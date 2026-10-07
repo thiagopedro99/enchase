@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react'
 
+import type { ThemeInput } from '@styles/createTheme.ts'
+
 export type ColorMode = 'light' | 'dark' | 'system'
 
 export type ResolvedColorMode = 'light' | 'dark'
@@ -18,6 +20,7 @@ export type ColorModeContextValue = {
 
 export type ColorModeProviderProps = {
   children: ReactNode
+  theme?: ThemeInput
   mode?: ColorMode
   defaultMode?: ColorMode
   onModeChange?: (mode: ColorMode) => void

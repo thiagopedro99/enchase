@@ -2,10 +2,12 @@ import { act, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mockSystemColorScheme } from '@tests/colorScheme.ts'
 import userEvent from '@testing-library/user-event'
-import { useTheme } from 'styled-components'
+import { renderToString } from 'react-dom/server'
+import { ServerStyleSheet, useTheme } from 'styled-components'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { useColorMode } from '@hooks/useColorMode.ts'
+import { lightTheme } from '@styles/themes/index.ts'
 
 import type { ColorModeProviderProps, ColorModeStorage } from '@components/colorMode/types.ts'
 
@@ -216,6 +218,66 @@ describe('ColorModeProvider', () => {
     expect(onModeChange).toHaveBeenCalledWith('light')
     expect(screen.getByTestId('mode')).toHaveTextContent('dark')
     expect(storage.data.size).toBe(0)
+  })
+})
+
+describe('ColorModeProvider with a custom theme', () => {
+  const stylesOf = (props: Partial<ColorModeProviderProps>) => {
+    const sheet = new ServerStyleSheet()
+
+    try {
+      renderToString(
+        sheet.collectStyles(
+          <ColorModeProvider storage={null} {...props}>
+            <Probe />
+          </ColorModeProvider>
+        )
+      )
+
+      return sheet.getStyleTags().replace(/\s+/g, '')
+    } finally {
+      sheet.seal()
+    }
+  }
+
+  it('writes the colors and fonts of the given theme as css variables', () => {
+    mockScheme('light')
+
+    const styles = stylesOf({ theme: { fonts: { primary: 'Arial' }, light: { colors: { primary: '#0B6BCB' } }, dark: { colors: { primary: '#99CCFF' } } } })
+
+    expect(styles).toContain('--enchase-color-primary:#0B6BCB')
+    expect(styles).toContain('--enchase-color-primary:#99CCFF')
+    expect(styles).toContain('--enchase-font-primary:Arial')
+  })
+
+  it('keeps handing the components references that do not change with the theme', () => {
+    mockScheme('light')
+    renderProbe({ theme: { light: { colors: { background: '#FAFAFA' } } } })
+
+    expect(screen.getByTestId('background')).toHaveTextContent('var(--enchase-color-background)')
+  })
+
+  it('keeps the built-in values when no theme is given', () => {
+    mockScheme('light')
+
+    expect(stylesOf({})).toContain('--enchase-color-primary:' + lightTheme.colors.primary)
+  })
+
+  it('refuses an invalid value instead of writing it as css', () => {
+    mockScheme('light')
+    const error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    expect(() => renderProbe({ theme: { light: { colors: { primary: 'red; display: none' } } } })).toThrow('Invalid color for "light.colors.primary"')
+    expect(() => renderProbe({ theme: { fonts: { primary: 'Arial; } body { display: none' } } })).toThrow('Invalid font family for "fonts.primary"')
+
+    error.mockRestore()
+  })
+
+  it('uses the theme it is given each time', () => {
+    mockScheme('light')
+
+    expect(stylesOf({ theme: { light: { colors: { primary: '#0B6BCB' } } } })).toContain('--enchase-color-primary:#0B6BCB')
+    expect(stylesOf({ theme: { light: { colors: { primary: '#C2185B' } } } })).toContain('--enchase-color-primary:#C2185B')
   })
 })
 

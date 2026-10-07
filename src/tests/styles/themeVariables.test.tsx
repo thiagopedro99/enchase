@@ -2,15 +2,18 @@ import { ServerStyleSheet } from 'styled-components'
 import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
-import { ThemeVariables, variableTheme } from '@styles/themeVariables.ts'
-import { darkTheme, lightTheme } from '@styles/themes/index.ts'
+import { defaultThemeCss, ThemeVariables, themeCss, variableTheme } from '@styles/themeVariables.ts'
+import { darkTheme, lightTheme, themes } from '@styles/themes/index.ts'
+import { createTheme } from '@styles/createTheme.ts'
 import { themeReferences } from '@styles/cssVariables.ts'
 
-const renderCss = () => {
+import type { ThemeSet } from '@styles/createTheme.ts'
+
+const renderCss = (set: ThemeSet = themes) => {
   const sheet = new ServerStyleSheet()
 
   try {
-    renderToString(sheet.collectStyles(<ThemeVariables />))
+    renderToString(sheet.collectStyles(<ThemeVariables $css={themeCss(set)} />))
 
     return sheet.getStyleTags().replace(/\s+/g, '')
   } finally {
@@ -59,6 +62,22 @@ describe('ThemeVariables fonts', () => {
   it('writes the sizes and weights', () => {
     expect(css).toContain('--enchase-font-size-base:' + lightTheme.fonts.sizes.base)
     expect(css).toContain('--enchase-font-weight-bold:' + lightTheme.fonts.weights.bold)
+  })
+})
+
+describe('themeCss', () => {
+  it('is what the default css is made of', () => {
+    expect(defaultThemeCss).toBe(themeCss(themes))
+  })
+
+  it('writes the values of the themes it receives', () => {
+    const css = renderCss(createTheme({ fonts: { primary: 'Arial', sizes: { base: '1.25rem' } }, light: { colors: { primary: '#0B6BCB' } }, dark: { colors: { primary: '#99CCFF' } } }))
+
+    expect(css).toContain('--enchase-color-primary:#0B6BCB')
+    expect(css).toContain('--enchase-color-primary:#99CCFF')
+    expect(css).toContain('--enchase-font-primary:Arial')
+    expect(css).toContain('--enchase-font-size-base:1.25rem')
+    expect(css).not.toContain('--enchase-color-primary:' + lightTheme.colors.primary)
   })
 })
 

@@ -1,14 +1,17 @@
 import { createGlobalStyle } from 'styled-components'
 
 import { cssVariablesRule, fontVariablesRule, themeReferences } from './cssVariables.ts'
-import { darkTheme, lightTheme } from './themes/index.ts'
+import { lightTheme, themes } from './themes/index.ts'
+
+import type { ThemeSet } from './createTheme.ts'
 
 export const variableTheme = themeReferences(lightTheme)
 
-export const ThemeVariables = createGlobalStyle`
-  ${fontVariablesRule(':root', lightTheme.fonts)}
+export const themeCss = ({ light, dark }: ThemeSet) =>
+  [fontVariablesRule(':root', light.fonts), cssVariablesRule(":root, [data-theme='light']", light), cssVariablesRule("[data-theme='dark']", dark)].join('\n\n')
 
-  ${cssVariablesRule(":root, [data-theme='light']", lightTheme)}
+export const defaultThemeCss = themeCss(themes)
 
-  ${cssVariablesRule("[data-theme='dark']", darkTheme)}
+export const ThemeVariables = createGlobalStyle<{ $css: string }>`
+  ${({ $css }) => $css}
 `

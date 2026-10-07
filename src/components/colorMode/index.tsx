@@ -3,12 +3,13 @@ import { ThemeProvider } from 'styled-components'
 
 import { defaultColorMode, defaultStorageKey, getDefaultStorage, readStoredMode, systemDarkQuery, writeStoredMode } from './defaultData.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
-import { ThemeVariables, variableTheme } from '@styles/themeVariables.ts'
+import { createTheme } from '@styles/createTheme.ts'
+import { defaultThemeCss, ThemeVariables, themeCss, variableTheme } from '@styles/themeVariables.ts'
 import { ColorModeContext } from './context.ts'
 
 import type { ColorMode, ColorModeProviderProps, ResolvedColorMode } from './types.ts'
 
-export const ColorModeProvider = ({ children, mode: controlledMode, defaultMode = defaultColorMode, onModeChange, storage, storageKey = defaultStorageKey }: ColorModeProviderProps) => {
+export const ColorModeProvider = ({ children, theme, mode: controlledMode, defaultMode = defaultColorMode, onModeChange, storage, storageKey = defaultStorageKey }: ColorModeProviderProps) => {
   const store = useMemo(() => (storage === undefined ? getDefaultStorage() : storage), [storage])
   const [internalMode, setInternalMode] = useState<ColorMode>(() => readStoredMode(store, storageKey) ?? defaultMode)
   const systemPrefersDark = useMediaQuery(systemDarkQuery)
@@ -34,11 +35,13 @@ export const ColorModeProvider = ({ children, mode: controlledMode, defaultMode 
     document.documentElement.style.colorScheme = resolvedMode
   }, [resolvedMode])
 
+  const css = useMemo(() => (theme === undefined ? defaultThemeCss : themeCss(createTheme(theme))), [theme])
+
   const value = useMemo(() => ({ mode, resolvedMode, setMode, toggleMode }), [mode, resolvedMode, setMode, toggleMode])
 
   return (
     <ColorModeContext.Provider value={value}>
-      <ThemeVariables />
+      <ThemeVariables $css={css} />
       <ThemeProvider theme={variableTheme}>{children}</ThemeProvider>
     </ColorModeContext.Provider>
   )
