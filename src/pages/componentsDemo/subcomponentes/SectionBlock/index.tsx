@@ -13,7 +13,7 @@ export const SectionBlock = ({ id, title, description, onShowCode, bare, childre
         {description && <SectionDescription>{description}</SectionDescription>}
       </HeaderText>
       {onShowCode && (
-        <Button $size="sm" $variant="outline" onClick={onShowCode}>
+        <Button size="sm" variant="outline" onClick={onShowCode}>
           <Code size={16} /> Ver Código
         </Button>
       )}

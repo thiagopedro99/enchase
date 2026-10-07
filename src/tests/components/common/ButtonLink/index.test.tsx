@@ -18,6 +18,29 @@ describe('ButtonLink', () => {
     expect(screen.queryByRole('button')).not.toBeInTheDocument()
   })
 
+  it('shares the button style through the same data attributes', () => {
+    renderWithProviders(
+      <>
+        <ButtonLink href="/a">Padrão</ButtonLink>
+        <ButtonLink href="/b" variant="secondary" size="sm" fullWidth className="custom">
+          Custom
+        </ButtonLink>
+      </>
+    )
+
+    const plain = screen.getByRole('link', { name: 'Padrão' })
+    const custom = screen.getByRole('link', { name: 'Custom' })
+
+    expect(plain).toHaveAttribute('data-variant', 'primary')
+    expect(plain).toHaveAttribute('data-size', 'md')
+    expect(plain).not.toHaveAttribute('data-full-width')
+    expect(custom).toHaveAttribute('data-variant', 'secondary')
+    expect(custom).toHaveAttribute('data-size', 'sm')
+    expect(custom).toHaveAttribute('data-full-width')
+    expect(custom).toHaveClass('custom')
+    expect(custom).not.toHaveAttribute('variant')
+  })
+
   it('is reached with the keyboard', async () => {
     const user = userEvent.setup()
     renderWithProviders(<ButtonLink href="/docs/">Começar</ButtonLink>)
@@ -69,13 +92,13 @@ describe('ButtonLink', () => {
   it('has no axe violations across variants', async () => {
     const { container } = renderWithProviders(
       <>
-        <ButtonLink href="/a" $variant="primary">
+        <ButtonLink href="/a" variant="primary">
           Primary
         </ButtonLink>
-        <ButtonLink href="/b" $variant="outline">
+        <ButtonLink href="/b" variant="outline">
           Outline
         </ButtonLink>
-        <ButtonLink href="https://example.com" target="_blank" $variant="ghost">
+        <ButtonLink href="https://example.com" target="_blank" variant="ghost">
           Externo
         </ButtonLink>
       </>

@@ -10,26 +10,26 @@ const meta = {
   component: Button,
   args: {
     children: 'Enviar',
-    $variant: defaultVariant,
-    $size: defaultSize,
-    $fullWidth: defaultFullWidth,
+    variant: defaultVariant,
+    size: defaultSize,
+    fullWidth: defaultFullWidth,
     disabled: defaultDisabled,
     motionRecipe: 'default'
   },
   argTypes: {
-    $variant: {
+    variant: {
       description: 'Estilo visual do botão.',
       control: 'select',
       options: ['primary', 'secondary', 'outline', 'ghost'],
       table: { defaultValue: { summary: defaultVariant } }
     },
-    $size: {
+    size: {
       description: 'Tamanho do botão.',
       control: 'inline-radio',
       options: ['sm', 'md', 'lg'],
       table: { defaultValue: { summary: defaultSize } }
     },
-    $fullWidth: {
+    fullWidth: {
       description: 'Ocupa toda a largura disponível.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultFullWidth) } }

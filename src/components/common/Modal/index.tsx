@@ -126,10 +126,10 @@ export const ConfirmModal = ({
       animation={animation}
       footer={
         <Flex $justify="end" $gap="0.5rem">
-          <Button $variant="outline" onClick={onClose} data-autofocus>
+          <Button variant="outline" onClick={onClose} data-autofocus>
             {cancelText ?? labels.cancel}
           </Button>
-          <Button $variant={confirmVariant} onClick={handleConfirm}>
+          <Button variant={confirmVariant} onClick={handleConfirm}>
             {confirmText ?? labels.confirm}
           </Button>
         </Flex>

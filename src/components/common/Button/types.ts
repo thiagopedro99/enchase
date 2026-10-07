@@ -7,10 +7,10 @@ export type ButtonSize = 'sm' | 'md' | 'lg'
 type MotionConflictingHandlers = 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart'
 
 export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, MotionConflictingHandlers> {
-  $variant?: ButtonVariant
-  $size?: ButtonSize
-  $fullWidth?: boolean
+  variant?: ButtonVariant
+  size?: ButtonSize
+  fullWidth?: boolean
   animation?: MotionOverride
 }
 
-export type ButtonStyleProps = Pick<ButtonProps, '$variant' | '$size' | '$fullWidth'>
+export type ButtonStyleProps = Pick<ButtonProps, 'variant' | 'size' | 'fullWidth'>

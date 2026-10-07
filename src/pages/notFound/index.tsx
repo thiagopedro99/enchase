@@ -21,11 +21,11 @@ const NotFound = () => {
               <Message>Desculpe, a página que você está procurando não existe ou foi movida.</Message>
 
               <Flex $gap="1rem" $wrap>
-                <Button $variant="primary" onClick={() => navigate('/')}>
+                <Button variant="primary" onClick={() => navigate('/')}>
                   Voltar para Home
                 </Button>
 
-                <Button $variant="outline" onClick={() => navigate(-1)}>
+                <Button variant="outline" onClick={() => navigate(-1)}>
                   Voltar
                 </Button>
               </Flex>

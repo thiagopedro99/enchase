@@ -15,10 +15,10 @@ const Home = () => (
         </Hero>
 
         <Flex $gap="1rem" $wrap>
-          <ButtonLink href={docsUrl} $size="lg">
+          <ButtonLink href={docsUrl} size="lg">
             Começar
           </ButtonLink>
-          <ButtonLink href={repositoryUrl} target="_blank" $variant="outline" $size="lg">
+          <ButtonLink href={repositoryUrl} target="_blank" variant="outline" size="lg">
             Repositório
           </ButtonLink>
         </Flex>

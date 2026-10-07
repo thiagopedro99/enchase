@@ -30,7 +30,7 @@ export const ModalsDemo = ({ onShowCode }: DemoSectionProps) => {
         title="Exemplo de Modal"
         footer={
           <Flex $justify="end" $gap="0.5rem">
-            <Button $variant="outline" onClick={() => setModalOpen(false)}>
+            <Button variant="outline" onClick={() => setModalOpen(false)}>
               Cancelar
             </Button>
             <Button onClick={handleConfirm}>Confirmar</Button>

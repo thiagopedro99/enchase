@@ -10,10 +10,10 @@ export const LiveStrip = () => {
   return (
     <Panel>
       <Row>
-        <Button $variant="primary">Primary</Button>
-        <Button $variant="secondary">Secondary</Button>
-        <Button $variant="outline">Outline</Button>
-        <Button $variant="ghost">Ghost</Button>
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="ghost">Ghost</Button>
         <Button disabled>Disabled</Button>
       </Row>
 
@@ -25,7 +25,7 @@ export const LiveStrip = () => {
       </Row>
 
       <Row>
-        <Button $variant="secondary" onClick={() => setModalOpen(true)} aria-haspopup="dialog">
+        <Button variant="secondary" onClick={() => setModalOpen(true)} aria-haspopup="dialog">
           Abrir modal
         </Button>
       </Row>
@@ -36,7 +36,7 @@ export const LiveStrip = () => {
         title="Editar perfil"
         footer={
           <>
-            <Button $variant="ghost" onClick={() => setModalOpen(false)}>
+            <Button variant="ghost" onClick={() => setModalOpen(false)}>
               Cancelar
             </Button>
             <Button onClick={() => setModalOpen(false)}>Salvar</Button>

@@ -15,20 +15,20 @@ export const codeExamples: Record<string, CodeBlock[]> = {
     },
     {
       title: 'Variações',
-      code: `<Button $variant="primary">Primary</Button>
-<Button $variant="secondary">Secondary</Button>
-<Button $variant="outline">Outline</Button>
-<Button $variant="ghost">Ghost</Button>`
+      code: `<Button variant="primary">Primary</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="outline">Outline</Button>
+<Button variant="ghost">Ghost</Button>`
     },
     {
       title: 'Tamanhos',
-      code: `<Button $size="sm">Pequeno</Button>
-<Button $size="md">Médio</Button>
-<Button $size="lg">Grande</Button>`
+      code: `<Button size="sm">Pequeno</Button>
+<Button size="md">Médio</Button>
+<Button size="lg">Grande</Button>`
     },
     {
       title: 'Largura total',
-      code: `<Button $fullWidth>Largura Total</Button>`
+      code: `<Button fullWidth>Largura Total</Button>`
     },
     {
       title: 'Desabilitado',
@@ -192,7 +192,7 @@ import { useState } from 'react';`
     title="Título do Modal"
     footer={
       <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-        <Button $variant="outline" onClick={() => setIsOpen(false)}>
+        <Button variant="outline" onClick={() => setIsOpen(false)}>
           Cancelar
         </Button>
         <Button onClick={() => setIsOpen(false)}>

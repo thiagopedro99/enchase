@@ -16,10 +16,10 @@ export const NextSteps = ({ onNavigate }: NextStepsProps) => {
         <Title>Pronto para começar?</Title>
         <Description>Agora que você conhece o básico, explore os componentes disponíveis e comece a construir sua aplicação!</Description>
         <Flex $gap="1rem" $wrap>
-          <Button $variant="primary" onClick={() => onNavigate('/components')} $size="lg">
+          <Button variant="primary" onClick={() => onNavigate('/components')} size="lg">
             Ver Componentes
           </Button>
-          <Button $variant="outline" onClick={() => onNavigate('/')} $size="lg">
+          <Button variant="outline" onClick={() => onNavigate('/')} size="lg">
             Voltar para Home
           </Button>
         </Flex>
