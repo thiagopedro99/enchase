@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { colorReferences, colorVariableName, colorVariables, cssVariablesRule } from '@styles/cssVariables.ts'
+import { colorReferences, colorVariableName, colorVariables, cssVariablesRule, shadowReferences, shadowVariableName, shadowVariables, themeReferences, themeVariables } from '@styles/cssVariables.ts'
 import { darkTheme, lightTheme } from '@styles/themes/index.ts'
 
 const leafPaths = (tree: Record<string, unknown>, path: string[] = []): string[] =>
   Object.entries(tree).flatMap(([key, value]) => (typeof value === 'string' ? [[...path, key].join('.')] : leafPaths(value as Record<string, unknown>, [...path, key])))
+
+const variableNamesIn = (value: string) => [...value.matchAll(/var\((--[a-z0-9-]+)\)/g)].map((match) => match[1])
 
 describe('colorVariableName', () => {
   it.each([
@@ -15,6 +17,16 @@ describe('colorVariableName', () => {
     [['text', 'placeholder'], '--enchase-color-text-placeholder']
   ])('names %j as %s', (path, expected) => {
     expect(colorVariableName(path)).toBe(expected)
+  })
+})
+
+describe('shadowVariableName', () => {
+  it.each([
+    ['sm', '--enchase-shadow-sm'],
+    ['xl', '--enchase-shadow-xl'],
+    ['none', '--enchase-shadow-none']
+  ])('names %s as %s', (key, expected) => {
+    expect(shadowVariableName(key)).toBe(expected)
   })
 })
 
@@ -29,13 +41,13 @@ describe('colorVariables', () => {
   })
 
   it('never reuses a variable name for two different tokens', () => {
-    const names = Object.keys(colorVariables(lightTheme.colors))
+    const names = Object.keys(themeVariables(lightTheme))
 
     expect(new Set(names).size).toBe(names.length)
   })
 
   it('gives the light and the dark theme exactly the same tokens', () => {
-    expect(Object.keys(colorVariables(darkTheme.colors)).sort()).toEqual(Object.keys(colorVariables(lightTheme.colors)).sort())
+    expect(Object.keys(themeVariables(darkTheme)).sort()).toEqual(Object.keys(themeVariables(lightTheme)).sort())
   })
 
   it('uses the values of the theme it receives', () => {
@@ -44,7 +56,25 @@ describe('colorVariables', () => {
   })
 })
 
-describe('colorReferences', () => {
+describe('shadowVariables', () => {
+  it('creates one variable for every shadow of the theme, with its own value', () => {
+    const variables = shadowVariables(darkTheme.shadows)
+
+    expect(Object.keys(variables)).toHaveLength(Object.keys(darkTheme.shadows).length)
+    expect(variables['--enchase-shadow-md']).toBe(darkTheme.shadows.md)
+    expect(variables['--enchase-shadow-none']).toBe('none')
+  })
+})
+
+describe('what is allowed to change between the light and the dark theme', () => {
+  it('differs only in colors and shadows, which are the parts turned into variables', () => {
+    const rest = (theme: Record<string, unknown>) => Object.fromEntries(Object.entries(theme).filter(([key]) => key !== 'colors' && key !== 'shadows'))
+
+    expect(rest(darkTheme)).toEqual(rest(lightTheme))
+  })
+})
+
+describe('colorReferences and shadowReferences', () => {
   const references = colorReferences(lightTheme.colors)
 
   it('keeps the shape of the color tokens', () => {
@@ -55,23 +85,7 @@ describe('colorReferences', () => {
     expect(references.primary).toBe('var(--enchase-color-primary)')
     expect(references.onPrimaryContainer).toBe('var(--enchase-color-on-primary-container)')
     expect(references.text.primary).toBe('var(--enchase-color-text-primary)')
-  })
-
-  it('references only variables that exist in both themes', () => {
-    const lightNames = new Set(Object.keys(colorVariables(lightTheme.colors)))
-    const darkNames = new Set(Object.keys(colorVariables(darkTheme.colors)))
-    const used = leafPaths(references).map((path) => path.split('.').reduce<unknown>((value, key) => (value as Record<string, unknown>)[key], references) as string)
-
-    for (const reference of used) {
-      const name = reference.replace(/^var\((.*)\)$/, '$1')
-
-      expect(lightNames.has(name)).toBe(true)
-      expect(darkNames.has(name)).toBe(true)
-    }
-  })
-
-  it('is the same for the light and the dark theme, so switching modes does not change it', () => {
-    expect(colorReferences(darkTheme.colors)).toEqual(references)
+    expect(shadowReferences(lightTheme.shadows).md).toBe('var(--enchase-shadow-md)')
   })
 
   it('does not change the theme it receives', () => {
@@ -79,21 +93,50 @@ describe('colorReferences', () => {
   })
 })
 
+describe('themeReferences', () => {
+  const light = themeReferences(lightTheme)
+
+  it('references only variables that exist in both themes', () => {
+    const lightNames = new Set(Object.keys(themeVariables(lightTheme)))
+    const darkNames = new Set(Object.keys(themeVariables(darkTheme)))
+    const names = [...variableNamesIn(JSON.stringify(light.colors)), ...variableNamesIn(JSON.stringify(light.shadows))]
+
+    expect(names.length).toBe(Object.keys(themeVariables(lightTheme)).length)
+
+    for (const name of names) {
+      expect(lightNames.has(name)).toBe(true)
+      expect(darkNames.has(name)).toBe(true)
+    }
+  })
+
+  it('is the same for the light and the dark theme, so switching modes does not change it', () => {
+    expect(themeReferences(darkTheme)).toEqual(light)
+  })
+
+  it('keeps everything that is not a variable', () => {
+    expect(light.fonts).toEqual(lightTheme.fonts)
+    expect(light.breakpoints).toEqual(lightTheme.breakpoints)
+    expect(light.spacing).toEqual(lightTheme.spacing)
+  })
+})
+
 describe('cssVariablesRule', () => {
   it('writes a rule with one declaration per token, for the given selector', () => {
-    const rule = cssVariablesRule(':root', lightTheme.colors)
+    const rule = cssVariablesRule(':root', lightTheme)
 
     expect(rule.startsWith(':root {\n')).toBe(true)
     expect(rule.endsWith('\n}')).toBe(true)
     expect(rule).toContain(`  --enchase-color-primary: ${lightTheme.colors.primary};`)
     expect(rule).toContain(`  --enchase-color-text-primary: ${lightTheme.colors.text.primary};`)
-    expect(rule.split('\n').filter((line) => line.startsWith('  --'))).toHaveLength(Object.keys(colorVariables(lightTheme.colors)).length)
+    expect(rule).toContain(`  --enchase-shadow-sm: ${lightTheme.shadows.sm};`)
+    expect(rule.split('\n').filter((line) => line.startsWith('  --'))).toHaveLength(Object.keys(themeVariables(lightTheme)).length)
   })
 
   it('writes the dark values under the selector it is given', () => {
-    const rule = cssVariablesRule("[data-theme='dark']", darkTheme.colors)
+    const rule = cssVariablesRule("[data-theme='dark']", darkTheme)
 
     expect(rule.startsWith("[data-theme='dark'] {\n")).toBe(true)
     expect(rule).toContain(`  --enchase-color-background: ${darkTheme.colors.background};`)
+    expect(rule).toContain(`  --enchase-shadow-md: ${darkTheme.shadows.md};`)
   })
 })

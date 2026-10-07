@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
 import { ThemeProvider } from 'styled-components'
 
 import { defaultColorMode, defaultStorageKey, getDefaultStorage, readStoredMode, systemDarkQuery, writeStoredMode } from './defaultData.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
-import { themes } from '@styles/themes/index.ts'
+import { ThemeVariables, variableTheme } from '@styles/themeVariables.ts'
 import { ColorModeContext } from './context.ts'
 
 import type { ColorMode, ColorModeProviderProps, ResolvedColorMode } from './types.ts'
@@ -29,7 +29,7 @@ export const ColorModeProvider = ({ children, mode: controlledMode, defaultMode 
 
   const toggleMode = useCallback(() => setMode(resolvedMode === 'dark' ? 'light' : 'dark'), [resolvedMode, setMode])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     document.documentElement.dataset.theme = resolvedMode
     document.documentElement.style.colorScheme = resolvedMode
   }, [resolvedMode])
@@ -38,7 +38,8 @@ export const ColorModeProvider = ({ children, mode: controlledMode, defaultMode 
 
   return (
     <ColorModeContext.Provider value={value}>
-      <ThemeProvider theme={themes[resolvedMode]}>{children}</ThemeProvider>
+      <ThemeVariables />
+      <ThemeProvider theme={variableTheme}>{children}</ThemeProvider>
     </ColorModeContext.Provider>
   )
 }

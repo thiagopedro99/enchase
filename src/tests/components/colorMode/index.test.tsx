@@ -6,7 +6,6 @@ import { useTheme } from 'styled-components'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { useColorMode } from '@hooks/useColorMode.ts'
-import { themes } from '@styles/themes/index.ts'
 
 import type { ColorModeProviderProps, ColorModeStorage } from '@components/colorMode/types.ts'
 
@@ -112,19 +111,30 @@ describe('ColorModeProvider', () => {
     expect(screen.getByTestId('resolved')).toHaveTextContent('dark')
   })
 
-  it('provides the matching theme tokens and marks the document', async () => {
+  it('marks the document with the resolved mode and its color scheme', async () => {
     mockScheme('light')
     const user = userEvent.setup()
     renderProbe({ defaultMode: 'light' })
 
-    expect(screen.getByTestId('background')).toHaveTextContent(themes.light.colors.background)
     expect(document.documentElement.dataset.theme).toBe('light')
+    expect(document.documentElement.style.colorScheme).toBe('light')
 
     await user.click(screen.getByRole('button', { name: 'dark' }))
 
-    expect(screen.getByTestId('background')).toHaveTextContent(themes.dark.colors.background)
     expect(document.documentElement.dataset.theme).toBe('dark')
     expect(document.documentElement.style.colorScheme).toBe('dark')
+  })
+
+  it('hands the components references to css variables that do not change with the mode', async () => {
+    mockScheme('light')
+    const user = userEvent.setup()
+    renderProbe({ defaultMode: 'light' })
+
+    expect(screen.getByTestId('background')).toHaveTextContent('var(--enchase-color-background)')
+
+    await user.click(screen.getByRole('button', { name: 'dark' }))
+
+    expect(screen.getByTestId('background')).toHaveTextContent('var(--enchase-color-background)')
   })
 
   it('remembers the choice in the given storage and restores it on the next mount', async () => {
