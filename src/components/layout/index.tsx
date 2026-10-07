@@ -30,6 +30,7 @@ const Layout = ({
   navigation = 'sidebar',
   brand = defaultBrand,
   brandLogo = defaultBrandLogo,
+  sidebarFooter,
   navigationSections = defaultNavigationSections,
   pageSections = [],
   activePageSectionId,
@@ -80,7 +81,7 @@ const Layout = ({
 
       {usesSidebar && isDesktop && (
         <SidebarArea>
-          <AppSidebar brand={brand} brandLogo={brandLogo} sections={sections} variant="permanent" activeId={activePageSectionId} navId={navId} />
+          <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="permanent" activeId={activePageSectionId} navId={navId} />
         </SidebarArea>
       )}
 
@@ -96,7 +97,7 @@ const Layout = ({
         </FooterArea>
       )}
 
-      {usesSidebar && !isDesktop && <AppSidebar brand={brand} brandLogo={brandLogo} sections={sections} variant="modal" activeId={activePageSectionId} navId={navId} />}
+      {usesSidebar && !isDesktop && <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="modal" activeId={activePageSectionId} navId={navId} />}
     </LayoutWrapper>
   )
 }

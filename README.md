@@ -107,7 +107,6 @@ src/
 ├── routes/          # Configuração de rotas
 ├── stores/          # Gerenciamento de estado (Zustand)
 │   ├── app/        # Estado global da aplicação
-│   ├── auth/       # Token e usuário autenticado
 │   └── data/       # Estado de dados específicos
 ├── styles/          # Temas e estilos globais
 │   └── themes/     # Temas light e dark
@@ -213,7 +212,7 @@ O `Layout` oferece duas navegações, escolhidas pela prop `navigation`:
 </Layout>
 ```
 
-- **`navigation="sidebar"` (padrão)**: uma barra superior (`AppBar`) com o botão de menu, o breadcrumb e o botão de tema, e o menu lateral. No desktop o botão recolhe a sidebar para uma barra de ícones (a escolha fica salva); no mobile ele abre o drawer modal. O ícone acompanha o estado (linhas com seta `‹` quando o menu está aberto, hambúrguer quando fechado) e o botão tem tooltip com a ação atual. Se houver usuário no `useAuthStore`, o rodapé da sidebar mostra avatar, nome e botão de sair.
+- **`navigation="sidebar"` (padrão)**: uma barra superior (`AppBar`) com o botão de menu, o breadcrumb e o botão de tema, e o menu lateral. No desktop o botão recolhe a sidebar para uma barra de ícones (a escolha fica salva); no mobile ele abre o drawer modal. O ícone acompanha o estado (linhas com seta `‹` quando o menu está aberto, hambúrguer quando fechado) e o botão tem tooltip com a ação atual. Com a propriedade `sidebarFooter`, o rodapé da sidebar mostra o que você passar, por exemplo o `SidebarUser`, com avatar, nome e botão de sair.
 - **`navigation="navbar"`**: a barra de navegação clássica no topo.
 - **`navigationSections`**: substitui os itens do menu (por padrão, Início, Primeiros passos e Componentes).
 - **`pageSections` e `activePageSectionId`**: seções extras no menu para navegar por âncoras dentro da página, usadas no style guide da rota `/components` com o hook `useScrollSpy`.
@@ -309,9 +308,7 @@ const response = await api.delete('/users/1');
 
 ### Interceptors
 
-Os interceptors já configurados incluem:
-- Adição automática do token de autenticação (lido do `useAuthStore`)
-- Logout automático em caso de erro 401
+O `actions/api.ts` cria a instância do Axios sem interceptors. Se o seu projeto precisar de autenticação ou de tratamento global de erros, adicione-os ali, com o gerenciamento de sessão que você escolher.
 
 ### Actions por Entidade
 
@@ -330,7 +327,7 @@ export const getUserById = async (id: string): Promise<User> => {
 };
 ```
 
-Os tipos da entidade (domínio e request/response) ficam juntos em `src/actions/<entidade>/types.ts`. Veja `src/actions/users` e `src/actions/auth` como exemplo. As convenções completas estão em [`skill.md`](./skill.md).
+Os tipos da entidade (domínio e request/response) ficam juntos em `src/actions/<entidade>/types.ts`. Veja `src/actions/users` como exemplo. As convenções completas estão em [`skill.md`](./skill.md).
 
 ## Sistema de Temas
 

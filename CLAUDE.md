@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Enchase (React 19, TypeScript, Vite, styled-components, Zustand, Axios, motion). Ainda não se comunica com nenhuma API — `actions/` e `stores/` trazem só exemplos genéricos (`users`, `auth`).
+Enchase (React 19, TypeScript, Vite, styled-components, Zustand, Axios, motion). Ainda não se comunica com nenhuma API — `actions/` e `stores/` trazem só exemplos genéricos (`users`, `data`).
 
 ## Convenções de código
 

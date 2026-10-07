@@ -72,6 +72,26 @@ describe('Layout with sidebar (default, desktop)', () => {
     expect(within(nav).getByRole('link', { name: 'Documentação' })).toHaveAttribute('href', docsUrl)
   })
 
+  it('renders the sidebar footer slot and tells it when the sidebar is collapsed', () => {
+    const footer = ({ collapsed }: { collapsed: boolean }) => <span>{collapsed ? 'Rodapé compacto' : 'Rodapé completo'}</span>
+    const { unmount } = renderWithProviders(page({ sidebarFooter: footer }))
+
+    expect(within(screen.getByRole('navigation', { name: 'Navegação principal' }).parentElement as HTMLElement).getByText('Rodapé completo')).toBeInTheDocument()
+
+    unmount()
+    useAppStore.setState({ sidebarCollapsed: true })
+    renderWithProviders(page({ sidebarFooter: footer }))
+
+    expect(screen.getByText('Rodapé compacto')).toBeInTheDocument()
+    expect(screen.queryByText('Rodapé completo')).not.toBeInTheDocument()
+  })
+
+  it('has no sidebar footer unless one is given', () => {
+    renderWithProviders(page())
+
+    expect(screen.queryByText('Rodapé completo')).not.toBeInTheDocument()
+  })
+
   it('hides the breadcrumb when the trail has a single item', () => {
     renderWithProviders(page())
 

@@ -1,5 +1,5 @@
 import type { BreadcrumbItem } from '../common/Breadcrumbs/types.ts'
-import type { SidebarSection } from '../common/Sidebar/types.ts'
+import type { SidebarSection, SidebarSlot } from '../common/Sidebar/types.ts'
 import type { ReactNode } from 'react'
 
 export type LayoutNavigation = 'sidebar' | 'navbar'
@@ -15,6 +15,7 @@ export interface LayoutProps {
   navigation?: LayoutNavigation
   brand?: string
   brandLogo?: string
+  sidebarFooter?: SidebarSlot
   navigationSections?: SidebarSection[]
   pageSections?: SidebarSection[]
   activePageSectionId?: string

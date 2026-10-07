@@ -76,7 +76,7 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 
 Padrão Actions: cada entidade (ex: `users`) tem sua própria subpasta em `actions/` e, quando tem estado de servidor, em `stores/`:
 
-- `actions/api.ts` — a instância única do Axios (`baseURL`, interceptors de auth e de erro).
+- `actions/api.ts` — a instância única do Axios (`baseURL` e, se o projeto precisar, interceptors).
 - `actions/<entidade>/index.ts` — funções que chamam a API (`listUsers`, `createUser`...), usando a instância `api`. Arrow functions exportadas, sem classe wrapper, devolvendo dado já tipado:
   ```ts
   export const createUser = async (payload: CreateUserInput): Promise<User> => {
@@ -93,17 +93,17 @@ Padrão Actions: cada entidade (ex: `users`) tem sua própria subpasta em `actio
 
 ## Estado (Zustand)
 
-- Um store por domínio (ex: `useAuthStore`, `useUserStore`), nunca um store global único.
+- Um store por domínio (ex: `useAppStore`, `useDataStore`), nunca um store global único.
 - Store expõe estado + ações no mesmo objeto (`create<Store>((set, get) => ({ ... }))`); componentes nunca mutam estado fora de uma ação do store.
-- Selecione só o slice necessário no componente (`useAuthStore((state) => state.user)`), nunca desestruture o store inteiro — evita rerender desnecessário.
+- Selecione só o slice necessário no componente (`useDataStore((state) => state.items)`), nunca desestruture o store inteiro — evita rerender desnecessário.
 - Estado de servidor (dados vindos da API) fica no store; estado local de UI (aberto/fechado de modal, valor de input) fica em `useState` do próprio componente — não misture os dois num store.
 
 ## HTTP (Axios)
 
-- Uma instância única (`actions/api.ts`) com `baseURL` e interceptor de auth (token) — nunca `axios.get`/`axios.post` direto nos componentes.
+- Uma instância única (`actions/api.ts`) com `baseURL` e os interceptors que o projeto precisar — nunca `axios.get`/`axios.post` direto nos componentes.
 - Um módulo de action por entidade, cada um exportando funções que chamam a instância única e devolvem dados já tipados (ver seção Estrutura por entidade).
 - Chamada HTTP nunca dentro de componente/JSX direto — sempre via hook ou store action que chama a action.
-- Erros de resposta tratados no interceptor (ex: 401 desloga) e/ou na action — componente só lida com estado de loading/erro, nunca com o objeto de erro do Axios cru.
+- Erros de resposta tratados no interceptor e/ou na action — componente só lida com estado de loading/erro, nunca com o objeto de erro do Axios cru.
 
 ## Animação (`motion`, catálogo de receitas)
 

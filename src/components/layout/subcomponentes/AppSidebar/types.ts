@@ -1,4 +1,4 @@
-import type { SidebarSection, SidebarVariant } from '@components/common/Sidebar/types.ts'
+import type { SidebarSection, SidebarSlot, SidebarVariant } from '@components/common/Sidebar/types.ts'
 
 export type AppSidebarProps = {
   brand: string
@@ -7,4 +7,5 @@ export type AppSidebarProps = {
   variant: SidebarVariant
   activeId?: string
   navId?: string
+  footer?: SidebarSlot
 }
