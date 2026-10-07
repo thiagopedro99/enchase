@@ -265,11 +265,10 @@ Gerencia o estado global da aplicação:
 ```typescript
 import { useAppStore } from '@stores/app/index.ts';
 
-const { theme, toggleTheme, language, setLanguage } = useAppStore();
+const { language, setLanguage, sidebarCollapsed } = useAppStore();
 ```
 
 **Estados disponíveis:**
-- `theme` - Tema atual (light/dark)
 - `language` - Idioma da aplicação
 - `sidebarOpen` - Estado da sidebar
 - `modalOpen` - Estado de modals
@@ -399,16 +398,19 @@ A paleta dos dois temas atende WCAG 2.2 AA e isso é verificado por testes (`npm
 
 ### Alternância de Tema
 
-```typescript
-import { useAppStore } from '@stores/app/index.ts';
+O tema é controlado pelo `ColorModeProvider` (já usado no `App.tsx`). Ele aceita três modos: `light`, `dark` e `system` (o padrão, que acompanha a preferência do sistema), lembra a escolha no `localStorage` e marca o `<html>` com `data-theme`.
 
-const { theme, toggleTheme } = useAppStore();
+```tsx
+import { useColorMode } from '@hooks/useColorMode.ts'
 
-// Alternar tema
-<button onClick={toggleTheme}>
-  Tema: {theme}
+const { mode, resolvedMode, setMode, toggleMode } = useColorMode()
+
+<button onClick={toggleMode}>
+  Tema: {resolvedMode}
 </button>
 ```
+
+Para começar sempre no claro, use `<ColorModeProvider defaultMode="light">`. Para desligar a persistência, `storage={null}`; para controlar de fora, passe `mode` e `onModeChange`.
 
 ## Roteamento
 

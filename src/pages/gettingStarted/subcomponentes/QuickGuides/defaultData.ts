@@ -46,12 +46,12 @@ const MeuComponente = () => {
 export const storeCode = `import { useAppStore } from '@stores/app/index.ts'
 
 const MeuComponente = () => {
-  const theme = useAppStore((state) => state.theme)
-  const toggleTheme = useAppStore((state) => state.toggleTheme)
+  const collapsed = useAppStore((state) => state.sidebarCollapsed)
+  const toggleCollapsed = useAppStore((state) => state.toggleSidebarCollapsed)
 
   return (
-    <button onClick={toggleTheme}>
-      Tema atual: {theme}
+    <button onClick={toggleCollapsed}>
+      Menu: {collapsed ? 'recolhido' : 'aberto'}
     </button>
   )
 }`

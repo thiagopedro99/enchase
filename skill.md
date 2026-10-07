@@ -50,6 +50,7 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 
 - styled-components é o único mecanismo de estilo — sem CSS inline, sem CSS modules, sem outra biblioteca de UI. Componentes próprios usam `styled.div`, `styled(Componente)` etc., sempre exportados de `styles.ts`, nunca definidos dentro de `index.tsx`.
 - Tema centralizado em `src/styles/themes/` (`light.ts`, `dark.ts`, tipado em `styles/styled.d.ts`) — telas e componentes consomem via `theme` do styled-components (`${({ theme }) => theme.colors.x}`) ou `useTheme()`, nunca hardcodam cor/espaçamento.
+- O modo de cor (`light`, `dark` ou `system`) vem do `ColorModeProvider`; leia e troque com `useColorMode()` e nunca guarde o tema em um store.
 - Nome do styled component reflete o elemento semântico, não o estilo (`CardContainer`, não `BlueBox`).
 
 ## Linguagem visual (Material Design 3)

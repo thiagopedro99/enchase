@@ -6,14 +6,11 @@ import type { AppState } from './types.ts'
 export const useAppStore = create<AppState>()(
   persist(
     (set) => ({
-      theme: 'light',
       language: 'pt-BR',
       sidebarOpen: false,
       sidebarCollapsed: false,
       modalOpen: false,
       modalContent: null,
-      toggleTheme: () => set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
-      setTheme: (theme) => set({ theme }),
       setLanguage: (language) => set({ language }),
       toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
       setSidebarOpen: (open) => set({ sidebarOpen: open }),
@@ -24,7 +21,6 @@ export const useAppStore = create<AppState>()(
     {
       name: 'app-storage',
       partialize: (state) => ({
-        theme: state.theme,
         language: state.language,
         sidebarCollapsed: state.sidebarCollapsed
       })
