@@ -9,6 +9,7 @@ import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
 
 import { useAppStore } from '@stores/app/index.ts'
+import { docsUrl } from '@components/layout/defaultData.ts'
 import Layout from '@components/layout/index.tsx'
 
 import type { DialogContractAdapter } from '@tests/shared/contracts/types.ts'
@@ -57,6 +58,18 @@ describe('Layout with sidebar (default, desktop)', () => {
     renderWithProviders(page({ pageTitle: 'Painel', brand: 'Aurora' }))
 
     expect(document.title).toBe('Painel · Aurora')
+  })
+
+  it('offers the documentation as a plain link in the default navigation', () => {
+    renderWithProviders(
+      <Layout pageTitle="Teste">
+        <h1>Conteúdo</h1>
+      </Layout>
+    )
+    const nav = screen.getByRole('navigation', { name: 'Navegação principal' })
+
+    expect(within(nav).getByRole('link', { name: 'Início' })).toHaveAttribute('href', '/')
+    expect(within(nav).getByRole('link', { name: 'Documentação' })).toHaveAttribute('href', docsUrl)
   })
 
   it('hides the breadcrumb when the trail has a single item', () => {

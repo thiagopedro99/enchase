@@ -1,6 +1,7 @@
 import { ButtonLink, Container, Flex } from '@components/common/index.ts'
 import { Hero, Logo, Title, Subtitle } from './styles.ts'
-import { docsUrl, repositoryUrl } from './defaultData.ts'
+import { docsUrl } from '@components/layout/defaultData.ts'
+import { repositoryUrl } from './defaultData.ts'
 import Layout from '@components/layout/index.tsx'
 
 const Home = () => (
