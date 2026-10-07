@@ -62,6 +62,21 @@ export const contrastChecks = (colors: Theme['colors']): ContrastCheck[] => {
   ]
 }
 
+export const formatContrastIssues = (issues: ContrastIssue[]): string | null => {
+  const failures = issues.filter((issue) => issue.ratio !== null)
+  const unmeasured = issues.length - failures.length
+
+  if (issues.length === 0) return null
+
+  const lines = failures.map((issue) => `  ${issue.mode} · ${issue.label}: ${issue.ratio?.toFixed(2)}:1 (needs ${issue.minimum}:1)`)
+
+  if (unmeasured > 0) lines.push(`  ${unmeasured} pair(s) not checked: use hex or rgb colors to check their contrast`)
+
+  const heading = failures.length > 0 ? `[enchase] ${failures.length} color pair(s) of the theme are below the minimum contrast` : '[enchase] some color pairs of the theme could not be checked'
+
+  return [heading, ...lines].join('\n')
+}
+
 export const validateTheme = (themes: ThemeSet): ContrastIssue[] =>
   (['light', 'dark'] as const).flatMap((mode) =>
     contrastChecks(themes[mode].colors).flatMap((check): ContrastIssue[] => {

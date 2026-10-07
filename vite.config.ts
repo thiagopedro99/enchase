@@ -6,7 +6,7 @@ import { dirname, resolve } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   plugins: [
     react({
       babel: {
@@ -16,7 +16,7 @@ export default defineConfig({
   ],
 
   esbuild: {
-    drop: ['console', 'debugger'],
+    drop: command === 'build' ? ['console', 'debugger'] : ['debugger'],
     legalComments: 'none',
   },
 
@@ -127,4 +127,4 @@ export default defineConfig({
     include: ['src/**/*.test.{ts,tsx}'],
     css: false
   },
-});
+}));

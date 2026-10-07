@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { componentContrast, contrastChecks, textContrast, validateTheme } from '@styles/validateTheme.ts'
+import { componentContrast, contrastChecks, formatContrastIssues, textContrast, validateTheme } from '@styles/validateTheme.ts'
 import { createTheme } from '@styles/createTheme.ts'
 import { darkTheme, lightTheme, themes } from '@styles/themes/index.ts'
 
@@ -20,6 +20,34 @@ describe('contrastChecks', () => {
     expect(new Set(labels).size).toBe(labels.length)
     expect(checks.find((check) => check.label === 'onPrimary on primary')).toMatchObject({ foreground: lightTheme.colors.onPrimary, background: lightTheme.colors.primary })
     expect(contrastChecks(darkTheme.colors).find((check) => check.label === 'onPrimary on primary')).toMatchObject({ foreground: darkTheme.colors.onPrimary })
+  })
+})
+
+describe('formatContrastIssues', () => {
+  it('says nothing when there is nothing to report', () => {
+    expect(formatContrastIssues([])).toBeNull()
+  })
+
+  it('lists each failing pair with the mode, the measured ratio and the minimum', () => {
+    const message = formatContrastIssues(validateTheme(createTheme({ light: { colors: { onPrimary: '#EEEEEE', primary: '#DDDDDD' } } })))
+
+    expect(message).toContain('below the minimum contrast')
+    expect(message).toMatch(/ {2}light · onPrimary on primary: 1\.\d\d:1 \(needs 4\.5:1\)/)
+    expect(message).not.toContain('not checked')
+  })
+
+  it('counts the pairs it could not check and says how to get them checked', () => {
+    const message = formatContrastIssues(validateTheme(createTheme({ light: { colors: { primary: 'hsl(244 76% 59%)' } } })))
+
+    expect(message).toContain('could not be checked')
+    expect(message).toMatch(/ {2}\d+ pair\(s\) not checked: use hex or rgb/)
+  })
+
+  it('reports failing and unchecked pairs together', () => {
+    const message = formatContrastIssues(validateTheme(createTheme({ light: { colors: { primary: 'hsl(244 76% 59%)', text: { primary: '#EEEEEE' } } } })))
+
+    expect(message).toContain('below the minimum contrast')
+    expect(message).toContain('not checked')
   })
 })
 

@@ -281,6 +281,63 @@ describe('ColorModeProvider with a custom theme', () => {
   })
 })
 
+describe('ColorModeProvider contrast warning', () => {
+  const warnSpy = () => vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+
+  it('warns about the pairs of a custom theme that are below the minimum contrast', () => {
+    mockScheme('light')
+    const warn = warnSpy()
+    renderProbe({ theme: { light: { colors: { onPrimary: '#EEEEEE', primary: '#DDDDDD' } } } })
+
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn.mock.calls[0][0]).toContain('light · onPrimary on primary')
+
+    warn.mockRestore()
+  })
+
+  it('stays quiet for a custom theme that is fine, for the default theme and for a theme without contrast problems', () => {
+    mockScheme('light')
+    const warn = warnSpy()
+    renderProbe()
+    renderProbe({ theme: { fonts: { primary: 'Arial' } } })
+    renderProbe({ theme: { light: { colors: { primary: '#3F37C9' } } } })
+
+    expect(warn).not.toHaveBeenCalled()
+
+    warn.mockRestore()
+  })
+
+  it('warns only once for the same problem when the parent renders again with an equal theme', () => {
+    mockScheme('light')
+    const warn = warnSpy()
+    const bad = () => ({ light: { colors: { onPrimary: '#EEEEEE', primary: '#DDDDDD' } } })
+    const view = renderProbe({ theme: bad() })
+
+    view.rerender(
+      <ColorModeProvider storage={createMemoryStorage()} theme={bad()}>
+        <Probe />
+      </ColorModeProvider>
+    )
+
+    expect(warn).toHaveBeenCalledTimes(1)
+
+    warn.mockRestore()
+  })
+
+  it('does not warn again when only the mode changes', async () => {
+    mockScheme('light')
+    const user = userEvent.setup()
+    const warn = warnSpy()
+    renderProbe({ theme: { light: { colors: { onPrimary: '#EEEEEE', primary: '#DDDDDD' } } } })
+
+    await user.click(screen.getByRole('button', { name: 'dark' }))
+
+    expect(warn).toHaveBeenCalledTimes(1)
+
+    warn.mockRestore()
+  })
+})
+
 describe('useColorMode', () => {
   it('throws a clear error outside the provider', () => {
     const error = vi.spyOn(console, 'error').mockImplementation(() => undefined)

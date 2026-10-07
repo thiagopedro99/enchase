@@ -1,10 +1,11 @@
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { ThemeProvider } from 'styled-components'
 
 import { defaultColorMode, defaultStorageKey, getDefaultStorage, readStoredMode, systemDarkQuery, writeStoredMode } from './defaultData.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { createTheme } from '@styles/createTheme.ts'
 import { defaultThemeCss, ThemeVariables, themeCss, variableTheme } from '@styles/themeVariables.ts'
+import { formatContrastIssues, validateTheme } from '@styles/validateTheme.ts'
 import { ColorModeContext } from './context.ts'
 
 import type { ColorMode, ColorModeProviderProps, ResolvedColorMode } from './types.ts'
@@ -35,7 +36,19 @@ export const ColorModeProvider = ({ children, theme, mode: controlledMode, defau
     document.documentElement.style.colorScheme = resolvedMode
   }, [resolvedMode])
 
-  const css = useMemo(() => (theme === undefined ? defaultThemeCss : themeCss(createTheme(theme))), [theme])
+  const themeSet = useMemo(() => (theme === undefined ? undefined : createTheme(theme)), [theme])
+  const lastWarning = useRef<string | null>(null)
+  const css = useMemo(() => (themeSet === undefined ? defaultThemeCss : themeCss(themeSet)), [themeSet])
+
+  useEffect(() => {
+    if (themeSet === undefined || !import.meta.env.DEV) return
+
+    const message = formatContrastIssues(validateTheme(themeSet))
+
+    if (message && message !== lastWarning.current) console.warn(message)
+
+    lastWarning.current = message
+  }, [themeSet])
 
   const value = useMemo(() => ({ mode, resolvedMode, setMode, toggleMode }), [mode, resolvedMode, setMode, toggleMode])
 
