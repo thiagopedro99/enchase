@@ -1,16 +1,32 @@
 type Rgba = { r: number; g: number; b: number; a: number }
 
-const parseColor = (value: string): Rgba => {
-  const hex = value.replace('#', '')
-  if (/^[0-9a-f]{6,8}$/i.test(hex)) {
-    const alpha = hex.length === 8 ? parseInt(hex.slice(6, 8), 16) / 255 : 1
+const hexColor = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i
 
-    return { r: parseInt(hex.slice(0, 2), 16), g: parseInt(hex.slice(2, 4), 16), b: parseInt(hex.slice(4, 6), 16), a: alpha }
+const rgbColor = /^rgba?\(\s*(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)(?:\s*[\s,/]\s*(\d+(?:\.\d+)?%?))?\s*\)$/i
+
+const parseAlpha = (value: string | undefined) => {
+  if (value === undefined) return 1
+
+  return value.endsWith('%') ? Number(value.slice(0, -1)) / 100 : Number(value)
+}
+
+const parseColor = (value: string): Rgba | null => {
+  const hex = hexColor.exec(value)?.[1]
+
+  if (hex) {
+    const full = hex.length <= 4 ? [...hex].map((digit) => digit + digit).join('') : hex
+    const alpha = full.length === 8 ? parseInt(full.slice(6, 8), 16) / 255 : 1
+
+    return { r: parseInt(full.slice(0, 2), 16), g: parseInt(full.slice(2, 4), 16), b: parseInt(full.slice(4, 6), 16), a: alpha }
   }
 
-  const [r, g, b, a = '1'] = value.match(/[\d.]+/g) ?? []
+  const rgb = rgbColor.exec(value)
 
-  return { r: Number(r), g: Number(g), b: Number(b), a: Number(a) }
+  if (!rgb) return null
+
+  const color = { r: Number(rgb[1]), g: Number(rgb[2]), b: Number(rgb[3]), a: parseAlpha(rgb[4]) }
+
+  return color.r <= 255 && color.g <= 255 && color.b <= 255 && color.a <= 1 ? color : null
 }
 
 const blend = (foreground: Rgba, background: Rgba): Rgba => ({
@@ -30,10 +46,16 @@ const luminance = ({ r, g, b }: Rgba) => {
   return 0.2126 * red + 0.7152 * green + 0.0722 * blue
 }
 
+export const canMeasureContrast = (value: string) => parseColor(value) !== null
+
 export const contrastRatio = (foreground: string, background: string) => {
-  const base = parseColor(background)
-  const text = blend(parseColor(foreground), base)
-  const [lighter, darker] = [luminance(text), luminance(base)].sort((a, b) => b - a)
+  const parsedBase = parseColor(background)
+  const parsedText = parseColor(foreground)
+
+  if (!parsedBase || !parsedText) return Number.NaN
+
+  const text = blend(parsedText, parsedBase)
+  const [lighter, darker] = [luminance(text), luminance(parsedBase)].sort((a, b) => b - a)
 
   return (lighter + 0.05) / (darker + 0.05)
 }

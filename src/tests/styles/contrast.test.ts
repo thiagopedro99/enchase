@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
+import { canMeasureContrast, contrastRatio } from '@styles/contrast.ts'
+import { contrastChecks } from '@styles/validateTheme.ts'
 import { darkTheme, lightTheme } from '@styles/themes/index.ts'
-import { contrastRatio } from '@styles/contrast.ts'
 
 const themes = { light: lightTheme, dark: darkTheme }
 const text = 4.5
-const component = 3
 
 const codeTokenColors = ['#d4d4d4', '#6a9955', '#ce9178', '#c586c0', '#4ec9b0', '#dcdcaa', '#b5cea8', '#569cd6', '#9cdcfe']
 
@@ -19,64 +19,36 @@ describe('contrastRatio', () => {
   it('blends translucent foregrounds over the background', () => {
     expect(contrastRatio('rgba(0, 0, 0, 0.6)', '#ffffff')).toBeCloseTo(contrastRatio('#666666', '#ffffff'), 1)
   })
+
+  it('reads short hex and space separated rgb the same as the long forms', () => {
+    expect(contrastRatio('#000', '#fff')).toBeCloseTo(21, 1)
+    expect(contrastRatio('rgb(0 0 0)', 'rgb(255 255 255)')).toBeCloseTo(21, 1)
+    expect(contrastRatio('rgb(0 0 0 / 60%)', '#ffffff')).toBeCloseTo(contrastRatio('rgba(0, 0, 0, 0.6)', '#ffffff'), 5)
+    expect(contrastRatio('#0008', '#fff')).toBeCloseTo(contrastRatio('#00000088', '#ffffff'), 5)
+  })
+
+  it('does not guess formats it cannot read', () => {
+    expect(contrastRatio('hsl(0 0% 0%)', '#ffffff')).toBeNaN()
+    expect(contrastRatio('#000000', 'oklch(1 0 0)')).toBeNaN()
+    expect(contrastRatio('transparent', '#ffffff')).toBeNaN()
+  })
+})
+
+describe('canMeasureContrast', () => {
+  it.each(['#fff', '#FFFF', '#4F46E5', '#4F46E5CC', 'rgb(1, 2, 3)', 'rgba(1, 2, 3, 0.5)', 'rgb(1 2 3 / 50%)'])('measures %s', (value) => {
+    expect(canMeasureContrast(value)).toBe(true)
+  })
+
+  it.each(['hsl(244 76% 59%)', 'oklch(0.5 0.1 250)', 'transparent', 'rgb(10% 20% 30%)', 'rgb(300, 0, 0)', 'rgba(1, 2, 3, 2)', '', 'red'])('does not measure %s', (value) => {
+    expect(canMeasureContrast(value)).toBe(false)
+  })
 })
 
 describe.each(Object.entries(themes))('%s theme palette', (_, theme) => {
   const { colors } = theme
-  const surfaces = [
-    ['surface', colors.surface],
-    ['background', colors.background],
-    ['surfaceContainerLow', colors.surfaceContainerLow],
-    ['surfaceContainer', colors.surfaceContainer],
-    ['surfaceContainerHigh', colors.surfaceContainerHigh]
-  ] as const
 
-  const onSurface = surfaces.flatMap(([surfaceName, surface]) => [
-    [`primary text on ${surfaceName}`, colors.text.primary, surface],
-    [`secondary text on ${surfaceName}`, colors.text.secondary, surface],
-    [`link on ${surfaceName}`, colors.primary, surface],
-    [`link hover on ${surfaceName}`, colors.primaryHover, surface],
-    [`error text on ${surfaceName}`, colors.error, surface],
-    [`success text on ${surfaceName}`, colors.success, surface],
-    [`warning text on ${surfaceName}`, colors.warning, surface],
-    [`info text on ${surfaceName}`, colors.info, surface]
-  ])
-
-  it.each([
-    ...onSurface,
-    ['placeholder on surface', colors.text.placeholder, colors.surface],
-    ['placeholder on surfaceContainerLow', colors.text.placeholder, colors.surfaceContainerLow],
-    ['placeholder on surfaceContainer', colors.text.placeholder, colors.surfaceContainer],
-    ['placeholder on surfaceContainerHigh', colors.text.placeholder, colors.surfaceContainerHigh],
-    ['onPrimary on primary', colors.onPrimary, colors.primary],
-    ['inverse text on primary', colors.text.inverse, colors.primary],
-    ['onPrimaryContainer on primaryContainer', colors.onPrimaryContainer, colors.primaryContainer],
-    ['link on primaryContainer', colors.primary, colors.primaryContainer],
-    ['link hover on primaryContainer', colors.primaryHover, colors.primaryContainer],
-    ['onSecondary on secondary', colors.onSecondary, colors.secondary],
-    ['onSecondaryContainer on secondaryContainer', colors.onSecondaryContainer, colors.secondaryContainer],
-    ['onError on error', colors.onError, colors.error],
-    ['onErrorContainer on errorContainer', colors.onErrorContainer, colors.errorContainer],
-    ['onSuccess on success', colors.onSuccess, colors.success],
-    ['onSuccessContainer on successContainer', colors.onSuccessContainer, colors.successContainer],
-    ['onWarning on warning', colors.onWarning, colors.warning],
-    ['onWarningContainer on warningContainer', colors.onWarningContainer, colors.warningContainer],
-    ['onInfo on info', colors.onInfo, colors.info],
-    ['onInfoContainer on infoContainer', colors.onInfoContainer, colors.infoContainer],
-    ['inverseOnSurface on inverseSurface', colors.inverseOnSurface, colors.inverseSurface],
-    ['inversePrimary action on inverseSurface', colors.inversePrimary, colors.inverseSurface]
-  ])('%s is at least 4.5:1 (WCAG 1.4.3)', (_label, foreground, background) => {
-    expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(text)
-  })
-
-  it.each(
-    surfaces.flatMap(([surfaceName, surface]) => [
-      [`form control border on ${surfaceName}`, colors.borderStrong, surface],
-      [`primary (focus ring, outline) on ${surfaceName}`, colors.primary, surface],
-      [`error (invalid border) on ${surfaceName}`, colors.error, surface]
-    ])
-  )('%s is at least 3:1 (WCAG 1.4.11)', (_label, foreground, background) => {
-    expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(component)
+  it.each(contrastChecks(colors))('$label is at least $minimum:1', ({ foreground, background, minimum }) => {
+    expect(contrastRatio(foreground, background)).toBeGreaterThanOrEqual(minimum)
   })
 
   it.each(codeTokenColors)('code token %s on the code background is at least 4.5:1', (color) => {
