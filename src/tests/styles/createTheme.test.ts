@@ -79,6 +79,104 @@ describe('createTheme', () => {
   })
 })
 
+describe('createTheme fonts', () => {
+  it('applies the same fonts to both modes and leaves the rest alone', () => {
+    const { light, dark } = createTheme({ fonts: { primary: "'Inter', sans-serif", mono: 'Menlo, monospace' } })
+
+    expect(light.fonts.primary).toBe("'Inter', sans-serif")
+    expect(dark.fonts.primary).toBe("'Inter', sans-serif")
+    expect(light.fonts.mono).toBe('Menlo, monospace')
+    expect(light.fonts.sizes).toEqual(lightTheme.fonts.sizes)
+    expect(light.fonts.weights).toEqual(lightTheme.fonts.weights)
+    expect(light.colors).toEqual(lightTheme.colors)
+    expect(dark.colors).toEqual(darkTheme.colors)
+  })
+
+  it('overrides single sizes and weights without touching their siblings', () => {
+    const { light, dark } = createTheme({ fonts: { sizes: { base: '1.0625rem' }, weights: { bold: 800 } } })
+
+    expect(light.fonts.sizes.base).toBe('1.0625rem')
+    expect(light.fonts.sizes.sm).toBe(lightTheme.fonts.sizes.sm)
+    expect(dark.fonts.weights.bold).toBe(800)
+    expect(dark.fonts.weights.regular).toBe(darkTheme.fonts.weights.regular)
+  })
+
+  it('combines fonts with color overrides', () => {
+    const { light, dark } = createTheme({ fonts: { primary: 'Arial' }, light: { colors: { primary: '#0B6BCB' } } })
+
+    expect(light.colors.primary).toBe('#0B6BCB')
+    expect(light.fonts.primary).toBe('Arial')
+    expect(dark.fonts.primary).toBe('Arial')
+    expect(dark.colors).toEqual(darkTheme.colors)
+  })
+
+  it('ignores a font token that is explicitly undefined', () => {
+    const { light } = createTheme({ fonts: { primary: undefined, sizes: { base: undefined, sm: '0.8rem' } } })
+
+    expect(light.fonts.primary).toBe(lightTheme.fonts.primary)
+    expect(light.fonts.sizes.base).toBe(lightTheme.fonts.sizes.base)
+    expect(light.fonts.sizes.sm).toBe('0.8rem')
+  })
+
+  it('does not change the built-in themes', () => {
+    const before = JSON.stringify([lightTheme, darkTheme])
+
+    createTheme({ fonts: { primary: 'Arial', sizes: { base: '2rem' }, weights: { bold: 900 } } })
+
+    expect(JSON.stringify([lightTheme, darkTheme])).toBe(before)
+  })
+
+  it('keeps the same css variables when fonts change', () => {
+    const { light } = createTheme({ fonts: { primary: 'Arial', sizes: { base: '2rem' } } })
+
+    expect(Object.keys(themeVariables(light)).sort()).toEqual(Object.keys(themeVariables(lightTheme)).sort())
+  })
+
+  it('rejects a font token that does not exist, naming where it is', () => {
+    const bad = (input: unknown) => () => createTheme(input as ThemeInput)
+
+    expect(bad({ fonts: { display: 'Arial' } })).toThrow('Unknown font token "fonts.display"')
+    expect(bad({ fonts: { sizes: { huge: '9rem' } } })).toThrow('Unknown font token "fonts.sizes.huge"')
+    expect(bad({ fonts: { weights: { heavy: 900 } } })).toThrow('Unknown font token "fonts.weights.heavy"')
+  })
+
+  it('rejects invalid values, naming the token and showing the value', () => {
+    const bad = (input: unknown) => () => createTheme(input as ThemeInput)
+
+    expect(bad({ fonts: { primary: 'Arial; display: none' } })).toThrow('Invalid font family for "fonts.primary": "Arial; display: none"')
+    expect(bad({ fonts: { mono: 12 } })).toThrow('Invalid font family for "fonts.mono"')
+    expect(bad({ fonts: { sizes: { base: 'calc(1rem + 1px)' } } })).toThrow('Invalid font size for "fonts.sizes.base"')
+    expect(bad({ fonts: { sizes: { base: 16 } } })).toThrow('Invalid font size for "fonts.sizes.base"')
+    expect(bad({ fonts: { weights: { bold: '700' } } })).toThrow('Invalid font weight for "fonts.weights.bold"')
+    expect(bad({ fonts: { weights: { bold: 1500 } } })).toThrow('Invalid font weight for "fonts.weights.bold"')
+  })
+
+  it('rejects a group given as a single value, and fonts that are not an object', () => {
+    const bad = (input: unknown) => () => createTheme(input as ThemeInput)
+
+    expect(bad({ fonts: { sizes: '1rem' } })).toThrow('Expected an object for "fonts.sizes"')
+    expect(bad({ fonts: { weights: 400 } })).toThrow('Expected an object for "fonts.weights"')
+    expect(bad({ fonts: 'Arial' })).toThrow('Expected an object for "fonts"')
+    expect(bad({ fonts: null })).toThrow('Expected an object for "fonts"')
+  })
+
+  it('does not let a crafted key pollute objects, and refuses it as an unknown token', () => {
+    const bad = (input: unknown) => () => createTheme(input as ThemeInput)
+    const input = JSON.parse('{"fonts":{"sizes":{"__proto__":{"base":"9rem"}}}}')
+
+    expect(bad(input)).toThrow('Unknown font token "fonts.sizes.__proto__"')
+    expect(bad(JSON.parse('{"fonts":{"__proto__":{"primary":"Arial"}}}'))).toThrow('Unknown font token "fonts.__proto__"')
+    expect(({} as Record<string, unknown>).base).toBeUndefined()
+  })
+
+  it('leaves the themes untouched when one of several font tokens is wrong', () => {
+    const before = JSON.stringify([lightTheme, darkTheme])
+
+    expect(() => createTheme({ fonts: { primary: 'Arial', sizes: { base: 'nope' } } })).toThrow()
+    expect(JSON.stringify([lightTheme, darkTheme])).toBe(before)
+  })
+})
+
 describe('createTheme with wrong input', () => {
   const bad = (input: unknown) => () => createTheme(input as ThemeInput)
 
