@@ -3,6 +3,7 @@ import { useTheme } from 'styled-components'
 import { Divider, Group, GroupTitle, RadiusSample, ShadowSample, Tile, Tiles, TokenLabel } from './styles.ts'
 import { radiusTokens, shadowTokens } from './defaultData.ts'
 import SectionBlock from '../SectionBlock/index.tsx'
+import { lightTheme } from '@styles/themes/index.ts'
 
 export const ShapeDemo = () => {
   const theme = useTheme()
@@ -16,7 +17,7 @@ export const ShapeDemo = () => {
             <Tile key={token}>
               <RadiusSample $radius={theme.borderRadius[token]} />
               <TokenLabel>
-                {token} · {theme.borderRadius[token]}
+                {token} · {lightTheme.borderRadius[token]}
               </TokenLabel>
             </Tile>
           ))}

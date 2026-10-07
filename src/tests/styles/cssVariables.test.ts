@@ -11,9 +11,12 @@ import {
   fontVariables,
   fontVariablesRule,
   fontWeightVariableName,
+  layoutVariables,
+  layoutVariablesRule,
   shadowReferences,
   shadowVariableName,
   shadowVariables,
+  spacingVariableName,
   themeReferences,
   themeVariables
 } from '@styles/cssVariables.ts'
@@ -128,6 +131,37 @@ describe('fontReferences', () => {
   })
 })
 
+describe('layoutVariables', () => {
+  const variables = layoutVariables(lightTheme)
+
+  it('creates one variable for every spacing, radius and transition', () => {
+    const expected = Object.keys(lightTheme.spacing).length + Object.keys(lightTheme.borderRadius).length + Object.keys(lightTheme.transitions).length
+
+    expect(Object.keys(variables)).toHaveLength(expected)
+  })
+
+  it('names and keeps the values', () => {
+    expect(spacingVariableName('2xl')).toBe('--enchase-space-2xl')
+    expect(variables['--enchase-space-md']).toBe(lightTheme.spacing.md)
+    expect(variables['--enchase-radius-full']).toBe(lightTheme.borderRadius.full)
+    expect(variables['--enchase-transition-fast']).toBe(lightTheme.transitions.fast)
+  })
+
+  it('does not reuse a name of any other variable', () => {
+    const others = new Set([...Object.keys(themeVariables(lightTheme)), ...Object.keys(fontVariables(lightTheme.fonts))])
+
+    for (const name of Object.keys(variables)) expect(others.has(name)).toBe(false)
+  })
+
+  it('writes one declaration per variable, for the given selector', () => {
+    const rule = layoutVariablesRule(':root', lightTheme)
+
+    expect(rule.startsWith(':root {\n')).toBe(true)
+    expect(rule).toContain(`  --enchase-radius-md: ${lightTheme.borderRadius.md};`)
+    expect(rule.split('\n').filter((line) => line.startsWith('  --'))).toHaveLength(Object.keys(variables).length)
+  })
+})
+
 describe('what is allowed to change between the light and the dark theme', () => {
   it('differs only in colors and shadows, which are the parts turned into variables', () => {
     const rest = (theme: Record<string, unknown>) => Object.fromEntries(Object.entries(theme).filter(([key]) => key !== 'colors' && key !== 'shadows'))
@@ -184,9 +218,27 @@ describe('themeReferences', () => {
     for (const name of names) expect(fontNames.has(name)).toBe(true)
   })
 
+  it('points spacing, radius and transitions to variables, keeping the shape', () => {
+    expect(light.spacing.md).toBe('var(--enchase-space-md)')
+    expect(light.borderRadius.full).toBe('var(--enchase-radius-full)')
+    expect(light.transitions.fast).toBe('var(--enchase-transition-fast)')
+    expect(Object.keys(light.spacing)).toEqual(Object.keys(lightTheme.spacing))
+    expect(Object.keys(light.borderRadius)).toEqual(Object.keys(lightTheme.borderRadius))
+    expect(Object.keys(light.transitions)).toEqual(Object.keys(lightTheme.transitions))
+  })
+
+  it('references only layout variables that exist', () => {
+    const layoutNames = new Set(Object.keys(layoutVariables(lightTheme)))
+    const names = variableNamesIn(JSON.stringify([light.spacing, light.borderRadius, light.transitions]))
+
+    expect(names).toHaveLength(layoutNames.size)
+
+    for (const name of names) expect(layoutNames.has(name)).toBe(true)
+  })
+
   it('keeps everything that is not a variable', () => {
     expect(light.breakpoints).toEqual(lightTheme.breakpoints)
-    expect(light.spacing).toEqual(lightTheme.spacing)
+    expect(light.zIndex).toEqual(lightTheme.zIndex)
   })
 })
 

@@ -81,6 +81,19 @@ describe('themeCss', () => {
   })
 })
 
+describe('ThemeVariables layout', () => {
+  const css = renderCss()
+
+  it('writes spacing, radius and transitions once, not per mode', () => {
+    const spacing = '--enchase-space-md:' + lightTheme.spacing.md
+
+    expect(css).toContain(spacing)
+    expect(css.split(spacing)).toHaveLength(2)
+    expect(css).toContain('--enchase-radius-full:' + lightTheme.borderRadius.full)
+    expect(css).toContain('--enchase-transition-fast:' + lightTheme.transitions.fast.replace(/\s+/g, ''))
+  })
+})
+
 describe('variableTheme', () => {
   it('is the theme with every color and shadow turned into a variable reference', () => {
     expect(variableTheme).toEqual(themeReferences(lightTheme))
