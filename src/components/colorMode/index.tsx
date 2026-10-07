@@ -41,7 +41,7 @@ export const ColorModeProvider = ({ children, theme, mode: controlledMode, defau
   const css = useMemo(() => (themeSet === undefined ? defaultThemeCss : themeCss(themeSet)), [themeSet])
 
   useEffect(() => {
-    if (themeSet === undefined || !import.meta.env.DEV) return
+    if (themeSet === undefined || process.env.NODE_ENV === 'production') return
 
     const message = formatContrastIssues(validateTheme(themeSet))
 

@@ -77,7 +77,7 @@ npm install
 cp .env.example .env
 ```
 
-A única variável usada é `VITE_API_BASE_URL`, o endereço base da sua API. Sem o arquivo `.env`, o projeto usa `https://api.example.com`.
+A única variável usada é `VITE_API_BASE_URL`, o endereço base da sua API. Sem o arquivo `.env`, as chamadas usam o endereço relativo à página atual, e nenhuma URL de API fica embutida no código.
 
 ### 4. Inicie o servidor de desenvolvimento
 
