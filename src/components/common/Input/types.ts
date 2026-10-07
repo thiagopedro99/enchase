@@ -1,0 +1,15 @@
+import type { InputHTMLAttributes } from 'react'
+
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string
+  error?: string
+  helperText?: string
+  $fullWidth?: boolean
+  passwordToggle?: boolean
+}
+
+export interface InputStyleProps {
+  $hasLabel?: boolean
+  $hasError?: boolean
+  $hasToggle?: boolean
+}

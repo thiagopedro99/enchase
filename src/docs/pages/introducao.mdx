@@ -1,0 +1,37 @@
+import { Meta, Story } from '@storybook/addon-docs/blocks'
+import * as FaixaStories from '../stories/introducao/index.stories.tsx'
+
+<Meta title="Introdução" />
+
+# Enchase
+
+Componentes React acessíveis e configuráveis, prontos para usar. Seguem a norma WCAG 2.2 AA, têm movimento padronizado e o visual do Material Design 3, nos temas claro e escuro.
+
+## Experimente aqui mesmo
+
+Estes são os componentes reais, com o tema e as configurações do projeto. Use o teclado, mude para o tema escuro na barra superior e veja o que acontece.
+
+<Story of={FaixaStories.Faixa} />
+
+## Dois jeitos de usar
+
+**Como template.** Clone o repositório e comece com a estrutura, as convenções e os testes já prontos.
+
+**Como biblioteca.** Instale o pacote e importe só o que precisar. Esse caminho ainda não está disponível: a extração da biblioteca vem depois do template.
+
+## Comece em um minuto
+
+```bash
+git clone https://github.com/thiagopedro99/enchase.git
+cd enchase
+npm install
+npm run dev
+```
+
+Para ver esta documentação localmente, rode `npm run storybook` em outro terminal.
+
+## O que você encontra aqui
+
+Os componentes aparecem no menu lateral, em **Componentes**. Cada um tem a tabela de props com os valores padrão, controles para mexer nas propriedades ao vivo, o código pronto para copiar e a checagem de acessibilidade na aba **Accessibility**.
+
+Use as chaves **Tema** e **Motion** na barra superior para ver os componentes no tema escuro e sem movimento.
