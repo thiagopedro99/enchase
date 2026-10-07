@@ -1,6 +1,22 @@
 import { describe, expect, it } from 'vitest'
 
-import { colorReferences, colorVariableName, colorVariables, cssVariablesRule, shadowReferences, shadowVariableName, shadowVariables, themeReferences, themeVariables } from '@styles/cssVariables.ts'
+import {
+  colorReferences,
+  colorVariableName,
+  colorVariables,
+  cssVariablesRule,
+  fontFamilyVariableName,
+  fontReferences,
+  fontSizeVariableName,
+  fontVariables,
+  fontVariablesRule,
+  fontWeightVariableName,
+  shadowReferences,
+  shadowVariableName,
+  shadowVariables,
+  themeReferences,
+  themeVariables
+} from '@styles/cssVariables.ts'
 import { darkTheme, lightTheme } from '@styles/themes/index.ts'
 
 const leafPaths = (tree: Record<string, unknown>, path: string[] = []): string[] =>
@@ -66,6 +82,52 @@ describe('shadowVariables', () => {
   })
 })
 
+describe('font variable names', () => {
+  it('names families, sizes and weights without clashing', () => {
+    expect(fontFamilyVariableName('primary')).toBe('--enchase-font-primary')
+    expect(fontFamilyVariableName('mono')).toBe('--enchase-font-mono')
+    expect(fontSizeVariableName('base')).toBe('--enchase-font-size-base')
+    expect(fontSizeVariableName('2xl')).toBe('--enchase-font-size-2xl')
+    expect(fontWeightVariableName('semibold')).toBe('--enchase-font-weight-semibold')
+  })
+})
+
+describe('fontVariables', () => {
+  const variables = fontVariables(lightTheme.fonts)
+
+  it('creates one variable for every family, size and weight', () => {
+    const expected = 2 + Object.keys(lightTheme.fonts.sizes).length + Object.keys(lightTheme.fonts.weights).length
+
+    expect(Object.keys(variables)).toHaveLength(expected)
+  })
+
+  it('keeps the values, writing weights as text', () => {
+    expect(variables['--enchase-font-primary']).toBe(lightTheme.fonts.primary)
+    expect(variables['--enchase-font-mono']).toBe(lightTheme.fonts.mono)
+    expect(variables['--enchase-font-size-base']).toBe(lightTheme.fonts.sizes.base)
+    expect(variables['--enchase-font-weight-bold']).toBe('700')
+  })
+
+  it('does not reuse a name of the color or shadow variables', () => {
+    const colorAndShadowNames = new Set(Object.keys(themeVariables(lightTheme)))
+
+    for (const name of Object.keys(variables)) expect(colorAndShadowNames.has(name)).toBe(false)
+  })
+})
+
+describe('fontReferences', () => {
+  const references = fontReferences(lightTheme.fonts)
+
+  it('points every font token to its own variable, keeping the shape', () => {
+    expect(references.primary).toBe('var(--enchase-font-primary)')
+    expect(references.mono).toBe('var(--enchase-font-mono)')
+    expect(references.sizes.base).toBe('var(--enchase-font-size-base)')
+    expect(Object.keys(references.sizes)).toEqual(Object.keys(lightTheme.fonts.sizes))
+    expect(references.weights.semibold).toBe('var(--enchase-font-weight-semibold)')
+    expect(Object.keys(references.weights)).toEqual(Object.keys(lightTheme.fonts.weights))
+  })
+})
+
 describe('what is allowed to change between the light and the dark theme', () => {
   it('differs only in colors and shadows, which are the parts turned into variables', () => {
     const rest = (theme: Record<string, unknown>) => Object.fromEntries(Object.entries(theme).filter(([key]) => key !== 'colors' && key !== 'shadows'))
@@ -113,10 +175,29 @@ describe('themeReferences', () => {
     expect(themeReferences(darkTheme)).toEqual(light)
   })
 
+  it('points the fonts to variables that exist', () => {
+    const fontNames = new Set(Object.keys(fontVariables(lightTheme.fonts)))
+    const names = variableNamesIn(JSON.stringify(light.fonts))
+
+    expect(names).toHaveLength(fontNames.size)
+
+    for (const name of names) expect(fontNames.has(name)).toBe(true)
+  })
+
   it('keeps everything that is not a variable', () => {
-    expect(light.fonts).toEqual(lightTheme.fonts)
     expect(light.breakpoints).toEqual(lightTheme.breakpoints)
     expect(light.spacing).toEqual(lightTheme.spacing)
+  })
+})
+
+describe('fontVariablesRule', () => {
+  it('writes one declaration per font variable, for the given selector', () => {
+    const rule = fontVariablesRule(':root', lightTheme.fonts)
+
+    expect(rule.startsWith(':root {\n')).toBe(true)
+    expect(rule).toContain(`  --enchase-font-primary: ${lightTheme.fonts.primary};`)
+    expect(rule).toContain('  --enchase-font-weight-bold: 700;')
+    expect(rule.split('\n').filter((line) => line.startsWith('  --'))).toHaveLength(Object.keys(fontVariables(lightTheme.fonts)).length)
   })
 })
 

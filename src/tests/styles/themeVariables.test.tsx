@@ -45,10 +45,29 @@ describe('ThemeVariables', () => {
   })
 })
 
+describe('ThemeVariables fonts', () => {
+  const css = renderCss()
+
+  it('writes the fonts once, under the root selector, not per mode', () => {
+    const family = '--enchase-font-primary:' + lightTheme.fonts.primary.replace(/\s+/g, '')
+
+    expect(css).toContain(family)
+    expect(css.split(family)).toHaveLength(2)
+    expect(css.indexOf(family)).toBeLessThan(css.indexOf('--enchase-color-primary:'))
+  })
+
+  it('writes the sizes and weights', () => {
+    expect(css).toContain('--enchase-font-size-base:' + lightTheme.fonts.sizes.base)
+    expect(css).toContain('--enchase-font-weight-bold:' + lightTheme.fonts.weights.bold)
+  })
+})
+
 describe('variableTheme', () => {
   it('is the theme with every color and shadow turned into a variable reference', () => {
     expect(variableTheme).toEqual(themeReferences(lightTheme))
     expect(variableTheme.colors.primary).toBe('var(--enchase-color-primary)')
     expect(variableTheme.shadows.md).toBe('var(--enchase-shadow-md)')
+    expect(variableTheme.fonts.primary).toBe('var(--enchase-font-primary)')
+    expect(variableTheme.fonts.sizes.base).toBe('var(--enchase-font-size-base)')
   })
 })
