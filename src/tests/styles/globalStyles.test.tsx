@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import GlobalStyles from '@styles/globalStyles.tsx'
+import { GlobalStyles } from '@styles/globalStyles.tsx'
 
 describe('global styles', () => {
   it('underlines inline links so they do not rely on color alone (WCAG 1.4.1)', () => {

@@ -1,6 +1,6 @@
-type Rgba = { r: number; g: number; b: number; a: number }
+import { hexColor } from './colorFormat.ts'
 
-const hexColor = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i
+type Rgba = { r: number; g: number; b: number; a: number }
 
 const rgbColor = /^rgba?\(\s*(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)[\s,]+(\d+(?:\.\d+)?)(?:\s*[\s,/]\s*(\d+(?:\.\d+)?%?))?\s*\)$/i
 

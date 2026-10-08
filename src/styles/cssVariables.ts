@@ -37,24 +37,14 @@ const zIndexPrefix = '--enchase-z-'
 
 const toKebabCase = (key: string) => key.replace(/([A-Z])/g, '-$1').toLowerCase()
 
-const walk = (tree: ColorTree, path: string[], visit: (path: string[], value: string) => string): ColorTree =>
-  Object.fromEntries(Object.entries(tree).map(([key, value]) => [key, typeof value === 'string' ? visit([...path, key], value) : walk(value, [...path, key], visit)]))
+const flatten = (tree: ColorTree, path: string[] = []): [string[], string][] =>
+  Object.entries(tree).flatMap(([key, value]) => (typeof value === 'string' ? [[[...path, key], value] as [string[], string]] : flatten(value, [...path, key])))
 
 export const colorVariableName = (path: string[]) => `${colorPrefix}${path.map(toKebabCase).join('-')}`
 
 export const shadowVariableName = (key: string) => `${shadowPrefix}${toKebabCase(key)}`
 
-export const colorVariables = (colors: ColorTokens): Record<string, string> => {
-  const entries: [string, string][] = []
-
-  walk(colors, [], (path, value) => {
-    entries.push([colorVariableName(path), value])
-
-    return value
-  })
-
-  return Object.fromEntries(entries)
-}
+export const colorVariables = (colors: ColorTokens): Record<string, string> => Object.fromEntries(flatten(colors).map(([path, value]) => [colorVariableName(path), value]))
 
 export const shadowVariables = (shadows: ShadowTokens): Record<string, string> => Object.fromEntries(Object.entries(shadows).map(([key, value]) => [shadowVariableName(key), value]))
 

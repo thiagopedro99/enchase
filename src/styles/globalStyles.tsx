@@ -117,5 +117,3 @@ export const globalStylesCss = `
 `
 
 export const GlobalStyles = () => <style>{globalStylesCss}</style>
-
-export default GlobalStyles

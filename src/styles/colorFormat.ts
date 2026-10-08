@@ -1,6 +1,6 @@
 const maxColorLength = 100
 
-const hexColor = /^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/
+export const hexColor = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i
 
 const colorFunction = /^(rgb|rgba|hsl|hsla|oklch|oklab)\(([^()]*)\)$/i
 
