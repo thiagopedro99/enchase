@@ -10,17 +10,17 @@ export const FlexDemo = ({ onShowCode }: DemoSectionProps) => (
     <Flex $direction="column" $gap="1rem">
       <LabeledExample label="Horizontal (padrão):">
         <Flex $gap="0.5rem">
-          <Card $padding="1rem">Item 1</Card>
-          <Card $padding="1rem">Item 2</Card>
-          <Card $padding="1rem">Item 3</Card>
+          <Card padding="1rem">Item 1</Card>
+          <Card padding="1rem">Item 2</Card>
+          <Card padding="1rem">Item 3</Card>
         </Flex>
       </LabeledExample>
 
       <LabeledExample label="Vertical:">
         <Flex $direction="column" $gap="0.5rem">
-          <Card $padding="1rem">Item 1</Card>
-          <Card $padding="1rem">Item 2</Card>
-          <Card $padding="1rem">Item 3</Card>
+          <Card padding="1rem">Item 1</Card>
+          <Card padding="1rem">Item 2</Card>
+          <Card padding="1rem">Item 3</Card>
         </Flex>
       </LabeledExample>
     </Flex>

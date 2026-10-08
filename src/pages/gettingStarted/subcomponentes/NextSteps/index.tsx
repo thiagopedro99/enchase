@@ -10,7 +10,7 @@ export const NextSteps = ({ onNavigate }: NextStepsProps) => {
   const theme = useTheme()
 
   return (
-    <Card $variant="outlined">
+    <Card variant="outlined">
       <Centered>
         <Rocket size={48} color={theme.colors.primary} />
         <Title>Pronto para começar?</Title>

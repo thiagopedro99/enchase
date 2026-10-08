@@ -275,28 +275,28 @@ import { useState } from 'react';`
     },
     {
       title: 'Card padrão',
-      code: `<Card $variant="default">
+      code: `<Card variant="default">
   <h3>Card Padrão</h3>
   <p>Sombra média com hover</p>
 </Card>`
     },
     {
       title: 'Card elevado',
-      code: `<Card $variant="elevated">
+      code: `<Card variant="elevated">
   <h3>Card Elevado</h3>
   <p>Sombra maior com animação</p>
 </Card>`
     },
     {
       title: 'Card outlined',
-      code: `<Card $variant="outlined">
+      code: `<Card variant="outlined">
   <h3>Card Outlined</h3>
   <p>Apenas borda</p>
 </Card>`
     },
     {
       title: 'Com padding customizado',
-      code: `<Card $padding="2rem">
+      code: `<Card padding="2rem">
   Conteúdo com padding maior
 </Card>`
     }

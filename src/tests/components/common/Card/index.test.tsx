@@ -8,13 +8,13 @@ describe('Card', () => {
   it('renders every variant and passes through attributes', () => {
     renderWithProviders(
       <>
-        <Card $variant="default" data-testid="default">
+        <Card variant="default" data-testid="default">
           a
         </Card>
-        <Card $variant="elevated" data-testid="elevated">
+        <Card variant="elevated" data-testid="elevated">
           b
         </Card>
-        <Card $variant="outlined" data-testid="outlined">
+        <Card variant="outlined" data-testid="outlined">
           c
         </Card>
       </>

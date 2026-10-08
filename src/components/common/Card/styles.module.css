@@ -1,0 +1,26 @@
+.card {
+  border-radius: var(--enchase-radius-xl);
+  padding: var(--enchase-space-lg);
+  transition:
+    box-shadow var(--enchase-transition-fast),
+    background-color var(--enchase-transition-fast),
+    border-color var(--enchase-transition-fast);
+}
+
+.card[data-variant='default'] {
+  background-color: var(--enchase-color-surface-container);
+}
+
+.card[data-variant='elevated'] {
+  background-color: var(--enchase-color-surface-container-low);
+  box-shadow: var(--enchase-shadow-sm);
+}
+
+.card[data-variant='elevated']:hover {
+  box-shadow: var(--enchase-shadow-md);
+}
+
+.card[data-variant='outlined'] {
+  background-color: var(--enchase-color-surface);
+  border: 1px solid var(--enchase-color-border);
+}

@@ -10,18 +10,18 @@ export const GridDemo = ({ onShowCode }: DemoSectionProps) => (
     <Flex $direction="column" $gap="1.5rem">
       <LabeledExample label="2 Colunas:">
         <Grid $columns={2} $gap="0.5rem">
-          <Card $padding="1rem">Item 1</Card>
-          <Card $padding="1rem">Item 2</Card>
-          <Card $padding="1rem">Item 3</Card>
-          <Card $padding="1rem">Item 4</Card>
+          <Card padding="1rem">Item 1</Card>
+          <Card padding="1rem">Item 2</Card>
+          <Card padding="1rem">Item 3</Card>
+          <Card padding="1rem">Item 4</Card>
         </Grid>
       </LabeledExample>
 
       <LabeledExample label="3 Colunas:">
         <Grid $columns={3} $gap="0.5rem">
-          <Card $padding="1rem">Item 1</Card>
-          <Card $padding="1rem">Item 2</Card>
-          <Card $padding="1rem">Item 3</Card>
+          <Card padding="1rem">Item 1</Card>
+          <Card padding="1rem">Item 2</Card>
+          <Card padding="1rem">Item 3</Card>
         </Grid>
       </LabeledExample>
     </Flex>
