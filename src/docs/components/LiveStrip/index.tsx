@@ -1,34 +1,34 @@
 import { useState } from 'react'
 
 import { Button, Checkbox, Input, Modal, Select } from '@components/common/index.ts'
-import { Panel, Row } from './styles.ts'
 import { countryOptions } from './defaultData.ts'
+import styles from './styles.module.css'
 
 export const LiveStrip = () => {
   const [modalOpen, setModalOpen] = useState(false)
 
   return (
-    <Panel>
-      <Row>
+    <div className={styles.panel}>
+      <div className={styles.row}>
         <Button variant="primary">Primary</Button>
         <Button variant="secondary">Secondary</Button>
         <Button variant="outline">Outline</Button>
         <Button variant="ghost">Ghost</Button>
         <Button disabled>Disabled</Button>
-      </Row>
+      </div>
 
-      <Row align="flex-start">
+      <div className={styles.row} data-align="flex-start">
         <Input label="Email" helperText="Nunca compartilhamos seu email" />
         <Input label="Senha" type="password" />
         <Select label="País" placeholder="Selecione..." options={countryOptions} defaultValue="" />
         <Checkbox label="Aceito os termos" />
-      </Row>
+      </div>
 
-      <Row>
+      <div className={styles.row}>
         <Button variant="secondary" onClick={() => setModalOpen(true)} aria-haspopup="dialog">
           Abrir modal
         </Button>
-      </Row>
+      </div>
 
       <Modal
         isOpen={modalOpen}
@@ -45,7 +45,7 @@ export const LiveStrip = () => {
       >
         <Input label="Nome" fullWidth />
       </Modal>
-    </Panel>
+    </div>
   )
 }
 

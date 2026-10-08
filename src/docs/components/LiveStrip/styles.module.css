@@ -1,0 +1,19 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-lg);
+  padding: var(--enchase-space-lg);
+  background-color: var(--enchase-color-surface-container-low);
+  border-radius: var(--enchase-radius-lg);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--enchase-space-md);
+}
+
+.row[data-align='flex-start'] {
+  align-items: flex-start;
+}
