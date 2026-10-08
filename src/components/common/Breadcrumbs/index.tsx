@@ -1,17 +1,29 @@
 import { useEffect, useRef, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
-import { CrumbAnchor, CrumbRouterLink, CrumbText, Current, EllipsisButton, Item, List, Nav, Separator } from './styles.ts'
 import { collapseTrail, defaultMaxItems } from './defaultData.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
+import styles from './styles.module.css'
 
 import type { BreadcrumbItem, BreadcrumbsProps } from './types.ts'
 
 const CrumbLink = ({ item }: { item: BreadcrumbItem }) => {
-  if (item.to) return <CrumbRouterLink to={item.to}>{item.label}</CrumbRouterLink>
-  if (item.href) return <CrumbAnchor href={item.href}>{item.label}</CrumbAnchor>
+  if (item.to)
+    return (
+      <Link to={item.to} className={styles.crumb}>
+        {item.label}
+      </Link>
+    )
 
-  return <CrumbText>{item.label}</CrumbText>
+  if (item.href)
+    return (
+      <a href={item.href} className={styles.crumb}>
+        {item.label}
+      </a>
+    )
+
+  return <span className={styles.crumbText}>{item.label}</span>
 }
 
 export const Breadcrumbs = ({ items, maxItems = defaultMaxItems, ariaLabel }: BreadcrumbsProps) => {
@@ -27,33 +39,35 @@ export const Breadcrumbs = ({ items, maxItems = defaultMaxItems, ariaLabel }: Br
   if (items.length === 0) return null
 
   return (
-    <Nav aria-label={ariaLabel ?? labels.breadcrumb}>
-      <List ref={listRef}>
+    <nav className={styles.nav} aria-label={ariaLabel ?? labels.breadcrumb}>
+      <ol ref={listRef} className={styles.list}>
         {entries.map((entry, index) => {
           const isLast = index === entries.length - 1
           const key = entry === 'ellipsis' ? 'ellipsis' : entry.id
 
           return (
-            <Item key={key} $hideOnMobile={index < entries.length - 2}>
+            <li key={key} className={styles.item} data-hide-on-mobile={index < entries.length - 2 ? '' : undefined}>
               {entry === 'ellipsis' ? (
-                <EllipsisButton type="button" aria-label={labels.showFullPath} onClick={() => setExpanded(true)}>
+                <button type="button" className={styles.ellipsis} aria-label={labels.showFullPath} onClick={() => setExpanded(true)}>
                   …
-                </EllipsisButton>
+                </button>
               ) : isLast ? (
-                <Current aria-current="page">{entry.label}</Current>
+                <span className={styles.current} aria-current="page">
+                  {entry.label}
+                </span>
               ) : (
                 <CrumbLink item={entry} />
               )}
               {!isLast && (
-                <Separator aria-hidden="true">
+                <span className={styles.separator} aria-hidden="true">
                   <ChevronRight size={16} />
-                </Separator>
+                </span>
               )}
-            </Item>
+            </li>
           )
         })}
-      </List>
-    </Nav>
+      </ol>
+    </nav>
   )
 }
 
