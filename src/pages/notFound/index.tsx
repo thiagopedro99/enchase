@@ -10,17 +10,17 @@ const NotFound = () => {
 
   return (
     <Layout pageTitle="Página não encontrada">
-      <Container $maxWidth="md">
+      <Container maxWidth="md">
         <CenteredContent>
           <ErrorCode>404</ErrorCode>
 
           <Card>
-            <Flex $direction="column" $align="center" $gap="1.5rem">
+            <Flex direction="column" align="center" gap="1.5rem">
               <Title>Página não encontrada</Title>
 
               <Message>Desculpe, a página que você está procurando não existe ou foi movida.</Message>
 
-              <Flex $gap="1rem" $wrap>
+              <Flex gap="1rem" wrap>
                 <Button variant="primary" onClick={() => navigate('/')}>
                   Voltar para Home
                 </Button>

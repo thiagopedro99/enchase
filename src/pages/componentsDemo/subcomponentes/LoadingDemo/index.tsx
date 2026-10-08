@@ -22,9 +22,9 @@ export const LoadingDemo = ({ onShowCode }: DemoSectionProps) => {
 
   return (
     <SectionBlock id="loading" title="Loading" description="Indicadores de progresso com status anunciado e movimento reduzido respeitado." onShowCode={() => onShowCode(codeExamples.loading, 'Loading')}>
-      <Flex $gap="2rem" $wrap $align="center">
+      <Flex gap="2rem" wrap align="center">
         <LabeledExample label="Tamanhos:">
-          <Flex $gap="1rem" $align="center">
+          <Flex gap="1rem" align="center">
             <Loading size="xs" />
             <Loading size="sm" />
             <Loading size="md" />

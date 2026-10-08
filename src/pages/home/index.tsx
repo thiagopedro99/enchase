@@ -6,15 +6,15 @@ import Layout from '@components/layout/index.tsx'
 
 const Home = () => (
   <Layout pageTitle="Início" centered>
-    <Container $maxWidth="lg">
-      <Flex $direction="column" $align="center" $gap="2rem">
+    <Container maxWidth="lg">
+      <Flex direction="column" align="center" gap="2rem">
         <Hero>
           <Logo src="/enchase-marca.svg" alt="" />
           <Title>Bem-vindo ao Enchase</Title>
           <Subtitle>Componentes React acessíveis e configuráveis, prontos para usar</Subtitle>
         </Hero>
 
-        <Flex $gap="1rem" $wrap>
+        <Flex gap="1rem" wrap>
           <ButtonLink href={docsUrl} size="lg">
             Começar
           </ButtonLink>

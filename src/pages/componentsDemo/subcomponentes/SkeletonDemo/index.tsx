@@ -7,9 +7,9 @@ import type { DemoSectionProps } from '../../types.ts'
 
 export const SkeletonDemo = ({ onShowCode }: DemoSectionProps) => (
   <SectionBlock id="skeleton" title="Skeleton" description="Marcadores de carregamento com brilho suave, ocultos para leitores de tela." onShowCode={() => onShowCode(codeExamples.skeleton, 'Skeleton')}>
-    <Flex $direction="column" $gap="2rem">
+    <Flex direction="column" gap="2rem">
       <LabeledExample label="Texto:">
-        <Flex $direction="column" $gap="0.5rem">
+        <Flex direction="column" gap="0.5rem">
           <Skeleton variant="text" width="100%" />
           <Skeleton variant="text" width="80%" />
           <Skeleton variant="text" width="60%" />
@@ -17,7 +17,7 @@ export const SkeletonDemo = ({ onShowCode }: DemoSectionProps) => (
       </LabeledExample>
 
       <LabeledExample label="Circular (Avatar):">
-        <Flex $gap="1rem">
+        <Flex gap="1rem">
           <Skeleton variant="circular" width="40px" />
           <Skeleton variant="circular" width="60px" />
           <Skeleton variant="circular" width="80px" />

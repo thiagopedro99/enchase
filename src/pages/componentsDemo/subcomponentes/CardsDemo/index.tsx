@@ -6,7 +6,7 @@ import type { DemoSectionProps } from '../../types.ts'
 
 export const CardsDemo = ({ onShowCode }: DemoSectionProps) => (
   <SectionBlock id="cards" title="Cards" description="Três variantes de superfície: preenchido, elevado e contornado." onShowCode={() => onShowCode(codeExamples.card, 'Card')} bare>
-    <Grid $columns={3} $gap="1rem">
+    <Grid columns={3} gap="1rem">
       <Card variant="default">
         <h3>Card Padrão</h3>
         <p>Sombra média com hover</p>

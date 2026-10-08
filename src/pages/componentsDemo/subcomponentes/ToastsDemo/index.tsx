@@ -10,7 +10,7 @@ export const ToastsDemo = ({ onShowCode }: DemoSectionProps) => {
 
   return (
     <SectionBlock id="toasts" title="Toasts (Notificações)" description="Notificações tonais por tipo; pausam no hover e no foco e fecham com Esc." onShowCode={() => onShowCode(codeExamples.toast, 'Toast')}>
-      <Flex $gap="1rem" $wrap>
+      <Flex gap="1rem" wrap>
         <Button onClick={() => toast.success('Sucesso!')}>Success</Button>
         <Button onClick={() => toast.error('Erro!')}>Error</Button>
         <Button onClick={() => toast.warning('Atenção!')}>Warning</Button>

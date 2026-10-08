@@ -9,7 +9,7 @@ import InfoBox from '../InfoBox/index.tsx'
 
 export const Customization = () => (
   <SectionCard icon={Settings} title="4. Customização">
-    <Flex $direction="column" $gap="2rem">
+    <Flex direction="column" gap="2rem">
       <div>
         <h3>Modificar cores do tema</h3>
         <p>

@@ -17,7 +17,7 @@ export const LiveStrip = () => {
         <Button disabled>Disabled</Button>
       </Row>
 
-      <Row $align="flex-start">
+      <Row align="flex-start">
         <Input label="Email" helperText="Nunca compartilhamos seu email" />
         <Input label="Senha" type="password" />
         <Select label="País" placeholder="Selecione..." options={countryOptions} defaultValue="" />

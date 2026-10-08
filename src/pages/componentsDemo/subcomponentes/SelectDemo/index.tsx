@@ -12,7 +12,7 @@ export const SelectDemo = ({ onShowCode }: DemoSectionProps) => {
 
   return (
     <SectionBlock id="select" title="Select" description="Seleção nativa estilizada, com a mesma anatomia dos campos de texto." onShowCode={() => onShowCode(codeExamples.select, 'Select')}>
-      <Grid $columns={2} $gap="1rem">
+      <Grid columns={2} gap="1rem">
         <Select
           label="Escolha uma opção"
           placeholder="Selecione..."

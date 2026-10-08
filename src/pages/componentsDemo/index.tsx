@@ -39,7 +39,7 @@ const ComponentsDemo = () => {
 
   return (
     <Layout pageTitle="Demo de Componentes" pageSections={pageSections} activePageSectionId={activeSectionId}>
-      <Flex $direction="column" $gap="2rem">
+      <Flex direction="column" gap="2rem">
         <PageHeader />
         <ColorsDemo />
         <TypographyDemo />

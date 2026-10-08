@@ -16,7 +16,7 @@ const GettingStarted = () => {
 
   return (
     <Layout pageTitle="Getting Started - Guia de Início">
-      <Flex $direction="column" $gap="2rem">
+      <Flex direction="column" gap="2rem">
         <Header />
         <Installation />
         <ProjectStructure />

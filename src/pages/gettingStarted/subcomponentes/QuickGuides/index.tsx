@@ -12,7 +12,7 @@ import type { QuickGuidesProps } from './types.ts'
 
 export const QuickGuides = ({ onNavigate }: QuickGuidesProps) => (
   <SectionCard icon={Code} title="3. Guias Rápidos">
-    <Flex $direction="column" $gap="2rem">
+    <Flex direction="column" gap="2rem">
       <div>
         <h3>Como criar uma nova página</h3>
         <GuideList

@@ -1,0 +1,31 @@
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--enchase-space-md);
+  padding-right: var(--enchase-space-md);
+}
+
+.container[data-max-width='sm'] {
+  max-width: 640px;
+}
+
+.container[data-max-width='md'] {
+  max-width: 768px;
+}
+
+.container[data-max-width='lg'] {
+  max-width: 1024px;
+}
+
+.container[data-max-width='xl'] {
+  max-width: 1280px;
+}
+
+.container[data-max-width='2xl'] {
+  max-width: 1536px;
+}
+
+.container[data-max-width='full'] {
+  max-width: 100%;
+}

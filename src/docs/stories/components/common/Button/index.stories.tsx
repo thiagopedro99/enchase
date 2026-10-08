@@ -7,7 +7,7 @@ import type { ButtonStoryArgs } from './types.ts'
 
 const meta = {
   title: 'Componentes/Button',
-  component: Button,
+  component: Button,
   args: {
     children: 'Enviar',
     variant: defaultVariant,

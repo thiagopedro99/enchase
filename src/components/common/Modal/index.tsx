@@ -132,7 +132,7 @@ export const ConfirmModal = ({
       role="alertdialog"
       animation={animation}
       footer={
-        <Flex $justify="end" $gap="0.5rem">
+        <Flex justify="end" gap="0.5rem">
           <Button variant="outline" onClick={onClose} data-autofocus>
             {cancelText ?? labels.cancel}
           </Button>

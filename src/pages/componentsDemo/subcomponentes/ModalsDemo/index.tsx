@@ -19,7 +19,7 @@ export const ModalsDemo = ({ onShowCode }: DemoSectionProps) => {
 
   return (
     <SectionBlock id="modais" title="Modais" description="Diálogos com foco preso, página inerte, Esc para fechar e saída animada." onShowCode={() => onShowCode(codeExamples.modal, 'Modal')}>
-      <Flex $gap="1rem" $wrap>
+      <Flex gap="1rem" wrap>
         <Button onClick={() => setModalOpen(true)}>Abrir Modal</Button>
         <Button onClick={() => setConfirmOpen(true)}>Modal de Confirmação</Button>
       </Flex>
@@ -29,7 +29,7 @@ export const ModalsDemo = ({ onShowCode }: DemoSectionProps) => {
         onClose={() => setModalOpen(false)}
         title="Exemplo de Modal"
         footer={
-          <Flex $justify="end" $gap="0.5rem">
+          <Flex justify="end" gap="0.5rem">
             <Button variant="outline" onClick={() => setModalOpen(false)}>
               Cancelar
             </Button>

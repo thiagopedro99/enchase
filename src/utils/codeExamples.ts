@@ -473,7 +473,7 @@ import { useState } from 'react';`
     },
     {
       title: 'Direção vertical',
-      code: `<Flex $direction="column">
+      code: `<Flex direction="column">
   <div>Item 1</div>
   <div>Item 2</div>
   <div>Item 3</div>
@@ -481,27 +481,27 @@ import { useState } from 'react';`
     },
     {
       title: 'Alinhamento',
-      code: `<Flex $align="center">...</Flex>
-<Flex $align="start">...</Flex>
-<Flex $align="end">...</Flex>`
+      code: `<Flex align="center">...</Flex>
+<Flex align="start">...</Flex>
+<Flex align="end">...</Flex>`
     },
     {
       title: 'Justificação',
-      code: `<Flex $justify="center">...</Flex>
-<Flex $justify="between">...</Flex>
-<Flex $justify="around">...</Flex>`
+      code: `<Flex justify="center">...</Flex>
+<Flex justify="between">...</Flex>
+<Flex justify="around">...</Flex>`
     },
     {
       title: 'Gap customizado',
-      code: `<Flex $gap="2rem">...</Flex>`
+      code: `<Flex gap="2rem">...</Flex>`
     },
     {
       title: 'Com wrap',
-      code: `<Flex $wrap>...</Flex>`
+      code: `<Flex wrap>...</Flex>`
     },
     {
       title: 'Combinações',
-      code: `<Flex $direction="column" $align="center" $gap="1rem">
+      code: `<Flex direction="column" align="center" gap="1rem">
   <div>Centralizado</div>
   <div>Verticalmente</div>
 </Flex>`
@@ -523,7 +523,7 @@ import { useState } from 'react';`
     },
     {
       title: '2 colunas',
-      code: `<Grid $columns={2}>
+      code: `<Grid columns={2}>
   <div>Item 1</div>
   <div>Item 2</div>
   <div>Item 3</div>
@@ -532,7 +532,7 @@ import { useState } from 'react';`
     },
     {
       title: '3 colunas',
-      code: `<Grid $columns={3}>
+      code: `<Grid columns={3}>
   <Card>Item 1</Card>
   <Card>Item 2</Card>
   <Card>Item 3</Card>
@@ -540,7 +540,7 @@ import { useState } from 'react';`
     },
     {
       title: 'Com largura mínima',
-      code: `<Grid $minColumnWidth="250px">
+      code: `<Grid minColumnWidth="250px">
   <Card>Card 1</Card>
   <Card>Card 2</Card>
   <Card>Card 3</Card>
@@ -548,7 +548,7 @@ import { useState } from 'react';`
     },
     {
       title: 'Gap customizado',
-      code: `<Grid $columns={3} $gap="2rem">...</Grid>`
+      code: `<Grid columns={3} gap="2rem">...</Grid>`
     }
   ]
 }

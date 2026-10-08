@@ -11,7 +11,7 @@ export const InputsDemo = ({ onShowCode }: DemoSectionProps) => {
 
   return (
     <SectionBlock id="inputs" title="Inputs" description="Campos outlined com rótulo, ajuda e erro associados para tecnologia assistiva." onShowCode={() => onShowCode(codeExamples.input, 'Input')}>
-      <Grid $columns={2} $gap="1rem">
+      <Grid columns={2} gap="1rem">
         <Input label="Nome" placeholder="Digite seu nome" value={inputValue} onChange={(event) => setInputValue(event.target.value)} />
         <Input label="Email" type="email" placeholder="seu@email.com" helperText="Nunca compartilharemos seu email" />
         <Input label="Senha" type="password" placeholder="••••••••" />

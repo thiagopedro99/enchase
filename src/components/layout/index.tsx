@@ -88,7 +88,7 @@ const Layout = ({
       )}
 
       <main id={mainId} tabIndex={-1} className={styles.main} data-centered={centered ? '' : undefined}>
-        <Container $maxWidth={maxWidth} $padding={padding}>
+        <Container maxWidth={maxWidth} padding={padding}>
           {children}
         </Container>
       </main>

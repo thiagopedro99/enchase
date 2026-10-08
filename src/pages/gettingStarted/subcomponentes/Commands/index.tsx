@@ -7,7 +7,7 @@ import { commandEntries } from './defaultData.ts'
 
 export const Commands = () => (
   <SectionCard icon={FileCode} title="5. Comandos Úteis">
-    <Flex $direction="column" $gap="1rem">
+    <Flex direction="column" gap="1rem">
       {commandEntries.map((entry) => (
         <div key={entry.command}>
           <strong>{entry.label}</strong>

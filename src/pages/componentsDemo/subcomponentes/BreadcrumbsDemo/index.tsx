@@ -14,7 +14,7 @@ export const BreadcrumbsDemo = ({ onShowCode }: DemoSectionProps) => (
     description="Trilha de navegação que mostra onde a pessoa está. A trilha longa colapsa o meio e o último item é a página atual."
     onShowCode={() => onShowCode(codeExamples.breadcrumbs, 'Breadcrumbs')}
   >
-    <Flex $direction="column" $gap="1.5rem">
+    <Flex direction="column" gap="1.5rem">
       <LabeledExample label="Trilha curta:">
         <Breadcrumbs items={shortTrail} ariaLabel="Exemplo de trilha curta" />
       </LabeledExample>

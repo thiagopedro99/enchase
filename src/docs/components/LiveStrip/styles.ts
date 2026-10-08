@@ -9,9 +9,9 @@ export const Panel = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.lg};
 `
 
-export const Row = styled.div<{ $align?: 'center' | 'flex-start' }>`
+export const Row = styled.div<{ align?: 'center' | 'flex-start' }>`
   display: flex;
   flex-wrap: wrap;
-  align-items: ${({ $align = 'center' }) => $align};
+  align-items: ${({ align = 'center' }) => align};
   gap: ${({ theme }) => theme.spacing.md};
 `

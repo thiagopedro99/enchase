@@ -7,9 +7,9 @@ import type { DemoSectionProps } from '../../types.ts'
 
 export const FlexDemo = ({ onShowCode }: DemoSectionProps) => (
   <SectionBlock id="flex" title="Flex (Layout)" description="Container flexível com direção, alinhamento, espaçamento e quebra por props." onShowCode={() => onShowCode(codeExamples.flex, 'Flex')}>
-    <Flex $direction="column" $gap="1rem">
+    <Flex direction="column" gap="1rem">
       <LabeledExample label="Horizontal (padrão):">
-        <Flex $gap="0.5rem">
+        <Flex gap="0.5rem">
           <Card padding="1rem">Item 1</Card>
           <Card padding="1rem">Item 2</Card>
           <Card padding="1rem">Item 3</Card>
@@ -17,7 +17,7 @@ export const FlexDemo = ({ onShowCode }: DemoSectionProps) => (
       </LabeledExample>
 
       <LabeledExample label="Vertical:">
-        <Flex $direction="column" $gap="0.5rem">
+        <Flex direction="column" gap="0.5rem">
           <Card padding="1rem">Item 1</Card>
           <Card padding="1rem">Item 2</Card>
           <Card padding="1rem">Item 3</Card>

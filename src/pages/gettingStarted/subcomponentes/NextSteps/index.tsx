@@ -15,7 +15,7 @@ export const NextSteps = ({ onNavigate }: NextStepsProps) => {
         <Rocket size={48} color={theme.colors.primary} />
         <Title>Pronto para começar?</Title>
         <Description>Agora que você conhece o básico, explore os componentes disponíveis e comece a construir sua aplicação!</Description>
-        <Flex $gap="1rem" $wrap>
+        <Flex gap="1rem" wrap>
           <Button variant="primary" onClick={() => onNavigate('/components')} size="lg">
             Ver Componentes
           </Button>

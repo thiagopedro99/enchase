@@ -11,7 +11,7 @@ export const CheckboxDemo = ({ onShowCode }: DemoSectionProps) => {
 
   return (
     <SectionBlock id="checkbox" title="Checkbox" description="Controle nativo com estado visual por CSS, alvo de 40px e foco visível." onShowCode={() => onShowCode(codeExamples.checkbox, 'Checkbox')}>
-      <Flex $direction="column" $gap="0.5rem" $align="start">
+      <Flex direction="column" gap="0.5rem" align="start">
         <Checkbox label="Aceito os termos e condições" checked={checked} onChange={(event) => setChecked(event.target.checked)} />
         <Checkbox label="Deseja receber novidades?" />
         <Checkbox label="Opção desabilitada" disabled />

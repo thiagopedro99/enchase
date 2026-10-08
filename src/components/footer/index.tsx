@@ -6,10 +6,10 @@ import type { FooterProps } from './types.ts'
 
 const Footer = ({ companyName = defaultCompanyName, notice = defaultNotice, year = getCurrentYear(), links = defaultLinks }: FooterProps) => (
   <FooterContainer>
-    <Container $maxWidth="xl">
-      <Flex $direction="row" $justify="center" $align="center" $wrap $gap="1.5rem">
+    <Container maxWidth="xl">
+      <Flex direction="row" justify="center" align="center" wrap gap="1.5rem">
         {links.length > 0 && (
-          <Flex $gap="1.5rem" $wrap>
+          <Flex gap="1.5rem" wrap>
             {links.map((link) => (
               <Link key={link.href} href={link.href}>
                 {link.label}

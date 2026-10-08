@@ -7,9 +7,9 @@ import type { DemoSectionProps } from '../../types.ts'
 
 export const GridDemo = ({ onShowCode }: DemoSectionProps) => (
   <SectionBlock id="grid" title="Grid (Layout)" description="Grade de colunas iguais com espaçamento configurável." onShowCode={() => onShowCode(codeExamples.grid, 'Grid')}>
-    <Flex $direction="column" $gap="1.5rem">
+    <Flex direction="column" gap="1.5rem">
       <LabeledExample label="2 Colunas:">
-        <Grid $columns={2} $gap="0.5rem">
+        <Grid columns={2} gap="0.5rem">
           <Card padding="1rem">Item 1</Card>
           <Card padding="1rem">Item 2</Card>
           <Card padding="1rem">Item 3</Card>
@@ -18,7 +18,7 @@ export const GridDemo = ({ onShowCode }: DemoSectionProps) => (
       </LabeledExample>
 
       <LabeledExample label="3 Colunas:">
-        <Grid $columns={3} $gap="0.5rem">
+        <Grid columns={3} gap="0.5rem">
           <Card padding="1rem">Item 1</Card>
           <Card padding="1rem">Item 2</Card>
           <Card padding="1rem">Item 3</Card>

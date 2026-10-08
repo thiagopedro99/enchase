@@ -74,7 +74,7 @@ const Navbar = ({ logo = 'Logo', menuItems = defaultMenuItems }: NavbarProps) =>
   return (
     <>
       <header className={styles.header}>
-        <Container $maxWidth="xl">
+        <Container maxWidth="xl">
           <div className={styles.headerBar}>
             <Link to="/" className={styles.logo}>
               {logo}
