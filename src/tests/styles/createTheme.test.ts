@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { darkTheme, lightTheme } from '@styles/themes/index.ts'
+import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/themes/index.ts'
 import { themeVariables } from '@styles/cssVariables.ts'
 import { createTheme } from '@styles/createTheme.ts'
 
@@ -8,11 +8,12 @@ import type { ThemeInput } from '@styles/createTheme.ts'
 
 describe('createTheme', () => {
   it('returns the built-in light and dark themes when nothing is customized', () => {
-    const { light, dark } = createTheme()
+    const { base, light, dark } = createTheme()
 
+    expect(base).toEqual(baseTokens)
     expect(light).toEqual(lightTheme)
     expect(dark).toEqual(darkTheme)
-    expect(createTheme({})).toEqual({ light: lightTheme, dark: darkTheme })
+    expect(createTheme({})).toEqual(defaultTheme)
   })
 
   it('overrides a single color in one mode and leaves everything else alone', () => {
@@ -48,18 +49,17 @@ describe('createTheme', () => {
   })
 
   it('does not change the built-in themes', () => {
-    const before = JSON.stringify([lightTheme, darkTheme])
+    const before = JSON.stringify(defaultTheme)
 
     createTheme({ light: { colors: { primary: '#0B6BCB', text: { primary: '#101010' } } }, dark: { colors: { background: '#000000' } } })
 
-    expect(JSON.stringify([lightTheme, darkTheme])).toBe(before)
+    expect(JSON.stringify(defaultTheme)).toBe(before)
   })
 
   it('keeps the parts of the theme that are not colors', () => {
-    const { light, dark } = createTheme({ light: { colors: { primary: '#0B6BCB' } }, dark: { colors: { primary: '#CCDDFF' } } })
+    const { base, light, dark } = createTheme({ light: { colors: { primary: '#0B6BCB' } }, dark: { colors: { primary: '#CCDDFF' } } })
 
-    expect(light.fonts).toEqual(lightTheme.fonts)
-    expect(light.spacing).toEqual(lightTheme.spacing)
+    expect(base).toEqual(baseTokens)
     expect(light.shadows).toEqual(lightTheme.shadows)
     expect(dark.shadows).toEqual(darkTheme.shadows)
   })
@@ -80,50 +80,49 @@ describe('createTheme', () => {
 })
 
 describe('createTheme fonts', () => {
-  it('applies the same fonts to both modes and leaves the rest alone', () => {
-    const { light, dark } = createTheme({ fonts: { primary: "'Inter', sans-serif", mono: 'Menlo, monospace' } })
+  it('customizes the fonts of the base and leaves the modes alone', () => {
+    const { base, light, dark } = createTheme({ fonts: { primary: "'Inter', sans-serif", mono: 'Menlo, monospace' } })
 
-    expect(light.fonts.primary).toBe("'Inter', sans-serif")
-    expect(dark.fonts.primary).toBe("'Inter', sans-serif")
-    expect(light.fonts.mono).toBe('Menlo, monospace')
-    expect(light.fonts.sizes).toEqual(lightTheme.fonts.sizes)
-    expect(light.fonts.weights).toEqual(lightTheme.fonts.weights)
-    expect(light.colors).toEqual(lightTheme.colors)
-    expect(dark.colors).toEqual(darkTheme.colors)
+    expect(base.fonts.primary).toBe("'Inter', sans-serif")
+    expect(base.fonts.mono).toBe('Menlo, monospace')
+    expect(base.fonts.sizes).toEqual(baseTokens.fonts.sizes)
+    expect(base.fonts.weights).toEqual(baseTokens.fonts.weights)
+    expect(base.spacing).toEqual(baseTokens.spacing)
+    expect(light).toEqual(lightTheme)
+    expect(dark).toEqual(darkTheme)
   })
 
   it('overrides single sizes and weights without touching their siblings', () => {
-    const { light, dark } = createTheme({ fonts: { sizes: { base: '1.0625rem' }, weights: { bold: 800 } } })
+    const { base } = createTheme({ fonts: { sizes: { base: '1.0625rem' }, weights: { bold: 800 } } })
 
-    expect(light.fonts.sizes.base).toBe('1.0625rem')
-    expect(light.fonts.sizes.sm).toBe(lightTheme.fonts.sizes.sm)
-    expect(dark.fonts.weights.bold).toBe(800)
-    expect(dark.fonts.weights.regular).toBe(darkTheme.fonts.weights.regular)
+    expect(base.fonts.sizes.base).toBe('1.0625rem')
+    expect(base.fonts.sizes.sm).toBe(baseTokens.fonts.sizes.sm)
+    expect(base.fonts.weights.bold).toBe(800)
+    expect(base.fonts.weights.regular).toBe(baseTokens.fonts.weights.regular)
   })
 
   it('combines fonts with color overrides', () => {
-    const { light, dark } = createTheme({ fonts: { primary: 'Arial' }, light: { colors: { primary: '#0B6BCB' } } })
+    const { base, light, dark } = createTheme({ fonts: { primary: 'Arial' }, light: { colors: { primary: '#0B6BCB' } } })
 
     expect(light.colors.primary).toBe('#0B6BCB')
-    expect(light.fonts.primary).toBe('Arial')
-    expect(dark.fonts.primary).toBe('Arial')
+    expect(base.fonts.primary).toBe('Arial')
     expect(dark.colors).toEqual(darkTheme.colors)
   })
 
   it('ignores a font token that is explicitly undefined', () => {
-    const { light } = createTheme({ fonts: { primary: undefined, sizes: { base: undefined, sm: '0.8rem' } } })
+    const { base } = createTheme({ fonts: { primary: undefined, sizes: { base: undefined, sm: '0.8rem' } } })
 
-    expect(light.fonts.primary).toBe(lightTheme.fonts.primary)
-    expect(light.fonts.sizes.base).toBe(lightTheme.fonts.sizes.base)
-    expect(light.fonts.sizes.sm).toBe('0.8rem')
+    expect(base.fonts.primary).toBe(baseTokens.fonts.primary)
+    expect(base.fonts.sizes.base).toBe(baseTokens.fonts.sizes.base)
+    expect(base.fonts.sizes.sm).toBe('0.8rem')
   })
 
   it('does not change the built-in themes', () => {
-    const before = JSON.stringify([lightTheme, darkTheme])
+    const before = JSON.stringify(defaultTheme)
 
     createTheme({ fonts: { primary: 'Arial', sizes: { base: '2rem' }, weights: { bold: 900 } } })
 
-    expect(JSON.stringify([lightTheme, darkTheme])).toBe(before)
+    expect(JSON.stringify(defaultTheme)).toBe(before)
   })
 
   it('keeps the same css variables when fonts change', () => {
@@ -170,10 +169,10 @@ describe('createTheme fonts', () => {
   })
 
   it('leaves the themes untouched when one of several font tokens is wrong', () => {
-    const before = JSON.stringify([lightTheme, darkTheme])
+    const before = JSON.stringify(defaultTheme)
 
     expect(() => createTheme({ fonts: { primary: 'Arial', sizes: { base: 'nope' } } })).toThrow()
-    expect(JSON.stringify([lightTheme, darkTheme])).toBe(before)
+    expect(JSON.stringify(defaultTheme)).toBe(before)
   })
 })
 
@@ -224,9 +223,9 @@ describe('createTheme with wrong input', () => {
   })
 
   it('leaves the themes untouched when one of several tokens is wrong', () => {
-    const before = JSON.stringify([lightTheme, darkTheme])
+    const before = JSON.stringify(defaultTheme)
 
     expect(bad({ light: { colors: { primary: '#0B6BCB', secondary: 'nope' } } })).toThrow()
-    expect(JSON.stringify([lightTheme, darkTheme])).toBe(before)
+    expect(JSON.stringify(defaultTheme)).toBe(before)
   })
 })

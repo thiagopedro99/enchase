@@ -18,7 +18,7 @@ import {
   themeVariables,
   zIndexVariableName
 } from '@styles/cssVariables.ts'
-import { darkTheme, lightTheme } from '@styles/themes/index.ts'
+import { baseTokens, darkTheme, lightTheme } from '@styles/themes/index.ts'
 
 const leafPaths = (tree: Record<string, unknown>, path: string[] = []): string[] =>
   Object.entries(tree).flatMap(([key, value]) => (typeof value === 'string' ? [[...path, key].join('.')] : leafPaths(value as Record<string, unknown>, [...path, key])))
@@ -92,18 +92,18 @@ describe('font variable names', () => {
 })
 
 describe('fontVariables', () => {
-  const variables = fontVariables(lightTheme.fonts)
+  const variables = fontVariables(baseTokens.fonts)
 
   it('creates one variable for every family, size and weight', () => {
-    const expected = 2 + Object.keys(lightTheme.fonts.sizes).length + Object.keys(lightTheme.fonts.weights).length
+    const expected = 2 + Object.keys(baseTokens.fonts.sizes).length + Object.keys(baseTokens.fonts.weights).length
 
     expect(Object.keys(variables)).toHaveLength(expected)
   })
 
   it('keeps the values, writing weights as text', () => {
-    expect(variables['--enchase-font-primary']).toBe(lightTheme.fonts.primary)
-    expect(variables['--enchase-font-mono']).toBe(lightTheme.fonts.mono)
-    expect(variables['--enchase-font-size-base']).toBe(lightTheme.fonts.sizes.base)
+    expect(variables['--enchase-font-primary']).toBe(baseTokens.fonts.primary)
+    expect(variables['--enchase-font-mono']).toBe(baseTokens.fonts.mono)
+    expect(variables['--enchase-font-size-base']).toBe(baseTokens.fonts.sizes.base)
     expect(variables['--enchase-font-weight-bold']).toBe('700')
   })
 
@@ -115,61 +115,53 @@ describe('fontVariables', () => {
 })
 
 describe('layoutVariables', () => {
-  const variables = layoutVariables(lightTheme)
+  const variables = layoutVariables(baseTokens)
 
   it('creates one variable for every spacing, radius, transition, state and z-index token', () => {
     const expected =
-      Object.keys(lightTheme.spacing).length +
-      Object.keys(lightTheme.borderRadius).length +
-      Object.keys(lightTheme.transitions).length +
-      Object.keys(lightTheme.state).length +
-      Object.keys(lightTheme.zIndex).length
+      Object.keys(baseTokens.spacing).length +
+      Object.keys(baseTokens.borderRadius).length +
+      Object.keys(baseTokens.transitions).length +
+      Object.keys(baseTokens.state).length +
+      Object.keys(baseTokens.zIndex).length
 
     expect(Object.keys(variables)).toHaveLength(expected)
   })
 
   it('names and keeps the values', () => {
     expect(spacingVariableName('2xl')).toBe('--enchase-space-2xl')
-    expect(variables['--enchase-space-md']).toBe(lightTheme.spacing.md)
-    expect(variables['--enchase-radius-full']).toBe(lightTheme.borderRadius.full)
-    expect(variables['--enchase-transition-fast']).toBe(lightTheme.transitions.fast)
+    expect(variables['--enchase-space-md']).toBe(baseTokens.spacing.md)
+    expect(variables['--enchase-radius-full']).toBe(baseTokens.borderRadius.full)
+    expect(variables['--enchase-transition-fast']).toBe(baseTokens.transitions.fast)
     expect(stateVariableName('hover')).toBe('--enchase-state-hover')
-    expect(variables['--enchase-state-pressed']).toBe(lightTheme.state.pressed)
+    expect(variables['--enchase-state-pressed']).toBe(baseTokens.state.pressed)
     expect(zIndexVariableName('tooltip')).toBe('--enchase-z-tooltip')
-    expect(variables['--enchase-z-modal']).toBe(String(lightTheme.zIndex.modal))
+    expect(variables['--enchase-z-modal']).toBe(String(baseTokens.zIndex.modal))
   })
 
   it('does not reuse a name of any other variable', () => {
-    const others = new Set([...Object.keys(themeVariables(lightTheme)), ...Object.keys(fontVariables(lightTheme.fonts))])
+    const others = new Set([...Object.keys(themeVariables(lightTheme)), ...Object.keys(fontVariables(baseTokens.fonts))])
 
     for (const name of Object.keys(variables)) expect(others.has(name)).toBe(false)
   })
 
   it('writes one declaration per variable, for the given selector', () => {
-    const rule = layoutVariablesRule(':root', lightTheme)
+    const rule = layoutVariablesRule(':root', baseTokens)
 
     expect(rule.startsWith(':root {\n')).toBe(true)
-    expect(rule).toContain(`  --enchase-radius-md: ${lightTheme.borderRadius.md};`)
+    expect(rule).toContain(`  --enchase-radius-md: ${baseTokens.borderRadius.md};`)
     expect(rule.split('\n').filter((line) => line.startsWith('  --'))).toHaveLength(Object.keys(variables).length)
-  })
-})
-
-describe('what is allowed to change between the light and the dark theme', () => {
-  it('differs only in colors and shadows, which are the parts turned into variables', () => {
-    const rest = (theme: Record<string, unknown>) => Object.fromEntries(Object.entries(theme).filter(([key]) => key !== 'colors' && key !== 'shadows'))
-
-    expect(rest(darkTheme)).toEqual(rest(lightTheme))
   })
 })
 
 describe('fontVariablesRule', () => {
   it('writes one declaration per font variable, for the given selector', () => {
-    const rule = fontVariablesRule(':root', lightTheme.fonts)
+    const rule = fontVariablesRule(':root', baseTokens.fonts)
 
     expect(rule.startsWith(':root {\n')).toBe(true)
-    expect(rule).toContain(`  --enchase-font-primary: ${lightTheme.fonts.primary};`)
+    expect(rule).toContain(`  --enchase-font-primary: ${baseTokens.fonts.primary};`)
     expect(rule).toContain('  --enchase-font-weight-bold: 700;')
-    expect(rule.split('\n').filter((line) => line.startsWith('  --'))).toHaveLength(Object.keys(fontVariables(lightTheme.fonts)).length)
+    expect(rule.split('\n').filter((line) => line.startsWith('  --'))).toHaveLength(Object.keys(fontVariables(baseTokens.fonts)).length)
   })
 })
 

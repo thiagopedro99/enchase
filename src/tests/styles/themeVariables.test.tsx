@@ -2,13 +2,13 @@ import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
 import { defaultThemeCss, themeCss } from '@styles/cssVariables.ts'
-import { darkTheme, lightTheme, themes } from '@styles/themes/index.ts'
+import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/themes/index.ts'
 import { createTheme } from '@styles/createTheme.ts'
 import { ThemeVariables } from '@styles/themeVariables.tsx'
 
-import type { ThemeSet } from '@styles/createTheme.ts'
+import type { ThemeSet } from '@styles/themes/types.ts'
 
-const renderCss = (set: ThemeSet = themes) => {
+const renderCss = (set: ThemeSet = defaultTheme) => {
   const html = renderToString(<ThemeVariables css={themeCss(set)} />)
   const match = html.match(/<style[^>]*>([\s\S]*)<\/style>/)
 
@@ -46,7 +46,7 @@ describe('ThemeVariables fonts', () => {
   const css = renderCss()
 
   it('writes the fonts once, under the root selector, not per mode', () => {
-    const family = '--enchase-font-primary:' + lightTheme.fonts.primary.replace(/\s+/g, '')
+    const family = '--enchase-font-primary:' + baseTokens.fonts.primary.replace(/\s+/g, '')
 
     expect(css).toContain(family)
     expect(css.split(family)).toHaveLength(2)
@@ -54,14 +54,14 @@ describe('ThemeVariables fonts', () => {
   })
 
   it('writes the sizes and weights', () => {
-    expect(css).toContain('--enchase-font-size-base:' + lightTheme.fonts.sizes.base)
-    expect(css).toContain('--enchase-font-weight-bold:' + lightTheme.fonts.weights.bold)
+    expect(css).toContain('--enchase-font-size-base:' + baseTokens.fonts.sizes.base)
+    expect(css).toContain('--enchase-font-weight-bold:' + baseTokens.fonts.weights.bold)
   })
 })
 
 describe('themeCss', () => {
   it('is what the default css is made of', () => {
-    expect(defaultThemeCss).toBe(themeCss(themes))
+    expect(defaultThemeCss).toBe(themeCss(defaultTheme))
   })
 
   it('writes the values of the themes it receives', () => {
@@ -79,11 +79,11 @@ describe('ThemeVariables layout', () => {
   const css = renderCss()
 
   it('writes spacing, radius and transitions once, not per mode', () => {
-    const spacing = '--enchase-space-md:' + lightTheme.spacing.md
+    const spacing = '--enchase-space-md:' + baseTokens.spacing.md
 
     expect(css).toContain(spacing)
     expect(css.split(spacing)).toHaveLength(2)
-    expect(css).toContain('--enchase-radius-full:' + lightTheme.borderRadius.full)
-    expect(css).toContain('--enchase-transition-fast:' + lightTheme.transitions.fast.replace(/\s+/g, ''))
+    expect(css).toContain('--enchase-radius-full:' + baseTokens.borderRadius.full)
+    expect(css).toContain('--enchase-transition-fast:' + baseTokens.transitions.fast.replace(/\s+/g, ''))
   })
 })

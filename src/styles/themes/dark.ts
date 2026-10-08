@@ -1,8 +1,6 @@
-import { sharedTokens } from './shared.ts'
+import type { ModeTokens } from './types.ts'
 
 export const darkTheme = {
-  ...sharedTokens,
-
   colors: {
     primary: '#BEC2FF',
     onPrimary: '#14106E',
@@ -68,4 +66,4 @@ export const darkTheme = {
     lg: '0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 8px 3px rgba(0, 0, 0, 0.3)',
     xl: '0 2px 3px rgba(0, 0, 0, 0.5), 0 6px 10px 4px rgba(0, 0, 0, 0.3)'
   }
-}
+} satisfies ModeTokens

@@ -1,25 +1,22 @@
 import { assertValidColor } from './colorFormat.ts'
 import { assertValidFontFamily, assertValidFontSize, assertValidFontWeight } from './fontFormat.ts'
-import { darkTheme, lightTheme } from './themes/index.ts'
+import { baseTokens, darkTheme, lightTheme } from './themes/index.ts'
+import { themeModes } from './themes/types.ts'
 
-import type { Theme } from './themes/index.ts'
+import type { BaseTokens, ColorTokens, ModeTokens, ThemeSet } from './themes/types.ts'
 
 type DeepPartial<T> = { [K in keyof T]?: T[K] extends string ? string : DeepPartial<T[K]> }
 
-export type ThemeOverrides = { colors?: DeepPartial<Theme['colors']> }
+export type ThemeOverrides = { colors?: DeepPartial<ColorTokens> }
 
 export type FontOverrides = {
   primary?: string
   mono?: string
-  sizes?: Partial<Theme['fonts']['sizes']>
-  weights?: Partial<Theme['fonts']['weights']>
+  sizes?: Partial<BaseTokens['fonts']['sizes']>
+  weights?: Partial<BaseTokens['fonts']['weights']>
 }
 
 export type ThemeInput = { fonts?: FontOverrides; light?: ThemeOverrides; dark?: ThemeOverrides }
-
-export type ThemeSet = { light: Theme; dark: Theme }
-
-const themeModes = ['light', 'dark'] as const
 
 const inputSections = [...themeModes, 'fonts']
 
@@ -72,7 +69,7 @@ const mergeFontGroup = (base: Record<string, unknown>, overrides: unknown, path:
   return result
 }
 
-const mergeFonts = (base: Theme['fonts'], overrides: unknown): Theme['fonts'] => {
+const mergeFonts = (base: BaseTokens['fonts'], overrides: unknown): BaseTokens['fonts'] => {
   if (overrides === undefined) return base
   if (!isRecord(overrides)) throw new Error('Expected an object for "fonts"')
 
@@ -88,21 +85,19 @@ const mergeFonts = (base: Theme['fonts'], overrides: unknown): Theme['fonts'] =>
     else result[key] = mergeFontGroup(base[key as 'sizes' | 'weights'], value, tokenPath, fontGroupValidators[key])
   }
 
-  return result as Theme['fonts']
+  return result as BaseTokens['fonts']
 }
 
-const mergeTheme = (base: Theme, overrides: ThemeOverrides | undefined, fonts: Theme['fonts'], mode: string): Theme => {
+const mergeMode = (base: ModeTokens, overrides: ThemeOverrides | undefined, mode: string): ModeTokens => {
   if (overrides !== undefined && !isRecord(overrides)) throw new Error(`Expected an object for "${mode}"`)
 
   for (const section of Object.keys(overrides ?? {})) {
     if (!customizableSections.includes(section)) throw new Error(`Unknown theme section "${mode}.${section}"`)
   }
 
-  const colors = overrides?.colors === undefined ? base.colors : (mergeColors(base.colors, overrides.colors, `${mode}.colors`) as Theme['colors'])
+  if (overrides?.colors === undefined) return base
 
-  if (colors === base.colors && fonts === base.fonts) return base
-
-  return { ...base, colors, fonts }
+  return { ...base, colors: mergeColors(base.colors, overrides.colors, `${mode}.colors`) as ColorTokens }
 }
 
 export const createTheme = (input: ThemeInput = {}): ThemeSet => {
@@ -112,7 +107,11 @@ export const createTheme = (input: ThemeInput = {}): ThemeSet => {
     if (!inputSections.includes(section)) throw new Error(`Unknown theme mode "${section}"`)
   }
 
-  const fonts = mergeFonts(lightTheme.fonts, input.fonts)
+  const fonts = mergeFonts(baseTokens.fonts, input.fonts)
 
-  return { light: mergeTheme(lightTheme, input.light, fonts, 'light'), dark: mergeTheme(darkTheme, input.dark, fonts, 'dark') }
+  return {
+    base: fonts === baseTokens.fonts ? baseTokens : { ...baseTokens, fonts },
+    light: mergeMode(lightTheme, input.light, 'light'),
+    dark: mergeMode(darkTheme, input.dark, 'dark')
+  }
 }

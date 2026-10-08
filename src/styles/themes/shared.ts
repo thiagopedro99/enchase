@@ -1,6 +1,6 @@
 const standardEasing = 'cubic-bezier(0.2, 0, 0, 1)'
 
-export const sharedTokens = {
+export const baseTokens = {
   fonts: {
     primary: "'Figtree Variable', 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif",
     mono: "ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace",

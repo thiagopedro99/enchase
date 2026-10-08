@@ -1,17 +1,12 @@
-import { themes } from './themes/index.ts'
+import { defaultTheme } from './themes/index.ts'
 
-import type { ThemeSet } from './createTheme.ts'
-import type { Theme } from './themes/index.ts'
+import type { BaseTokens, ColorTokens, ModeTokens, ShadowTokens, ThemeSet } from './themes/types.ts'
 
-type ColorTokens = Theme['colors']
+type FontTokens = BaseTokens['fonts']
 
-type ShadowTokens = Theme['shadows']
+type ThemeTokens = ModeTokens
 
-type FontTokens = Theme['fonts']
-
-type ThemeTokens = Pick<Theme, 'colors' | 'shadows'>
-
-type LayoutTokens = Pick<Theme, 'spacing' | 'borderRadius' | 'transitions' | 'state' | 'zIndex'>
+type LayoutTokens = Pick<BaseTokens, 'spacing' | 'borderRadius' | 'transitions' | 'state' | 'zIndex'>
 
 type ColorTree = { [key: string]: string | ColorTree }
 
@@ -95,7 +90,7 @@ export const fontVariablesRule = (selector: string, fonts: FontTokens) => variab
 
 export const layoutVariablesRule = (selector: string, theme: LayoutTokens) => variablesRule(selector, layoutVariables(theme))
 
-export const themeCss = ({ light, dark }: ThemeSet) =>
-  [fontVariablesRule(':root', light.fonts), layoutVariablesRule(':root', light), cssVariablesRule(":root, [data-theme='light']", light), cssVariablesRule("[data-theme='dark']", dark)].join('\n\n')
+export const themeCss = ({ base, light, dark }: ThemeSet) =>
+  [fontVariablesRule(':root', base.fonts), layoutVariablesRule(':root', base), cssVariablesRule(":root, [data-theme='light']", light), cssVariablesRule("[data-theme='dark']", dark)].join('\n\n')
 
-export const defaultThemeCss = themeCss(themes)
+export const defaultThemeCss = themeCss(defaultTheme)

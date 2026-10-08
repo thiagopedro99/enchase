@@ -10,7 +10,7 @@ import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { Container } from '@components/common/index.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { classNames } from '@utils/classNames.ts'
-import { sharedTokens } from '@styles/themes/shared.ts'
+import { baseTokens } from '@styles/themes/shared.ts'
 import styles from './styles.module.css'
 
 import type { MobileDrawerProps, NavbarProps } from './types.ts'
@@ -60,7 +60,7 @@ const Navbar = ({ logo = 'Logo', menuItems = defaultMenuItems }: NavbarProps) =>
   const handleClose = () => setMobileOpen(false)
 
   useEffect(() => {
-    const query = window.matchMedia(`(min-width: ${sharedTokens.breakpoints.md})`)
+    const query = window.matchMedia(`(min-width: ${baseTokens.breakpoints.md})`)
     const handleChange = (event: MediaQueryListEvent) => {
       if (event.matches) setMobileOpen(false)
     }

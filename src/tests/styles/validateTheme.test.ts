@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { componentContrast, contrastChecks, formatContrastIssues, textContrast, validateTheme } from '@styles/validateTheme.ts'
 import { createTheme } from '@styles/createTheme.ts'
-import { darkTheme, lightTheme, themes } from '@styles/themes/index.ts'
+import { darkTheme, defaultTheme, lightTheme } from '@styles/themes/index.ts'
 
 describe('contrastChecks', () => {
   const checks = contrastChecks(lightTheme.colors)
@@ -53,7 +53,7 @@ describe('formatContrastIssues', () => {
 
 describe('validateTheme', () => {
   it('finds nothing wrong in the built-in themes', () => {
-    expect(validateTheme(themes)).toEqual([])
+    expect(validateTheme(defaultTheme)).toEqual([])
     expect(validateTheme(createTheme())).toEqual([])
   })
 
@@ -98,10 +98,10 @@ describe('validateTheme', () => {
   })
 
   it('does not change the themes it receives', () => {
-    const before = JSON.stringify(themes)
+    const before = JSON.stringify(defaultTheme)
 
     validateTheme(createTheme({ light: { colors: { primary: '#DDDDDD' } } }))
 
-    expect(JSON.stringify(themes)).toBe(before)
+    expect(JSON.stringify(defaultTheme)).toBe(before)
   })
 })

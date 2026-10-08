@@ -1,7 +1,7 @@
 import { canMeasureContrast, contrastRatio } from './contrast.ts'
+import { themeModes } from './themes/types.ts'
 
-import type { ThemeSet } from './createTheme.ts'
-import type { Theme } from './themes/index.ts'
+import type { ColorTokens, ThemeSet } from './themes/types.ts'
 
 export type ContrastCheck = { label: string; foreground: string; background: string; minimum: number }
 
@@ -11,7 +11,7 @@ export const textContrast = 4.5
 
 export const componentContrast = 3
 
-export const contrastChecks = (colors: Theme['colors']): ContrastCheck[] => {
+export const contrastChecks = (colors: ColorTokens): ContrastCheck[] => {
   const surfaces = [
     ['surface', colors.surface],
     ['background', colors.background],
@@ -78,7 +78,7 @@ export const formatContrastIssues = (issues: ContrastIssue[]): string | null => 
 }
 
 export const validateTheme = (themes: ThemeSet): ContrastIssue[] =>
-  (['light', 'dark'] as const).flatMap((mode) =>
+  themeModes.flatMap((mode) =>
     contrastChecks(themes[mode].colors).flatMap((check): ContrastIssue[] => {
       if (!canMeasureContrast(check.foreground) || !canMeasureContrast(check.background)) return [{ ...check, mode, ratio: null }]
 

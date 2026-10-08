@@ -10,7 +10,7 @@ import AppBar from './subcomponentes/AppBar/index.tsx'
 import { deriveBreadcrumbs } from './breadcrumbs.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { useAppStore } from '@stores/app/index.ts'
-import { sharedTokens } from '@styles/themes/shared.ts'
+import { baseTokens } from '@styles/themes/shared.ts'
 import Navbar from '@components/navbar/index.tsx'
 import Footer from '@components/footer/index.tsx'
 import styles from './styles.module.css'
@@ -39,7 +39,7 @@ const Layout = ({
   const { labels } = useUIConfig()
   const navId = useId()
   const { pathname } = useLocation()
-  const isDesktop = useMediaQuery(`(min-width: ${sharedTokens.breakpoints.md})`)
+  const isDesktop = useMediaQuery(`(min-width: ${baseTokens.breakpoints.md})`)
   const collapsed = useAppStore((state) => state.sidebarCollapsed)
   const toggleCollapsed = useAppStore((state) => state.toggleSidebarCollapsed)
   const sidebarOpen = useAppStore((state) => state.sidebarOpen)

@@ -1,8 +1,6 @@
-import { sharedTokens } from './shared.ts'
+import type { ModeTokens } from './types.ts'
 
 export const lightTheme = {
-  ...sharedTokens,
-
   colors: {
     primary: '#4F46E5',
     onPrimary: '#FFFFFF',
@@ -68,4 +66,4 @@ export const lightTheme = {
     lg: '0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 8px 3px rgba(0, 0, 0, 0.15)',
     xl: '0 2px 3px rgba(0, 0, 0, 0.3), 0 6px 10px 4px rgba(0, 0, 0, 0.15)'
   }
-}
+} satisfies ModeTokens

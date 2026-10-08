@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { assertValidFontFamily, assertValidFontSize, assertValidFontWeight, isValidFontFamily, isValidFontSize, isValidFontWeight } from '@styles/fontFormat.ts'
-import { darkTheme, lightTheme } from '@styles/themes/index.ts'
+import { baseTokens } from '@styles/themes/index.ts'
 
 describe('isValidFontFamily', () => {
   it.each([
@@ -55,11 +55,9 @@ describe('isValidFontFamily', () => {
     expect(isValidFontFamily(Array.from({ length: 8 }, (_, index) => `f${index}`).join(', '))).toBe(true)
   })
 
-  it('accepts the families of the built-in themes', () => {
-    for (const theme of [lightTheme, darkTheme]) {
-      expect(isValidFontFamily(theme.fonts.primary)).toBe(true)
-      expect(isValidFontFamily(theme.fonts.mono)).toBe(true)
-    }
+  it('accepts the families of the built-in theme', () => {
+    expect(isValidFontFamily(baseTokens.fonts.primary)).toBe(true)
+    expect(isValidFontFamily(baseTokens.fonts.mono)).toBe(true)
   })
 })
 
@@ -82,11 +80,9 @@ describe('isValidFontSize', () => {
     expect(isValidFontSize(undefined)).toBe(false)
   })
 
-  it('accepts the sizes of the built-in themes', () => {
-    for (const theme of [lightTheme, darkTheme]) {
-      for (const [name, value] of Object.entries(theme.fonts.sizes)) {
-        expect(isValidFontSize(value), `${name}: ${value}`).toBe(true)
-      }
+  it('accepts the sizes of the built-in theme', () => {
+    for (const [name, value] of Object.entries(baseTokens.fonts.sizes)) {
+      expect(isValidFontSize(value), `${name}: ${value}`).toBe(true)
     }
   })
 })
@@ -100,11 +96,9 @@ describe('isValidFontWeight', () => {
     expect(isValidFontWeight(value)).toBe(false)
   })
 
-  it('accepts the weights of the built-in themes', () => {
-    for (const theme of [lightTheme, darkTheme]) {
-      for (const [name, value] of Object.entries(theme.fonts.weights)) {
-        expect(isValidFontWeight(value), `${name}: ${value}`).toBe(true)
-      }
+  it('accepts the weights of the built-in theme', () => {
+    for (const [name, value] of Object.entries(baseTokens.fonts.weights)) {
+      expect(isValidFontWeight(value), `${name}: ${value}`).toBe(true)
     }
   })
 })

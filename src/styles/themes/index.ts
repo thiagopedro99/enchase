@@ -1,12 +1,9 @@
+import { baseTokens } from './shared.ts'
 import { lightTheme } from './light.ts'
 import { darkTheme } from './dark.ts'
 
-export const themes = {
-  light: lightTheme,
-  dark: darkTheme,
-} as const
+import type { ThemeSet } from './types.ts'
 
-export type ThemeType = keyof typeof themes
-export type Theme = typeof lightTheme
+export const defaultTheme: ThemeSet = { base: baseTokens, light: lightTheme, dark: darkTheme }
 
-export { lightTheme, darkTheme }
+export { baseTokens, lightTheme, darkTheme }
