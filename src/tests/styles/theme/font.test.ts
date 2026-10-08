@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { assertValidFontFamily, assertValidFontSize, assertValidFontWeight, isValidFontFamily, isValidFontSize, isValidFontWeight } from '@styles/fontFormat.ts'
-import { baseTokens } from '@styles/themes/index.ts'
+import { assertValidFontFamily, assertValidFontSize, assertValidFontWeight, isValidFontFamily, isValidFontSize, isValidFontWeight } from '@styles/theme/font.ts'
+import { baseTokens } from '@styles/tokens/index.ts'
 
 describe('isValidFontFamily', () => {
   it.each([

@@ -6,7 +6,7 @@ import { renderToString } from 'react-dom/server'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { useColorMode } from '@hooks/useColorMode.ts'
-import { lightTheme } from '@styles/themes/index.ts'
+import { lightTheme } from '@styles/tokens/index.ts'
 
 import type { ColorModeProviderProps, ColorModeStorage } from '@components/colorMode/types.ts'
 

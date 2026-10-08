@@ -1,9 +1,9 @@
-import { assertValidColor } from './colorFormat.ts'
-import { assertValidFontFamily, assertValidFontSize, assertValidFontWeight } from './fontFormat.ts'
-import { baseTokens, darkTheme, lightTheme } from './themes/index.ts'
-import { themeModes } from './themes/types.ts'
+import { assertValidColor } from './color.ts'
+import { assertValidFontFamily, assertValidFontSize, assertValidFontWeight } from './font.ts'
+import { baseTokens, darkTheme, lightTheme } from '../tokens/index.ts'
+import { themeModes } from '../tokens/types.ts'
 
-import type { BaseTokens, ColorTokens, ModeTokens, ThemeSet } from './themes/types.ts'
+import type { BaseTokens, ColorTokens, ModeTokens, ThemeSet } from '../tokens/types.ts'
 
 type DeepPartial<T> = { [K in keyof T]?: T[K] extends string ? string : DeepPartial<T[K]> }
 

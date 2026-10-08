@@ -115,5 +115,3 @@ export const globalStylesCss = `
     color: var(--enchase-color-on-primary-container);
   }
 `
-
-export const GlobalStyles = () => <style>{globalStylesCss}</style>

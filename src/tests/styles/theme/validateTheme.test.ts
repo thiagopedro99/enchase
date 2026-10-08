@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import { componentContrast, contrastChecks, formatContrastIssues, textContrast, validateTheme } from '@styles/validateTheme.ts'
-import { createTheme } from '@styles/createTheme.ts'
-import { darkTheme, defaultTheme, lightTheme } from '@styles/themes/index.ts'
+import { componentContrast, contrastChecks, formatContrastIssues, textContrast, validateTheme } from '@styles/theme/validateTheme.ts'
+import { createTheme } from '@styles/theme/createTheme.ts'
+import { darkTheme, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
 
 describe('contrastChecks', () => {
   const checks = contrastChecks(lightTheme.colors)

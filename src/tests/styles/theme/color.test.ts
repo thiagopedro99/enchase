@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { assertValidColor, isValidColor } from '@styles/colorFormat.ts'
-import { darkTheme, lightTheme } from '@styles/themes/index.ts'
+import { assertValidColor, isValidColor } from '@styles/theme/color.ts'
+import { darkTheme, lightTheme } from '@styles/tokens/index.ts'
 
 const flatten = (tree: Record<string, unknown>, path: string[] = []): [string, string][] =>
   Object.entries(tree).flatMap(([key, value]) => (typeof value === 'string' ? [[[...path, key].join('.'), value] as [string, string]] : flatten(value as Record<string, unknown>, [...path, key])))

@@ -10,7 +10,7 @@ import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { Container } from '@components/common/index.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { classNames } from '@utils/classNames.ts'
-import { baseTokens } from '@styles/themes/shared.ts'
+import { baseTokens } from '@styles/tokens/base.ts'
 import styles from './styles.module.css'
 
 import type { MobileDrawerProps, NavbarProps } from './types.ts'

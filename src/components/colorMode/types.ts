@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import type { ThemeInput } from '@styles/createTheme.ts'
+import type { ThemeInput } from '@styles/theme/createTheme.ts'
 
 export type ColorMode = 'light' | 'dark' | 'system'
 

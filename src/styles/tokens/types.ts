@@ -1,4 +1,4 @@
-import type { baseTokens } from './shared.ts'
+import type { baseTokens } from './base.ts'
 
 export const themeModes = ['light', 'dark'] as const
 

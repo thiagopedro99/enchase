@@ -1,7 +1,7 @@
 import { canMeasureContrast, contrastRatio } from './contrast.ts'
-import { themeModes } from './themes/types.ts'
+import { themeModes } from '../tokens/types.ts'
 
-import type { ColorTokens, ThemeSet } from './themes/types.ts'
+import type { ColorTokens, ThemeSet } from '../tokens/types.ts'
 
 export type ContrastCheck = { label: string; foreground: string; background: string; minimum: number }
 

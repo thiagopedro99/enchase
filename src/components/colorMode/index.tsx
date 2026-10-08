@@ -2,10 +2,10 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 
 import { defaultColorMode, defaultStorageKey, getDefaultStorage, readStoredMode, systemDarkQuery, writeStoredMode } from './defaultData.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
-import { createTheme } from '@styles/createTheme.ts'
-import { defaultThemeCss, themeCss } from '@styles/cssVariables.ts'
-import { formatContrastIssues, validateTheme } from '@styles/validateTheme.ts'
-import { ThemeVariables } from '@styles/themeVariables.tsx'
+import { createTheme } from '@styles/theme/createTheme.ts'
+import { defaultThemeCss, themeCss } from '@styles/css/declarations.ts'
+import { formatContrastIssues, validateTheme } from '@styles/theme/validateTheme.ts'
+import { ThemeVariables } from '@styles/react.tsx'
 import { ColorModeContext } from './context.ts'
 
 import type { ColorMode, ColorModeProviderProps, ResolvedColorMode } from './types.ts'

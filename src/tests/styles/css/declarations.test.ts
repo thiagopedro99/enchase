@@ -17,8 +17,8 @@ import {
   stateVariableName,
   themeVariables,
   zIndexVariableName
-} from '@styles/cssVariables.ts'
-import { baseTokens, darkTheme, lightTheme } from '@styles/themes/index.ts'
+} from '@styles/css/declarations.ts'
+import { baseTokens, darkTheme, lightTheme } from '@styles/tokens/index.ts'
 
 const leafPaths = (tree: Record<string, unknown>, path: string[] = []): string[] =>
   Object.entries(tree).flatMap(([key, value]) => (typeof value === 'string' ? [[...path, key].join('.')] : leafPaths(value as Record<string, unknown>, [...path, key])))

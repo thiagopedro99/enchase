@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import { canMeasureContrast, contrastRatio } from '@styles/contrast.ts'
-import { contrastChecks } from '@styles/validateTheme.ts'
-import { darkTheme, lightTheme } from '@styles/themes/index.ts'
+import { canMeasureContrast, contrastRatio } from '@styles/theme/contrast.ts'
+import { contrastChecks } from '@styles/theme/validateTheme.ts'
+import { darkTheme, lightTheme } from '@styles/tokens/index.ts'
 
 const themes = { light: lightTheme, dark: darkTheme }
 const text = 4.5

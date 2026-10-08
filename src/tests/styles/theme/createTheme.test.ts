@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/themes/index.ts'
-import { themeVariables } from '@styles/cssVariables.ts'
-import { createTheme } from '@styles/createTheme.ts'
+import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
+import { themeVariables } from '@styles/css/declarations.ts'
+import { createTheme } from '@styles/theme/createTheme.ts'
 
-import type { ThemeInput } from '@styles/createTheme.ts'
+import type { ThemeInput } from '@styles/theme/createTheme.ts'
 
 describe('createTheme', () => {
   it('returns the built-in light and dark themes when nothing is customized', () => {

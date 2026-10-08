@@ -1,12 +1,13 @@
+import { render, screen } from '@testing-library/react'
 import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
-import { defaultThemeCss, themeCss } from '@styles/cssVariables.ts'
-import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/themes/index.ts'
-import { createTheme } from '@styles/createTheme.ts'
-import { ThemeVariables } from '@styles/themeVariables.tsx'
+import { defaultThemeCss, themeCss } from '@styles/css/declarations.ts'
+import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
+import { createTheme } from '@styles/theme/createTheme.ts'
+import { GlobalStyles, ThemeVariables } from '@styles/react.tsx'
 
-import type { ThemeSet } from '@styles/themes/types.ts'
+import type { ThemeSet } from '@styles/tokens/types.ts'
 
 const renderCss = (set: ThemeSet = defaultTheme) => {
   const html = renderToString(<ThemeVariables css={themeCss(set)} />)
@@ -85,5 +86,20 @@ describe('ThemeVariables layout', () => {
     expect(css.split(spacing)).toHaveLength(2)
     expect(css).toContain('--enchase-radius-full:' + baseTokens.borderRadius.full)
     expect(css).toContain('--enchase-transition-fast:' + baseTokens.transitions.fast.replace(/\s+/g, ''))
+  })
+})
+
+describe('GlobalStyles', () => {
+  it('underlines inline links so they do not rely on color alone (WCAG 1.4.1)', () => {
+    render(
+      <>
+        <GlobalStyles />
+        <p>
+          Read the <a href="/docs">documentation</a> first.
+        </p>
+      </>
+    )
+
+    expect(getComputedStyle(screen.getByRole('link', { name: 'documentation' })).textDecoration).toContain('underline')
   })
 })

@@ -1,6 +1,6 @@
-import { defaultTheme } from './themes/index.ts'
+import { defaultTheme } from '../tokens/index.ts'
 
-import type { BaseTokens, ColorTokens, ModeTokens, ShadowTokens, ThemeSet } from './themes/types.ts'
+import type { BaseTokens, ColorTokens, ModeTokens, ShadowTokens, ThemeSet } from '../tokens/types.ts'
 
 type FontTokens = BaseTokens['fonts']
 

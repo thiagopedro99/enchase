@@ -1,4 +1,4 @@
-import { hexColor } from './colorFormat.ts'
+import { hexColor } from './color.ts'
 
 type Rgba = { r: number; g: number; b: number; a: number }
 

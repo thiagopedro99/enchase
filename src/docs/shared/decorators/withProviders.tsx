@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
-import { GlobalStyles } from '@styles/globalStyles.tsx'
+import { GlobalStyles } from '@styles/react.tsx'
 
 import type { Decorator } from '@storybook/react-vite'
 
