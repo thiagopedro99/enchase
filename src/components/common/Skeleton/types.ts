@@ -9,9 +9,3 @@ export interface SkeletonProps {
   className?: string
   animation?: MotionOverride
 }
-
-export interface StyledSkeletonProps {
-  $variant: SkeletonVariant
-  $width?: string
-  $height?: string
-}

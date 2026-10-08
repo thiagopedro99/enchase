@@ -1,0 +1,23 @@
+.skeleton {
+  background: var(--enchase-color-surface-container-high);
+  background-image: linear-gradient(90deg, var(--enchase-color-surface-container-high) 0px, var(--enchase-color-surface-container-low) 40px, var(--enchase-color-surface-container-high) 80px);
+  background-size: 468px 100%;
+}
+
+.skeleton[data-variant='text'] {
+  width: var(--skeleton-width, 100%);
+  height: var(--skeleton-height, 1em);
+  border-radius: var(--enchase-radius-sm);
+}
+
+.skeleton[data-variant='circular'] {
+  width: var(--skeleton-width, 40px);
+  height: var(--skeleton-height, 40px);
+  border-radius: 50%;
+}
+
+.skeleton[data-variant='rectangular'] {
+  width: var(--skeleton-width, 100%);
+  height: var(--skeleton-height, 200px);
+  border-radius: var(--enchase-radius-md);
+}
