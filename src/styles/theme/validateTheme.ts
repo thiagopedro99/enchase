@@ -1,5 +1,5 @@
 import { canMeasureContrast, contrastRatio } from './contrast.ts'
-import { themeModes } from '../tokens/types.ts'
+import { colorRoles, themeModes } from '../tokens/types.ts'
 
 import type { ColorTokens, ThemeSet } from '../tokens/types.ts'
 
@@ -11,54 +11,48 @@ export const textContrast = 4.5
 
 export const componentContrast = 3
 
+const surfaceNames = ['surface', 'background', 'surfaceContainerLow', 'surfaceContainer', 'surfaceContainerHigh'] as const
+
+const capitalize = <Text extends string>(text: Text) => (text.charAt(0).toUpperCase() + text.slice(1)) as Capitalize<Text>
+
 export const contrastChecks = (colors: ColorTokens): ContrastCheck[] => {
-  const surfaces = [
-    ['surface', colors.surface],
-    ['background', colors.background],
-    ['surfaceContainerLow', colors.surfaceContainerLow],
-    ['surfaceContainer', colors.surfaceContainer],
-    ['surfaceContainerHigh', colors.surfaceContainerHigh]
-  ] as const
+  const surfaces = surfaceNames.map((name) => [name, colors[name]] as const)
 
   const pair = (label: string, foreground: string, background: string, minimum: number): ContrastCheck => ({ label, foreground, background, minimum })
 
+  const textOnSurface = [
+    ['primary text', colors.text.primary],
+    ['secondary text', colors.text.secondary],
+    ['link', colors.primary],
+    ['link hover', colors.primaryHover],
+    ['error text', colors.error],
+    ['success text', colors.success],
+    ['warning text', colors.warning],
+    ['info text', colors.info]
+  ] as const
+
+  const componentOnSurface = [
+    ['form control border', colors.borderStrong],
+    ['primary (focus ring, outline)', colors.primary],
+    ['error (invalid border)', colors.error]
+  ] as const
+
+  const onRole = colorRoles.flatMap((role) => {
+    const on = `on${capitalize(role)}` as const
+
+    return [pair(`${on} on ${role}`, colors[on], colors[role], textContrast), pair(`${on}Container on ${role}Container`, colors[`${on}Container`], colors[`${role}Container`], textContrast)]
+  })
+
   return [
-    ...surfaces.flatMap(([name, surface]) => [
-      pair(`primary text on ${name}`, colors.text.primary, surface, textContrast),
-      pair(`secondary text on ${name}`, colors.text.secondary, surface, textContrast),
-      pair(`link on ${name}`, colors.primary, surface, textContrast),
-      pair(`link hover on ${name}`, colors.primaryHover, surface, textContrast),
-      pair(`error text on ${name}`, colors.error, surface, textContrast),
-      pair(`success text on ${name}`, colors.success, surface, textContrast),
-      pair(`warning text on ${name}`, colors.warning, surface, textContrast),
-      pair(`info text on ${name}`, colors.info, surface, textContrast)
-    ]),
-    pair('placeholder on surface', colors.text.placeholder, colors.surface, textContrast),
-    pair('placeholder on surfaceContainerLow', colors.text.placeholder, colors.surfaceContainerLow, textContrast),
-    pair('placeholder on surfaceContainer', colors.text.placeholder, colors.surfaceContainer, textContrast),
-    pair('placeholder on surfaceContainerHigh', colors.text.placeholder, colors.surfaceContainerHigh, textContrast),
-    pair('onPrimary on primary', colors.onPrimary, colors.primary, textContrast),
+    ...surfaces.flatMap(([name, surface]) => textOnSurface.map(([label, color]) => pair(`${label} on ${name}`, color, surface, textContrast))),
+    ...surfaces.filter(([name]) => name !== 'background').map(([name, surface]) => pair(`placeholder on ${name}`, colors.text.placeholder, surface, textContrast)),
+    ...onRole,
     pair('inverse text on primary', colors.text.inverse, colors.primary, textContrast),
-    pair('onPrimaryContainer on primaryContainer', colors.onPrimaryContainer, colors.primaryContainer, textContrast),
     pair('link on primaryContainer', colors.primary, colors.primaryContainer, textContrast),
     pair('link hover on primaryContainer', colors.primaryHover, colors.primaryContainer, textContrast),
-    pair('onSecondary on secondary', colors.onSecondary, colors.secondary, textContrast),
-    pair('onSecondaryContainer on secondaryContainer', colors.onSecondaryContainer, colors.secondaryContainer, textContrast),
-    pair('onError on error', colors.onError, colors.error, textContrast),
-    pair('onErrorContainer on errorContainer', colors.onErrorContainer, colors.errorContainer, textContrast),
-    pair('onSuccess on success', colors.onSuccess, colors.success, textContrast),
-    pair('onSuccessContainer on successContainer', colors.onSuccessContainer, colors.successContainer, textContrast),
-    pair('onWarning on warning', colors.onWarning, colors.warning, textContrast),
-    pair('onWarningContainer on warningContainer', colors.onWarningContainer, colors.warningContainer, textContrast),
-    pair('onInfo on info', colors.onInfo, colors.info, textContrast),
-    pair('onInfoContainer on infoContainer', colors.onInfoContainer, colors.infoContainer, textContrast),
     pair('inverseOnSurface on inverseSurface', colors.inverseOnSurface, colors.inverseSurface, textContrast),
     pair('inversePrimary action on inverseSurface', colors.inversePrimary, colors.inverseSurface, textContrast),
-    ...surfaces.flatMap(([name, surface]) => [
-      pair(`form control border on ${name}`, colors.borderStrong, surface, componentContrast),
-      pair(`primary (focus ring, outline) on ${name}`, colors.primary, surface, componentContrast),
-      pair(`error (invalid border) on ${name}`, colors.error, surface, componentContrast)
-    ])
+    ...surfaces.flatMap(([name, surface]) => componentOnSurface.map(([label, color]) => pair(`${label} on ${name}`, color, surface, componentContrast)))
   ]
 }
 
