@@ -1,12 +1,12 @@
-import { AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { useRef } from 'react'
 
 import { collapsedWidth, drawerWidth, expandedWidth } from './defaultData.ts'
-import { ModalOverlay, ModalPanel, SidebarAside } from './styles.ts'
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import SidebarContent from './SidebarContent.tsx'
+import styles from './styles.module.css'
 
 import type { SidebarProps } from './types.ts'
 
@@ -17,7 +17,7 @@ const PermanentSidebar = ({ sections, activeId, header, footer, collapsed = fals
   const resizeMotion = useMotionRecipe('resize', animation)
 
   return (
-    <SidebarAside {...resizeMotion} id={id} initial={false} animate={{ width: collapsed ? collapsedWidth : expandedWidth }}>
+    <motion.div {...resizeMotion} id={id} className={styles.aside} initial={false} animate={{ width: collapsed ? collapsedWidth : expandedWidth }}>
       <SidebarContent
         sections={sections}
         activeId={activeId}
@@ -27,7 +27,7 @@ const PermanentSidebar = ({ sections, activeId, header, footer, collapsed = fals
         onToggleCollapsed={onToggleCollapsed}
         ariaLabel={ariaLabel ?? labels.mainNavigation}
       />
-    </SidebarAside>
+    </motion.div>
   )
 }
 
@@ -43,11 +43,11 @@ const ModalSidebarPanel = ({ sections, activeId, header, footer, onClose, ariaLa
 
   return (
     <div ref={rootRef}>
-      <ModalOverlay {...overlayMotion} onClick={onClose} />
+      <motion.div {...overlayMotion} className={styles.overlay} onClick={onClose} />
 
-      <ModalPanel {...panelMotion} ref={panelRef} id={id} role="dialog" aria-modal="true" aria-label={name} tabIndex={-1}>
+      <motion.div {...panelMotion} ref={panelRef} id={id} className={styles.panel} style={{ width: drawerWidth }} role="dialog" aria-modal="true" aria-label={name} tabIndex={-1}>
         <SidebarContent sections={sections} activeId={activeId} header={header} footer={footer} collapsed={false} onSelect={onClose} ariaLabel={name} />
-      </ModalPanel>
+      </motion.div>
     </div>
   )
 }

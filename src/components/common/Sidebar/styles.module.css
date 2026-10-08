@@ -1,0 +1,193 @@
+.aside,
+.panel {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--enchase-color-surface-container-low);
+  color: var(--enchase-color-text-primary);
+}
+
+.aside {
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
+  height: 100vh;
+  z-index: var(--enchase-z-sticky);
+  border-radius: 0 var(--enchase-radius-lg) var(--enchase-radius-lg) 0;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--enchase-color-overlay);
+  z-index: var(--enchase-z-backdrop);
+}
+
+.panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  max-width: 90vw;
+  height: 100vh;
+  z-index: var(--enchase-z-modal);
+  border-radius: 0 var(--enchase-radius-2xl) var(--enchase-radius-2xl) 0;
+  box-shadow: var(--enchase-shadow-lg);
+}
+
+.panel:focus {
+  outline: none;
+}
+
+.headerSlot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 72px;
+  padding: 0 var(--enchase-space-lg);
+  overflow: hidden;
+}
+
+.headerSlot[data-collapsed] {
+  justify-content: center;
+}
+
+.nav {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-md);
+  padding: var(--enchase-space-xs) var(--enchase-space-md);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-xs);
+}
+
+.sectionTitle {
+  margin: 0;
+  padding: var(--enchase-space-sm) var(--enchase-space-md);
+  font-size: var(--enchase-font-size-sm);
+  font-weight: var(--enchase-font-weight-semibold);
+  color: var(--enchase-color-text-secondary);
+}
+
+.sectionDivider {
+  margin: var(--enchase-space-xs) var(--enchase-space-md);
+  border: 0;
+  border-top: 1px solid var(--enchase-color-border);
+}
+
+.itemList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-xs);
+}
+
+.listItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--enchase-space-md);
+  width: 100%;
+  height: 52px;
+  padding: 0 var(--enchase-space-md);
+  justify-content: flex-start;
+  border-radius: var(--enchase-radius-full);
+  color: var(--enchase-color-text-secondary);
+  font-family: inherit;
+  font-size: var(--enchase-font-size-sm);
+  font-weight: var(--enchase-font-weight-semibold);
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--enchase-transition-fast),
+    color var(--enchase-transition-fast);
+}
+
+.item[data-collapsed] {
+  padding: 0;
+  justify-content: center;
+}
+
+.item:hover {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+  color: var(--enchase-color-text-primary);
+}
+
+.item[aria-current='page'],
+.item[aria-current='location'] {
+  background-color: var(--enchase-color-primary-container);
+  color: var(--enchase-color-on-primary-container);
+}
+
+.itemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  font-size: var(--enchase-font-size-base);
+  font-weight: var(--enchase-font-weight-bold);
+}
+
+.itemText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemBadge {
+  padding: 2px var(--enchase-space-sm);
+  border-radius: var(--enchase-radius-full);
+  background-color: var(--enchase-color-secondary-container);
+  color: var(--enchase-color-on-secondary-container);
+  font-size: var(--enchase-font-size-xs);
+  font-weight: var(--enchase-font-weight-semibold);
+}
+
+.footerSlot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--enchase-space-sm);
+  padding: var(--enchase-space-md);
+}
+
+.footerSlot[data-collapsed] {
+  flex-direction: column;
+  justify-content: center;
+}
+
+.collapseButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--enchase-radius-full);
+  color: var(--enchase-color-text-secondary);
+  transition:
+    background-color var(--enchase-transition-fast),
+    color var(--enchase-transition-fast);
+}
+
+.collapseButton:hover {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+  color: var(--enchase-color-text-primary);
+}

@@ -1,9 +1,10 @@
 import { ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { NavLink } from 'react-router-dom'
 
-import { CollapseButton, FooterSlot, HeaderSlot, ItemAnchor, ItemBadge, ItemButton, ItemIcon, ItemList, ItemRouterLink, ItemText, ListItem, Nav, Section, SectionDivider, SectionTitle } from './styles.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import Tooltip from '../Tooltip/index.tsx'
+import styles from './styles.module.css'
 
 import type { SidebarContentProps, SidebarItemViewProps } from './types.ts'
 
@@ -17,28 +18,30 @@ const SidebarItemView = ({ item, active, collapsed, onSelect }: SidebarItemViewP
 
   const content = (
     <>
-      <ItemIcon aria-hidden="true">{Icon ? <Icon size={22} /> : item.label.charAt(0).toUpperCase()}</ItemIcon>
-      {collapsed ? <VisuallyHidden>{item.label}</VisuallyHidden> : <ItemText>{item.label}</ItemText>}
-      {!collapsed && item.badge && <ItemBadge>{item.badge}</ItemBadge>}
+      <span className={styles.itemIcon} aria-hidden="true">
+        {Icon ? <Icon size={22} /> : item.label.charAt(0).toUpperCase()}
+      </span>
+      {collapsed ? <VisuallyHidden>{item.label}</VisuallyHidden> : <span className={styles.itemText}>{item.label}</span>}
+      {!collapsed && item.badge && <span className={styles.itemBadge}>{item.badge}</span>}
     </>
   )
 
   const element = item.to ? (
-    <ItemRouterLink to={item.to} end={item.to === '/'} onClick={handleClick} $collapsed={collapsed}>
+    <NavLink to={item.to} end={item.to === '/'} onClick={handleClick} className={styles.item} data-collapsed={collapsed ? '' : undefined}>
       {content}
-    </ItemRouterLink>
+    </NavLink>
   ) : item.href ? (
-    <ItemAnchor href={item.href} aria-current={active ? 'location' : undefined} onClick={handleClick} $collapsed={collapsed}>
+    <a href={item.href} aria-current={active ? 'location' : undefined} onClick={handleClick} className={styles.item} data-collapsed={collapsed ? '' : undefined}>
       {content}
-    </ItemAnchor>
+    </a>
   ) : (
-    <ItemButton type="button" onClick={handleClick} $collapsed={collapsed}>
+    <button type="button" onClick={handleClick} className={styles.item} data-collapsed={collapsed ? '' : undefined}>
       {content}
-    </ItemButton>
+    </button>
   )
 
   return (
-    <ListItem>
+    <li className={styles.listItem}>
       {collapsed ? (
         <Tooltip text={item.label} position="right" describe={false}>
           {element}
@@ -46,7 +49,7 @@ const SidebarItemView = ({ item, active, collapsed, onSelect }: SidebarItemViewP
       ) : (
         element
       )}
-    </ListItem>
+    </li>
   )
 }
 
@@ -58,31 +61,39 @@ export const SidebarContent = ({ sections, activeId, header, footer, collapsed, 
 
   return (
     <>
-      {headerContent && <HeaderSlot $collapsed={collapsed}>{headerContent}</HeaderSlot>}
+      {headerContent && (
+        <div className={styles.headerSlot} data-collapsed={collapsed ? '' : undefined}>
+          {headerContent}
+        </div>
+      )}
 
-      <Nav aria-label={ariaLabel}>
+      <nav className={styles.nav} aria-label={ariaLabel}>
         {sections.map((section, index) => (
-          <Section key={section.id}>
-            {section.title && !collapsed && <SectionTitle aria-hidden="true">{section.title}</SectionTitle>}
-            {collapsed && index > 0 && <SectionDivider />}
-            <ItemList aria-label={section.title}>
+          <div key={section.id} className={styles.section}>
+            {section.title && !collapsed && (
+              <p className={styles.sectionTitle} aria-hidden="true">
+                {section.title}
+              </p>
+            )}
+            {collapsed && index > 0 && <hr className={styles.sectionDivider} />}
+            <ul className={styles.itemList} aria-label={section.title}>
               {section.items.map((item) => (
                 <SidebarItemView key={item.id} item={item} active={item.id === activeId} collapsed={collapsed} onSelect={onSelect} />
               ))}
-            </ItemList>
-          </Section>
+            </ul>
+          </div>
         ))}
-      </Nav>
+      </nav>
 
       {(footerContent || onToggleCollapsed) && (
-        <FooterSlot $collapsed={collapsed}>
+        <div className={styles.footerSlot} data-collapsed={collapsed ? '' : undefined}>
           {footerContent}
           {onToggleCollapsed && (
-            <CollapseButton type="button" onClick={onToggleCollapsed} aria-label={toggleLabel} aria-expanded={!collapsed}>
+            <button type="button" className={styles.collapseButton} onClick={onToggleCollapsed} aria-label={toggleLabel} aria-expanded={!collapsed}>
               {collapsed ? <ChevronsRight size={22} aria-hidden="true" /> : <ChevronsLeft size={22} aria-hidden="true" />}
-            </CollapseButton>
+            </button>
           )}
-        </FooterSlot>
+        </div>
       )}
     </>
   )
