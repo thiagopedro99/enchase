@@ -12,10 +12,5 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   helperText?: string
   options: SelectOption[]
   placeholder?: string
-  $fullWidth?: boolean
-}
-
-export interface SelectStyleProps {
-  $hasLabel?: boolean
-  $hasError?: boolean
+  fullWidth?: boolean
 }

@@ -1,11 +1,12 @@
 import { forwardRef, useId } from 'react'
 
-import { SelectWrapper, Field, StyledSelect, Label, NotchedOutline, SelectIcon, ErrorMessage, HelperText } from './styles.ts'
 import { defaultFullWidth } from './defaultData.ts'
+import { classNames } from '@utils/classNames.ts'
+import styles from './styles.module.css'
 
 import type { SelectProps } from './types.ts'
 
-export const Select = forwardRef<HTMLSelectElement, SelectProps>(({ label, error, helperText, options, placeholder, $fullWidth = defaultFullWidth, id, ...props }, ref) => {
+export const Select = forwardRef<HTMLSelectElement, SelectProps>(({ label, error, helperText, options, placeholder, fullWidth = defaultFullWidth, id, className, ...props }, ref) => {
   const generatedId = useId()
   const selectId = id ?? generatedId
   const errorId = `${selectId}-error`
@@ -15,9 +16,9 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({ label, error
   const describedBy = [props['aria-describedby'], error ? errorId : helperText ? helperId : undefined].filter(Boolean).join(' ') || undefined
 
   return (
-    <SelectWrapper $fullWidth={$fullWidth}>
-      <Field>
-        <StyledSelect {...props} ref={ref} id={selectId} $hasLabel={hasLabel} aria-invalid={hasError || undefined} aria-describedby={describedBy}>
+    <div className={styles.wrapper} data-full-width={fullWidth ? '' : undefined}>
+      <div className={styles.field}>
+        <select {...props} ref={ref} id={selectId} className={classNames(styles.select, className)} data-has-label={hasLabel ? '' : undefined} aria-invalid={hasError || undefined} aria-describedby={describedBy}>
           {placeholder && (
             <option value="" disabled data-placeholder="">
               {placeholder}
@@ -29,31 +30,35 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(({ label, error
               {option.label}
             </option>
           ))}
-        </StyledSelect>
+        </select>
 
         {hasLabel && (
-          <Label htmlFor={selectId} $hasError={hasError}>
+          <label htmlFor={selectId} className={styles.label} data-has-error={hasError ? '' : undefined}>
             {label}
-          </Label>
+          </label>
         )}
 
-        <NotchedOutline aria-hidden="true" $hasLabel={hasLabel} $hasError={hasError}>
+        <fieldset aria-hidden="true" className={styles.outline} data-has-label={hasLabel ? '' : undefined} data-has-error={hasError ? '' : undefined}>
           <legend>
             <span>{label ?? '​'}</span>
           </legend>
-        </NotchedOutline>
+        </fieldset>
 
-        <SelectIcon aria-hidden="true" />
-      </Field>
+        <div aria-hidden="true" className={styles.icon} />
+      </div>
 
       {error && (
-        <ErrorMessage id={errorId} role="alert">
+        <span id={errorId} role="alert" className={styles.error}>
           {error}
-        </ErrorMessage>
+        </span>
       )}
 
-      {helperText && !error && <HelperText id={helperId}>{helperText}</HelperText>}
-    </SelectWrapper>
+      {helperText && !error && (
+        <span id={helperId} className={styles.helper}>
+          {helperText}
+        </span>
+      )}
+    </div>
   )
 })
 

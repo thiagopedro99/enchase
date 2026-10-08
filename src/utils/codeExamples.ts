@@ -132,7 +132,7 @@ import { useState } from 'react';`
       title: 'Largura total',
       code: `<Select
   label="Opções"
-  $fullWidth
+  fullWidth
   options={[...]}
 />`
     }

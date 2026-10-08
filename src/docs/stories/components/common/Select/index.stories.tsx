@@ -12,7 +12,7 @@ const meta = {
     placeholder: 'Selecione...',
     options: countryOptions,
     defaultValue: '',
-    $fullWidth: defaultFullWidth,
+    fullWidth: defaultFullWidth,
     disabled: false
   },
   argTypes: {
@@ -37,7 +37,7 @@ const meta = {
       description: 'Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta.',
       control: 'text'
     },
-    $fullWidth: {
+    fullWidth: {
       description: 'Ocupa toda a largura disponível.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultFullWidth) } }
