@@ -5,15 +5,11 @@ import { axe } from '@tests/axe.ts'
 
 import { docsUrl } from '@components/layout/defaultData.ts'
 import { repositoryUrl } from '@pages/home/defaultData.ts'
-import ComponentsDemo from '@pages/componentsDemo/index.tsx'
-import GettingStarted from '@pages/gettingStarted/index.tsx'
 import NotFound from '@pages/notFound/index.tsx'
 import Home from '@pages/home/index.tsx'
 
 const pages = [
   ['Home', Home],
-  ['GettingStarted', GettingStarted],
-  ['ComponentsDemo', ComponentsDemo],
   ['NotFound', NotFound]
 ] as const
 
@@ -71,19 +67,5 @@ describe('Home links', () => {
     expect(link).toHaveAttribute('href', repositoryUrl)
     expect(link).toHaveAttribute('target', '_blank')
     expect(link).toHaveAttribute('rel', 'noopener noreferrer')
-  })
-})
-
-describe('GettingStarted layout', () => {
-  it('stacks and centers the page header and the closing call to action', () => {
-    renderWithProviders(<GettingStarted />)
-
-    const header = screen.getByRole('heading', { level: 1 }).parentElement as HTMLElement
-    const closing = screen.getByRole('heading', { name: 'Pronto para começar?' }).parentElement as HTMLElement
-
-    for (const element of [header, closing]) {
-      expect(getComputedStyle(element).flexDirection).toBe('column')
-      expect(getComputedStyle(element).alignItems).toBe('center')
-    }
   })
 })

@@ -93,14 +93,14 @@ describe('Navbar', () => {
 
     await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
     const dialog = await screen.findByRole('dialog')
-    await user.click(dialog.querySelector('a[href="/components"]') as HTMLElement)
+    await user.click(dialog.querySelector('a[href="/"]') as HTMLElement)
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
   })
 
   it('marks the current page link', () => {
-    renderWithProviders(<Navbar />, { route: '/components' })
+    renderWithProviders(<Navbar />, { route: '/' })
 
-    expect(screen.getByRole('link', { name: 'Components', hidden: true })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('link', { name: 'Home', hidden: true })).toHaveAttribute('aria-current', 'page')
   })
 
   it('has no axe violations while closed', async () => {
