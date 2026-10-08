@@ -2,7 +2,6 @@ import { useLocation } from 'react-router-dom'
 import { useTheme } from 'styled-components'
 import { useEffect, useId } from 'react'
 
-import { FooterArea, LayoutWrapper, Main, NavbarArea, SidebarArea, SkipLink } from './styles.ts'
 import { defaultBrand, defaultBrandLogo, defaultCentered, defaultNavigationSections } from './defaultData.ts'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import AppSidebar from './subcomponentes/AppSidebar/index.tsx'
@@ -14,6 +13,7 @@ import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { useAppStore } from '@stores/app/index.ts'
 import Navbar from '@components/navbar/index.tsx'
 import Footer from '@components/footer/index.tsx'
+import styles from './styles.module.css'
 
 import type { LayoutProps } from './types.ts'
 
@@ -58,8 +58,10 @@ const Layout = ({
   }, [isDesktop, sidebarOpen, setSidebarOpen])
 
   return (
-    <LayoutWrapper $sidebar={usesSidebar && isDesktop}>
-      <SkipLink href={`#${mainId}`}>{labels.skipToContent}</SkipLink>
+    <div className={styles.wrapper} data-sidebar={usesSidebar && isDesktop ? '' : undefined}>
+      <a href={`#${mainId}`} className={styles.skipLink}>
+        {labels.skipToContent}
+      </a>
 
       {usesSidebar && (
         <AppBar
@@ -74,31 +76,31 @@ const Layout = ({
       )}
 
       {navigation === 'navbar' && !hideNavbar && (
-        <NavbarArea>
+        <div className={styles.navbarArea}>
           <Navbar logo={brand} />
-        </NavbarArea>
+        </div>
       )}
 
       {usesSidebar && isDesktop && (
-        <SidebarArea>
+        <div className={styles.sidebarArea}>
           <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="permanent" activeId={activePageSectionId} navId={navId} />
-        </SidebarArea>
+        </div>
       )}
 
-      <Main id={mainId} tabIndex={-1} $centered={centered}>
+      <main id={mainId} tabIndex={-1} className={styles.main} data-centered={centered ? '' : undefined}>
         <Container $maxWidth={maxWidth} $padding={padding}>
           {children}
         </Container>
-      </Main>
+      </main>
 
       {!hideFooter && (
-        <FooterArea>
+        <div className={styles.footerArea}>
           <Footer />
-        </FooterArea>
+        </div>
       )}
 
       {usesSidebar && !isDesktop && <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="modal" activeId={activePageSectionId} navId={navId} />}
-    </LayoutWrapper>
+    </div>
   )
 }
 
