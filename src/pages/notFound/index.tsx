@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 
-import { CenteredContent, ErrorCode, Title, Message } from './styles.ts'
 import { Button, Card, Container } from '@components/common/index.ts'
 import { Flex } from '@components/common/index.ts'
 import Layout from '@components/layout/index.tsx'
+import styles from './styles.module.css'
 
 const NotFound = () => {
   const navigate = useNavigate()
@@ -11,14 +11,14 @@ const NotFound = () => {
   return (
     <Layout pageTitle="Página não encontrada">
       <Container maxWidth="md">
-        <CenteredContent>
-          <ErrorCode>404</ErrorCode>
+        <div className={styles.centeredContent}>
+          <h1 className={styles.errorCode}>404</h1>
 
           <Card>
             <Flex direction="column" align="center" gap="1.5rem">
-              <Title>Página não encontrada</Title>
+              <h2 className={styles.title}>Página não encontrada</h2>
 
-              <Message>Desculpe, a página que você está procurando não existe ou foi movida.</Message>
+              <p className={styles.message}>Desculpe, a página que você está procurando não existe ou foi movida.</p>
 
               <Flex gap="1rem" wrap>
                 <Button variant="primary" onClick={() => navigate('/')}>
@@ -31,7 +31,7 @@ const NotFound = () => {
               </Flex>
             </Flex>
           </Card>
-        </CenteredContent>
+        </div>
       </Container>
     </Layout>
   )

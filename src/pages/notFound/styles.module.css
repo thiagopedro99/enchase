@@ -1,0 +1,44 @@
+.centeredContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.errorCode {
+  font-size: 8rem;
+  font-weight: var(--enchase-font-weight-bold);
+  color: var(--enchase-color-primary);
+  margin: 0;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .errorCode {
+    font-size: 6rem;
+  }
+}
+
+.title {
+  font-size: var(--enchase-font-size-2xl);
+  font-weight: var(--enchase-font-weight-semibold);
+  color: var(--enchase-color-text-primary);
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: var(--enchase-font-size-xl);
+  }
+}
+
+.message {
+  font-size: var(--enchase-font-size-base);
+  color: var(--enchase-color-text-secondary);
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 400px;
+}
