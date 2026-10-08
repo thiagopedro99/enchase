@@ -1,14 +1,19 @@
 import { createPortal } from 'react-dom'
+import { motion } from 'motion/react'
 import { useRef } from 'react'
 
-import { SpinnerContainer, Spinner, Overlay, LoadingText, InlineSpinner } from './styles.ts'
 import { useInertSiblings } from '@hooks/useInertSiblings.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { useScrollLock } from '@hooks/useScrollLock.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
+import { classNames } from '@utils/classNames.ts'
+import styles from './styles.module.css'
 
+import type { CSSProperties } from 'react'
 import type { InlineLoadingProps, LoadingProps } from './types.ts'
+
+const spinnerColorStyle = (color?: string): CSSProperties | undefined => (color ? ({ '--spinner-color': color } as CSSProperties) : undefined)
 
 const OverlayLoading = ({ size, text, color, animation }: Required<Pick<LoadingProps, 'size'>> & Omit<LoadingProps, 'size' | 'overlay'>) => {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -20,11 +25,11 @@ const OverlayLoading = ({ size, text, color, animation }: Required<Pick<LoadingP
 
   return (
     <div ref={rootRef}>
-      <Overlay aria-hidden="true" />
-      <SpinnerContainer $overlay role="status" aria-live="polite">
-        <Spinner {...spinMotion} $size={size} $color={color} aria-hidden="true" />
-        {text ? <LoadingText>{text}</LoadingText> : <VisuallyHidden>{labels.loading}</VisuallyHidden>}
-      </SpinnerContainer>
+      <div className={styles.overlay} aria-hidden="true" />
+      <div className={styles.container} data-overlay="" role="status" aria-live="polite">
+        <motion.div {...spinMotion} className={styles.spinner} data-size={size} style={spinnerColorStyle(color)} aria-hidden="true" />
+        {text ? <p className={styles.text}>{text}</p> : <VisuallyHidden>{labels.loading}</VisuallyHidden>}
+      </div>
     </div>
   )
 }
@@ -40,10 +45,10 @@ export const Loading = ({ size = 'md', overlay = false, text, color, animation }
   }
 
   return (
-    <SpinnerContainer $overlay={false} role="status" aria-live="polite">
-      <Spinner {...spinMotion} $size={size} $color={color} aria-hidden="true" />
-      {text ? <LoadingText>{text}</LoadingText> : <VisuallyHidden>{labels.loading}</VisuallyHidden>}
-    </SpinnerContainer>
+    <div className={styles.container} role="status" aria-live="polite">
+      <motion.div {...spinMotion} className={styles.spinner} data-size={size} style={spinnerColorStyle(color)} aria-hidden="true" />
+      {text ? <p className={styles.text}>{text}</p> : <VisuallyHidden>{labels.loading}</VisuallyHidden>}
+    </div>
   )
 }
 
@@ -53,7 +58,7 @@ export const InlineLoading = ({ size = 'sm', color, label, animation }: InlineLo
 
   return (
     <span role="status">
-      <InlineSpinner {...spinMotion} $size={size} $color={color} aria-hidden="true" />
+      <motion.div {...spinMotion} className={classNames(styles.spinner, styles.inlineSpinner)} data-size={size} style={spinnerColorStyle(color)} aria-hidden="true" />
       <VisuallyHidden>{label ?? labels.loading}</VisuallyHidden>
     </span>
   )
