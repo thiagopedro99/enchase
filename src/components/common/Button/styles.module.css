@@ -28,12 +28,12 @@
 }
 
 .button:hover:not(:disabled)::after {
-  opacity: 0.08;
+  opacity: var(--enchase-state-hover);
 }
 
 .button:focus-visible::after,
 .button:active:not(:disabled)::after {
-  opacity: 0.1;
+  opacity: var(--enchase-state-pressed);
 }
 
 .button[data-size='sm'] {

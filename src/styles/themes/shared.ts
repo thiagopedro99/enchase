@@ -51,6 +51,12 @@ export const sharedTokens = {
     slow: `350ms ${standardEasing}`
   },
 
+  state: {
+    hover: '0.08',
+    focus: '0.1',
+    pressed: '0.1'
+  },
+
   breakpoints: {
     xs: '320px',
     sm: '640px',

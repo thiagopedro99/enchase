@@ -8,7 +8,7 @@ type FontTokens = Theme['fonts']
 
 type ThemeTokens = Pick<Theme, 'colors' | 'shadows'>
 
-type LayoutTokens = Pick<Theme, 'spacing' | 'borderRadius' | 'transitions'>
+type LayoutTokens = Pick<Theme, 'spacing' | 'borderRadius' | 'transitions' | 'state' | 'zIndex'>
 
 type ColorTree = { [key: string]: string | ColorTree }
 
@@ -27,6 +27,10 @@ const spacingPrefix = '--enchase-space-'
 const radiusPrefix = '--enchase-radius-'
 
 const transitionPrefix = '--enchase-transition-'
+
+const statePrefix = '--enchase-state-'
+
+const zIndexPrefix = '--enchase-z-'
 
 const toKebabCase = (key: string) => key.replace(/([A-Z])/g, '-$1').toLowerCase()
 
@@ -70,12 +74,18 @@ export const radiusVariableName = (key: string) => `${radiusPrefix}${toKebabCase
 
 export const transitionVariableName = (key: string) => `${transitionPrefix}${toKebabCase(key)}`
 
+export const stateVariableName = (key: string) => `${statePrefix}${toKebabCase(key)}`
+
+export const zIndexVariableName = (key: string) => `${zIndexPrefix}${toKebabCase(key)}`
+
 const prefixed = (record: Record<string, string>, name: (key: string) => string) => Object.fromEntries(Object.entries(record).map(([key, value]) => [name(key), value]))
 
 export const layoutVariables = (theme: LayoutTokens): Record<string, string> => ({
   ...prefixed(theme.spacing, spacingVariableName),
   ...prefixed(theme.borderRadius, radiusVariableName),
-  ...prefixed(theme.transitions, transitionVariableName)
+  ...prefixed(theme.transitions, transitionVariableName),
+  ...prefixed(theme.state, stateVariableName),
+  ...prefixed(Object.fromEntries(Object.entries(theme.zIndex).map(([key, value]) => [key, String(value)])), zIndexVariableName)
 })
 
 export const themeVariables = (theme: ThemeTokens): Record<string, string> => ({ ...colorVariables(theme.colors), ...shadowVariables(theme.shadows) })
@@ -100,7 +110,8 @@ export const themeReferences = (theme: Theme): Theme => ({
   fonts: fontReferences(theme.fonts),
   spacing: referencesTo(theme.spacing, spacingVariableName),
   borderRadius: referencesTo(theme.borderRadius, radiusVariableName),
-  transitions: referencesTo(theme.transitions, transitionVariableName)
+  transitions: referencesTo(theme.transitions, transitionVariableName),
+  state: referencesTo(theme.state, stateVariableName)
 })
 
 const variablesRule = (selector: string, variables: Record<string, string>) => {

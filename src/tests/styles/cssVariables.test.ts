@@ -17,8 +17,10 @@ import {
   shadowVariableName,
   shadowVariables,
   spacingVariableName,
+  stateVariableName,
   themeReferences,
-  themeVariables
+  themeVariables,
+  zIndexVariableName
 } from '@styles/cssVariables.ts'
 import { darkTheme, lightTheme } from '@styles/themes/index.ts'
 
@@ -134,8 +136,13 @@ describe('fontReferences', () => {
 describe('layoutVariables', () => {
   const variables = layoutVariables(lightTheme)
 
-  it('creates one variable for every spacing, radius and transition', () => {
-    const expected = Object.keys(lightTheme.spacing).length + Object.keys(lightTheme.borderRadius).length + Object.keys(lightTheme.transitions).length
+  it('creates one variable for every spacing, radius, transition, state and z-index token', () => {
+    const expected =
+      Object.keys(lightTheme.spacing).length +
+      Object.keys(lightTheme.borderRadius).length +
+      Object.keys(lightTheme.transitions).length +
+      Object.keys(lightTheme.state).length +
+      Object.keys(lightTheme.zIndex).length
 
     expect(Object.keys(variables)).toHaveLength(expected)
   })
@@ -145,6 +152,10 @@ describe('layoutVariables', () => {
     expect(variables['--enchase-space-md']).toBe(lightTheme.spacing.md)
     expect(variables['--enchase-radius-full']).toBe(lightTheme.borderRadius.full)
     expect(variables['--enchase-transition-fast']).toBe(lightTheme.transitions.fast)
+    expect(stateVariableName('hover')).toBe('--enchase-state-hover')
+    expect(variables['--enchase-state-pressed']).toBe(lightTheme.state.pressed)
+    expect(zIndexVariableName('tooltip')).toBe('--enchase-z-tooltip')
+    expect(variables['--enchase-z-modal']).toBe(String(lightTheme.zIndex.modal))
   })
 
   it('does not reuse a name of any other variable', () => {
@@ -218,18 +229,20 @@ describe('themeReferences', () => {
     for (const name of names) expect(fontNames.has(name)).toBe(true)
   })
 
-  it('points spacing, radius and transitions to variables, keeping the shape', () => {
+  it('points spacing, radius, transitions and state to variables, keeping the shape', () => {
     expect(light.spacing.md).toBe('var(--enchase-space-md)')
     expect(light.borderRadius.full).toBe('var(--enchase-radius-full)')
     expect(light.transitions.fast).toBe('var(--enchase-transition-fast)')
+    expect(light.state.hover).toBe('var(--enchase-state-hover)')
     expect(Object.keys(light.spacing)).toEqual(Object.keys(lightTheme.spacing))
     expect(Object.keys(light.borderRadius)).toEqual(Object.keys(lightTheme.borderRadius))
     expect(Object.keys(light.transitions)).toEqual(Object.keys(lightTheme.transitions))
+    expect(Object.keys(light.state)).toEqual(Object.keys(lightTheme.state))
   })
 
-  it('references only layout variables that exist', () => {
-    const layoutNames = new Set(Object.keys(layoutVariables(lightTheme)))
-    const names = variableNamesIn(JSON.stringify([light.spacing, light.borderRadius, light.transitions]))
+  it('references only layout variables that exist (zIndex stays numeric, not referenced here)', () => {
+    const layoutNames = new Set([...Object.keys(layoutVariables(lightTheme))].filter((name) => !name.startsWith('--enchase-z-')))
+    const names = variableNamesIn(JSON.stringify([light.spacing, light.borderRadius, light.transitions, light.state]))
 
     expect(names).toHaveLength(layoutNames.size)
 
