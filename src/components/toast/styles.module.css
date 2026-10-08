@@ -1,0 +1,131 @@
+.container {
+  position: fixed;
+  z-index: var(--enchase-z-tooltip);
+  top: 1em;
+  right: 1em;
+  width: 360px;
+  max-height: calc(100vh - 2em);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 480px) {
+  .container {
+    width: 100vw;
+    padding: 0 var(--enchase-space-md);
+    left: 0;
+    margin: 0;
+    top: 0;
+    right: 0;
+  }
+}
+
+.item {
+  position: relative;
+  min-height: 56px;
+  box-sizing: border-box;
+  margin-bottom: var(--enchase-space-sm);
+  padding: var(--enchase-space-xs) var(--enchase-space-sm) var(--enchase-space-xs) var(--enchase-space-md);
+  border-radius: var(--enchase-radius-md);
+  box-shadow: var(--enchase-shadow-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-height: 800px;
+  overflow: hidden;
+  font-family: var(--enchase-font-primary);
+  cursor: pointer;
+  direction: ltr;
+  pointer-events: auto;
+}
+
+.item[data-type='success'] {
+  background-color: var(--enchase-color-success-container);
+  color: var(--enchase-color-on-success-container);
+}
+
+.item[data-type='error'] {
+  background-color: var(--enchase-color-error-container);
+  color: var(--enchase-color-on-error-container);
+}
+
+.item[data-type='warning'] {
+  background-color: var(--enchase-color-warning-container);
+  color: var(--enchase-color-on-warning-container);
+}
+
+.item[data-type='info'] {
+  background-color: var(--enchase-color-info-container);
+  color: var(--enchase-color-on-info-container);
+}
+
+.body {
+  margin: auto 0;
+  flex: 1 1 auto;
+  padding: var(--enchase-space-xs) 0;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  margin-inline-end: var(--enchase-space-md);
+  width: 20px;
+  flex-shrink: 0;
+  display: flex;
+  color: inherit;
+}
+
+.content {
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.message {
+  flex: 1;
+  font-size: var(--enchase-font-size-sm);
+  font-weight: var(--enchase-font-weight-medium);
+  white-space: pre-wrap;
+  line-height: 1.5;
+  color: inherit;
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  min-height: 40px;
+  color: inherit;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  align-self: center;
+  z-index: 1;
+  border-radius: var(--enchase-radius-full);
+  transition: background-color var(--enchase-transition-fast);
+}
+
+.close:hover {
+  background-color: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 0;
+}
+
+.progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 1;
+  background-color: currentColor;
+  opacity: 0.4;
+  transform-origin: left;
+}

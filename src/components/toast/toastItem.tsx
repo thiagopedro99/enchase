@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AlertTriangle, Check, Info, X } from 'lucide-react'
-import { animate, useMotionValue } from 'motion/react'
+import { animate, motion, useMotionValue } from 'motion/react'
 
-import { ToastItem as StyledToastItem, ToastBody, ToastIcon, ToastContent, ToastMessage, CloseButton, ProgressBar } from './styles.ts'
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { defaultToastDuration } from './defaultData.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
+import styles from './styles.module.css'
 
 import type { ToastItemProps } from './types.ts'
 import type { KeyboardEvent } from 'react'
@@ -48,10 +48,11 @@ const ToastItemComponent = ({ toast, onRemove, animation }: ToastItemProps) => {
   }
 
   return (
-    <StyledToastItem
+    <motion.div
       {...slideMotion}
       layout
-      $type={toast.type}
+      className={styles.item}
+      data-type={toast.type}
       role={toast.type === 'error' ? 'alert' : undefined}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -60,15 +61,18 @@ const ToastItemComponent = ({ toast, onRemove, animation }: ToastItemProps) => {
       onKeyDown={handleKeyDown}
       onClick={handleClose}
     >
-      <ToastBody>
-        <ToastIcon aria-hidden="true">{Icons[toast.type]}</ToastIcon>
-        <ToastContent>
-          <ToastMessage>{toast.message}</ToastMessage>
-        </ToastContent>
-      </ToastBody>
+      <div className={styles.body}>
+        <div className={styles.icon} aria-hidden="true">
+          {Icons[toast.type]}
+        </div>
+        <div className={styles.content}>
+          <div className={styles.message}>{toast.message}</div>
+        </div>
+      </div>
 
-      <CloseButton
+      <button
         type="button"
+        className={styles.close}
         aria-label={labels.closeToast}
         onClick={(event) => {
           event.stopPropagation()
@@ -81,10 +85,10 @@ const ToastItemComponent = ({ toast, onRemove, animation }: ToastItemProps) => {
             fill="currentColor"
           />
         </svg>
-      </CloseButton>
+      </button>
 
-      {!sticky && <ProgressBar style={{ scaleX: progress }} aria-hidden="true" />}
-    </StyledToastItem>
+      {!sticky && <motion.div className={styles.progress} style={{ scaleX: progress }} aria-hidden="true" />}
+    </motion.div>
   )
 }
 

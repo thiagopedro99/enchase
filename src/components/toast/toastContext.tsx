@@ -4,8 +4,8 @@ import { useState, useCallback } from 'react'
 import { defaultToastDuration } from './defaultData.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import ToastItemComponent from './toastItem.tsx'
-import { ToastContainer } from './styles.ts'
 import { ToastContext } from './context.ts'
+import styles from './styles.module.css'
 
 import type { Toast, ToastType, ToastProviderProps } from './types.ts'
 
@@ -32,13 +32,13 @@ export const ToastProvider = ({ children, animation }: ToastProviderProps) => {
     <ToastContext.Provider value={{ toasts, addToast, removeToast, success, error, warning, info }}>
       {children}
 
-      <ToastContainer role="region" aria-label={labels.notifications} aria-live="polite" aria-relevant="additions">
+      <div className={styles.container} role="region" aria-label={labels.notifications} aria-live="polite" aria-relevant="additions">
         <AnimatePresence>
           {toasts.map((toast) => (
             <ToastItemComponent key={toast.id} toast={toast} onRemove={removeToast} animation={animation} />
           ))}
         </AnimatePresence>
-      </ToastContainer>
+      </div>
     </ToastContext.Provider>
   )
 }
