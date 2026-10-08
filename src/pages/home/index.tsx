@@ -1,18 +1,18 @@
 import { ButtonLink, Container, Flex } from '@components/common/index.ts'
-import { Hero, Logo, Title, Subtitle } from './styles.ts'
 import { docsUrl } from '@components/layout/defaultData.ts'
 import { repositoryUrl } from './defaultData.ts'
 import Layout from '@components/layout/index.tsx'
+import styles from './styles.module.css'
 
 const Home = () => (
   <Layout pageTitle="Início" centered>
     <Container maxWidth="lg">
       <Flex direction="column" align="center" gap="2rem">
-        <Hero>
-          <Logo src="/enchase-marca.svg" alt="" />
-          <Title>Bem-vindo ao Enchase</Title>
-          <Subtitle>Componentes React acessíveis e configuráveis, prontos para usar</Subtitle>
-        </Hero>
+        <div className={styles.hero}>
+          <img src="/enchase-marca.svg" alt="" className={styles.logo} />
+          <h1 className={styles.title}>Bem-vindo ao Enchase</h1>
+          <p className={styles.subtitle}>Componentes React acessíveis e configuráveis, prontos para usar</p>
+        </div>
 
         <Flex gap="1rem" wrap>
           <ButtonLink href={docsUrl} size="lg">

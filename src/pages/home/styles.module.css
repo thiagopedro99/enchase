@@ -1,0 +1,30 @@
+.hero {
+  text-align: center;
+}
+
+.logo {
+  display: block;
+  width: 96px;
+  height: 96px;
+  margin: 0 auto var(--enchase-space-md);
+}
+
+.title {
+  font-size: var(--enchase-font-size-5xl);
+  font-weight: var(--enchase-font-weight-medium);
+  letter-spacing: -0.02em;
+  color: var(--enchase-color-text-primary);
+  margin-bottom: var(--enchase-space-sm);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: var(--enchase-font-size-3xl);
+  }
+}
+
+.subtitle {
+  font-size: var(--enchase-font-size-lg);
+  color: var(--enchase-color-text-secondary);
+  margin: 0;
+}
