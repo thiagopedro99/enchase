@@ -1,49 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  colorVariableName,
-  colorVariables,
-  cssVariablesRule,
-  fontFamilyVariableName,
-  fontSizeVariableName,
-  fontVariables,
-  fontVariablesRule,
-  fontWeightVariableName,
-  layoutVariables,
-  layoutVariablesRule,
-  shadowVariableName,
-  shadowVariables,
-  spacingVariableName,
-  stateVariableName,
-  themeVariables,
-  zIndexVariableName
-} from '@styles/css/declarations.ts'
+import { colorVariables, cssVariablesRule, fontVariables, fontVariablesRule, layoutVariables, layoutVariablesRule, shadowVariables, themeVariables } from '@styles/css/declarations.ts'
+import { variableName } from '@styles/css/names.ts'
 import { baseTokens, darkTheme, lightTheme } from '@styles/tokens/index.ts'
 
 const leafPaths = (tree: Record<string, unknown>, path: string[] = []): string[] =>
   Object.entries(tree).flatMap(([key, value]) => (typeof value === 'string' ? [[...path, key].join('.')] : leafPaths(value as Record<string, unknown>, [...path, key])))
-
-describe('colorVariableName', () => {
-  it.each([
-    [['primary'], '--enchase-color-primary'],
-    [['onPrimaryContainer'], '--enchase-color-on-primary-container'],
-    [['surfaceContainerLow'], '--enchase-color-surface-container-low'],
-    [['text', 'primary'], '--enchase-color-text-primary'],
-    [['text', 'placeholder'], '--enchase-color-text-placeholder']
-  ])('names %j as %s', (path, expected) => {
-    expect(colorVariableName(path)).toBe(expected)
-  })
-})
-
-describe('shadowVariableName', () => {
-  it.each([
-    ['sm', '--enchase-shadow-sm'],
-    ['xl', '--enchase-shadow-xl'],
-    ['none', '--enchase-shadow-none']
-  ])('names %s as %s', (key, expected) => {
-    expect(shadowVariableName(key)).toBe(expected)
-  })
-})
 
 describe('colorVariables', () => {
   it('creates one variable for every color token of the theme', () => {
@@ -83,11 +45,11 @@ describe('shadowVariables', () => {
 
 describe('font variable names', () => {
   it('names families, sizes and weights without clashing', () => {
-    expect(fontFamilyVariableName('primary')).toBe('--enchase-font-primary')
-    expect(fontFamilyVariableName('mono')).toBe('--enchase-font-mono')
-    expect(fontSizeVariableName('base')).toBe('--enchase-font-size-base')
-    expect(fontSizeVariableName('2xl')).toBe('--enchase-font-size-2xl')
-    expect(fontWeightVariableName('semibold')).toBe('--enchase-font-weight-semibold')
+    expect(variableName('font', 'primary')).toBe('--enchase-font-primary')
+    expect(variableName('font', 'mono')).toBe('--enchase-font-mono')
+    expect(variableName('font-size', 'base')).toBe('--enchase-font-size-base')
+    expect(variableName('font-size', '2xl')).toBe('--enchase-font-size-2xl')
+    expect(variableName('font-weight', 'semibold')).toBe('--enchase-font-weight-semibold')
   })
 })
 
@@ -129,13 +91,13 @@ describe('layoutVariables', () => {
   })
 
   it('names and keeps the values', () => {
-    expect(spacingVariableName('2xl')).toBe('--enchase-space-2xl')
+    expect(variableName('space', '2xl')).toBe('--enchase-space-2xl')
     expect(variables['--enchase-space-md']).toBe(baseTokens.spacing.md)
     expect(variables['--enchase-radius-full']).toBe(baseTokens.borderRadius.full)
     expect(variables['--enchase-transition-fast']).toBe(baseTokens.transitions.fast)
-    expect(stateVariableName('hover')).toBe('--enchase-state-hover')
+    expect(variableName('state', 'hover')).toBe('--enchase-state-hover')
     expect(variables['--enchase-state-pressed']).toBe(baseTokens.state.pressed)
-    expect(zIndexVariableName('tooltip')).toBe('--enchase-z-tooltip')
+    expect(variableName('z', 'tooltip')).toBe('--enchase-z-tooltip')
     expect(variables['--enchase-z-modal']).toBe(String(baseTokens.zIndex.modal))
   })
 

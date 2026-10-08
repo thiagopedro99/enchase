@@ -1,6 +1,8 @@
 import { defaultTheme } from '../tokens/index.ts'
+import { variableName } from './names.ts'
 
 import type { BaseTokens, ColorTokens, ModeTokens, ShadowTokens, ThemeSet } from '../tokens/types.ts'
+import type { VariableGroup } from './names.ts'
 
 type FontTokens = BaseTokens['fonts']
 
@@ -10,70 +12,29 @@ type LayoutTokens = Pick<BaseTokens, 'spacing' | 'borderRadius' | 'transitions' 
 
 type ColorTree = { [key: string]: string | ColorTree }
 
-const colorPrefix = '--enchase-color-'
-
-const shadowPrefix = '--enchase-shadow-'
-
-const fontPrefix = '--enchase-font-'
-
-const fontSizePrefix = '--enchase-font-size-'
-
-const fontWeightPrefix = '--enchase-font-weight-'
-
-const spacingPrefix = '--enchase-space-'
-
-const radiusPrefix = '--enchase-radius-'
-
-const transitionPrefix = '--enchase-transition-'
-
-const statePrefix = '--enchase-state-'
-
-const zIndexPrefix = '--enchase-z-'
-
-const toKebabCase = (key: string) => key.replace(/([A-Z])/g, '-$1').toLowerCase()
-
 const flatten = (tree: ColorTree, path: string[] = []): [string[], string][] =>
   Object.entries(tree).flatMap(([key, value]) => (typeof value === 'string' ? [[[...path, key], value] as [string[], string]] : flatten(value, [...path, key])))
 
-export const colorVariableName = (path: string[]) => `${colorPrefix}${path.map(toKebabCase).join('-')}`
+const declare = (group: VariableGroup, record: Record<string, string | number>): Record<string, string> =>
+  Object.fromEntries(Object.entries(record).map(([key, value]) => [variableName(group, key), String(value)]))
 
-export const shadowVariableName = (key: string) => `${shadowPrefix}${toKebabCase(key)}`
+export const colorVariables = (colors: ColorTokens): Record<string, string> => Object.fromEntries(flatten(colors).map(([path, value]) => [variableName('color', ...path), value]))
 
-export const colorVariables = (colors: ColorTokens): Record<string, string> => Object.fromEntries(flatten(colors).map(([path, value]) => [colorVariableName(path), value]))
-
-export const shadowVariables = (shadows: ShadowTokens): Record<string, string> => Object.fromEntries(Object.entries(shadows).map(([key, value]) => [shadowVariableName(key), value]))
-
-export const fontFamilyVariableName = (key: string) => `${fontPrefix}${toKebabCase(key)}`
-
-export const fontSizeVariableName = (key: string) => `${fontSizePrefix}${toKebabCase(key)}`
-
-export const fontWeightVariableName = (key: string) => `${fontWeightPrefix}${toKebabCase(key)}`
+export const shadowVariables = (shadows: ShadowTokens): Record<string, string> => declare('shadow', shadows)
 
 export const fontVariables = (fonts: FontTokens): Record<string, string> => ({
-  [fontFamilyVariableName('primary')]: fonts.primary,
-  [fontFamilyVariableName('mono')]: fonts.mono,
-  ...Object.fromEntries(Object.entries(fonts.sizes).map(([key, value]) => [fontSizeVariableName(key), value])),
-  ...Object.fromEntries(Object.entries(fonts.weights).map(([key, value]) => [fontWeightVariableName(key), String(value)]))
+  [variableName('font', 'primary')]: fonts.primary,
+  [variableName('font', 'mono')]: fonts.mono,
+  ...declare('font-size', fonts.sizes),
+  ...declare('font-weight', fonts.weights)
 })
 
-export const spacingVariableName = (key: string) => `${spacingPrefix}${toKebabCase(key)}`
-
-export const radiusVariableName = (key: string) => `${radiusPrefix}${toKebabCase(key)}`
-
-export const transitionVariableName = (key: string) => `${transitionPrefix}${toKebabCase(key)}`
-
-export const stateVariableName = (key: string) => `${statePrefix}${toKebabCase(key)}`
-
-export const zIndexVariableName = (key: string) => `${zIndexPrefix}${toKebabCase(key)}`
-
-const prefixed = (record: Record<string, string>, name: (key: string) => string) => Object.fromEntries(Object.entries(record).map(([key, value]) => [name(key), value]))
-
 export const layoutVariables = (theme: LayoutTokens): Record<string, string> => ({
-  ...prefixed(theme.spacing, spacingVariableName),
-  ...prefixed(theme.borderRadius, radiusVariableName),
-  ...prefixed(theme.transitions, transitionVariableName),
-  ...prefixed(theme.state, stateVariableName),
-  ...prefixed(Object.fromEntries(Object.entries(theme.zIndex).map(([key, value]) => [key, String(value)])), zIndexVariableName)
+  ...declare('space', theme.spacing),
+  ...declare('radius', theme.borderRadius),
+  ...declare('transition', theme.transitions),
+  ...declare('state', theme.state),
+  ...declare('z', theme.zIndex)
 })
 
 export const themeVariables = (theme: ThemeTokens): Record<string, string> => ({ ...colorVariables(theme.colors), ...shadowVariables(theme.shadows) })
