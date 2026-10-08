@@ -17,7 +17,7 @@ export const InputsDemo = ({ onShowCode }: DemoSectionProps) => {
         <Input label="Senha" type="password" placeholder="••••••••" />
         <Input label="Com erro" error="Este campo é obrigatório" placeholder="Campo com erro" />
         <Input label="Desabilitado" disabled placeholder="Campo desabilitado" />
-        <Input label="Full Width" $fullWidth placeholder="Campo de largura total" />
+        <Input label="Full Width" fullWidth placeholder="Campo de largura total" />
       </Grid>
     </SectionBlock>
   )

@@ -88,7 +88,7 @@ import { useState } from 'react';`
       title: 'Largura total',
       code: `<Input
   label="Full Width"
-  $fullWidth
+  fullWidth
   placeholder="Campo de largura total"
 />`
     }

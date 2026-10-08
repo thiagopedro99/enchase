@@ -43,7 +43,7 @@ export const LiveStrip = () => {
           </>
         }
       >
-        <Input label="Nome" $fullWidth />
+        <Input label="Nome" fullWidth />
       </Modal>
     </Panel>
   )
