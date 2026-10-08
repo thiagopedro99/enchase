@@ -17,13 +17,14 @@ Este template fornece uma base sólida para iniciar projetos React com TypeScrip
 
 - **React 19** com TypeScript para desenvolvimento type-safe
 - **Vite** para build ultra-rápido e Hot Module Replacement otimizado
-- **Styled Components** para estilização com CSS-in-JS
+- **CSS Modules** com variáveis CSS para estilização, sem biblioteca de estilo em tempo de execução
 - **React Router** para navegação client-side
 - **Zustand** para gerenciamento de estado global leve e eficiente
 - **Axios** configurado para requisições HTTP
-- **Sistema de temas** (Light/Dark) totalmente customizável
+- **Sistema de temas** (claro, escuro e sistema) configurável com `createTheme`, com validação dos valores e aviso de contraste
 - **Componentes reutilizáveis** prontos para uso
 - **Sistema de notificações** (Toast) integrado
+- **Storybook** com a documentação interativa dos componentes
 - **Estrutura de pastas** organizada e escalável
 - **ESLint** configurado para qualidade de código
 - **Path aliases** para imports mais limpos
@@ -36,8 +37,10 @@ Este template fornece uma base sólida para iniciar projetos React com TypeScrip
 - Vite 6.3.5
 
 ### UI e Estilização
-- Styled Components 6.1.18
+- CSS Modules e variáveis CSS
+- Motion 14 (animações)
 - Lucide React 0.544.0 (ícones)
+- Figtree (`@fontsource-variable/figtree`)
 
 ### Roteamento e Estado
 - React Router DOM 7.6.0
@@ -49,7 +52,8 @@ Este template fornece uma base sólida para iniciar projetos React com TypeScrip
 ### Ferramentas de Desenvolvimento
 - ESLint 9.25.0
 - TypeScript ESLint 8.30.1
-- Babel Plugin Styled Components 2.1.4
+- Vitest, Testing Library e vitest-axe
+- Storybook 10
 
 ## Pré-requisitos
 
@@ -91,25 +95,29 @@ O aplicativo estará disponível em `http://localhost:5173`
 
 ```
 src/
-├── assets/           # Recursos estáticos (imagens, fontes, etc)
-├── components/       # Componentes reutilizáveis
+├── actions/         # Cliente Axios e funções de API por entidade
+├── assets/          # Recursos estáticos (imagens, fontes, etc)
+├── components/      # Componentes reutilizáveis (index.tsx, styles.module.css, types.ts)
 │   ├── common/      # Componentes básicos (Button, Input, Card, etc)
 │   ├── layout/      # Layout principal da aplicação
 │   ├── navbar/      # Barra de navegação (opção ao menu lateral)
 │   ├── footer/      # Rodapé
 │   └── toast/       # Sistema de notificações
+├── docs/            # Storybook: stories, páginas MDX e decorators
 ├── hooks/           # Custom React hooks
-├── pages/           # Páginas da aplicação
-│   ├── home/
-│   ├── componentsDemo/
-│   ├── gettingStarted/
-│   └── notFound/
+├── motion/          # Catálogo de receitas de animação
+├── pages/           # Páginas da aplicação (home e notFound)
 ├── routes/          # Configuração de rotas
 ├── stores/          # Gerenciamento de estado (Zustand)
-│   ├── app/        # Estado global da aplicação
-│   └── data/       # Estado de dados específicos
-├── styles/          # Temas e estilos globais
-│   └── themes/     # Temas light e dark
+│   ├── app/         # Estado global da aplicação
+│   └── data/        # Estado de dados específicos
+├── styles/          # Sistema de tema
+│   ├── tokens/      # Tokens: cores, sombras, fontes, espaçamento, raios...
+│   ├── theme/       # createTheme, validateTheme e validadores
+│   ├── css/         # Geração das variáveis CSS e do CSS global
+│   └── react.tsx    # GlobalStyles e ThemeVariables
+├── tests/           # Testes, espelhando a estrutura de src
+├── types/           # Tipos compartilhados
 ├── utils/           # Funções utilitárias
 ├── App.tsx          # Componente raiz
 └── main.tsx         # Entry point
@@ -165,6 +173,14 @@ npm run type-check
 
 Verifica os tipos TypeScript sem emitir arquivos.
 
+### Storybook
+
+```bash
+npm run storybook
+```
+
+Abre a documentação interativa dos componentes em `http://localhost:6006`. O `npm run build-storybook` gera o site estático em `storybook-static/`.
+
 ## Componentes Disponíveis
 
 O template inclui uma biblioteca completa de componentes reutilizáveis:
@@ -196,7 +212,7 @@ O template inclui uma biblioteca completa de componentes reutilizáveis:
 - **Navbar** - Barra de navegação responsiva com menu mobile (alternativa à Sidebar)
 - **Footer** - Rodapé customizável
 
-Para ver todos os componentes em ação, acesse a rota `/components` no aplicativo.
+Para ver todos os componentes em ação, rode `npm run storybook`.
 
 ## Layout e Navegação
 
@@ -214,8 +230,8 @@ O `Layout` oferece duas navegações, escolhidas pela prop `navigation`:
 
 - **`navigation="sidebar"` (padrão)**: uma barra superior (`AppBar`) com o botão de menu, o breadcrumb e o botão de tema, e o menu lateral. No desktop o botão recolhe a sidebar para uma barra de ícones (a escolha fica salva); no mobile ele abre o drawer modal. O ícone acompanha o estado (linhas com seta `‹` quando o menu está aberto, hambúrguer quando fechado) e o botão tem tooltip com a ação atual. Com a propriedade `sidebarFooter`, o rodapé da sidebar mostra o que você passar, por exemplo o `SidebarUser`, com avatar, nome e botão de sair.
 - **`navigation="navbar"`**: a barra de navegação clássica no topo.
-- **`navigationSections`**: substitui os itens do menu (por padrão, Início, Primeiros passos e Componentes).
-- **`pageSections` e `activePageSectionId`**: seções extras no menu para navegar por âncoras dentro da página, usadas no style guide da rota `/components` com o hook `useScrollSpy`.
+- **`navigationSections`**: substitui os itens do menu (por padrão, Início e Documentação).
+- **`pageSections` e `activePageSectionId`**: seções extras no menu para navegar por âncoras dentro da página, ativadas com o hook `useScrollSpy`.
 - **`breadcrumbs`**: trilha explícita (`BreadcrumbItem[]`). Sem ela, o `Layout` deriva a trilha do item de menu da rota atual (`Início › Componentes`) e acrescenta a seção ativa da página (`Início › Componentes › Botões`); em rotas sem item de menu usa o `pageTitle`.
 - **`brand`**: nome exibido na marca. `hideNavbar` esconde a navegação.
 
@@ -332,15 +348,18 @@ Os tipos da entidade (domínio e request/response) ficam juntos em `src/actions/
 
 ### Linguagem visual
 
-O template segue o **Material Design 3**, implementado só com styled-components (sem a biblioteca MUI): paleta tonal em índigo, cantos arredondados (botões em pílula, cards de 24px, diálogos de 28px), elevação suave, camadas de estado em hover/foco/pressionado e a fonte Figtree (self-hosted via `@fontsource-variable/figtree`).
+O template segue o **Material Design 3**, implementado só com CSS Modules e variáveis CSS (sem a biblioteca MUI): paleta tonal em índigo, cantos arredondados (botões em pílula, cards de 24px, diálogos de 28px), elevação suave, camadas de estado em hover/foco/pressionado e a fonte Figtree (self-hosted via `@fontsource-variable/figtree`).
 
 ### Estrutura dos Temas
 
-Os temas ficam em `src/styles/themes/`:
+O sistema de tema fica em `src/styles/`:
 
-- `shared.ts` - tokens comuns aos dois temas (fontes, espaçamento, raios, transições, breakpoints, z-index)
-- `light.ts` - cores e sombras do tema claro
-- `dark.ts` - cores e sombras do tema escuro
+- `tokens/` - os dados: `base.ts` (fontes, espaçamento, raios, transições, estados, breakpoints, z-index, iguais nos dois modos), `light.ts` e `dark.ts` (só cores e sombras de cada modo)
+- `theme/` - construção e validação: `createTheme`, `validateTheme` e os validadores de cor, família, tamanho e peso de fonte
+- `css/` - geração das variáveis CSS e do CSS global a partir dos tokens
+- `react.tsx` - os componentes `GlobalStyles` e `ThemeVariables`, os únicos que usam React
+
+Os componentes não leem o tema em JavaScript: tudo chega por variáveis CSS `--enchase-*` (`--enchase-color-*`, `--enchase-shadow-*`, `--enchase-font-*`, `--enchase-space-*`, `--enchase-radius-*`, `--enchase-transition-*`, `--enchase-state-*` e `--enchase-z-*`). Trocar o modo muda só o `data-theme` do `<html>`: as cores mudam pelo CSS, sem re-renderizar os componentes que não leem o modo.
 
 ### Papéis de cor
 
@@ -359,27 +378,31 @@ As cores são papéis, nunca hex solto nos componentes:
 
 ### Camadas de estado e forma
 
-Hover, foco e pressionado usam `stateLayer(cor, opacidade)` de `src/styles/stateLayer.ts` (8% hover, 10% foco e pressionado), em vez de trocar de cor. Os cantos vêm de `borderRadius` (`xs` 4px, `sm` 8px, `md` 12px, `lg` 16px, `xl` 24px, `2xl` 28px, `full`) e a elevação de `shadows` (`sm` a `xl`).
+Hover, foco e pressionado usam uma camada de estado (`--enchase-state-hover` 8%, `--enchase-state-focus` e `--enchase-state-pressed` 10%), em vez de trocar de cor. Os cantos vêm de `--enchase-radius-*` (`xs` 4px, `sm` 8px, `md` 12px, `lg` 16px, `xl` 24px, `2xl` 28px, `full`) e a elevação de `--enchase-shadow-*` (`sm` a `xl`).
 
 ### Customização
 
-Para modificar as cores e estilos:
+Passe um tema parcial ao `ColorModeProvider`. Só o que você informar muda; o resto continua com os valores padrão:
 
-```typescript
-// src/styles/themes/light.ts
-export const lightTheme = {
-  ...sharedTokens,
-  colors: {
-    primary: '#4F46E5',
-    onPrimary: '#FFFFFF',
-    primaryContainer: '#E1E0FF',
-    background: '#FBF8FF',
-    surface: '#FBF8FF',
-    // ...
-  },
-  // ...
-};
+```tsx
+<ColorModeProvider
+  theme={{
+    fonts: { primary: "'Inter Variable', system-ui, sans-serif", sizes: { base: '1.0625rem' }, weights: { bold: 800 } },
+    light: { colors: { primary: '#0B6BCB', onPrimary: '#FFFFFF' } },
+    dark: { colors: { primary: '#9CCBFF', onPrimary: '#00325A' } }
+  }}
+>
+  <App />
+</ColorModeProvider>
 ```
+
+- `fonts` vale para os dois modos (`primary`, `mono`, `sizes` e `weights`). `light` e `dark` aceitam `colors`, com qualquer papel de cor.
+- Todo valor é validado antes de virar CSS: cores em hex, `rgb()`, `hsl()`, `oklch()` ou `oklab()`; famílias de fonte como lista de nomes; tamanhos em `rem`, `em` ou `px`; pesos de 1 a 1000. Um valor inválido ou uma chave desconhecida lança um erro dizendo qual token falhou, e nada é escrito como CSS.
+- Em desenvolvimento, o provider confere o contraste (WCAG) dos pares de cor e avisa no console. `validateTheme(createTheme(...))` faz a mesma checagem e devolve a lista de pares abaixo do mínimo. Cores em `hsl`, `oklch` ou `oklab` não são medidas, e o aviso diz quantos pares ficaram sem checar.
+- O template não traz o arquivo de uma fonte nova: carregue-a (por exemplo com `@fontsource`) e informe só o nome da família.
+- `createTheme` e `validateTheme` também funcionam fora do React (um script de build ou o servidor), importando de `src/styles/index.ts`, que não depende do React.
+
+Para mudar os valores padrão do template, edite os arquivos de `src/styles/tokens/`.
 
 ### Paleta e Acessibilidade
 
@@ -394,7 +417,7 @@ A paleta dos dois temas atende WCAG 2.2 AA e isso é verificado por testes (`npm
 | `borderStrong` | Borda de campos (`Input`, `Select`, `Checkbox`) | 3:1 |
 | `primary`, `error` | Anel de foco, botão outline e campo inválido | 3:1 |
 
-`border` é só para divisores decorativos. Ao trocar uma cor, rode os testes: `src/tests/styles/contrast.test.ts` falha se algum par ficar abaixo do mínimo. Para checar uma cor nova, use `contrastRatio(foreground, background)` de `src/styles/contrast.ts`.
+`border` é só para divisores decorativos. Ao trocar uma cor, rode os testes: `src/tests/styles/theme/contrast.test.ts` falha se algum par ficar abaixo do mínimo. Para checar uma cor nova, use `contrastRatio(foreground, background)` de `src/styles/theme/contrast.ts`.
 
 ### Alternância de Tema
 
@@ -472,6 +495,8 @@ import Layout from '@components/layout';
 - `@assets/*` → `src/assets/*`
 - `@routes/*` → `src/routes/*`
 - `@motion/*` → `src/motion/*`
+- `@docs/*` → `src/docs/*`
+- `@tests/*` → `src/tests/*`
 
 ## Build para Produção
 
@@ -483,7 +508,7 @@ O template está configurado com várias otimizações de build:
 - **Tree shaking** habilitado
 - **CSS minification**
 - **Compressão de assets**
-- **Chunks otimizados** (react-vendor, ui-vendor, state-vendor)
+- **Chunks otimizados** (react-vendor e vendor)
 
 ### Configuração de Build
 
@@ -526,10 +551,10 @@ Este projeto segue a convenção de [Conventional Commits](https://www.conventio
 
 **Exemplos:**
 ```bash
-git commit -m "feat: adiciona componente Accordion"
-git commit -m "fix: corrige bug no modal de confirmação"
-git commit -m "docs: atualiza documentação do componente Button"
-git commit -m "chore: atualiza dependências do projeto"
+git commit -m "feat: add Accordion component"
+git commit -m "fix: close the confirm modal on Esc"
+git commit -m "docs: update the Button docs"
+git commit -m "chore: update dependencies"
 ```
 
 ### Diretrizes

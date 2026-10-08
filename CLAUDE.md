@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-Enchase (React 19, TypeScript, Vite, styled-components, Zustand, Axios, motion). Ainda não se comunica com nenhuma API — `actions/` e `stores/` trazem só exemplos genéricos (`users`, `data`).
+Enchase (React 19, TypeScript, Vite, CSS Modules, Zustand, Axios, motion). Ainda não se comunica com nenhuma API — `actions/` e `stores/` trazem só exemplos genéricos (`users`, `data`).
 
 ## Convenções de código
 
-Siga o [`skill.md`](./skill.md): formatação, imports, componentização com `/subcomponentes`, padrão Actions (`actions/`, `stores/`, `types/`), Zustand, Axios, animação com `motion/react` e acessibilidade. Consistência com o padrão existente vem antes de qualquer abstração nova.
+Siga o [`skill.md`](./skill.md): formatação, imports, componentização com `/subcomponentes`, estilos com CSS Modules e variáveis `--enchase-*`, padrão Actions (`actions/`, `stores/`, `types/`), Zustand, Axios, animação com `motion/react` e acessibilidade. Consistência com o padrão existente vem antes de qualquer abstração nova.
 
 ## Regras essenciais de código
 
@@ -17,6 +17,8 @@ Siga o [`skill.md`](./skill.md): formatação, imports, componentização com `/
 - `npm run lint` — ESLint
 - `npm run type-check` — `tsc --noEmit`
 - `npm run test` — Vitest (comportamento + axe)
+- `npm run storybook` — documentação interativa em `localhost:6006`
+- `npm run build-storybook` — site estático do Storybook
 
 Antes de dar uma tarefa por concluída, rode `npm run build` (inclui o type-check) e `npm run test`. Mudança em foco, `inert`, layout ou animação também deve ser conferida no navegador: o jsdom não simula esses recursos.
 
