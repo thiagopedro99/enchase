@@ -1,0 +1,45 @@
+.bar {
+  grid-area: appbar;
+  position: sticky;
+  top: 0;
+  z-index: var(--enchase-z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--enchase-space-sm);
+  min-width: 0;
+  height: 64px;
+  padding: 0 var(--enchase-space-md);
+  background-color: var(--enchase-color-surface);
+  border-bottom: 1px solid var(--enchase-color-border);
+}
+
+.menuButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: var(--enchase-radius-full);
+  color: var(--enchase-color-text-secondary);
+  transition:
+    background-color var(--enchase-transition-fast),
+    color var(--enchase-transition-fast);
+}
+
+.menuButton:hover {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+  color: var(--enchase-color-text-primary);
+}
+
+.trail {
+  flex: 1;
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: var(--enchase-space-xs);
+}
