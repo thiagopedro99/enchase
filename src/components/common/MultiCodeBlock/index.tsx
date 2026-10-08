@@ -1,13 +1,11 @@
 import { Copy, Check } from 'lucide-react'
 import { useState } from 'react'
 
-import { MultiCodeBlockWrapper, CodeSection, SectionHeader, SectionTitle, CopyButton, CodeContent, TokenSpan } from './styles.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
 import { tokenize } from './highlighter.ts'
+import styles from './styles.module.css'
 
 import type { MultiCodeBlockProps } from './types.ts'
-
-
 
 export const MultiCodeBlock = ({ blocks, language = 'tsx' }: MultiCodeBlockProps) => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
@@ -19,20 +17,16 @@ export const MultiCodeBlock = ({ blocks, language = 'tsx' }: MultiCodeBlockProps
   }
 
   return (
-    <MultiCodeBlockWrapper>
+    <div className={styles.wrapper}>
       {blocks.map((block, index) => {
         const tokens = tokenize(block.code, language)
         const isCopied = copiedIndex === index
 
         return (
-          <CodeSection key={index}>
-            <SectionHeader>
-              <SectionTitle>{block.title}</SectionTitle>
-              <CopyButton
-                type="button"
-                onClick={() => handleCopy(block.code, index)}
-                title={isCopied ? 'Copiado!' : 'Copiar código'}
-              >
+          <div key={index} className={styles.section}>
+            <div className={styles.header}>
+              <span className={styles.title}>{block.title}</span>
+              <button type="button" className={styles.copyButton} onClick={() => handleCopy(block.code, index)} title={isCopied ? 'Copiado!' : 'Copiar código'}>
                 {isCopied ? (
                   <>
                     <Check size={16} />
@@ -44,25 +38,25 @@ export const MultiCodeBlock = ({ blocks, language = 'tsx' }: MultiCodeBlockProps
                     <span>Copiar</span>
                   </>
                 )}
-              </CopyButton>
+              </button>
               <VisuallyHidden role="status">{isCopied ? 'Copiado!' : ''}</VisuallyHidden>
-            </SectionHeader>
-            
-            <CodeContent tabIndex={0} role="region" aria-label={block.title}>
+            </div>
+
+            <div className={styles.content} tabIndex={0} role="region" aria-label={block.title}>
               <pre>
                 <code>
                   {tokens.map((token, tokenIndex) => (
-                    <TokenSpan key={tokenIndex} $type={token.type}>
+                    <span key={tokenIndex} className={styles.token} data-type={token.type}>
                       {token.content}
-                    </TokenSpan>
+                    </span>
                   ))}
                 </code>
               </pre>
-            </CodeContent>
-          </CodeSection>
+            </div>
+          </div>
         )
       })}
-    </MultiCodeBlockWrapper>
+    </div>
   )
 }
 
