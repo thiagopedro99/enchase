@@ -1,7 +1,7 @@
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
-import GlobalStyles from '@styles/globalStyles.ts'
+import GlobalStyles from '@styles/globalStyles.tsx'
 import Router from '@routes/index.tsx'
 
 const App = () => (

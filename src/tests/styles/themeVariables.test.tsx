@@ -1,24 +1,18 @@
-import { ServerStyleSheet } from 'styled-components'
 import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
-import { defaultThemeCss, ThemeVariables, themeCss, variableTheme } from '@styles/themeVariables.ts'
+import { defaultThemeCss, themeCss } from '@styles/cssVariables.ts'
 import { darkTheme, lightTheme, themes } from '@styles/themes/index.ts'
 import { createTheme } from '@styles/createTheme.ts'
-import { themeReferences } from '@styles/cssVariables.ts'
+import { ThemeVariables } from '@styles/themeVariables.tsx'
 
 import type { ThemeSet } from '@styles/createTheme.ts'
 
 const renderCss = (set: ThemeSet = themes) => {
-  const sheet = new ServerStyleSheet()
+  const html = renderToString(<ThemeVariables css={themeCss(set)} />)
+  const match = html.match(/<style[^>]*>([\s\S]*)<\/style>/)
 
-  try {
-    renderToString(sheet.collectStyles(<ThemeVariables $css={themeCss(set)} />))
-
-    return sheet.getStyleTags().replace(/\s+/g, '')
-  } finally {
-    sheet.seal()
-  }
+  return (match?.[1] ?? '').replace(/\s+/g, '')
 }
 
 describe('ThemeVariables', () => {
@@ -91,15 +85,5 @@ describe('ThemeVariables layout', () => {
     expect(css.split(spacing)).toHaveLength(2)
     expect(css).toContain('--enchase-radius-full:' + lightTheme.borderRadius.full)
     expect(css).toContain('--enchase-transition-fast:' + lightTheme.transitions.fast.replace(/\s+/g, ''))
-  })
-})
-
-describe('variableTheme', () => {
-  it('is the theme with every color and shadow turned into a variable reference', () => {
-    expect(variableTheme).toEqual(themeReferences(lightTheme))
-    expect(variableTheme.colors.primary).toBe('var(--enchase-color-primary)')
-    expect(variableTheme.shadows.md).toBe('var(--enchase-shadow-md)')
-    expect(variableTheme.fonts.primary).toBe('var(--enchase-font-primary)')
-    expect(variableTheme.fonts.sizes.base).toBe('var(--enchase-font-size-base)')
   })
 })

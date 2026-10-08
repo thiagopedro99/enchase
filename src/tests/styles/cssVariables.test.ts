@@ -1,24 +1,20 @@
 import { describe, expect, it } from 'vitest'
 
 import {
-  colorReferences,
   colorVariableName,
   colorVariables,
   cssVariablesRule,
   fontFamilyVariableName,
-  fontReferences,
   fontSizeVariableName,
   fontVariables,
   fontVariablesRule,
   fontWeightVariableName,
   layoutVariables,
   layoutVariablesRule,
-  shadowReferences,
   shadowVariableName,
   shadowVariables,
   spacingVariableName,
   stateVariableName,
-  themeReferences,
   themeVariables,
   zIndexVariableName
 } from '@styles/cssVariables.ts'
@@ -26,8 +22,6 @@ import { darkTheme, lightTheme } from '@styles/themes/index.ts'
 
 const leafPaths = (tree: Record<string, unknown>, path: string[] = []): string[] =>
   Object.entries(tree).flatMap(([key, value]) => (typeof value === 'string' ? [[...path, key].join('.')] : leafPaths(value as Record<string, unknown>, [...path, key])))
-
-const variableNamesIn = (value: string) => [...value.matchAll(/var\((--[a-z0-9-]+)\)/g)].map((match) => match[1])
 
 describe('colorVariableName', () => {
   it.each([
@@ -120,19 +114,6 @@ describe('fontVariables', () => {
   })
 })
 
-describe('fontReferences', () => {
-  const references = fontReferences(lightTheme.fonts)
-
-  it('points every font token to its own variable, keeping the shape', () => {
-    expect(references.primary).toBe('var(--enchase-font-primary)')
-    expect(references.mono).toBe('var(--enchase-font-mono)')
-    expect(references.sizes.base).toBe('var(--enchase-font-size-base)')
-    expect(Object.keys(references.sizes)).toEqual(Object.keys(lightTheme.fonts.sizes))
-    expect(references.weights.semibold).toBe('var(--enchase-font-weight-semibold)')
-    expect(Object.keys(references.weights)).toEqual(Object.keys(lightTheme.fonts.weights))
-  })
-})
-
 describe('layoutVariables', () => {
   const variables = layoutVariables(lightTheme)
 
@@ -178,80 +159,6 @@ describe('what is allowed to change between the light and the dark theme', () =>
     const rest = (theme: Record<string, unknown>) => Object.fromEntries(Object.entries(theme).filter(([key]) => key !== 'colors' && key !== 'shadows'))
 
     expect(rest(darkTheme)).toEqual(rest(lightTheme))
-  })
-})
-
-describe('colorReferences and shadowReferences', () => {
-  const references = colorReferences(lightTheme.colors)
-
-  it('keeps the shape of the color tokens', () => {
-    expect(leafPaths(references)).toEqual(leafPaths(lightTheme.colors))
-  })
-
-  it('points every token to its own variable', () => {
-    expect(references.primary).toBe('var(--enchase-color-primary)')
-    expect(references.onPrimaryContainer).toBe('var(--enchase-color-on-primary-container)')
-    expect(references.text.primary).toBe('var(--enchase-color-text-primary)')
-    expect(shadowReferences(lightTheme.shadows).md).toBe('var(--enchase-shadow-md)')
-  })
-
-  it('does not change the theme it receives', () => {
-    expect(lightTheme.colors.primary).toBe('#4F46E5')
-  })
-})
-
-describe('themeReferences', () => {
-  const light = themeReferences(lightTheme)
-
-  it('references only variables that exist in both themes', () => {
-    const lightNames = new Set(Object.keys(themeVariables(lightTheme)))
-    const darkNames = new Set(Object.keys(themeVariables(darkTheme)))
-    const names = [...variableNamesIn(JSON.stringify(light.colors)), ...variableNamesIn(JSON.stringify(light.shadows))]
-
-    expect(names.length).toBe(Object.keys(themeVariables(lightTheme)).length)
-
-    for (const name of names) {
-      expect(lightNames.has(name)).toBe(true)
-      expect(darkNames.has(name)).toBe(true)
-    }
-  })
-
-  it('is the same for the light and the dark theme, so switching modes does not change it', () => {
-    expect(themeReferences(darkTheme)).toEqual(light)
-  })
-
-  it('points the fonts to variables that exist', () => {
-    const fontNames = new Set(Object.keys(fontVariables(lightTheme.fonts)))
-    const names = variableNamesIn(JSON.stringify(light.fonts))
-
-    expect(names).toHaveLength(fontNames.size)
-
-    for (const name of names) expect(fontNames.has(name)).toBe(true)
-  })
-
-  it('points spacing, radius, transitions and state to variables, keeping the shape', () => {
-    expect(light.spacing.md).toBe('var(--enchase-space-md)')
-    expect(light.borderRadius.full).toBe('var(--enchase-radius-full)')
-    expect(light.transitions.fast).toBe('var(--enchase-transition-fast)')
-    expect(light.state.hover).toBe('var(--enchase-state-hover)')
-    expect(Object.keys(light.spacing)).toEqual(Object.keys(lightTheme.spacing))
-    expect(Object.keys(light.borderRadius)).toEqual(Object.keys(lightTheme.borderRadius))
-    expect(Object.keys(light.transitions)).toEqual(Object.keys(lightTheme.transitions))
-    expect(Object.keys(light.state)).toEqual(Object.keys(lightTheme.state))
-  })
-
-  it('references only layout variables that exist (zIndex stays numeric, not referenced here)', () => {
-    const layoutNames = new Set([...Object.keys(layoutVariables(lightTheme))].filter((name) => !name.startsWith('--enchase-z-')))
-    const names = variableNamesIn(JSON.stringify([light.spacing, light.borderRadius, light.transitions, light.state]))
-
-    expect(names).toHaveLength(layoutNames.size)
-
-    for (const name of names) expect(layoutNames.has(name)).toBe(true)
-  })
-
-  it('keeps everything that is not a variable', () => {
-    expect(light.breakpoints).toEqual(lightTheme.breakpoints)
-    expect(light.zIndex).toEqual(lightTheme.zIndex)
   })
 })
 

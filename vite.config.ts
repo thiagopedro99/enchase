@@ -7,13 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig(({ command }) => ({
-  plugins: [
-    react({
-      babel: {
-        plugins: ['babel-plugin-styled-components']
-      }
-    })
-  ],
+  plugins: [react()],
 
   esbuild: {
     drop: command === 'build' ? ['console', 'debugger'] : ['debugger'],
@@ -112,7 +106,6 @@ export default defineConfig(({ command }) => ({
       'react',
       'react-dom',
       'react-router-dom',
-      'styled-components',
       'zustand',
       'axios',
       'lucide-react',

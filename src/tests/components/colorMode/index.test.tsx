@@ -3,7 +3,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { mockSystemColorScheme } from '@tests/colorScheme.ts'
 import userEvent from '@testing-library/user-event'
 import { renderToString } from 'react-dom/server'
-import { ServerStyleSheet, useTheme } from 'styled-components'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { useColorMode } from '@hooks/useColorMode.ts'
@@ -19,13 +18,11 @@ const createMemoryStorage = (initial: Record<string, string> = {}): ColorModeSto
 
 const Probe = () => {
   const { mode, resolvedMode, setMode, toggleMode } = useColorMode()
-  const theme = useTheme()
 
   return (
     <>
       <p data-testid="mode">{mode}</p>
       <p data-testid="resolved">{resolvedMode}</p>
-      <p data-testid="background">{theme.colors.background}</p>
       <button onClick={toggleMode}>toggle</button>
       <button onClick={() => setMode('dark')}>dark</button>
       <button onClick={() => setMode('light')}>light</button>
@@ -127,18 +124,6 @@ describe('ColorModeProvider', () => {
     expect(document.documentElement.style.colorScheme).toBe('dark')
   })
 
-  it('hands the components references to css variables that do not change with the mode', async () => {
-    mockScheme('light')
-    const user = userEvent.setup()
-    renderProbe({ defaultMode: 'light' })
-
-    expect(screen.getByTestId('background')).toHaveTextContent('var(--enchase-color-background)')
-
-    await user.click(screen.getByRole('button', { name: 'dark' }))
-
-    expect(screen.getByTestId('background')).toHaveTextContent('var(--enchase-color-background)')
-  })
-
   it('remembers the choice in the given storage and restores it on the next mount', async () => {
     mockScheme('light')
     const user = userEvent.setup()
@@ -223,21 +208,14 @@ describe('ColorModeProvider', () => {
 
 describe('ColorModeProvider with a custom theme', () => {
   const stylesOf = (props: Partial<ColorModeProviderProps>) => {
-    const sheet = new ServerStyleSheet()
+    const html = renderToString(
+      <ColorModeProvider storage={null} {...props}>
+        <Probe />
+      </ColorModeProvider>
+    )
+    const match = html.match(/<style[^>]*>([\s\S]*?)<\/style>/)
 
-    try {
-      renderToString(
-        sheet.collectStyles(
-          <ColorModeProvider storage={null} {...props}>
-            <Probe />
-          </ColorModeProvider>
-        )
-      )
-
-      return sheet.getStyleTags().replace(/\s+/g, '')
-    } finally {
-      sheet.seal()
-    }
+    return (match?.[1] ?? '').replace(/\s+/g, '')
   }
 
   it('writes the colors and fonts of the given theme as css variables', () => {
@@ -248,13 +226,6 @@ describe('ColorModeProvider with a custom theme', () => {
     expect(styles).toContain('--enchase-color-primary:#0B6BCB')
     expect(styles).toContain('--enchase-color-primary:#99CCFF')
     expect(styles).toContain('--enchase-font-primary:Arial')
-  })
-
-  it('keeps handing the components references that do not change with the theme', () => {
-    mockScheme('light')
-    renderProbe({ theme: { light: { colors: { background: '#FAFAFA' } } } })
-
-    expect(screen.getByTestId('background')).toHaveTextContent('var(--enchase-color-background)')
   })
 
   it('keeps the built-in values when no theme is given', () => {

@@ -1,7 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { NavLink, Link } from 'react-router-dom'
-import { useTheme } from 'styled-components'
 import { Menu, X } from 'lucide-react'
 
 import { defaultMenuItems, drawerSlideDistance } from './defaultData.ts'
@@ -11,6 +10,7 @@ import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { Container } from '@components/common/index.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { classNames } from '@utils/classNames.ts'
+import { sharedTokens } from '@styles/themes/shared.ts'
 import styles from './styles.module.css'
 
 import type { MobileDrawerProps, NavbarProps } from './types.ts'
@@ -55,13 +55,12 @@ const MobileDrawer = ({ id, menuItems, onClose }: MobileDrawerProps) => {
 const Navbar = ({ logo = 'Logo', menuItems = defaultMenuItems }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const drawerId = useId()
-  const theme = useTheme()
   const { labels } = useUIConfig()
 
   const handleClose = () => setMobileOpen(false)
 
   useEffect(() => {
-    const query = window.matchMedia(`(min-width: ${theme.breakpoints.md})`)
+    const query = window.matchMedia(`(min-width: ${sharedTokens.breakpoints.md})`)
     const handleChange = (event: MediaQueryListEvent) => {
       if (event.matches) setMobileOpen(false)
     }
@@ -69,7 +68,7 @@ const Navbar = ({ logo = 'Logo', menuItems = defaultMenuItems }: NavbarProps) =>
     query.addEventListener('change', handleChange)
 
     return () => query.removeEventListener('change', handleChange)
-  }, [theme.breakpoints.md])
+  }, [])
 
   return (
     <>

@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { ThemeProvider } from 'styled-components'
 
 import { defaultColorMode, defaultStorageKey, getDefaultStorage, readStoredMode, systemDarkQuery, writeStoredMode } from './defaultData.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { createTheme } from '@styles/createTheme.ts'
-import { defaultThemeCss, ThemeVariables, themeCss, variableTheme } from '@styles/themeVariables.ts'
+import { defaultThemeCss, themeCss } from '@styles/cssVariables.ts'
 import { formatContrastIssues, validateTheme } from '@styles/validateTheme.ts'
+import { ThemeVariables } from '@styles/themeVariables.tsx'
 import { ColorModeContext } from './context.ts'
 
 import type { ColorMode, ColorModeProviderProps, ResolvedColorMode } from './types.ts'
@@ -54,8 +54,8 @@ export const ColorModeProvider = ({ children, theme, mode: controlledMode, defau
 
   return (
     <ColorModeContext.Provider value={value}>
-      <ThemeVariables $css={css} />
-      <ThemeProvider theme={variableTheme}>{children}</ThemeProvider>
+      <ThemeVariables css={css} />
+      {children}
     </ColorModeContext.Provider>
   )
 }

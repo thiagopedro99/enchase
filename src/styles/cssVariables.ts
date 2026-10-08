@@ -1,3 +1,6 @@
+import { themes } from './themes/index.ts'
+
+import type { ThemeSet } from './createTheme.ts'
 import type { Theme } from './themes/index.ts'
 
 type ColorTokens = Theme['colors']
@@ -90,30 +93,6 @@ export const layoutVariables = (theme: LayoutTokens): Record<string, string> => 
 
 export const themeVariables = (theme: ThemeTokens): Record<string, string> => ({ ...colorVariables(theme.colors), ...shadowVariables(theme.shadows) })
 
-export const colorReferences = (colors: ColorTokens): ColorTokens => walk(colors, [], (path) => `var(${colorVariableName(path)})`) as ColorTokens
-
-export const shadowReferences = (shadows: ShadowTokens): ShadowTokens => Object.fromEntries(Object.keys(shadows).map((key) => [key, `var(${shadowVariableName(key)})`])) as ShadowTokens
-
-export const fontReferences = (fonts: FontTokens): FontTokens => ({
-  primary: `var(${fontFamilyVariableName('primary')})`,
-  mono: `var(${fontFamilyVariableName('mono')})`,
-  sizes: Object.fromEntries(Object.keys(fonts.sizes).map((key) => [key, `var(${fontSizeVariableName(key)})`])) as FontTokens['sizes'],
-  weights: Object.fromEntries(Object.keys(fonts.weights).map((key) => [key, `var(${fontWeightVariableName(key)})`])) as unknown as FontTokens['weights']
-})
-
-const referencesTo = <T extends Record<string, string>>(record: T, name: (key: string) => string) => Object.fromEntries(Object.keys(record).map((key) => [key, `var(${name(key)})`])) as T
-
-export const themeReferences = (theme: Theme): Theme => ({
-  ...theme,
-  colors: colorReferences(theme.colors),
-  shadows: shadowReferences(theme.shadows),
-  fonts: fontReferences(theme.fonts),
-  spacing: referencesTo(theme.spacing, spacingVariableName),
-  borderRadius: referencesTo(theme.borderRadius, radiusVariableName),
-  transitions: referencesTo(theme.transitions, transitionVariableName),
-  state: referencesTo(theme.state, stateVariableName)
-})
-
 const variablesRule = (selector: string, variables: Record<string, string>) => {
   const declarations = Object.entries(variables).map(([name, value]) => `  ${name}: ${value};`)
 
@@ -125,3 +104,8 @@ export const cssVariablesRule = (selector: string, theme: ThemeTokens) => variab
 export const fontVariablesRule = (selector: string, fonts: FontTokens) => variablesRule(selector, fontVariables(fonts))
 
 export const layoutVariablesRule = (selector: string, theme: LayoutTokens) => variablesRule(selector, layoutVariables(theme))
+
+export const themeCss = ({ light, dark }: ThemeSet) =>
+  [fontVariablesRule(':root', light.fonts), layoutVariablesRule(':root', light), cssVariablesRule(":root, [data-theme='light']", light), cssVariablesRule("[data-theme='dark']", dark)].join('\n\n')
+
+export const defaultThemeCss = themeCss(themes)
