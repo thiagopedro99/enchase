@@ -118,6 +118,7 @@ export default defineConfig(({ command }) => ({
     environment: 'jsdom',
     setupFiles: ['./src/tests/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
+    globalSetup: ['./src/tests/hydration/serverHtml.setup.ts'],
     css: false
   },
 }));
