@@ -1,0 +1,40 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bubble {
+  position: fixed;
+  z-index: var(--enchase-z-tooltip);
+  background: var(--enchase-color-inverse-surface);
+  color: var(--enchase-color-inverse-on-surface);
+  padding: var(--enchase-space-xs) var(--enchase-space-sm);
+  border-radius: var(--enchase-radius-xs);
+  font-size: var(--enchase-font-size-xs);
+  font-weight: var(--enchase-font-weight-medium);
+  white-space: nowrap;
+}
+
+.bubble[data-position='top'] {
+  translate: -50% -100%;
+}
+
+.bubble[data-position='bottom'] {
+  translate: -50% 0;
+}
+
+.bubble[data-position='left'] {
+  translate: -100% -50%;
+}
+
+.bubble[data-position='right'] {
+  translate: 0 -50%;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .bubble {
+    display: none;
+  }
+}

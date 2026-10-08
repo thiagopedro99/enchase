@@ -1,10 +1,10 @@
 import { cloneElement, isValidElement, useEffect, useId, useRef, useState } from 'react'
-import { AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { createPortal } from 'react-dom'
 
-import { TooltipWrapper, TooltipBubble } from './styles.ts'
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { closeDelay, placeBubble } from './defaultData.ts'
+import styles from './styles.module.css'
 
 import type { KeyboardEvent, ReactElement } from 'react'
 import type { TooltipProps } from './types.ts'
@@ -54,7 +54,7 @@ export const Tooltip = ({ text, children, position = 'top', describe = true, ani
   const trigger = describe && isValidElement(children) ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, { 'aria-describedby': id }) : children
 
   return (
-    <TooltipWrapper ref={wrapperRef} onMouseEnter={show} onMouseLeave={hide} onFocus={show} onBlur={hide} onKeyDown={handleKeyDown}>
+    <div ref={wrapperRef} className={styles.wrapper} onMouseEnter={show} onMouseLeave={hide} onFocus={show} onBlur={hide} onKeyDown={handleKeyDown}>
       {trigger}
       {describe && (
         <span id={id} role="tooltip" hidden>
@@ -65,14 +65,14 @@ export const Tooltip = ({ text, children, position = 'top', describe = true, ani
         createPortal(
           <AnimatePresence>
             {open && (
-              <TooltipBubble key="tooltip-bubble" {...bubbleMotion} style={anchor} $position={position} aria-hidden="true">
+              <motion.span key="tooltip-bubble" {...bubbleMotion} style={anchor} className={styles.bubble} data-position={position} aria-hidden="true">
                 {text}
-              </TooltipBubble>
+              </motion.span>
             )}
           </AnimatePresence>,
           document.body
         )}
-    </TooltipWrapper>
+    </div>
   )
 }
 
