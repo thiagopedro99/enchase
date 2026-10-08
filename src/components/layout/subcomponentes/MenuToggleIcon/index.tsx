@@ -1,8 +1,8 @@
-import { AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { Menu } from 'lucide-react'
 
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
-import { IconSlot } from './styles.ts'
+import styles from './styles.module.css'
 
 import type { MenuToggleIconProps } from './types.ts'
 
@@ -20,9 +20,9 @@ export const MenuToggleIcon = ({ open }: MenuToggleIconProps) => {
 
   return (
     <AnimatePresence mode="wait" initial={false}>
-      <IconSlot key={open ? 'open' : 'closed'} {...swapMotion} aria-hidden="true">
+      <motion.span key={open ? 'open' : 'closed'} {...swapMotion} className={styles.slot} aria-hidden="true">
         {open ? <MenuOpenIcon /> : <Menu size={24} />}
-      </IconSlot>
+      </motion.span>
     </AnimatePresence>
   )
 }
