@@ -1,11 +1,11 @@
 import { canMeasureContrast, contrastRatio } from './contrast.ts'
 import { colorRoles, themeModes } from '../tokens/types.ts'
 
-import type { ColorTokens, ThemeSet } from '../tokens/types.ts'
+import type { ColorTokens, ThemeMode, ThemeSet } from '../tokens/types.ts'
 
 export type ContrastCheck = { label: string; foreground: string; background: string; minimum: number }
 
-export type ContrastIssue = ContrastCheck & { mode: 'light' | 'dark'; ratio: number | null }
+export type ContrastIssue = ContrastCheck & { mode: ThemeMode; ratio: number | null }
 
 export const textContrast = 4.5
 

@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
 
 import type { ThemeInput } from '@styles/theme/createTheme.ts'
+import type { ThemeMode } from '@styles/tokens/types.ts'
 
 export type ColorMode = 'light' | 'dark' | 'system'
 
-export type ResolvedColorMode = 'light' | 'dark'
+export type ResolvedColorMode = ThemeMode
 
 export type ColorModeStorage = {
   getItem: (key: string) => string | null

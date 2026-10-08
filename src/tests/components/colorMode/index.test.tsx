@@ -9,6 +9,7 @@ import { useColorMode } from '@hooks/useColorMode.ts'
 import { lightTheme } from '@styles/tokens/index.ts'
 
 import type { ColorModeProviderProps, ColorModeStorage } from '@components/colorMode/types.ts'
+import type { ThemeMode } from '@styles/tokens/types.ts'
 
 const createMemoryStorage = (initial: Record<string, string> = {}): ColorModeStorage & { data: Map<string, string> } => {
   const data = new Map(Object.entries(initial))
@@ -40,7 +41,7 @@ const renderProbe = (props: Partial<ColorModeProviderProps> = {}) =>
 
 let scheme: ReturnType<typeof mockSystemColorScheme> | undefined
 
-const mockScheme = (initial: 'light' | 'dark') => {
+const mockScheme = (initial: ThemeMode) => {
   scheme = mockSystemColorScheme(initial)
 
   return scheme

@@ -1,4 +1,6 @@
-type Scheme = 'light' | 'dark'
+import type { ThemeMode } from '@styles/tokens/types.ts'
+
+type Scheme = ThemeMode
 
 type Listener = (event: MediaQueryListEvent) => void
 
