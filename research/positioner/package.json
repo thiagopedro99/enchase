@@ -1,0 +1,14 @@
+{
+  "name": "enchase-research-positioner",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bundle": "esbuild entry.ts --bundle --format=iife --outfile=bundle.js",
+    "diff-test": "node diff-test.mjs"
+  },
+  "devDependencies": {
+    "@floating-ui/dom": "1.8.0",
+    "esbuild": "^0.28.2",
+    "playwright-core": "^1.56.0"
+  }
+}

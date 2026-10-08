@@ -1,0 +1,359 @@
+diff -ruN a/package.json b/package.json
+--- a/package.json	2026-10-08 18:48:15.503576156 +0000
++++ b/package.json	2026-10-08 18:48:15.521991059 +0000
+@@ -36,16 +36,19 @@
+     "@types/react": "^19.1.2",
+     "@types/react-dom": "^19.1.2",
+     "@vitejs/plugin-react": "^4.4.1",
++    "@vitest/browser-playwright": "^5.0.3",
+     "eslint": "^9.25.0",
+     "eslint-plugin-react-hooks": "^5.2.0",
+     "eslint-plugin-react-refresh": "^0.4.19",
+     "globals": "^16.0.0",
+     "jsdom": "^29.1.1",
++    "playwright": "^1.64.0",
+     "storybook": "^10.6.1",
+     "typescript": "~5.8.3",
+     "typescript-eslint": "^8.30.1",
+     "vite": "^6.3.5",
+     "vitest": "^5.0.3",
+-    "vitest-axe": "^0.1.0"
++    "vitest-axe": "^0.1.0",
++    "vitest-browser-react": "^2.3.0"
+   }
+ }
+diff -ruN a/src/tests/axe.ts b/src/tests/axe.ts
+--- a/src/tests/axe.ts	2026-10-08 18:48:15.495904480 +0000
++++ b/src/tests/axe.ts	2026-10-08 18:48:15.506102963 +0000
+@@ -1,7 +1,12 @@
+-import { configureAxe } from 'vitest-axe'
++import axeCore from 'axe-core'
+ 
+-export const axe = configureAxe({
++import type { AxeResults, RunOptions } from 'axe-core'
++
++const baseOptions: RunOptions = {
+   rules: {
+     'color-contrast': { enabled: false }
+   }
+-})
++}
++
++export const axe = (element: Element, options: RunOptions = {}): Promise<AxeResults> =>
++  axeCore.run(element, { ...baseOptions, ...options, rules: { ...baseOptions.rules, ...options.rules } })
+diff -ruN a/src/tests/components/common/Modal/index.test.tsx b/src/tests/components/common/Modal/index.test.tsx
+--- a/src/tests/components/common/Modal/index.test.tsx	2026-10-08 18:48:15.497096724 +0000
++++ b/src/tests/components/common/Modal/index.test.tsx	2026-10-08 18:48:15.508346424 +0000
+@@ -101,7 +101,7 @@
+     const dialog = await screen.findByRole('dialog')
+     const backdrop = dialog.previousElementSibling as HTMLElement
+ 
+-    await user.click(backdrop)
++    await user.click(backdrop, { position: { x: 5, y: 5 } } as never)
+ 
+     expect(onClose).toHaveBeenCalledTimes(1)
+   })
+diff -ruN a/src/tests/components/layout/index.test.tsx b/src/tests/components/layout/index.test.tsx
+--- a/src/tests/components/layout/index.test.tsx	2026-10-08 18:48:15.498109708 +0000
++++ b/src/tests/components/layout/index.test.tsx	2026-10-08 18:48:15.511203246 +0000
+@@ -20,8 +20,8 @@
+   </Layout>
+ )
+ 
+-beforeEach(() => {
+-  setViewportWidth(1280)
++beforeEach(async () => {
++  await setViewportWidth(1280)
+   useAppStore.setState({ sidebarOpen: false, sidebarCollapsed: false })
+ })
+ 
+diff -ruN a/src/tests/components/navbar/index.test.tsx b/src/tests/components/navbar/index.test.tsx
+--- a/src/tests/components/navbar/index.test.tsx	2026-10-08 18:48:15.498818162 +0000
++++ b/src/tests/components/navbar/index.test.tsx	2026-10-08 18:48:15.506719306 +0000
+@@ -2,7 +2,8 @@
+ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
+ import { screen, waitFor } from '@testing-library/react'
+ import userEvent from '@testing-library/user-event'
+-import { describe, expect, it } from 'vitest'
++import { afterEach, beforeEach, describe, expect, it } from 'vitest'
++import { setViewportWidth } from '@tests/viewport.ts'
+ import { axe } from '@tests/axe.ts'
+ 
+ import Navbar from '@components/navbar/index.tsx'
+@@ -13,12 +14,17 @@
+   name: 'Navbar drawer',
+   triggerName: 'Abrir menu',
+   dialogName: 'Navegação mobile',
+-  render: () => <Navbar />
++  render: () => <Navbar />,
++  before: () => setViewportWidth(500),
++  after: () => setViewportWidth(1280)
+ }
+ 
+ describeDialogContract(navbarDrawerAdapter)
+ 
+ describe('Navbar', () => {
++  beforeEach(() => setViewportWidth(500))
++  afterEach(() => setViewportWidth(1280))
++
+   it('uses banner and labelled navigation landmarks without nesting navs', () => {
+     renderWithProviders(<Navbar />)
+ 
+diff -ruN a/src/tests/probe/contrast.test.tsx b/src/tests/probe/contrast.test.tsx
+--- a/src/tests/probe/contrast.test.tsx	1970-01-01 00:00:00.000000000 +0000
++++ b/src/tests/probe/contrast.test.tsx	2026-10-08 18:48:15.518170477 +0000
+@@ -0,0 +1,24 @@
++import { describe, expect, it, vi } from 'vitest'
++import { screen } from '@testing-library/react'
++import axeCore from 'axe-core'
++
++import { renderWithProviders } from '@tests/renderWithProviders.tsx'
++import { ConfirmModal } from '@components/common/Modal/index.tsx'
++
++const contrast = async (el: Element) => (await axeCore.run(el, { runOnly: ['color-contrast'] })).violations.length
++
++describe('contrast timing', () => {
++  for (const theme of ['light', 'dark'] as const) {
++    it(`ConfirmModal primary button contrast (${theme}) immediately vs after animation`, async () => {
++      renderWithProviders(<ConfirmModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} message="Delete?" />, { theme })
++      const dialog = await screen.findByRole('alertdialog')
++      const btn = screen.getByRole('button', { name: 'Confirmar' })
++      const early = await contrast(dialog)
++      const earlyOpacity = getComputedStyle(dialog).opacity
++      await new Promise((r) => setTimeout(r, 800))
++      const late = await contrast(dialog)
++      console.log(`[contrast] ${theme} early=${early} (opacity ${earlyOpacity}) late=${late} bg=${getComputedStyle(btn).backgroundColor} fg=${getComputedStyle(btn).color}`)
++      expect(late).toBe(0)
++    })
++  }
++})
+diff -ruN a/src/tests/probe/realBrowser.test.tsx b/src/tests/probe/realBrowser.test.tsx
+--- a/src/tests/probe/realBrowser.test.tsx	1970-01-01 00:00:00.000000000 +0000
++++ b/src/tests/probe/realBrowser.test.tsx	2026-10-08 18:48:15.518359240 +0000
+@@ -0,0 +1,91 @@
++import { describe, expect, it } from 'vitest'
++import { screen, waitFor } from '@testing-library/react'
++import userEvent from '@testing-library/user-event'
++
++import { ControlledDialog } from '@tests/shared/contracts/dialogHarness.tsx'
++import { renderWithProviders } from '@tests/renderWithProviders.tsx'
++import { Modal } from '@components/common/Modal/index.tsx'
++
++const isBrowser = !navigator.userAgent.includes('jsdom')
++
++const renderModal = () =>
++  renderWithProviders(
++    <ControlledDialog>
++      {({ open, close }) => (
++        <>
++          <div data-testid="tall" style={{ height: '5000px' }} />
++          <Modal isOpen={open} onClose={close} title="Edit profile" footer={<button>Save</button>}>
++            <input aria-label="Name" />
++          </Modal>
++        </>
++      )}
++    </ControlledDialog>
++  )
++
++const open = async () => {
++  const user = userEvent.setup()
++  renderModal()
++  const trigger = screen.getByRole('button', { name: 'Open' })
++  await user.click(trigger)
++  const dialog = await screen.findByRole('dialog')
++  return { user, trigger, dialog }
++}
++
++describe(`probe (${isBrowser ? 'browser' : 'jsdom'})`, () => {
++  it('inert really blocks programmatic focus on the page behind', async () => {
++    const { trigger, dialog } = await open()
++    trigger.focus()
++    expect(dialog).toContainElement(document.activeElement as HTMLElement)
++  })
++
++  it('backdrop is the hit-test target outside the dialog box', async () => {
++    const { dialog } = await open()
++    const hit = document.elementFromPoint(5, 5)
++    expect(hit).toBe(dialog.previousElementSibling)
++  })
++
++  it('Tab lands on an element that matches :focus-visible with a visible outline', async () => {
++    const { user } = await open()
++    await user.tab()
++    const active = document.activeElement as HTMLElement
++    expect(active.matches(':focus-visible')).toBe(true)
++    expect(getComputedStyle(active).outlineStyle).not.toBe('none')
++  })
++
++  it('CSS modules are applied (backdrop is position: fixed)', async () => {
++    const { dialog } = await open()
++    expect(getComputedStyle(dialog.previousElementSibling as Element).position).toBe('fixed')
++  })
++
++  it('exit animation keeps the dialog mounted for a measurable time', async () => {
++    const { user } = await open()
++    const start = performance.now()
++    await user.keyboard('{Escape}')
++    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
++    const elapsed = performance.now() - start
++    console.log(`[probe] exit took ${elapsed.toFixed(0)}ms`)
++    expect(elapsed).toBeGreaterThan(50)
++  })
++
++  it.skipIf(!isBrowser)('wheel does not scroll the page while open, and does after close', async () => {
++    const { commands } = await import('vitest/browser')
++    const wheel = (commands as unknown as { wheelAt: (x: number, y: number, dy: number) => Promise<void> }).wheelAt
++    const { user } = await open()
++    window.scrollTo(0, 0)
++    await wheel(5, 5, 600)
++    await new Promise((r) => setTimeout(r, 200))
++    const lockedY = window.scrollY
++    await user.keyboard('{Escape}')
++    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
++    await wheel(5, 5, 600)
++    await new Promise((r) => setTimeout(r, 200))
++    console.log(`[probe] scrollY locked=${lockedY} after=${window.scrollY}`)
++    expect(lockedY).toBe(0)
++    expect(window.scrollY).toBeGreaterThan(0)
++  })
++
++  it('matchMedia for prefers-reduced-motion reflects the environment', () => {
++    console.log(`[probe] reduce=${window.matchMedia('(prefers-reduced-motion: reduce)').matches} mm-is-mock=${!String(window.matchMedia).includes('[native code]')}`)
++    expect(true).toBe(true)
++  })
++})
+diff -ruN a/src/tests/probe/tooltipGlide.test.tsx b/src/tests/probe/tooltipGlide.test.tsx
+--- a/src/tests/probe/tooltipGlide.test.tsx	1970-01-01 00:00:00.000000000 +0000
++++ b/src/tests/probe/tooltipGlide.test.tsx	2026-10-08 18:48:15.517968866 +0000
+@@ -0,0 +1,34 @@
++import { describe, expect, it } from 'vitest'
++import { screen } from '@testing-library/react'
++
++import { renderWithProviders } from '@tests/renderWithProviders.tsx'
++import { Tooltip } from '@components/common/Tooltip/index.tsx'
++
++type Glide = (x1: number, y1: number, x2: number, y2: number, steps: number, pause: number) => Promise<void>
++
++describe('tooltip hoverable with a real pointer path', () => {
++  for (const [steps, pause] of [[5, 10], [10, 20], [10, 40]] as const) {
++    it(`stays open when the pointer glides from trigger to bubble (${steps} steps x ${pause}ms)`, async () => {
++      const { commands } = await import('vitest/browser')
++      const glide = (commands as unknown as { glide: Glide }).glide
++      renderWithProviders(
++        <div style={{ padding: '120px' }}>
++          <Tooltip text="Save changes">
++            <button>Save</button>
++          </Tooltip>
++        </div>
++      )
++      const button = screen.getByRole('button', { name: 'Save' })
++      const b = button.getBoundingClientRect()
++      await glide(b.left + b.width / 2, b.top + b.height / 2, b.left + b.width / 2, b.top + b.height / 2 + 1, 1, 0)
++      const bubble = await screen.findByText('Save changes', { selector: '[aria-hidden="true"]' })
++      await new Promise((r) => setTimeout(r, 300))
++      const t = bubble.getBoundingClientRect()
++      const gap = b.top - t.bottom
++      await glide(b.left + b.width / 2, b.top + b.height / 2, t.left + t.width / 2, t.top + t.height / 2, steps, pause)
++      await new Promise((r) => setTimeout(r, 400))
++      console.log(`[glide] gap=${gap.toFixed(1)}px steps=${steps} pause=${pause} open=${document.body.contains(bubble)}`)
++      expect(document.body.contains(bubble)).toBe(true)
++    })
++  }
++})
+diff -ruN a/src/tests/setup.mockmm.ts b/src/tests/setup.mockmm.ts
+--- a/src/tests/setup.mockmm.ts	1970-01-01 00:00:00.000000000 +0000
++++ b/src/tests/setup.mockmm.ts	2026-10-08 18:48:15.506043902 +0000
+@@ -0,0 +1,32 @@
++import * as axeMatchers from 'vitest-axe/matchers'
++import { cleanup } from '@testing-library/react'
++import { afterEach, expect, vi } from 'vitest'
++import '@testing-library/jest-dom/vitest'
++
++expect.extend(axeMatchers)
++
++afterEach(() => cleanup())
++
++const evaluateQuery = (query: string) => {
++  const width = window.innerWidth
++  const min = query.match(/\(min-width:\s*(\d+)px\)/)
++  const max = query.match(/\(max-width:\s*(\d+)px\)/)
++  if (min && width < Number(min[1])) return false
++  if (max && width > Number(max[1])) return false
++
++  return Boolean(min || max)
++}
++
++Object.defineProperty(window, 'matchMedia', {
++  writable: true,
++  value: (query: string) => ({
++    matches: evaluateQuery(query),
++    media: query,
++    onchange: null,
++    addEventListener: vi.fn(),
++    removeEventListener: vi.fn(),
++    addListener: vi.fn(),
++    removeListener: vi.fn(),
++    dispatchEvent: vi.fn()
++  })
++})
+diff -ruN a/src/tests/setup.ts b/src/tests/setup.ts
+--- a/src/tests/setup.ts	2026-10-08 18:48:15.499852708 +0000
++++ b/src/tests/setup.ts	2026-10-08 18:48:15.511970659 +0000
+@@ -17,7 +17,7 @@
+   return Boolean(min || max)
+ }
+ 
+-Object.defineProperty(window, 'matchMedia', {
++if (navigator.userAgent.includes('jsdom')) Object.defineProperty(window, 'matchMedia', {
+   writable: true,
+   value: (query: string) => ({
+     matches: evaluateQuery(query),
+diff -ruN a/src/tests/shared/contracts/dialogContract.tsx b/src/tests/shared/contracts/dialogContract.tsx
+--- a/src/tests/shared/contracts/dialogContract.tsx	2026-10-08 18:48:15.499994240 +0000
++++ b/src/tests/shared/contracts/dialogContract.tsx	2026-10-08 18:48:15.506378294 +0000
+@@ -10,12 +10,14 @@
+ 
+ export const describeDialogContract = (adapter: DialogContractAdapter) => {
+   describe(`${adapter.name} · contrato de diálogo`, () => {
+-    beforeEach(() => {
++    beforeEach(async () => {
+       document.body.style.overflow = 'auto'
+-      adapter.before?.()
++      await adapter.before?.()
+     })
+ 
+-    afterEach(() => adapter.after?.())
++    afterEach(async () => {
++      await adapter.after?.()
++    })
+ 
+     const openDialog = async () => {
+       const user = userEvent.setup()
+diff -ruN a/src/tests/shared/contracts/types.ts b/src/tests/shared/contracts/types.ts
+--- a/src/tests/shared/contracts/types.ts	2026-10-08 18:48:15.500092280 +0000
++++ b/src/tests/shared/contracts/types.ts	2026-10-08 18:48:15.506491646 +0000
+@@ -8,8 +8,8 @@
+   role?: 'dialog' | 'alertdialog'
+   dialogName?: string | RegExp
+   options?: RenderWithProvidersOptions
+-  before?: () => void
+-  after?: () => void
++  before?: () => void | Promise<void>
++  after?: () => void | Promise<void>
+ }
+ 
+ export type ControlledDialogState = {
+diff -ruN a/src/tests/viewport.ts b/src/tests/viewport.ts
+--- a/src/tests/viewport.ts	2026-10-08 18:48:15.501281073 +0000
++++ b/src/tests/viewport.ts	2026-10-08 18:48:15.516545444 +0000
+@@ -1,3 +1,8 @@
+-export const setViewportWidth = (width: number) => {
+-  Object.defineProperty(window, 'innerWidth', { configurable: true, writable: true, value: width })
++export const setViewportWidth = async (width: number) => {
++  if (navigator.userAgent.includes('jsdom')) {
++    Object.defineProperty(window, 'innerWidth', { configurable: true, writable: true, value: width })
++    return
++  }
++  const { page } = await import('vitest/browser')
++  await page.viewport(width, 800)
+ }

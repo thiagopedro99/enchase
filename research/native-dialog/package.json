@@ -1,0 +1,20 @@
+{
+  "name": "q3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mdn/browser-compat-data": "^8.1.5",
+    "happy-dom": "^20.14.5",
+    "jsdom": "^29.1.1",
+    "playwright": "1.56",
+    "pngjs": "^7.0.0",
+    "web-features": "^3.41.0"
+  }
+}

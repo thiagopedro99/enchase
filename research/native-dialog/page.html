@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>q3 dialog experiment</title>
+<style>
+  body { margin: 0; font: 16px sans-serif; height: 3000px; }
+  #hostile { position: fixed; inset: 0 auto auto 0; width: 100vw; height: 100vh; z-index: 2147483647; background: rgba(0, 0, 255, 1); pointer-events: none; display: none; }
+  body.hostile #hostile { display: block; }
+  dialog { padding: 0; border: 0; width: 300px; height: 200px; }
+  dialog::backdrop { background: rgba(0, 0, 0, 0.3); }
+  #a { background: rgb(255, 0, 0); }
+  #b { background: rgb(0, 255, 0); }
+  #fade { background: rgb(255, 0, 255); opacity: 0;
+    transition: opacity 1000ms linear, overlay 1000ms linear allow-discrete, display 1000ms linear allow-discrete; }
+  #fade[open] { opacity: 1; }
+  @starting-style { #fade[open] { opacity: 0; } }
+  #fadeNoOverlay { background: rgb(255, 0, 255); opacity: 0;
+    transition: opacity 1000ms linear, display 1000ms linear allow-discrete; }
+  #fadeNoOverlay[open] { opacity: 1; }
+  @starting-style { #fadeNoOverlay[open] { opacity: 0; } }
+  [popover] { margin: 0; inset: auto; top: 10px; left: 10px; }
+</style>
+</head>
+<body>
+  <div id="hostile"></div>
+  <button id="outside">Outside button</button>
+  <button id="openA">Open A</button>
+  <dialog id="a" aria-label="A">
+    <button id="insideA">Inside A</button>
+    <button id="openB">Open B</button>
+  </dialog>
+  <dialog id="b" aria-label="B">
+    <button id="insideB">Inside B</button>
+  </dialog>
+  <button id="openFade">Open fade</button>
+  <dialog id="fade" aria-label="Fade"><button>x</button></dialog>
+  <dialog id="fadeNoOverlay" aria-label="Fade no overlay"><button>x</button></dialog>
+  <dialog id="cd" aria-label="closedby" closedby="none"><button>x</button></dialog>
+  <button id="openP1">Open P1</button>
+  <div id="p1" popover="auto"><button id="openP2" popovertarget="p2">Open P2</button></div>
+  <div id="p2" popover="auto">P2</div>
+  <div id="hint" popover="hint">hint</div>
+  <select id="sel"><option>One</option><option>Two</option></select>
+  <script>
+    window.log = []
+    for (const id of ['a', 'b', 'fade', 'fadeNoOverlay', 'cd']) {
+      const d = document.getElementById(id)
+      d.addEventListener('cancel', (e) => log.push(`cancel:${id}:cancelable=${e.cancelable}`))
+      d.addEventListener('close', () => log.push(`close:${id}`))
+    }
+    document.getElementById('openA').addEventListener('click', () => document.getElementById('a').showModal())
+    document.getElementById('openB').addEventListener('click', () => document.getElementById('b').showModal())
+    document.getElementById('openFade').addEventListener('click', () => document.getElementById('fade').showModal())
+    document.getElementById('openP1').addEventListener('click', () => document.getElementById('p1').showPopover())
+  </script>
+</body>
+</html>

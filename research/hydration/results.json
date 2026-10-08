@@ -1,0 +1,174 @@
+{
+  "date": "2026-10-08",
+  "versions": {
+    "react": "19.3.0",
+    "vitest": "5.0.3",
+    "react-router-dom": "7.18.4",
+    "motion": "14.0.0"
+  },
+  "method": "Two-phase probe using temporary files in src/tests/ssr-probe/ (cases.tsx, runner.tsx, server.test.tsx, hydrate.test.tsx, hydrate-reduced.test.tsx). All of them have since been deleted. Versions: React and react-dom 19.3.0, Vitest 5.0.3, react-router-dom 7.18.4, motion 14.0.0. NODE_ENV=test, so React's dev builds ran and printed full hydration diffs.\n\nShared cases (cases.tsx): every component case is wrapped exactly as App.tsx does it, with default props everywhere: <ColorModeProvider> (no storage/mode props, so the localStorage and matchMedia paths run) > <GlobalStyles/> > <UIProvider> > <ToastProvider> > <MemoryRouter initialEntries={['/']}>. MemoryRouter is used on both sides so the router tree is identical and cannot cause a mismatch. The ToastProvider and ColorModeProvider cases are also rendered standalone with no other providers. Extra cases: Loading inline, Sidebar permanent collapsed (tooltips), Home page (full App tree), and Modal open as the last child with only UIProvider around it.\n\nPhase 1, server (server.test.tsx, docblock `@vitest-environment node`): the file asserts typeof window and typeof document are 'undefined' (localStorage and matchMedia were undefined too). It dynamically imports the cases, calls renderToString from react-dom/server per case inside try/catch, captures console.error/warn, and writes {name, ok, html, logs} to <scratchpad>/ssr-probe/server-html.json. The repo config could not run this file: src/tests/setup.ts:20 calls Object.defineProperty(window, ...) unconditionally and throws \"ReferenceError: window is not defined\" in a node environment, and Vitest 5 has no CLI override for setupFiles. So phase 1 ran with `npx vitest run --config <scratchpad>/ssr-probe/vitest.server.config.ts`. That config imports vite.config.ts and only changes root, environment='node', setupFiles=[] and include=[server.test.tsx]; plugins, aliases and css:false are unchanged, so CSS-module class names come out the same in both environments.\n\nPhase 2, hydration (jsdom, normal repo config including setup.ts, run with `npx vitest run src/tests/ssr-probe/hydrate`): the runner sets IS_REACT_ACT_ENVIRONMENT and installs its own window.matchMedia and innerWidth. For each case it clears localStorage and seeds it per variant, resets document.body and <html data-theme>, and puts the server HTML into <div id=\"root\"> on body. It spies on console.error/warn and calls hydrateRoot(container, sameElement, {onRecoverableError, onCaughtError, onUncaughtError}) inside `await act(async () => ...)`, then flushes with a second act and a 30ms timer. It records recoverable errors with their message and component stack, console errors and warnings, how many server DOM nodes survived (to detect a client re-render), and portal output outside the container, then unmounts.\n\nRequired variant A: width 1280 (min-width:768px matches), prefers-color-scheme: dark true, localStorage['enchase-color-mode']='dark', reduced motion false. Isolation variants: B mobile 375 + light + nothing stored (control); C desktop + light + nothing stored; D mobile + dark system + nothing stored; F mobile + light system + stored 'dark'; E mobile + light + prefers-reduced-motion. E ran in its own test file because motion caches the reduced-motion preference per module graph.\n\nResults JSON: <scratchpad>/ssr-probe/hydration-{A..F}-*.json. 'hydration' below reports variant A. Status rule: a recoverable/uncaught error or a hydration-mismatch console.error counts as 'mismatch', and 'error' was reserved for thrown or uncaught errors (none happened).",
+  "results": [
+    {
+      "component": "Button",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in A, B, C, D and F (4/4 server nodes kept). Only in variant E (client prefers reduced motion), console.error reports an attribute mismatch that React does not patch: the server <button> has tabindex=\"0\" and the client does not.",
+      "cause": "Variant A: none. Variant E: src/hooks/useMotionRecipe.ts:11 `useReducedMotion() ?? false` is null on the server and true on a reduced-motion client. src/motion/recipes.ts:98-100 then maps 'press' to {}, so motion.button in src/components/common/Button/index.tsx:11-15 loses whileTap and stops emitting tabindex=0."
+    },
+    {
+      "component": "Input",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants. The useId values (_R_2q_, _R_4q_) are the same on server and client, and the password toggle hydrates.",
+      "cause": "None."
+    },
+    {
+      "component": "Select",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants (the placeholder option gets selected=\"\" from defaultValue).",
+      "cause": "None."
+    },
+    {
+      "component": "Checkbox",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants.",
+      "cause": "None."
+    },
+    {
+      "component": "Card",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants (elevated variant, lift recipe sets no inline style).",
+      "cause": "None."
+    },
+    {
+      "component": "Tooltip (button child)",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants. The aria-describedby/useId pairing matches.",
+      "cause": "None observed. Latent risk: src/components/common/Tooltip/index.tsx:64-74 adds a createPortal on the client only (`typeof document !== 'undefined' &&`). It is safe only because the portal has no host children at hydration time (open is always false at first). The Modal case shows that a portal with content during hydration fails."
+    },
+    {
+      "component": "ThemeToggle",
+      "serverRender": "ok",
+      "hydration": "mismatch",
+      "hydrationDetail": "onRecoverableError: \"Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client.\" Diff: aria-label \"Mudar para tema claro\" (client) vs \"Mudar para tema escuro\" (server); svg className \"lucide lucide-sun\" vs \"lucide lucide-moon\"; client <circle cx=12 cy=12 r=4> vs server <path d=\"M20.985 ...\">. The whole root was client-rendered (0/8 server nodes survived). D (system dark only) and F (stored dark only) each reproduce it; B and C are clean. E produces an attribute-only mismatch: span style opacity:1 vs \"opacity:1;transform:none\", plus tabindex.",
+      "cause": "ColorModeProvider resolves a different mode on the server than on the client. (1) Storage path: src/components/colorMode/defaultData.ts:13 returns null storage when window is undefined, so src/components/colorMode/index.tsx:15 starts at 'system' on the server, while the same useState initializer reads 'dark' from localStorage on the client. (2) System path: index.tsx:16 calls useMediaQuery, and src/hooks/useMediaQuery.ts:4 reads window.matchMedia(query).matches in its useState initializer (false on the server, true on the client). resolvedMode (index.tsx:18) then drives the label at src/components/common/ThemeToggle/index.tsx:15 and the keyed icon branch at :21-22 (Moon vs Sun)."
+    },
+    {
+      "component": "Modal isOpen=false",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants. The server outputs nothing; the client adds a portal to document.body whose AnimatePresence has no children, so hydration has nothing to match.",
+      "cause": "None (but see Modal isOpen=true for the same code path with content)."
+    },
+    {
+      "component": "Modal isOpen=true",
+      "serverRender": "ok",
+      "hydration": "mismatch",
+      "hydrationDetail": "The server HTML has no dialog at all (only <p>Página</p> and the toast region). On hydration, onRecoverableError fires in every variant, including control B: \"Hydration failed because the server rendered HTML didn't match the client...\". The diff shows ModalDialog's root <div ref> being matched against the next server node, the toast region <div class=\"_container_5d9cae\" role=\"region\">, with an extra client child <div className=\"_backdrop_97beb5\" style={{opacity:0}}>. When the Modal is the last child (standalone case) the diff is \"+ <div ref={{current:null}}>\" (an extra node). The whole root was regenerated on the client (0/4 nodes kept), and the dialog then mounts into body.",
+      "cause": "src/components/common/Modal/index.tsx:89 `if (typeof document === 'undefined') return null` renders nothing on the server, while :91-106 returns createPortal(<AnimatePresence>{isOpen && <ModalDialog/>}</AnimatePresence>, document.body) on the client. React does not support portals that have content during hydration: it tries to hydrate the portal's host nodes against the parent's server DOM, which throws. An open modal is also never part of the SSR HTML."
+    },
+    {
+      "component": "ConfirmModal open",
+      "serverRender": "ok",
+      "hydration": "mismatch",
+      "hydrationDetail": "Same failure as Modal isOpen=true in every variant: the role=\"alertdialog\" ModalDialog <div ref> is matched against the server toast-region div and the extra backdrop child throws \"Hydration failed because the server rendered HTML didn't match the client\". The root was regenerated on the client (0/4 nodes kept).",
+      "cause": "ConfirmModal renders <Modal isOpen> (src/components/common/Modal/index.tsx:128), so it hits the same server null at :89 and client createPortal at :91."
+    },
+    {
+      "component": "Loading overlay (fullscreen)",
+      "serverRender": "ok",
+      "hydration": "mismatch",
+      "hydrationDetail": "Fails in every variant: \"Hydration failed because the server rendered HTML didn't match the client\". The diff shows OverlayLoading's root <div ref> compared with the server toast-region div, plus an extra client <div className=\"_overlay_2716ca\" aria-hidden=\"true\">. The root was regenerated on the client (0/4 nodes kept). The overlay is missing from the SSR HTML.",
+      "cause": "src/components/common/Loading/index.tsx:42 `if (typeof document === 'undefined') return null` on the server versus :44 `createPortal(<OverlayLoading .../>, document.body)` on the client. The portal's content (OverlayLoading root div at :27-28) gets hydrated against server DOM that does not contain it."
+    },
+    {
+      "component": "Loading default (inline)",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants (spinner has no initial style; reduced motion swaps spin for pulse without changing SSR attributes).",
+      "cause": "None."
+    },
+    {
+      "component": "Skeleton",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants (text and circular, CSS-variable inline style matches).",
+      "cause": "None."
+    },
+    {
+      "component": "Breadcrumbs",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants (5 items collapsed with the ellipsis button; Link hrefs match).",
+      "cause": "None."
+    },
+    {
+      "component": "Sidebar permanent",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants (style=\"width:280px\" from initial={false}, NavLink active class matches; 40/40 nodes kept). The collapsed variant with Tooltips (width:80px) is also clean in all variants.",
+      "cause": "None."
+    },
+    {
+      "component": "Sidebar modal open",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in A, B, C, D and F. It renders inline (no portal), so the overlay (opacity:0) and the panel (width:300px;opacity:0;transform:translateX(-300px)) match. In variant E only, console.error reports an attribute mismatch that React does not patch: the server panel style has \"transform: translateX(-300px)\" and the client style has only width 300 and opacity 0.",
+      "cause": "Variant A: none. Variant E: src/hooks/useMotionRecipe.ts:11 (useReducedMotion is null on the server, true on the client) makes src/motion/recipes.ts:103 swap 'slide' for 'fade', which changes the initial style of the panel at src/components/common/Sidebar/index.tsx:39,48."
+    },
+    {
+      "component": "Navbar",
+      "serverRender": "ok",
+      "hydration": "mismatch",
+      "hydrationDetail": "\"Hydration failed because the server rendered HTML didn't match the client\". The diff is the same as ThemeToggle: aria-label \"Mudar para tema claro\" vs \"Mudar para tema escuro\" and lucide-sun <circle> vs lucide-moon <path>. The root was regenerated (0/20 nodes kept). Clean in B and C; fails in D and F; attribute-only mismatch in E.",
+      "cause": "Navbar itself is SSR-safe. Its matchMedia use is inside useEffect at src/components/navbar/index.tsx:62-71. It embeds <ThemeToggle /> at src/components/navbar/index.tsx:91, so it inherits the ColorModeProvider divergence (src/components/colorMode/index.tsx:15-16 via src/hooks/useMediaQuery.ts:4) that feeds src/components/common/ThemeToggle/index.tsx:15,21-22."
+    },
+    {
+      "component": "Footer",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants (\"© 2026 Enchase. Licença MIT.\").",
+      "cause": "None observed. The year comes from new Date().getFullYear() (src/components/footer/defaultData.ts:9), which could differ between server and client only around New Year across time zones."
+    },
+    {
+      "component": "Layout (navigation sidebar)",
+      "serverRender": "ok",
+      "hydration": "mismatch",
+      "hydrationDetail": "\"Hydration failed because the server rendered HTML didn't match the client\". The server rendered the mobile layout, the client the desktop one. Diff: wrapper data-sidebar=\"\" (client) vs absent; menu button aria-label \"Recolher menu lateral\" vs \"Abrir menu\", aria-expanded true vs \"false\", aria-haspopup undefined vs \"dialog\". The structural break is in MenuToggleIcon: the client's <svg data-icon=\"menu-open\"> with paths M3 6h13/M3 12h9/M3 18h13 plus an extra path M21 8l-4 4 4 4, against the server's lucide-menu (M4 5h16...). The ThemeToggle diff in the actions slot also applies. The root was regenerated (0/28 nodes kept). C (desktop, light, nothing stored) still fails, so the viewport alone is enough; B is clean; D and F fail through ThemeToggle; E gives attribute-only mismatches.",
+      "cause": "Two independent causes. (1) src/components/layout/index.tsx:42 `const isDesktop = useMediaQuery('(min-width: 768px)')`: src/hooks/useMediaQuery.ts:4 initializes from window.matchMedia on the client and to false on the server. isDesktop then changes layout/index.tsx:60 (data-sidebar), :68-72 (AppBar label/expanded/haspopup/handler), :83-87 (permanent sidebar area) and :101 (modal sidebar). The first throw comes from src/components/layout/subcomponentes/MenuToggleIcon/index.tsx:23-24 (keyed open/closed icon). (2) <ThemeToggle/> in the AppBar actions (layout/index.tsx:73) carries the ColorModeProvider divergence from src/components/colorMode/index.tsx:15-16."
+    },
+    {
+      "component": "ToastProvider (no toasts)",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants, both standalone (no other providers, using the default UIContext) and inside the full App provider stack. The aria-live region with an empty AnimatePresence matches.",
+      "cause": "None."
+    },
+    {
+      "component": "ColorModeProvider (standalone, default props)",
+      "serverRender": "ok",
+      "hydration": "clean",
+      "hydrationDetail": "Clean in all variants. The <style> from ThemeVariables does not depend on the mode (defaultThemeCss), and data-theme and color-scheme are applied to <html> in useLayoutEffect after hydration (data-theme becomes 'dark' in A).",
+      "cause": "No hydration error. SSR side effect: the server HTML carries no data-theme, and styles/css/declarations.ts:55 makes \":root, [data-theme='light']\" the default with no prefers-color-scheme fallback. Dark-mode users therefore see the light theme until src/components/colorMode/index.tsx:34-37 runs on the client. The provider's internal state also differs (index.tsx:15-16), which breaks any consumer that renders from mode or resolvedMode (ThemeToggle, Navbar, Layout)."
+    },
+    {
+      "component": "Home page (App tree, extra)",
+      "serverRender": "ok",
+      "hydration": "mismatch",
+      "hydrationDetail": "Same as Layout: data-sidebar, menu button aria attributes, and MenuToggleIcon MenuOpenIcon vs lucide-menu throw \"Hydration failed...\", and the whole root is regenerated (0/42 nodes kept). Clean in control B. React's hoisted <link rel=\"preload\" as=\"image\" href=\"/enchase-marca.svg\"> at the top of the renderToString output was skipped correctly during hydration.",
+      "cause": "Inherits the Layout causes: src/components/layout/index.tsx:42 with src/hooks/useMediaQuery.ts:4, plus ThemeToggle via src/components/colorMode/index.tsx:15-16."
+    },
+    {
+      "component": "Modal isOpen=true (only UIProvider, portal is last child; extra)",
+      "serverRender": "ok",
+      "hydration": "mismatch",
+      "hydrationDetail": "In every variant: \"Hydration failed because the server rendered HTML didn't match the client\", with the diff \"+ <div ref={{current:null}}>\" under ModalDialog (the client inserts a node the server never sent). This shows the Modal failure does not depend on which sibling follows it.",
+      "cause": "src/components/common/Modal/index.tsx:89 (null on the server) versus :91 (createPortal with content on the client during hydration)."
+    }
+  ],
+  "notes": "All 25 cases server-rendered without throwing, and none logged a console.error or console.warn on the server. In variant A, 18 cases hydrate cleanly and 7 fail, all with a recoverable error after which the whole root is rendered again on the client. With no Suspense boundary, one failing component regenerates the entire page.\n\nThere are three root-cause families:\n(a) Values read from browser storage or media queries inside useState initializers: src/hooks/useMediaQuery.ts:4 and src/components/colorMode/index.tsx:14-16 together with colorMode/defaultData.ts:13. These affect ThemeToggle, Navbar, Layout and Home.\n(b) Server/client branches that return null on the server and a portal with content on the client: Modal/index.tsx:89-91 and Loading/index.tsx:42-44. These affect Modal open, ConfirmModal open and Loading overlay, and they fail even when server and client environments are identical (control variant B).\n(c) Reduced motion (variant E only): hooks/useMotionRecipe.ts:11 gives attribute-only mismatches that React does not patch, in Button, ThemeToggle, Sidebar modal, Navbar and Layout.\n\nThe variant matrix shows which input triggers what. B (mobile, light, nothing stored) fails only on the portal cases. C (desktop, light, nothing stored) adds Layout and Home. D (dark system preference alone) and F (stored 'dark' alone) each add ThemeToggle, Navbar, Layout and Home.\n\nMethod caveats:\n- renderToString was used instead of Next's streaming renderer.\n- Hydration targets a <div id=root> container rather than hydrateRoot(document), as Next does.\n- The server step needed a scratchpad config, because src/tests/setup.ts:20 throws in a node environment. That config disables setupFiles and changes nothing else.\n- The zustand persist store (stores/app, key 'app-storage', which holds sidebarCollapsed) was not seeded, so its effect on hydration is untested.\n\nCleanup: src/tests/ssr-probe/ was deleted, and `git status --porcelain` printed nothing. Only the dist/ directory that was already there shows up as ignored. Raw data is kept in <scratchpad>/ssr-probe/ (server-html.json, hydration-A..F-*.json, vitest.server.config.ts). No commits were made and no other repository files changed."
+}
