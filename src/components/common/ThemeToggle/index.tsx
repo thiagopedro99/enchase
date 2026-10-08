@@ -1,11 +1,11 @@
-import { AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { Moon, Sun } from 'lucide-react'
 
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { useColorMode } from '@hooks/useColorMode.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
-import { ToggleButton, Icon } from './styles.ts'
 import Tooltip from '../Tooltip/index.tsx'
+import styles from './styles.module.css'
 
 const ThemeToggle = () => {
   const { resolvedMode, toggleMode } = useColorMode()
@@ -16,13 +16,13 @@ const ThemeToggle = () => {
 
   return (
     <Tooltip text={label} position="bottom" describe={false}>
-      <ToggleButton {...pressMotion} type="button" onClick={toggleMode} aria-label={label}>
+      <motion.button {...pressMotion} type="button" className={styles.button} onClick={toggleMode} aria-label={label}>
         <AnimatePresence mode="wait" initial={false}>
-          <Icon key={resolvedMode} {...iconMotion} aria-hidden="true">
+          <motion.span key={resolvedMode} {...iconMotion} className={styles.icon} aria-hidden="true">
             {resolvedMode === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-          </Icon>
+          </motion.span>
         </AnimatePresence>
-      </ToggleButton>
+      </motion.button>
     </Tooltip>
   )
 }
