@@ -1,0 +1,13 @@
+{
+  "name": "enchase-research-positioner-review",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bundle": "esbuild entry.ts --bundle --format=iife --outfile=bundle.js && esbuild entry-fixed.ts --bundle --format=iife --outfile=bundle-fixed.js && esbuild entry-naive.ts --bundle --format=iife --outfile=bundle-naive.js && esbuild entry-style.ts --bundle --format=iife --outfile=bundle-style.js"
+  },
+  "devDependencies": {
+    "@floating-ui/dom": "1.8.0",
+    "esbuild": "^0.28.2",
+    "playwright-core": "^1.56.0"
+  }
+}

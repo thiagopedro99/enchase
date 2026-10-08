@@ -1,0 +1,8 @@
+{
+  "name": "enchase-research-overlay-stack",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "playwright-core": "^1.56.0"
+  }
+}

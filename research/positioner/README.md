@@ -25,6 +25,6 @@ O teste só usa tamanhos inteiros e a janela como limite. Fracionários, zoom, c
 
 Os `css-anchor-test*.mjs` conferem no Chromium 141: `position-area`, `position-try-fallbacks: flip-block`, o bug de `position-area: bottom` sozinho (corrigido com `justify-self: anchor-center`), `position-try-order: most-height`, `position-visibility: anchors-visible`, âncora implícita por `showPopover({ source })`, contêiner com rolagem e RTL.
 
-## Antes de usar
+## Revisão
 
-Revisão linha a linha e testes dentro do repositório. A comparação com o floating-ui pode virar um teste permanente, com o floating-ui só como devDependency.
+A revisão linha a linha está em [`review/`](./review): a matemática bate com o floating-ui, mas há 7 bugs confirmados nas bordas (atualização a cada quadro, tamanhos fracionários, `scrollbar-gutter`, `referenceHidden` e outros), com uma versão corrigida e um teste por achado. A comparação com o floating-ui pode virar um teste permanente, com o floating-ui só como devDependency.
