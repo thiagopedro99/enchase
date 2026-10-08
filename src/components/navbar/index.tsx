@@ -1,17 +1,21 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
+import { NavLink, Link } from 'react-router-dom'
 import { useTheme } from 'styled-components'
 import { Menu, X } from 'lucide-react'
 
-import { Header, HeaderBar, Logo, DesktopMenu, MenuLink, MobileMenuButton, MobileMenu, MobileMenuLink, MobileNav, Overlay, CloseButton, DrawerHeader, HeaderActions } from './styles.ts'
 import { defaultMenuItems, drawerSlideDistance } from './defaultData.ts'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { Container } from '@components/common/index.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
+import { classNames } from '@utils/classNames.ts'
+import styles from './styles.module.css'
 
 import type { MobileDrawerProps, NavbarProps } from './types.ts'
+
+const navLinkClassName = (base: string) => ({ isActive }: { isActive: boolean }) => classNames(base, isActive && styles.active)
 
 const drawerOverride = { tuning: { distance: drawerSlideDistance } }
 
@@ -26,24 +30,24 @@ const MobileDrawer = ({ id, menuItems, onClose }: MobileDrawerProps) => {
 
   return (
     <div ref={rootRef}>
-      <Overlay {...overlayMotion} onClick={onClose} />
+      <motion.div {...overlayMotion} className={styles.overlay} onClick={onClose} />
 
-      <MobileMenu {...drawerMotion} ref={drawerRef} id={id} role="dialog" aria-modal="true" aria-label={labels.mobileNavigation} tabIndex={-1}>
-        <DrawerHeader>
+      <motion.div {...drawerMotion} ref={drawerRef} id={id} className={styles.mobileMenu} role="dialog" aria-modal="true" aria-label={labels.mobileNavigation} tabIndex={-1}>
+        <div className={styles.drawerHeader}>
           <ThemeToggle />
-          <CloseButton type="button" onClick={onClose} aria-label={labels.closeMenu}>
+          <button type="button" className={styles.closeButton} onClick={onClose} aria-label={labels.closeMenu}>
             <X size={24} aria-hidden="true" />
-          </CloseButton>
-        </DrawerHeader>
+          </button>
+        </div>
 
-        <MobileNav aria-label={labels.mobileNavigation}>
+        <nav className={styles.mobileNav} aria-label={labels.mobileNavigation}>
           {menuItems.map((item) => (
-            <MobileMenuLink key={item.path} to={item.path} onClick={onClose}>
+            <NavLink key={item.path} to={item.path} className={navLinkClassName(styles.mobileMenuLink)} onClick={onClose}>
               {item.label}
-            </MobileMenuLink>
+            </NavLink>
           ))}
-        </MobileNav>
-      </MobileMenu>
+        </nav>
+      </motion.div>
     </div>
   )
 }
@@ -69,24 +73,27 @@ const Navbar = ({ logo = 'Logo', menuItems = defaultMenuItems }: NavbarProps) =>
 
   return (
     <>
-      <Header>
+      <header className={styles.header}>
         <Container $maxWidth="xl">
-          <HeaderBar>
-            <Logo to="/">{logo}</Logo>
+          <div className={styles.headerBar}>
+            <Link to="/" className={styles.logo}>
+              {logo}
+            </Link>
 
-            <HeaderActions>
-              <DesktopMenu aria-label={labels.mainNavigation}>
+            <div className={styles.headerActions}>
+              <nav className={styles.desktopMenu} aria-label={labels.mainNavigation}>
                 {menuItems.map((item) => (
-                  <MenuLink key={item.path} to={item.path}>
+                  <NavLink key={item.path} to={item.path} className={navLinkClassName(styles.menuLink)}>
                     {item.label}
-                  </MenuLink>
+                  </NavLink>
                 ))}
-              </DesktopMenu>
+              </nav>
 
               <ThemeToggle />
 
-              <MobileMenuButton
+              <button
                 type="button"
+                className={styles.mobileMenuButton}
                 onClick={() => setMobileOpen(true)}
                 aria-label={labels.openMenu}
                 aria-expanded={mobileOpen}
@@ -94,11 +101,11 @@ const Navbar = ({ logo = 'Logo', menuItems = defaultMenuItems }: NavbarProps) =>
                 aria-haspopup="dialog"
               >
                 <Menu size={24} aria-hidden="true" />
-              </MobileMenuButton>
-            </HeaderActions>
-          </HeaderBar>
+              </button>
+            </div>
+          </div>
         </Container>
-      </Header>
+      </header>
 
       <AnimatePresence>{mobileOpen && <MobileDrawer key="mobile-drawer" id={drawerId} menuItems={menuItems} onClose={handleClose} />}</AnimatePresence>
     </>

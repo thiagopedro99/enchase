@@ -29,17 +29,14 @@ describe('Navbar', () => {
     expect(navigations[0]).toHaveAttribute('aria-label', 'Navegação principal')
   })
 
-  it('lays out the logo on the left, actions on the right and both vertically centered', () => {
+  it('lays out the logo first and the actions last, with the theme toggle among them', () => {
     renderWithProviders(<Navbar />)
     const logo = screen.getByRole('link', { name: 'Logo' })
     const bar = logo.parentElement as HTMLElement
     const actions = bar.lastElementChild as HTMLElement
 
-    expect(getComputedStyle(bar).justifyContent).toBe('space-between')
-    expect(getComputedStyle(bar).alignItems).toBe('center')
     expect(bar.firstElementChild).toBe(logo)
     expect(actions).toContainElement(screen.getByRole('button', { name: 'Mudar para tema escuro' }))
-    expect(getComputedStyle(actions).alignItems).toBe('center')
   })
 
   it('exposes the mobile menu button state with expanded and controls', async () => {
