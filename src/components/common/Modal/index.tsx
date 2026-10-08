@@ -1,14 +1,14 @@
-import { AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
 import { createPortal } from 'react-dom'
 import { useId, useRef } from 'react'
 import { X } from 'lucide-react'
 
-import { Backdrop, ModalContainer, ModalHeader, ModalTitle, CloseButton, ModalBody, ModalFooter } from './styles.ts'
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { Button } from '../Button/index.tsx'
 import { Flex } from '../Flex/index.tsx'
+import styles from './styles.module.css'
 
 import type { ModalDialogProps, ModalProps, ConfirmModalProps } from './types.ts'
 
@@ -37,12 +37,13 @@ const ModalDialog = ({
 
   return (
     <div ref={rootRef}>
-      <Backdrop {...backdropMotion} onClick={closeOnOverlayClick ? onClose : undefined} />
+      <motion.div {...backdropMotion} className={styles.backdrop} onClick={closeOnOverlayClick ? onClose : undefined} />
 
-      <ModalContainer
+      <motion.div
         {...dialogMotion}
         ref={dialogRef}
-        $size={size}
+        className={styles.container}
+        data-size={size}
         role={role}
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
@@ -51,21 +52,27 @@ const ModalDialog = ({
         tabIndex={-1}
       >
         {(title || showCloseButton) && (
-          <ModalHeader>
-            {title && <ModalTitle id={titleId}>{title}</ModalTitle>}
+          <div className={styles.header}>
+            {title && (
+              <h2 id={titleId} className={styles.title}>
+                {title}
+              </h2>
+            )}
 
             {showCloseButton && (
-              <CloseButton type="button" onClick={onClose} aria-label={labels.closeModal}>
+              <button type="button" className={styles.close} onClick={onClose} aria-label={labels.closeModal}>
                 <X size={20} aria-hidden="true" />
-              </CloseButton>
+              </button>
             )}
-          </ModalHeader>
+          </div>
         )}
 
-        <ModalBody id={bodyId}>{children}</ModalBody>
+        <div id={bodyId} className={styles.body}>
+          {children}
+        </div>
 
-        {footer && <ModalFooter>{footer}</ModalFooter>}
-      </ModalContainer>
+        {footer && <div className={styles.footer}>{footer}</div>}
+      </motion.div>
     </div>
   )
 }
