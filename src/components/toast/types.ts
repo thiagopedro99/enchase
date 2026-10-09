@@ -11,7 +11,6 @@ export interface Toast {
 }
 
 export interface ToastContextType {
-  toasts: Toast[]
   addToast: (message: string, type: ToastType, duration?: number) => void
   removeToast: (id: string) => void
   success: (message: string, duration?: number) => void

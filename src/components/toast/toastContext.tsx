@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'motion/react'
-import { useState, useCallback } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { defaultToastDuration } from './defaultData.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -28,8 +28,10 @@ export const ToastProvider = ({ children, animation }: ToastProviderProps) => {
   const warning = useCallback((message: string, duration?: number) => addToast(message, 'warning', duration), [addToast])
   const info = useCallback((message: string, duration?: number) => addToast(message, 'info', duration), [addToast])
 
+  const actions = useMemo(() => ({ addToast, removeToast, success, error, warning, info }), [addToast, removeToast, success, error, warning, info])
+
   return (
-    <ToastContext.Provider value={{ toasts, addToast, removeToast, success, error, warning, info }}>
+    <ToastContext.Provider value={actions}>
       {children}
 
       <div className={styles.container} role="region" aria-label={labels.notifications} aria-live="polite" aria-relevant="additions">

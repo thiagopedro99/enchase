@@ -1,5 +1,5 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { act, screen } from '@testing-library/react'
+import { act, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
@@ -13,12 +13,38 @@ const Probe = ({ duration }: { duration?: number }) => {
     <>
       <button onClick={() => toast.success('Saved', duration)}>success</button>
       <button onClick={() => toast.error('Failed', duration)}>error</button>
-      <output data-testid="count">{toast.toasts.length}</output>
     </>
   )
 }
 
-const count = () => screen.getByTestId('count').textContent
+const toastCount = () => screen.queryAllByRole('button', { name: 'Fechar notificação' }).length
+
+const expectCount = (expected: number) => waitFor(() => expect(toastCount()).toBe(expected))
+
+const renders = { current: 0 }
+
+const Dispatcher = () => {
+  const toast = useToast()
+
+  renders.current += 1
+
+  return <button onClick={() => toast.success('Saved', 0)}>fire</button>
+}
+
+describe('useToast consumers', () => {
+  it('do not render again when toasts appear or disappear', async () => {
+    const user = userEvent.setup()
+    renders.current = 0
+    renderWithProviders(<Dispatcher />)
+    const initialRenders = renders.current
+
+    await user.click(screen.getByRole('button', { name: 'fire' }))
+    await user.click(screen.getByRole('button', { name: 'fire' }))
+    await user.click(screen.getAllByRole('button', { name: 'Fechar notificação' })[0])
+
+    expect(renders.current).toBe(initialRenders)
+  })
+})
 
 describe('Toast', () => {
   it('renders into a persistent labelled live region', () => {
@@ -65,11 +91,11 @@ describe('Toast', () => {
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await user.click(screen.getByRole('button', { name: 'error' }))
-    expect(count()).toBe('2')
+    await expectCount(2)
 
     await user.click(screen.getAllByRole('button', { name: 'Fechar notificação' })[0])
 
-    expect(count()).toBe('1')
+    await expectCount(1)
   })
 
   it('dismisses the focused toast with Escape', async () => {
@@ -81,7 +107,7 @@ describe('Toast', () => {
     act(() => close.focus())
     await user.keyboard('{Escape}')
 
-    expect(count()).toBe('0')
+    await expectCount(0)
   })
 
   it('auto dismisses after the duration', async () => {
@@ -90,13 +116,13 @@ describe('Toast', () => {
     renderWithProviders(<Probe duration={1000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
-    expect(count()).toBe('1')
+    await expectCount(1)
 
     await act(async () => {
       await vi.advanceTimersByTimeAsync(1100)
     })
 
-    expect(count()).toBe('0')
+    await expectCount(0)
     vi.useRealTimers()
   })
 
@@ -112,13 +138,13 @@ describe('Toast', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(3000)
     })
-    expect(count()).toBe('1')
+    expect(toastCount()).toBe(1)
 
     await user.unhover(toastItem)
     await act(async () => {
       await vi.advanceTimersByTimeAsync(1500)
     })
-    expect(count()).toBe('0')
+    await expectCount(0)
     vi.useRealTimers()
   })
 
@@ -134,13 +160,13 @@ describe('Toast', () => {
     await act(async () => {
       await vi.advanceTimersByTimeAsync(3000)
     })
-    expect(count()).toBe('1')
+    expect(toastCount()).toBe(1)
 
     act(() => close.blur())
     await act(async () => {
       await vi.advanceTimersByTimeAsync(1500)
     })
-    expect(count()).toBe('0')
+    await expectCount(0)
     vi.useRealTimers()
   })
 
@@ -154,7 +180,7 @@ describe('Toast', () => {
       await vi.advanceTimersByTimeAsync(10000)
     })
 
-    expect(count()).toBe('1')
+    expect(toastCount()).toBe(1)
     vi.useRealTimers()
   })
 
