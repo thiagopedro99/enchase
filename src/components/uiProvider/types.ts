@@ -35,4 +35,6 @@ export type UIProviderProps = {
   children: ReactNode
   motion?: Partial<MotionSettings>
   labels?: Partial<UILabels>
+  navigate?: (href: string) => void
+  currentHref?: string
 }
