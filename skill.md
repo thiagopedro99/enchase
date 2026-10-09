@@ -44,6 +44,7 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 - Nunca entregue uma página monolítica: se o JSX passar de ~100 linhas, extraia.
 - `/components` é só para itens reutilizados em múltiplas páginas.
 - Sem estilos inline — sempre em `styles.module.css` (ver seção Estilos). Exceções: valores dinâmicos passados como variável CSS (ver seção Estilos) e valores dinâmicos de `motion` (ver seção Animação).
+- Sem `console.log`, `console.debug` nem `console.info`: a regra `no-console` do ESLint só libera `console.warn` e `console.error`. No build, `console.log` e `console.debug` também são removidos (`treeshake.manualPureFunctions` no `vite.config.ts`), e `warn` e `error` ficam.
 - Proibido `import React from 'react'` (JSX transform é padrão); importe só o que usa (`{ useState }` etc).
 
 ## Estilos (CSS Modules)
@@ -177,5 +178,7 @@ Padrão Actions: cada entidade (ex: `users`) tem sua própria subpasta em `actio
 - Tudo que depende de `inert`, layout ou animação real deve ser conferido no navegador, pois o jsdom não simula esses recursos.
 
 ## Dependências
+
+O build usa Vite 8 (Rolldown) e `@vitejs/plugin-react` 6. No `vite.config.ts`, `moduleSideEffects: false` vale só para o `src/` (regra por caminho), para descartar componentes que ninguém usa; as dependências respeitam o `sideEffects` de cada pacote. Um `package-lock.json` gerado com npm 11 precisa ser conferido com `npm ci` do npm 10 (o do `node:22` do Dockerfile) antes do commit.
 
 Verifique `package.json` e o que já está importado antes de instalar algo novo — priorize o que já existe ou uma solução nativa; só instale se não houver alternativa.
