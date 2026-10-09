@@ -15,7 +15,7 @@ import { Button } from '@components/common/Button/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
-import UIProvider from '@components/uiProvider/index.tsx'
+import RouterBridge from '@routes/RouterBridge.tsx'
 import Layout from '@components/layout/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 import Footer from '@components/footer/index.tsx'
@@ -30,7 +30,7 @@ const sections: SidebarSection[] = [
     id: 'main',
     title: 'Navigation',
     items: [
-      { id: 'home', label: 'Home', icon: Home, to: '/' },
+      { id: 'home', label: 'Home', icon: Home, href: '/' },
       { id: 'docs', label: 'Docs', href: '/docs' }
     ]
   }
@@ -68,9 +68,9 @@ export const withProviders = ({ element, bare }: HydrationCase): ReactNode =>
   ) : (
     <MemoryRouter>
       <ColorModeProvider>
-        <UIProvider>
+        <RouterBridge>
           <ToastProvider>{element}</ToastProvider>
-        </UIProvider>
+        </RouterBridge>
       </ColorModeProvider>
     </MemoryRouter>
   )

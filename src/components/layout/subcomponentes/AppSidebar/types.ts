@@ -5,7 +5,7 @@ export type AppSidebarProps = {
   brandLogo?: string
   sections: SidebarSection[]
   variant: SidebarVariant
-  activeId?: string
+  activeSectionId?: string
   navId?: string
   footer?: SidebarSlot
 }

@@ -82,7 +82,7 @@ const Layout = ({
 
       {usesSidebar && isDesktop && (
         <div className={styles.sidebarArea}>
-          <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="permanent" activeId={activePageSectionId} navId={navId} />
+          <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="permanent" activeSectionId={activePageSectionId} navId={navId} />
         </div>
       )}
 
@@ -98,7 +98,7 @@ const Layout = ({
         </div>
       )}
 
-      {usesSidebar && !isDesktop && <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="modal" activeId={activePageSectionId} navId={navId} />}
+      {usesSidebar && !isDesktop && <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="modal" activeSectionId={activePageSectionId} navId={navId} />}
     </div>
   )
 }

@@ -9,10 +9,12 @@ const sections: SidebarSection[] = [
   {
     id: 'nav',
     items: [
-      { id: 'home', label: 'Início', to: '/' },
-      { id: 'docs', label: 'Docs', to: '/docs' },
-      { id: 'docs-api', label: 'API', to: '/docs/api' },
-      { id: 'anchor', label: 'Âncora', href: '#x' }
+      { id: 'home', label: 'Início', href: '/' },
+      { id: 'docs', label: 'Docs', href: '/docs' },
+      { id: 'docs-api', label: 'API', href: '/docs/api' },
+      { id: 'anchor', label: 'Âncora', href: '#x' },
+      { id: 'external', label: 'Externo', href: 'https://example.com/docs' },
+      { id: 'reference', label: 'Referência', href: '/docs/reference/', native: true }
     ]
   }
 ]
@@ -60,10 +62,15 @@ describe('deriveBreadcrumbs', () => {
   })
 
   it('works without a home route', () => {
-    expect(derive('/docs', undefined, { sections: [{ id: 'nav', items: [{ id: 'docs', label: 'Docs', to: '/docs' }] }] })).toEqual([{ id: 'docs', label: 'Docs', to: '/docs' }])
+    expect(derive('/docs', undefined, { sections: [{ id: 'nav', items: [{ id: 'docs', label: 'Docs', href: '/docs' }] }] })).toEqual([{ id: 'docs', label: 'Docs', to: '/docs' }])
   })
 
-  it('ignores items that are not routes', () => {
-    expect(derive('/anything').map((item) => item.id)).not.toContain('anchor')
+  it('ignores items that are not routes of the app', () => {
+    const ids = derive('/docs/reference/x').map((item) => item.id)
+
+    expect(ids).not.toContain('anchor')
+    expect(ids).not.toContain('external')
+    expect(ids).not.toContain('reference')
+    expect(ids).toEqual(['home', 'docs'])
   })
 })

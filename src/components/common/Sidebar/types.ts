@@ -6,8 +6,8 @@ export type SidebarItem = {
   id: string
   label: string
   icon?: LucideIcon
-  to?: string
   href?: string
+  native?: boolean
   badge?: string
   onClick?: () => void
 }
@@ -24,7 +24,8 @@ export type SidebarSlot = ReactNode | ((state: { collapsed: boolean }) => ReactN
 
 export interface SidebarProps {
   sections: SidebarSection[]
-  activeId?: string
+  activeSectionId?: string
+  currentHref?: string
   header?: SidebarSlot
   footer?: SidebarSlot
   variant?: SidebarVariant
@@ -39,7 +40,8 @@ export interface SidebarProps {
 
 export interface SidebarContentProps {
   sections: SidebarSection[]
-  activeId?: string
+  activeSectionId?: string
+  currentHref?: string
   header?: SidebarSlot
   footer?: SidebarSlot
   collapsed: boolean
@@ -50,7 +52,7 @@ export interface SidebarContentProps {
 
 export interface SidebarItemViewProps {
   item: SidebarItem
-  active: boolean
+  current?: 'page' | 'location'
   collapsed: boolean
   onSelect?: () => void
 }

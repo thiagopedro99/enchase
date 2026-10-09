@@ -79,6 +79,17 @@ describe('Link', () => {
     expect(notPrevented).toBe(true)
   })
 
+  it('leaves the click to the browser when the link is native, without passing the prop to the page', () => {
+    const navigate = vi.fn()
+    renderLink({ native: true }, navigate)
+
+    const notPrevented = fireEvent.click(link())
+
+    expect(navigate).not.toHaveBeenCalled()
+    expect(notPrevented).toBe(true)
+    expect(link()).not.toHaveAttribute('native')
+  })
+
   it('leaves the navigation to the browser when the provider has no navigate', () => {
     renderLink({}, null)
 

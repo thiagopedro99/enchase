@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
-import UIProvider from '@components/uiProvider/index.tsx'
+import RouterBridge from '@routes/RouterBridge.tsx'
 
 import type { RenderWithProvidersOptions } from './types.ts'
 import type { ReactElement } from 'react'
@@ -12,9 +12,9 @@ export const renderWithProviders = (ui: ReactElement, { theme = 'light', route =
   render(
     <MemoryRouter initialEntries={[route]}>
       <ColorModeProvider defaultMode={theme} storage={null}>
-        <UIProvider motion={motion} labels={labels}>
+        <RouterBridge motion={motion} labels={labels}>
           <ToastProvider>{ui}</ToastProvider>
-        </UIProvider>
+        </RouterBridge>
       </ColorModeProvider>
     </MemoryRouter>
   )

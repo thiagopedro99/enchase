@@ -1,13 +1,14 @@
 import { describeDialogContract } from '@tests/shared/contracts/dialogContract.tsx'
 import { ControlledDialog } from '@tests/shared/contracts/dialogHarness.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { Home, LayoutGrid } from 'lucide-react'
 import { axe } from '@tests/axe.ts'
 
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
+import UIProvider from '@components/uiProvider/index.tsx'
 
 import type { DialogContractAdapter } from '@tests/shared/contracts/types.ts'
 import type { SidebarSection } from '@components/common/Sidebar/types.ts'
@@ -17,8 +18,8 @@ const sections: SidebarSection[] = [
     id: 'app',
     title: 'Aplicação',
     items: [
-      { id: 'home', label: 'Início', icon: Home, to: '/' },
-      { id: 'components', label: 'Componentes', icon: LayoutGrid, to: '/components', badge: 'Novo' }
+      { id: 'home', label: 'Início', icon: Home, href: '/' },
+      { id: 'components', label: 'Componentes', icon: LayoutGrid, href: '/components', badge: 'Novo' }
     ]
   },
   {
@@ -49,7 +50,7 @@ describe('Sidebar (permanent)', () => {
   })
 
   it('marks the active in-page anchor with aria-current location', () => {
-    renderWithProviders(<Sidebar sections={sections} activeId="inputs" />)
+    renderWithProviders(<Sidebar sections={sections} activeSectionId="inputs" />)
 
     expect(screen.getByRole('link', { name: 'Campos' })).toHaveAttribute('aria-current', 'location')
     expect(screen.getByRole('link', { name: 'Botões' })).not.toHaveAttribute('aria-current')
@@ -138,6 +139,104 @@ describe('Sidebar (permanent)', () => {
     const { container } = renderWithProviders(<Sidebar sections={sections} collapsed onToggleCollapsed={vi.fn()} />)
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Sidebar navigation', () => {
+  it('marks a route as the page and never marks a section anchor as the page', () => {
+    renderWithProviders(<Sidebar sections={sections} />, { route: '/components' })
+
+    expect(screen.getByRole('link', { name: /Componentes/ })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('link', { name: 'Botões' })).not.toHaveAttribute('aria-current')
+  })
+
+  it('does not mark a route as a location just because its id is the active section', () => {
+    renderWithProviders(<Sidebar sections={sections} activeSectionId="home" />)
+
+    expect(screen.getByRole('link', { name: 'Início' })).not.toHaveAttribute('aria-current', 'location')
+  })
+
+  it('lets the currentHref prop override the one of the provider', () => {
+    render(
+      <UIProvider currentHref="/">
+        <Sidebar sections={sections} currentHref="/components" />
+      </UIProvider>
+    )
+
+    expect(screen.getByRole('link', { name: /Componentes/ })).toHaveAttribute('aria-current', 'page')
+    expect(screen.getByRole('link', { name: 'Início' })).not.toHaveAttribute('aria-current')
+  })
+
+  it('never marks an external, native or phone link as current', () => {
+    const items = [
+      { id: 'ext', label: 'Externo', href: 'https://example.com/docs' },
+      { id: 'native', label: 'Nativo', href: '/docs/', native: true },
+      { id: 'mail', label: 'Email', href: 'mailto:a@b.co' }
+    ]
+    render(
+      <UIProvider currentHref="/docs/intro">
+        <Sidebar sections={[{ id: 'a', items }]} />
+      </UIProvider>
+    )
+
+    for (const name of ['Externo', 'Nativo', 'Email']) expect(screen.getByRole('link', { name })).not.toHaveAttribute('aria-current')
+  })
+
+  it('navigates through the provider when a route is chosen, and still runs the item handler', () => {
+    const navigate = vi.fn()
+    const onClick = vi.fn()
+    render(
+      <UIProvider navigate={navigate}>
+        <Sidebar sections={[{ id: 'a', items: [{ id: 'docs', label: 'Docs', href: '/docs', onClick }] }]} />
+      </UIProvider>
+    )
+
+    const notPrevented = fireEvent.click(screen.getByRole('link', { name: 'Docs' }))
+
+    expect(navigate).toHaveBeenCalledWith('/docs')
+    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(notPrevented).toBe(false)
+  })
+
+  it('closes the drawer after choosing a route', () => {
+    const navigate = vi.fn()
+    const onClose = vi.fn()
+    render(
+      <UIProvider navigate={navigate}>
+        <Sidebar variant="modal" open onClose={onClose} sections={[{ id: 'a', items: [{ id: 'docs', label: 'Docs', href: '/docs' }] }]} />
+      </UIProvider>
+    )
+
+    fireEvent.click(screen.getByRole('link', { name: 'Docs' }))
+
+    expect(navigate).toHaveBeenCalledWith('/docs')
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('leaves a native item to the browser even when it looks like a route', () => {
+    const navigate = vi.fn()
+    render(
+      <UIProvider navigate={navigate}>
+        <Sidebar sections={[{ id: 'a', items: [{ id: 'docs', label: 'Docs', href: '/docs/', native: true }] }]} />
+      </UIProvider>
+    )
+
+    const notPrevented = fireEvent.click(screen.getByRole('link', { name: 'Docs' }))
+
+    expect(navigate).not.toHaveBeenCalled()
+    expect(notPrevented).toBe(true)
+  })
+
+  it('leaves a section anchor to the browser', () => {
+    const navigate = vi.fn()
+    render(
+      <UIProvider navigate={navigate}>
+        <Sidebar sections={sections} />
+      </UIProvider>
+    )
+
+    expect(fireEvent.click(screen.getByRole('link', { name: 'Campos' }))).toBe(true)
+    expect(navigate).not.toHaveBeenCalled()
   })
 })
 

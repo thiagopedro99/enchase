@@ -131,7 +131,7 @@ describe('Layout with sidebar (default, desktop)', () => {
   })
 
   it('accepts custom navigation sections and brand', () => {
-    renderWithProviders(page({ brand: 'Aurora', navigationSections: [{ id: 'x', title: 'Menu', items: [{ id: 'a', label: 'Painel', to: '/painel' }] }] }))
+    renderWithProviders(page({ brand: 'Aurora', navigationSections: [{ id: 'x', title: 'Menu', items: [{ id: 'a', label: 'Painel', href: '/painel' }] }] }))
     const nav = screen.getByRole('navigation', { name: 'Navegação principal' })
 
     expect(within(nav).getByRole('link', { name: 'Painel' })).toBeInTheDocument()

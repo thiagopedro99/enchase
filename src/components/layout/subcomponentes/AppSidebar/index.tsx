@@ -4,7 +4,7 @@ import Brand from '../Brand/index.tsx'
 
 import type { AppSidebarProps } from './types.ts'
 
-export const AppSidebar = ({ brand, brandLogo, sections, variant, activeId, navId, footer }: AppSidebarProps) => {
+export const AppSidebar = ({ brand, brandLogo, sections, variant, activeSectionId, navId, footer }: AppSidebarProps) => {
   const collapsed = useAppStore((state) => state.sidebarCollapsed)
   const open = useAppStore((state) => state.sidebarOpen)
   const setOpen = useAppStore((state) => state.setSidebarOpen)
@@ -14,7 +14,7 @@ export const AppSidebar = ({ brand, brandLogo, sections, variant, activeId, navI
       id={navId}
       variant={variant}
       sections={sections}
-      activeId={activeId}
+      activeSectionId={activeSectionId}
       header={({ collapsed: isCollapsed }) => <Brand name={brand} logo={brandLogo} compact={isCollapsed} />}
       footer={footer}
       collapsed={collapsed}

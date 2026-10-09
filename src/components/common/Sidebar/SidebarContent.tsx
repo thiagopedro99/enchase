@@ -1,14 +1,16 @@
 import { ChevronsLeft, ChevronsRight } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
 
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
+import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
+import { Link } from '../Link/index.tsx'
+import { currentOf } from './defaultData.ts'
 import Tooltip from '../Tooltip/index.tsx'
 import styles from './styles.module.css'
 
 import type { SidebarContentProps, SidebarItemViewProps } from './types.ts'
 
-const SidebarItemView = ({ item, active, collapsed, onSelect }: SidebarItemViewProps) => {
+const SidebarItemView = ({ item, current, collapsed, onSelect }: SidebarItemViewProps) => {
   const Icon = item.icon
 
   const handleClick = () => {
@@ -26,14 +28,10 @@ const SidebarItemView = ({ item, active, collapsed, onSelect }: SidebarItemViewP
     </>
   )
 
-  const element = item.to ? (
-    <NavLink to={item.to} end={item.to === '/'} onClick={handleClick} className={styles.item} data-collapsed={collapsed ? '' : undefined}>
+  const element = item.href ? (
+    <Link href={item.href} native={item.native} aria-current={current} onClick={handleClick} className={styles.item} data-collapsed={collapsed ? '' : undefined}>
       {content}
-    </NavLink>
-  ) : item.href ? (
-    <a href={item.href} aria-current={active ? 'location' : undefined} onClick={handleClick} className={styles.item} data-collapsed={collapsed ? '' : undefined}>
-      {content}
-    </a>
+    </Link>
   ) : (
     <button type="button" onClick={handleClick} className={styles.item} data-collapsed={collapsed ? '' : undefined}>
       {content}
@@ -53,8 +51,10 @@ const SidebarItemView = ({ item, active, collapsed, onSelect }: SidebarItemViewP
   )
 }
 
-export const SidebarContent = ({ sections, activeId, header, footer, collapsed, onToggleCollapsed, onSelect, ariaLabel }: SidebarContentProps) => {
+export const SidebarContent = ({ sections, activeSectionId, currentHref, header, footer, collapsed, onToggleCollapsed, onSelect, ariaLabel }: SidebarContentProps) => {
   const { labels } = useUIConfig()
+  const contextHref = useCurrentHref()
+  const location = currentHref ?? contextHref
   const toggleLabel = collapsed ? labels.expandSidebar : labels.collapseSidebar
   const headerContent = typeof header === 'function' ? header({ collapsed }) : header
   const footerContent = typeof footer === 'function' ? footer({ collapsed }) : footer
@@ -78,7 +78,7 @@ export const SidebarContent = ({ sections, activeId, header, footer, collapsed, 
             {collapsed && index > 0 && <hr className={styles.sectionDivider} />}
             <ul className={styles.itemList} aria-label={section.title}>
               {section.items.map((item) => (
-                <SidebarItemView key={item.id} item={item} active={item.id === activeId} collapsed={collapsed} onSelect={onSelect} />
+                <SidebarItemView key={item.id} item={item} current={currentOf(item, activeSectionId, location)} collapsed={collapsed} onSelect={onSelect} />
               ))}
             </ul>
           </div>

@@ -87,6 +87,11 @@ describe('shouldNavigate', () => {
     expect(shouldNavigate('/docs', { ...plainClick, ...change }, {})).toBe(false)
   })
 
+  it('leaves the click to the browser for a link marked as native', () => {
+    expect(shouldNavigate('/docs/', plainClick, { native: true })).toBe(false)
+    expect(shouldNavigate('/docs/', plainClick, { native: false })).toBe(true)
+  })
+
   it('leaves the click to the browser for another target or a download', () => {
     expect(shouldNavigate('/docs', plainClick, { target: '_blank' })).toBe(false)
     expect(shouldNavigate('/docs', plainClick, { target: 'frame' })).toBe(false)

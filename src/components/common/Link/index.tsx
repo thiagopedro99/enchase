@@ -4,13 +4,13 @@ import { shouldNavigate } from '@utils/href.ts'
 import type { LinkProps } from './types.ts'
 import type { MouseEvent } from 'react'
 
-export const Link = ({ href, onClick, target, download, ...props }: LinkProps) => {
+export const Link = ({ href, onClick, target, download, native, ...props }: LinkProps) => {
   const navigate = useNavigator()
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     onClick?.(event)
 
-    if (!navigate || !shouldNavigate(href, event, { target, download })) return
+    if (!navigate || !shouldNavigate(href, event, { target, download, native })) return
 
     event.preventDefault()
     navigate(href)

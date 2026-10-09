@@ -12,7 +12,7 @@ import type { SidebarProps } from './types.ts'
 
 const drawerOverride = { tuning: { distance: drawerWidth } }
 
-const PermanentSidebar = ({ sections, activeId, header, footer, collapsed = false, onToggleCollapsed, ariaLabel, id, animation }: SidebarProps) => {
+const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, footer, collapsed = false, onToggleCollapsed, ariaLabel, id, animation }: SidebarProps) => {
   const { labels } = useUIConfig()
   const resizeMotion = useMotionRecipe('resize', animation)
 
@@ -20,7 +20,8 @@ const PermanentSidebar = ({ sections, activeId, header, footer, collapsed = fals
     <motion.div {...resizeMotion} id={id} className={styles.aside} initial={false} animate={{ width: collapsed ? collapsedWidth : expandedWidth }}>
       <SidebarContent
         sections={sections}
-        activeId={activeId}
+        activeSectionId={activeSectionId}
+        currentHref={currentHref}
         header={header}
         footer={footer}
         collapsed={collapsed}
@@ -31,7 +32,7 @@ const PermanentSidebar = ({ sections, activeId, header, footer, collapsed = fals
   )
 }
 
-const ModalSidebarPanel = ({ sections, activeId, header, footer, onClose, ariaLabel, id, animation }: SidebarProps) => {
+const ModalSidebarPanel = ({ sections, activeSectionId, currentHref, header, footer, onClose, ariaLabel, id, animation }: SidebarProps) => {
   const rootRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
@@ -46,7 +47,7 @@ const ModalSidebarPanel = ({ sections, activeId, header, footer, onClose, ariaLa
       <motion.div {...overlayMotion} className={styles.overlay} onClick={onClose} />
 
       <motion.div {...panelMotion} ref={panelRef} id={id} className={styles.panel} style={{ width: drawerWidth }} role="dialog" aria-modal="true" aria-label={name} tabIndex={-1}>
-        <SidebarContent sections={sections} activeId={activeId} header={header} footer={footer} collapsed={false} onSelect={onClose} ariaLabel={name} />
+        <SidebarContent sections={sections} activeSectionId={activeSectionId} currentHref={currentHref} header={header} footer={footer} collapsed={false} onSelect={onClose} ariaLabel={name} />
       </motion.div>
     </div>
   )

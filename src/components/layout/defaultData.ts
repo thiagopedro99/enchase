@@ -15,8 +15,8 @@ export const defaultNavigationSections: SidebarSection[] = [
     id: 'navigation',
     title: 'Navegação',
     items: [
-      { id: 'home', label: 'Início', icon: Home, to: '/' },
-      { id: 'docs', label: 'Documentação', icon: BookOpen, href: docsUrl }
+      { id: 'home', label: 'Início', icon: Home, href: '/' },
+      { id: 'docs', label: 'Documentação', icon: BookOpen, href: docsUrl, native: true }
     ]
   }
 ]
