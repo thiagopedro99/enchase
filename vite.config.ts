@@ -6,13 +6,8 @@ import { dirname, resolve } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export default defineConfig(({ command }) => ({
+export default defineConfig({
   plugins: [react()],
-
-  esbuild: {
-    drop: command === 'build' ? ['console', 'debugger'] : ['debugger'],
-    legalComments: 'none',
-  },
 
   resolve: {
     alias: {
@@ -33,14 +28,15 @@ export default defineConfig(({ command }) => ({
 
   build: {
     target: 'esnext',
-    minify: 'esbuild',
     cssCodeSplit: true,
-    cssMinify: true,
+    cssMinify: 'lightningcss',
     sourcemap: false,
     chunkSizeWarningLimit: 500,
 
-    rollupOptions: {
+    rolldownOptions: {
       output: {
+        comments: { legal: false },
+
         manualChunks: (id) => {
           if (!id.includes('node_modules')) {
             return;
@@ -56,12 +52,13 @@ export default defineConfig(({ command }) => ({
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
-          if (!assetInfo.name) {
+          const name = assetInfo.names[0];
+
+          if (!name) {
             return 'assets/[name]-[hash][extname]';
           }
 
-          const info = assetInfo.name.split('.');
-          const ext = info[info.length - 1];
+          const ext = name.split('.').pop() ?? '';
 
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
             return `assets/images/[name]-[hash][extname]`;
@@ -74,25 +71,15 @@ export default defineConfig(({ command }) => ({
           }
           return `assets/[ext]/[name]-[hash][extname]`;
         },
-
-        compact: true,
-        generatedCode: {
-          constBindings: true,
-        },
       },
 
       treeshake: {
-        moduleSideEffects: false,
-        propertyReadSideEffects: false,
-        tryCatchDeoptimization: false,
+        manualPureFunctions: ['console.log', 'console.debug'],
+        moduleSideEffects: [{ test: /\/src\//, sideEffects: false }],
       },
     },
 
     reportCompressedSize: true,
-    commonjsOptions: {
-      include: [/node_modules/],
-      extensions: ['.js', '.cjs'],
-    },
   },
 
   server: {
@@ -121,4 +108,4 @@ export default defineConfig(({ command }) => ({
     globalSetup: ['./src/tests/hydration/serverHtml.setup.ts'],
     css: false
   },
-}));
+});
