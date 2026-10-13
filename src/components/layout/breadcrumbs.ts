@@ -15,8 +15,8 @@ export const deriveBreadcrumbs = ({ sections, pageSections, pathname, pageTitle,
   const section = pageSections.flatMap((group) => group.items).find((item) => item.id === activePageSectionId)
   const trail: BreadcrumbItem[] = []
 
-  if (home && current?.id !== home.id) trail.push({ id: home.id, label: home.label, to: home.href })
-  trail.push(current ? { id: current.id, label: current.label, to: current.href } : { id: 'current-page', label: pageTitle })
+  if (home && current?.id !== home.id) trail.push({ id: home.id, label: home.label, href: home.href })
+  trail.push(current ? { id: current.id, label: current.label, href: current.href } : { id: 'current-page', label: pageTitle })
   if (section) trail.push({ id: section.id, label: section.label, href: section.href })
 
   return trail

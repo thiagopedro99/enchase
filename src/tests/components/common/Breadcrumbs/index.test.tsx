@@ -1,25 +1,26 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
 import { Breadcrumbs } from '@components/common/Breadcrumbs/index.tsx'
+import UIProvider from '@components/uiProvider/index.tsx'
 
 import type { BreadcrumbItem } from '@components/common/Breadcrumbs/types.ts'
 
 const short: BreadcrumbItem[] = [
-  { id: 'home', label: 'Início', to: '/' },
-  { id: 'docs', label: 'Docs', to: '/docs' },
+  { id: 'home', label: 'Início', href: '/' },
+  { id: 'docs', label: 'Docs', href: '/docs' },
   { id: 'api', label: 'API' }
 ]
 
 const long: BreadcrumbItem[] = [
-  { id: 'a', label: 'Nível A', to: '/a' },
-  { id: 'b', label: 'Nível B', to: '/b' },
-  { id: 'c', label: 'Nível C', to: '/c' },
-  { id: 'd', label: 'Nível D', to: '/d' },
-  { id: 'e', label: 'Nível E', to: '/e' },
+  { id: 'a', label: 'Nível A', href: '/a' },
+  { id: 'b', label: 'Nível B', href: '/b' },
+  { id: 'c', label: 'Nível C', href: '/c' },
+  { id: 'd', label: 'Nível D', href: '/d' },
+  { id: 'e', label: 'Nível E', href: '/e' },
   { id: 'f', label: 'Nível F' }
 ]
 
@@ -43,10 +44,37 @@ describe('Breadcrumbs', () => {
   })
 
   it('does not link the last item even when it has a destination', () => {
-    renderWithProviders(<Breadcrumbs items={[{ id: 'a', label: 'A', to: '/a' }, { id: 'b', label: 'B', to: '/b' }]} />)
+    renderWithProviders(<Breadcrumbs items={[{ id: 'a', label: 'A', href: '/a' }, { id: 'b', label: 'B', href: '/b' }]} />)
 
     expect(screen.queryByRole('link', { name: 'B' })).not.toBeInTheDocument()
     expect(screen.getByText('B')).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('navigates through the provider when a crumb is clicked', () => {
+    const navigate = vi.fn()
+    render(
+      <UIProvider navigate={navigate}>
+        <Breadcrumbs items={short} />
+      </UIProvider>
+    )
+
+    const notPrevented = fireEvent.click(screen.getByRole('link', { name: 'Docs' }))
+
+    expect(navigate).toHaveBeenCalledWith('/docs')
+    expect(notPrevented).toBe(false)
+  })
+
+  it('leaves native crumbs to the browser', () => {
+    const navigate = vi.fn()
+    render(
+      <UIProvider navigate={navigate}>
+        <Breadcrumbs items={[{ id: 'a', label: 'Docs', href: '/docs/', native: true }, { id: 'b', label: 'Atual' }]} />
+      </UIProvider>
+    )
+
+    fireEvent.click(screen.getByRole('link', { name: 'Docs' }))
+
+    expect(navigate).not.toHaveBeenCalled()
   })
 
   it('supports in-page anchors and items without a destination', () => {

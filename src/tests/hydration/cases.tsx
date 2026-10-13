@@ -52,7 +52,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Loading overlay', element: <Loading overlay text="Loading" /> },
   { name: 'Loading inline', element: <InlineLoading label="Loading" /> },
   { name: 'Skeleton', element: <Skeleton /> },
-  { name: 'Breadcrumbs', element: <Breadcrumbs items={[{ id: 'home', label: 'Home', to: '/' }, { id: 'page', label: 'Page' }]} /> },
+  { name: 'Breadcrumbs', element: <Breadcrumbs items={[{ id: 'home', label: 'Home', href: '/' }, { id: 'page', label: 'Page' }]} /> },
   { name: 'Sidebar permanent', element: <Sidebar sections={sections} /> },
   { name: 'Sidebar modal open', element: <Sidebar variant="modal" open onClose={noop} sections={sections} /> },
   { name: 'Navbar', element: <Navbar logo="Logo" /> },

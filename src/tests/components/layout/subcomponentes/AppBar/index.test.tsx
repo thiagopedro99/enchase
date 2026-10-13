@@ -11,7 +11,7 @@ import type { AppBarProps } from '@components/layout/subcomponentes/AppBar/types
 
 const baseProps: AppBarProps = {
   items: [
-    { id: 'home', label: 'Início', to: '/' },
+    { id: 'home', label: 'Início', href: '/' },
     { id: 'docs', label: 'Docs' }
   ],
   menuLabel: 'Recolher menu lateral',

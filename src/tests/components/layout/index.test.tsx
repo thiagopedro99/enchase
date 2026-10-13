@@ -1,14 +1,17 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { describeDialogContract } from '@tests/shared/contracts/dialogContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { navigationSections } from '@tests/shared/fixtures/navigationSections.ts'
 import { pageSections } from '@tests/shared/fixtures/pageSections.ts'
-import { screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import { setViewportWidth } from '@tests/viewport.ts'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
 
 import { useAppStore } from '@stores/app/index.ts'
+import { ColorModeProvider } from '@components/colorMode/index.tsx'
+import UIProvider from '@components/uiProvider/index.tsx'
 import { docsUrl } from '@components/layout/defaultData.ts'
 import Layout from '@components/layout/index.tsx'
 
@@ -229,7 +232,7 @@ describe('Layout with sidebar (default, desktop)', () => {
     renderWithProviders(
       page({
         breadcrumbs: [
-          { id: 'a', label: 'Projetos', to: '/projetos' },
+          { id: 'a', label: 'Projetos', href: '/projetos' },
           { id: 'b', label: 'Aurora' }
         ]
       })
@@ -239,6 +242,21 @@ describe('Layout with sidebar (default, desktop)', () => {
     expect(within(trail).getByRole('link', { name: 'Projetos' })).toBeInTheDocument()
     expect(within(trail).getByText('Aurora')).toHaveAttribute('aria-current', 'page')
     expect(within(trail).queryByText('Início')).not.toBeInTheDocument()
+  })
+
+  it('navigates through the provider from the brand', () => {
+    const navigate = vi.fn()
+    render(
+      <MemoryRouter>
+        <ColorModeProvider defaultMode="light" storage={null}>
+          <UIProvider navigate={navigate}>{page()}</UIProvider>
+        </ColorModeProvider>
+      </MemoryRouter>
+    )
+
+    fireEvent.click(screen.getByRole('link', { name: 'Enchase' }))
+
+    expect(navigate).toHaveBeenCalledWith('/')
   })
 
   it('hides the navigation and the app bar with hideNavbar', () => {

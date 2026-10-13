@@ -1,8 +1,8 @@
 export type BreadcrumbItem = {
   id: string
   label: string
-  to?: string
   href?: string
+  native?: boolean
 }
 
 export interface BreadcrumbsProps {

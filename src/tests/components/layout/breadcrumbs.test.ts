@@ -24,13 +24,13 @@ const derive = (pathname: string, activePageSectionId?: string, overrides: Parti
 
 describe('deriveBreadcrumbs', () => {
   it('returns only the home item on the home route', () => {
-    expect(derive('/')).toEqual([{ id: 'home', label: 'Início', to: '/' }])
+    expect(derive('/')).toEqual([{ id: 'home', label: 'Início', href: '/' }])
   })
 
   it('prefixes the home link before another route', () => {
     expect(derive('/docs')).toEqual([
-      { id: 'home', label: 'Início', to: '/' },
-      { id: 'docs', label: 'Docs', to: '/docs' }
+      { id: 'home', label: 'Início', href: '/' },
+      { id: 'docs', label: 'Docs', href: '/docs' }
     ])
   })
 
@@ -45,7 +45,7 @@ describe('deriveBreadcrumbs', () => {
 
   it('falls back to the page title when no route matches', () => {
     expect(derive('/nao-existe')).toEqual([
-      { id: 'home', label: 'Início', to: '/' },
+      { id: 'home', label: 'Início', href: '/' },
       { id: 'current-page', label: 'Título da página' }
     ])
   })
@@ -62,7 +62,7 @@ describe('deriveBreadcrumbs', () => {
   })
 
   it('works without a home route', () => {
-    expect(derive('/docs', undefined, { sections: [{ id: 'nav', items: [{ id: 'docs', label: 'Docs', href: '/docs' }] }] })).toEqual([{ id: 'docs', label: 'Docs', to: '/docs' }])
+    expect(derive('/docs', undefined, { sections: [{ id: 'nav', items: [{ id: 'docs', label: 'Docs', href: '/docs' }] }] })).toEqual([{ id: 'docs', label: 'Docs', href: '/docs' }])
   })
 
   it('ignores items that are not routes of the app', () => {

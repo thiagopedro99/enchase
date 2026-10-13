@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ChevronRight } from 'lucide-react'
-import { Link } from 'react-router-dom'
 
+import { Link } from '../Link/index.tsx'
 import { collapseTrail, defaultMaxItems } from './defaultData.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import styles from './styles.module.css'
@@ -9,18 +9,11 @@ import styles from './styles.module.css'
 import type { BreadcrumbItem, BreadcrumbsProps } from './types.ts'
 
 const CrumbLink = ({ item }: { item: BreadcrumbItem }) => {
-  if (item.to)
-    return (
-      <Link to={item.to} className={styles.crumb}>
-        {item.label}
-      </Link>
-    )
-
   if (item.href)
     return (
-      <a href={item.href} className={styles.crumb}>
+      <Link href={item.href} native={item.native} className={styles.crumb}>
         {item.label}
-      </a>
+      </Link>
     )
 
   return <span className={styles.crumbText}>{item.label}</span>
