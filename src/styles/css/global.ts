@@ -10,6 +10,8 @@ export const globalStylesCss = `
   html {
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
@@ -35,6 +37,11 @@ export const globalStylesCss = `
     line-height: 1.2;
     letter-spacing: -0.01em;
     margin-bottom: ${vars.space.md};
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   h1 { font-size: ${vars.font.size['4xl']}; }
