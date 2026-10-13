@@ -1,5 +1,5 @@
-import type { MenuItem } from './types.ts'
+import type { SidebarSection } from '../common/Sidebar/types.ts'
 
-export const defaultMenuItems: MenuItem[] = [{ label: 'Home', path: '/' }]
+export const defaultSections: SidebarSection[] = [{ id: 'main', items: [{ id: 'home', label: 'Home', href: '/' }] }]
 
 export const drawerSlideDistance = 280

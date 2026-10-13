@@ -1,25 +1,44 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { NavLink, Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 
-import { defaultMenuItems, drawerSlideDistance } from './defaultData.ts'
+import { defaultSections, drawerSlideDistance } from './defaultData.ts'
+import { currentOf } from '../common/Sidebar/defaultData.ts'
+import { useCurrentHref } from '@hooks/useCurrentHref.ts'
+import { Link } from '@components/common/Link/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { Container } from '@components/common/index.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
-import { classNames } from '@utils/classNames.ts'
 import { baseTokens } from '@styles/tokens/base.ts'
 import styles from './styles.module.css'
 
-import type { MobileDrawerProps, NavbarProps } from './types.ts'
-
-const navLinkClassName = (base: string) => ({ isActive }: { isActive: boolean }) => classNames(base, isActive && styles.active)
+import type { MobileDrawerProps, NavbarLinksProps, NavbarProps } from './types.ts'
 
 const drawerOverride = { tuning: { distance: drawerSlideDistance } }
 
-const MobileDrawer = ({ id, menuItems, onClose }: MobileDrawerProps) => {
+const NavbarLinks = ({ items, activeSectionId, linkClassName, onSelect }: NavbarLinksProps) => {
+  const currentHref = useCurrentHref()
+
+  return items.map((item) => (
+    <Link
+      key={item.id}
+      href={item.href as string}
+      native={item.native}
+      aria-current={currentOf(item, activeSectionId, currentHref)}
+      className={linkClassName}
+      onClick={() => {
+        item.onClick?.()
+        onSelect?.()
+      }}
+    >
+      {item.label}
+    </Link>
+  ))
+}
+
+const MobileDrawer = ({ id, items, activeSectionId, onClose }: MobileDrawerProps) => {
   const rootRef = useRef<HTMLDivElement>(null)
   const drawerRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
@@ -41,21 +60,18 @@ const MobileDrawer = ({ id, menuItems, onClose }: MobileDrawerProps) => {
         </div>
 
         <nav className={styles.mobileNav} aria-label={labels.mobileNavigation}>
-          {menuItems.map((item) => (
-            <NavLink key={item.path} to={item.path} className={navLinkClassName(styles.mobileMenuLink)} onClick={onClose}>
-              {item.label}
-            </NavLink>
-          ))}
+          <NavbarLinks items={items} activeSectionId={activeSectionId} linkClassName={styles.mobileMenuLink} onSelect={onClose} />
         </nav>
       </motion.div>
     </div>
   )
 }
 
-const Navbar = ({ logo = 'Logo', menuItems = defaultMenuItems }: NavbarProps) => {
+const Navbar = ({ logo = 'Logo', sections = defaultSections, activeSectionId }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const drawerId = useId()
   const { labels } = useUIConfig()
+  const items = sections.flatMap((section) => section.items).filter((item) => item.href)
 
   const handleClose = () => setMobileOpen(false)
 
@@ -75,17 +91,13 @@ const Navbar = ({ logo = 'Logo', menuItems = defaultMenuItems }: NavbarProps) =>
       <header className={styles.header}>
         <Container maxWidth="xl">
           <div className={styles.headerBar}>
-            <Link to="/" className={styles.logo}>
+            <Link href="/" className={styles.logo}>
               {logo}
             </Link>
 
             <div className={styles.headerActions}>
               <nav className={styles.desktopMenu} aria-label={labels.mainNavigation}>
-                {menuItems.map((item) => (
-                  <NavLink key={item.path} to={item.path} className={navLinkClassName(styles.menuLink)}>
-                    {item.label}
-                  </NavLink>
-                ))}
+                <NavbarLinks items={items} activeSectionId={activeSectionId} linkClassName={styles.menuLink} />
               </nav>
 
               <ThemeToggle />
@@ -106,7 +118,7 @@ const Navbar = ({ logo = 'Logo', menuItems = defaultMenuItems }: NavbarProps) =>
         </Container>
       </header>
 
-      <AnimatePresence>{mobileOpen && <MobileDrawer key="mobile-drawer" id={drawerId} menuItems={menuItems} onClose={handleClose} />}</AnimatePresence>
+      <AnimatePresence>{mobileOpen && <MobileDrawer key="mobile-drawer" id={drawerId} items={items} activeSectionId={activeSectionId} onClose={handleClose} />}</AnimatePresence>
     </>
   )
 }

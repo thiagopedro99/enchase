@@ -14,11 +14,16 @@
 
 .headerActions {
   display: flex;
+  min-width: 0;
   align-items: center;
   gap: var(--enchase-space-sm);
 }
 
 .logo {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   text-decoration: none;
   font-size: var(--enchase-font-size-xl);
   font-weight: var(--enchase-font-weight-semibold);
@@ -32,7 +37,10 @@
 
 .desktopMenu {
   display: none;
+  min-width: 0;
   gap: var(--enchase-space-xs);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
 @media (min-width: 768px) {
@@ -43,6 +51,7 @@
 
 .menuLink,
 .mobileMenuLink {
+  flex-shrink: 0;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -61,7 +70,9 @@
 }
 
 .mobileMenuLink {
-  height: 52px;
+  min-height: 52px;
+  padding-block: var(--enchase-space-sm);
+  overflow-wrap: anywhere;
 }
 
 .menuLink:hover,
@@ -70,8 +81,8 @@
   color: var(--enchase-color-text-primary);
 }
 
-.menuLink.active,
-.mobileMenuLink.active {
+.menuLink[aria-current],
+.mobileMenuLink[aria-current] {
   background-color: var(--enchase-color-primary-container);
   color: var(--enchase-color-on-primary-container);
 }

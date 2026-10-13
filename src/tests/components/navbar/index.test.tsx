@@ -1,13 +1,31 @@
 import { describeDialogContract } from '@tests/shared/contracts/dialogContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
+import { ColorModeProvider } from '@components/colorMode/index.tsx'
+import UIProvider from '@components/uiProvider/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 
+import type { SidebarSection } from '@components/common/Sidebar/types.ts'
+
 import type { DialogContractAdapter } from '@tests/shared/contracts/types.ts'
+
+const sections: SidebarSection[] = [
+  {
+    id: 'main',
+    items: [
+      { id: 'home', label: 'Início', href: '/' },
+      { id: 'docs', label: 'Docs', href: '/docs' },
+      { id: 'intro', label: 'Introdução', href: '#intro' },
+      { id: 'storybook', label: 'Storybook', href: '/storybook/', native: true },
+      { id: 'action', label: 'Sem destino' }
+    ]
+  },
+  { id: 'extra', title: 'Extra', items: [{ id: 'api', label: 'API', href: '/api' }] }
+]
 
 const navbarDrawerAdapter: DialogContractAdapter = {
   name: 'Navbar drawer',
@@ -101,6 +119,62 @@ describe('Navbar', () => {
     renderWithProviders(<Navbar />, { route: '/' })
 
     expect(screen.getByRole('link', { name: 'Home', hidden: true })).toHaveAttribute('aria-current', 'page')
+  })
+
+  it('renders the links of every section and skips items without a destination', () => {
+    renderWithProviders(<Navbar sections={sections} />)
+    const nav = screen.getByRole('navigation', { name: 'Navegação principal', hidden: true })
+
+    expect(within(nav).getAllByRole('link', { hidden: true }).map((link) => link.textContent)).toEqual(['Início', 'Docs', 'Introdução', 'Storybook', 'API'])
+    expect(within(nav).queryByText('Sem destino')).not.toBeInTheDocument()
+  })
+
+  it('marks routes with page, sections with location, and never native links', () => {
+    renderWithProviders(<Navbar sections={sections} activeSectionId="intro" />, { route: '/docs/guide' })
+    const nav = screen.getByRole('navigation', { name: 'Navegação principal', hidden: true })
+    const current = (name: string) => within(nav).getByRole('link', { name, hidden: true }).getAttribute('aria-current')
+
+    expect(current('Docs')).toBe('page')
+    expect(current('Introdução')).toBe('location')
+    expect(current('Início')).toBeNull()
+    expect(current('Storybook')).toBeNull()
+    expect(current('API')).toBeNull()
+  })
+
+  it('navigates through the provider from the logo and the menu links', () => {
+    const navigate = vi.fn()
+    render(
+      <ColorModeProvider storage={null}>
+        <UIProvider navigate={navigate} currentHref="/">
+          <Navbar sections={sections} />
+        </UIProvider>
+      </ColorModeProvider>
+    )
+
+    fireEvent.click(screen.getByRole('link', { name: 'Logo' }))
+    fireEvent.click(screen.getByRole('link', { name: 'Docs', hidden: true }))
+    fireEvent.click(screen.getByRole('link', { name: 'Storybook', hidden: true }))
+
+    expect(navigate.mock.calls).toEqual([['/'], ['/docs']])
+  })
+
+  it('navigates and closes the drawer when a drawer link is chosen', async () => {
+    const user = userEvent.setup()
+    const navigate = vi.fn()
+    render(
+      <ColorModeProvider storage={null}>
+        <UIProvider navigate={navigate}>
+          <Navbar sections={sections} />
+        </UIProvider>
+      </ColorModeProvider>
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+    const dialog = await screen.findByRole('dialog')
+    await user.click(within(dialog).getByRole('link', { name: 'Docs' }))
+
+    expect(navigate).toHaveBeenCalledWith('/docs')
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
   })
 
   it('has no axe violations while closed', async () => {

@@ -76,7 +76,7 @@ const Layout = ({
 
       {navigation === 'navbar' && !hideNavbar && (
         <div className={styles.navbarArea}>
-          <Navbar logo={brand} />
+          <Navbar logo={brand} sections={sections} activeSectionId={activePageSectionId} />
         </div>
       )}
 

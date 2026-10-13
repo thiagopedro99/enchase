@@ -336,6 +336,14 @@ describe('Layout with navbar option', () => {
     expect(screen.queryByRole('navigation', { name: 'Trilha de navegação' })).not.toBeInTheDocument()
   })
 
+  it('shows the configured navigation sections in the navbar and marks the current page', () => {
+    renderWithProviders(page({ navigation: 'navbar', navigationSections: [{ id: 'x', items: [{ id: 'a', label: 'Painel', href: '/painel' }] }] }), { route: '/painel' })
+    const nav = screen.getByRole('navigation', { name: 'Navegação principal', hidden: true })
+
+    expect(within(nav).getByRole('link', { name: 'Painel', hidden: true })).toHaveAttribute('aria-current', 'page')
+    expect(within(nav).queryByRole('link', { name: 'Home', hidden: true })).not.toBeInTheDocument()
+  })
+
   it('exposes banner, main and contentinfo landmarks', () => {
     renderWithProviders(page({ navigation: 'navbar' }))
 
