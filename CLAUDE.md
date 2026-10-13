@@ -22,6 +22,10 @@ Siga o [`skill.md`](./skill.md): formatação, imports, componentização com `/
 
 Antes de dar uma tarefa por concluída, rode `npm run build` (inclui o type-check) e `npm run test`. Mudança em foco, `inert`, layout ou animação também deve ser conferida no navegador: o jsdom não simula esses recursos.
 
+## Skills de design
+
+As skills de design e de animação (de `emilkowalski/skills`) ficam fora do git (`.agents/` e `.claude/skills/`). O `skills-lock.json` registra a origem e o hash de cada uma: reinstale-as com o instalador de skills que o gerou.
+
 ## Commits (regras essenciais)
 
 - Sempre no padrão **Conventional Commits** (`feat:`, `fix:`, `refactor:`, `docs:`, `chore:`, `style:`, `test:`...).

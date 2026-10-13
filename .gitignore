@@ -26,3 +26,7 @@ meu-template-react-merged.txt
 
 storybook-static
 .env
+
+.agents
+.claude/skills
+.claude/settings.local.json
