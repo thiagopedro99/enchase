@@ -1,11 +1,14 @@
-.grid {
+:where(.grid) {
+  box-sizing: border-box;
   display: grid;
-  gap: var(--enchase-space-md);
-  grid-template-columns: var(--grid-template-columns, repeat(1, 1fr));
+  gap: var(--enchase-grid-gap, var(--enchase-space-md));
+  grid-template-columns: var(--enchase-grid-columns, repeat(1, 1fr));
+  margin: 0;
+  padding: 0;
 }
 
 @media (max-width: 768px) {
-  .grid {
+  :where(.grid) {
     grid-template-columns: 1fr;
   }
 }

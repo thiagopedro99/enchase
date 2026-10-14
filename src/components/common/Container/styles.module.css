@@ -1,31 +1,40 @@
-.container {
-  width: 100%;
-  margin-inline-start: auto;
-  margin-inline-end: auto;
-  padding-inline-start: var(--enchase-space-md);
-  padding-inline-end: var(--enchase-space-md);
+:where(.container) {
+  box-sizing: border-box;
+  inline-size: 100%;
+  margin-block: 0;
+  margin-inline: auto;
+  padding-block: 0;
+  padding-inline: var(--enchase-container-padding, var(--enchase-space-md));
 }
 
-.container[data-max-width='sm'] {
-  max-width: 640px;
+:where(.container[data-padding='none']) {
+  padding-inline: 0;
 }
 
-.container[data-max-width='md'] {
-  max-width: 768px;
+:where(.container[data-center='false']) {
+  margin-inline: 0;
 }
 
-.container[data-max-width='lg'] {
-  max-width: 1024px;
+:where(.container[data-max-width='sm']) {
+  max-inline-size: 640px;
 }
 
-.container[data-max-width='xl'] {
-  max-width: 1280px;
+:where(.container[data-max-width='md']) {
+  max-inline-size: 768px;
 }
 
-.container[data-max-width='2xl'] {
-  max-width: 1536px;
+:where(.container[data-max-width='lg']) {
+  max-inline-size: 1024px;
 }
 
-.container[data-max-width='full'] {
-  max-width: 100%;
+:where(.container[data-max-width='xl']) {
+  max-inline-size: 1280px;
+}
+
+:where(.container[data-max-width='2xl']) {
+  max-inline-size: 1536px;
+}
+
+:where(.container[data-max-width='full']) {
+  max-inline-size: 100%;
 }

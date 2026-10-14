@@ -7,10 +7,6 @@ const withoutExtension = (path: string) => path.replace(/\.(ts|tsx)$/, '')
 
 const exemptions: Record<string, string> = {
   'footer': 'static markup without behavior',
-  'common/Container': 'pure layout primitive',
-  'common/Flex': 'pure layout primitive',
-  'common/Grid': 'pure layout primitive',
-  'common/VisuallyHidden': 'covered through the components that use it',
   'layout/subcomponentes/AppSidebar': 'covered by the Layout tests',
   'layout/subcomponentes/Brand': 'covered by the Layout tests'
 }
