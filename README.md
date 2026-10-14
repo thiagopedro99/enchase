@@ -358,6 +358,36 @@ const { mode, resolvedMode, setMode, toggleMode } = useColorMode()
 
 Para começar sempre no claro, use `<ColorModeProvider defaultMode="light">`. Para desligar a persistência, `storage={null}`; para controlar de fora, passe `mode` e `onModeChange`.
 
+## Renderização no servidor (Next.js e SSR)
+
+Os componentes renderizam no servidor sem erro de hidratação. Num app com App Router:
+
+```tsx
+import { ColorModeProvider, ColorModeScript, GlobalStyles, UIProvider } from 'enchase'
+import 'enchase/styles.css'
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <ColorModeScript />
+      </head>
+      <body>
+        <ColorModeProvider>
+          <GlobalStyles />
+          <UIProvider>{children}</UIProvider>
+        </ColorModeProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+- **`ColorModeScript`**: script inline que aplica o `data-theme` antes da primeira pintura, conforme o modo salvo ou o do sistema, sem flash. O `suppressHydrationWarning` no `<html>` evita o aviso por causa desse atributo. Sem JavaScript, o tema escuro do sistema vale por `@media (prefers-color-scheme: dark)`.
+- **`cssLayer`** no `ColorModeProvider`: coloca as variáveis do tema numa `@layer` com o nome que você escolher.
+- **Layout e Navbar** renderizam o modo desktop no servidor e trocam pelo breakpoint com CSS gerado, então não há quadro compacto antes da hidratação.
+- **`'use client'`**: o pacote marca todo o `enchase` como cliente. Páginas e layouts de servidor podem importar os componentes direto; `npm run test:next` prova isso com um app Next mínimo.
+
 ## Navegação
 
 Os componentes não dependem de nenhum roteador. Links internos (`/caminho`) são `<a href>` de verdade: um clique simples chama o `navigate` do `UIProvider`, e Ctrl, Cmd, Shift, botão do meio, `target`, `download`, `native` e URLs externas seguem o comportamento do navegador. Sem `navigate`, todos os links navegam normalmente (recarregando a página).

@@ -51,7 +51,8 @@
     "build-storybook": "storybook build -o storybook-static",
     "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json && node scripts/fixDeclarations.mjs",
     "pack:check": "npm pack --dry-run && publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css",
-    "test:consumer": "node scripts/testConsumer.mjs"
+    "test:consumer": "node scripts/testConsumer.mjs",
+    "test:next": "node scripts/testNext.mjs"
   },
   "dependencies": {
     "motion": "^14.0.0"
