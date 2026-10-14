@@ -1,23 +1,90 @@
 .skeleton {
-  background: var(--enchase-color-surface-container-high);
-  background-image: linear-gradient(90deg, var(--enchase-color-surface-container-high) 0px, var(--enchase-color-surface-container-low) 40px, var(--enchase-color-surface-container-high) 80px);
-  background-size: 468px 100%;
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  overflow: hidden;
+  isolation: isolate;
 }
 
-.skeleton[data-variant='text'] {
-  width: var(--skeleton-width, 100%);
-  height: var(--skeleton-height, 1em);
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(90deg, transparent 0%, var(--enchase-color-surface-container-low) 50%, transparent 100%);
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+:where(.skeleton) {
+  background-color: var(--enchase-color-surface-container-high);
+}
+
+:where(.skeleton[data-variant='text']) {
+  inline-size: var(--skeleton-width, 100%);
+  block-size: var(--skeleton-height, 1em);
   border-radius: var(--enchase-radius-sm);
 }
 
-.skeleton[data-variant='circular'] {
-  width: var(--skeleton-width, 40px);
-  height: var(--skeleton-height, 40px);
+:where(.skeleton[data-variant='circular']) {
+  inline-size: var(--skeleton-width, 40px);
+  block-size: var(--skeleton-height, 40px);
   border-radius: 50%;
 }
 
-.skeleton[data-variant='rectangular'] {
-  width: var(--skeleton-width, 100%);
-  height: var(--skeleton-height, 200px);
+:where(.skeleton[data-variant='rectangular']) {
+  inline-size: var(--skeleton-width, 100%);
+  block-size: var(--skeleton-height, 200px);
   border-radius: var(--enchase-radius-md);
+}
+
+.skeleton[data-motion='on']::after {
+  animation: sweep var(--enchase-shimmer-duration, 1.5s) var(--enchase-motion-ease-in-out) infinite;
+}
+
+.skeleton[data-motion='on']:dir(rtl)::after {
+  animation-name: sweepReverse;
+}
+
+@keyframes sweep {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes sweepReverse {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton[data-motion='on'] {
+    animation: pulse 1.6s var(--enchase-motion-ease-in-out) infinite;
+  }
+
+  .skeleton[data-motion='on']::after,
+  .skeleton[data-motion='on']:dir(rtl)::after {
+    animation: none;
+    display: none;
+  }
 }
