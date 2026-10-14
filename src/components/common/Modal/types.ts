@@ -1,5 +1,5 @@
 import type { MotionOverride } from '@motion/types.ts'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
@@ -18,6 +18,8 @@ export interface ModalProps {
   closeOnEsc?: boolean
   size?: ModalSize
   animation?: MotionOverride
+  className?: string
+  style?: CSSProperties
 }
 
 export type ModalDialogProps = Required<Pick<ModalProps, 'role' | 'showCloseButton' | 'closeOnOverlayClick' | 'closeOnEsc' | 'size'>> &
@@ -33,4 +35,6 @@ export interface ConfirmModalProps {
   cancelText?: string
   confirmVariant?: 'primary' | 'secondary' | 'outline' | 'ghost'
   animation?: MotionOverride
+  className?: string
+  style?: CSSProperties
 }

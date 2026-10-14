@@ -41,7 +41,6 @@ const baseline: Record<string, number> = {
   'common/Card': 1,
   'common/Checkbox': 1,
   'common/Input': 3,
-  'common/Modal': 1,
   'common/Select': 3,
   'common/Sidebar': 2,
   'common/ThemeToggle': 1,

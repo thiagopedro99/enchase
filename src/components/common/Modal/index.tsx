@@ -1,19 +1,32 @@
-import { AnimatePresence, motion } from 'motion/react'
 import { createPortal } from 'react-dom'
 import { useId, useRef } from 'react'
 import { CloseIcon } from '../Icon/icons/CloseIcon.tsx'
 
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
-import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
+import { useOverlayStack } from '@hooks/useOverlayStack.ts'
+import { exitMilliseconds } from '@motion/css.ts'
+import { useMediaQuery } from '@hooks/useMediaQuery.ts'
+import { useMotionStyle } from '@hooks/useMotionStyle.ts'
+import { usePresence } from '@hooks/usePresence.ts'
+import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { Button } from '../Button/index.tsx'
 import { Flex } from '../Flex/index.tsx'
 import styles from './styles.module.css'
 
+import type { PresenceState } from '@hooks/usePresence.ts'
+import type { CSSProperties, RefObject } from 'react'
 import type { ModalDialogProps, ModalProps, ConfirmModalProps } from './types.ts'
+
+const exitPadding = 80
+
+const reducedMotionQuery = '(prefers-reduced-motion: reduce)'
 
 const ModalDialog = ({
   onClose,
+  open,
+  state,
+  panelRef,
   title,
   ariaLabel,
   role,
@@ -23,56 +36,66 @@ const ModalDialog = ({
   closeOnOverlayClick,
   closeOnEsc,
   size,
-  animation
-}: ModalDialogProps) => {
+  className,
+  style,
+  motionStyle
+}: ModalDialogProps & { open: boolean; state: PresenceState; panelRef: RefObject<HTMLDivElement | null>; motionStyle: CSSProperties }) => {
   const rootRef = useRef<HTMLDivElement>(null)
-  const dialogRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
   const bodyId = useId()
   const { labels } = useUIConfig()
-  const backdropMotion = useMotionRecipe('fade', animation === false ? false : undefined)
-  const dialogMotion = useMotionRecipe('pop', animation)
+  const isTop = useOverlayStack(open)
 
-  useModalBehavior({ rootRef, dialogRef, onEscape: closeOnEsc ? onClose : undefined })
+  useModalBehavior({ rootRef, dialogRef: panelRef, onEscape: closeOnEsc ? () => isTop() && onClose() : undefined })
+
+  const panelProps = mergeProps(
+    {
+      ...slot('modal', 'panel'),
+      className: styles.container,
+      style: motionStyle,
+      'data-state': state,
+      'data-size': size,
+      role,
+      'aria-modal': true,
+      'aria-labelledby': title ? titleId : undefined,
+      'aria-label': title ? undefined : ariaLabel,
+      'aria-describedby': role === 'alertdialog' ? bodyId : undefined,
+      tabIndex: -1
+    },
+    { className, style }
+  )
 
   return (
-    <div ref={rootRef}>
-      <motion.div {...backdropMotion} className={styles.backdrop} onClick={closeOnOverlayClick ? onClose : undefined} />
+    <div ref={rootRef} {...slot('modal')}>
+      <div {...slot('modal', 'overlay')} className={styles.backdrop} style={motionStyle} data-state={state} onClick={closeOnOverlayClick ? onClose : undefined} />
 
-      <motion.div
-        {...dialogMotion}
-        ref={dialogRef}
-        className={styles.container}
-        data-size={size}
-        role={role}
-        aria-modal="true"
-        aria-labelledby={title ? titleId : undefined}
-        aria-label={title ? undefined : ariaLabel}
-        aria-describedby={role === 'alertdialog' ? bodyId : undefined}
-        tabIndex={-1}
-      >
+      <div ref={panelRef} {...panelProps}>
         {(title || showCloseButton) && (
-          <div className={styles.header}>
+          <div {...slot('modal', 'header')} className={styles.header}>
             {title && (
-              <h2 id={titleId} className={styles.title}>
+              <h2 {...slot('modal', 'title')} id={titleId} className={styles.title}>
                 {title}
               </h2>
             )}
 
             {showCloseButton && (
-              <button type="button" className={styles.close} onClick={onClose} aria-label={labels.closeModal}>
+              <button {...slot('modal', 'close')} type="button" className={styles.close} onClick={onClose} aria-label={labels.closeModal}>
                 <CloseIcon size={20} />
               </button>
             )}
           </div>
         )}
 
-        <div id={bodyId} className={styles.body}>
+        <div {...slot('modal', 'body')} id={bodyId} className={styles.body}>
           {children}
         </div>
 
-        {footer && <div className={styles.footer}>{footer}</div>}
-      </motion.div>
+        {footer && (
+          <div {...slot('modal', 'footer')} className={styles.footer}>
+            {footer}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
@@ -86,22 +109,27 @@ export const Modal = ({
   size = 'md',
   ...props
 }: ModalProps) => {
+  const motionStyle = useMotionStyle('pop', props.animation)
+  const reduced = useMediaQuery(reducedMotionQuery)
+  const { mounted, state, ref } = usePresence<HTMLDivElement>(isOpen, { exitMs: reduced ? 0 : exitMilliseconds(motionStyle) + exitPadding })
+
   if (typeof document === 'undefined') return null
 
   return createPortal(
-    <AnimatePresence>
-      {isOpen && (
-        <ModalDialog
-          key="modal-dialog"
-          role={role}
-          showCloseButton={showCloseButton}
-          closeOnOverlayClick={closeOnOverlayClick}
-          closeOnEsc={closeOnEsc}
-          size={size}
-          {...props}
-        />
-      )}
-    </AnimatePresence>,
+    mounted ? (
+      <ModalDialog
+        role={role}
+        showCloseButton={showCloseButton}
+        closeOnOverlayClick={closeOnOverlayClick}
+        closeOnEsc={closeOnEsc}
+        size={size}
+        open={isOpen}
+        state={state}
+        panelRef={ref}
+        motionStyle={motionStyle}
+        {...props}
+      />
+    ) : null,
     document.body
   )
 }
@@ -115,7 +143,9 @@ export const ConfirmModal = ({
   confirmText,
   cancelText,
   confirmVariant = 'primary',
-  animation
+  animation,
+  className,
+  style
 }: ConfirmModalProps) => {
   const { labels } = useUIConfig()
 
@@ -131,6 +161,8 @@ export const ConfirmModal = ({
       title={title ?? labels.confirmAction}
       role="alertdialog"
       animation={animation}
+      className={className}
+      style={style}
       footer={
         <Flex justify="end" gap="0.5rem">
           <Button variant="outline" onClick={onClose} data-autofocus>

@@ -3,15 +3,26 @@
   inset: 0;
   background-color: var(--enchase-color-overlay);
   z-index: var(--enchase-z-backdrop);
+  opacity: 1;
+  transition: opacity var(--enchase-presence-duration, var(--enchase-motion-duration-base)) var(--enchase-motion-ease-out);
+}
+
+.backdrop:where([data-state='entering']) {
+  opacity: 0;
+}
+
+.backdrop:where([data-state='exiting']) {
+  opacity: 0;
+  transition-duration: var(--enchase-presence-exit-duration, var(--enchase-motion-duration-fast));
 }
 
 .container {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  width: 90%;
-  max-height: 90vh;
+  inset: 0;
+  margin: auto;
+  inline-size: 90%;
+  block-size: fit-content;
+  max-block-size: 90vh;
   background-color: var(--enchase-color-surface-container-high);
   border-radius: var(--enchase-radius-2xl);
   box-shadow: var(--enchase-shadow-lg);
@@ -19,36 +30,58 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+  transition:
+    opacity var(--enchase-presence-duration, var(--enchase-motion-duration-base)) var(--enchase-motion-ease-out),
+    transform var(--enchase-presence-duration, var(--enchase-motion-duration-base)) var(--enchase-motion-ease-out);
+}
+
+.container:where([data-state='entering']) {
+  opacity: 0;
+  transform: translate(var(--enchase-presence-x, 0), var(--enchase-presence-y, 0)) scale(var(--enchase-presence-scale, 1));
+}
+
+.container:where([data-state='exiting']) {
+  opacity: 0;
+  transform: translate(var(--enchase-presence-x, 0), var(--enchase-presence-y, 0)) scale(var(--enchase-presence-scale, 1));
+  transition-duration: var(--enchase-presence-exit-duration, var(--enchase-motion-duration-fast));
 }
 
 .container:focus {
   outline: none;
 }
 
-.container[data-size='sm'] {
-  max-width: 400px;
+.container:where([data-size='sm']) {
+  max-inline-size: 400px;
 }
 
-.container[data-size='md'] {
-  max-width: 600px;
+.container:where([data-size='md']) {
+  max-inline-size: 600px;
 }
 
-.container[data-size='lg'] {
-  max-width: 800px;
+.container:where([data-size='lg']) {
+  max-inline-size: 800px;
 }
 
-.container[data-size='xl'] {
-  max-width: 1000px;
+.container:where([data-size='xl']) {
+  max-inline-size: 1000px;
 }
 
-.container[data-size='full'] {
-  max-width: 95vw;
+.container:where([data-size='full']) {
+  max-inline-size: 95vw;
 }
 
 @media (max-width: 640px) {
   .container {
-    width: 95%;
-    max-height: 95vh;
+    inline-size: 95%;
+    max-block-size: 95vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .container:where([data-state='entering'], [data-state='exiting']) {
+    transform: none;
   }
 }
 
@@ -57,7 +90,8 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--enchase-space-md);
-  padding: var(--enchase-space-lg) var(--enchase-space-lg) 0;
+  padding-block: var(--enchase-space-lg) 0;
+  padding-inline: var(--enchase-space-lg);
 }
 
 .title {
@@ -72,23 +106,37 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  min-width: 40px;
-  min-height: 40px;
+  min-inline-size: 40px;
+  min-block-size: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  appearance: none;
   color: var(--enchase-color-text-secondary);
   border-radius: var(--enchase-radius-full);
   transition:
-    background-color var(--enchase-transition-fast),
-    color var(--enchase-transition-fast);
+    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
   cursor: pointer;
 }
 
-.close:hover {
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+@media (hover: hover) and (pointer: fine) {
+  .close:hover {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    color: var(--enchase-color-text-primary);
+  }
+}
+
+.close:active {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent);
   color: var(--enchase-color-text-primary);
 }
 
 .body {
-  padding: var(--enchase-space-md) var(--enchase-space-lg) var(--enchase-space-lg);
+  padding-block: var(--enchase-space-md) var(--enchase-space-lg);
+  padding-inline: var(--enchase-space-lg);
   overflow-y: auto;
   flex: 1;
   color: var(--enchase-color-text-secondary);
@@ -96,5 +144,6 @@
 }
 
 .footer {
-  padding: 0 var(--enchase-space-lg) var(--enchase-space-lg);
+  padding-block: 0 var(--enchase-space-lg);
+  padding-inline: var(--enchase-space-lg);
 }

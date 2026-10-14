@@ -3,7 +3,8 @@ import { ControlledDialog } from '@tests/shared/contracts/dialogHarness.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { screen } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
+import { useState } from 'react'
 
 import { ConfirmModal, Modal } from '@components/common/Modal/index.tsx'
 
@@ -125,6 +126,121 @@ describe('Modal', () => {
     )
 
     expect(await screen.findByRole('button', { name: 'Close dialog' })).toBeInTheDocument()
+  })
+})
+
+describe('Modal contract', () => {
+  it('merges className and style on the panel and exposes the slots and state', async () => {
+    renderWithProviders(
+      <Modal isOpen onClose={vi.fn()} title="Slots" className="mine" style={{ color: 'red' }} footer={<button>Ok</button>}>
+        <p>content</p>
+      </Modal>
+    )
+    const dialog = await screen.findByRole('dialog')
+
+    expect(dialog).toHaveClass('mine')
+    expect(dialog.style.color).toBe('red')
+    expect(dialog).toHaveAttribute('data-slot', 'modal-panel')
+    expect(dialog).toHaveAttribute('data-size', 'md')
+    expect(dialog.previousElementSibling).toHaveAttribute('data-slot', 'modal-overlay')
+    expect(screen.getByRole('heading', { name: 'Slots' })).toHaveAttribute('data-slot', 'modal-title')
+    expect(screen.getByRole('button', { name: 'Fechar modal' })).toHaveAttribute('data-slot', 'modal-close')
+    await waitFor(() => expect(dialog).toHaveAttribute('data-state', 'open'))
+  })
+
+  it('turns the presence variables to zero when the animation is off', async () => {
+    renderWithProviders(
+      <Modal isOpen onClose={vi.fn()} title="Still" animation={false}>
+        <p>content</p>
+      </Modal>
+    )
+    const dialog = await screen.findByRole('dialog')
+
+    expect(dialog.style.getPropertyValue('--enchase-presence-duration')).toBe('0ms')
+    expect(dialog.style.getPropertyValue('--enchase-presence-y')).toBe('0px')
+    expect(dialog.style.getPropertyValue('--enchase-presence-scale')).toBe('1')
+  })
+
+  it('animates from the tuned distance and scale of the pop recipe by default', async () => {
+    renderWithProviders(
+      <Modal isOpen onClose={vi.fn()} title="Pop">
+        <p>content</p>
+      </Modal>
+    )
+    const dialog = await screen.findByRole('dialog')
+
+    expect(dialog.style.getPropertyValue('--enchase-presence-duration')).toBe('200ms')
+    expect(dialog.style.getPropertyValue('--enchase-presence-y')).toBe('12px')
+    expect(dialog.style.getPropertyValue('--enchase-presence-scale')).toBe('0.96')
+  })
+
+  it('stays mounted while exiting and unmounts after the exit time', async () => {
+    const Harness = () => {
+      const [open, setOpen] = useState(true)
+
+      return (
+        <>
+          <button onClick={() => setOpen(false)}>Close</button>
+          <Modal isOpen={open} onClose={() => setOpen(false)} title="Exit">
+            <p>content</p>
+          </Modal>
+        </>
+      )
+    }
+    renderWithProviders(<Harness />)
+    await screen.findByRole('dialog')
+
+    await act(async () => {
+      document.querySelector<HTMLButtonElement>('button')?.click()
+    })
+
+    expect(screen.getByRole('dialog', { hidden: true })).toHaveAttribute('data-state', 'exiting')
+    await waitFor(() => expect(screen.queryByRole('dialog', { hidden: true })).not.toBeInTheDocument(), { timeout: 2000 })
+  })
+
+  it('reopens in the middle of the exit without losing the dialog', async () => {
+    let setOpenOutside: (open: boolean) => void = () => undefined
+    const Harness = () => {
+      const [open, setOpen] = useState(true)
+      setOpenOutside = setOpen
+
+      return (
+        <Modal isOpen={open} onClose={() => setOpen(false)} title="Again">
+          <p>content</p>
+        </Modal>
+      )
+    }
+    renderWithProviders(<Harness />)
+    await screen.findByRole('dialog')
+
+    act(() => setOpenOutside(false))
+    expect(screen.getByRole('dialog', { hidden: true })).toHaveAttribute('data-state', 'exiting')
+    act(() => setOpenOutside(true))
+
+    await waitFor(() => expect(screen.getByRole('dialog')).toHaveAttribute('data-state', 'open'))
+    expect(screen.getAllByRole('dialog')).toHaveLength(1)
+  })
+
+  it('closes only the top modal on Escape when modals are stacked', async () => {
+    const user = userEvent.setup()
+    const closeBottom = vi.fn()
+    const closeTop = vi.fn()
+    render(
+      <>
+        <Modal isOpen onClose={closeBottom} title="Bottom">
+          <p>bottom</p>
+        </Modal>
+        <Modal isOpen onClose={closeTop} title="Top">
+          <p>top</p>
+        </Modal>
+      </>
+    )
+    await screen.findAllByRole('dialog', { hidden: true })
+
+    await user.keyboard('{Escape}')
+
+    expect(closeTop).toHaveBeenCalledTimes(1)
+    expect(closeBottom).not.toHaveBeenCalled()
   })
 })
 
