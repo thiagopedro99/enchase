@@ -1,5 +1,6 @@
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { axe } from '@tests/axe.ts'
 
 import { AlertTriangleIcon } from '@components/common/Icon/icons/AlertTriangleIcon.tsx'
 import { CheckIcon } from '@components/common/Icon/icons/CheckIcon.tsx'
@@ -76,6 +77,49 @@ describe('Icon', () => {
     expect(svg).toHaveClass('mine')
     expect(svg).not.toHaveAttribute('aria-hidden')
     expect(svg).toHaveAttribute('aria-label', 'Dot')
+  })
+
+  it('marks its root with a data-slot and keeps the user class next to its own', () => {
+    const { container } = render(<Icon name="dot" className="mine" style={{ color: 'red' }}><circle cx="12" cy="12" r="1" /></Icon>)
+    const svg = svgOf(container)
+
+    expect(svg).toHaveAttribute('data-slot', 'icon')
+    expect(svg.getAttribute('class')).toMatch(/icon/)
+    expect(svg).toHaveClass('mine')
+    expect(svg.style.color).toBe('red')
+  })
+
+  it('becomes an image with an accessible name when given a title', () => {
+    render(<Icon name="dot" title="Status"><circle cx="12" cy="12" r="1" /></Icon>)
+
+    const image = screen.getByRole('img', { name: 'Status' })
+
+    expect(image).not.toHaveAttribute('aria-hidden')
+    expect(image.querySelector('title')).toHaveTextContent('Status')
+  })
+
+  it('flags only the directional icons', () => {
+    const { container, rerender } = render(<ChevronRightIcon />)
+
+    expect(svgOf(container)).toHaveAttribute('data-directional')
+
+    rerender(<MenuIcon />)
+
+    expect(svgOf(container)).not.toHaveAttribute('data-directional')
+  })
+
+  it('has no axe violations hidden or with a title', async () => {
+    const { container } = render(
+      <div>
+        <button type="button">
+          <CheckIcon />
+          Salvar
+        </button>
+        <Icon name="dot" title="Status"><circle cx="12" cy="12" r="1" /></Icon>
+      </div>
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
   })
 })
 

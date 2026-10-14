@@ -1,0 +1,9 @@
+:where(.icon) {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+:where(.icon[data-directional]:dir(rtl)) {
+  transform: scaleX(-1);
+}
