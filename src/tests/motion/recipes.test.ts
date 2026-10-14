@@ -1,4 +1,5 @@
-import { defaultMotionSettings } from '@motion/defaultData.ts'
+import { defaultEase, defaultMotionSettings } from '@motion/defaultData.ts'
+import { baseTokens } from '@styles/tokens/base.ts'
 import { resolveRecipe } from '@motion/recipes.ts'
 import { describe, expect, it } from 'vitest'
 
@@ -7,6 +8,10 @@ import type { MotionSettings } from '@motion/types.ts'
 const settings = (overrides: Partial<MotionSettings> = {}): MotionSettings => ({ ...defaultMotionSettings, ...overrides })
 
 describe('resolveRecipe', () => {
+  it('uses the same curve as the ease-out token', () => {
+    expect(baseTokens.motion.ease.out).toBe(`cubic-bezier(${defaultEase.join(', ')})`)
+  })
+
   it('builds a pop recipe with enter and exit states', () => {
     const recipe = resolveRecipe({ name: 'pop', settings: settings(), prefersReduced: false })
 

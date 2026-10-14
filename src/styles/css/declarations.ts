@@ -8,12 +8,14 @@ type FontTokens = BaseTokens['fonts']
 
 type ThemeTokens = ModeTokens
 
-type LayoutTokens = Pick<BaseTokens, 'spacing' | 'borderRadius' | 'transitions' | 'state' | 'zIndex'>
+type LayoutTokens = Pick<BaseTokens, 'spacing' | 'borderRadius' | 'transitions' | 'motion' | 'control' | 'state' | 'zIndex'>
 
 type ColorTree = { [key: string]: string | ColorTree }
 
 const flatten = (tree: ColorTree, path: string[] = []): [string[], string][] =>
   Object.entries(tree).flatMap(([key, value]) => (typeof value === 'string' ? [[[...path, key], value] as [string[], string]] : flatten(value, [...path, key])))
+
+const declareTree = (group: VariableGroup, tree: ColorTree): Record<string, string> => Object.fromEntries(flatten(tree).map(([path, value]) => [variableName(group, ...path), value]))
 
 const declare = (group: VariableGroup, record: Record<string, string | number>): Record<string, string> =>
   Object.fromEntries(Object.entries(record).map(([key, value]) => [variableName(group, key), String(value)]))
@@ -33,6 +35,8 @@ export const layoutVariables = (theme: LayoutTokens): Record<string, string> => 
   ...declare('space', theme.spacing),
   ...declare('radius', theme.borderRadius),
   ...declare('transition', theme.transitions),
+  ...declareTree('motion', theme.motion),
+  ...declareTree('control', theme.control),
   ...declare('state', theme.state),
   ...declare('z', theme.zIndex)
 })

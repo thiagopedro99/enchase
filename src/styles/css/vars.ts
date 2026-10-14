@@ -24,6 +24,8 @@ export const vars = {
   space: build('space', base.spacing),
   radius: build('radius', base.borderRadius),
   transition: build('transition', base.transitions),
+  motion: build('motion', base.motion),
+  control: build('control', base.control),
   state: build('state', base.state),
   z: build('z', base.zIndex)
 }

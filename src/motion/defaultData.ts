@@ -1,6 +1,6 @@
 import type { BaseTuning, MotionPreset, MotionSettings, RecipeName, PresetScale } from './types.ts'
 
-export const defaultEase: [number, number, number, number] = [0.4, 0, 0.2, 1]
+export const defaultEase: [number, number, number, number] = [0.2, 0, 0, 1]
 
 export const presetScale: Record<MotionPreset, PresetScale> = {
   off: { duration: 0, distance: 0 },

@@ -1,4 +1,8 @@
-const standardEasing = 'cubic-bezier(0.2, 0, 0, 1)'
+const easeOut = 'cubic-bezier(0.2, 0, 0, 1)'
+
+const easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)'
+
+const duration = { fast: '150ms', base: '250ms', slow: '350ms' }
 
 export const baseTokens = {
   fonts: {
@@ -42,13 +46,24 @@ export const baseTokens = {
     lg: '1rem',
     xl: '1.5rem',
     '2xl': '1.75rem',
+    control: '0.5rem',
     full: '9999px'
   },
 
+  control: {
+    height: { sm: '2rem', md: '2.5rem', lg: '3rem' }
+  },
+
+  motion: {
+    duration,
+    ease: { out: easeOut, inOut: easeInOut },
+    distance: { xs: '2px', sm: '12px', md: '32px' }
+  },
+
   transitions: {
-    fast: `150ms ${standardEasing}`,
-    normal: `250ms ${standardEasing}`,
-    slow: `350ms ${standardEasing}`
+    fast: `${duration.fast} ${easeOut}`,
+    normal: `${duration.base} ${easeOut}`,
+    slow: `${duration.slow} ${easeOut}`
   },
 
   state: {

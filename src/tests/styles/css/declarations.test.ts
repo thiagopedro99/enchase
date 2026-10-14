@@ -84,10 +84,27 @@ describe('layoutVariables', () => {
       Object.keys(baseTokens.spacing).length +
       Object.keys(baseTokens.borderRadius).length +
       Object.keys(baseTokens.transitions).length +
+      leafPaths(baseTokens.motion).length +
+      leafPaths(baseTokens.control).length +
       Object.keys(baseTokens.state).length +
       Object.keys(baseTokens.zIndex).length
 
     expect(Object.keys(variables)).toHaveLength(expected)
+  })
+
+  it('declares the motion and control tokens used by the component contract', () => {
+    expect(variables['--enchase-motion-duration-fast']).toBe('150ms')
+    expect(variables['--enchase-motion-duration-base']).toBe('250ms')
+    expect(variables['--enchase-motion-duration-slow']).toBe('350ms')
+    expect(variables['--enchase-motion-ease-out']).toBe('cubic-bezier(0.2, 0, 0, 1)')
+    expect(variables['--enchase-motion-ease-in-out']).toBe('cubic-bezier(0.4, 0, 0.2, 1)')
+    expect(variables['--enchase-motion-distance-sm']).toBe('12px')
+    expect(variables['--enchase-control-height-md']).toBe('2.5rem')
+    expect(variables['--enchase-radius-control']).toBe('0.5rem')
+  })
+
+  it('derives the transition shorthands from the motion tokens', () => {
+    expect(baseTokens.transitions.fast).toBe(`${baseTokens.motion.duration.fast} ${baseTokens.motion.ease.out}`)
   })
 
   it('names and keeps the values', () => {
