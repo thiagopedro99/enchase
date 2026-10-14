@@ -1,6 +1,6 @@
 import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
 
-import { ColorModeProvider } from '@components/colorMode/index.tsx'
+import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import { Breadcrumbs } from '@components/common/Breadcrumbs/index.tsx'
@@ -57,8 +57,11 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Navbar', element: <Navbar logo="Logo" /> },
   { name: 'Footer', element: <Footer /> },
   { name: 'Layout', element: <Layout pageTitle="Home"><p>Content</p></Layout> },
+  { name: 'Layout navbar', element: <Layout navigation="navbar" pageTitle="Home"><p>Content</p></Layout> },
+  { name: 'Layout collapsed with storage', element: <Layout storageKey="hydration-layout" defaultCollapsed pageTitle="Home"><p>Content</p></Layout> },
   { name: 'Providers only', element: <p>Content</p> },
-  { name: 'ColorModeProvider alone', element: <ColorModeProvider><p>Content</p></ColorModeProvider>, bare: true }
+  { name: 'ColorModeProvider alone', element: <ColorModeProvider><p>Content</p></ColorModeProvider>, bare: true },
+  { name: 'ColorModeProvider with script and layer', element: <ColorModeProvider cssLayer="enchase-theme"><ColorModeScript /><p>Content</p></ColorModeProvider>, bare: true }
 ]
 
 export const withProviders = ({ element, bare }: HydrationCase): ReactNode =>
