@@ -11,6 +11,9 @@ export default defineConfig({
 
   resolve: {
     alias: {
+      'enchase/theme': resolve(__dirname, './lib/theme.ts'),
+      'enchase/locales': resolve(__dirname, './lib/locales.ts'),
+      enchase: resolve(__dirname, './lib/index.ts'),
       '@components': resolve(__dirname, './src/components'),
       '@assets': resolve(__dirname, './src/assets'),
       '@styles': resolve(__dirname, './src/styles'),
