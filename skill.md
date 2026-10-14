@@ -96,8 +96,8 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 Especificação, não descrição: os componentes atuais ainda não cumprem tudo. Cada componente passa por ela uma vez, começando por `Button`, `Modal`, `Popover`, `Icon`, `Link` e `Tooltip`; um componente só conta como pronto quando cumpre todos os itens.
 
 **Customização**
-- A raiz aceita `className` e `style` e os espalha por último. A classe de quem usa vence a da lib sem `!important`.
-- Cada parte relevante recebe `data-slot="<componente>-<parte>"` (`modal-panel`, `sidebar-item`). Quem estiliza de fora usa `data-slot` e `data-state`, nunca o nome da classe do CSS Module.
+- A raiz aceita `className` e `style` e os espalha por último, com `mergeProps(own, user)` de `@utils/mergeProps.ts`: classes unidas (a de quem usa por último), `style` mesclado (quem usa vence), handlers dos dois (quem usa primeiro; o da lib não roda após `preventDefault`) e `data-slot` da lib preservado. A classe de quem usa vence a da lib sem `!important`.
+- Cada parte relevante recebe `data-slot="<componente>-<parte>"` pelo helper `slot('modal', 'panel')` (`modal-panel`, `sidebar-item`). Quem estiliza de fora usa `data-slot` e `data-state`, nunca o nome da classe do CSS Module.
 - Seletores internos que dependem de contexto usam `:where()` para manter a especificidade em zero e deixar a customização ganhar.
 - Variantes e estados por atributo (`data-variant`, `data-size`, `data-state`), além das classes.
 - Reset próprio em cada componente (botão, lista, link): nenhum componente depende de um reset global.
@@ -112,14 +112,15 @@ Especificação, não descrição: os componentes atuais ainda não cumprem tudo
 
 **Movimento**
 - Só `transform` e `opacity`; nunca `width`, `height`, `margin`, `top`, `left` nem `transition: all`.
-- Uma curva e durações por token (`--enchase-motion-*`), nunca valor solto no componente. Entrada com `ease-out`; saída mais curta que a entrada.
-- Hover só dentro de `@media (hover: hover) and (pointer: fine)`; o toque ganha feedback por `:active`.
+- Uma curva e durações por token, nunca valor solto no componente: `--enchase-motion-duration-fast|base|slow` (150, 250, 350 ms), `--enchase-motion-ease-out` (`cubic-bezier(0.2, 0, 0, 1)`, a única curva de entrada e saída; o `defaultEase` do catálogo é a mesma) e `--enchase-motion-ease-in-out` (`cubic-bezier(0.4, 0, 0.2, 1)`, só para o que já está na tela e se move), mais `--enchase-motion-distance-xs|sm|md` (2, 12 e 32 px: `lift`, `pop` e `slide`). Entrada com `ease-out`; saída mais curta que a entrada.
+- Presença (montar e desmontar com saída animada): `usePresence(open, { exitMs })` de `@hooks/usePresence.ts` devolve `{ mounted, state, ref }`, com `state` em `entering | open | exiting | closed`. O CSS anima por `data-state`; o hook mantém o elemento montado até o `transitionend` ou `animationend` do próprio elemento (ou `exitMs`, padrão 300 ms) e aceita reabrir no meio da saída. Não usa `window` na renderização.
+- Hover só dentro de `@media (hover: hover) and (pointer: fine)` escrito por extenso (custom media não entrou: precisaria do transformador Lightning CSS em todas as configs); o toque ganha feedback por `:active`. O teste `hoverGating` tem uma lista dos componentes que ainda têm `:hover` fora da media query: nenhum entra nela, e quem for corrigido sai dela.
 - `prefers-reduced-motion`: movimento espacial vira fade; nada depende de movimento para ser entendido.
 - Interrompível: reverter no meio do caminho parte do estado atual.
 - Arrastar exige alternativa por clique ou teclado e anúncio em `aria-live` (WCAG 2.5.7).
 
 **Tokens para presets**
-- Altura de controle, raio, sombra e duração vêm de variáveis `--enchase-*` do tema, para um preset trocar a pele sem mexer na estrutura. Sem valor fixo desses quatro dentro do CSS do componente.
+- Altura de controle (`--enchase-control-height-sm|md|lg`: 2, 2,5 e 3 rem), raio de controle (`--enchase-radius-control`, 0,5 rem), sombra (`--enchase-shadow-*`) e duração (`--enchase-motion-duration-*`) vêm de variáveis do tema, para um preset trocar a pele sem mexer na estrutura. Sem valor fixo desses quatro dentro do CSS do componente.
 
 **Acessibilidade e testes**
 - Alvo mínimo de 24x24 px (WCAG 2.5.8); foco visível; nome acessível vem de `labels`, nunca de texto fixo.
