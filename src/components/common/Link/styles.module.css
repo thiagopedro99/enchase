@@ -1,0 +1,18 @@
+:where(.link) {
+  color: var(--enchase-color-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  border-radius: var(--enchase-radius-sm);
+  transition: color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+}
+
+:where(.link):focus-visible {
+  outline: 2px solid var(--enchase-color-primary);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :where(.link):hover {
+    color: var(--enchase-color-primary-hover);
+  }
+}

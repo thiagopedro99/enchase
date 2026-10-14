@@ -1,10 +1,12 @@
 import { useNavigator } from '@hooks/useNavigator.ts'
+import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { shouldNavigate } from '@utils/href.ts'
+import styles from './styles.module.css'
 
 import type { LinkProps } from './types.ts'
 import type { MouseEvent } from 'react'
 
-export const Link = ({ href, onClick, target, download, native, ...props }: LinkProps) => {
+export const Link = ({ href, onClick, target, download, native, rel, ...props }: LinkProps) => {
   const navigate = useNavigator()
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
@@ -16,7 +18,17 @@ export const Link = ({ href, onClick, target, download, native, ...props }: Link
     navigate(href)
   }
 
-  return <a {...props} href={href} target={target} download={download} onClick={handleClick} />
+  const own = {
+    ...slot('link'),
+    className: styles.link,
+    href,
+    target,
+    download,
+    rel: rel ?? (target === '_blank' ? 'noopener noreferrer' : undefined),
+    onClick: handleClick
+  }
+
+  return <a {...mergeProps(own, props)} />
 }
 
 export default Link

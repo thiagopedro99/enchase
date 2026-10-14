@@ -1,5 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { axe } from '@tests/axe.ts'
 
 import { Link } from '@components/common/Link/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
@@ -122,5 +123,37 @@ describe('Link', () => {
 
     expect(onClick).toHaveBeenCalledTimes(1)
     expect(navigate).toHaveBeenCalledWith('/docs')
+  })
+
+  it('marks the root with a data-slot and merges the class and style of the caller', () => {
+    renderLink({ className: 'mine', style: { color: 'red' } })
+
+    expect(link()).toHaveAttribute('data-slot', 'link')
+    expect(link().getAttribute('class')).toMatch(/link/)
+    expect(link()).toHaveClass('mine')
+    expect(link().style.color).toBe('red')
+  })
+
+  it('adds rel noopener noreferrer to a new tab link unless the caller sets one', () => {
+    const { unmount } = renderLink({ target: '_blank' })
+
+    expect(link()).toHaveAttribute('rel', 'noopener noreferrer')
+
+    unmount()
+    renderLink({ target: '_blank', rel: 'me' })
+
+    expect(link()).toHaveAttribute('rel', 'me')
+  })
+
+  it('has no rel on a plain link', () => {
+    renderLink()
+
+    expect(link()).not.toHaveAttribute('rel')
+  })
+
+  it('has no axe violations', async () => {
+    const { container } = renderLink()
+
+    expect(await axe(container)).toHaveNoViolations()
   })
 })
