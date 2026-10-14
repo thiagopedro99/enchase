@@ -39,13 +39,12 @@ describe('Layout with sidebar (default, desktop)', () => {
     expect(screen.queryByRole('button', { name: 'Abrir menu' })).not.toBeInTheDocument()
   })
 
-  it('exposes banner, navigation, main and contentinfo landmarks and sets the document title', () => {
+  it('exposes banner, navigation, main and contentinfo landmarks', () => {
     renderWithProviders(page({ pageTitle: 'Minha página' }))
 
     expect(screen.getByRole('banner')).toBeInTheDocument()
     expect(screen.getByRole('main')).toBeInTheDocument()
     expect(screen.getByRole('contentinfo')).toBeInTheDocument()
-    expect(document.title).toBe('Minha página · Enchase')
   })
 
   it('credits the project and its license in the footer with the current year', () => {
@@ -54,10 +53,11 @@ describe('Layout with sidebar (default, desktop)', () => {
     expect(screen.getByRole('contentinfo')).toHaveTextContent(`© ${new Date().getFullYear()} Enchase. Licença MIT.`)
   })
 
-  it('puts the brand after the page title in the document title', () => {
+  it('leaves the document title to the page', () => {
+    document.title = 'Original'
     renderWithProviders(page({ pageTitle: 'Painel', brand: 'Aurora' }))
 
-    expect(document.title).toBe('Painel · Aurora')
+    expect(document.title).toBe('Original')
   })
 
   it('offers the documentation as a plain link in the default navigation', () => {

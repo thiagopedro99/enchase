@@ -22,7 +22,7 @@ const mainId = 'main-content'
 
 const Layout = ({
   children,
-  pageTitle = 'Meu App',
+  pageTitle,
   maxWidth = 'lg',
   padding = true,
   hideNavbar = false,
@@ -55,10 +55,6 @@ const Layout = ({
   const usesSidebar = navigation === 'sidebar' && !hideNavbar
   const sections = [...navigationSections, ...pageSections]
   const trail = breadcrumbs ?? deriveBreadcrumbs({ sections: navigationSections, pageSections, currentHref, pageTitle, activePageSectionId })
-
-  useEffect(() => {
-    document.title = `${pageTitle} · ${brand}`
-  }, [pageTitle, brand])
 
   useEffect(() => {
     if (isDesktop && sidebarOpen) setSidebarOpen(false)

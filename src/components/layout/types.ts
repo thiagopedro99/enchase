@@ -33,6 +33,6 @@ export type DeriveBreadcrumbsInput = {
   sections: SidebarSection[]
   pageSections: SidebarSection[]
   currentHref?: string
-  pageTitle: string
+  pageTitle?: string
   activePageSectionId?: string
 }

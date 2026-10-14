@@ -16,7 +16,8 @@ export const deriveBreadcrumbs = ({ sections, pageSections, currentHref, pageTit
   const trail: BreadcrumbItem[] = []
 
   if (home && current?.id !== home.id) trail.push({ id: home.id, label: home.label, href: home.href })
-  trail.push(current ? { id: current.id, label: current.label, href: current.href } : { id: 'current-page', label: pageTitle })
+  if (current) trail.push({ id: current.id, label: current.label, href: current.href })
+  else if (pageTitle) trail.push({ id: 'current-page', label: pageTitle })
   if (section) trail.push({ id: section.id, label: section.label, href: section.href })
 
   return trail
