@@ -30,3 +30,4 @@ storybook-static
 .agents
 .claude/skills
 .claude/settings.local.json
+.vitest/
