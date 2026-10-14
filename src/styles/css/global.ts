@@ -1,6 +1,7 @@
 import { vars } from './vars.ts'
 
 export const globalStylesCss = `
+  @layer enchase-base {
   *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -122,5 +123,6 @@ export const globalStylesCss = `
   ::selection {
     background-color: ${vars.color.primaryContainer};
     color: ${vars.color.onPrimaryContainer};
+  }
   }
 `
