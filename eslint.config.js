@@ -23,7 +23,7 @@ export default tseslint.config(
   },
   {
     files: ['src/**/*.{ts,tsx}'],
-    ignores: ['src/docs/**', 'src/components/**'],
+    ignores: ['src/docs/**', 'src/components/**', 'src/tests/lib/**'],
     rules: {
       'no-restricted-imports': ['error', { patterns: ['enchase', 'enchase/*', '**/lib/*'] }]
     }
