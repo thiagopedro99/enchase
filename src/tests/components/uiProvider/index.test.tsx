@@ -1,6 +1,9 @@
 import { render, screen } from '@testing-library/react'
+import { renderToString } from 'react-dom/server'
 import { describe, expect, it, vi } from 'vitest'
 
+import { ColorModeProvider } from '@components/colorMode/index.tsx'
+import Layout from '@components/layout/index.tsx'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { useNavigator } from '@hooks/useNavigator.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -111,5 +114,34 @@ describe('UIProvider navigation', () => {
     render(<UIProvider labels={{ closeModal: 'Close dialog' }}>{probes}</UIProvider>)
 
     expect(screen.getByTestId('label')).toHaveTextContent('Close dialog')
+  })
+})
+
+describe('UIProvider on the server', () => {
+  it('writes the responsive rules of the layout and the navbar from the configured breakpoints', () => {
+    const html = renderToString(
+      <UIProvider breakpoints={{ md: '1000px' }}>
+        <p>x</p>
+      </UIProvider>
+    )
+
+    expect(html).toContain("[data-slot='layout'][data-layout='auto'][data-breakpoint='md']")
+    expect(html).toContain('@media not all and (min-width: 1000px)')
+    expect(html).toContain("[data-slot='navbar'][data-layout='auto'][data-breakpoint='lg']")
+    expect(html).toContain('@media (min-width: 992px)')
+  })
+
+  it('renders the layout with the wide default and an automatic layout marker', () => {
+    const html = renderToString(
+      <ColorModeProvider>
+        <UIProvider>
+          <Layout navigationSections={[{ id: 'n', items: [{ id: 'a', label: 'Home', href: '/' }] }]}>x</Layout>
+        </UIProvider>
+      </ColorModeProvider>
+    )
+
+    expect(html).toContain('data-layout="auto"')
+    expect(html).toContain('data-slot="layout-sidebar"')
+    expect(html).toContain('data-sidebar')
   })
 })

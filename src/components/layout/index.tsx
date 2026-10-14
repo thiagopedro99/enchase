@@ -7,6 +7,7 @@ import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { useStoredCollapsed } from '@hooks/useStoredCollapsed.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
+import { useIsClient } from '@hooks/useIsClient.ts'
 import { Container } from '@components/common/index.ts'
 import AppBar from './subcomponentes/AppBar/index.tsx'
 import { deriveBreadcrumbs } from './breadcrumbs.ts'
@@ -50,7 +51,8 @@ const Layout = ({
   const { labels, breakpoints } = useUIConfig()
   const navId = useId()
   const currentHref = useCurrentHref()
-  const isDesktop = useMediaQuery(`(min-width: ${breakpoints[breakpoint]})`)
+  const isDesktop = useMediaQuery(`(min-width: ${breakpoints[breakpoint]})`, true)
+  const isClient = useIsClient()
   const [collapsed, setCollapsed] = useControllableState(collapsedProp, defaultCollapsed, onCollapsedChange)
   const [sidebarOpen, setSidebarOpen] = useControllableState(openProp, defaultOpen, onOpenChange)
   useStoredCollapsed(collapsedProp === undefined ? storageKey : undefined, collapsed, setCollapsed)
@@ -63,7 +65,7 @@ const Layout = ({
     if (isDesktop && sidebarOpen) setSidebarOpen(false)
   }, [isDesktop, sidebarOpen, setSidebarOpen])
 
-  const own = { ...slot('layout'), className: styles.wrapper, 'data-layout': isDesktop ? 'wide' : 'compact', 'data-sidebar': usesSidebar && isDesktop ? '' : undefined }
+  const own = { ...slot('layout'), className: styles.wrapper, 'data-layout': isClient ? (isDesktop ? 'wide' : 'compact') : 'auto', 'data-breakpoint': breakpoint,'data-sidebar': usesSidebar && isDesktop ? '' : undefined }
 
   return (
     <div {...mergeProps(own, props)}>

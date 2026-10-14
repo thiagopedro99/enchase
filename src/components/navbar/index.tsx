@@ -11,6 +11,7 @@ import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
+import { useIsClient } from '@hooks/useIsClient.ts'
 import { exitMilliseconds } from '@motion/css.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
@@ -82,9 +83,8 @@ const Navbar = ({ logo = 'Logo', breakpoint = 'md', sections = defaultSections, 
   const [mobileOpen, setMobileOpen] = useState(false)
   const drawerId = useId()
   const { labels, breakpoints } = useUIConfig()
-  const matchesWide = useMediaQuery(`(min-width: ${breakpoints[breakpoint]})`)
-  const [hydrated, setHydrated] = useState(false)
-  const wide = hydrated && matchesWide
+  const wide = useMediaQuery(`(min-width: ${breakpoints[breakpoint]})`, true)
+  const isClient = useIsClient()
   const motionStyle = useMotionStyle('slide', drawerOverride, 'right')
   const reduced = useMediaQuery(reducedMotionQuery)
   const { mounted, state, ref } = usePresence<HTMLDivElement>(mobileOpen, { exitMs: reduced ? 0 : exitMilliseconds(motionStyle) + exitPadding })
@@ -94,14 +94,12 @@ const Navbar = ({ logo = 'Logo', breakpoint = 'md', sections = defaultSections, 
 
   const wasWide = useRef(wide)
 
-  useEffect(() => setHydrated(true), [])
-
   useEffect(() => {
     if (wide && !wasWide.current) setMobileOpen(false)
     wasWide.current = wide
   }, [wide])
 
-  const headerProps = mergeProps({ ...slot('navbar'), className: styles.header, 'data-layout': wide ? 'wide' : 'compact' }, { className, style })
+  const headerProps = mergeProps({ ...slot('navbar'), className: styles.header, 'data-layout': isClient ? (wide ? 'wide' : 'compact') : 'auto', 'data-breakpoint': breakpoint }, { className, style })
 
   return (
     <>

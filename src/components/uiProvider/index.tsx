@@ -4,6 +4,7 @@ import { MotionConfig } from 'motion/react'
 import { CurrentHrefContext, NavigateContext } from './navigationContext.ts'
 import { defaultMotionSettings } from '../../motion/defaultData.ts'
 import { defaultBreakpoints, defaultDir, defaultLabels } from './defaultData.ts'
+import { breakpointCss } from './breakpointCss.ts'
 import { UIContext } from './context.ts'
 
 import type { UIProviderProps } from './types.ts'
@@ -22,7 +23,9 @@ export const UIProvider = ({ children, motion, locale, labels, breakpoints, navi
     [motion, locale, labels, breakpoints]
   )
 
-  const stableNavigate = useMemo(() => (hasNavigate ? (href: string) => navigateRef.current?.(href) : undefined), [hasNavigate])
+  const responsiveCss = useMemo(() => breakpointCss(value.breakpoints), [value.breakpoints])
+
+  const stableNavigate =useMemo(() => (hasNavigate ? (href: string) => navigateRef.current?.(href) : undefined), [hasNavigate])
 
   useEffect(() => {
     navigateRef.current = navigate
@@ -32,6 +35,7 @@ export const UIProvider = ({ children, motion, locale, labels, breakpoints, navi
     <UIContext.Provider value={value}>
       <NavigateContext.Provider value={stableNavigate}>
         <CurrentHrefContext.Provider value={currentHref}>
+          <style>{responsiveCss}</style>
           <MotionConfig reducedMotion={value.motion.mode === 'never' ? 'always' : 'user'}>{children}</MotionConfig>
         </CurrentHrefContext.Provider>
       </NavigateContext.Provider>
