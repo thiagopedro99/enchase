@@ -83,7 +83,7 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 ## Layout e navegação
 
 - Páginas sempre dentro de `Layout` (`@components/layout`). A navegação padrão é `navigation="sidebar"`; `navigation="navbar"` usa a barra superior. Nunca montar `Sidebar` ou `Navbar` direto em uma página.
-- Itens de menu vêm de `SidebarSection[]`: rota com `to`, âncora com `href` e ação com `onClick`. Seções específicas da página entram por `pageSections`, com `activePageSectionId` vindo de `useScrollSpy`.
+- Itens de menu vêm de `SidebarSection[]`: rota com `href` (`/caminho`), âncora com `href` (`#id`) e ação com `onClick`. Seções específicas da página entram por `pageSections`, com `activePageSectionId` vindo de `useScrollSpy`.
 - O `Sidebar` é um componente reutilizável com duas variantes (`permanent` e `modal`) e estado recolhido controlado por quem o usa. No `Layout`, o estado recolhido fica em `useAppStore` (`sidebarCollapsed`) e a abertura do drawer em `sidebarOpen`; o botão que recolhe e abre o menu mora na `AppBar` do `Layout`, não no rodapé da sidebar.
 - A `AppBar` do `Layout` reúne botão de menu, `Breadcrumbs` e ações (tema). O botão de menu usa `MenuToggleIcon` (ícone de menu aberto quando expandido, hambúrguer quando fechado, com troca animada) e um `Tooltip` com `describe={false}` repetindo o rótulo da ação atual. A trilha vem da prop `breadcrumbs` ou é derivada do menu e da rota (`deriveBreadcrumbs`); o último item é sempre a página atual, sem link.
 - `header` e `footer` do `Sidebar` aceitam um nó ou uma função `({ collapsed }) => nó`, para o conteúdo se adaptar ao modo recolhido (marca compacta, avatar sem nome).

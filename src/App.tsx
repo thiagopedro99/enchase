@@ -1,22 +1,18 @@
-import { BrowserRouter } from 'react-router-dom'
-
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
+import UIProvider from '@components/uiProvider/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
 import { GlobalStyles } from '@styles/react.tsx'
-import RouterBridge from '@routes/RouterBridge.tsx'
-import Router from '@routes/index.tsx'
+import Home from '@pages/home/index.tsx'
 
 const App = () => (
-  <BrowserRouter>
-    <ColorModeProvider>
-      <GlobalStyles />
-      <RouterBridge>
-        <ToastProvider>
-          <Router />
-        </ToastProvider>
-      </RouterBridge>
-    </ColorModeProvider>
-  </BrowserRouter>
+  <ColorModeProvider>
+    <GlobalStyles />
+    <UIProvider>
+      <ToastProvider>
+        <Home />
+      </ToastProvider>
+    </UIProvider>
+  </ColorModeProvider>
 )
 
 export default App

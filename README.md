@@ -18,7 +18,6 @@ Este template fornece uma base sólida para iniciar projetos React com TypeScrip
 - **React 19** com TypeScript para desenvolvimento type-safe
 - **Vite** para build ultra-rápido e Hot Module Replacement otimizado
 - **CSS Modules** com variáveis CSS para estilização, sem biblioteca de estilo em tempo de execução
-- **React Router** para navegação client-side
 - **Zustand** para gerenciamento de estado global leve e eficiente
 - **Axios** configurado para requisições HTTP
 - **Sistema de temas** (claro, escuro e sistema) configurável com `createTheme`, com validação dos valores e aviso de contraste
@@ -42,8 +41,7 @@ Este template fornece uma base sólida para iniciar projetos React com TypeScrip
 - Lucide React 0.544.0 (ícones)
 - Figtree (`@fontsource-variable/figtree`)
 
-### Roteamento e Estado
-- React Router DOM 7.6.0
+### Estado
 - Zustand 5.0.4
 
 ### HTTP Client
@@ -106,8 +104,7 @@ src/
 ├── docs/            # Storybook: stories, páginas MDX e decorators
 ├── hooks/           # Custom React hooks
 ├── motion/          # Catálogo de receitas de animação
-├── pages/           # Páginas da aplicação (home e notFound)
-├── routes/          # Configuração de rotas
+├── pages/           # Páginas da aplicação (home)
 ├── stores/          # Gerenciamento de estado (Zustand)
 │   ├── app/         # Estado global da aplicação
 │   └── data/        # Estado de dados específicos
@@ -239,13 +236,13 @@ O `Sidebar` também pode ser usado sozinho:
 
 ```tsx
 <Sidebar
-  sections={[{ id: 'app', title: 'Navegação', items: [{ id: 'home', label: 'Início', icon: Home, to: '/' }] }]}
+  sections={[{ id: 'app', title: 'Navegação', items: [{ id: 'home', label: 'Início', icon: Home, href: '/' }] }]}
   collapsed={collapsed}
   onToggleCollapsed={() => setCollapsed((current) => !current)}
 />
 ```
 
-Cada item pode ser uma rota (`to`), uma âncora (`href`) ou uma ação (`onClick`). Com `variant="modal"` ele vira um drawer com foco preso, página inerte e Esc para fechar.
+Cada item pode ser uma rota (`href: '/caminho'`), uma âncora (`href: '#id'`) ou uma ação (`onClick`); `native` faz o link sair do app em vez de navegar por dentro. Com `variant="modal"` ele vira um drawer com foco preso, página inerte e Esc para fechar.
 
 ## Acessibilidade e Movimento
 
@@ -257,7 +254,7 @@ Os componentes seguem WCAG 2.2 AA (foco visível, teclado, ARIA, contraste e alv
   labels={{ closeModal: 'Close dialog', closeToast: 'Dismiss' }}
 >
   <ToastProvider>
-    <Router />
+    <App />
   </ToastProvider>
 </UIProvider>
 ```
@@ -435,11 +432,22 @@ const { mode, resolvedMode, setMode, toggleMode } = useColorMode()
 
 Para começar sempre no claro, use `<ColorModeProvider defaultMode="light">`. Para desligar a persistência, `storage={null}`; para controlar de fora, passe `mode` e `onModeChange`.
 
-## Roteamento
+## Navegação
 
-### Adicionar Nova Rota
+Os componentes não dependem de nenhum roteador. Links internos (`/caminho`) são `<a href>` de verdade: um clique simples chama o `navigate` do `UIProvider`, e Ctrl, Cmd, Shift, botão do meio, `target`, `download`, `native` e URLs externas seguem o comportamento do navegador. Sem `navigate`, todos os links navegam normalmente (recarregando a página).
 
-1. Crie a página em `src/pages/`:
+```tsx
+<UIProvider navigate={(href) => router.push(href)} currentHref={pathname}>
+  <App />
+</UIProvider>
+```
+
+- **`navigate`**: recebe o `href` e leva o app até ele, com o roteador que você usar.
+- **`currentHref`**: caminho atual, usado para marcar o item ativo (`aria-current="page"`) e derivar os `Breadcrumbs`. A raiz `/` só é ativa por igualdade; os demais itens também ficam ativos nos subcaminhos.
+
+### Adicionar uma página
+
+Crie a página em `src/pages/` com o `Layout` e renderize-a no `App`:
 
 ```typescript
 // src/pages/minhaPage/index.tsx
@@ -454,23 +462,6 @@ const MinhaPage = () => {
 };
 
 export default MinhaPage;
-```
-
-2. Adicione a rota em `src/routes/routes.tsx`:
-
-```typescript
-import MinhaPage from '@pages/minhaPage';
-
-const routes = [
-  {
-    path: "/",
-    privateRoute: false,
-    routes: [
-      // ...
-      ["/minha-page", <MinhaPage />],
-    ],
-  },
-];
 ```
 
 ## Path Aliases
@@ -493,7 +484,6 @@ import Layout from '@components/layout';
 - `@utils/*` → `src/utils/*`
 - `@styles/*` → `src/styles/*`
 - `@assets/*` → `src/assets/*`
-- `@routes/*` → `src/routes/*`
 - `@motion/*` → `src/motion/*`
 - `@docs/*` → `src/docs/*`
 - `@tests/*` → `src/tests/*`

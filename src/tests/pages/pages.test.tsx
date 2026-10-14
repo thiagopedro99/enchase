@@ -5,13 +5,9 @@ import { axe } from '@tests/axe.ts'
 
 import { docsUrl } from '@components/layout/defaultData.ts'
 import { repositoryUrl } from '@pages/home/defaultData.ts'
-import NotFound from '@pages/notFound/index.tsx'
 import Home from '@pages/home/index.tsx'
 
-const pages = [
-  ['Home', Home],
-  ['NotFound', NotFound]
-] as const
+const pages = [['Home', Home]] as const
 
 const headingLevels = () => screen.getAllByRole('heading').map((heading) => Number(heading.tagName.slice(1)))
 

@@ -1,9 +1,7 @@
-import { MemoryRouter } from 'react-router-dom'
-
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
 import { GlobalStyles } from '@styles/react.tsx'
-import RouterBridge from '@routes/RouterBridge.tsx'
+import UIProvider from '@components/uiProvider/index.tsx'
 
 import type { Decorator } from '@storybook/react-vite'
 
@@ -12,15 +10,13 @@ export const withProviders: Decorator = (Story, context) => {
   const motion = context.globals.motion === 'never' ? 'never' : 'auto'
 
   return (
-    <MemoryRouter>
-      <ColorModeProvider mode={theme}>
-        <GlobalStyles />
-        <RouterBridge motion={{ mode: motion }}>
-          <ToastProvider>
-            <Story />
-          </ToastProvider>
-        </RouterBridge>
-      </ColorModeProvider>
-    </MemoryRouter>
+    <ColorModeProvider mode={theme}>
+      <GlobalStyles />
+      <UIProvider motion={{ mode: motion }}>
+        <ToastProvider>
+          <Story />
+        </ToastProvider>
+      </UIProvider>
+    </ColorModeProvider>
   )
 }

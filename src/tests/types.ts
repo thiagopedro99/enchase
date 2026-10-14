@@ -4,6 +4,7 @@ import type { ColorMode } from '@components/colorMode/types.ts'
 export type RenderWithProvidersOptions = {
   theme?: ColorMode
   route?: string
+  navigate?: (href: string) => void
   motion?: UIProviderProps['motion']
   labels?: UIProviderProps['labels']
 }

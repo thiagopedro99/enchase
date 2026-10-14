@@ -14,7 +14,6 @@ export default defineConfig({
       '@components': resolve(__dirname, './src/components'),
       '@actions': resolve(__dirname, './src/actions'),
       '@assets': resolve(__dirname, './src/assets'),
-      '@routes': resolve(__dirname, './src/routes'),
       '@styles': resolve(__dirname, './src/styles'),
       '@stores': resolve(__dirname, './src/stores'),
       '@utils': resolve(__dirname, './src/utils'),
@@ -92,7 +91,6 @@ export default defineConfig({
     include: [
       'react',
       'react-dom',
-      'react-router-dom',
       'zustand',
       'axios',
       'lucide-react',

@@ -1,4 +1,3 @@
-import { MemoryRouter } from 'react-router-dom'
 import { Home } from 'lucide-react'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
@@ -15,7 +14,7 @@ import { Button } from '@components/common/Button/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
-import RouterBridge from '@routes/RouterBridge.tsx'
+import UIProvider from '@components/uiProvider/index.tsx'
 import Layout from '@components/layout/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 import Footer from '@components/footer/index.tsx'
@@ -66,11 +65,9 @@ export const withProviders = ({ element, bare }: HydrationCase): ReactNode =>
   bare ? (
     element
   ) : (
-    <MemoryRouter>
-      <ColorModeProvider>
-        <RouterBridge>
-          <ToastProvider>{element}</ToastProvider>
-        </RouterBridge>
-      </ColorModeProvider>
-    </MemoryRouter>
+    <ColorModeProvider>
+      <UIProvider>
+        <ToastProvider>{element}</ToastProvider>
+      </UIProvider>
+    </ColorModeProvider>
   )

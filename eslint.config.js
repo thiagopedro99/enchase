@@ -18,7 +18,7 @@ export default tseslint.config(
   {
     files: ['src/components/**/*.{ts,tsx}'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: ['@docs/*'] }]
+      'no-restricted-imports': ['error', { patterns: ['@docs/*', 'react-router', 'react-router-dom', 'react-router/*', 'react-router-dom/*'] }]
     }
   },
   stylesBoundary(['src/styles/tokens/**/*.ts'], ['../**'], 'styles/tokens must not import anything from outside tokens, nor react'),
