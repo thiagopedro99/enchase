@@ -50,6 +50,10 @@ const meta = {
       description: 'Desativa o campo.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
+    },
+    wrapperClassName: {
+      description: 'Classe da raiz (data-slot="input"). className e style continuam no input nativo (data-slot="input-field").',
+      control: 'text'
     }
   }
 } satisfies Meta<typeof Input>

@@ -39,9 +39,6 @@ const ungatedHovers = (css: string) => {
 const baseline: Record<string, number> = {
   'common/Breadcrumbs': 2,
   'common/Card': 1,
-  'common/Checkbox': 1,
-  'common/Input': 3,
-  'common/Select': 3,
   'common/Sidebar': 2,
   'common/ThemeToggle': 1,
   'footer': 1,

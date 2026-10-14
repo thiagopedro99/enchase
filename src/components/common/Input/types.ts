@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes } from 'react'
+import type { CSSProperties, InputHTMLAttributes } from 'react'
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -6,4 +6,6 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   helperText?: string
   fullWidth?: boolean
   passwordToggle?: boolean
+  wrapperClassName?: string
+  wrapperStyle?: CSSProperties
 }

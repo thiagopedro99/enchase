@@ -1,4 +1,4 @@
-import type { SelectHTMLAttributes } from 'react'
+import type { CSSProperties, SelectHTMLAttributes } from 'react'
 
 export interface SelectOption {
   value: string | number
@@ -13,4 +13,6 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   options: SelectOption[]
   placeholder?: string
   fullWidth?: boolean
+  wrapperClassName?: string
+  wrapperStyle?: CSSProperties
 }

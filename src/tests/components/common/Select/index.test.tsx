@@ -35,3 +35,35 @@ describe('Select', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Select contract', () => {
+  it('marks the wrapper and every part with a data-slot', () => {
+    const { container } = renderWithProviders(<Select label="País" options={options} error="Obrigatório" />)
+
+    for (const part of ['select', 'select-control', 'select-field', 'select-label', 'select-outline', 'select-icon', 'select-error']) {
+      expect(container.querySelector(`[data-slot="${part}"]`), part).toBeInTheDocument()
+    }
+  })
+
+  it('keeps className and style on the native select and the wrapper ones on the root', () => {
+    const { container } = renderWithProviders(<Select label="País" options={options} className="mine" style={{ color: 'red' }} wrapperClassName="outer" wrapperStyle={{ margin: '3px' }} />)
+    const field = screen.getByLabelText('País')
+    const root = container.querySelector('[data-slot="select"]') as HTMLElement
+
+    expect(field.className.split(' ').at(-1)).toBe('mine')
+    expect(field.style.color).toBe('red')
+    expect(root.className.split(' ').at(-1)).toBe('outer')
+    expect(root.style.margin).toBe('3px')
+  })
+
+  it('flags the wrapper as invalid or disabled and wires the error to the field', () => {
+    const { container } = renderWithProviders(<Select label="País" options={options} error="Obrigatório" disabled />)
+    const root = container.querySelector('[data-slot="select"]') as HTMLElement
+    const field = screen.getByLabelText('País')
+
+    expect(root).toHaveAttribute('data-invalid')
+    expect(root).toHaveAttribute('data-disabled')
+    expect(field).toHaveAttribute('aria-invalid', 'true')
+    expect(field.getAttribute('aria-describedby')).toBe(screen.getByRole('alert').id)
+  })
+})

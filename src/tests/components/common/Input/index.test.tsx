@@ -137,3 +137,42 @@ describe('Input', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Input contract', () => {
+  it('marks the wrapper and every part with a data-slot', () => {
+    const { container } = renderWithProviders(<Input label="Senha" type="password" error="Obrigatório" />)
+
+    for (const part of ['input', 'input-control', 'input-field', 'input-label', 'input-outline', 'input-toggle', 'input-error']) {
+      expect(container.querySelector(`[data-slot="${part}"]`), part).toBeInTheDocument()
+    }
+  })
+
+  it('keeps className and style on the native input and the wrapper ones on the root', () => {
+    const { container } = renderWithProviders(<Input label="Nome" className="mine" style={{ color: 'red' }} wrapperClassName="outer" wrapperStyle={{ margin: '3px' }} />)
+    const field = screen.getByLabelText('Nome')
+    const root = container.querySelector('[data-slot="input"]') as HTMLElement
+
+    expect(field.className.split(' ').at(-1)).toBe('mine')
+    expect(field.style.color).toBe('red')
+    expect(field).toHaveAttribute('data-slot', 'input-field')
+    expect(root.className.split(' ').at(-1)).toBe('outer')
+    expect(root.style.margin).toBe('3px')
+  })
+
+  it('flags the wrapper as invalid or disabled and wires the error to the field', () => {
+    const { container } = renderWithProviders(<Input label="Nome" error="Obrigatório" disabled />)
+    const root = container.querySelector('[data-slot="input"]') as HTMLElement
+    const field = screen.getByLabelText('Nome')
+
+    expect(root).toHaveAttribute('data-invalid')
+    expect(root).toHaveAttribute('data-disabled')
+    expect(field).toHaveAttribute('aria-invalid', 'true')
+    expect(field.getAttribute('aria-describedby')).toBe(screen.getByRole('alert').id)
+  })
+
+  it('joins a caller aria-describedby with the helper text', () => {
+    renderWithProviders(<Input label="Nome" helperText="Dica" aria-describedby="extra" />)
+
+    expect(screen.getByLabelText('Nome').getAttribute('aria-describedby')).toBe(`extra ${screen.getByText('Dica').id}`)
+  })
+})

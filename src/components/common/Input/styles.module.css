@@ -1,12 +1,18 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--enchase-space-xs);
-  width: auto;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.wrapper[data-full-width] {
-  width: 100%;
+:where(.wrapper) {
+  gap: var(--enchase-space-xs);
+  inline-size: auto;
+}
+
+:where(.wrapper[data-full-width]) {
+  inline-size: 100%;
 }
 
 .field {
@@ -15,19 +21,25 @@
 }
 
 .input {
-  width: 100%;
-  min-width: 200px;
-  height: 56px;
-  padding: 0 var(--enchase-space-md);
-  font-size: var(--enchase-font-size-base);
+  box-sizing: border-box;
+  margin: 0;
   font-family: inherit;
   color: var(--enchase-color-text-primary);
   background-color: transparent;
   border: none;
-  border-radius: var(--enchase-radius-sm);
 }
 
-.input[data-has-toggle] {
+:where(.input) {
+  inline-size: 100%;
+  min-inline-size: 200px;
+  block-size: var(--enchase-input-height, 3.5rem);
+  padding-block: 0;
+  padding-inline: var(--enchase-space-md);
+  font-size: var(--enchase-font-size-base);
+  border-radius: var(--enchase-radius-control);
+}
+
+:where(.input[data-has-toggle]) {
   padding-inline-end: 3.5rem;
 }
 
@@ -38,7 +50,7 @@
 .input::placeholder {
   color: var(--enchase-color-text-placeholder);
   opacity: 1;
-  transition: opacity var(--enchase-transition-fast);
+  transition: opacity var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
 .input[data-has-label]::placeholder {
@@ -57,8 +69,9 @@
 .label {
   position: absolute;
   inset-inline-start: var(--enchase-space-md);
-  top: 50%;
-  max-width: calc(100% - 2rem);
+  inset-block-start: 50%;
+  max-inline-size: calc(100% - 2rem);
+  margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -66,11 +79,15 @@
   font-weight: var(--enchase-font-weight-regular);
   color: var(--enchase-color-text-secondary);
   transform: translateY(-50%);
-  transform-origin: top left;
+  transform-origin: left top;
   pointer-events: none;
   transition:
-    transform var(--enchase-transition-fast),
-    color var(--enchase-transition-fast);
+    transform var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+}
+
+.label:dir(rtl) {
+  transform-origin: right top;
 }
 
 .input:focus ~ .label,
@@ -97,16 +114,19 @@
 
 .outline {
   position: absolute;
-  inset: -5px 0 0 0;
-  min-width: 0;
+  inset-block: -5px 0;
+  inset-inline: 0;
+  box-sizing: border-box;
+  min-inline-size: 0;
   margin: 0;
-  padding: 0 var(--enchase-space-sm);
+  padding-block: 0;
+  padding-inline: var(--enchase-space-sm);
   font: inherit;
   text-align: start;
   pointer-events: none;
   border: 1px solid var(--enchase-color-border-strong);
-  border-radius: var(--enchase-radius-sm);
-  transition: border-color var(--enchase-transition-fast);
+  border-radius: var(--enchase-radius-control);
+  transition: border-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
 .outline[data-has-error] {
@@ -115,14 +135,14 @@
 
 .outline legend {
   display: block;
-  width: auto;
-  max-width: 0.01px;
-  height: 11px;
+  inline-size: auto;
+  max-inline-size: 0.01px;
+  block-size: 11px;
   padding: 0;
   font-size: var(--enchase-font-size-xs);
   visibility: hidden;
   white-space: nowrap;
-  transition: max-width var(--enchase-transition-fast);
+  transition: max-inline-size var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
 .outline legend span {
@@ -133,21 +153,24 @@
 }
 
 .outline[data-has-label] legend span {
-  padding: 0 var(--enchase-space-sm);
+  padding-block: 0;
+  padding-inline: var(--enchase-space-sm);
 }
 
 .input:focus ~ .outline legend,
 .input:not(:placeholder-shown) ~ .outline legend,
 .input:-webkit-autofill ~ .outline legend {
-  max-width: 100%;
+  max-inline-size: 100%;
 }
 
-.input:hover:not(:disabled):not(:focus) ~ .outline {
-  border-color: var(--enchase-color-text-primary);
-}
+@media (hover: hover) and (pointer: fine) {
+  .input:hover:not(:disabled):not(:focus) ~ .outline {
+    border-color: var(--enchase-color-text-primary);
+  }
 
-.input:hover:not(:disabled):not(:focus) ~ .outline[data-has-error] {
-  border-color: var(--enchase-color-error);
+  .input:hover:not(:disabled):not(:focus) ~ .outline[data-has-error] {
+    border-color: var(--enchase-color-error);
+  }
 }
 
 .input:focus ~ .outline {
@@ -165,28 +188,45 @@
 
 .toggle {
   position: absolute;
-  top: 50%;
+  inset-block-start: 50%;
   inset-inline-end: var(--enchase-space-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  box-sizing: border-box;
+  margin: 0;
   padding: 0;
+  font-family: inherit;
   background-color: transparent;
   border: none;
-  border-radius: var(--enchase-radius-full);
   color: var(--enchase-color-text-secondary);
   cursor: pointer;
   transform: translateY(-50%);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition:
-    background-color var(--enchase-transition-fast),
-    color var(--enchase-transition-fast);
+    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
-.toggle:hover:not(:disabled) {
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
-  color: var(--enchase-color-text-primary);
+:where(.toggle) {
+  inline-size: 40px;
+  block-size: 40px;
+  min-inline-size: 24px;
+  min-block-size: 24px;
+  border-radius: var(--enchase-radius-full);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--enchase-color-primary);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .toggle:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    color: var(--enchase-color-text-primary);
+  }
 }
 
 .toggle:disabled {

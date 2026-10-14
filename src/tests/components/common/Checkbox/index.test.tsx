@@ -53,3 +53,28 @@ describe('Checkbox', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Checkbox contract', () => {
+  it('marks the wrapper and every part with a data-slot', () => {
+    const { container } = renderWithProviders(<Checkbox label="Aceito" />)
+
+    for (const part of ['checkbox', 'checkbox-input', 'checkbox-box', 'checkbox-label']) {
+      expect(container.querySelector(`[data-slot="${part}"]`), part).toBeInTheDocument()
+    }
+  })
+
+  it('keeps className on the native input and the wrapper ones on the root', () => {
+    const { container } = renderWithProviders(<Checkbox label="Aceito" className="mine" wrapperClassName="outer" wrapperStyle={{ margin: '3px' }} />)
+    const root = container.querySelector('[data-slot="checkbox"]') as HTMLElement
+
+    expect(screen.getByRole('checkbox').className.split(' ').at(-1)).toBe('mine')
+    expect(root.className.split(' ').at(-1)).toBe('outer')
+    expect(root.style.margin).toBe('3px')
+  })
+
+  it('flags the wrapper as disabled', () => {
+    const { container } = renderWithProviders(<Checkbox label="Aceito" disabled />)
+
+    expect(container.querySelector('[data-slot="checkbox"]')).toHaveAttribute('data-disabled')
+  })
+})

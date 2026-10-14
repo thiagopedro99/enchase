@@ -1,12 +1,18 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--enchase-space-xs);
-  width: auto;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.wrapper[data-full-width] {
-  width: 100%;
+:where(.wrapper) {
+  gap: var(--enchase-space-xs);
+  inline-size: auto;
+}
+
+:where(.wrapper[data-full-width]) {
+  inline-size: 100%;
 }
 
 .field {
@@ -15,21 +21,26 @@
 }
 
 .select {
-  width: 100%;
-  min-width: 200px;
-  height: 56px;
-  padding-block: 0;
-  padding-inline: var(--enchase-space-md) 2.75rem;
-  font-size: var(--enchase-font-size-base);
+  box-sizing: border-box;
+  margin: 0;
   font-family: inherit;
   color: var(--enchase-color-text-primary);
   background-color: transparent;
   border: none;
-  border-radius: var(--enchase-radius-sm);
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+:where(.select) {
+  inline-size: 100%;
+  min-inline-size: 200px;
+  block-size: var(--enchase-input-height, 3.5rem);
+  padding-block: 0;
+  padding-inline: var(--enchase-space-md) 2.75rem;
+  font-size: var(--enchase-font-size-base);
+  border-radius: var(--enchase-radius-control);
 }
 
 .select option {
@@ -74,12 +85,12 @@
     border-radius: var(--enchase-radius-md);
     box-shadow: var(--enchase-shadow-md);
     opacity: 0;
-    transform: translateY(-4px);
+    transform: translateY(calc(-1 * var(--enchase-motion-distance-xs)));
     transition:
-      opacity var(--enchase-transition-fast),
-      transform var(--enchase-transition-fast),
-      overlay var(--enchase-transition-fast) allow-discrete,
-      display var(--enchase-transition-fast) allow-discrete;
+      opacity var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+      transform var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+      overlay var(--enchase-motion-duration-fast) allow-discrete,
+      display var(--enchase-motion-duration-fast) allow-discrete;
   }
 
   .select:open::picker(select) {
@@ -90,7 +101,7 @@
   @starting-style {
     .select:open::picker(select) {
       opacity: 0;
-      transform: translateY(-4px);
+      transform: translateY(calc(-1 * var(--enchase-motion-distance-xs)));
     }
   }
 
@@ -98,11 +109,13 @@
     display: flex;
     align-items: center;
     gap: var(--enchase-space-sm);
-    padding: 0.75rem var(--enchase-space-md);
+    padding-block: 0.75rem;
+    padding-inline: var(--enchase-space-md);
+    min-block-size: 24px;
     background-color: transparent;
-    border-radius: var(--enchase-radius-sm);
+    border-radius: var(--enchase-radius-control);
     cursor: pointer;
-    transition: background-color var(--enchase-transition-fast);
+    transition: background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
   }
 
   .select option::checkmark {
@@ -110,12 +123,14 @@
     margin-inline-start: auto;
   }
 
-  .select option:hover:not(:disabled),
-  .select option:focus-visible {
-    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+  @media (hover: hover) and (pointer: fine) {
+    .select option:hover:not(:disabled) {
+      background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    }
   }
 
   .select option:focus-visible {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
     outline: 2px solid var(--enchase-color-primary);
     outline-offset: -2px;
   }
@@ -139,8 +154,9 @@
 .label {
   position: absolute;
   inset-inline-start: var(--enchase-space-md);
-  top: 50%;
-  max-width: calc(100% - 4rem);
+  inset-block-start: 50%;
+  max-inline-size: calc(100% - 4rem);
+  margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -148,11 +164,15 @@
   font-weight: var(--enchase-font-weight-regular);
   color: var(--enchase-color-text-secondary);
   transform: translateY(-50%);
-  transform-origin: top left;
+  transform-origin: left top;
   pointer-events: none;
   transition:
-    transform var(--enchase-transition-fast),
-    color var(--enchase-transition-fast);
+    transform var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+}
+
+.label:dir(rtl) {
+  transform-origin: right top;
 }
 
 .select:focus ~ .label,
@@ -181,16 +201,19 @@
 
 .outline {
   position: absolute;
-  inset: -5px 0 0 0;
-  min-width: 0;
+  inset-block: -5px 0;
+  inset-inline: 0;
+  box-sizing: border-box;
+  min-inline-size: 0;
   margin: 0;
-  padding: 0 var(--enchase-space-sm);
+  padding-block: 0;
+  padding-inline: var(--enchase-space-sm);
   font: inherit;
   text-align: start;
   pointer-events: none;
   border: 1px solid var(--enchase-color-border-strong);
-  border-radius: var(--enchase-radius-sm);
-  transition: border-color var(--enchase-transition-fast);
+  border-radius: var(--enchase-radius-control);
+  transition: border-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
 .outline[data-has-error] {
@@ -199,14 +222,14 @@
 
 .outline legend {
   display: block;
-  width: auto;
-  max-width: 0.01px;
-  height: 11px;
+  inline-size: auto;
+  max-inline-size: 0.01px;
+  block-size: 11px;
   padding: 0;
   font-size: var(--enchase-font-size-xs);
   visibility: hidden;
   white-space: nowrap;
-  transition: max-width var(--enchase-transition-fast);
+  transition: max-inline-size var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
 .outline legend span {
@@ -217,21 +240,24 @@
 }
 
 .outline[data-has-label] legend span {
-  padding: 0 var(--enchase-space-sm);
+  padding-block: 0;
+  padding-inline: var(--enchase-space-sm);
 }
 
 .select:focus ~ .outline legend,
 .select:open ~ .outline legend,
 .select:has(option:checked:not([data-placeholder])) ~ .outline legend {
-  max-width: 100%;
+  max-inline-size: 100%;
 }
 
-.select:hover:not(:disabled):not(:focus) ~ .outline {
-  border-color: var(--enchase-color-text-primary);
-}
+@media (hover: hover) and (pointer: fine) {
+  .select:hover:not(:disabled):not(:focus) ~ .outline {
+    border-color: var(--enchase-color-text-primary);
+  }
 
-.select:hover:not(:disabled):not(:focus) ~ .outline[data-has-error] {
-  border-color: var(--enchase-color-error);
+  .select:hover:not(:disabled):not(:focus) ~ .outline[data-has-error] {
+    border-color: var(--enchase-color-error);
+  }
 }
 
 .select:focus ~ .outline,
@@ -252,11 +278,11 @@
 .icon {
   position: absolute;
   inset-inline-end: 1rem;
-  top: 50%;
+  inset-block-start: 50%;
   transform: translateY(-50%);
   pointer-events: none;
   color: var(--enchase-color-text-secondary);
-  transition: transform var(--enchase-transition-fast);
+  transition: transform var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
 .select:open ~ .icon {
@@ -266,11 +292,11 @@
 .icon::after {
   content: '';
   display: block;
-  width: 0;
-  height: 0;
+  inline-size: 0;
+  block-size: 0;
   border-inline-start: 5px solid transparent;
   border-inline-end: 5px solid transparent;
-  border-top: 5px solid currentColor;
+  border-block-start: 5px solid currentColor;
 }
 
 .error {

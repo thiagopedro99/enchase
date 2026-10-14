@@ -46,6 +46,10 @@ const meta = {
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
+    wrapperClassName: {
+      description: 'Classe da raiz (data-slot="select"). className e style continuam no select nativo (data-slot="select-field").',
+      control: 'text'
+    },
     defaultValue: {
       description: 'Valor inicial quando o campo não é controlado. Use vazio para mostrar o placeholder.',
       control: false

@@ -26,6 +26,10 @@ const meta = {
     checked: {
       description: 'Estado marcado quando o componente é controlado. Exige também onChange.',
       control: false
+    },
+    wrapperClassName: {
+      description: 'Classe da raiz (data-slot="checkbox"). className continua no input nativo (data-slot="checkbox-input").',
+      control: 'text'
     }
   }
 } satisfies Meta<typeof Checkbox>
