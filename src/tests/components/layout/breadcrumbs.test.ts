@@ -19,8 +19,8 @@ const sections: SidebarSection[] = [
   }
 ]
 
-const derive = (pathname: string, activePageSectionId?: string, overrides: Partial<Parameters<typeof deriveBreadcrumbs>[0]> = {}) =>
-  deriveBreadcrumbs({ sections, pageSections, pathname, pageTitle: 'Título da página', activePageSectionId, ...overrides })
+const derive = (currentHref: string | undefined, activePageSectionId?: string, overrides: Partial<Parameters<typeof deriveBreadcrumbs>[0]> = {}) =>
+  deriveBreadcrumbs({ sections, pageSections, currentHref, pageTitle: 'Título da página', activePageSectionId, ...overrides })
 
 describe('deriveBreadcrumbs', () => {
   it('returns only the home item on the home route', () => {

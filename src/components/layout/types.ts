@@ -25,7 +25,7 @@ export interface LayoutProps {
 export type DeriveBreadcrumbsInput = {
   sections: SidebarSection[]
   pageSections: SidebarSection[]
-  pathname: string
+  currentHref?: string
   pageTitle: string
   activePageSectionId?: string
 }

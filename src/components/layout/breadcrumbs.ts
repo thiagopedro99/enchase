@@ -8,10 +8,10 @@ type RouteItem = SidebarItem & { href: string }
 
 const isRoute = (item: SidebarItem): item is RouteItem => Boolean(item.href) && !item.native && isInternalHref(item.href as string)
 
-export const deriveBreadcrumbs = ({ sections, pageSections, pathname, pageTitle, activePageSectionId }: DeriveBreadcrumbsInput): BreadcrumbItem[] => {
+export const deriveBreadcrumbs = ({ sections, pageSections, currentHref, pageTitle, activePageSectionId }: DeriveBreadcrumbsInput): BreadcrumbItem[] => {
   const routes = sections.flatMap((section) => section.items).filter(isRoute)
   const home = routes.find((item) => item.href === '/')
-  const current = routes.filter((item) => isCurrentHref(item.href, pathname)).sort((a, b) => b.href.length - a.href.length)[0]
+  const current = routes.filter((item) => isCurrentHref(item.href, currentHref)).sort((a, b) => b.href.length - a.href.length)[0]
   const section = pageSections.flatMap((group) => group.items).find((item) => item.id === activePageSectionId)
   const trail: BreadcrumbItem[] = []
 

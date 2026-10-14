@@ -1,9 +1,9 @@
-import { useLocation } from 'react-router-dom'
 import { useEffect, useId } from 'react'
 
 import { defaultBrand, defaultBrandLogo, defaultCentered, defaultNavigationSections } from './defaultData.ts'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import AppSidebar from './subcomponentes/AppSidebar/index.tsx'
+import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { Container } from '@components/common/index.ts'
 import AppBar from './subcomponentes/AppBar/index.tsx'
@@ -38,7 +38,7 @@ const Layout = ({
 }: LayoutProps) => {
   const { labels } = useUIConfig()
   const navId = useId()
-  const { pathname } = useLocation()
+  const currentHref = useCurrentHref()
   const isDesktop = useMediaQuery(`(min-width: ${baseTokens.breakpoints.md})`)
   const collapsed = useAppStore((state) => state.sidebarCollapsed)
   const toggleCollapsed = useAppStore((state) => state.toggleSidebarCollapsed)
@@ -46,7 +46,7 @@ const Layout = ({
   const setSidebarOpen = useAppStore((state) => state.setSidebarOpen)
   const usesSidebar = navigation === 'sidebar' && !hideNavbar
   const sections = [...navigationSections, ...pageSections]
-  const trail = breadcrumbs ?? deriveBreadcrumbs({ sections: navigationSections, pageSections, pathname, pageTitle, activePageSectionId })
+  const trail = breadcrumbs ?? deriveBreadcrumbs({ sections: navigationSections, pageSections, currentHref, pageTitle, activePageSectionId })
 
   useEffect(() => {
     document.title = `${pageTitle} · ${brand}`

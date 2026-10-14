@@ -4,7 +4,6 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { navigationSections } from '@tests/shared/fixtures/navigationSections.ts'
 import { pageSections } from '@tests/shared/fixtures/pageSections.ts'
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
 import { setViewportWidth } from '@tests/viewport.ts'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
@@ -247,16 +246,26 @@ describe('Layout with sidebar (default, desktop)', () => {
   it('navigates through the provider from the brand', () => {
     const navigate = vi.fn()
     render(
-      <MemoryRouter>
-        <ColorModeProvider defaultMode="light" storage={null}>
-          <UIProvider navigate={navigate}>{page()}</UIProvider>
-        </ColorModeProvider>
-      </MemoryRouter>
+      <ColorModeProvider defaultMode="light" storage={null}>
+        <UIProvider navigate={navigate}>{page()}</UIProvider>
+      </ColorModeProvider>
     )
 
     fireEvent.click(screen.getByRole('link', { name: 'Enchase' }))
 
     expect(navigate).toHaveBeenCalledWith('/')
+  })
+
+  it('derives the breadcrumbs from the current href of the provider, without a router', () => {
+    render(
+      <ColorModeProvider defaultMode="light" storage={null}>
+        <UIProvider currentHref="/components">{page()}</UIProvider>
+      </ColorModeProvider>
+    )
+    const trail = screen.getByRole('navigation', { name: 'Trilha de navegação' })
+
+    expect(within(trail).getByRole('link', { name: 'Início' })).toHaveAttribute('href', '/')
+    expect(within(trail).getByText('Componentes')).toHaveAttribute('aria-current', 'page')
   })
 
   it('hides the navigation and the app bar with hideNavbar', () => {
