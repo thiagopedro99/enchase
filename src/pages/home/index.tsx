@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 
 import { ButtonLink, Container, Flex } from '@components/common/index.ts'
-import { docsUrl } from '@components/layout/defaultData.tsx'
-import { repositoryUrl } from './defaultData.ts'
+import { brand, brandLogo, docsUrl, footerProps, navigationSections, repositoryUrl } from './defaultData.tsx'
 import Layout from '@components/layout/index.tsx'
 import styles from './styles.module.css'
 
@@ -12,7 +11,7 @@ const Home = () => {
   }, [])
 
   return (
-    <Layout pageTitle="Início" centered storageKey="enchase-sidebar-collapsed">
+    <Layout pageTitle="Início" brand={brand} brandLogo={brandLogo} navigationSections={navigationSections} footerProps={footerProps} centered storageKey="enchase-sidebar-collapsed">
       <Container maxWidth="lg">
         <Flex direction="column" align="center" gap="2rem">
           <div className={styles.hero}>

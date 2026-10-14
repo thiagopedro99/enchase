@@ -1,6 +1,6 @@
 import { useEffect, useId } from 'react'
 
-import { defaultBrand, defaultBrandLogo, defaultCentered, defaultNavigationSections } from './defaultData.tsx'
+import { defaultCentered, defaultNavigationSections } from './defaultData.ts'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import AppSidebar from './subcomponentes/AppSidebar/index.tsx'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
@@ -29,8 +29,9 @@ const Layout = ({
   hideFooter = false,
   centered = defaultCentered,
   navigation = 'sidebar',
-  brand = defaultBrand,
-  brandLogo = defaultBrandLogo,
+  brand,
+  brandLogo,
+  footerProps,
   sidebarFooter,
   navigationSections = defaultNavigationSections,
   pageSections = [],
@@ -98,7 +99,7 @@ const Layout = ({
 
       {!hideFooter && (
         <div className={styles.footerArea}>
-          <Footer />
+          <Footer {...footerProps} />
         </div>
       )}
 

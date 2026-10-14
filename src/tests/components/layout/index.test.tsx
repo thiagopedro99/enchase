@@ -11,13 +11,13 @@ import { axe } from '@tests/axe.ts'
 import { ptBR } from '@locales/ptBR.ts'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
-import { docsUrl } from '@components/layout/defaultData.tsx'
+import { brand, brandLogo, docsUrl, footerProps, navigationSections as demoSections } from '@pages/home/defaultData.tsx'
 import Layout from '@components/layout/index.tsx'
 
 import type { DialogContractAdapter } from '@tests/shared/contracts/types.ts'
 
 const page = (props: Partial<Parameters<typeof Layout>[0]> = {}) => (
-  <Layout pageTitle="Teste" navigationSections={navigationSections} {...props}>
+  <Layout pageTitle="Teste" brand={brand} brandLogo={brandLogo} footerProps={footerProps} navigationSections={navigationSections} {...props}>
     <h1>Conteúdo</h1>
   </Layout>
 )
@@ -54,6 +54,19 @@ describe('Layout with sidebar (default, desktop)', () => {
     expect(screen.getByRole('contentinfo')).toHaveTextContent(`© ${new Date().getFullYear()} Enchase. Licença MIT.`)
   })
 
+  it('ships without a brand, a footer notice or navigation of its own', () => {
+    renderWithProviders(
+      <Layout>
+        <h1>Conteúdo</h1>
+      </Layout>
+    )
+
+    expect(screen.queryByRole('link', { name: 'Enchase' })).not.toBeInTheDocument()
+    expect(screen.getByRole('contentinfo')).toHaveTextContent(`© ${new Date().getFullYear()}`)
+    expect(screen.getByRole('contentinfo')).not.toHaveTextContent('Enchase')
+    expect(within(screen.getByRole('navigation', { name: 'Navegação principal' })).queryAllByRole('link')).toHaveLength(0)
+  })
+
   it('leaves the document title to the page', () => {
     document.title = 'Original'
     renderWithProviders(page({ pageTitle: 'Painel', brand: 'Aurora' }))
@@ -61,9 +74,9 @@ describe('Layout with sidebar (default, desktop)', () => {
     expect(document.title).toBe('Original')
   })
 
-  it('offers the documentation as a plain link in the default navigation', () => {
+  it('offers the documentation as a plain link in the demo navigation', () => {
     renderWithProviders(
-      <Layout pageTitle="Teste">
+      <Layout pageTitle="Teste" navigationSections={demoSections}>
         <h1>Conteúdo</h1>
       </Layout>
     )

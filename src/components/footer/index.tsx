@@ -19,7 +19,7 @@ const Footer = ({ companyName = defaultCompanyName, notice = defaultNotice, year
         )}
 
         <p className={styles.copyright}>
-          © {year} {companyName}. {notice}
+          {[`© ${year}`, companyName && `${companyName}.`, notice].filter(Boolean).join(' ')}
         </p>
       </Flex>
     </Container>

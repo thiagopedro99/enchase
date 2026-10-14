@@ -3,8 +3,7 @@ import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
-import { docsUrl } from '@components/layout/defaultData.tsx'
-import { repositoryUrl } from '@pages/home/defaultData.ts'
+import { docsUrl, repositoryUrl } from '@pages/home/defaultData.tsx'
 import Home from '@pages/home/index.tsx'
 
 const pages = [['Home', Home]] as const

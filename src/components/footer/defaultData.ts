@@ -1,8 +1,8 @@
 import type { FooterLink } from './types.ts'
 
-export const defaultCompanyName = 'Enchase'
+export const defaultCompanyName = ''
 
-export const defaultNotice = 'Licença MIT.'
+export const defaultNotice = ''
 
 export const defaultLinks: FooterLink[] = []
 

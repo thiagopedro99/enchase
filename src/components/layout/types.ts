@@ -1,3 +1,4 @@
+import type { FooterProps } from '../footer/types.ts'
 import type { BreadcrumbItem } from '../common/Breadcrumbs/types.ts'
 import type { SidebarSection, SidebarSlot } from '../common/Sidebar/types.ts'
 import type { ReactNode } from 'react'
@@ -15,6 +16,7 @@ export interface LayoutProps {
   navigation?: LayoutNavigation
   brand?: string
   brandLogo?: string
+  footerProps?: FooterProps
   sidebarFooter?: SidebarSlot
   navigationSections?: SidebarSection[]
   pageSections?: SidebarSection[]
