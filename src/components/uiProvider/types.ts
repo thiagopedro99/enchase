@@ -5,7 +5,9 @@ import type { ReactNode } from 'react'
 
 export type Breakpoints = typeof baseTokens.breakpoints
 
-export type BreakpointName = 'sm' | 'md' | 'lg' | 'xl'
+export type BreakpointKey = keyof Breakpoints
+
+export type BreakpointName = Exclude<BreakpointKey, 'xs'>
 
 export type UILabels = {
   closeModal: string

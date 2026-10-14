@@ -16,6 +16,10 @@ describe('styles public entry', () => {
     expect(typeof styles.globalStylesCss).toBe('string')
   })
 
+  it('ships the Bootstrap 5 breakpoints, mobile first', () => {
+    expect(styles.breakpoints).toEqual({ xs: '0px', sm: '576px', md: '768px', lg: '992px', xl: '1200px', xxl: '1400px' })
+  })
+
   it('does not expose any react component', () => {
     expect(Object.keys(styles)).not.toContain('GlobalStyles')
     expect(Object.keys(styles)).not.toContain('ThemeVariables')

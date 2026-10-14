@@ -227,6 +227,21 @@ O `Sidebar` também pode ser usado sozinho:
 
 Cada item pode ser uma rota (`href: '/caminho'`), uma âncora (`href: '#id'`) ou uma ação (`onClick`); `native` faz o link sair do app em vez de navegar por dentro. Com `variant="modal"` ele vira um drawer com foco preso, página inerte e Esc para fechar.
 
+## Responsividade e Breakpoints
+
+Os breakpoints seguem o Bootstrap 5 (mobile-first, `min-width`): `xs` 0, `sm` 576px, `md` 768px, `lg` 992px, `xl` 1200px e `xxl` 1400px. Valores em CSS não podem vir de variáveis dentro de `@media`, então o que muda de comportamento é decidido em JavaScript e exposto por atributo:
+
+```tsx
+<UIProvider breakpoints={{ md: '1000px' }}>
+  <Layout breakpoint="md" navigationSections={sections}>...</Layout>
+</UIProvider>
+```
+
+- **`UIProvider breakpoints`**: sobrescreve qualquer um dos seis valores, e vale para todos os componentes e hooks abaixo.
+- **`Layout breakpoint` e `Navbar breakpoint`** (`sm`, `md`, `lg`, `xl` ou `xxl`, padrão `md`): a partir dele o `Layout` mostra a sidebar permanente e o `Navbar` mostra os links no lugar do botão de menu. A raiz leva `data-layout="compact"` ou `"wide"`, para você estilizar por atributo.
+- **`useBreakpoint()`** (exportado de `enchase`): devolve `{ current, up(name), down(name) }`, lendo os valores do `UIProvider`. No primeiro render usa `matchMedia` do navegador (a decisão de servidor fica para o suporte a SSR).
+- **Sem breakpoint nenhum:** `Grid` (as colunas cabem sozinhas, com `--enchase-grid-min-column`, padrão 14rem), `Footer`, `Modal`, `toast` e `Breadcrumbs` se ajustam pela largura disponível, sem `@media`.
+
 ## Acessibilidade e Movimento
 
 Os componentes seguem WCAG 2.2 AA (foco visível, teclado, ARIA, contraste e alvos mínimos) e todas as animações vêm de um catálogo único de receitas (`src/motion/`), configurável pelo `UIProvider`:
