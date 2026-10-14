@@ -230,12 +230,12 @@ describe('Layout with sidebar (default, desktop)', () => {
     renderWithProviders(page())
     const banner = screen.getByRole('banner')
 
-    expect(banner.querySelector('[data-icon="menu-open"]')).toBeInTheDocument()
+    expect(banner.querySelector('[data-slot="icon-swap-item"][data-state="active"] [data-icon="menu-open"]')).toBeInTheDocument()
 
     await user.click(within(banner).getByRole('button', { name: 'Recolher menu lateral' }))
 
-    await waitFor(() => expect(banner.querySelector('[data-icon="menu"]')).toBeInTheDocument())
-    expect(banner.querySelector('[data-icon="menu-open"]')).not.toBeInTheDocument()
+    await waitFor(() => expect(banner.querySelector('[data-slot="icon-swap-item"][data-state="active"] [data-icon="menu"]')).toBeInTheDocument())
+    expect(banner.querySelector('[data-slot="icon-swap-item"][data-state="active"] [data-icon="menu-open"]')).not.toBeInTheDocument()
   })
 
   it('no longer renders a collapse button inside the sidebar', () => {

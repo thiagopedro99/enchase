@@ -1,4 +1,10 @@
-import type { ReactNode, SVGProps } from 'react'
+import type { HTMLAttributes, ReactNode, SVGProps } from 'react'
+
+export interface IconSwapProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
+  first: ReactNode
+  second: ReactNode
+  showSecond: boolean
+}
 
 export type IconProps = Omit<SVGProps<SVGSVGElement>, 'name'> & {
   size?: number

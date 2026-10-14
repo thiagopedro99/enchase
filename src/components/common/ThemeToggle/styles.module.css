@@ -1,21 +1,28 @@
-.button {
+:where(.button) {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
-  background-color: transparent;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-radius: var(--enchase-radius-full);
+  background-color: transparent;
   color: var(--enchase-color-text-secondary);
-  transition:
-    background-color var(--enchase-transition-fast),
-    color var(--enchase-transition-fast);
+  font-family: inherit;
   cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-.button:hover {
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
-  color: var(--enchase-color-text-primary);
+.button {
+  transition:
+    transform var(--enchase-button-duration, var(--enchase-motion-duration-fast)) var(--enchase-motion-ease-out),
+    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
 .button:focus-visible {
@@ -23,15 +30,24 @@
   outline-offset: 2px;
 }
 
-.icon {
-  width: 22px;
-  height: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.button[data-motion='press']:active {
+  transform: scale(var(--enchase-button-scale, 0.97));
 }
 
-.icon svg {
-  width: 100%;
-  height: 100%;
+@media (hover: hover) and (pointer: fine) {
+  .button:hover {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    color: var(--enchase-color-text-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button[data-motion]:active {
+    transform: none;
+  }
+}
+
+:where(.icon) {
+  inline-size: 22px;
+  block-size: 22px;
 }

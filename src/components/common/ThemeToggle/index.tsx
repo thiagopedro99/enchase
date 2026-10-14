@@ -1,29 +1,35 @@
-import { AnimatePresence, motion } from 'motion/react'
-
-import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { useColorMode } from '@hooks/useColorMode.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
+import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { resolveButtonMotion } from '../Button/motion.ts'
 import { MoonIcon } from '../Icon/icons/MoonIcon.tsx'
 import { SunIcon } from '../Icon/icons/SunIcon.tsx'
+import { IconSwap } from '../Icon/IconSwap.tsx'
 import Tooltip from '../Tooltip/index.tsx'
 import styles from './styles.module.css'
 
-const ThemeToggle = () => {
+import type { ThemeToggleProps } from './types.ts'
+
+const ThemeToggle = ({ animation, ...props }: ThemeToggleProps) => {
   const { resolvedMode, toggleMode } = useColorMode()
-  const { labels } = useUIConfig()
-  const pressMotion = useMotionRecipe('press')
-  const iconMotion = useMotionRecipe('pop')
+  const { labels, motion: settings } = useUIConfig()
+  const { motion, style } = resolveButtonMotion(settings, animation)
   const label = resolvedMode === 'light' ? labels.switchToDark : labels.switchToLight
+  const own = {
+    ...slot('theme-toggle'),
+    className: styles.button,
+    style,
+    type: 'button' as const,
+    onClick: toggleMode,
+    'aria-label': label,
+    'data-motion': motion
+  }
 
   return (
     <Tooltip text={label} position="bottom" describe={false}>
-      <motion.button {...pressMotion} type="button" className={styles.button} onClick={toggleMode} aria-label={label}>
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.span key={resolvedMode} {...iconMotion} className={styles.icon} aria-hidden="true">
-            {resolvedMode === 'light' ? <MoonIcon size={20} /> : <SunIcon size={20} />}
-          </motion.span>
-        </AnimatePresence>
-      </motion.button>
+      <button {...mergeProps(own, props)}>
+        <IconSwap className={styles.icon} data-slot="theme-toggle-icon" first={<MoonIcon size={20} />} second={<SunIcon size={20} />} showSecond={resolvedMode === 'dark'} />
+      </button>
     </Tooltip>
   )
 }

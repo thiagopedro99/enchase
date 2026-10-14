@@ -61,14 +61,14 @@ describe('AppBar', () => {
   it('shows the menu-open icon while expanded and the hamburger while collapsed', () => {
     const { container, unmount } = renderWithProviders(<AppBar {...baseProps} menuExpanded />)
 
-    expect(container.querySelector('[data-icon="menu-open"]')).toBeInTheDocument()
-    expect(container.querySelector('[data-icon="menu"]')).not.toBeInTheDocument()
+    expect(container.querySelector('[data-slot="icon-swap-item"][data-state="active"] [data-icon="menu-open"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-slot="icon-swap-item"][data-state="active"] [data-icon="menu"]')).not.toBeInTheDocument()
 
     unmount()
     const collapsed = renderWithProviders(<AppBar {...baseProps} menuExpanded={false} menuLabel="Expandir menu lateral" />)
 
-    expect(collapsed.container.querySelector('[data-icon="menu"]')).toBeInTheDocument()
-    expect(collapsed.container.querySelector('[data-icon="menu-open"]')).not.toBeInTheDocument()
+    expect(collapsed.container.querySelector('[data-slot="icon-swap-item"][data-state="active"] [data-icon="menu"]')).toBeInTheDocument()
+    expect(collapsed.container.querySelector('[data-slot="icon-swap-item"][data-state="active"] [data-icon="menu-open"]')).not.toBeInTheDocument()
   })
 
   it('shows the action as a tooltip on keyboard focus, without duplicating the accessible description', async () => {

@@ -37,7 +37,6 @@ const ungatedHovers = (css: string) => {
 }
 
 const baseline: Record<string, number> = {
-  'common/ThemeToggle': 1,
   'layout/subcomponentes/AppBar': 1,
   'layout/subcomponentes/Brand': 1,
   'layout/subcomponentes/SidebarUser': 1,

@@ -56,6 +56,42 @@ describe('ThemeToggle', () => {
     expect(screen.getByRole('button', { name: 'Dark mode' })).toBeInTheDocument()
   })
 
+  it('marks the root and the icon with slots and keeps the caller className, style and attributes', () => {
+    renderWithProviders(<ThemeToggle className="mine" style={{ color: 'red' }} id="tema" />, { theme: 'light' })
+    const button = screen.getByRole('button', { name: 'Mudar para tema escuro' })
+
+    expect(button).toHaveAttribute('data-slot', 'theme-toggle')
+    expect(button.className.split(' ').at(-1)).toBe('mine')
+    expect(button).toHaveStyle({ color: 'rgb(255, 0, 0)' })
+    expect(button).toHaveAttribute('id', 'tema')
+    expect(button.querySelector('[data-slot="theme-toggle-icon"]')).toBeInTheDocument()
+  })
+
+  it('crossfades the sun and the moon by attribute with both icons mounted', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<ThemeToggle />, { theme: 'light' })
+    const button = screen.getByRole('button', { name: 'Mudar para tema escuro' })
+    const active = () => button.querySelector('[data-slot="icon-swap-item"][data-state="active"] [data-icon]')?.getAttribute('data-icon')
+
+    expect(button.querySelectorAll('[data-icon]')).toHaveLength(2)
+    expect(active()).toBe('moon')
+
+    await user.click(button)
+
+    expect(active()).toBe('sun')
+  })
+
+  it('turns the press feedback off with animation false', () => {
+    const { unmount } = renderWithProviders(<ThemeToggle />)
+
+    expect(screen.getByRole('button')).toHaveAttribute('data-motion', 'press')
+
+    unmount()
+    renderWithProviders(<ThemeToggle animation={false} />)
+
+    expect(screen.getByRole('button')).toHaveAttribute('data-motion', 'off')
+  })
+
   it('has no axe violations', async () => {
     const { container } = renderWithProviders(<ThemeToggle />)
 
