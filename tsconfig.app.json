@@ -27,7 +27,7 @@
       "@assets/*": ["./src/assets/*"],
       "@styles/*": ["./src/styles/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@pages/*": ["./src/pages/*"],
+      "@demo/*": ["./demo/*"],
       "@utils/*": ["./src/utils/*"],
       "@motion/*": ["./src/motion/*"],
       "@tests/*": ["./src/tests/*"],
@@ -35,5 +35,5 @@
       "@locales/*": ["./src/locales/*"]
     }
   },
-  "include": ["src", "lib", ".storybook/**/*"]
+  "include": ["src", "lib", "demo", ".storybook/**/*"]
 }

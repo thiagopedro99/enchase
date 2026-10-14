@@ -1,7 +1,6 @@
-import { BookOpenIcon } from '@components/common/Icon/icons/BookOpenIcon.tsx'
-import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
+import { BookOpenIcon, HomeIcon } from './icons.tsx'
 
-import type { SidebarSection } from '@components/common/Sidebar/types.ts'
+import type { SidebarSection } from 'enchase'
 
 export const repositoryUrl = 'https://github.com/thiagopedro99/enchase'
 

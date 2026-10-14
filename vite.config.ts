@@ -21,7 +21,7 @@ export default defineConfig({
       '@hooks': resolve(__dirname, './src/hooks'),
       '@motion': resolve(__dirname, './src/motion'),
       '@tests': resolve(__dirname, './src/tests'),
-      '@pages': resolve(__dirname, './src/pages'),
+      '@demo': resolve(__dirname, './demo'),
       '@docs': resolve(__dirname, './src/docs'),
       '@locales': resolve(__dirname, './src/locales'),
     },

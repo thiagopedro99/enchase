@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 
-import { ButtonLink, Container, Flex } from '@components/common/index.ts'
+import { ButtonLink, Container, Flex, Layout } from 'enchase'
 import { brand, brandLogo, docsUrl, footerProps, navigationSections, repositoryUrl } from './defaultData.tsx'
-import Layout from '@components/layout/index.tsx'
 import styles from './styles.module.css'
 
 const Home = () => {

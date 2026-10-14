@@ -28,6 +28,12 @@ export default tseslint.config(
       'no-restricted-imports': ['error', { patterns: ['enchase', 'enchase/*', '**/lib/*'] }]
     }
   },
+  {
+    files: ['demo/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: ['@components/*', '@hooks/*', '@styles/*', '@motion/*', '@utils/*', '@locales/*', '@docs/*', '@tests/*', '**/src/*', '**/lib/*'] }]
+    }
+  },
   stylesBoundary(['src/styles/tokens/**/*.ts'], ['../**'], 'styles/tokens must not import anything from outside tokens, nor react'),
   stylesBoundary(['src/styles/theme/**/*.ts'], ['../css/**', '../react.tsx', '../index.ts', '../../**'], 'styles/theme may only import from styles/tokens, and must not use react'),
   stylesBoundary(['src/styles/css/**/*.ts'], ['../theme/**', '../react.tsx', '../index.ts', '../../**'], 'styles/css may only import from styles/tokens, and must not use react'),

@@ -11,7 +11,7 @@ import { axe } from '@tests/axe.ts'
 import { ptBR } from '@locales/ptBR.ts'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
-import { brand, brandLogo, docsUrl, footerProps, navigationSections as demoSections } from '@pages/home/defaultData.tsx'
+import { brand, brandLogo, demoSections, docsUrl, footerProps } from '@tests/shared/fixtures/layoutBranding.tsx'
 import Layout from '@components/layout/index.tsx'
 
 import type { DialogContractAdapter } from '@tests/shared/contracts/types.ts'
