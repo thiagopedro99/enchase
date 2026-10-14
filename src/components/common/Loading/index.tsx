@@ -1,64 +1,75 @@
 import { createPortal } from 'react-dom'
-import { motion } from 'motion/react'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { useInertSiblings } from '@hooks/useInertSiblings.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
-import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
+import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useScrollLock } from '@hooks/useScrollLock.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
-import { classNames } from '@utils/classNames.ts'
+import { usePresence } from '@hooks/usePresence.ts'
+import { resolveLoopMotion } from '@motion/loop.ts'
 import styles from './styles.module.css'
 
 import type { CSSProperties } from 'react'
-import type { InlineLoadingProps, LoadingProps } from './types.ts'
+import type { InlineLoadingProps, LoadingProps, SpinnerProps } from './types.ts'
 
-const spinnerColorStyle = (color?: string): CSSProperties | undefined => (color ? ({ '--spinner-color': color } as CSSProperties) : undefined)
+const Spinner = ({ part, size, color, animation }: SpinnerProps) => {
+  const { motion: settings } = useUIConfig()
+  const { motion, style } = resolveLoopMotion('spin', settings, animation)
+  const merged = { ...style, ...(color ? { '--spinner-color': color } : undefined) } as CSSProperties
 
-const OverlayLoading = ({ size, text, color, animation }: Required<Pick<LoadingProps, 'size'>> & Omit<LoadingProps, 'size' | 'overlay'>) => {
+  return <span {...slot(part, 'spinner')} className={styles.spinner} data-size={size} data-motion={motion} style={merged} aria-hidden="true" />
+}
+
+const OverlayLoading = ({ size, text, color, animation, ...props }: Required<Pick<LoadingProps, 'size'>> & Omit<LoadingProps, 'size' | 'overlay'>) => {
   const rootRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
-  const spinMotion = useMotionRecipe('spin', animation)
+  const [shown, setShown] = useState(false)
+  const { state } = usePresence(shown)
 
+  useEffect(() => setShown(true), [])
   useInertSiblings(rootRef)
   useScrollLock()
 
+  const own = { ...slot('loading'), className: styles.root, 'data-state': state }
+
   return (
-    <div ref={rootRef}>
-      <div className={styles.overlay} aria-hidden="true" />
-      <div className={styles.container} data-overlay="" role="status" aria-live="polite">
-        <motion.div {...spinMotion} className={styles.spinner} data-size={size} style={spinnerColorStyle(color)} aria-hidden="true" />
-        {text ? <p className={styles.text}>{text}</p> : <VisuallyHidden>{labels.loading}</VisuallyHidden>}
+    <div ref={rootRef} {...mergeProps(own, props)}>
+      <div {...slot('loading', 'backdrop')} className={styles.overlay} aria-hidden="true" />
+      <div {...slot('loading', 'content')} className={styles.container} data-overlay="" role="status" aria-live="polite">
+        <Spinner part="loading" size={size} color={color} animation={animation} />
+        {text ? <p {...slot('loading', 'text')} className={styles.text}>{text}</p> : <VisuallyHidden>{labels.loading}</VisuallyHidden>}
       </div>
     </div>
   )
 }
 
-export const Loading = ({ size = 'md', overlay = false, text, color, animation }: LoadingProps) => {
+export const Loading = ({ size = 'md', overlay = false, text, color, animation, ...props }: LoadingProps) => {
   const { labels } = useUIConfig()
-  const spinMotion = useMotionRecipe('spin', animation)
 
   if (overlay) {
     if (typeof document === 'undefined') return null
 
-    return createPortal(<OverlayLoading size={size} text={text} color={color} animation={animation} />, document.body)
+    return createPortal(<OverlayLoading size={size} text={text} color={color} animation={animation} {...props} />, document.body)
   }
 
+  const own = { ...slot('loading'), className: styles.container, role: 'status', 'aria-live': 'polite' as const }
+
   return (
-    <div className={styles.container} role="status" aria-live="polite">
-      <motion.div {...spinMotion} className={styles.spinner} data-size={size} style={spinnerColorStyle(color)} aria-hidden="true" />
-      {text ? <p className={styles.text}>{text}</p> : <VisuallyHidden>{labels.loading}</VisuallyHidden>}
+    <div {...mergeProps(own, props)}>
+      <Spinner part="loading" size={size} color={color} animation={animation} />
+      {text ? <p {...slot('loading', 'text')} className={styles.text}>{text}</p> : <VisuallyHidden>{labels.loading}</VisuallyHidden>}
     </div>
   )
 }
 
-export const InlineLoading = ({ size = 'sm', color, label, animation }: InlineLoadingProps) => {
+export const InlineLoading = ({ size = 'sm', color, label, animation, ...props }: InlineLoadingProps) => {
   const { labels } = useUIConfig()
-  const spinMotion = useMotionRecipe('spin', animation)
+  const own = { ...slot('inline-loading'), className: styles.inline, role: 'status' }
 
   return (
-    <span role="status">
-      <motion.div {...spinMotion} className={classNames(styles.spinner, styles.inlineSpinner)} data-size={size} style={spinnerColorStyle(color)} aria-hidden="true" />
+    <span {...mergeProps(own, props)}>
+      <Spinner part="inline-loading" size={size} color={color} animation={animation} />
       <VisuallyHidden>{label ?? labels.loading}</VisuallyHidden>
     </span>
   )

@@ -1,3 +1,12 @@
+.root > * {
+  transition: opacity var(--enchase-motion-duration-base) var(--enchase-motion-ease-out);
+}
+
+.root[data-state='closed'] > *,
+.root[data-state='entering'] > * {
+  opacity: 0;
+}
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -10,57 +19,71 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+:where(.container) {
   gap: var(--enchase-space-md);
 }
 
 .container[data-overlay] {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  translate: -50% -50%;
+  inset: 0;
+  margin: auto;
+  inline-size: fit-content;
+  block-size: fit-content;
   z-index: calc(var(--enchase-z-modal) + 1);
 }
 
+.inline {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
 .spinner {
+  display: inline-block;
+  flex-shrink: 0;
+  box-sizing: border-box;
   border-radius: 50%;
   border-style: solid;
   border-color: var(--enchase-color-border);
-  border-top-color: var(--spinner-color, var(--enchase-color-primary));
+  border-block-start-color: var(--spinner-color, var(--enchase-color-primary));
+}
+
+.spinner[data-motion='on'] {
+  animation: spin var(--enchase-spinner-duration, 0.8s) linear infinite;
 }
 
 .spinner[data-size='xs'] {
-  width: 16px;
-  height: 16px;
+  inline-size: 16px;
+  block-size: 16px;
   border-width: 2px;
 }
 
 .spinner[data-size='sm'] {
-  width: 24px;
-  height: 24px;
+  inline-size: 24px;
+  block-size: 24px;
   border-width: 3px;
 }
 
 .spinner[data-size='md'] {
-  width: 40px;
-  height: 40px;
+  inline-size: 40px;
+  block-size: 40px;
   border-width: 4px;
 }
 
 .spinner[data-size='lg'] {
-  width: 56px;
-  height: 56px;
+  inline-size: 56px;
+  block-size: 56px;
   border-width: 5px;
 }
 
 .spinner[data-size='xl'] {
-  width: 72px;
-  height: 72px;
+  inline-size: 72px;
+  block-size: 72px;
   border-width: 6px;
-}
-
-.inlineSpinner {
-  display: inline-block;
-  vertical-align: middle;
 }
 
 .text {
@@ -68,4 +91,31 @@
   color: var(--enchase-color-text-secondary);
   font-weight: var(--enchase-font-weight-medium);
   margin: 0;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner[data-motion='on'] {
+    animation: pulse 1.6s var(--enchase-motion-ease-in-out) infinite;
+  }
 }
