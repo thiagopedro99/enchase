@@ -24,6 +24,13 @@ export type TooltipAnchor = {
   left: number
 }
 
+export type TooltipBox = {
+  left: number
+  right: number
+  top: number
+  bottom: number
+}
+
 export type TooltipAnimation = {
   off: boolean
   duration: number

@@ -1,7 +1,7 @@
 import { cloneElement, isValidElement, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { closeDelay as defaultCloseDelay, crossAxisShift, defaultPosition, exitSafetyMs, openDelay as defaultOpenDelay, opposite, overflowsMainAxis, placeBubble, resolveAnimation, resolvePlacement } from './defaultData.ts'
+import { bubbleBox, closeDelay as defaultCloseDelay, crossAxisShift, defaultPosition, exitSafetyMs, openDelay as defaultOpenDelay, opposite, overflowsMainAxis, placeBubble, resolveAnimation, resolvePlacement } from './defaultData.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { classNames } from '@utils/classNames.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -88,14 +88,15 @@ export const Tooltip = ({
   useLayoutEffect(() => {
     const bubble = presence.ref.current
     const trigger = wrapperRef.current
-    if (!bubble || !trigger || presence.state !== 'entering') return
+    if (!bubble || !trigger || (presence.state !== 'entering' && presence.state !== 'open')) return
 
-    const bubbleRect = bubble.getBoundingClientRect()
-    if (bubbleRect.width === 0 && bubbleRect.height === 0) return
+    const size = { width: bubble.offsetWidth, height: bubble.offsetHeight }
+    if (size.width === 0 && size.height === 0) return
 
-    const viewport = { width: window.innerWidth, height: window.innerHeight }
+    const viewport = { width: document.documentElement.clientWidth, height: document.documentElement.clientHeight }
+    const box = bubbleBox(anchor, size, placement)
 
-    if (!flipped.current && overflowsMainAxis(bubbleRect, placement, viewport)) {
+    if (!flipped.current && overflowsMainAxis(box, placement, viewport)) {
       const next = opposite[placement]
 
       flipped.current = true
@@ -105,8 +106,8 @@ export const Tooltip = ({
       return
     }
 
-    setShift(crossAxisShift(bubbleRect, placement, viewport))
-  }, [presence.state, presence.ref, placement])
+    setShift(crossAxisShift(box, placement, viewport))
+  }, [presence.state, presence.ref, placement, anchor, text])
 
   const trigger = describe && isValidElement(children) ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, { 'aria-describedby': id }) : children
 

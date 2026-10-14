@@ -2,7 +2,7 @@ import { baseTuning, presetScale } from '@motion/defaultData.ts'
 
 import type { MotionOverride, MotionSettings } from '@motion/types.ts'
 import type { Direction } from '@locales/types.ts'
-import type { TooltipAnchor, TooltipAnimation, TooltipPlacement, TooltipPosition } from './types.ts'
+import type { TooltipAnchor, TooltipAnimation, TooltipBox, TooltipPlacement, TooltipPosition } from './types.ts'
 
 export const defaultPosition: TooltipPosition = 'top'
 
@@ -43,7 +43,15 @@ export const placeBubble = (rect: DOMRect, position: TooltipPlacement): TooltipA
   return placements[position]
 }
 
-export const overflowsMainAxis = (bubble: DOMRect, placement: TooltipPlacement, viewport: { width: number; height: number }) => {
+export const bubbleBox = (anchor: TooltipAnchor, size: { width: number; height: number }, placement: TooltipPlacement): TooltipBox => {
+  if (placement === 'top') return { left: anchor.left - size.width / 2, right: anchor.left + size.width / 2, top: anchor.top - size.height, bottom: anchor.top }
+  if (placement === 'bottom') return { left: anchor.left - size.width / 2, right: anchor.left + size.width / 2, top: anchor.top, bottom: anchor.top + size.height }
+  if (placement === 'left') return { left: anchor.left - size.width, right: anchor.left, top: anchor.top - size.height / 2, bottom: anchor.top + size.height / 2 }
+
+  return { left: anchor.left, right: anchor.left + size.width, top: anchor.top - size.height / 2, bottom: anchor.top + size.height / 2 }
+}
+
+export const overflowsMainAxis = (bubble: TooltipBox, placement: TooltipPlacement, viewport: { width: number; height: number }) => {
   if (placement === 'top') return bubble.top < viewportMargin
   if (placement === 'bottom') return bubble.bottom > viewport.height - viewportMargin
   if (placement === 'left') return bubble.left < viewportMargin
@@ -51,7 +59,7 @@ export const overflowsMainAxis = (bubble: DOMRect, placement: TooltipPlacement, 
   return bubble.right > viewport.width - viewportMargin
 }
 
-export const crossAxisShift = (bubble: DOMRect, placement: TooltipPlacement, viewport: { width: number; height: number }) => {
+export const crossAxisShift = (bubble: TooltipBox, placement: TooltipPlacement, viewport: { width: number; height: number }) => {
   const horizontal = placement === 'top' || placement === 'bottom'
   const start = horizontal ? bubble.left : bubble.top
   const end = horizontal ? bubble.right : bubble.bottom

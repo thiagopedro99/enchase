@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { cdp, page, userEvent } from 'vitest/browser'
 
@@ -95,6 +96,77 @@ describe('Tooltip flipping and shifting in a real browser', () => {
     await expect.poll(bubble).toBeTruthy()
 
     await expect.poll(() => (bubble() as HTMLElement).getBoundingClientRect().left).toBeGreaterThanOrEqual(7.5)
+  })
+})
+
+describe('Tooltip at the right edge in a real browser', () => {
+  const bubbleRight = () => (bubble() as HTMLElement).getBoundingClientRect().right
+  const visibleWidth = () => document.documentElement.clientWidth
+
+  it('keeps a long bubble inside the viewport when the trigger touches the right edge', async () => {
+    renderInBrowser(
+      <div style={{ position: 'absolute', top: 10, right: 0 }}>
+        <Tooltip text="Mudar para tema escuro" position="bottom">
+          <button>T</button>
+        </Tooltip>
+      </div>
+    )
+    await userEvent.hover(page.getByRole('button', { name: 'T' }))
+    await expect.poll(bubble).toBeTruthy()
+
+    await expect.poll(bubbleRight).toBeLessThanOrEqual(visibleWidth() - 7.5)
+  })
+
+  it('keeps it inside the visible area when the page has a scrollbar', async () => {
+    renderInBrowser(
+      <div style={{ height: 3000 }}>
+        <div style={{ position: 'absolute', top: 10, right: 0 }}>
+          <Tooltip text="Mudar para tema escuro" position="top">
+            <button>T</button>
+          </Tooltip>
+        </div>
+      </div>
+    )
+    await userEvent.hover(page.getByRole('button', { name: 'T' }))
+    await expect.poll(bubble).toBeTruthy()
+
+    await expect.poll(bubbleRight).toBeLessThanOrEqual(visibleWidth() - 7.5)
+  })
+
+  it('fits again when the text grows while the bubble is open', async () => {
+    const Toggle = () => {
+      const [dark, setDark] = useState(false)
+
+      return (
+        <div style={{ position: 'absolute', top: 10, right: 0 }}>
+          <Tooltip text={dark ? 'Mudar para tema claro muito longo' : 'Tema'} position="bottom">
+            <button onClick={() => setDark(true)}>T</button>
+          </Tooltip>
+        </div>
+      )
+    }
+    renderInBrowser(<Toggle />)
+    await userEvent.hover(page.getByRole('button', { name: 'T' }))
+    await expect.poll(bubble).toBeTruthy()
+    await userEvent.click(page.getByRole('button', { name: 'T' }))
+
+    await expect.poll(() => (bubble() as HTMLElement).textContent).toContain('muito longo')
+    await expect.poll(bubbleRight).toBeLessThanOrEqual(visibleWidth() - 7.5)
+  })
+
+  it('measures the final bubble, not the one that is still scaling in', async () => {
+    renderInBrowser(
+      <div style={{ position: 'absolute', top: 10, right: 0 }}>
+        <Tooltip text="Mudar para tema escuro" position="bottom" animation={{ recipe: 'pop' }}>
+          <button>T</button>
+        </Tooltip>
+      </div>
+    )
+    await userEvent.hover(page.getByRole('button', { name: 'T' }))
+    await expect.poll(bubble).toBeTruthy()
+    await new Promise((resolve) => setTimeout(resolve, 400))
+
+    expect(bubbleRight()).toBeLessThanOrEqual(visibleWidth() - 7.5)
   })
 })
 
