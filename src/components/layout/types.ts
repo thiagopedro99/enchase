@@ -23,6 +23,7 @@ export interface LayoutProps {
   collapsed?: boolean
   defaultCollapsed?: boolean
   onCollapsedChange?: (collapsed: boolean) => void
+  storageKey?: string
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void

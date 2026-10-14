@@ -5,7 +5,7 @@ import Layout from '@components/layout/index.tsx'
 import styles from './styles.module.css'
 
 const Home = () => (
-  <Layout pageTitle="Início" centered>
+  <Layout pageTitle="Início" centered storageKey="enchase-sidebar-collapsed">
     <Container maxWidth="lg">
       <Flex direction="column" align="center" gap="2rem">
         <div className={styles.hero}>

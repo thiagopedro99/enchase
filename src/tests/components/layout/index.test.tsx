@@ -187,6 +187,19 @@ describe('Layout with sidebar (default, desktop)', () => {
     expect(onCollapsedChange).toHaveBeenLastCalledWith(false)
   })
 
+  it('restores the collapsed state from storage only when a storage key is given', () => {
+    window.localStorage.setItem('layout-test', 'true')
+    const { unmount } = renderWithProviders(page())
+
+    expect(screen.getByRole('button', { name: 'Recolher menu lateral' })).toBeInTheDocument()
+
+    unmount()
+    renderWithProviders(page({ storageKey: 'layout-test' }))
+
+    expect(screen.getByRole('button', { name: 'Expandir menu lateral' })).toBeInTheDocument()
+    window.localStorage.clear()
+  })
+
   it('stays collapsed when controlled and only reports the requested change', async () => {
     const user = userEvent.setup()
     const onCollapsedChange = vi.fn()

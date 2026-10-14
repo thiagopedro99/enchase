@@ -4,6 +4,7 @@ import { defaultBrand, defaultBrandLogo, defaultCentered, defaultNavigationSecti
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import AppSidebar from './subcomponentes/AppSidebar/index.tsx'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
+import { useStoredCollapsed } from '@hooks/useStoredCollapsed.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { Container } from '@components/common/index.ts'
 import AppBar from './subcomponentes/AppBar/index.tsx'
@@ -38,6 +39,7 @@ const Layout = ({
   collapsed: collapsedProp,
   defaultCollapsed = false,
   onCollapsedChange,
+  storageKey,
   open: openProp,
   defaultOpen = false,
   onOpenChange
@@ -48,6 +50,7 @@ const Layout = ({
   const isDesktop = useMediaQuery(`(min-width: ${baseTokens.breakpoints.md})`)
   const [collapsed, setCollapsed] = useControllableState(collapsedProp, defaultCollapsed, onCollapsedChange)
   const [sidebarOpen, setSidebarOpen] = useControllableState(openProp, defaultOpen, onOpenChange)
+  useStoredCollapsed(collapsedProp === undefined ? storageKey : undefined, collapsed, setCollapsed)
   const closeSidebar = () => setSidebarOpen(false)
   const usesSidebar = navigation === 'sidebar' && !hideNavbar
   const sections = [...navigationSections, ...pageSections]
