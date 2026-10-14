@@ -7,4 +7,5 @@ export type RenderWithProvidersOptions = {
   navigate?: (href: string) => void
   motion?: UIProviderProps['motion']
   labels?: UIProviderProps['labels']
+  locale?: UIProviderProps['locale']
 }

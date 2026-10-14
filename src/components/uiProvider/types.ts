@@ -1,4 +1,5 @@
 import type { MotionSettings } from '../../motion/types.ts'
+import type { Direction, Locale } from '../../locales/types.ts'
 import type { ReactNode } from 'react'
 
 export type UILabels = {
@@ -29,11 +30,13 @@ export type UILabels = {
 export type UIConfig = {
   motion: MotionSettings
   labels: UILabels
+  dir: Direction
 }
 
 export type UIProviderProps = {
   children: ReactNode
   motion?: Partial<MotionSettings>
+  locale?: Locale
   labels?: Partial<UILabels>
   navigate?: (href: string) => void
   currentHref?: string

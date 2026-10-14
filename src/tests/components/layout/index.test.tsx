@@ -8,6 +8,7 @@ import { setViewportWidth } from '@tests/viewport.ts'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
 
+import { ptBR } from '@locales/ptBR.ts'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
 import { docsUrl } from '@components/layout/defaultData.tsx'
@@ -280,7 +281,7 @@ describe('Layout with sidebar (default, desktop)', () => {
   it('derives the breadcrumbs from the current href of the provider, without a router', () => {
     render(
       <ColorModeProvider defaultMode="light" storage={null}>
-        <UIProvider currentHref="/components">{page()}</UIProvider>
+        <UIProvider currentHref="/components" locale={ptBR}>{page()}</UIProvider>
       </ColorModeProvider>
     )
     const trail = screen.getByRole('navigation', { name: 'Trilha de navegação' })

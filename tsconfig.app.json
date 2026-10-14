@@ -29,7 +29,8 @@
       "@utils/*": ["./src/utils/*"],
       "@motion/*": ["./src/motion/*"],
       "@tests/*": ["./src/tests/*"],
-      "@docs/*": ["./src/docs/*"]
+      "@docs/*": ["./src/docs/*"],
+      "@locales/*": ["./src/locales/*"]
     }
   },
   "include": ["src", ".storybook/**/*"]

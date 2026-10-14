@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
+import { ptBR } from '@locales/ptBR.ts'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
@@ -163,7 +164,7 @@ describe('Navbar', () => {
     const navigate = vi.fn()
     render(
       <ColorModeProvider storage={null}>
-        <UIProvider navigate={navigate}>
+        <UIProvider navigate={navigate} locale={ptBR}>
           <Navbar sections={sections} />
         </UIProvider>
       </ColorModeProvider>
