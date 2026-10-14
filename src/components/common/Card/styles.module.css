@@ -1,26 +1,44 @@
 .card {
-  border-radius: var(--enchase-radius-xl);
-  padding: var(--enchase-space-lg);
+  box-sizing: border-box;
+  margin: 0;
   transition:
-    box-shadow var(--enchase-transition-fast),
-    background-color var(--enchase-transition-fast),
-    border-color var(--enchase-transition-fast);
+    transform var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-motion-ease-out),
+    box-shadow var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    border-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
-.card[data-variant='default'] {
+:where(.card) {
+  border-radius: var(--enchase-radius-xl);
+  padding: var(--enchase-space-lg);
+}
+
+:where(.card[data-variant='default']) {
   background-color: var(--enchase-color-surface-container);
 }
 
-.card[data-variant='elevated'] {
+:where(.card[data-variant='elevated']) {
   background-color: var(--enchase-color-surface-container-low);
   box-shadow: var(--enchase-shadow-sm);
 }
 
-.card[data-variant='elevated']:hover {
-  box-shadow: var(--enchase-shadow-md);
-}
-
-.card[data-variant='outlined'] {
+:where(.card[data-variant='outlined']) {
   background-color: var(--enchase-color-surface);
   border: 1px solid var(--enchase-color-border);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :where(.card[data-variant='elevated']:hover) {
+    box-shadow: var(--enchase-shadow-md);
+  }
+
+  :where(.card[data-variant='elevated'][data-motion='lift']:hover) {
+    transform: translateY(calc(-1 * var(--enchase-card-lift, var(--enchase-motion-distance-xs))));
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: reduce) {
+  :where(.card[data-variant='elevated'][data-motion='lift']:hover) {
+    transform: none;
+  }
 }
