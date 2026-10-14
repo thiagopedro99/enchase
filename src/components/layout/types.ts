@@ -1,3 +1,4 @@
+import type { BreakpointName } from '../uiProvider/types.ts'
 import type { FooterProps } from '../footer/types.ts'
 import type { BreadcrumbItem } from '../common/Breadcrumbs/types.ts'
 import type { SidebarSection, SidebarSlot } from '../common/Sidebar/types.ts'
@@ -14,6 +15,7 @@ export interface LayoutProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
   hideFooter?: boolean
   centered?: boolean
   navigation?: LayoutNavigation
+  breakpoint?: BreakpointName
   brand?: string
   brandLogo?: string
   footerProps?: FooterProps

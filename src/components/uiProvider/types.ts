@@ -1,6 +1,11 @@
 import type { MotionSettings } from '../../motion/types.ts'
 import type { Direction, Locale } from '../../locales/types.ts'
+import type { baseTokens } from '../../styles/tokens/base.ts'
 import type { ReactNode } from 'react'
+
+export type Breakpoints = typeof baseTokens.breakpoints
+
+export type BreakpointName = 'sm' | 'md' | 'lg' | 'xl'
 
 export type UILabels = {
   closeModal: string
@@ -31,6 +36,7 @@ export type UIConfig = {
   motion: MotionSettings
   labels: UILabels
   dir: Direction
+  breakpoints: Breakpoints
 }
 
 export type UIProviderProps = {
@@ -38,6 +44,7 @@ export type UIProviderProps = {
   motion?: Partial<MotionSettings>
   locale?: Locale
   labels?: Partial<UILabels>
+  breakpoints?: Partial<Breakpoints>
   navigate?: (href: string) => void
   currentHref?: string
 }

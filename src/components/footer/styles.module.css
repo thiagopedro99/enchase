@@ -25,13 +25,8 @@
 
 :where(.copyright) {
   margin: 0;
+  text-align: center;
   font-size: var(--enchase-font-size-sm);
   color: var(--enchase-color-text-secondary);
 }
 
-@media (max-width: 640px) {
-  :where(.copyright) {
-    text-align: center;
-    inline-size: 100%;
-  }
-}

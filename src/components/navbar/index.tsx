@@ -16,7 +16,6 @@ import { usePresence } from '@hooks/usePresence.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { Container } from '@components/common/index.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
-import { baseTokens } from '@styles/tokens/base.ts'
 import styles from './styles.module.css'
 
 import type { MobileDrawerProps, NavbarLinksProps, NavbarProps } from './types.ts'
@@ -41,7 +40,7 @@ const NavbarLinks = ({ items, activeSectionId, linkClassName, onSelect }: Navbar
   ))
 }
 
-const MobileDrawer = ({ id, items, activeSectionId, open, state, drawerRef, motionStyle, onClose }: MobileDrawerProps) => {
+const MobileDrawer = ({ layout, id, items, activeSectionId, open, state, drawerRef, motionStyle, onClose }: MobileDrawerProps) => {
   const rootRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
   const isTop = useOverlayStack(open)
@@ -49,7 +48,7 @@ const MobileDrawer = ({ id, items, activeSectionId, open, state, drawerRef, moti
   useModalBehavior({ rootRef, dialogRef: drawerRef, onEscape: () => isTop() && onClose() })
 
   return (
-    <div ref={rootRef} {...slot('navbar', 'drawer-root')}>
+    <div ref={rootRef} {...slot('navbar', 'drawer-root')} className={styles.drawerRoot} data-layout={layout}>
       <div {...slot('navbar', 'overlay')} className={styles.overlay} style={motionStyle} data-state={state} onClick={onClose} />
 
       <div
@@ -79,10 +78,13 @@ const MobileDrawer = ({ id, items, activeSectionId, open, state, drawerRef, moti
   )
 }
 
-const Navbar = ({ logo = 'Logo', sections = defaultSections, activeSectionId, className, style }: NavbarProps) => {
+const Navbar = ({ logo = 'Logo', breakpoint = 'md', sections = defaultSections, activeSectionId, className, style }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const drawerId = useId()
-  const { labels } = useUIConfig()
+  const { labels, breakpoints } = useUIConfig()
+  const matchesWide = useMediaQuery(`(min-width: ${breakpoints[breakpoint]})`)
+  const [hydrated, setHydrated] = useState(false)
+  const wide = hydrated && matchesWide
   const motionStyle = useMotionStyle('slide', drawerOverride, 'right')
   const reduced = useMediaQuery(reducedMotionQuery)
   const { mounted, state, ref } = usePresence<HTMLDivElement>(mobileOpen, { exitMs: reduced ? 0 : exitMilliseconds(motionStyle) + exitPadding })
@@ -90,18 +92,16 @@ const Navbar = ({ logo = 'Logo', sections = defaultSections, activeSectionId, cl
 
   const handleClose = () => setMobileOpen(false)
 
+  const wasWide = useRef(wide)
+
+  useEffect(() => setHydrated(true), [])
+
   useEffect(() => {
-    const query = window.matchMedia(`(min-width: ${baseTokens.breakpoints.md})`)
-    const handleChange = (event: MediaQueryListEvent) => {
-      if (event.matches) setMobileOpen(false)
-    }
+    if (wide && !wasWide.current) setMobileOpen(false)
+    wasWide.current = wide
+  }, [wide])
 
-    query.addEventListener('change', handleChange)
-
-    return () => query.removeEventListener('change', handleChange)
-  }, [])
-
-  const headerProps = mergeProps({ ...slot('navbar'), className: styles.header }, { className, style })
+  const headerProps = mergeProps({ ...slot('navbar'), className: styles.header, 'data-layout': wide ? 'wide' : 'compact' }, { className, style })
 
   return (
     <>
@@ -136,7 +136,7 @@ const Navbar = ({ logo = 'Logo', sections = defaultSections, activeSectionId, cl
         </Container>
       </header>
 
-      {mounted && <MobileDrawer id={drawerId} items={items} activeSectionId={activeSectionId} open={mobileOpen} state={state} drawerRef={ref} motionStyle={motionStyle} onClose={handleClose} />}
+      {mounted && <MobileDrawer layout={wide ? 'wide' : 'compact'} id={drawerId} items={items} activeSectionId={activeSectionId} open={mobileOpen} state={state} drawerRef={ref} motionStyle={motionStyle} onClose={handleClose} />}
     </>
   )
 }

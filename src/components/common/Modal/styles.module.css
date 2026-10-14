@@ -20,9 +20,10 @@
   position: fixed;
   inset: 0;
   margin: auto;
-  inline-size: 90%;
+  inline-size: min(90%, 100% - 2rem);
   block-size: fit-content;
   max-block-size: 90vh;
+  max-block-size: 90dvh;
   background-color: var(--enchase-color-surface-container-high);
   border-radius: var(--enchase-radius-2xl);
   box-shadow: var(--enchase-shadow-lg);
@@ -70,13 +71,6 @@
 
 .container:where([data-size='full']) {
   max-inline-size: 95vw;
-}
-
-@media (max-width: 640px) {
-  .container {
-    inline-size: 95%;
-    max-block-size: 95vh;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

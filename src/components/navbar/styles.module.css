@@ -48,10 +48,8 @@
   scrollbar-width: none;
 }
 
-@media (min-width: 768px) {
-  :where(.desktopMenu) {
-    display: flex;
-  }
+:where(.header[data-layout='wide'] .desktopMenu) {
+  display: flex;
 }
 
 :where(.menuLink, .mobileMenuLink) {
@@ -137,10 +135,12 @@
   background-color: color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent);
 }
 
-@media (min-width: 768px) {
-  :where(.mobileMenuButton) {
-    display: none;
-  }
+:where(.header[data-layout='wide'] .mobileMenuButton) {
+  display: none;
+}
+
+:where(.drawerRoot[data-layout='wide']) {
+  display: none;
 }
 
 :where(.overlay) {
@@ -159,12 +159,6 @@
 .overlay:where([data-state='exiting']) {
   opacity: 0;
   transition-duration: var(--enchase-presence-exit-duration, var(--enchase-motion-duration-fast));
-}
-
-@media (min-width: 768px) {
-  :where(.overlay) {
-    display: none;
-  }
 }
 
 :where(.mobileMenu) {
@@ -205,12 +199,6 @@
 @media (prefers-reduced-motion: reduce) {
   .mobileMenu:where([data-state='entering'], [data-state='exiting']) {
     transform: none;
-  }
-}
-
-@media (min-width: 768px) {
-  :where(.mobileMenu) {
-    display: none;
   }
 }
 

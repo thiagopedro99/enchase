@@ -12,7 +12,6 @@ import AppBar from './subcomponentes/AppBar/index.tsx'
 import { deriveBreadcrumbs } from './breadcrumbs.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { useControllableState } from '@hooks/useControllableState.ts'
-import { baseTokens } from '@styles/tokens/base.ts'
 import Navbar from '@components/navbar/index.tsx'
 import Footer from '@components/footer/index.tsx'
 import styles from './styles.module.css'
@@ -30,6 +29,7 @@ const Layout = ({
   hideFooter = false,
   centered = defaultCentered,
   navigation = 'sidebar',
+  breakpoint = 'md',
   brand,
   brandLogo,
   footerProps,
@@ -47,10 +47,10 @@ const Layout = ({
   onOpenChange,
   ...props
 }: LayoutProps) => {
-  const { labels } = useUIConfig()
+  const { labels, breakpoints } = useUIConfig()
   const navId = useId()
   const currentHref = useCurrentHref()
-  const isDesktop = useMediaQuery(`(min-width: ${baseTokens.breakpoints.md})`)
+  const isDesktop = useMediaQuery(`(min-width: ${breakpoints[breakpoint]})`)
   const [collapsed, setCollapsed] = useControllableState(collapsedProp, defaultCollapsed, onCollapsedChange)
   const [sidebarOpen, setSidebarOpen] = useControllableState(openProp, defaultOpen, onOpenChange)
   useStoredCollapsed(collapsedProp === undefined ? storageKey : undefined, collapsed, setCollapsed)
@@ -63,7 +63,7 @@ const Layout = ({
     if (isDesktop && sidebarOpen) setSidebarOpen(false)
   }, [isDesktop, sidebarOpen, setSidebarOpen])
 
-  const own = { ...slot('layout'), className: styles.wrapper, 'data-sidebar': usesSidebar && isDesktop ? '' : undefined }
+  const own = { ...slot('layout'), className: styles.wrapper, 'data-layout': isDesktop ? 'wide' : 'compact', 'data-sidebar': usesSidebar && isDesktop ? '' : undefined }
 
   return (
     <div {...mergeProps(own, props)}>
@@ -85,7 +85,7 @@ const Layout = ({
 
       {navigation === 'navbar' && !hideNavbar && (
         <div className={styles.navbarArea} {...slot('layout', 'navbar')}>
-          <Navbar logo={brand} sections={sections} activeSectionId={activePageSectionId} />
+          <Navbar logo={brand} breakpoint={breakpoint} sections={sections} activeSectionId={activePageSectionId} />
         </div>
       )}
 

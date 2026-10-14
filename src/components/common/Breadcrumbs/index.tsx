@@ -45,7 +45,7 @@ export const Breadcrumbs = ({ items, maxItems = defaultMaxItems, ariaLabel, ...p
           const key = entry === 'ellipsis' ? 'ellipsis' : entry.id
 
           return (
-            <li key={key} className={styles.item} {...slot('breadcrumbs', 'item')} data-hide-on-mobile={index < entries.length - 2 ? '' : undefined}>
+            <li key={key} className={styles.item} {...slot('breadcrumbs', 'item')} data-priority={index < entries.length - 2 ? 'low' : undefined}>
               {entry === 'ellipsis' ? (
                 <button type="button" className={styles.ellipsis} {...slot('breadcrumbs', 'ellipsis')} aria-label={labels.showFullPath} onClick={() => setExpanded(true)}>
                   …

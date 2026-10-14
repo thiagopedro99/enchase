@@ -10,7 +10,7 @@ describe('Grid', () => {
     const root = screen.getByTestId('g')
 
     expect(root).toHaveAttribute('data-slot', 'grid')
-    expect(root.style.getPropertyValue('--enchase-grid-columns')).toBe('repeat(3, 1fr)')
+    expect(root.style.getPropertyValue('--enchase-grid-columns')).toBe('repeat(auto-fit, minmax(min(100%, max(var(--enchase-grid-min-column, 14rem), calc((100% - 2 * var(--enchase-grid-gap, var(--enchase-space-md))) / 3))), 1fr))')
   })
 
   it('uses auto-fit with a minimum width when asked and passes the gap through a variable', () => {

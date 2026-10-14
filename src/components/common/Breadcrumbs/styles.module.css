@@ -5,7 +5,7 @@
 
 :where(.list) {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--enchase-space-xs);
   min-inline-size: 0;
@@ -24,10 +24,23 @@
   font-size: var(--enchase-font-size-sm);
 }
 
-@media (max-width: 640px) {
-  :where(.item[data-hide-on-mobile]) {
-    display: none;
-  }
+:where(.item) {
+  flex-shrink: 0;
+}
+
+:where(.item[data-priority='low']) {
+  flex-shrink: 1;
+  min-inline-size: 2rem;
+  overflow: hidden;
+}
+
+:where(.item[data-priority='low'] .crumb) {
+  display: block;
+  min-inline-size: 0;
+  overflow: hidden;
+  line-height: 28px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 :where(.separator) {

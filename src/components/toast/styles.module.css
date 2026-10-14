@@ -3,23 +3,12 @@
   z-index: var(--enchase-z-tooltip);
   inset-block-start: 1em;
   inset-inline-end: 1em;
-  inline-size: 360px;
-  max-block-size: calc(100vh - 2em);
+  inline-size: min(360px, 100vw - 2em);
+  max-block-size: calc(100dvh - 2em);
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
   pointer-events: none;
-}
-
-@media only screen and (max-width: 480px) {
-  .container {
-    inline-size: 100vw;
-    padding-block: 0;
-    padding-inline: var(--enchase-space-md);
-    inset-block-start: 0;
-    inset-inline: 0;
-    margin: 0;
-  }
 }
 
 .item {
