@@ -93,7 +93,6 @@ export default defineConfig({
       'react-dom',
       'zustand',
       'axios',
-      'lucide-react',
     ],
   },
 

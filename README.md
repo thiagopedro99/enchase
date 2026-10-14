@@ -38,7 +38,6 @@ Este template fornece uma base sólida para iniciar projetos React com TypeScrip
 ### UI e Estilização
 - CSS Modules e variáveis CSS
 - Motion 14 (animações)
-- Lucide React 0.544.0 (ícones)
 - Figtree (`@fontsource-variable/figtree`)
 
 ### Estado
