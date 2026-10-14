@@ -1,23 +1,35 @@
-import { AnimatePresence, motion } from 'motion/react'
 import { useRef } from 'react'
 
-import { collapsedWidth, drawerWidth, expandedWidth } from './defaultData.ts'
+import { drawerOverride, drawerWidth, exitPadding, reducedMotionQuery } from './defaultData.ts'
+import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
-import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
+import { useMotionStyle } from '@hooks/useMotionStyle.ts'
+import { useMediaQuery } from '@hooks/useMediaQuery.ts'
+import { exitMilliseconds } from '@motion/css.ts'
+import { usePresence } from '@hooks/usePresence.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import SidebarContent from './SidebarContent.tsx'
 import styles from './styles.module.css'
 
+import type { PresenceState } from '@hooks/usePresence.ts'
+import type { CSSProperties, RefObject } from 'react'
 import type { SidebarProps } from './types.ts'
 
-const drawerOverride = { tuning: { distance: drawerWidth } }
-
-const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, footer, collapsed = false, onToggleCollapsed, ariaLabel, id, animation }: SidebarProps) => {
+const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, footer, collapsed = false, onToggleCollapsed, ariaLabel, id, className, style }: SidebarProps) => {
   const { labels } = useUIConfig()
-  const resizeMotion = useMotionRecipe('resize', animation)
+  const rootProps = mergeProps(
+    {
+      ...slot('sidebar'),
+      className: styles.aside,
+      'data-variant': 'permanent',
+      'data-state': collapsed ? 'collapsed' : 'expanded'
+    },
+    { className, style }
+  )
 
   return (
-    <motion.div {...resizeMotion} id={id} className={styles.aside} initial={false} animate={{ width: collapsed ? collapsedWidth : expandedWidth }}>
+    <div id={id} {...rootProps}>
       <SidebarContent
         sections={sections}
         activeSectionId={activeSectionId}
@@ -28,35 +40,59 @@ const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, foot
         onToggleCollapsed={onToggleCollapsed}
         ariaLabel={ariaLabel ?? labels.mainNavigation}
       />
-    </motion.div>
-  )
-}
-
-const ModalSidebarPanel = ({ sections, activeSectionId, currentHref, header, footer, onClose, ariaLabel, id, animation }: SidebarProps) => {
-  const rootRef = useRef<HTMLDivElement>(null)
-  const panelRef = useRef<HTMLDivElement>(null)
-  const { labels } = useUIConfig()
-  const overlayMotion = useMotionRecipe('fade', animation === false ? false : undefined)
-  const panelMotion = useMotionRecipe('slide', animation ?? drawerOverride, 'left')
-  const name = ariaLabel ?? labels.mobileNavigation
-
-  useModalBehavior({ rootRef, dialogRef: panelRef, onEscape: onClose })
-
-  return (
-    <div ref={rootRef}>
-      <motion.div {...overlayMotion} className={styles.overlay} onClick={onClose} />
-
-      <motion.div {...panelMotion} ref={panelRef} id={id} className={styles.panel} style={{ width: drawerWidth }} role="dialog" aria-modal="true" aria-label={name} tabIndex={-1}>
-        <SidebarContent sections={sections} activeSectionId={activeSectionId} currentHref={currentHref} header={header} footer={footer} collapsed={false} onSelect={onClose} ariaLabel={name} />
-      </motion.div>
     </div>
   )
 }
 
-export const Sidebar = ({ variant = 'permanent', open = false, ...props }: SidebarProps) => {
-  if (variant === 'modal') {
-    return <AnimatePresence>{open && <ModalSidebarPanel key="sidebar-drawer" {...props} />}</AnimatePresence>
-  }
+type ModalPanelProps = SidebarProps & { open: boolean; state: PresenceState; panelRef: RefObject<HTMLDivElement | null>; motionStyle: CSSProperties }
+
+const ModalSidebarPanel = ({ sections, activeSectionId, currentHref, header, footer, onClose, ariaLabel, id, className, style, open, state, panelRef, motionStyle }: ModalPanelProps) => {
+  const rootRef = useRef<HTMLDivElement>(null)
+  const { labels } = useUIConfig()
+  const isTop = useOverlayStack(open)
+  const name = ariaLabel ?? labels.mobileNavigation
+
+  useModalBehavior({ rootRef, dialogRef: panelRef, onEscape: () => isTop() && onClose?.() })
+
+  const panelProps = mergeProps(
+    {
+      ...slot('sidebar', 'panel'),
+      className: styles.panel,
+      style: { ...motionStyle, inlineSize: drawerWidth },
+      'data-variant': 'modal',
+      'data-state': state,
+      role: 'dialog',
+      'aria-modal': true,
+      'aria-label': name,
+      tabIndex: -1
+    },
+    { className, style }
+  )
+
+  return (
+    <div ref={rootRef} {...slot('sidebar')} data-variant="modal">
+      <div {...slot('sidebar', 'overlay')} className={styles.overlay} style={motionStyle} data-state={state} onClick={onClose} />
+
+      <div ref={panelRef} id={id} {...panelProps}>
+        <SidebarContent sections={sections} activeSectionId={activeSectionId} currentHref={currentHref} header={header} footer={footer} collapsed={false} onSelect={onClose} ariaLabel={name} />
+      </div>
+    </div>
+  )
+}
+
+const ModalSidebar = (props: SidebarProps) => {
+  const motionStyle = useMotionStyle('slide', props.animation ?? drawerOverride, 'left')
+  const reduced = useMediaQuery(reducedMotionQuery)
+  const open = Boolean(props.open)
+  const { mounted, state, ref } = usePresence<HTMLDivElement>(open, { exitMs: reduced ? 0 : exitMilliseconds(motionStyle) + exitPadding })
+
+  if (!mounted) return null
+
+  return <ModalSidebarPanel {...props} open={open} state={state} panelRef={ref} motionStyle={motionStyle} />
+}
+
+export const Sidebar = ({ variant = 'permanent', ...props }: SidebarProps) => {
+  if (variant === 'modal') return <ModalSidebar {...props} />
 
   return <PermanentSidebar {...props} />
 }

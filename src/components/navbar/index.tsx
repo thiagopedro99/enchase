@@ -1,23 +1,25 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
 import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
 
-import { defaultSections, drawerSlideDistance } from './defaultData.ts'
+import { defaultSections, drawerOverride, exitPadding, reducedMotionQuery } from './defaultData.ts'
 import { currentOf } from '../common/Sidebar/defaultData.ts'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { Link } from '@components/common/Link/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
-import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
+import { useOverlayStack } from '@hooks/useOverlayStack.ts'
+import { useMotionStyle } from '@hooks/useMotionStyle.ts'
+import { useMediaQuery } from '@hooks/useMediaQuery.ts'
+import { exitMilliseconds } from '@motion/css.ts'
+import { usePresence } from '@hooks/usePresence.ts'
+import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { Container } from '@components/common/index.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { baseTokens } from '@styles/tokens/base.ts'
 import styles from './styles.module.css'
 
 import type { MobileDrawerProps, NavbarLinksProps, NavbarProps } from './types.ts'
-
-const drawerOverride = { tuning: { distance: drawerSlideDistance } }
 
 const NavbarLinks = ({ items, activeSectionId, linkClassName, onSelect }: NavbarLinksProps) => {
   const currentHref = useCurrentHref()
@@ -39,39 +41,51 @@ const NavbarLinks = ({ items, activeSectionId, linkClassName, onSelect }: Navbar
   ))
 }
 
-const MobileDrawer = ({ id, items, activeSectionId, onClose }: MobileDrawerProps) => {
+const MobileDrawer = ({ id, items, activeSectionId, open, state, drawerRef, motionStyle, onClose }: MobileDrawerProps) => {
   const rootRef = useRef<HTMLDivElement>(null)
-  const drawerRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
-  const overlayMotion = useMotionRecipe('fade')
-  const drawerMotion = useMotionRecipe('slide', drawerOverride, 'right')
+  const isTop = useOverlayStack(open)
 
-  useModalBehavior({ rootRef, dialogRef: drawerRef, onEscape: onClose })
+  useModalBehavior({ rootRef, dialogRef: drawerRef, onEscape: () => isTop() && onClose() })
 
   return (
-    <div ref={rootRef}>
-      <motion.div {...overlayMotion} className={styles.overlay} onClick={onClose} />
+    <div ref={rootRef} {...slot('navbar', 'drawer-root')}>
+      <div {...slot('navbar', 'overlay')} className={styles.overlay} style={motionStyle} data-state={state} onClick={onClose} />
 
-      <motion.div {...drawerMotion} ref={drawerRef} id={id} className={styles.mobileMenu} role="dialog" aria-modal="true" aria-label={labels.mobileNavigation} tabIndex={-1}>
-        <div className={styles.drawerHeader}>
+      <div
+        ref={drawerRef}
+        {...slot('navbar', 'drawer')}
+        id={id}
+        className={styles.mobileMenu}
+        style={motionStyle}
+        data-state={state}
+        role="dialog"
+        aria-modal="true"
+        aria-label={labels.mobileNavigation}
+        tabIndex={-1}
+      >
+        <div {...slot('navbar', 'drawer-header')} className={styles.drawerHeader}>
           <ThemeToggle />
-          <button type="button" className={styles.closeButton} onClick={onClose} aria-label={labels.closeMenu}>
+          <button {...slot('navbar', 'drawer-close')} type="button" className={styles.closeButton} onClick={onClose} aria-label={labels.closeMenu}>
             <CloseIcon />
           </button>
         </div>
 
-        <nav className={styles.mobileNav} aria-label={labels.mobileNavigation}>
+        <nav {...slot('navbar', 'drawer-nav')} className={styles.mobileNav} aria-label={labels.mobileNavigation}>
           <NavbarLinks items={items} activeSectionId={activeSectionId} linkClassName={styles.mobileMenuLink} onSelect={onClose} />
         </nav>
-      </motion.div>
+      </div>
     </div>
   )
 }
 
-const Navbar = ({ logo = 'Logo', sections = defaultSections, activeSectionId }: NavbarProps) => {
+const Navbar = ({ logo = 'Logo', sections = defaultSections, activeSectionId, className, style }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const drawerId = useId()
   const { labels } = useUIConfig()
+  const motionStyle = useMotionStyle('slide', drawerOverride, 'right')
+  const reduced = useMediaQuery(reducedMotionQuery)
+  const { mounted, state, ref } = usePresence<HTMLDivElement>(mobileOpen, { exitMs: reduced ? 0 : exitMilliseconds(motionStyle) + exitPadding })
   const items = sections.flatMap((section) => section.items).filter((item) => item.href)
 
   const handleClose = () => setMobileOpen(false)
@@ -87,23 +101,26 @@ const Navbar = ({ logo = 'Logo', sections = defaultSections, activeSectionId }: 
     return () => query.removeEventListener('change', handleChange)
   }, [])
 
+  const headerProps = mergeProps({ ...slot('navbar'), className: styles.header }, { className, style })
+
   return (
     <>
-      <header className={styles.header}>
+      <header {...headerProps}>
         <Container maxWidth="xl">
-          <div className={styles.headerBar}>
+          <div {...slot('navbar', 'bar')} className={styles.headerBar}>
             <Link href="/" className={styles.logo}>
               {logo}
             </Link>
 
-            <div className={styles.headerActions}>
-              <nav className={styles.desktopMenu} aria-label={labels.mainNavigation}>
+            <div {...slot('navbar', 'actions')} className={styles.headerActions}>
+              <nav {...slot('navbar', 'menu')} className={styles.desktopMenu} aria-label={labels.mainNavigation}>
                 <NavbarLinks items={items} activeSectionId={activeSectionId} linkClassName={styles.menuLink} />
               </nav>
 
               <ThemeToggle />
 
               <button
+                {...slot('navbar', 'menu-button')}
                 type="button"
                 className={styles.mobileMenuButton}
                 onClick={() => setMobileOpen(true)}
@@ -119,7 +136,7 @@ const Navbar = ({ logo = 'Logo', sections = defaultSections, activeSectionId }: 
         </Container>
       </header>
 
-      <AnimatePresence>{mobileOpen && <MobileDrawer key="mobile-drawer" id={drawerId} items={items} activeSectionId={activeSectionId} onClose={handleClose} />}</AnimatePresence>
+      {mounted && <MobileDrawer id={drawerId} items={items} activeSectionId={activeSectionId} open={mobileOpen} state={state} drawerRef={ref} motionStyle={motionStyle} onClose={handleClose} />}
     </>
   )
 }

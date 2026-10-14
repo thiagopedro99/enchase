@@ -22,7 +22,7 @@ export const knownFailures: Record<string, Record<string, string>> = {
 }
 
 export const reducedMotionKnownFailures: Record<string, string> = {
-  ...Object.fromEntries(['ThemeToggle', 'Sidebar modal open', 'Navbar'].map((name) => [name, reducedMotionCause])),
+  ...Object.fromEntries(['ThemeToggle', 'Navbar'].map((name) => [name, reducedMotionCause])),
   ...Object.fromEntries(portalCases.map((name) => [name, portalCause])),
   Layout: browserStateCause
 }

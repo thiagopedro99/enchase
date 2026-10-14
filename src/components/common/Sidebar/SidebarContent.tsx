@@ -4,6 +4,7 @@ import { ChevronsLeftIcon } from '../Icon/icons/ChevronsLeftIcon.tsx'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
+import { slot } from '@utils/mergeProps.ts'
 import { Link } from '../Link/index.tsx'
 import { currentOf } from './defaultData.ts'
 import Tooltip from '../Tooltip/index.tsx'
@@ -19,11 +20,21 @@ const SidebarItemView = ({ item, current, collapsed, onSelect }: SidebarItemView
 
   const content = (
     <>
-      <span className={styles.itemIcon} aria-hidden="true">
+      <span {...slot('sidebar', 'item-icon')} className={styles.itemIcon} aria-hidden="true">
         {item.icon ?? item.label.charAt(0).toUpperCase()}
       </span>
-      {collapsed ? <VisuallyHidden>{item.label}</VisuallyHidden> : <span className={styles.itemText}>{item.label}</span>}
-      {!collapsed && item.badge && <span className={styles.itemBadge}>{item.badge}</span>}
+      {collapsed ? (
+        <VisuallyHidden>{item.label}</VisuallyHidden>
+      ) : (
+        <span {...slot('sidebar', 'item-label')} className={styles.itemText}>
+          {item.label}
+        </span>
+      )}
+      {!collapsed && item.badge && (
+        <span {...slot('sidebar', 'item-badge')} className={styles.itemBadge}>
+          {item.badge}
+        </span>
+      )}
     </>
   )
 
@@ -32,15 +43,15 @@ const SidebarItemView = ({ item, current, collapsed, onSelect }: SidebarItemView
       {content}
     </Link>
   ) : (
-    <button type="button" onClick={handleClick} className={styles.item} data-collapsed={collapsed ? '' : undefined}>
+    <button {...slot('sidebar', 'item-control')} type="button" onClick={handleClick} className={styles.item} data-collapsed={collapsed ? '' : undefined}>
       {content}
     </button>
   )
 
   return (
-    <li className={styles.listItem}>
+    <li {...slot('sidebar', 'item')} className={styles.listItem}>
       {collapsed ? (
-        <Tooltip text={item.label} position="right" describe={false}>
+        <Tooltip text={item.label} position="end" describe={false}>
           {element}
         </Tooltip>
       ) : (
@@ -61,20 +72,20 @@ export const SidebarContent = ({ sections, activeSectionId, currentHref, header,
   return (
     <>
       {headerContent && (
-        <div className={styles.headerSlot} data-collapsed={collapsed ? '' : undefined}>
+        <div {...slot('sidebar', 'header')} className={styles.headerSlot} data-collapsed={collapsed ? '' : undefined}>
           {headerContent}
         </div>
       )}
 
-      <nav className={styles.nav} aria-label={ariaLabel}>
+      <nav {...slot('sidebar', 'nav')} className={styles.nav} aria-label={ariaLabel}>
         {sections.map((section, index) => (
-          <div key={section.id} className={styles.section}>
+          <div key={section.id} {...slot('sidebar', 'section')} className={styles.section}>
             {section.title && !collapsed && (
-              <p className={styles.sectionTitle} aria-hidden="true">
+              <p {...slot('sidebar', 'section-title')} className={styles.sectionTitle} aria-hidden="true">
                 {section.title}
               </p>
             )}
-            {collapsed && index > 0 && <hr className={styles.sectionDivider} />}
+            {collapsed && index > 0 && <hr {...slot('sidebar', 'section-divider')} className={styles.sectionDivider} />}
             <ul className={styles.itemList} aria-label={section.title}>
               {section.items.map((item) => (
                 <SidebarItemView key={item.id} item={item} current={currentOf(item, activeSectionId, location)} collapsed={collapsed} onSelect={onSelect} />
@@ -85,10 +96,10 @@ export const SidebarContent = ({ sections, activeSectionId, currentHref, header,
       </nav>
 
       {(footerContent || onToggleCollapsed) && (
-        <div className={styles.footerSlot} data-collapsed={collapsed ? '' : undefined}>
+        <div {...slot('sidebar', 'footer')} className={styles.footerSlot} data-collapsed={collapsed ? '' : undefined}>
           {footerContent}
           {onToggleCollapsed && (
-            <button type="button" className={styles.collapseButton} onClick={onToggleCollapsed} aria-label={toggleLabel} aria-expanded={!collapsed}>
+            <button {...slot('sidebar', 'collapse-button')} type="button" className={styles.collapseButton} onClick={onToggleCollapsed} aria-label={toggleLabel} aria-expanded={!collapsed}>
               {collapsed ? <ChevronsRightIcon size={22} /> : <ChevronsLeftIcon size={22} />}
             </button>
           )}

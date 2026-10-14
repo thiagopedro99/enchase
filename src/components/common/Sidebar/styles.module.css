@@ -1,89 +1,126 @@
-.aside,
-.panel {
+:where(.aside, .panel) {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  margin: 0;
   background-color: var(--enchase-color-surface-container-low);
   color: var(--enchase-color-text-primary);
 }
 
-.aside {
+:where(.aside) {
   position: sticky;
-  top: 0;
+  inset-block-start: 0;
   flex-shrink: 0;
-  height: 100vh;
+  inline-size: var(--enchase-sidebar-width, 280px);
+  block-size: 100vh;
   z-index: var(--enchase-z-sticky);
   border-start-end-radius: var(--enchase-radius-lg);
   border-end-end-radius: var(--enchase-radius-lg);
 }
 
-.overlay {
+:where(.aside[data-state='collapsed']) {
+  inline-size: var(--enchase-sidebar-width-collapsed, 80px);
+}
+
+:where(.overlay) {
   position: fixed;
   inset: 0;
   background-color: var(--enchase-color-overlay);
   z-index: var(--enchase-z-backdrop);
+  opacity: 1;
+  transition: opacity var(--enchase-presence-duration, var(--enchase-motion-duration-base)) var(--enchase-motion-ease-out);
 }
 
-.panel {
+.overlay:where([data-state='entering']) {
+  opacity: 0;
+}
+
+.overlay:where([data-state='exiting']) {
+  opacity: 0;
+  transition-duration: var(--enchase-presence-exit-duration, var(--enchase-motion-duration-fast));
+}
+
+:where(.panel) {
   position: fixed;
-  top: 0;
+  inset-block: 0;
   inset-inline-start: 0;
-  max-width: 90vw;
-  height: 100vh;
+  max-inline-size: 90vw;
   z-index: var(--enchase-z-modal);
   border-start-end-radius: var(--enchase-radius-2xl);
   border-end-end-radius: var(--enchase-radius-2xl);
   box-shadow: var(--enchase-shadow-lg);
+  transform: translate(0, 0);
+  transition: transform var(--enchase-presence-duration, var(--enchase-motion-duration-base)) var(--enchase-motion-ease-out);
+}
+
+.panel:where([data-state='entering']) {
+  transform: translate(var(--enchase-presence-x, 0), var(--enchase-presence-y, 0));
+}
+
+.panel:where([data-state='exiting']) {
+  transform: translate(var(--enchase-presence-x, 0), var(--enchase-presence-y, 0));
+  transition-duration: var(--enchase-presence-exit-duration, var(--enchase-motion-duration-fast));
 }
 
 .panel:focus {
   outline: none;
 }
 
-.headerSlot {
+@media (prefers-reduced-motion: reduce) {
+  .panel:where([data-state='entering'], [data-state='exiting']) {
+    transform: none;
+  }
+}
+
+:where(.headerSlot) {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  min-height: 72px;
-  padding: 0 var(--enchase-space-lg);
+  min-block-size: 72px;
+  padding-block: 0;
+  padding-inline: var(--enchase-space-lg);
   overflow: hidden;
 }
 
-.headerSlot[data-collapsed] {
+:where(.headerSlot[data-collapsed]) {
   justify-content: center;
 }
 
-.nav {
+:where(.nav) {
   flex: 1;
-  min-height: 0;
+  min-block-size: 0;
   display: flex;
   flex-direction: column;
   gap: var(--enchase-space-md);
-  padding: var(--enchase-space-xs) var(--enchase-space-md);
+  padding-block: var(--enchase-space-xs);
+  padding-inline: var(--enchase-space-md);
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-.section {
+:where(.section) {
   display: flex;
   flex-direction: column;
   gap: var(--enchase-space-xs);
 }
 
-.sectionTitle {
+:where(.sectionTitle) {
   margin: 0;
-  padding: var(--enchase-space-sm) var(--enchase-space-md);
+  padding-block: var(--enchase-space-sm);
+  padding-inline: var(--enchase-space-md);
   font-size: var(--enchase-font-size-sm);
   font-weight: var(--enchase-font-weight-semibold);
   color: var(--enchase-color-text-secondary);
 }
 
-.sectionDivider {
-  margin: var(--enchase-space-xs) var(--enchase-space-md);
+:where(.sectionDivider) {
+  margin-block: var(--enchase-space-xs);
+  margin-inline: var(--enchase-space-md);
   border: 0;
-  border-top: 1px solid var(--enchase-color-border);
+  border-block-start: 1px solid var(--enchase-color-border);
 }
 
-.itemList {
+:where(.itemList) {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -92,39 +129,57 @@
   gap: var(--enchase-space-xs);
 }
 
-.listItem {
+:where(.listItem) {
   display: flex;
   flex-direction: column;
 }
 
-.item {
+:where(.item) {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: var(--enchase-space-md);
-  width: 100%;
-  height: 52px;
-  padding: 0 var(--enchase-space-md);
   justify-content: flex-start;
-  border-radius: var(--enchase-radius-full);
-  color: var(--enchase-color-text-secondary);
+  gap: var(--enchase-space-md);
+  inline-size: 100%;
+  block-size: 52px;
+  min-block-size: 24px;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--enchase-space-md);
+  border: 0;
+  background-color: transparent;
   font-family: inherit;
   font-size: var(--enchase-font-size-sm);
   font-weight: var(--enchase-font-weight-semibold);
   text-align: start;
-  text-decoration: none;
   cursor: pointer;
-  transition:
-    background-color var(--enchase-transition-fast),
-    color var(--enchase-transition-fast);
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.item[data-collapsed] {
+.item {
+  border-radius: var(--enchase-radius-full);
+  color: var(--enchase-color-text-secondary);
+  text-decoration: none;
+  transition:
+    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+}
+
+:where(.item[data-collapsed]) {
   padding: 0;
   justify-content: center;
 }
 
-.item:hover {
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+@media (hover: hover) and (pointer: fine) {
+  .item:hover {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    color: var(--enchase-color-text-primary);
+  }
+}
+
+.item:active {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent);
   color: var(--enchase-color-text-primary);
 }
 
@@ -134,27 +189,28 @@
   color: var(--enchase-color-on-primary-container);
 }
 
-.itemIcon {
+:where(.itemIcon) {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 24px;
-  height: 24px;
+  inline-size: 24px;
+  block-size: 24px;
   font-size: var(--enchase-font-size-base);
   font-weight: var(--enchase-font-weight-bold);
 }
 
-.itemText {
+:where(.itemText) {
   flex: 1;
-  min-width: 0;
+  min-inline-size: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.itemBadge {
-  padding: 2px var(--enchase-space-sm);
+:where(.itemBadge) {
+  padding-block: 2px;
+  padding-inline: var(--enchase-space-sm);
   border-radius: var(--enchase-radius-full);
   background-color: var(--enchase-color-secondary-container);
   color: var(--enchase-color-on-secondary-container);
@@ -162,7 +218,7 @@
   font-weight: var(--enchase-font-weight-semibold);
 }
 
-.footerSlot {
+:where(.footerSlot) {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -171,25 +227,41 @@
   padding: var(--enchase-space-md);
 }
 
-.footerSlot[data-collapsed] {
+:where(.footerSlot[data-collapsed]) {
   flex-direction: column;
   justify-content: center;
 }
 
-.collapseButton {
+:where(.collapseButton) {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-radius: var(--enchase-radius-full);
+  background-color: transparent;
   color: var(--enchase-color-text-secondary);
+  font: inherit;
+  cursor: pointer;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
   transition:
-    background-color var(--enchase-transition-fast),
-    color var(--enchase-transition-fast);
+    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
-.collapseButton:hover {
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+@media (hover: hover) and (pointer: fine) {
+  .collapseButton:hover {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    color: var(--enchase-color-text-primary);
+  }
+}
+
+.collapseButton:active {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent);
   color: var(--enchase-color-text-primary);
 }

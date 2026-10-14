@@ -1,5 +1,5 @@
 import type { MotionOverride } from '@motion/types.ts'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 
 export type SidebarItem = {
   id: string
@@ -35,6 +35,8 @@ export interface SidebarProps {
   ariaLabel?: string
   id?: string
   animation?: MotionOverride
+  className?: string
+  style?: CSSProperties
 }
 
 export interface SidebarContentProps {
