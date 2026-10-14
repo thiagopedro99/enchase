@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 
-import { defaultColorMode, defaultStorageKey, getDefaultStorage, readStoredMode, systemDarkQuery, writeStoredMode } from './defaultData.ts'
+import { defaultColorMode, defaultStorageKey, getDefaultStorage, readStoredMode, subscribeToStoredMode, systemDarkQuery, writeStoredMode } from './defaultData.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 import { defaultThemeCss, themeCss } from '@styles/css/declarations.ts'
@@ -12,15 +12,21 @@ import type { ColorMode, ColorModeProviderProps, ResolvedColorMode } from './typ
 
 export const ColorModeProvider = ({ children, theme, mode: controlledMode, defaultMode = defaultColorMode, onModeChange, storage, storageKey = defaultStorageKey }: ColorModeProviderProps) => {
   const store = useMemo(() => (storage === undefined ? getDefaultStorage() : storage), [storage])
-  const [internalMode, setInternalMode] = useState<ColorMode>(() => readStoredMode(store, storageKey) ?? defaultMode)
+  const subscribe = useCallback((notify: () => void) => subscribeToStoredMode(storageKey, notify), [storageKey])
+  const storedMode = useSyncExternalStore(
+    subscribe,
+    () => readStoredMode(store, storageKey),
+    () => null
+  )
   const systemPrefersDark = useMediaQuery(systemDarkQuery)
-  const mode = controlledMode ?? internalMode
+  const [chosenMode, setChosenMode] = useState<ColorMode | null>(null)
+  const mode: ColorMode = controlledMode ?? chosenMode ?? storedMode ?? defaultMode
   const resolvedMode: ResolvedColorMode = mode === 'system' ? (systemPrefersDark ? 'dark' : 'light') : mode
 
   const setMode = useCallback(
     (next: ColorMode) => {
       if (controlledMode === undefined) {
-        setInternalMode(next)
+        setChosenMode(next)
         writeStoredMode(store, storageKey, next)
       }
 

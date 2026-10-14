@@ -28,6 +28,24 @@ export const readStoredMode = (storage: ColorModeStorage | null, key: string): C
   }
 }
 
+const listeners = new Map<string, Set<() => void>>()
+
+export const subscribeToStoredMode = (key: string, notify: () => void) => {
+  const set = listeners.get(key) ?? new Set<() => void>()
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key === key || event.key === null) notify()
+  }
+
+  set.add(notify)
+  listeners.set(key, set)
+  window.addEventListener('storage', handleStorage)
+
+  return () => {
+    set.delete(notify)
+    window.removeEventListener('storage', handleStorage)
+  }
+}
+
 export const writeStoredMode = (storage: ColorModeStorage | null, key: string, mode: ColorMode) => {
   if (!storage) return
 
@@ -36,4 +54,6 @@ export const writeStoredMode = (storage: ColorModeStorage | null, key: string, m
   } catch {
     return
   }
+
+  listeners.get(key)?.forEach((listener) => listener())
 }
