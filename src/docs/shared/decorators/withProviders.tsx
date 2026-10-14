@@ -1,6 +1,7 @@
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
 import { GlobalStyles } from '@styles/react.tsx'
+import { ptBR } from '@locales/ptBR.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
 
 import type { Decorator } from '@storybook/react-vite'
@@ -12,7 +13,7 @@ export const withProviders: Decorator = (Story, context) => {
   return (
     <ColorModeProvider mode={theme}>
       <GlobalStyles />
-      <UIProvider motion={{ mode: motion }}>
+      <UIProvider locale={ptBR} motion={{ mode: motion }}>
         <ToastProvider>
           <Story />
         </ToastProvider>

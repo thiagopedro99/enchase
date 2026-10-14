@@ -219,18 +219,19 @@ O `Layout` oferece duas navegações, escolhidas pela prop `navigation`:
 </Layout>
 ```
 
-- **`navigation="sidebar"` (padrão)**: uma barra superior (`AppBar`) com o botão de menu, o breadcrumb e o botão de tema, e o menu lateral. No desktop o botão recolhe a sidebar para uma barra de ícones (a escolha fica salva); no mobile ele abre o drawer modal. O ícone acompanha o estado (linhas com seta `‹` quando o menu está aberto, hambúrguer quando fechado) e o botão tem tooltip com a ação atual. Com a propriedade `sidebarFooter`, o rodapé da sidebar mostra o que você passar, por exemplo o `SidebarUser`, com avatar, nome e botão de sair.
+- **`navigation="sidebar"` (padrão)**: uma barra superior (`AppBar`) com o botão de menu, o breadcrumb e o botão de tema, e o menu lateral. No desktop o botão recolhe a sidebar para uma barra de ícones; no mobile ele abre o drawer modal. O ícone acompanha o estado (linhas com seta `‹` quando o menu está aberto, hambúrguer quando fechado) e o botão tem tooltip com a ação atual. Com a propriedade `sidebarFooter`, o rodapé da sidebar mostra o que você passar, por exemplo o `SidebarUser`, com avatar, nome e botão de sair.
 - **`navigation="navbar"`**: a barra de navegação clássica no topo.
-- **`navigationSections`**: substitui os itens do menu (por padrão, Início e Documentação).
+- **`navigationSections`**: os itens do menu (sem padrão: o `Layout` não traz navegação própria).
+- **`collapsed`, `defaultCollapsed` e `onCollapsedChange`**: estado da sidebar recolhida, controlado ou não. **`open`, `defaultOpen` e `onOpenChange`** fazem o mesmo para o drawer. **`storageKey`** guarda o estado recolhido no `localStorage` com esse nome, lido só depois de montar (sem a prop nada é salvo).
 - **`pageSections` e `activePageSectionId`**: seções extras no menu para navegar por âncoras dentro da página, ativadas com o hook `useScrollSpy`.
 - **`breadcrumbs`**: trilha explícita (`BreadcrumbItem[]`). Sem ela, o `Layout` deriva a trilha do item de menu da rota atual (`Início › Componentes`) e acrescenta a seção ativa da página (`Início › Componentes › Botões`); em rotas sem item de menu usa o `pageTitle`.
-- **`brand`**: nome exibido na marca. `hideNavbar` esconde a navegação.
+- **`brand` e `brandLogo`**: nome e imagem da marca (sem padrão). **`footerProps`**: `companyName`, `notice`, `year` e `links` do rodapé. `hideNavbar` esconde a navegação. O `Layout` não altera o `document.title`: defina-o na página.
 
 O `Sidebar` também pode ser usado sozinho:
 
 ```tsx
 <Sidebar
-  sections={[{ id: 'app', title: 'Navegação', items: [{ id: 'home', label: 'Início', icon: Home, href: '/' }] }]}
+  sections={[{ id: 'app', title: 'Navegação', items: [{ id: 'home', label: 'Início', icon: <HomeIcon />, href: '/' }] }]}
   collapsed={collapsed}
   onToggleCollapsed={() => setCollapsed((current) => !current)}
 />
@@ -244,6 +245,7 @@ Os componentes seguem WCAG 2.2 AA (foco visível, teclado, ARIA, contraste e alv
 
 ```tsx
 <UIProvider
+  locale={ptBR}
   motion={{ preset: 'subtle', recipes: { slide: { distance: 48 } } }}
   labels={{ closeModal: 'Close dialog', closeToast: 'Dismiss' }}
 >
@@ -256,7 +258,8 @@ Os componentes seguem WCAG 2.2 AA (foco visível, teclado, ARIA, contraste e alv
 - **`motion.mode`**: `auto` respeita `prefers-reduced-motion`; `never` desliga todo o movimento.
 - **`motion.preset`**: `off`, `subtle`, `standard` ou `expressive` escalam duração e distância de todas as receitas.
 - **`motion.recipes`**: ajuste fino por receita (`fade`, `pop`, `slide`, `press`, `lift`, `spin`, `shimmer`).
-- **`labels`**: todos os textos de acessibilidade (rótulos de botões, regiões e estados) para internacionalização.
+- **`locale`**: pacote de textos e direção (`{ locale, dir, messages }`); o padrão é inglês (`en`) e o projeto traz também `ptBR`, em `src/locales`. Os dados são só objetos, sem React.
+- **`labels`**: sobrescreve textos avulsos (rótulos de botões, regiões e estados) por cima do `locale`.
 - **Por componente**: `animation={false}` desliga, `animation={{ recipe: 'fade' }}` troca a receita.
 
 Com `prefers-reduced-motion`, movimento espacial vira fade, `press` e `lift` somem e os loops viram um pulso de opacidade.
