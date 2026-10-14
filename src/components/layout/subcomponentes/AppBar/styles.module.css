@@ -1,43 +1,65 @@
-.bar {
+:where(.bar) {
   grid-area: appbar;
   position: sticky;
-  top: 0;
+  inset-block-start: 0;
   z-index: var(--enchase-z-sticky);
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   gap: var(--enchase-space-sm);
-  min-width: 0;
-  height: 64px;
-  padding: 0 var(--enchase-space-md);
+  min-inline-size: 0;
+  block-size: 64px;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--enchase-space-md);
   background-color: var(--enchase-color-surface);
-  border-bottom: 1px solid var(--enchase-color-border);
+  border-block-end: 1px solid var(--enchase-color-border);
 }
 
-.menuButton {
+:where(.menuButton) {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  min-width: 44px;
-  min-height: 44px;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
   border-radius: var(--enchase-radius-full);
+  background-color: transparent;
   color: var(--enchase-color-text-secondary);
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.menuButton {
   transition:
-    background-color var(--enchase-transition-fast),
-    color var(--enchase-transition-fast);
+    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
-.menuButton:hover {
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
-  color: var(--enchase-color-text-primary);
+.menuButton:focus-visible {
+  outline: 2px solid var(--enchase-color-primary);
+  outline-offset: 2px;
 }
 
-.trail {
+@media (hover: hover) and (pointer: fine) {
+  .menuButton:hover {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    color: var(--enchase-color-text-primary);
+  }
+}
+
+:where(.trail) {
   flex: 1;
-  min-width: 0;
+  min-inline-size: 0;
 }
 
-.actions {
+:where(.actions) {
   display: flex;
   align-items: center;
   flex-shrink: 0;

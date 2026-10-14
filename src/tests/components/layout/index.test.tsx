@@ -67,6 +67,20 @@ describe('Layout with sidebar (default, desktop)', () => {
     expect(within(screen.getByRole('navigation', { name: 'Navegação principal' })).queryAllByRole('link')).toHaveLength(0)
   })
 
+  it('marks the root and its parts with slots and keeps the caller className, style and attributes', () => {
+    const { container } = renderWithProviders(page({ className: 'mine', style: { color: 'red' }, id: 'app' }))
+    const root = container.querySelector('[data-slot="layout"]') as HTMLElement
+
+    expect(root.className.split(' ').at(-1)).toBe('mine')
+    expect(root).toHaveStyle({ color: 'rgb(255, 0, 0)' })
+    expect(root).toHaveAttribute('id', 'app')
+    for (const name of ['layout-main', 'layout-sidebar', 'layout-footer', 'layout-header', 'layout-skip-link']) {
+      expect(root.querySelector(`[data-slot="${name}"]`), name).not.toBeNull()
+    }
+    expect(root.querySelector('[data-slot="brand"]')).not.toBeNull()
+    expect(root.querySelector('[data-slot="menu-toggle-icon"]')).not.toBeNull()
+  })
+
   it('leaves the document title to the page', () => {
     document.title = 'Original'
     renderWithProviders(page({ pageTitle: 'Painel', brand: 'Aurora' }))

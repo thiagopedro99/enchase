@@ -1,7 +1,7 @@
 import type { BreadcrumbItem } from '@components/common/Breadcrumbs/types.ts'
-import type { ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 
-export type AppBarProps = {
+export interface AppBarProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
   items: BreadcrumbItem[]
   menuLabel: string
   menuExpanded: boolean

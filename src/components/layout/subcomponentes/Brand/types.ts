@@ -1,4 +1,6 @@
-export type BrandProps = {
+import type { AnchorHTMLAttributes } from 'react'
+
+export interface BrandProps extends Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'children'> {
   name: string
   logo?: string
   compact?: boolean

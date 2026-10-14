@@ -3,6 +3,7 @@ import { useEffect, useId } from 'react'
 import { defaultCentered, defaultNavigationSections } from './defaultData.ts'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import AppSidebar from './subcomponentes/AppSidebar/index.tsx'
+import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { useStoredCollapsed } from '@hooks/useStoredCollapsed.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
@@ -43,7 +44,8 @@ const Layout = ({
   storageKey,
   open: openProp,
   defaultOpen = false,
-  onOpenChange
+  onOpenChange,
+  ...props
 }: LayoutProps) => {
   const { labels } = useUIConfig()
   const navId = useId()
@@ -61,9 +63,11 @@ const Layout = ({
     if (isDesktop && sidebarOpen) setSidebarOpen(false)
   }, [isDesktop, sidebarOpen, setSidebarOpen])
 
+  const own = { ...slot('layout'), className: styles.wrapper, 'data-sidebar': usesSidebar && isDesktop ? '' : undefined }
+
   return (
-    <div className={styles.wrapper} data-sidebar={usesSidebar && isDesktop ? '' : undefined}>
-      <a href={`#${mainId}`} className={styles.skipLink}>
+    <div {...mergeProps(own, props)}>
+      <a href={`#${mainId}`} className={styles.skipLink} {...slot('layout', 'skip-link')}>
         {labels.skipToContent}
       </a>
 
@@ -80,25 +84,25 @@ const Layout = ({
       )}
 
       {navigation === 'navbar' && !hideNavbar && (
-        <div className={styles.navbarArea}>
+        <div className={styles.navbarArea} {...slot('layout', 'navbar')}>
           <Navbar logo={brand} sections={sections} activeSectionId={activePageSectionId} />
         </div>
       )}
 
       {usesSidebar && isDesktop && (
-        <div className={styles.sidebarArea}>
+        <div className={styles.sidebarArea} {...slot('layout', 'sidebar')}>
           <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="permanent" activeSectionId={activePageSectionId} navId={navId} collapsed={collapsed} open={sidebarOpen} onClose={closeSidebar} />
         </div>
       )}
 
-      <main id={mainId} tabIndex={-1} className={styles.main} data-centered={centered ? '' : undefined}>
+      <main id={mainId} tabIndex={-1} className={styles.main} {...slot('layout', 'main')} data-centered={centered ? '' : undefined}>
         <Container maxWidth={maxWidth} padding={padding}>
           {children}
         </Container>
       </main>
 
       {!hideFooter && (
-        <div className={styles.footerArea}>
+        <div className={styles.footerArea} {...slot('layout', 'footer')}>
           <Footer {...footerProps} />
         </div>
       )}

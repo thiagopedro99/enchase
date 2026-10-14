@@ -1,4 +1,4 @@
-.link {
+:where(.link) {
   display: flex;
   align-items: center;
   gap: var(--enchase-space-md);
@@ -10,23 +10,25 @@
   white-space: nowrap;
 }
 
-.link:hover {
-  color: var(--enchase-color-text-primary);
+@media (hover: hover) and (pointer: fine) {
+  .link:hover {
+    color: var(--enchase-color-text-primary);
+  }
 }
 
-.image {
+:where(.image) {
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  inline-size: 32px;
+  block-size: 32px;
 }
 
-.mark {
+:where(.mark) {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 32px;
-  height: 32px;
+  inline-size: 32px;
+  block-size: 32px;
   border-radius: var(--enchase-radius-md);
   background-color: var(--enchase-color-primary);
   color: var(--enchase-color-on-primary);

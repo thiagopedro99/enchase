@@ -1,11 +1,11 @@
 import type { FooterProps } from '../footer/types.ts'
 import type { BreadcrumbItem } from '../common/Breadcrumbs/types.ts'
 import type { SidebarSection, SidebarSlot } from '../common/Sidebar/types.ts'
-import type { ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 
 export type LayoutNavigation = 'sidebar' | 'navbar'
 
-export interface LayoutProps {
+export interface LayoutProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   children: ReactNode
   pageTitle?: string
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full'
