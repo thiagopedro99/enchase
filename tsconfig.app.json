@@ -24,7 +24,6 @@
       "@actions/*": ["./src/actions/*"],
       "@assets/*": ["./src/assets/*"],
       "@styles/*": ["./src/styles/*"],
-      "@stores/*": ["./src/stores/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@pages/*": ["./src/pages/*"],
       "@utils/*": ["./src/utils/*"],

@@ -18,7 +18,6 @@ Este template fornece uma base sólida para iniciar projetos React com TypeScrip
 - **React 19** com TypeScript para desenvolvimento type-safe
 - **Vite** para build ultra-rápido e Hot Module Replacement otimizado
 - **CSS Modules** com variáveis CSS para estilização, sem biblioteca de estilo em tempo de execução
-- **Zustand** para gerenciamento de estado global leve e eficiente
 - **Axios** configurado para requisições HTTP
 - **Sistema de temas** (claro, escuro e sistema) configurável com `createTheme`, com validação dos valores e aviso de contraste
 - **Componentes reutilizáveis** prontos para uso
@@ -41,7 +40,6 @@ Este template fornece uma base sólida para iniciar projetos React com TypeScrip
 - Figtree (`@fontsource-variable/figtree`)
 
 ### Estado
-- Zustand 5.0.4
 
 ### HTTP Client
 - Axios 1.9.0
@@ -104,9 +102,6 @@ src/
 ├── hooks/           # Custom React hooks
 ├── motion/          # Catálogo de receitas de animação
 ├── pages/           # Páginas da aplicação (home)
-├── stores/          # Gerenciamento de estado (Zustand)
-│   ├── app/         # Estado global da aplicação
-│   └── data/        # Estado de dados específicos
 ├── styles/          # Sistema de tema
 │   ├── tokens/      # Tokens: cores, sombras, fontes, espaçamento, raios...
 │   ├── theme/       # createTheme, validateTheme e validadores
@@ -266,35 +261,6 @@ Os componentes seguem WCAG 2.2 AA (foco visível, teclado, ARIA, contraste e alv
 
 Com `prefers-reduced-motion`, movimento espacial vira fade, `press` e `lift` somem e os loops viram um pulso de opacidade.
 
-## Gerenciamento de Estado
-
-O template utiliza Zustand para gerenciamento de estado global. Exemplos de stores incluídos:
-
-### App Store
-
-Gerencia o estado global da aplicação:
-
-```typescript
-import { useAppStore } from '@stores/app/index.ts';
-
-const { language, setLanguage, sidebarCollapsed } = useAppStore();
-```
-
-**Estados disponíveis:**
-- `language` - Idioma da aplicação
-- `sidebarOpen` - Estado da sidebar
-- `modalOpen` - Estado de modals
-
-### Data Store
-
-Exemplo de store para gerenciar dados da aplicação:
-
-```typescript
-import { useDataStore } from '@stores/data/index.ts';
-
-const { items, addItem, updateItem, removeItem } = useDataStore();
-```
-
 ## API e Serviços
 
 ### Configuração Base
@@ -323,7 +289,7 @@ O `actions/api.ts` cria a instância do Axios sem interceptors. Se o seu projeto
 
 ### Actions por Entidade
 
-Cada entidade tem sua pasta em `src/actions/<entidade>/` (funções) e, quando tem estado de servidor, em `src/stores/<entidade>/`:
+Cada entidade tem sua pasta em `src/actions/<entidade>/`:
 
 ```typescript
 // src/actions/users/index.ts
@@ -469,7 +435,6 @@ O projeto está configurado com aliases para imports mais limpos:
 
 ```typescript
 import { Button } from '@components/common';
-import { useAppStore } from '@stores/app/index.ts';
 import { api } from '@actions/api.ts';
 import Layout from '@components/layout';
 ```
@@ -477,7 +442,6 @@ import Layout from '@components/layout';
 **Aliases disponíveis:**
 - `@components/*` → `src/components/*`
 - `@pages/*` → `src/pages/*`
-- `@stores/*` → `src/stores/*`
 - `@actions/*` → `src/actions/*`
 - `@hooks/*` → `src/hooks/*`
 - `@utils/*` → `src/utils/*`

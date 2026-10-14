@@ -84,16 +84,16 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 
 - Páginas sempre dentro de `Layout` (`@components/layout`). A navegação padrão é `navigation="sidebar"`; `navigation="navbar"` usa a barra superior. Nunca montar `Sidebar` ou `Navbar` direto em uma página.
 - Itens de menu vêm de `SidebarSection[]`: rota com `href` (`/caminho`), âncora com `href` (`#id`) e ação com `onClick`. Seções específicas da página entram por `pageSections`, com `activePageSectionId` vindo de `useScrollSpy`.
-- O `Sidebar` é um componente reutilizável com duas variantes (`permanent` e `modal`) e estado recolhido controlado por quem o usa. No `Layout`, o estado recolhido fica em `useAppStore` (`sidebarCollapsed`) e a abertura do drawer em `sidebarOpen`; o botão que recolhe e abre o menu mora na `AppBar` do `Layout`, não no rodapé da sidebar.
+- O `Sidebar` é um componente reutilizável com duas variantes (`permanent` e `modal`) e estado recolhido controlado por quem o usa. No `Layout`, o estado recolhido (`collapsed`, `defaultCollapsed`, `onCollapsedChange`, `storageKey` opcional) e a abertura do drawer (`open`, `defaultOpen`, `onOpenChange`) são controlados ou não; o botão que recolhe e abre o menu mora na `AppBar` do `Layout`, não no rodapé da sidebar.
 - A `AppBar` do `Layout` reúne botão de menu, `Breadcrumbs` e ações (tema). O botão de menu usa `MenuToggleIcon` (ícone de menu aberto quando expandido, hambúrguer quando fechado, com troca animada) e um `Tooltip` com `describe={false}` repetindo o rótulo da ação atual. A trilha vem da prop `breadcrumbs` ou é derivada do menu e da rota (`deriveBreadcrumbs`); o último item é sempre a página atual, sem link.
 - `header` e `footer` do `Sidebar` aceitam um nó ou uma função `({ collapsed }) => nó`, para o conteúdo se adaptar ao modo recolhido (marca compacta, avatar sem nome).
 - A ordem do DOM do `Layout` é skip link, `AppBar`, sidebar, `main`, rodapé (posicionados por CSS grid), para o botão de menu vir antes da sidebar no foco.
 - Tooltip renderiza a bolha em portal com posição fixa, por isso funciona dentro de containers com scroll; item de menu recolhido usa `Tooltip` com `describe={false}`.
 - Dentro de um componente, estilo de layout com CSS explícito no `.module.css` (`display: flex`); `Flex`, `Grid` e `Container` servem para compor páginas.
 
-## Estrutura por entidade (`actions/`, `stores/`, `types/`)
+## Estrutura por entidade (`actions/`, `types/`)
 
-Padrão Actions: cada entidade (ex: `users`) tem sua própria subpasta em `actions/` e, quando tem estado de servidor, em `stores/`:
+Padrão Actions: cada entidade (ex: `users`) tem sua própria subpasta em `actions/`:
 
 - `actions/api.ts` — a instância única do Axios (`baseURL` e, se o projeto precisar, interceptors).
 - `actions/<entidade>/index.ts` — funções que chamam a API (`listUsers`, `createUser`...), usando a instância `api`. Arrow functions exportadas, sem classe wrapper, devolvendo dado já tipado:
@@ -105,23 +105,15 @@ Padrão Actions: cada entidade (ex: `users`) tem sua própria subpasta em `actio
   }
   ```
 - `actions/<entidade>/types.ts` — **todos** os tipos daquela entidade: formato de domínio (`User`) e de request/response (`CreateUserInput`, `UpdateUserInput`...) juntos no mesmo arquivo.
-- `stores/<entidade>/index.ts` — o store Zustand (`useUserStore`), que chama as actions. Se o nome da action conflitar com o da ação do store, importe com alias (`coverShift as coverShiftRequest`). O tipo do estado fica em `stores/<entidade>/types.ts`.
-- `types/` — nunca tem subpasta por entidade (isso é exclusivo de `actions/`/`stores/`); fica só com arquivo solto pro que é genuinamente usado por **mais de uma entidade**. Tipo que só a própria entidade usa vai pro `actions/<entidade>/types.ts` dela, nunca pra `types/`.
+- `types/` — nunca tem subpasta por entidade (isso é exclusivo de `actions/`); fica só com arquivo solto pro que é genuinamente usado por **mais de uma entidade**. Tipo que só a própria entidade usa vai pro `actions/<entidade>/types.ts` dela, nunca pra `types/`.
 - Se a API paginar, o helper genérico fica em `actions/pagination.ts` (ex: `fetchAllPages`), e o tipo da resposta paginada em `types/pagination.ts`.
 - `services/` fica reservado pra integração com serviço de terceiro que não seja o próprio backend — só usar se/quando surgir.
-
-## Estado (Zustand)
-
-- Um store por domínio (ex: `useAppStore`, `useDataStore`), nunca um store global único.
-- Store expõe estado + ações no mesmo objeto (`create<Store>((set, get) => ({ ... }))`); componentes nunca mutam estado fora de uma ação do store.
-- Selecione só o slice necessário no componente (`useDataStore((state) => state.items)`), nunca desestruture o store inteiro — evita rerender desnecessário.
-- Estado de servidor (dados vindos da API) fica no store; estado local de UI (aberto/fechado de modal, valor de input) fica em `useState` do próprio componente — não misture os dois num store.
 
 ## HTTP (Axios)
 
 - Uma instância única (`actions/api.ts`) com `baseURL` e os interceptors que o projeto precisar — nunca `axios.get`/`axios.post` direto nos componentes.
 - Um módulo de action por entidade, cada um exportando funções que chamam a instância única e devolvem dados já tipados (ver seção Estrutura por entidade).
-- Chamada HTTP nunca dentro de componente/JSX direto — sempre via hook ou store action que chama a action.
+- Chamada HTTP nunca dentro de componente/JSX direto — sempre via hook que chama a action.
 - Erros de resposta tratados no interceptor e/ou na action — componente só lida com estado de loading/erro, nunca com o objeto de erro do Axios cru.
 
 ## Animação (`motion`, catálogo de receitas)

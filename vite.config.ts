@@ -15,7 +15,6 @@ export default defineConfig({
       '@actions': resolve(__dirname, './src/actions'),
       '@assets': resolve(__dirname, './src/assets'),
       '@styles': resolve(__dirname, './src/styles'),
-      '@stores': resolve(__dirname, './src/stores'),
       '@utils': resolve(__dirname, './src/utils'),
       '@hooks': resolve(__dirname, './src/hooks'),
       '@motion': resolve(__dirname, './src/motion'),
@@ -91,7 +90,6 @@ export default defineConfig({
     include: [
       'react',
       'react-dom',
-      'zustand',
       'axios',
     ],
   },

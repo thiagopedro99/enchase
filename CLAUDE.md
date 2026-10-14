@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-Enchase (React 19, TypeScript, Vite, CSS Modules, Zustand, Axios, motion). Ainda não se comunica com nenhuma API — `actions/` e `stores/` trazem só exemplos genéricos (`users`, `data`).
+Enchase (React 19, TypeScript, Vite, CSS Modules, Axios, motion). Ainda não se comunica com nenhuma API — `actions/` traz só um exemplo genérico (`users`).
 
 ## Convenções de código
 
-Siga o [`skill.md`](./skill.md): formatação, imports, componentização com `/subcomponentes`, estilos com CSS Modules e variáveis `--enchase-*`, padrão Actions (`actions/`, `stores/`, `types/`), Zustand, Axios, animação com `motion/react` e acessibilidade. Consistência com o padrão existente vem antes de qualquer abstração nova.
+Siga o [`skill.md`](./skill.md): formatação, imports, componentização com `/subcomponentes`, estilos com CSS Modules e variáveis `--enchase-*`, padrão Actions (`actions/`, `types/`), Axios, animação com `motion/react` e acessibilidade. Consistência com o padrão existente vem antes de qualquer abstração nova.
 
 ## Regras essenciais de código
 
