@@ -1,4 +1,6 @@
 import { createPortal } from 'react-dom'
+
+import { useIsClient } from '@hooks/useIsClient.ts'
 import { useId, useRef } from 'react'
 import { CloseIcon } from '../Icon/icons/CloseIcon.tsx'
 
@@ -111,9 +113,10 @@ export const Modal = ({
 }: ModalProps) => {
   const motionStyle = useMotionStyle('pop', props.animation)
   const reduced = useMediaQuery(reducedMotionQuery)
+  const isClient = useIsClient()
   const { mounted, state, ref } = usePresence<HTMLDivElement>(isOpen, { exitMs: reduced ? 0 : exitMilliseconds(motionStyle) + exitPadding })
 
-  if (typeof document === 'undefined') return null
+  if (!isClient) return null
 
   return createPortal(
     mounted ? (

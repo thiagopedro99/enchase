@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
 
+import { useIsClient } from '@hooks/useIsClient.ts'
 import { useInertSiblings } from '@hooks/useInertSiblings.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
@@ -46,9 +47,10 @@ const OverlayLoading = ({ size, text, color, animation, ...props }: Required<Pic
 
 export const Loading = ({ size = 'md', overlay = false, text, color, animation, ...props }: LoadingProps) => {
   const { labels } = useUIConfig()
+  const isClient = useIsClient()
 
   if (overlay) {
-    if (typeof document === 'undefined') return null
+    if (!isClient) return null
 
     return createPortal(<OverlayLoading size={size} text={text} color={color} animation={animation} {...props} />, document.body)
   }

@@ -5,6 +5,7 @@ import { bubbleBox, closeDelay as defaultCloseDelay, crossAxisShift, defaultPosi
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { classNames } from '@utils/classNames.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
+import { useIsClient } from '@hooks/useIsClient.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import styles from './styles.module.css'
 
@@ -25,6 +26,7 @@ export const Tooltip = ({
   bubbleStyle
 }: TooltipProps) => {
   const { motion, dir } = useUIConfig()
+  const isClient = useIsClient()
   const motionSettings = resolveAnimation(animation, motion)
   const [open, setOpen] = useState(false)
   const [anchor, setAnchor] = useState<TooltipAnchor>({ top: 0, left: 0 })
@@ -144,7 +146,7 @@ export const Tooltip = ({
           {text}
         </span>
       )}
-      {typeof document !== 'undefined' && createPortal(presence.mounted ? <span {...bubbleProps}>{text}</span> : null, document.body)}
+      {isClient && createPortal(presence.mounted ? <span {...bubbleProps}>{text}</span> : null, document.body)}
     </div>
   )
 }
