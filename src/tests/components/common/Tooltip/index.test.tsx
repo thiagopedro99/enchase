@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
 
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
+import { ptBR } from '@locales/ptBR.ts'
 
 const visibleBubble = () => screen.queryByText('Save changes', { selector: '[aria-hidden="true"]' })
 
@@ -160,5 +161,164 @@ describe('Tooltip placement', () => {
     fireEvent.scroll(window)
 
     await waitFor(() => expect(visibleBubble()).not.toBeInTheDocument())
+  })
+})
+
+describe('Tooltip contract', () => {
+  const hoverSave = async (user: ReturnType<typeof userEvent.setup>) => user.hover(screen.getByRole('button', { name: 'Save' }))
+  const bubbleOf = () => screen.findByText('Save changes', { selector: '[aria-hidden="true"]' })
+
+  it('marks the trigger and the bubble with data-slot and the bubble with position and state', async () => {
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(
+      <Tooltip text="Save changes" position="bottom">
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await hoverSave(user)
+    const bubble = await bubbleOf()
+
+    expect(container.querySelector('[data-slot="tooltip-trigger"]')).toBeInTheDocument()
+    expect(bubble).toHaveAttribute('data-slot', 'tooltip-bubble')
+    expect(bubble).toHaveAttribute('data-position', 'bottom')
+    await waitFor(() => expect(bubble).toHaveAttribute('data-state', 'open'))
+  })
+
+  it('merges className and style on the trigger wrapper and on the bubble', async () => {
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(
+      <Tooltip text="Save changes" className="mine" style={{ color: 'red' }} bubbleClassName="bubble-mine" bubbleStyle={{ letterSpacing: '2px' }}>
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await hoverSave(user)
+    const bubble = await bubbleOf()
+    const wrapper = container.querySelector('[data-slot="tooltip-trigger"]') as HTMLElement
+
+    expect(wrapper).toHaveClass('mine')
+    expect(wrapper.className).toContain('wrapper')
+    expect(wrapper.style.color).toBe('red')
+    expect(bubble).toHaveClass('bubble-mine')
+    expect(bubble).toHaveStyle({ letterSpacing: '2px' })
+  })
+
+  it.each([
+    ['ltr', 'start', 'left'],
+    ['ltr', 'end', 'right'],
+    ['rtl', 'start', 'right'],
+    ['rtl', 'end', 'left']
+  ] as const)('maps %s %s to the %s side', async (dir, position, placement) => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Tooltip text="Save changes" position={position}>
+        <button>Save</button>
+      </Tooltip>,
+      { locale: { locale: 'x', dir, messages: ptBR.messages } }
+    )
+
+    await hoverSave(user)
+
+    expect(await bubbleOf()).toHaveAttribute('data-position', placement)
+  })
+
+  it('waits for openDelay before showing', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Tooltip text="Save changes" openDelay={150}>
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await hoverSave(user)
+    expect(visibleBubble()).not.toBeInTheDocument()
+
+    expect(await bubbleOf()).toBeInTheDocument()
+  })
+
+  it('does not open when the pointer leaves before openDelay', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Tooltip text="Save changes" openDelay={150}>
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await hoverSave(user)
+    await user.unhover(screen.getByRole('button', { name: 'Save' }))
+    await new Promise((resolve) => setTimeout(resolve, 300))
+
+    expect(visibleBubble()).not.toBeInTheDocument()
+  })
+
+  it('honors closeDelay before hiding', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Tooltip text="Save changes" closeDelay={400} animation={false}>
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await hoverSave(user)
+    await bubbleOf()
+    await user.unhover(screen.getByRole('button', { name: 'Save' }))
+    await new Promise((resolve) => setTimeout(resolve, 200))
+    expect(visibleBubble()).toBeInTheDocument()
+
+    await waitFor(() => expect(visibleBubble()).not.toBeInTheDocument(), { timeout: 1000 })
+  })
+
+  it('turns the transition off with animation false or motion never', async () => {
+    const user = userEvent.setup()
+    const { unmount } = renderWithProviders(
+      <Tooltip text="Save changes" animation={false}>
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await hoverSave(user)
+    expect(await bubbleOf()).toHaveAttribute('data-animation', 'off')
+    unmount()
+
+    renderWithProviders(
+      <Tooltip text="Save changes">
+        <button>Save</button>
+      </Tooltip>,
+      { motion: { mode: 'never' } }
+    )
+    await hoverSave(user)
+
+    expect(await bubbleOf()).toHaveAttribute('data-animation', 'off')
+  })
+
+  it('exposes the duration and the pop scale as CSS variables', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Tooltip text="Save changes" animation={{ recipe: 'pop', tuning: { duration: 0.4, scale: 0.9 } }}>
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await hoverSave(user)
+    const bubble = await bubbleOf()
+
+    expect(bubble.style.getPropertyValue('--enchase-tooltip-duration')).toBe('0.4s')
+    expect(bubble.style.getPropertyValue('--enchase-tooltip-scale')).toBe('0.9')
+  })
+
+  it('keeps the description wiring off the visual bubble', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Tooltip text="Save changes">
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await hoverSave(user)
+    const bubble = await bubbleOf()
+
+    expect(bubble).not.toHaveAttribute('id')
+    expect(bubble).not.toHaveAttribute('role')
   })
 })

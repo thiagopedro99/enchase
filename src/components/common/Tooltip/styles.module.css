@@ -8,6 +8,7 @@
 .bubble {
   position: fixed;
   z-index: var(--enchase-z-tooltip);
+  margin: 0;
   background: var(--enchase-color-inverse-surface);
   color: var(--enchase-color-inverse-on-surface);
   padding: var(--enchase-space-xs) var(--enchase-space-sm);
@@ -15,22 +16,40 @@
   font-size: var(--enchase-font-size-xs);
   font-weight: var(--enchase-font-weight-medium);
   white-space: nowrap;
+  opacity: 0;
+  transform: scale(var(--enchase-tooltip-scale, 1));
+  transition-property: opacity, transform;
+  transition-duration: var(--enchase-tooltip-duration, var(--enchase-motion-duration-fast));
+  transition-timing-function: var(--enchase-motion-ease-out);
 }
 
-.bubble[data-position='top'] {
-  translate: -50% -100%;
+.bubble[data-state='open'] {
+  opacity: 1;
+  transform: none;
 }
 
-.bubble[data-position='bottom'] {
-  translate: -50% 0;
+.bubble[data-animation='off'] {
+  transition: none;
 }
 
-.bubble[data-position='left'] {
-  translate: -100% -50%;
+.bubble:where([data-position='top']) {
+  translate: calc(-50% + var(--enchase-tooltip-shift, 0px)) -100%;
+  transform-origin: 50% 100%;
 }
 
-.bubble[data-position='right'] {
-  translate: 0 -50%;
+.bubble:where([data-position='bottom']) {
+  translate: calc(-50% + var(--enchase-tooltip-shift, 0px)) 0;
+  transform-origin: 50% 0;
+}
+
+.bubble:where([data-position='left']) {
+  translate: -100% calc(-50% + var(--enchase-tooltip-shift, 0px));
+  transform-origin: 100% 50%;
+}
+
+.bubble:where([data-position='right']) {
+  translate: 0 calc(-50% + var(--enchase-tooltip-shift, 0px));
+  transform-origin: 0 50%;
 }
 
 @media (hover: none) and (pointer: coarse) {

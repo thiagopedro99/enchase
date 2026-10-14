@@ -1,7 +1,9 @@
+import type { CSSProperties, ReactNode } from 'react'
 import type { MotionOverride } from '@motion/types.ts'
-import type { ReactNode } from 'react'
 
-export type TooltipPosition = 'top' | 'bottom' | 'left' | 'right'
+export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right'
+
+export type TooltipPosition = TooltipPlacement | 'start' | 'end'
 
 export interface TooltipProps {
   text: string
@@ -9,4 +11,21 @@ export interface TooltipProps {
   position?: TooltipPosition
   describe?: boolean
   animation?: MotionOverride
+  openDelay?: number
+  closeDelay?: number
+  className?: string
+  style?: CSSProperties
+  bubbleClassName?: string
+  bubbleStyle?: CSSProperties
+}
+
+export type TooltipAnchor = {
+  top: number
+  left: number
+}
+
+export type TooltipAnimation = {
+  off: boolean
+  duration: number
+  scale: number
 }
