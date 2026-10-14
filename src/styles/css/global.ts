@@ -52,28 +52,6 @@ export const globalStylesCss = `
   h5 { font-size: ${vars.font.size.lg}; }
   h6 { font-size: ${vars.font.size.base}; }
 
-  a {
-    color: ${vars.color.primary};
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-    transition: color ${vars.transition.fast};
-  }
-
-  a:hover {
-    color: ${vars.color.primaryHover};
-  }
-
-  button {
-    font-family: inherit;
-    cursor: pointer;
-    border: none;
-    background: none;
-  }
-
-  button:disabled {
-    cursor: not-allowed;
-  }
-
   img {
     max-width: 100%;
     height: auto;
@@ -113,10 +91,13 @@ export const globalStylesCss = `
       scroll-behavior: auto;
     }
 
-    *, *::before, *::after {
-      transition-duration: 0.01ms !important;
+    *:not([data-motion='on']), *:not([data-motion='on'])::before, *:not([data-motion='on'])::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
+    }
+
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
     }
   }
 

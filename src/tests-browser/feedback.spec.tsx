@@ -77,6 +77,16 @@ describe('Skeleton in a real browser', () => {
     expect(getComputedStyle(element, '::after').display).toBe('none')
   })
 
+  it('keeps the reduced motion pulse looping instead of freezing it', async () => {
+    renderInBrowser(<Skeleton data-testid="skeleton" />, 'auto')
+    const element = page.getByTestId('skeleton').element()
+
+    await setReducedMotion('reduce')
+
+    expect(getComputedStyle(element).animationIterationCount).toBe('infinite')
+    expect(parseFloat(getComputedStyle(element).animationDuration)).toBeGreaterThan(0.1)
+  })
+
   it('lets the caller className win on size and radius even when its css loads first', () => {
     addStyle('.mine { block-size: 77px; inline-size: 55px; border-radius: 2px; }', 'start')
     renderInBrowser(<Skeleton variant="rectangular" className="mine" data-testid="skeleton" />)
