@@ -1,10 +1,12 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { act, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
-import { useToast } from '@components/toast/index.ts'
+import UIProvider from '@components/uiProvider/index.tsx'
+import { ToastProvider, useToast } from '@components/toast/index.ts'
+import { ptBR } from '@locales/ptBR.ts'
 
 const Probe = ({ duration }: { duration?: number }) => {
   const toast = useToast()
@@ -182,6 +184,98 @@ describe('Toast', () => {
 
     expect(toastCount()).toBe(1)
     vi.useRealTimers()
+  })
+
+  it('marks the viewport, the toast and its parts with slots and states', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Probe duration={0} />)
+
+    await user.click(screen.getByRole('button', { name: 'success' }))
+    const item = (await screen.findByText('Saved')).closest('[data-slot="toast"]') as HTMLElement
+
+    expect(screen.getByRole('region', { name: 'Notificações' })).toHaveAttribute('data-slot', 'toast-viewport')
+    expect(item).toHaveAttribute('data-type', 'success')
+    expect(['entering', 'open']).toContain(item.getAttribute('data-state'))
+    expect(item.querySelector('[data-slot="toast-title"]')).toHaveTextContent('Saved')
+    expect(item.querySelector('[data-slot="toast-close"]')).toBeInTheDocument()
+  })
+
+  it('has a progress bar slot only when the toast expires', async () => {
+    const user = userEvent.setup()
+    const { unmount } = renderWithProviders(<Probe duration={5000} />)
+
+    await user.click(screen.getByRole('button', { name: 'success' }))
+    await screen.findByText('Saved')
+    expect(document.querySelector('[data-slot="toast-progress"]')).toBeInTheDocument()
+
+    unmount()
+    renderWithProviders(<Probe duration={0} />)
+    await user.click(screen.getByRole('button', { name: 'success' }))
+    await screen.findByText('Saved')
+    expect(document.querySelector('[data-slot="toast-progress"]')).not.toBeInTheDocument()
+  })
+
+  it('keeps the caller className and style on the viewport and on each toast', async () => {
+    const user = userEvent.setup()
+    const Custom = () => {
+      const toast = useToast()
+
+      return <button onClick={() => toast.info('Custom', 0, { className: 'mine', style: { color: 'rgb(255, 0, 0)' } })}>open</button>
+    }
+    render(
+      <UIProvider locale={ptBR}>
+        <ToastProvider className="viewport" style={{ opacity: 0.9 }}>
+          <Custom />
+        </ToastProvider>
+      </UIProvider>
+    )
+
+    await user.click(screen.getByRole('button', { name: 'open' }))
+    const item = (await screen.findByText('Custom')).closest('[data-slot="toast"]') as HTMLElement
+    const region = screen.getByRole('region', { name: 'Notificações' })
+
+    expect(item.className.split(' ').at(-1)).toBe('mine')
+    expect(item).toHaveStyle({ color: 'rgb(255, 0, 0)' })
+    expect(region.className.split(' ').at(-1)).toBe('viewport')
+    expect(region).toHaveStyle({ opacity: '0.9' })
+  })
+
+  it('keeps a dismissed toast mounted and inert while it leaves', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Probe duration={0} />)
+
+    await user.click(screen.getByRole('button', { name: 'success' }))
+    await user.click(await screen.findByRole('button', { name: 'Fechar notificação' }))
+    const item = screen.getByText('Saved').closest('[data-slot="toast"]') as HTMLElement
+
+    expect(item).toHaveAttribute('data-state', 'exiting')
+    expect(item).toHaveAttribute('inert')
+    await expectCount(0)
+  })
+
+  it('removes the toast at once when animation is off', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Probe duration={0} />, { motion: { mode: 'never' } })
+
+    await user.click(screen.getByRole('button', { name: 'success' }))
+    await user.click(await screen.findByRole('button', { name: 'Fechar notificação' }))
+
+    await expectCount(0)
+  })
+
+  it('marks a hovered toast as paused for the progress bar', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Probe duration={5000} />)
+
+    await user.click(screen.getByRole('button', { name: 'success' }))
+    const item = (await screen.findByText('Saved')).closest('[data-slot="toast"]') as HTMLElement
+    await user.hover(item)
+
+    expect(item).toHaveAttribute('data-paused')
+
+    await user.unhover(item)
+
+    expect(item).not.toHaveAttribute('data-paused')
   })
 
   it('has no axe violations', async () => {
