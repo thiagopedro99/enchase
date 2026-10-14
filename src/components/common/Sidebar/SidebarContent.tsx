@@ -1,4 +1,5 @@
-import { ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { ChevronsRightIcon } from '../Icon/icons/ChevronsRightIcon.tsx'
+import { ChevronsLeftIcon } from '../Icon/icons/ChevronsLeftIcon.tsx'
 
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
@@ -90,7 +91,7 @@ export const SidebarContent = ({ sections, activeSectionId, currentHref, header,
           {footerContent}
           {onToggleCollapsed && (
             <button type="button" className={styles.collapseButton} onClick={onToggleCollapsed} aria-label={toggleLabel} aria-expanded={!collapsed}>
-              {collapsed ? <ChevronsRight size={22} aria-hidden="true" /> : <ChevronsLeft size={22} aria-hidden="true" />}
+              {collapsed ? <ChevronsRightIcon size={22} /> : <ChevronsLeftIcon size={22} />}
             </button>
           )}
         </div>

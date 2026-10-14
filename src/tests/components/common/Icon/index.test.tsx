@@ -1,9 +1,13 @@
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
+import { ChevronsRightIcon } from '@components/common/Icon/icons/ChevronsRightIcon.tsx'
+import { ChevronsLeftIcon } from '@components/common/Icon/icons/ChevronsLeftIcon.tsx'
+import { ExternalLinkIcon } from '@components/common/Icon/icons/ExternalLinkIcon.tsx'
 import { ChevronRightIcon } from '@components/common/Icon/icons/ChevronRightIcon.tsx'
 import { MenuOpenIcon } from '@components/common/Icon/icons/MenuOpenIcon.tsx'
 import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
+import { LogOutIcon } from '@components/common/Icon/icons/LogOutIcon.tsx'
 import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
 import { Icon } from '@components/common/Icon/index.tsx'
 
@@ -11,7 +15,11 @@ const icons = [
   ['menu', MenuIcon],
   ['menu-open', MenuOpenIcon],
   ['close', CloseIcon],
-  ['chevron-right', ChevronRightIcon]
+  ['chevron-right', ChevronRightIcon],
+  ['chevrons-right', ChevronsRightIcon],
+  ['chevrons-left', ChevronsLeftIcon],
+  ['external-link', ExternalLinkIcon],
+  ['log-out', LogOutIcon]
 ] as const
 
 const svgOf = (container: HTMLElement) => container.querySelector('svg') as SVGSVGElement

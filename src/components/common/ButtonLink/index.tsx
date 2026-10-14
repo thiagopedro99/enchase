@@ -1,7 +1,7 @@
-import { ExternalLink } from 'lucide-react'
 import { motion } from 'motion/react'
 
 import { defaultFullWidth, defaultRecipe, defaultSize, defaultVariant } from '../Button/defaultData.ts'
+import { ExternalLinkIcon } from '../Icon/icons/ExternalLinkIcon.tsx'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -31,7 +31,7 @@ export const ButtonLink = ({ children, animation, variant = defaultVariant, size
       {opensNewTab && (
         <>
           {' '}
-          <ExternalLink size={16} aria-hidden="true" />
+          <ExternalLinkIcon size={16} />
           <VisuallyHidden>{labels.opensInNewTab}</VisuallyHidden>
         </>
       )}

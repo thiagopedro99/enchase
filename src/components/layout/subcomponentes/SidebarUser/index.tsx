@@ -1,4 +1,4 @@
-import { LogOut } from 'lucide-react'
+import { LogOutIcon } from '@components/common/Icon/icons/LogOutIcon.tsx'
 
 import { VisuallyHidden } from '@components/common/VisuallyHidden/index.tsx'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -19,7 +19,7 @@ export const SidebarUser = ({ name, collapsed, onLogout }: SidebarUserProps) => 
       </div>
       {!collapsed && onLogout && (
         <button type="button" className={styles.logout} onClick={onLogout} aria-label={labels.logout}>
-          <LogOut size={22} aria-hidden="true" />
+          <LogOutIcon size={22} />
         </button>
       )}
     </div>
