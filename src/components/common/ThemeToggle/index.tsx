@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from 'motion/react'
-import { Moon, Sun } from 'lucide-react'
 
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
 import { useColorMode } from '@hooks/useColorMode.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
+import { MoonIcon } from '../Icon/icons/MoonIcon.tsx'
+import { SunIcon } from '../Icon/icons/SunIcon.tsx'
 import Tooltip from '../Tooltip/index.tsx'
 import styles from './styles.module.css'
 
@@ -19,7 +20,7 @@ const ThemeToggle = () => {
       <motion.button {...pressMotion} type="button" className={styles.button} onClick={toggleMode} aria-label={label}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.span key={resolvedMode} {...iconMotion} className={styles.icon} aria-hidden="true">
-            {resolvedMode === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+            {resolvedMode === 'light' ? <MoonIcon size={20} /> : <SunIcon size={20} />}
           </motion.span>
         </AnimatePresence>
       </motion.button>

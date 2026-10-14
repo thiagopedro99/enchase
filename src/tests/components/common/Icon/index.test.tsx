@@ -10,6 +10,8 @@ import { ChevronsRightIcon } from '@components/common/Icon/icons/ChevronsRightIc
 import { ChevronsLeftIcon } from '@components/common/Icon/icons/ChevronsLeftIcon.tsx'
 import { ExternalLinkIcon } from '@components/common/Icon/icons/ExternalLinkIcon.tsx'
 import { ChevronRightIcon } from '@components/common/Icon/icons/ChevronRightIcon.tsx'
+import { MoonIcon } from '@components/common/Icon/icons/MoonIcon.tsx'
+import { SunIcon } from '@components/common/Icon/icons/SunIcon.tsx'
 import { MenuOpenIcon } from '@components/common/Icon/icons/MenuOpenIcon.tsx'
 import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { LogOutIcon } from '@components/common/Icon/icons/LogOutIcon.tsx'
@@ -29,7 +31,9 @@ const icons = [
   ['info', InfoIcon],
   ['alert-triangle', AlertTriangleIcon],
   ['eye', EyeIcon],
-  ['eye-off', EyeOffIcon]
+  ['eye-off', EyeOffIcon],
+  ['sun', SunIcon],
+  ['moon', MoonIcon]
 ] as const
 
 const svgOf = (container: HTMLElement) => container.querySelector('svg') as SVGSVGElement
