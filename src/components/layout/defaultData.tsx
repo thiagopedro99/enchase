@@ -1,4 +1,5 @@
-import { BookOpen, Home } from 'lucide-react'
+import { BookOpenIcon } from '../common/Icon/icons/BookOpenIcon.tsx'
+import { HomeIcon } from '../common/Icon/icons/HomeIcon.tsx'
 
 import type { SidebarSection } from '../common/Sidebar/types.ts'
 
@@ -15,8 +16,8 @@ export const defaultNavigationSections: SidebarSection[] = [
     id: 'navigation',
     title: 'Navegação',
     items: [
-      { id: 'home', label: 'Início', icon: Home, href: '/' },
-      { id: 'docs', label: 'Documentação', icon: BookOpen, href: docsUrl, native: true }
+      { id: 'home', label: 'Início', icon: <HomeIcon />, href: '/' },
+      { id: 'docs', label: 'Documentação', icon: <BookOpenIcon />, href: docsUrl, native: true }
     ]
   }
 ]

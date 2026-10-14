@@ -1,11 +1,10 @@
 import type { MotionOverride } from '@motion/types.ts'
-import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 export type SidebarItem = {
   id: string
   label: string
-  icon?: LucideIcon
+  icon?: ReactNode
   href?: string
   native?: boolean
   badge?: string

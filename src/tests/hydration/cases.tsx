@@ -1,4 +1,4 @@
-import { Home } from 'lucide-react'
+import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
@@ -29,7 +29,7 @@ const sections: SidebarSection[] = [
     id: 'main',
     title: 'Navigation',
     items: [
-      { id: 'home', label: 'Home', icon: Home, href: '/' },
+      { id: 'home', label: 'Home', icon: <HomeIcon />, href: '/' },
       { id: 'docs', label: 'Docs', href: '/docs' }
     ]
   }

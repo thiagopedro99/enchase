@@ -1,6 +1,6 @@
 import { useEffect, useId } from 'react'
 
-import { defaultBrand, defaultBrandLogo, defaultCentered, defaultNavigationSections } from './defaultData.ts'
+import { defaultBrand, defaultBrandLogo, defaultCentered, defaultNavigationSections } from './defaultData.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import AppSidebar from './subcomponentes/AppSidebar/index.tsx'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'

@@ -16,6 +16,10 @@ import { MenuOpenIcon } from '@components/common/Icon/icons/MenuOpenIcon.tsx'
 import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { LogOutIcon } from '@components/common/Icon/icons/LogOutIcon.tsx'
 import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
+import { BookOpenIcon } from '@components/common/Icon/icons/BookOpenIcon.tsx'
+import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
+import { LayoutGridIcon } from '@components/common/Icon/icons/LayoutGridIcon.tsx'
+import { RocketIcon } from '@components/common/Icon/icons/RocketIcon.tsx'
 import { Icon } from '@components/common/Icon/index.tsx'
 
 const icons = [
@@ -33,7 +37,11 @@ const icons = [
   ['eye', EyeIcon],
   ['eye-off', EyeOffIcon],
   ['sun', SunIcon],
-  ['moon', MoonIcon]
+  ['moon', MoonIcon],
+  ['home', HomeIcon],
+  ['book-open', BookOpenIcon],
+  ['layout-grid', LayoutGridIcon],
+  ['rocket', RocketIcon]
 ] as const
 
 const svgOf = (container: HTMLElement) => container.querySelector('svg') as SVGSVGElement
@@ -72,13 +80,13 @@ describe('Icon', () => {
 })
 
 describe.each(icons)('%s icon', (name, Component) => {
-  it('renders its paths with the shared base attributes', () => {
+  it('renders its shapes with the shared base attributes', () => {
     const { container } = render(<Component size={20} />)
     const svg = svgOf(container)
 
     expect(svg).toHaveAttribute('data-icon', name)
     expect(svg).toHaveAttribute('width', '20')
     expect(svg).toHaveAttribute('aria-hidden', 'true')
-    expect(svg.querySelectorAll('path').length).toBeGreaterThan(0)
+    expect(svg.querySelectorAll('path, rect, circle').length).toBeGreaterThan(0)
   })
 })

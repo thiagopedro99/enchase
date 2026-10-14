@@ -1,5 +1,5 @@
 import { ButtonLink, Container, Flex } from '@components/common/index.ts'
-import { docsUrl } from '@components/layout/defaultData.ts'
+import { docsUrl } from '@components/layout/defaultData.tsx'
 import { repositoryUrl } from './defaultData.ts'
 import Layout from '@components/layout/index.tsx'
 import styles from './styles.module.css'

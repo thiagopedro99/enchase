@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
-import { docsUrl } from '@components/layout/defaultData.ts'
+import { docsUrl } from '@components/layout/defaultData.tsx'
 import { repositoryUrl } from '@pages/home/defaultData.ts'
 import Home from '@pages/home/index.tsx'
 

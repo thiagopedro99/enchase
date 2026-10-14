@@ -12,8 +12,6 @@ import styles from './styles.module.css'
 import type { SidebarContentProps, SidebarItemViewProps } from './types.ts'
 
 const SidebarItemView = ({ item, current, collapsed, onSelect }: SidebarItemViewProps) => {
-  const Icon = item.icon
-
   const handleClick = () => {
     item.onClick?.()
     onSelect?.()
@@ -22,7 +20,7 @@ const SidebarItemView = ({ item, current, collapsed, onSelect }: SidebarItemView
   const content = (
     <>
       <span className={styles.itemIcon} aria-hidden="true">
-        {Icon ? <Icon size={22} /> : item.label.charAt(0).toUpperCase()}
+        {item.icon ?? item.label.charAt(0).toUpperCase()}
       </span>
       {collapsed ? <VisuallyHidden>{item.label}</VisuallyHidden> : <span className={styles.itemText}>{item.label}</span>}
       {!collapsed && item.badge && <span className={styles.itemBadge}>{item.badge}</span>}

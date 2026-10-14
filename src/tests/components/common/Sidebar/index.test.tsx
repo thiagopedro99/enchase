@@ -4,7 +4,8 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { Home, LayoutGrid } from 'lucide-react'
+import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
+import { LayoutGridIcon } from '@components/common/Icon/icons/LayoutGridIcon.tsx'
 import { axe } from '@tests/axe.ts'
 
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
@@ -18,8 +19,8 @@ const sections: SidebarSection[] = [
     id: 'app',
     title: 'Aplicação',
     items: [
-      { id: 'home', label: 'Início', icon: Home, href: '/' },
-      { id: 'components', label: 'Componentes', icon: LayoutGrid, href: '/components', badge: 'Novo' }
+      { id: 'home', label: 'Início', icon: <HomeIcon />, href: '/' },
+      { id: 'components', label: 'Componentes', icon: <LayoutGridIcon />, href: '/components', badge: 'Novo' }
     ]
   },
   {
