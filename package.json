@@ -1,8 +1,43 @@
 {
   "name": "enchase",
-  "private": true,
   "version": "0.0.0",
+  "description": "Accessible, themeable React components with a validated theme, own icons and a motion catalog",
+  "license": "MIT",
   "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thiagopedro99/enchase.git"
+  },
+  "files": [
+    "dist-lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist-lib/types/lib/index.d.ts",
+      "import": "./dist-lib/index.js",
+      "default": "./dist-lib/index.js"
+    },
+    "./theme": {
+      "types": "./dist-lib/types/lib/theme.d.ts",
+      "import": "./dist-lib/theme.js",
+      "default": "./dist-lib/theme.js"
+    },
+    "./locales": {
+      "types": "./dist-lib/types/lib/locales.d.ts",
+      "import": "./dist-lib/locales.js",
+      "default": "./dist-lib/locales.js"
+    },
+    "./styles.css": "./dist-lib/styles.css",
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -13,16 +48,22 @@
     "test:watch": "vitest",
     "test:browser": "vitest run --config vitest.browser.config.ts",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build -o storybook-static"
+    "build-storybook": "storybook build -o storybook-static",
+    "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json && node scripts/fixDeclarations.mjs",
+    "pack:check": "npm pack --dry-run && publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css",
+    "test:consumer": "node scripts/testConsumer.mjs"
   },
   "dependencies": {
-    "@fontsource-variable/figtree": "^5.3.0",
-    "motion": "^14.0.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "motion": "^14.0.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
     "@eslint/js": "^9.25.0",
+    "@fontsource-variable/figtree": "^5.3.0",
     "@storybook/addon-a11y": "^10.6.1",
     "@storybook/addon-docs": "^10.6.1",
     "@storybook/react-vite": "^10.6.1",
@@ -40,6 +81,9 @@
     "globals": "^16.0.0",
     "jsdom": "^29.1.1",
     "playwright": "^1.64.1",
+    "publint": "^0.3.25",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
     "storybook": "^10.6.1",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
