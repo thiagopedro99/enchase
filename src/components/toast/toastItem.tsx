@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AlertTriangle, Check, Info } from 'lucide-react'
+import { AlertTriangleIcon } from '@components/common/Icon/icons/AlertTriangleIcon.tsx'
 import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
+import { CheckIcon } from '@components/common/Icon/icons/CheckIcon.tsx'
+import { InfoIcon } from '@components/common/Icon/icons/InfoIcon.tsx'
 import { animate, motion, useMotionValue } from 'motion/react'
 
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
@@ -12,10 +14,10 @@ import type { ToastItemProps } from './types.ts'
 import type { KeyboardEvent } from 'react'
 
 const Icons = {
-  success: <Check size={20} />,
+  success: <CheckIcon size={20} />,
   error: <CloseIcon size={20} />,
-  warning: <AlertTriangle size={20} />,
-  info: <Info size={20} />
+  warning: <AlertTriangleIcon size={20} />,
+  info: <InfoIcon size={20} />
 }
 
 const ToastItemComponent = ({ toast, onRemove, animation }: ToastItemProps) => {

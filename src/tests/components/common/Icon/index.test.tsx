@@ -1,6 +1,11 @@
 import { render } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
+import { AlertTriangleIcon } from '@components/common/Icon/icons/AlertTriangleIcon.tsx'
+import { CheckIcon } from '@components/common/Icon/icons/CheckIcon.tsx'
+import { EyeOffIcon } from '@components/common/Icon/icons/EyeOffIcon.tsx'
+import { InfoIcon } from '@components/common/Icon/icons/InfoIcon.tsx'
+import { EyeIcon } from '@components/common/Icon/icons/EyeIcon.tsx'
 import { ChevronsRightIcon } from '@components/common/Icon/icons/ChevronsRightIcon.tsx'
 import { ChevronsLeftIcon } from '@components/common/Icon/icons/ChevronsLeftIcon.tsx'
 import { ExternalLinkIcon } from '@components/common/Icon/icons/ExternalLinkIcon.tsx'
@@ -19,7 +24,12 @@ const icons = [
   ['chevrons-right', ChevronsRightIcon],
   ['chevrons-left', ChevronsLeftIcon],
   ['external-link', ExternalLinkIcon],
-  ['log-out', LogOutIcon]
+  ['log-out', LogOutIcon],
+  ['check', CheckIcon],
+  ['info', InfoIcon],
+  ['alert-triangle', AlertTriangleIcon],
+  ['eye', EyeIcon],
+  ['eye-off', EyeOffIcon]
 ] as const
 
 const svgOf = (container: HTMLElement) => container.querySelector('svg') as SVGSVGElement

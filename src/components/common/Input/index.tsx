@@ -1,6 +1,7 @@
 import { forwardRef, useId, useState } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
 
+import { EyeOffIcon } from '../Icon/icons/EyeOffIcon.tsx'
+import { EyeIcon } from '../Icon/icons/EyeIcon.tsx'
 import { defaultFullWidth, defaultPasswordToggle } from './defaultData.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { classNames } from '@utils/classNames.ts'
@@ -52,7 +53,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
 
           {hasToggle && (
             <button type="button" className={styles.toggle} onClick={() => setPasswordVisible((visible) => !visible)} disabled={props.disabled} aria-label={passwordVisible ? labels.hidePassword : labels.showPassword}>
-              {passwordVisible ? <EyeOff size={20} aria-hidden="true" /> : <Eye size={20} aria-hidden="true" />}
+              {passwordVisible ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
             </button>
           )}
         </div>
