@@ -22,7 +22,9 @@ const stream = (tree: ReactNode) =>
     const { pipe } = renderToPipeableStream(tree, {
       onAllReady: () => pipe(sink),
       onShellError: reject,
-      onError: (error) => errors.push(error)
+      onError: (error) => {
+        errors.push(error)
+      }
     })
   })
 
