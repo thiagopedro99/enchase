@@ -199,7 +199,7 @@ describe('Layout with sidebar (default, desktop)', () => {
 
     await user.click(within(banner).getByRole('button', { name: 'Recolher menu lateral' }))
 
-    await waitFor(() => expect(banner.querySelector('.lucide-menu')).toBeInTheDocument())
+    await waitFor(() => expect(banner.querySelector('[data-icon="menu"]')).toBeInTheDocument())
     expect(banner.querySelector('[data-icon="menu-open"]')).not.toBeInTheDocument()
   })
 

@@ -62,12 +62,12 @@ describe('AppBar', () => {
     const { container, unmount } = renderWithProviders(<AppBar {...baseProps} menuExpanded />)
 
     expect(container.querySelector('[data-icon="menu-open"]')).toBeInTheDocument()
-    expect(container.querySelector('.lucide-menu')).not.toBeInTheDocument()
+    expect(container.querySelector('[data-icon="menu"]')).not.toBeInTheDocument()
 
     unmount()
     const collapsed = renderWithProviders(<AppBar {...baseProps} menuExpanded={false} menuLabel="Expandir menu lateral" />)
 
-    expect(collapsed.container.querySelector('.lucide-menu')).toBeInTheDocument()
+    expect(collapsed.container.querySelector('[data-icon="menu"]')).toBeInTheDocument()
     expect(collapsed.container.querySelector('[data-icon="menu-open"]')).not.toBeInTheDocument()
   })
 

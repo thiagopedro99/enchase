@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { Menu, X } from 'lucide-react'
+import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
+import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
 
 import { defaultSections, drawerSlideDistance } from './defaultData.ts'
 import { currentOf } from '../common/Sidebar/defaultData.ts'
@@ -55,7 +56,7 @@ const MobileDrawer = ({ id, items, activeSectionId, onClose }: MobileDrawerProps
         <div className={styles.drawerHeader}>
           <ThemeToggle />
           <button type="button" className={styles.closeButton} onClick={onClose} aria-label={labels.closeMenu}>
-            <X size={24} aria-hidden="true" />
+            <CloseIcon />
           </button>
         </div>
 
@@ -111,7 +112,7 @@ const Navbar = ({ logo = 'Logo', sections = defaultSections, activeSectionId }: 
                 aria-controls={drawerId}
                 aria-haspopup="dialog"
               >
-                <Menu size={24} aria-hidden="true" />
+                <MenuIcon />
               </button>
             </div>
           </div>

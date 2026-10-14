@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRightIcon } from '../Icon/icons/ChevronRightIcon.tsx'
 
 import { Link } from '../Link/index.tsx'
 import { collapseTrail, defaultMaxItems } from './defaultData.ts'
@@ -53,7 +53,7 @@ export const Breadcrumbs = ({ items, maxItems = defaultMaxItems, ariaLabel }: Br
               )}
               {!isLast && (
                 <span className={styles.separator} aria-hidden="true">
-                  <ChevronRight size={16} />
+                  <ChevronRightIcon size={16} />
                 </span>
               )}
             </li>

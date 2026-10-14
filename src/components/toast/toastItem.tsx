@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AlertTriangle, Check, Info, X } from 'lucide-react'
+import { AlertTriangle, Check, Info } from 'lucide-react'
+import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { animate, motion, useMotionValue } from 'motion/react'
 
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
@@ -12,7 +13,7 @@ import type { KeyboardEvent } from 'react'
 
 const Icons = {
   success: <Check size={20} />,
-  error: <X size={20} />,
+  error: <CloseIcon size={20} />,
   warning: <AlertTriangle size={20} />,
   info: <Info size={20} />
 }

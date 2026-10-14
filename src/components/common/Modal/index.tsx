@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { createPortal } from 'react-dom'
 import { useId, useRef } from 'react'
-import { X } from 'lucide-react'
+import { CloseIcon } from '../Icon/icons/CloseIcon.tsx'
 
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
@@ -61,7 +61,7 @@ const ModalDialog = ({
 
             {showCloseButton && (
               <button type="button" className={styles.close} onClick={onClose} aria-label={labels.closeModal}>
-                <X size={20} aria-hidden="true" />
+                <CloseIcon size={20} />
               </button>
             )}
           </div>

@@ -8,7 +8,7 @@ import { MenuToggleIcon } from '@components/layout/subcomponentes/MenuToggleIcon
 
 const openIcon = (container: HTMLElement) => container.querySelector('[data-icon="menu-open"]')
 
-const hamburgerIcon = (container: HTMLElement) => container.querySelector('.lucide-menu')
+const hamburgerIcon = (container: HTMLElement) => container.querySelector('[data-icon="menu"]')
 
 const Harness = () => {
   const [open, setOpen] = useState(false)
