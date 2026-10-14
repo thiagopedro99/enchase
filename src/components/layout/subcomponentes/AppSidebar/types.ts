@@ -8,4 +8,7 @@ export type AppSidebarProps = {
   activeSectionId?: string
   navId?: string
   footer?: SidebarSlot
+  collapsed: boolean
+  open: boolean
+  onClose: () => void
 }

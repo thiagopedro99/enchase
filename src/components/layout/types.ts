@@ -20,6 +20,12 @@ export interface LayoutProps {
   pageSections?: SidebarSection[]
   activePageSectionId?: string
   breadcrumbs?: BreadcrumbItem[]
+  collapsed?: boolean
+  defaultCollapsed?: boolean
+  onCollapsedChange?: (collapsed: boolean) => void
+  open?: boolean
+  defaultOpen?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 export type DeriveBreadcrumbsInput = {

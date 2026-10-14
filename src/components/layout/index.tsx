@@ -9,7 +9,7 @@ import { Container } from '@components/common/index.ts'
 import AppBar from './subcomponentes/AppBar/index.tsx'
 import { deriveBreadcrumbs } from './breadcrumbs.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
-import { useAppStore } from '@stores/app/index.ts'
+import { useControllableState } from '@hooks/useControllableState.ts'
 import { baseTokens } from '@styles/tokens/base.ts'
 import Navbar from '@components/navbar/index.tsx'
 import Footer from '@components/footer/index.tsx'
@@ -34,16 +34,21 @@ const Layout = ({
   navigationSections = defaultNavigationSections,
   pageSections = [],
   activePageSectionId,
-  breadcrumbs
+  breadcrumbs,
+  collapsed: collapsedProp,
+  defaultCollapsed = false,
+  onCollapsedChange,
+  open: openProp,
+  defaultOpen = false,
+  onOpenChange
 }: LayoutProps) => {
   const { labels } = useUIConfig()
   const navId = useId()
   const currentHref = useCurrentHref()
   const isDesktop = useMediaQuery(`(min-width: ${baseTokens.breakpoints.md})`)
-  const collapsed = useAppStore((state) => state.sidebarCollapsed)
-  const toggleCollapsed = useAppStore((state) => state.toggleSidebarCollapsed)
-  const sidebarOpen = useAppStore((state) => state.sidebarOpen)
-  const setSidebarOpen = useAppStore((state) => state.setSidebarOpen)
+  const [collapsed, setCollapsed] = useControllableState(collapsedProp, defaultCollapsed, onCollapsedChange)
+  const [sidebarOpen, setSidebarOpen] = useControllableState(openProp, defaultOpen, onOpenChange)
+  const closeSidebar = () => setSidebarOpen(false)
   const usesSidebar = navigation === 'sidebar' && !hideNavbar
   const sections = [...navigationSections, ...pageSections]
   const trail = breadcrumbs ?? deriveBreadcrumbs({ sections: navigationSections, pageSections, currentHref, pageTitle, activePageSectionId })
@@ -69,7 +74,7 @@ const Layout = ({
           menuExpanded={isDesktop ? !collapsed : sidebarOpen}
           menuControls={navId}
           menuHasPopup={!isDesktop}
-          onMenuToggle={isDesktop ? toggleCollapsed : () => setSidebarOpen(true)}
+          onMenuToggle={isDesktop ? () => setCollapsed((previous) => !previous) : () => setSidebarOpen(true)}
           actions={<ThemeToggle />}
         />
       )}
@@ -82,7 +87,7 @@ const Layout = ({
 
       {usesSidebar && isDesktop && (
         <div className={styles.sidebarArea}>
-          <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="permanent" activeSectionId={activePageSectionId} navId={navId} />
+          <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="permanent" activeSectionId={activePageSectionId} navId={navId} collapsed={collapsed} open={sidebarOpen} onClose={closeSidebar} />
         </div>
       )}
 
@@ -98,7 +103,7 @@ const Layout = ({
         </div>
       )}
 
-      {usesSidebar && !isDesktop && <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="modal" activeSectionId={activePageSectionId} navId={navId} />}
+      {usesSidebar && !isDesktop && <AppSidebar brand={brand} brandLogo={brandLogo} footer={sidebarFooter} sections={sections} variant="modal" activeSectionId={activePageSectionId} navId={navId} collapsed={collapsed} open={sidebarOpen} onClose={closeSidebar} />}
     </div>
   )
 }

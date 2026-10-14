@@ -8,7 +8,6 @@ import { setViewportWidth } from '@tests/viewport.ts'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
 
-import { useAppStore } from '@stores/app/index.ts'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
 import { docsUrl } from '@components/layout/defaultData.tsx'
@@ -24,7 +23,6 @@ const page = (props: Partial<Parameters<typeof Layout>[0]> = {}) => (
 
 beforeEach(() => {
   setViewportWidth(1280)
-  useAppStore.setState({ sidebarOpen: false, sidebarCollapsed: false })
 })
 
 afterEach(() => setViewportWidth(1024))
@@ -81,8 +79,7 @@ describe('Layout with sidebar (default, desktop)', () => {
     expect(within(screen.getByRole('navigation', { name: 'Navegação principal' }).parentElement as HTMLElement).getByText('Rodapé completo')).toBeInTheDocument()
 
     unmount()
-    useAppStore.setState({ sidebarCollapsed: true })
-    renderWithProviders(page({ sidebarFooter: footer }))
+    renderWithProviders(page({ sidebarFooter: footer, defaultCollapsed: true }))
 
     expect(screen.getByText('Rodapé compacto')).toBeInTheDocument()
     expect(screen.queryByText('Rodapé completo')).not.toBeInTheDocument()
@@ -149,8 +146,7 @@ describe('Layout with sidebar (default, desktop)', () => {
     expect(brandLink.querySelector('img')).toHaveAttribute('alt', '')
 
     unmount()
-    useAppStore.setState({ sidebarCollapsed: true })
-    renderWithProviders(page())
+    renderWithProviders(page({ defaultCollapsed: true }))
 
     const collapsedLink = screen.getByRole('link', { name: 'Enchase' })
     expect(collapsedLink.querySelector('img')).toHaveAttribute('src', '/enchase-marca.svg')
@@ -172,7 +168,8 @@ describe('Layout with sidebar (default, desktop)', () => {
 
   it('collapses and expands from the app bar button, keeping the state in sync and controlling the sidebar', async () => {
     const user = userEvent.setup()
-    renderWithProviders(page())
+    const onCollapsedChange = vi.fn()
+    renderWithProviders(page({ onCollapsedChange }))
     const button = screen.getByRole('button', { name: 'Recolher menu lateral' })
 
     expect(button).toHaveAttribute('aria-expanded', 'true')
@@ -180,14 +177,25 @@ describe('Layout with sidebar (default, desktop)', () => {
 
     await user.click(button)
 
-    expect(useAppStore.getState().sidebarCollapsed).toBe(true)
+    expect(onCollapsedChange).toHaveBeenLastCalledWith(true)
     const expand = screen.getByRole('button', { name: 'Expandir menu lateral' })
     expect(expand).toHaveAttribute('aria-expanded', 'false')
     expect(screen.getByRole('link', { name: 'Componentes' })).toBeInTheDocument()
 
     await user.click(expand)
 
-    expect(useAppStore.getState().sidebarCollapsed).toBe(false)
+    expect(onCollapsedChange).toHaveBeenLastCalledWith(false)
+  })
+
+  it('stays collapsed when controlled and only reports the requested change', async () => {
+    const user = userEvent.setup()
+    const onCollapsedChange = vi.fn()
+    renderWithProviders(page({ collapsed: true, onCollapsedChange }))
+
+    await user.click(screen.getByRole('button', { name: 'Expandir menu lateral' }))
+
+    expect(onCollapsedChange).toHaveBeenCalledWith(false)
+    expect(screen.getByRole('button', { name: 'Expandir menu lateral' })).toHaveAttribute('aria-expanded', 'false')
   })
 
   it('shows the menu-open icon while expanded and the hamburger once collapsed', async () => {
