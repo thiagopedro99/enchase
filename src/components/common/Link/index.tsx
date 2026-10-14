@@ -28,7 +28,9 @@ export const Link = ({ href, onClick, target, download, native, rel, ...props }:
     onClick: handleClick
   }
 
-  return <a {...mergeProps(own, props)} />
+  const slotOverride = props['data-slot' as keyof typeof props]
+
+  return <a {...mergeProps(own, props)} {...(slotOverride ? { 'data-slot': slotOverride } : {})} />
 }
 
 export default Link

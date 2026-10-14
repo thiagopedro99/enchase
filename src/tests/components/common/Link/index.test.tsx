@@ -156,4 +156,10 @@ describe('Link', () => {
 
     expect(await axe(container)).toHaveNoViolations()
   })
+
+  it('lets a composing component rename the slot of its link', () => {
+    render(<Link href="/x" {...{ 'data-slot': 'sidebar-item-control' }}>Item</Link>)
+
+    expect(screen.getByRole('link', { name: 'Item' })).toHaveAttribute('data-slot', 'sidebar-item-control')
+  })
 })
