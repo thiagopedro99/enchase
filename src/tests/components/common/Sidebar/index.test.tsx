@@ -1,13 +1,16 @@
 import { describeDialogContract } from '@tests/shared/contracts/dialogContract.tsx'
 import { ControlledDialog } from '@tests/shared/contracts/dialogHarness.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { fireEvent, render, screen, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { useState } from 'react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
 import { LayoutGridIcon } from '@components/common/Icon/icons/LayoutGridIcon.tsx'
 import { axe } from '@tests/axe.ts'
 
+import { ptBR } from '@locales/ptBR.ts'
+import { Modal } from '@components/common/Modal/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
 
@@ -283,5 +286,117 @@ describe('Sidebar (modal)', () => {
     await user.click(screen.getByRole('button', { name: 'Executar ação' }))
     expect(onClick).toHaveBeenCalledTimes(1)
     expect(onClose).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('Sidebar contract', () => {
+  it('marks the permanent root with a slot, variant and state, merging className and style', () => {
+    const { container, rerender } = renderWithProviders(<Sidebar sections={sections} className="mine" style={{ color: 'red' }} />)
+    const root = container.querySelector('[data-slot="sidebar"]') as HTMLElement
+
+    expect(root).toHaveAttribute('data-variant', 'permanent')
+    expect(root).toHaveAttribute('data-state', 'expanded')
+    expect(root.className.split(' ').at(-1)).toBe('mine')
+    expect(root.style.color).toBe('red')
+
+    rerender(<Sidebar sections={sections} collapsed />)
+
+    expect(container.querySelector('[data-slot="sidebar"]')).toHaveAttribute('data-state', 'collapsed')
+  })
+
+  it('never sets or animates the width inline when collapsing', () => {
+    const { container } = renderWithProviders(<Sidebar sections={sections} collapsed />)
+    const root = container.querySelector('[data-slot="sidebar"]') as HTMLElement
+
+    expect(root.style.width).toBe('')
+    expect(root.style.inlineSize).toBe('')
+    expect(root.style.transition).toBe('')
+  })
+
+  it('names the parts with slots', () => {
+    const { container } = renderWithProviders(<Sidebar sections={sections} header={<span>Marca</span>} footer={<span>Rodapé</span>} onToggleCollapsed={vi.fn()} />)
+
+    for (const name of ['sidebar-header', 'sidebar-nav', 'sidebar-section', 'sidebar-section-title', 'sidebar-item', 'sidebar-item-icon', 'sidebar-item-label', 'sidebar-item-badge', 'sidebar-footer', 'sidebar-collapse-button']) {
+      expect(container.querySelector(`[data-slot="${name}"]`), name).toBeInTheDocument()
+    }
+    expect(screen.getByRole('button', { name: 'Executar ação' })).toHaveAttribute('data-slot', 'sidebar-item-control')
+  })
+
+  it('places the collapsed tooltip at the end side', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Sidebar sections={sections} collapsed />)
+
+    await user.tab()
+
+    expect(await screen.findByText('Início', { selector: '[aria-hidden="true"]' })).toHaveAttribute('data-position', 'right')
+  })
+
+  it('puts className and style on the modal panel and names the modal parts', async () => {
+    const { container } = renderWithProviders(<Sidebar sections={sections} variant="modal" open onClose={vi.fn()} className="mine" style={{ color: 'red' }} />)
+    const dialog = await screen.findByRole('dialog')
+
+    expect(dialog).toHaveAttribute('data-slot', 'sidebar-panel')
+    expect(dialog).toHaveAttribute('data-variant', 'modal')
+    expect(dialog).toHaveClass('mine')
+    expect(dialog.style.color).toBe('red')
+    expect(dialog.previousElementSibling).toHaveAttribute('data-slot', 'sidebar-overlay')
+    expect(container.querySelector('[data-slot="sidebar"][data-variant="modal"]')).toBeInTheDocument()
+    await waitFor(() => expect(dialog).toHaveAttribute('data-state', 'open'))
+  })
+
+  it('slides from the start side by the drawer width and flips in rtl', async () => {
+    const { unmount } = renderWithProviders(<Sidebar sections={sections} variant="modal" open onClose={vi.fn()} />)
+
+    expect((await screen.findByRole('dialog')).style.getPropertyValue('--enchase-presence-x')).toBe('-300px')
+
+    unmount()
+    renderWithProviders(<Sidebar sections={sections} variant="modal" open onClose={vi.fn()} />, { locale: { ...ptBR, dir: 'rtl' } })
+
+    expect((await screen.findByRole('dialog')).style.getPropertyValue('--enchase-presence-x')).toBe('300px')
+  })
+
+  it('turns the presence variables to zero when the animation is off', async () => {
+    renderWithProviders(<Sidebar sections={sections} variant="modal" open onClose={vi.fn()} animation={false} />)
+    const dialog = await screen.findByRole('dialog')
+
+    expect(dialog.style.getPropertyValue('--enchase-presence-duration')).toBe('0ms')
+    expect(dialog.style.getPropertyValue('--enchase-presence-x')).toBe('0px')
+  })
+
+  it('stays mounted while exiting and unmounts after the exit time', async () => {
+    let setOpenOutside: (open: boolean) => void = () => undefined
+    const Harness = () => {
+      const [open, setOpen] = useState(true)
+      setOpenOutside = setOpen
+
+      return <Sidebar sections={sections} variant="modal" open={open} onClose={() => setOpen(false)} />
+    }
+    renderWithProviders(<Harness />)
+    await screen.findByRole('dialog')
+
+    act(() => setOpenOutside(false))
+
+    expect(screen.getByRole('dialog', { hidden: true })).toHaveAttribute('data-state', 'exiting')
+    await waitFor(() => expect(screen.queryByRole('dialog', { hidden: true })).not.toBeInTheDocument(), { timeout: 2000 })
+  })
+
+  it('closes only the modal on top when a modal is open over the drawer', async () => {
+    const user = userEvent.setup()
+    const closeDrawer = vi.fn()
+    const closeModal = vi.fn()
+    render(
+      <>
+        <Sidebar sections={sections} variant="modal" open onClose={closeDrawer} />
+        <Modal isOpen onClose={closeModal} title="Sobre o menu">
+          <p>conteúdo</p>
+        </Modal>
+      </>
+    )
+    await screen.findAllByRole('dialog', { hidden: true })
+
+    await user.keyboard('{Escape}')
+
+    expect(closeModal).toHaveBeenCalledTimes(1)
+    expect(closeDrawer).not.toHaveBeenCalled()
   })
 })

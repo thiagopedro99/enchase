@@ -1,6 +1,7 @@
 import { describeDialogContract } from '@tests/shared/contracts/dialogContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { useState } from 'react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
@@ -8,6 +9,7 @@ import { axe } from '@tests/axe.ts'
 import { ptBR } from '@locales/ptBR.ts'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
+import { Modal } from '@components/common/Modal/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 
 import type { SidebarSection } from '@components/common/Sidebar/types.ts'
@@ -182,5 +184,87 @@ describe('Navbar', () => {
     const { container } = renderWithProviders(<Navbar />)
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Navbar contract', () => {
+  it('marks the root and the parts with slots, merging className and style', () => {
+    const { container } = renderWithProviders(<Navbar sections={sections} className="mine" style={{ color: 'red' }} />)
+    const root = container.querySelector('header') as HTMLElement
+
+    expect(root).toHaveAttribute('data-slot', 'navbar')
+    expect(root.className.split(' ').at(-1)).toBe('mine')
+    expect(root.style.color).toBe('red')
+    for (const name of ['navbar-bar', 'navbar-actions', 'navbar-menu', 'navbar-menu-button']) {
+      expect(container.querySelector(`[data-slot="${name}"]`), name).toBeInTheDocument()
+    }
+  })
+
+  it('names the drawer parts and goes through entering and open', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Navbar sections={sections} />)
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+    const dialog = await screen.findByRole('dialog')
+
+    expect(dialog).toHaveAttribute('data-slot', 'navbar-drawer')
+    expect(dialog.previousElementSibling).toHaveAttribute('data-slot', 'navbar-overlay')
+    expect(within(dialog).getByRole('button', { name: 'Fechar menu' })).toHaveAttribute('data-slot', 'navbar-drawer-close')
+    expect(within(dialog).getByRole('navigation')).toHaveAttribute('data-slot', 'navbar-drawer-nav')
+    await waitFor(() => expect(dialog).toHaveAttribute('data-state', 'open'))
+  })
+
+  it('slides in from the end side by the drawer distance and flips in rtl', async () => {
+    const user = userEvent.setup()
+    const { unmount } = renderWithProviders(<Navbar sections={sections} />)
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+    expect((await screen.findByRole('dialog')).style.getPropertyValue('--enchase-presence-x')).toBe('280px')
+
+    unmount()
+    renderWithProviders(<Navbar sections={sections} />, { locale: { ...ptBR, dir: 'rtl' } })
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+
+    expect((await screen.findByRole('dialog')).style.getPropertyValue('--enchase-presence-x')).toBe('-280px')
+  })
+
+  it('stays mounted while exiting and unmounts after the exit time', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Navbar sections={sections} />)
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+    const dialog = await screen.findByRole('dialog')
+    await user.click(within(dialog).getByRole('button', { name: 'Fechar menu' }))
+
+    expect(screen.getByRole('dialog', { hidden: true })).toHaveAttribute('data-state', 'exiting')
+    await waitFor(() => expect(screen.queryByRole('dialog', { hidden: true })).not.toBeInTheDocument(), { timeout: 2000 })
+  })
+
+  it('keeps the drawer open when Escape closes a modal opened over it', async () => {
+    const user = userEvent.setup()
+    const Harness = () => {
+      const [modal, setModal] = useState(false)
+
+      return (
+        <>
+          <Navbar sections={sections} />
+          <button onClick={() => setModal(true)}>Abrir modal</button>
+          <Modal isOpen={modal} onClose={() => setModal(false)} title="Sobre o menu">
+            <p>conteúdo</p>
+          </Modal>
+        </>
+      )
+    }
+    renderWithProviders(<Harness />)
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+    await screen.findByRole('dialog', { name: 'Navegação mobile' })
+    act(() => screen.getByRole('button', { name: 'Abrir modal', hidden: true }).click())
+    await screen.findByRole('dialog', { name: 'Sobre o menu' })
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => expect(screen.queryByRole('dialog', { name: 'Sobre o menu', hidden: true })).not.toBeInTheDocument(), { timeout: 2000 })
+    expect(screen.getByRole('dialog', { name: 'Navegação mobile', hidden: true })).toHaveAttribute('data-state', 'open')
   })
 })
