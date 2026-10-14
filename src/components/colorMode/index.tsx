@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 
-import { defaultColorMode, defaultStorageKey, getDefaultStorage, readStoredMode, subscribeToStoredMode, systemDarkQuery, writeStoredMode } from './defaultData.ts'
+import { colorModeScript, defaultColorMode, defaultStorageKey, getDefaultStorage, readStoredMode, subscribeToStoredMode, systemDarkQuery, writeStoredMode } from './defaultData.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
+import { defaultTheme } from '@styles/tokens/index.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 import { defaultThemeCss, themeCss } from '@styles/css/declarations.ts'
 import { formatContrastIssues, validateTheme } from '@styles/theme/validateTheme.ts'
 import { ThemeVariables } from '@styles/react.tsx'
 import { ColorModeContext } from './context.ts'
 
-import type { ColorMode, ColorModeProviderProps, ResolvedColorMode } from './types.ts'
+import type { ColorMode, ColorModeProviderProps, ColorModeScriptProps, ResolvedColorMode } from './types.ts'
 
-export const ColorModeProvider = ({ children, theme, mode: controlledMode, defaultMode = defaultColorMode, onModeChange, storage, storageKey = defaultStorageKey }: ColorModeProviderProps) => {
+export const ColorModeProvider = ({ children, theme, mode: controlledMode, defaultMode = defaultColorMode, onModeChange, storage, storageKey = defaultStorageKey, cssLayer }: ColorModeProviderProps) => {
   const store = useMemo(() => (storage === undefined ? getDefaultStorage() : storage), [storage])
   const subscribe = useCallback((notify: () => void) => subscribeToStoredMode(storageKey, notify), [storageKey])
   const storedMode = useSyncExternalStore(
@@ -44,7 +45,11 @@ export const ColorModeProvider = ({ children, theme, mode: controlledMode, defau
 
   const themeSet = useMemo(() => (theme === undefined ? undefined : createTheme(theme)), [theme])
   const lastWarning = useRef<string | null>(null)
-  const css = useMemo(() => (themeSet === undefined ? defaultThemeCss : themeCss(themeSet)), [themeSet])
+  const css = useMemo(() => {
+    if (cssLayer) return themeCss(themeSet ?? defaultTheme, { layer: cssLayer })
+
+    return themeSet === undefined ? defaultThemeCss : themeCss(themeSet)
+  }, [themeSet, cssLayer])
 
   useEffect(() => {
     if (themeSet === undefined || process.env.NODE_ENV === 'production') return
@@ -65,5 +70,7 @@ export const ColorModeProvider = ({ children, theme, mode: controlledMode, defau
     </ColorModeContext.Provider>
   )
 }
+
+export const ColorModeScript = ({ storageKey, defaultMode, nonce }: ColorModeScriptProps) => <script nonce={nonce} dangerouslySetInnerHTML={{ __html: colorModeScript(storageKey, defaultMode) }} />
 
 export default ColorModeProvider

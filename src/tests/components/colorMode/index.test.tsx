@@ -4,7 +4,7 @@ import { mockSystemColorScheme } from '@tests/colorScheme.ts'
 import userEvent from '@testing-library/user-event'
 import { renderToString } from 'react-dom/server'
 
-import { ColorModeProvider } from '@components/colorMode/index.tsx'
+import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.tsx'
 import { useColorMode } from '@hooks/useColorMode.ts'
 import { lightTheme } from '@styles/tokens/index.ts'
 
@@ -317,5 +317,92 @@ describe('useColorMode', () => {
     expect(() => render(<Probe />)).toThrow('useColorMode must be used within a ColorModeProvider')
 
     error.mockRestore()
+  })
+})
+
+describe('server rendering support', () => {
+  it('paints the dark colors without javascript when the system prefers dark and no theme is chosen', () => {
+    const html = renderToString(
+      <ColorModeProvider>
+        <p>x</p>
+      </ColorModeProvider>
+    )
+
+    expect(html).toContain('@media (prefers-color-scheme: dark)')
+    expect(html).toContain(':root:not([data-theme])')
+  })
+
+  it('wraps the theme variables in the given css layer', () => {
+    const html = renderToString(
+      <ColorModeProvider cssLayer="enchase-theme">
+        <p>x</p>
+      </ColorModeProvider>
+    )
+
+    expect(html).toContain('@layer enchase-theme {')
+    expect(html).toContain('--enchase-color-primary')
+  })
+
+  it('does not wrap the variables in a layer by default', () => {
+    const html = renderToString(
+      <ColorModeProvider>
+        <p>x</p>
+      </ColorModeProvider>
+    )
+
+    expect(html).not.toContain('@layer')
+  })
+})
+
+describe('ColorModeScript', () => {
+  const run = (html: string) => {
+    const source = html.replace(/^<script[^>]*>/, '').replace(/<\/script>$/, '')
+
+    new Function(source)()
+  }
+
+  afterEach(() => {
+    window.localStorage.clear()
+    delete document.documentElement.dataset.theme
+    document.documentElement.style.colorScheme = ''
+  })
+
+  it('renders an inline script that applies the stored mode before React runs', () => {
+    window.localStorage.setItem('enchase-color-mode', 'dark')
+
+    run(renderToString(<ColorModeScript />))
+
+    expect(document.documentElement.dataset.theme).toBe('dark')
+    expect(document.documentElement.style.colorScheme).toBe('dark')
+  })
+
+  it('follows the system when nothing is stored', () => {
+    mockSystemColorScheme('dark')
+
+    run(renderToString(<ColorModeScript />))
+
+    expect(document.documentElement.dataset.theme).toBe('dark')
+  })
+
+  it('uses the given default mode and storage key, and ignores unknown values', () => {
+    window.localStorage.setItem('custom-key', 'purple')
+
+    run(renderToString(<ColorModeScript storageKey="custom-key" defaultMode="light" />))
+
+    expect(document.documentElement.dataset.theme).toBe('light')
+  })
+
+  it('never throws when storage is blocked', () => {
+    const spy = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+      throw new Error('blocked')
+    })
+
+    expect(() => run(renderToString(<ColorModeScript />))).not.toThrow()
+
+    spy.mockRestore()
+  })
+
+  it('carries the nonce', () => {
+    expect(renderToString(<ColorModeScript nonce="abc" />)).toContain('nonce="abc"')
   })
 })

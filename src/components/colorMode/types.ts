@@ -27,4 +27,11 @@ export type ColorModeProviderProps = {
   onModeChange?: (mode: ColorMode) => void
   storage?: ColorModeStorage | null
   storageKey?: string
+  cssLayer?: string
+}
+
+export type ColorModeScriptProps = {
+  storageKey?: string
+  defaultMode?: ColorMode
+  nonce?: string
 }

@@ -55,7 +55,26 @@ export const fontVariablesRule = (selector: string, fonts: FontTokens) => variab
 
 export const layoutVariablesRule = (selector: string, theme: LayoutTokens) => variablesRule(selector, layoutVariables(theme))
 
-export const themeCss = ({ base, light, dark }: ThemeSet) =>
-  [fontVariablesRule(':root', base.fonts), layoutVariablesRule(':root', base), cssVariablesRule(":root, [data-theme='light']", light), cssVariablesRule("[data-theme='dark']", dark)].join('\n\n')
+export type ThemeCssOptions = {
+  layer?: string
+}
+
+const indent = (css: string) =>
+  css
+    .split('\n')
+    .map((line) => (line ? `  ${line}` : line))
+    .join('\n')
+
+export const themeCss = ({ base, light, dark }: ThemeSet, { layer }: ThemeCssOptions = {}) => {
+  const rules = [
+    fontVariablesRule(':root', base.fonts),
+    layoutVariablesRule(':root', base),
+    cssVariablesRule(":root, [data-theme='light']", light),
+    cssVariablesRule("[data-theme='dark']", dark),
+    `@media (prefers-color-scheme: dark) {\n${indent(cssVariablesRule(':root:not([data-theme])', dark))}\n}`
+  ].join('\n\n')
+
+  return layer ? `@layer ${layer} {\n${indent(rules)}\n}` : rules
+}
 
 export const defaultThemeCss = themeCss(defaultTheme)

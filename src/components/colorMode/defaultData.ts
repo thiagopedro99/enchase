@@ -28,6 +28,9 @@ export const readStoredMode = (storage: ColorModeStorage | null, key: string): C
   }
 }
 
+export const colorModeScript = (storageKey: string = defaultStorageKey, defaultMode: ColorMode = defaultColorMode) =>
+  `(function(){try{var m=localStorage.getItem(${JSON.stringify(storageKey)});if(m!=='light'&&m!=='dark'&&m!=='system')m=${JSON.stringify(defaultMode)};if(m==='system')m=matchMedia(${JSON.stringify(systemDarkQuery)}).matches?'dark':'light';var d=document.documentElement;d.dataset.theme=m;d.style.colorScheme=m}catch(e){}})()`
+
 const listeners = new Map<string, Set<() => void>>()
 
 export const subscribeToStoredMode = (key: string, notify: () => void) => {
