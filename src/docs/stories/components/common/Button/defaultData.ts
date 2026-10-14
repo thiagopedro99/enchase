@@ -1,6 +1,16 @@
-import type { RecipeTuning, MotionOverride } from '@motion/types.ts'
+import type { MotionOverride, RecipeTuning } from 'enchase'
 
 import type { ButtonMotionChoice, ButtonMotionControls } from './types.ts'
+
+export const defaultVariant = 'primary'
+
+export const defaultSize = 'md'
+
+export const defaultFullWidth = false
+
+export const defaultDisabled = false
+
+export const defaultRecipe = 'press'
 
 export const motionLabels: Record<ButtonMotionChoice, string> = {
   default: 'Padrão (press)',

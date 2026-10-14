@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { Button, Checkbox, Input, Modal, Select } from '@components/common/index.ts'
+import { Button, Checkbox, Input, Modal, Select } from 'enchase'
 import { countryOptions } from './defaultData.ts'
 import styles from './styles.module.css'
 

@@ -1,5 +1,5 @@
-import { defaultFullWidth, defaultPasswordToggle } from '@components/common/Input/defaultData.ts'
-import { Input } from '@components/common/Input/index.tsx'
+import { Input } from 'enchase'
+import { defaultFullWidth, defaultPasswordToggle } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

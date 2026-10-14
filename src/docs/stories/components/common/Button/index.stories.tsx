@@ -1,6 +1,5 @@
-import { defaultDisabled, defaultFullWidth, defaultRecipe, defaultSize, defaultVariant } from '@components/common/Button/defaultData.ts'
-import { Button } from '@components/common/Button/index.tsx'
-import { motionLabels, toAnimation } from './defaultData.ts'
+import { Button } from 'enchase'
+import { defaultDisabled, defaultFullWidth, defaultRecipe, defaultSize, defaultVariant, motionLabels, toAnimation } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ButtonStoryArgs } from './types.ts'

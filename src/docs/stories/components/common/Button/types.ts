@@ -1,4 +1,4 @@
-import type { ButtonProps } from '@components/common/Button/types.ts'
+import type { ButtonProps } from 'enchase'
 
 export type ButtonMotionChoice = 'default' | 'off' | 'press' | 'lift'
 

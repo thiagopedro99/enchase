@@ -29,6 +29,12 @@ export default tseslint.config(
     }
   },
   {
+    files: ['src/docs/**/*.{ts,tsx}', '.storybook/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: ['@components/*', '@hooks/*', '@styles/*', '@motion/*', '@utils/*', '@locales/*', '@tests/*', '**/src/*', '**/lib/*'] }]
+    }
+  },
+  {
     files: ['demo/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': ['error', { patterns: ['@components/*', '@hooks/*', '@styles/*', '@motion/*', '@utils/*', '@locales/*', '@docs/*', '@tests/*', '**/src/*', '**/lib/*'] }]

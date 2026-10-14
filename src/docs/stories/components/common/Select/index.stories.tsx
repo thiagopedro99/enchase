@@ -1,6 +1,5 @@
-import { defaultFullWidth } from '@components/common/Select/defaultData.ts'
-import { Select } from '@components/common/Select/index.tsx'
-import { countryOptions } from './defaultData.ts'
+import { Select } from 'enchase'
+import { countryOptions, defaultFullWidth } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

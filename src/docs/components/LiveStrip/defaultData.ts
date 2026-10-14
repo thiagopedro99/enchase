@@ -1,4 +1,4 @@
-import type { SelectOption } from '@components/common/Select/types.ts'
+import type { SelectOption } from 'enchase'
 
 export const countryOptions: SelectOption[] = [
   { value: 'br', label: 'Brasil' },

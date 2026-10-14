@@ -1,4 +1,4 @@
-import { Checkbox } from '@components/common/Checkbox/index.tsx'
+import { Checkbox } from 'enchase'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 

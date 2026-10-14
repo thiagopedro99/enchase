@@ -1,8 +1,5 @@
-import { ColorModeProvider } from '@components/colorMode/index.tsx'
-import { ToastProvider } from '@components/toast/index.ts'
-import { GlobalStyles } from '@styles/react.tsx'
-import { ptBR } from '@locales/ptBR.ts'
-import UIProvider from '@components/uiProvider/index.tsx'
+import { ColorModeProvider, GlobalStyles, ToastProvider, UIProvider } from 'enchase'
+import { ptBR } from 'enchase/locales'
 
 import type { Decorator } from '@storybook/react-vite'
 
