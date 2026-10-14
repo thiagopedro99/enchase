@@ -91,6 +91,44 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 - Tooltip renderiza a bolha em portal com posição fixa, por isso funciona dentro de containers com scroll; item de menu recolhido usa `Tooltip` com `describe={false}`.
 - Dentro de um componente, estilo de layout com CSS explícito no `.module.css` (`display: flex`); `Flex`, `Grid` e `Container` servem para compor páginas.
 
+## Contrato de componente (especificação para a passada por componente)
+
+Especificação, não descrição: os componentes atuais ainda não cumprem tudo. Cada componente passa por ela uma vez, começando por `Button`, `Modal`, `Popover`, `Icon`, `Link` e `Tooltip`; um componente só conta como pronto quando cumpre todos os itens.
+
+**Customização**
+- A raiz aceita `className` e `style` e os espalha por último. A classe de quem usa vence a da lib sem `!important`.
+- Cada parte relevante recebe `data-slot="<componente>-<parte>"` (`modal-panel`, `sidebar-item`). Quem estiliza de fora usa `data-slot` e `data-state`, nunca o nome da classe do CSS Module.
+- Seletores internos que dependem de contexto usam `:where()` para manter a especificidade em zero e deixar a customização ganhar.
+- Variantes e estados por atributo (`data-variant`, `data-size`, `data-state`), além das classes.
+- Reset próprio em cada componente (botão, lista, link): nenhum componente depende de um reset global.
+
+**Camadas de CSS**
+- Variante opcional em `@layer enchase`, para quem usa camadas ganhar em qualquer ordem. A variante padrão não usa camada.
+
+**Direção (RTL)**
+- Só propriedades lógicas (`margin-inline-start`, `inset-inline-end`, `padding-block`, `text-align: start`, `border-start-start-radius`). Exceções (centralização com `translate`, `transform-origin`) documentadas no CSS do componente.
+- Deslocamentos de movimento usam `start` e `end`, não `left` e `right`. O sentido vem de `dir` do `UIProvider`.
+- Ícones direcionais (setas, chevrons) espelham em RTL por atributo, não por cópia.
+
+**Movimento**
+- Só `transform` e `opacity`; nunca `width`, `height`, `margin`, `top`, `left` nem `transition: all`.
+- Uma curva e durações por token (`--enchase-motion-*`), nunca valor solto no componente. Entrada com `ease-out`; saída mais curta que a entrada.
+- Hover só dentro de `@media (hover: hover) and (pointer: fine)`; o toque ganha feedback por `:active`.
+- `prefers-reduced-motion`: movimento espacial vira fade; nada depende de movimento para ser entendido.
+- Interrompível: reverter no meio do caminho parte do estado atual.
+- Arrastar exige alternativa por clique ou teclado e anúncio em `aria-live` (WCAG 2.5.7).
+
+**Tokens para presets**
+- Altura de controle, raio, sombra e duração vêm de variáveis `--enchase-*` do tema, para um preset trocar a pele sem mexer na estrutura. Sem valor fixo desses quatro dentro do CSS do componente.
+
+**Acessibilidade e testes**
+- Alvo mínimo de 24x24 px (WCAG 2.5.8); foco visível; nome acessível vem de `labels`, nunca de texto fixo.
+- Para cada componente: teste de comportamento (jsdom), axe, hidratação sem erro e, quando mexer em foco, `inert`, layout ou movimento, teste em navegador real.
+- Nenhum texto visível ou acessível fixo em um idioma: o que o componente mostra vem de `labels` ou de props.
+
+**API pública**
+- Só o que está em `lib/` é público. Tipos de props exportados junto do componente. Exportar pouco.
+
 ## Animação (`motion`, catálogo de receitas)
 
 - Importar sempre de `motion/react`.
