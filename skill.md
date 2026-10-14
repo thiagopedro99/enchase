@@ -91,31 +91,6 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 - Tooltip renderiza a bolha em portal com posição fixa, por isso funciona dentro de containers com scroll; item de menu recolhido usa `Tooltip` com `describe={false}`.
 - Dentro de um componente, estilo de layout com CSS explícito no `.module.css` (`display: flex`); `Flex`, `Grid` e `Container` servem para compor páginas.
 
-## Estrutura por entidade (`actions/`, `types/`)
-
-Padrão Actions: cada entidade (ex: `users`) tem sua própria subpasta em `actions/`:
-
-- `actions/api.ts` — a instância única do Axios (`baseURL` e, se o projeto precisar, interceptors).
-- `actions/<entidade>/index.ts` — funções que chamam a API (`listUsers`, `createUser`...), usando a instância `api`. Arrow functions exportadas, sem classe wrapper, devolvendo dado já tipado:
-  ```ts
-  export const createUser = async (payload: CreateUserInput): Promise<User> => {
-    const { data } = await api.post<User>('/users', payload)
-
-    return data
-  }
-  ```
-- `actions/<entidade>/types.ts` — **todos** os tipos daquela entidade: formato de domínio (`User`) e de request/response (`CreateUserInput`, `UpdateUserInput`...) juntos no mesmo arquivo.
-- `types/` — nunca tem subpasta por entidade (isso é exclusivo de `actions/`); fica só com arquivo solto pro que é genuinamente usado por **mais de uma entidade**. Tipo que só a própria entidade usa vai pro `actions/<entidade>/types.ts` dela, nunca pra `types/`.
-- Se a API paginar, o helper genérico fica em `actions/pagination.ts` (ex: `fetchAllPages`), e o tipo da resposta paginada em `types/pagination.ts`.
-- `services/` fica reservado pra integração com serviço de terceiro que não seja o próprio backend — só usar se/quando surgir.
-
-## HTTP (Axios)
-
-- Uma instância única (`actions/api.ts`) com `baseURL` e os interceptors que o projeto precisar — nunca `axios.get`/`axios.post` direto nos componentes.
-- Um módulo de action por entidade, cada um exportando funções que chamam a instância única e devolvem dados já tipados (ver seção Estrutura por entidade).
-- Chamada HTTP nunca dentro de componente/JSX direto — sempre via hook que chama a action.
-- Erros de resposta tratados no interceptor e/ou na action — componente só lida com estado de loading/erro, nunca com o objeto de erro do Axios cru.
-
 ## Animação (`motion`, catálogo de receitas)
 
 - Importar sempre de `motion/react`.
@@ -134,7 +109,7 @@ Padrão Actions: cada entidade (ex: `users`) tem sua própria subpasta em `actio
 
 ## Estrutura e limites
 
-- Arquivos com mais de ~200 linhas devem ter lógica extraída para hooks/actions (Single Responsibility Principle).
+- Arquivos com mais de ~200 linhas devem ter lógica extraída para hooks (Single Responsibility Principle).
 - Faça somente o solicitado — escopo contido.
 
 ## Imutabilidade e performance

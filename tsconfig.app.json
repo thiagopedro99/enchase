@@ -21,7 +21,6 @@
     "noUncheckedSideEffectImports": true,
     "paths": {
       "@components/*": ["./src/components/*"],
-      "@actions/*": ["./src/actions/*"],
       "@assets/*": ["./src/assets/*"],
       "@styles/*": ["./src/styles/*"],
       "@hooks/*": ["./src/hooks/*"],

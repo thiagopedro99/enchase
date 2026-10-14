@@ -12,7 +12,6 @@ export default defineConfig({
   resolve: {
     alias: {
       '@components': resolve(__dirname, './src/components'),
-      '@actions': resolve(__dirname, './src/actions'),
       '@assets': resolve(__dirname, './src/assets'),
       '@styles': resolve(__dirname, './src/styles'),
       '@utils': resolve(__dirname, './src/utils'),
@@ -91,7 +90,6 @@ export default defineConfig({
     include: [
       'react',
       'react-dom',
-      'axios',
     ],
   },
 

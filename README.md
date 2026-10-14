@@ -18,7 +18,6 @@ Este template fornece uma base sólida para iniciar projetos React com TypeScrip
 - **React 19** com TypeScript para desenvolvimento type-safe
 - **Vite** para build ultra-rápido e Hot Module Replacement otimizado
 - **CSS Modules** com variáveis CSS para estilização, sem biblioteca de estilo em tempo de execução
-- **Axios** configurado para requisições HTTP
 - **Sistema de temas** (claro, escuro e sistema) configurável com `createTheme`, com validação dos valores e aviso de contraste
 - **Componentes reutilizáveis** prontos para uso
 - **Sistema de notificações** (Toast) integrado
@@ -42,7 +41,6 @@ Este template fornece uma base sólida para iniciar projetos React com TypeScrip
 ### Estado
 
 ### HTTP Client
-- Axios 1.9.0
 
 ### Ferramentas de Desenvolvimento
 - ESLint 9.25.0
@@ -90,7 +88,6 @@ O aplicativo estará disponível em `http://localhost:5173`
 
 ```
 src/
-├── actions/         # Cliente Axios e funções de API por entidade
 ├── assets/          # Recursos estáticos (imagens, fontes, etc)
 ├── components/      # Componentes reutilizáveis (index.tsx, styles.module.css, types.ts)
 │   ├── common/      # Componentes básicos (Button, Input, Card, etc)
@@ -264,51 +261,6 @@ Os componentes seguem WCAG 2.2 AA (foco visível, teclado, ARIA, contraste e alv
 
 Com `prefers-reduced-motion`, movimento espacial vira fade, `press` e `lift` somem e os loops viram um pulso de opacidade.
 
-## API e Serviços
-
-### Configuração Base
-
-O template inclui um cliente Axios pré-configurado em `src/actions/api.ts`:
-
-```typescript
-import { api } from '@actions/api.ts';
-
-// GET
-const response = await api.get('/users');
-
-// POST
-const response = await api.post('/users', userData);
-
-// PUT
-const response = await api.put('/users/1', userData);
-
-// DELETE
-const response = await api.delete('/users/1');
-```
-
-### Interceptors
-
-O `actions/api.ts` cria a instância do Axios sem interceptors. Se o seu projeto precisar de autenticação ou de tratamento global de erros, adicione-os ali, com o gerenciamento de sessão que você escolher.
-
-### Actions por Entidade
-
-Cada entidade tem sua pasta em `src/actions/<entidade>/`:
-
-```typescript
-// src/actions/users/index.ts
-import { api } from '../api.ts';
-
-import type { User } from './types.ts';
-
-export const getUserById = async (id: string): Promise<User> => {
-  const { data } = await api.get<User>(`/users/${id}`);
-
-  return data;
-};
-```
-
-Os tipos da entidade (domínio e request/response) ficam juntos em `src/actions/<entidade>/types.ts`. Veja `src/actions/users` como exemplo. As convenções completas estão em [`skill.md`](./skill.md).
-
 ## Sistema de Temas
 
 ### Linguagem visual
@@ -438,14 +390,12 @@ O projeto está configurado com aliases para imports mais limpos:
 
 ```typescript
 import { Button } from '@components/common';
-import { api } from '@actions/api.ts';
 import Layout from '@components/layout';
 ```
 
 **Aliases disponíveis:**
 - `@components/*` → `src/components/*`
 - `@pages/*` → `src/pages/*`
-- `@actions/*` → `src/actions/*`
 - `@hooks/*` → `src/hooks/*`
 - `@utils/*` → `src/utils/*`
 - `@styles/*` → `src/styles/*`

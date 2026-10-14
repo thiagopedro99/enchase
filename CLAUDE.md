@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-Enchase (React 19, TypeScript, Vite, CSS Modules, Axios, motion). Ainda não se comunica com nenhuma API — `actions/` traz só um exemplo genérico (`users`).
+Enchase (React 19, TypeScript, Vite, CSS Modules, motion). Biblioteca de componentes, sem acesso a API nem estado global.
 
 ## Convenções de código
 
-Siga o [`skill.md`](./skill.md): formatação, imports, componentização com `/subcomponentes`, estilos com CSS Modules e variáveis `--enchase-*`, padrão Actions (`actions/`, `types/`), Axios, animação com `motion/react` e acessibilidade. Consistência com o padrão existente vem antes de qualquer abstração nova.
+Siga o [`skill.md`](./skill.md): formatação, imports, componentização com `/subcomponentes`, estilos com CSS Modules e variáveis `--enchase-*`, animação com `motion/react` e acessibilidade. Consistência com o padrão existente vem antes de qualquer abstração nova.
 
 ## Regras essenciais de código
 
