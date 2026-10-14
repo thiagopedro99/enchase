@@ -68,25 +68,19 @@ cd meu-projeto
 npm install
 ```
 
-### 3. Configure as variáveis de ambiente (opcional)
-
-```bash
-cp .env.example .env
-```
-
-A única variável usada é `VITE_API_BASE_URL`, o endereço base da sua API. Sem o arquivo `.env`, as chamadas usam o endereço relativo à página atual, e nenhuma URL de API fica embutida no código.
-
-### 4. Inicie o servidor de desenvolvimento
+### 3. Inicie o servidor de desenvolvimento
 
 ```bash
 npm run dev
 ```
 
-O aplicativo estará disponível em `http://localhost:5173`
+A página de demonstração (`demo/`) estará disponível em `http://localhost:5173`
 
 ## Estrutura do Projeto
 
 ```
+demo/                # Página de demonstração (só importa da entrada pública)
+lib/                 # Entradas públicas: enchase, enchase/theme e enchase/locales
 src/
 ├── assets/          # Recursos estáticos (imagens, fontes, etc)
 ├── components/      # Componentes reutilizáveis (index.tsx, styles.module.css, types.ts)
@@ -98,17 +92,14 @@ src/
 ├── docs/            # Storybook: stories, páginas MDX e decorators
 ├── hooks/           # Custom React hooks
 ├── motion/          # Catálogo de receitas de animação
-├── pages/           # Páginas da aplicação (home)
+├── locales/         # Textos e direção por idioma (en, ptBR)
 ├── styles/          # Sistema de tema
 │   ├── tokens/      # Tokens: cores, sombras, fontes, espaçamento, raios...
 │   ├── theme/       # createTheme, validateTheme e validadores
 │   ├── css/         # Geração das variáveis CSS e do CSS global
 │   └── react.tsx    # GlobalStyles e ThemeVariables
 ├── tests/           # Testes, espelhando a estrutura de src
-├── types/           # Tipos compartilhados
-├── utils/           # Funções utilitárias
-├── App.tsx          # Componente raiz
-└── main.tsx         # Entry point
+└── utils/           # Funções utilitárias
 ```
 
 ## Scripts Disponíveis
@@ -365,23 +356,14 @@ Os componentes não dependem de nenhum roteador. Links internos (`/caminho`) sã
 - **`navigate`**: recebe o `href` e leva o app até ele, com o roteador que você usar.
 - **`currentHref`**: caminho atual, usado para marcar o item ativo (`aria-current="page"`) e derivar os `Breadcrumbs`. A raiz `/` só é ativa por igualdade; os demais itens também ficam ativos nos subcaminhos.
 
-### Adicionar uma página
+### Usar a entrada pública
 
-Crie a página em `src/pages/` com o `Layout` e renderize-a no `App`:
+Quem consome a biblioteca importa só de `enchase`, `enchase/theme` e `enchase/locales` (a `demo/` e as stories do Storybook seguem essa regra, garantida pelo ESLint); `src/` é interno:
 
-```typescript
-// src/pages/minhaPage/index.tsx
-import Layout from '@components/layout';
-
-const MinhaPage = () => {
-  return (
-    <Layout pageTitle="Minha Página">
-      <h1>Conteúdo</h1>
-    </Layout>
-  );
-};
-
-export default MinhaPage;
+```tsx
+import { Layout, UIProvider } from 'enchase'
+import { createTheme } from 'enchase/theme'
+import { ptBR } from 'enchase/locales'
 ```
 
 ## Path Aliases
@@ -395,7 +377,8 @@ import Layout from '@components/layout';
 
 **Aliases disponíveis:**
 - `@components/*` → `src/components/*`
-- `@pages/*` → `src/pages/*`
+- `@locales/*` → `src/locales/*`
+- `@demo/*` → `demo/*`
 - `@hooks/*` → `src/hooks/*`
 - `@utils/*` → `src/utils/*`
 - `@styles/*` → `src/styles/*`

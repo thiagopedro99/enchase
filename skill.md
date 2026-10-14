@@ -78,7 +78,7 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 - Camadas de superfície: página em `surface`/`background`; cards, barras e diálogos em `surfaceContainerLow`, `surfaceContainer` ou `surfaceContainerHigh`. Elevação por `shadows` só em elementos que flutuam (elevated card, menus, diálogos).
 - Hover, foco e pressionado por camada de estado: pseudo-elemento `::after` com `currentColor` e opacidade `var(--enchase-state-hover)` ou `var(--enchase-state-pressed)`, ou `color-mix(in srgb, <cor> 12%, transparent)`; não trocar a cor para escurecer.
 - Variantes de botão: `primary` (preenchido), `secondary` (tonal), `outline` e `ghost` (texto). Formas por `--enchase-radius-*`: botões e chips `full`, campos `sm`, cards `xl`, diálogos `2xl`.
-- Tipografia: fonte `var(--enchase-font-primary)` (Figtree, importada em `main.tsx`); títulos com peso `medium`.
+- Tipografia: fonte `var(--enchase-font-primary)` (Figtree, importada em `demo/main.tsx`); títulos com peso `medium`.
 
 ## Layout e navegação
 
