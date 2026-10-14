@@ -1,3 +1,5 @@
+import type { HTMLAttributes } from 'react'
+
 export type BreadcrumbItem = {
   id: string
   label: string
@@ -5,7 +7,7 @@ export type BreadcrumbItem = {
   native?: boolean
 }
 
-export interface BreadcrumbsProps {
+export interface BreadcrumbsProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
   items: BreadcrumbItem[]
   maxItems?: number
   ariaLabel?: string

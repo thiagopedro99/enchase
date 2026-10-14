@@ -156,6 +156,20 @@ describe('Breadcrumbs', () => {
     expect(screen.getByRole('navigation', { name: 'You are here' })).toBeInTheDocument()
   })
 
+  it('marks the root and its parts with slots and keeps the caller className, style and attributes', () => {
+    renderWithProviders(<Breadcrumbs items={short} className="mine" style={{ color: 'red' }} id="trail" />)
+    const nav = screen.getByRole('navigation', { name: 'Trilha de navegação' })
+
+    expect(nav).toHaveAttribute('data-slot', 'breadcrumbs')
+    expect(nav.className.split(' ').at(-1)).toBe('mine')
+    expect(nav).toHaveStyle({ color: 'rgb(255, 0, 0)' })
+    expect(nav).toHaveAttribute('id', 'trail')
+    expect(nav.querySelector('[data-slot="breadcrumbs-list"]')).not.toBeNull()
+    expect(nav.querySelectorAll('[data-slot="breadcrumbs-item"]')).toHaveLength(3)
+    expect(screen.getByRole('link', { name: 'Início' })).toHaveAttribute('data-slot', 'breadcrumbs-link')
+    expect(screen.getByText('API')).toHaveAttribute('data-slot', 'breadcrumbs-current')
+  })
+
   it('has no axe violations collapsed or expanded', async () => {
     const user = userEvent.setup()
     const { container } = renderWithProviders(<Breadcrumbs items={long} maxItems={4} />)
