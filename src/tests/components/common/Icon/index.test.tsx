@@ -79,6 +79,12 @@ describe('Icon', () => {
     expect(svg).toHaveAttribute('aria-label', 'Dot')
   })
 
+  it('lets a composing component rename the slot of its icon', () => {
+    const { container } = render(<Icon name="dot" {...{ 'data-slot': 'card-icon' }}><circle cx="12" cy="12" r="1" /></Icon>)
+
+    expect(svgOf(container)).toHaveAttribute('data-slot', 'card-icon')
+  })
+
   it('marks its root with a data-slot and keeps the user class next to its own', () => {
     const { container } = render(<Icon name="dot" className="mine" style={{ color: 'red' }}><circle cx="12" cy="12" r="1" /></Icon>)
     const svg = svgOf(container)

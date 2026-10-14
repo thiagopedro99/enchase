@@ -23,8 +23,11 @@ export const Icon = ({ name, size = defaultSize, directional = false, title, chi
     focusable: 'false'
   }
 
+  const merged = mergeProps(own, props)
+  const slotOverride = props['data-slot' as keyof typeof props]
+
   return (
-    <svg {...mergeProps(own, props)}>
+    <svg {...merged} {...(slotOverride ? { 'data-slot': slotOverride } : {})}>
       {title && <title>{title}</title>}
       {children}
     </svg>
