@@ -114,3 +114,68 @@ describe('Button', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Button contract', () => {
+  it('marks the root with its slot and keeps the caller className, style and handlers', async () => {
+    const user = userEvent.setup()
+    const onClick = vi.fn()
+    renderWithProviders(
+      <Button className="mine" style={{ color: 'red' }} onClick={onClick}>
+        Send
+      </Button>
+    )
+    const button = screen.getByRole('button', { name: 'Send' })
+
+    await user.click(button)
+
+    expect(button).toHaveAttribute('data-slot', 'button')
+    expect(button.className.split(' ').at(-1)).toBe('mine')
+    expect(button).toHaveStyle({ color: 'rgb(255, 0, 0)' })
+    expect(onClick).toHaveBeenCalledTimes(1)
+  })
+
+  it('renders a plain button with the press motion marked by an attribute and no inline style', () => {
+    renderWithProviders(<Button>Send</Button>)
+    const button = screen.getByRole('button', { name: 'Send' })
+
+    expect(button.getAttribute('style')).toBeNull()
+    expect(button).toHaveAttribute('data-motion', 'press')
+  })
+
+  it('turns the press motion off with animation={false}, mode never or preset off', () => {
+    renderWithProviders(<Button animation={false}>Send</Button>)
+    renderWithProviders(<Button>Never</Button>, { motion: { mode: 'never' } })
+    renderWithProviders(<Button>Off</Button>, { motion: { preset: 'off' } })
+
+    expect(screen.getByRole('button', { name: 'Send' })).toHaveAttribute('data-motion', 'off')
+    expect(screen.getByRole('button', { name: 'Never' })).toHaveAttribute('data-motion', 'off')
+    expect(screen.getByRole('button', { name: 'Off' })).toHaveAttribute('data-motion', 'off')
+  })
+
+  it('maps the animation override to the lift recipe and to css variables', () => {
+    renderWithProviders(
+      <>
+        <Button animation={{ recipe: 'lift', tuning: { distance: 6, duration: 0.3 } }}>Lift</Button>
+        <Button animation={{ tuning: { scale: 0.9 } }}>Press</Button>
+        <Button animation={{ recipe: 'fade' }}>Fade</Button>
+      </>
+    )
+
+    const lift = screen.getByRole('button', { name: 'Lift' })
+    const press = screen.getByRole('button', { name: 'Press' })
+
+    expect(lift).toHaveAttribute('data-motion', 'lift')
+    expect(lift.style.getPropertyValue('--enchase-button-lift')).toBe('6px')
+    expect(lift.style.getPropertyValue('--enchase-button-duration')).toBe('300ms')
+    expect(press.style.getPropertyValue('--enchase-button-scale')).toBe('0.9')
+    expect(screen.getByRole('button', { name: 'Fade' })).toHaveAttribute('data-motion', 'off')
+  })
+
+  it('scales the motion variables with the provider preset and recipe tuning', () => {
+    renderWithProviders(<Button>Subtle</Button>, { motion: { preset: 'subtle' } })
+    renderWithProviders(<Button>Tuned</Button>, { motion: { recipes: { press: { scale: 0.8 } } } })
+
+    expect(screen.getByRole('button', { name: 'Subtle' }).style.getPropertyValue('--enchase-button-duration')).toBe('90ms')
+    expect(screen.getByRole('button', { name: 'Tuned' }).style.getPropertyValue('--enchase-button-scale')).toBe('0.8')
+  })
+})

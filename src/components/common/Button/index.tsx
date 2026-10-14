@@ -1,20 +1,28 @@
-import { motion } from 'motion/react'
-
-import { defaultDisabled, defaultFullWidth, defaultRecipe, defaultSize, defaultVariant } from './defaultData.ts'
-import { useMotionRecipe } from '@hooks/useMotionRecipe.ts'
-import { classNames } from '@utils/classNames.ts'
+import { defaultDisabled, defaultFullWidth, defaultSize, defaultVariant } from './defaultData.ts'
+import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { useUIConfig } from '@hooks/useUIConfig.ts'
+import { resolveButtonMotion } from './motion.ts'
 import styles from './styles.module.css'
 
 import type { ButtonProps } from './types.ts'
 
-export const Button = ({ children, animation, variant = defaultVariant, size = defaultSize, fullWidth = defaultFullWidth, disabled = defaultDisabled, className, ...props }: ButtonProps) => {
-  const pressMotion = useMotionRecipe(defaultRecipe, animation)
-  const motionProps = disabled ? {} : pressMotion
+export const Button = ({ children, animation, variant = defaultVariant, size = defaultSize, fullWidth = defaultFullWidth, disabled = defaultDisabled, ...props }: ButtonProps) => {
+  const { motion: settings } = useUIConfig()
+  const { motion, style } = resolveButtonMotion(settings, animation)
+  const own = {
+    ...slot('button'),
+    className: styles.button,
+    style,
+    'data-variant': variant,
+    'data-size': size,
+    'data-motion': motion,
+    'data-full-width': fullWidth ? '' : undefined
+  }
 
   return (
-    <motion.button {...motionProps} {...props} className={classNames(styles.button, className)} data-variant={variant} data-size={size} data-full-width={fullWidth ? '' : undefined} disabled={disabled}>
+    <button {...mergeProps(own, props)} disabled={disabled}>
       {children}
-    </motion.button>
+    </button>
   )
 }
 

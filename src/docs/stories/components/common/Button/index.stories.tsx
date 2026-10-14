@@ -39,7 +39,7 @@ const meta = {
       table: { defaultValue: { summary: String(defaultDisabled) } }
     },
     animation: {
-      description: 'Receita de motion do botão. Use false para desligar a animação, ou { recipe, tuning } para trocar a receita e ajustar duração, escala e distância. Use os controles do grupo Motion para experimentar.',
+      description: 'Receita de motion do botão, feita só com CSS. Use false para desligar a animação, ou { recipe, tuning } com press (escala ao pressionar) ou lift (sobe ao passar o mouse); outras receitas são ignoradas. A duração, a escala e a distância viram as variáveis --enchase-button-duration, --enchase-button-scale e --enchase-button-lift. Use os controles do grupo Motion para experimentar. O elemento raiz aceita className e style, e expõe data-slot="button".',
       control: false,
       table: { type: { summary: 'false | { recipe, from, tuning }' }, defaultValue: { summary: defaultRecipe } }
     },

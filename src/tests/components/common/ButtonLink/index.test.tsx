@@ -107,3 +107,37 @@ describe('ButtonLink', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('ButtonLink contract', () => {
+  it('marks the root and the icon with slots and keeps the caller className and style', () => {
+    renderWithProviders(
+      <ButtonLink href="https://example.com" target="_blank" className="mine" style={{ color: 'red' }}>
+        Site
+      </ButtonLink>
+    )
+    const link = screen.getByRole('link', { name: 'Site (abre em nova aba)' })
+
+    expect(link).toHaveAttribute('data-slot', 'button-link')
+    expect(link.className.split(' ').at(-1)).toBe('mine')
+    expect(link).toHaveStyle({ color: 'rgb(255, 0, 0)' })
+    expect(link.querySelector('[data-slot="button-link-icon"]')).toBeInTheDocument()
+  })
+
+  it('follows the same motion mapping as the button', () => {
+    renderWithProviders(
+      <>
+        <ButtonLink href="/a">Press</ButtonLink>
+        <ButtonLink href="/b" animation={false}>
+          Off
+        </ButtonLink>
+        <ButtonLink href="/c" animation={{ recipe: 'lift', tuning: { distance: 4 } }}>
+          Lift
+        </ButtonLink>
+      </>
+    )
+
+    expect(screen.getByRole('link', { name: 'Press' })).toHaveAttribute('data-motion', 'press')
+    expect(screen.getByRole('link', { name: 'Off' })).toHaveAttribute('data-motion', 'off')
+    expect(screen.getByRole('link', { name: 'Lift' }).style.getPropertyValue('--enchase-button-lift')).toBe('4px')
+  })
+})
