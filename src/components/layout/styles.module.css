@@ -30,7 +30,7 @@
   text-decoration: none;
   position: absolute;
   top: -100px;
-  left: var(--enchase-space-md);
+  inset-inline-start: var(--enchase-space-md);
   z-index: var(--enchase-z-tooltip);
   padding: var(--enchase-space-sm) var(--enchase-space-md);
   border-radius: var(--enchase-radius-md);

@@ -87,8 +87,8 @@
 .button[data-variant='ghost'] {
   background-color: transparent;
   color: var(--enchase-color-primary);
-  padding-left: var(--enchase-space-md);
-  padding-right: var(--enchase-space-md);
+  padding-inline-start: var(--enchase-space-md);
+  padding-inline-end: var(--enchase-space-md);
 }
 
 .button[data-variant='ghost']:hover:not(:disabled) {

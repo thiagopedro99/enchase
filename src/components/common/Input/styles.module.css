@@ -28,7 +28,7 @@
 }
 
 .input[data-has-toggle] {
-  padding-right: 3.5rem;
+  padding-inline-end: 3.5rem;
 }
 
 .input:focus {
@@ -56,7 +56,7 @@
 
 .label {
   position: absolute;
-  left: var(--enchase-space-md);
+  inset-inline-start: var(--enchase-space-md);
   top: 50%;
   max-width: calc(100% - 2rem);
   overflow: hidden;
@@ -102,7 +102,7 @@
   margin: 0;
   padding: 0 var(--enchase-space-sm);
   font: inherit;
-  text-align: left;
+  text-align: start;
   pointer-events: none;
   border: 1px solid var(--enchase-color-border-strong);
   border-radius: var(--enchase-radius-sm);
@@ -166,7 +166,7 @@
 .toggle {
   position: absolute;
   top: 50%;
-  right: var(--enchase-space-sm);
+  inset-inline-end: var(--enchase-space-sm);
   display: flex;
   align-items: center;
   justify-content: center;

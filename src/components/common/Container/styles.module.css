@@ -1,9 +1,9 @@
 .container {
   width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: var(--enchase-space-md);
-  padding-right: var(--enchase-space-md);
+  margin-inline-start: auto;
+  margin-inline-end: auto;
+  padding-inline-start: var(--enchase-space-md);
+  padding-inline-end: var(--enchase-space-md);
 }
 
 .container[data-max-width='sm'] {

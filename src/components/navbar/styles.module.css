@@ -124,12 +124,13 @@
 .mobileMenu {
   position: fixed;
   top: 0;
-  right: 0;
+  inset-inline-end: 0;
   width: 300px;
   max-width: 90vw;
   height: 100vh;
   background-color: var(--enchase-color-surface-container-low);
-  border-radius: var(--enchase-radius-2xl) 0 0 var(--enchase-radius-2xl);
+  border-start-start-radius: var(--enchase-radius-2xl);
+  border-end-start-radius: var(--enchase-radius-2xl);
   box-shadow: var(--enchase-shadow-lg);
   z-index: var(--enchase-z-modal);
   padding: var(--enchase-space-lg);

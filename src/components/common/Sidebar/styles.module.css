@@ -12,7 +12,8 @@
   flex-shrink: 0;
   height: 100vh;
   z-index: var(--enchase-z-sticky);
-  border-radius: 0 var(--enchase-radius-lg) var(--enchase-radius-lg) 0;
+  border-start-end-radius: var(--enchase-radius-lg);
+  border-end-end-radius: var(--enchase-radius-lg);
 }
 
 .overlay {
@@ -25,11 +26,12 @@
 .panel {
   position: fixed;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   max-width: 90vw;
   height: 100vh;
   z-index: var(--enchase-z-modal);
-  border-radius: 0 var(--enchase-radius-2xl) var(--enchase-radius-2xl) 0;
+  border-start-end-radius: var(--enchase-radius-2xl);
+  border-end-end-radius: var(--enchase-radius-2xl);
   box-shadow: var(--enchase-shadow-lg);
 }
 
@@ -108,7 +110,7 @@
   font-family: inherit;
   font-size: var(--enchase-font-size-sm);
   font-weight: var(--enchase-font-weight-semibold);
-  text-align: left;
+  text-align: start;
   text-decoration: none;
   cursor: pointer;
   transition:

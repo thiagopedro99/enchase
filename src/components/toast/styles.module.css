@@ -2,7 +2,7 @@
   position: fixed;
   z-index: var(--enchase-z-tooltip);
   top: 1em;
-  right: 1em;
+  inset-inline-end: 1em;
   width: 360px;
   max-height: calc(100vh - 2em);
   overflow-y: auto;
@@ -15,10 +15,10 @@
   .container {
     width: 100vw;
     padding: 0 var(--enchase-space-md);
-    left: 0;
+    inset-inline-start: 0;
     margin: 0;
     top: 0;
-    right: 0;
+    inset-inline-end: 0;
   }
 }
 
@@ -27,7 +27,8 @@
   min-height: 56px;
   box-sizing: border-box;
   margin-bottom: var(--enchase-space-sm);
-  padding: var(--enchase-space-xs) var(--enchase-space-sm) var(--enchase-space-xs) var(--enchase-space-md);
+  padding-block: var(--enchase-space-xs);
+  padding-inline: var(--enchase-space-md) var(--enchase-space-sm);
   border-radius: var(--enchase-radius-md);
   box-shadow: var(--enchase-shadow-md);
   display: flex;
@@ -121,7 +122,7 @@
 .progress {
   position: absolute;
   bottom: 0;
-  left: 0;
+  inset-inline-start: 0;
   width: 100%;
   height: 3px;
   z-index: 1;
