@@ -6,6 +6,3 @@ export const drawerSlideDistance = 280
 
 export const drawerOverride = { tuning: { distance: drawerSlideDistance } }
 
-export const exitPadding = 80
-
-export const reducedMotionQuery = '(prefers-reduced-motion: reduce)'

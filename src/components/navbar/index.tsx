@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
 
-import { defaultSections, drawerOverride, exitPadding, reducedMotionQuery } from './defaultData.ts'
+import { defaultSections, drawerOverride } from './defaultData.ts'
 import { currentOf } from '../common/Sidebar/defaultData.ts'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { Link } from '@components/common/Link/index.tsx'
@@ -12,7 +12,6 @@ import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { useIsClient } from '@hooks/useIsClient.ts'
-import { exitMilliseconds } from '@motion/css.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { Container } from '@components/common/index.ts'
@@ -86,8 +85,7 @@ const Navbar = ({ logo = 'Logo', breakpoint = 'md', sections = defaultSections, 
   const wide = useMediaQuery(`(min-width: ${breakpoints[breakpoint]})`, true)
   const isClient = useIsClient()
   const motionStyle = useMotionStyle('slide', drawerOverride, 'right')
-  const reduced = useMediaQuery(reducedMotionQuery)
-  const { mounted, state, ref } = usePresence<HTMLDivElement>(mobileOpen, { exitMs: reduced ? 0 : exitMilliseconds(motionStyle) + exitPadding })
+  const { mounted, state, ref } = usePresence<HTMLDivElement>(mobileOpen)
   const items = sections.flatMap((section) => section.items).filter((item) => item.href)
 
   const handleClose = () => setMobileOpen(false)

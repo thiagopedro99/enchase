@@ -96,4 +96,34 @@ describe('usePresence', () => {
     fireEvent.transitionEnd(getByTestId('panel'))
     expect(queryByTestId('panel')).not.toBeInTheDocument()
   })
+
+  it('waits for the real transition duration set in css instead of a fixed time', () => {
+    const style = document.createElement('style')
+    style.textContent = '[data-testid="slow"] { transition-duration: 900ms; }'
+    document.head.append(style)
+
+    const Slow = ({ open }: { open: boolean }) => {
+      const { mounted, state, ref } = usePresence<HTMLDivElement>(open)
+
+      return mounted ? <div ref={ref} data-state={state} data-testid="slow" /> : null
+    }
+    const { rerender, queryByTestId } = render(<Slow open />)
+
+    rerender(<Slow open={false} />)
+    act(() => vi.advanceTimersByTime(500))
+    expect(queryByTestId('slow')).toBeInTheDocument()
+
+    act(() => vi.advanceTimersByTime(500))
+    expect(queryByTestId('slow')).not.toBeInTheDocument()
+    style.remove()
+  })
+
+  it('lets exitMs override the measured duration', () => {
+    const { rerender, queryByTestId } = render(<Panel open exitMs={80} />)
+
+    rerender(<Panel open={false} exitMs={80} />)
+    act(() => vi.advanceTimersByTime(80))
+
+    expect(queryByTestId('panel')).not.toBeInTheDocument()
+  })
 })

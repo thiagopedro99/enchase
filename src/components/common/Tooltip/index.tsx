@@ -1,7 +1,7 @@
 import { cloneElement, isValidElement, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { bubbleBox, closeDelay as defaultCloseDelay, crossAxisShift, defaultPosition, exitSafetyMs, openDelay as defaultOpenDelay, opposite, overflowsMainAxis, placeBubble, resolveAnimation, resolvePlacement } from './defaultData.ts'
+import { bubbleBox, closeDelay as defaultCloseDelay, crossAxisShift, defaultPosition, openDelay as defaultOpenDelay, opposite, overflowsMainAxis, placeBubble, resolveAnimation, resolvePlacement } from './defaultData.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { classNames } from '@utils/classNames.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -37,7 +37,7 @@ export const Tooltip = ({
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const flipped = useRef(false)
-  const presence = usePresence<HTMLSpanElement>(open, { exitMs: motionSettings.off ? 0 : motionSettings.duration * 1000 + exitSafetyMs })
+  const presence = usePresence<HTMLSpanElement>(open)
 
   const clearTimers = () => {
     if (openTimer.current) clearTimeout(openTimer.current)

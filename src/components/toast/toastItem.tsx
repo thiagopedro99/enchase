@@ -4,12 +4,10 @@ import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { CheckIcon } from '@components/common/Icon/icons/CheckIcon.tsx'
 import { InfoIcon } from '@components/common/Icon/icons/InfoIcon.tsx'
 
-import { defaultToastDuration, exitPadding, reducedMotionQuery } from './defaultData.ts'
+import { defaultToastDuration } from './defaultData.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
-import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { usePresence } from '@hooks/usePresence.ts'
-import { exitMilliseconds } from '@motion/css.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import styles from './styles.module.css'
 
@@ -26,7 +24,6 @@ const Icons = {
 const ToastItemComponent = ({ toast, open, onRemove, onDispose, animation }: ToastItemProps) => {
   const { labels } = useUIConfig()
   const motionStyle = useMotionStyle('slide', animation, 'right')
-  const reduced = useMediaQuery(reducedMotionQuery)
   const duration = toast.duration ?? defaultToastDuration
   const sticky = duration === 0
   const [shown, setShown] = useState(false)
@@ -34,7 +31,7 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, animation }: Toa
   const [focused, setFocused] = useState(false)
   const remaining = useRef(duration)
   const paused = hovered || focused
-  const { mounted, state, ref } = usePresence<HTMLDivElement>(shown && open, { exitMs: reduced ? 0 : exitMilliseconds(motionStyle) + exitPadding })
+  const { mounted, state, ref } = usePresence<HTMLDivElement>(shown && open)
 
   const handleClose = useCallback(() => onRemove(toast.id), [onRemove, toast.id])
 

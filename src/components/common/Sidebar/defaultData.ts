@@ -4,10 +4,6 @@ import type { SidebarItem } from './types.ts'
 
 export const drawerWidth = 300
 
-export const exitPadding = 80
-
-export const reducedMotionQuery = '(prefers-reduced-motion: reduce)'
-
 export const drawerOverride = { tuning: { distance: drawerWidth } }
 
 export const currentOf = (item: SidebarItem, activeSectionId: string | undefined, currentHref: string | undefined): 'page' | 'location' | undefined => {

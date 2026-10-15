@@ -1,12 +1,10 @@
 import { useRef } from 'react'
 
-import { drawerOverride, drawerWidth, exitPadding, reducedMotionQuery } from './defaultData.ts'
+import { drawerOverride, drawerWidth } from './defaultData.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
-import { useMediaQuery } from '@hooks/useMediaQuery.ts'
-import { exitMilliseconds } from '@motion/css.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import SidebarContent from './SidebarContent.tsx'
@@ -82,9 +80,8 @@ const ModalSidebarPanel = ({ sections, activeSectionId, currentHref, header, foo
 
 const ModalSidebar = (props: SidebarProps) => {
   const motionStyle = useMotionStyle('slide', props.animation ?? drawerOverride, 'left')
-  const reduced = useMediaQuery(reducedMotionQuery)
   const open = Boolean(props.open)
-  const { mounted, state, ref } = usePresence<HTMLDivElement>(open, { exitMs: reduced ? 0 : exitMilliseconds(motionStyle) + exitPadding })
+  const { mounted, state, ref } = usePresence<HTMLDivElement>(open)
 
   if (!mounted) return null
 

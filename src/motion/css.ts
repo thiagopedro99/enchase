@@ -44,9 +44,3 @@ export const resolveCssMotion = ({ name, settings, override, from = 'bottom', rt
     '--enchase-presence-scale': String(silent || recipe !== 'pop' ? 1 : factor)
   } as CSSProperties
 }
-
-export const exitMilliseconds = (style: CSSProperties) => {
-  const value = Number.parseFloat(String((style as Record<string, string>)['--enchase-presence-exit-duration']))
-
-  return Number.isFinite(value) ? value : 0
-}

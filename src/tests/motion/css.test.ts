@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { exitMilliseconds, resolveCssMotion } from '@motion/css.ts'
+import { resolveCssMotion } from '@motion/css.ts'
 import { defaultMotionSettings } from '@motion/defaultData.ts'
 
 const settings = defaultMotionSettings
@@ -54,9 +54,5 @@ describe('resolveCssMotion', () => {
 
     expect(ltr['--enchase-presence-x']).toBe('-32px')
     expect(rtl['--enchase-presence-x']).toBe('32px')
-  })
-
-  it('reads the exit duration back in milliseconds', () => {
-    expect(exitMilliseconds(resolveCssMotion({ name: 'pop', settings }))).toBe(140)
   })
 })

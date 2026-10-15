@@ -6,8 +6,6 @@ import { CloseIcon } from '../Icon/icons/CloseIcon.tsx'
 
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
-import { exitMilliseconds } from '@motion/css.ts'
-import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
@@ -19,10 +17,6 @@ import styles from './styles.module.css'
 import type { PresenceState } from '@hooks/usePresence.ts'
 import type { CSSProperties, RefObject } from 'react'
 import type { ModalDialogProps, ModalProps, ConfirmModalProps } from './types.ts'
-
-const exitPadding = 80
-
-const reducedMotionQuery = '(prefers-reduced-motion: reduce)'
 
 const ModalDialog = ({
   onClose,
@@ -112,9 +106,8 @@ export const Modal = ({
   ...props
 }: ModalProps) => {
   const motionStyle = useMotionStyle('pop', props.animation)
-  const reduced = useMediaQuery(reducedMotionQuery)
   const isClient = useIsClient()
-  const { mounted, state, ref } = usePresence<HTMLDivElement>(isOpen, { exitMs: reduced ? 0 : exitMilliseconds(motionStyle) + exitPadding })
+  const { mounted, state, ref } = usePresence<HTMLDivElement>(isOpen)
 
   if (!isClient) return null
 

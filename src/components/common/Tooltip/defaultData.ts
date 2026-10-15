@@ -14,8 +14,6 @@ export const bubbleGap = 8
 
 export const viewportMargin = 8
 
-export const exitSafetyMs = 50
-
 export const opposite: Record<TooltipPlacement, TooltipPlacement> = {
   top: 'bottom',
   bottom: 'top',
