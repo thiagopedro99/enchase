@@ -161,7 +161,7 @@ describe('Modal contract', () => {
     expect(dialog.style.getPropertyValue('--enchase-modal-scale')).toBe('1')
   })
 
-  it('animates from the tuned distance and scale of the pop recipe by default', async () => {
+  it('scales in from the centre with the spring duration, without travelling, by default', async () => {
     renderWithProviders(
       <Modal isOpen onClose={vi.fn()} title="Pop">
         <p>content</p>
@@ -169,8 +169,9 @@ describe('Modal contract', () => {
     )
     const dialog = await screen.findByRole('dialog')
 
-    expect(dialog.style.getPropertyValue('--enchase-modal-duration')).toBe('200ms')
-    expect(dialog.style.getPropertyValue('--enchase-modal-distance')).toBe('12px')
+    expect(dialog.style.getPropertyValue('--enchase-modal-duration')).toBe('400ms')
+    expect(dialog.style.getPropertyValue('--enchase-modal-exit-duration')).toBe('280ms')
+    expect(dialog.style.getPropertyValue('--enchase-modal-distance')).toBe('0px')
     expect(dialog.style.getPropertyValue('--enchase-modal-scale')).toBe('0.96')
   })
 

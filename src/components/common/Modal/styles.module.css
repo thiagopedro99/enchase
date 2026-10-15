@@ -34,8 +34,8 @@
   opacity: 1;
   transform: translate(0, 0) scale(1);
   transition:
-    opacity var(--enchase-modal-duration, var(--enchase-motion-duration-base)) var(--enchase-modal-ease, var(--enchase-motion-ease-out)),
-    transform var(--enchase-modal-duration, var(--enchase-motion-duration-base)) var(--enchase-modal-ease, var(--enchase-motion-ease-out));
+    opacity calc(var(--enchase-modal-duration, 400ms) * 0.6) var(--enchase-modal-fade-ease, var(--enchase-motion-ease-out)),
+    transform var(--enchase-modal-duration, 400ms) var(--enchase-modal-ease, var(--enchase-motion-spring-gentle));
 }
 
 .container:where([data-state='entering']) {
@@ -47,6 +47,7 @@
   opacity: 0;
   transform: translate(calc(var(--enchase-modal-dx, 0) * var(--enchase-modal-distance, 0px)), calc(var(--enchase-modal-dy, 0) * var(--enchase-modal-distance, 0px))) scale(var(--enchase-modal-scale, 1));
   transition-duration: var(--enchase-modal-exit-duration, var(--enchase-motion-duration-fast));
+  transition-timing-function: var(--enchase-modal-exit-ease, var(--enchase-motion-ease-out));
 }
 
 .container:focus {

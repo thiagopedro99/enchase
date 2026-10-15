@@ -96,6 +96,8 @@ const ModalDialog = ({
   )
 }
 
+const modalBase = { duration: 0.4, distance: 0 }
+
 export const Modal = ({
   isOpen,
   role = 'dialog',
@@ -105,7 +107,7 @@ export const Modal = ({
   size = 'md',
   ...props
 }: ModalProps) => {
-  const motionStyle = useMotionStyle('pop', 'modal', props.animation)
+  const motionStyle = useMotionStyle('pop', 'modal', props.animation, undefined, modalBase)
   const isClient = useIsClient()
   const { mounted, state, ref } = usePresence<HTMLDivElement>(isOpen)
 
