@@ -24,11 +24,13 @@ export const globalStylesCss = `
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
+    min-height: 100dvh;
     transition: color ${vars.transition.normal}, background-color ${vars.transition.normal};
   }
 
   #root {
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
   }

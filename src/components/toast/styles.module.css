@@ -1,14 +1,19 @@
 .container {
   position: fixed;
   z-index: var(--enchase-z-tooltip);
-  inset-block-start: 1em;
-  inset-inline-end: 1em;
+  inset-block-start: max(1em, env(safe-area-inset-top, 0px));
+  inset-inline-end: max(1em, env(safe-area-inset-right, 0px));
   inline-size: min(360px, 100vw - 2em);
   max-block-size: calc(100dvh - 2em);
   overflow-y: auto;
+  overscroll-behavior: contain;
   overflow-x: hidden;
   box-sizing: border-box;
   pointer-events: none;
+}
+
+.container:dir(rtl) {
+  inset-inline-end: max(1em, env(safe-area-inset-left, 0px));
 }
 
 .item {

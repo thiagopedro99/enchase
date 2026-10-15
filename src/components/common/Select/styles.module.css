@@ -31,6 +31,8 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 :where(.select) {
@@ -327,5 +329,11 @@
         transform: none;
       }
     }
+  }
+}
+
+@media (pointer: coarse) {
+  :where(.select) {
+    font-size: max(16px, var(--enchase-font-size-base));
   }
 }

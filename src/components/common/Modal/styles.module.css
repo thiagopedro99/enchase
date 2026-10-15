@@ -119,6 +119,8 @@
     background-color var(--enchase-modal-duration, var(--enchase-motion-duration-fast)) var(--enchase-modal-ease, var(--enchase-motion-ease-out)),
     color var(--enchase-modal-duration, var(--enchase-motion-duration-fast)) var(--enchase-modal-ease, var(--enchase-motion-ease-out));
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -137,6 +139,7 @@
   padding-block: var(--enchase-space-md) var(--enchase-space-lg);
   padding-inline: var(--enchase-space-lg);
   overflow-y: auto;
+  overscroll-behavior: contain;
   flex: 1;
   color: var(--enchase-color-text-secondary);
   line-height: 1.6;

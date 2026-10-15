@@ -2,6 +2,7 @@
   box-sizing: border-box;
   display: grid;
   min-block-size: 100vh;
+  min-block-size: 100dvh;
   margin: 0;
   padding: 0;
   grid-template-columns: minmax(0, 1fr);

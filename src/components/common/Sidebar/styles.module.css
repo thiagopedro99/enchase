@@ -13,6 +13,7 @@
   flex-shrink: 0;
   inline-size: var(--enchase-sidebar-width, 280px);
   block-size: 100vh;
+  block-size: 100dvh;
   overflow-x: clip;
   z-index: var(--enchase-z-sticky);
   border-start-end-radius: var(--enchase-radius-lg);
@@ -66,6 +67,8 @@
   border-start-end-radius: var(--enchase-radius-2xl);
   border-end-end-radius: var(--enchase-radius-2xl);
   box-shadow: var(--enchase-shadow-lg);
+  padding-block-start: env(safe-area-inset-top, 0px);
+  padding-block-end: env(safe-area-inset-bottom, 0px);
   transform: translate(0, 0);
   transition: transform var(--enchase-sidebar-duration, var(--enchase-motion-duration-base)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
 }
@@ -136,6 +139,7 @@
   padding-inline: var(--enchase-space-md);
   overflow-y: auto;
   overflow-x: hidden;
+  overscroll-behavior: contain;
 }
 
 :where(.indicator) {
@@ -219,6 +223,7 @@
   cursor: pointer;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .item {
@@ -321,6 +326,7 @@
   cursor: pointer;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   transition:
     background-color var(--enchase-sidebar-duration, var(--enchase-motion-duration-fast)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out)),
     color var(--enchase-sidebar-duration, var(--enchase-motion-duration-fast)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));

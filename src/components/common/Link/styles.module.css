@@ -3,7 +3,13 @@
   text-decoration: underline;
   text-underline-offset: 0.2em;
   border-radius: var(--enchase-radius-sm);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   transition: color var(--enchase-link-duration, var(--enchase-motion-duration-fast)) var(--enchase-link-ease, var(--enchase-motion-ease-out));
+}
+
+:where(.link):active {
+  color: var(--enchase-color-primary-hover);
 }
 
 :where(.link):focus-visible {

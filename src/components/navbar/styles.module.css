@@ -122,6 +122,7 @@
   cursor: pointer;
   appearance: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   transition: background-color var(--enchase-navbar-duration, var(--enchase-motion-duration-fast)) var(--enchase-navbar-ease, var(--enchase-motion-ease-out));
 }
 
@@ -171,16 +172,20 @@
   inline-size: 300px;
   max-inline-size: 90vw;
   block-size: 100vh;
+  block-size: 100dvh;
   background-color: var(--enchase-color-surface-container-low);
   border-start-start-radius: var(--enchase-radius-2xl);
   border-end-start-radius: var(--enchase-radius-2xl);
   box-shadow: var(--enchase-shadow-lg);
   z-index: var(--enchase-z-modal);
   padding: var(--enchase-space-lg);
+  padding-block-start: max(var(--enchase-space-lg), env(safe-area-inset-top, 0px));
+  padding-block-end: max(var(--enchase-space-lg), env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   gap: var(--enchase-space-sm);
   overflow-y: auto;
+  overscroll-behavior: contain;
   transform: translate(0, 0);
   transition: transform var(--enchase-navbar-duration, var(--enchase-motion-duration-base)) var(--enchase-navbar-ease, var(--enchase-motion-ease-out));
 }

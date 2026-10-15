@@ -250,3 +250,9 @@
     transition-property: color;
   }
 }
+
+@media (pointer: coarse) {
+  :where(.input) {
+    font-size: max(16px, var(--enchase-font-size-base));
+  }
+}
