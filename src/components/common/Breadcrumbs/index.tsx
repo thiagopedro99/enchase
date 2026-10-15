@@ -12,13 +12,13 @@ import type { BreadcrumbItem, BreadcrumbsProps } from './types.ts'
 const CrumbLink = ({ item }: { item: BreadcrumbItem }) => {
   if (item.href)
     return (
-      <Link href={item.href} native={item.native} className={styles.crumb} {...slot('breadcrumbs', 'link')}>
+      <Link href={item.href} native={item.native} title={item.label} className={styles.crumb} {...slot('breadcrumbs', 'link')}>
         {item.label}
       </Link>
     )
 
   return (
-    <span className={styles.crumbText} {...slot('breadcrumbs', 'text')}>
+    <span className={styles.crumbText} title={item.label} {...slot('breadcrumbs', 'text')}>
       {item.label}
     </span>
   )
@@ -51,7 +51,7 @@ export const Breadcrumbs = ({ items, maxItems = defaultMaxItems, ariaLabel, ...p
                   …
                 </button>
               ) : isLast ? (
-                <span className={styles.current} {...slot('breadcrumbs', 'current')} aria-current="page">
+                <span className={styles.current} title={entry.label} {...slot('breadcrumbs', 'current')} aria-current="page">
                   {entry.label}
                 </span>
               ) : (

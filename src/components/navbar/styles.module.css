@@ -14,9 +14,12 @@
 
 :where(.headerActions) {
   display: flex;
-  min-inline-size: 0;
   align-items: center;
   gap: var(--enchase-space-sm);
+}
+
+:where(.headerActions > *) {
+  flex-shrink: 0;
 }
 
 :where(.logo) {
@@ -42,6 +45,7 @@
 
 :where(.desktopMenu) {
   display: none;
+  flex-shrink: 1;
   min-inline-size: 0;
   gap: var(--enchase-space-xs);
   overflow-x: auto;

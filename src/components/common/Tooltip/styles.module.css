@@ -16,7 +16,10 @@
   border-radius: var(--enchase-radius-xs);
   font-size: var(--enchase-font-size-xs);
   font-weight: var(--enchase-font-weight-medium);
-  white-space: nowrap;
+  inline-size: max-content;
+  max-inline-size: min(20rem, 100vw - 1rem);
+  overflow-wrap: anywhere;
+  white-space: normal;
   opacity: 0;
   transform: scale(var(--enchase-tooltip-scale, 1));
   transition-property: opacity, transform;
