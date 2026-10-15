@@ -520,7 +520,7 @@ describe('Sidebar animation prop in a real browser', () => {
 
     await userEvent.click(page.getByRole('button', { name: 'Recolher menu lateral' }))
 
-    expect(document.querySelector('[data-slot="sidebar"]')).toHaveAttribute('data-state', 'collapsed')
+    await expect.poll(() => document.querySelector('[data-slot="sidebar"]')?.getAttribute('data-state'), { timeout: 2000 }).toBe('collapsed')
     expect(Math.round((document.querySelector('[data-slot="sidebar"]') as HTMLElement).getBoundingClientRect().width)).toBe(80)
     expect(getComputedStyle(document.querySelector('[data-slot="sidebar"]') as HTMLElement).getPropertyValue('--enchase-sidebar-item-scale').trim()).toBe('1')
   })

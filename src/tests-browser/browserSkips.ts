@@ -9,8 +9,7 @@ export const browserSkips = {
   touchEmulation: 'touch pointer emulation uses a Chromium-only protocol call',
   rawMouseInput: 'raw mouse dispatch uses a Chromium-only protocol call',
   layoutMetrics: 'layout cost is read from Chromium performance metrics',
-  webkitFocus: 'WebKit does not move focus to buttons and links on click or Tab by default, so focus return and Tab traps cannot be observed',
-  webkitSelectPadding: 'the padding of the native select reads 0px in WebKit: to investigate'
+  webkitSelectPadding: 'WebKit base-select keeps the select padding on an inner part, so the element reads 0px although its text is indented like the input'
 } as const
 
 export const chromiumOnly = (reason: keyof typeof browserSkips) => {
@@ -19,8 +18,9 @@ export const chromiumOnly = (reason: keyof typeof browserSkips) => {
   return isChromium ? it : it.skip
 }
 
-export const exceptWebkit = (reason: keyof typeof browserSkips) => {
+export const unlessWebkit = (reason: keyof typeof browserSkips) => {
   void browserSkips[reason]
 
-  return isWebkit ? it.skip : it
+  return !isWebkit
 }
+

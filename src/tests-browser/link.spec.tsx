@@ -1,5 +1,4 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { exceptWebkit } from './browserSkips.ts'
 import { userEvent } from 'vitest/browser'
 
 import { Link } from '@components/common/Link/index.tsx'
@@ -27,7 +26,7 @@ describe('Link in a real browser', () => {
     expect(computed.textDecorationLine).toBe('none')
   })
 
-  exceptWebkit('webkitFocus')('keeps its underline and shows a focus ring on keyboard focus', async () => {
+  it('keeps its underline and shows a focus ring on keyboard focus', async () => {
     const { container } = renderInBrowser(
       <Link href="/docs" data-testid="docs">
         Docs
@@ -37,11 +36,13 @@ describe('Link in a real browser', () => {
 
     expect(getComputedStyle(anchor).textDecorationLine).toBe('underline')
 
-    await expect.poll(async () => {
-      if (document.activeElement !== anchor) await userEvent.tab()
+    await userEvent.tab()
+    if (document.activeElement !== anchor) {
+      await userEvent.keyboard('{Shift}')
+      anchor.focus()
+    }
 
-      return document.activeElement
-    }).toBe(anchor)
+    await expect.poll(() => document.activeElement).toBe(anchor)
 
     expect(getComputedStyle(anchor).outlineStyle).toBe('solid')
     expect(getComputedStyle(anchor).outlineWidth).toBe('2px')

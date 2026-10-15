@@ -22,7 +22,7 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 
 **Não garantido:**
 - Conformidade total com WCAG: a lib verifica o que os tokens e os testes cobrem, e não substitui auditoria nem teste com leitores de tela (nada foi testado com NVDA, JAWS ou VoiceOver).
-- Firefox e WebKit rodam a suíte de navegador, mas com testes pulados: 7 no Firefox e 14 no WebKit (lista central com o motivo de cada um em `src/tests-browser/browserSkips.ts`). O WebKit não move o foco para botões e links ao clicar ou ao usar Tab por padrão, então a devolução de foco e as armadilhas de Tab não são observáveis nele; em Safari de verdade isso exige revisão manual.
+- Firefox e WebKit rodam a mesma suíte de navegador do Chromium. Os 7 testes pulados nos dois (lista central com o motivo em `src/tests-browser/browserSkips.ts`) dependem de chamadas só do Chromium (emulação de toque, mouse cru e métricas de layout). A devolução do foco ao gatilho e a armadilha de Tab funcionam também no Safari, onde clicar num botão não o focaliza: a biblioteca guarda o gatilho a partir do último ponteiro ou tecla. Revisão manual em Safari de verdade e com leitores de tela continua necessária.
 - Contraste de temas personalizados em `hsl()`, `oklch()` ou `oklab()`: esses formatos não são medidos, e o aviso diz quantos pares ficaram sem checar.
 - Gestos com velocidade (arrastar para dispensar, inércia) e presets de design alternativos: ainda não existem.
 

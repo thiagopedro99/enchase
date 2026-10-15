@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { exceptWebkit } from './browserSkips.ts'
+import { unlessWebkit } from './browserSkips.ts'
 import { page, userEvent } from 'vitest/browser'
 
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
@@ -37,7 +37,7 @@ describe('fields in a real browser', () => {
     expect(getComputedStyle(slotOf('input')).rowGap).toBe('17px')
   })
 
-  exceptWebkit('webkitSelectPadding')('renders a correct input, select and checkbox with the global reset in place', () => {
+  it('renders a correct input, select and checkbox with the global reset in place', () => {
     renderInBrowser(
       <>
         <Input label="Nome" />
@@ -49,7 +49,7 @@ describe('fields in a real browser', () => {
     expect(parseFloat(getComputedStyle(slotOf('input-field')).height)).toBeGreaterThanOrEqual(56)
     expect(parseFloat(getComputedStyle(slotOf('select-field')).height)).toBeGreaterThanOrEqual(56)
     expect(getComputedStyle(slotOf('input-field')).paddingInlineStart).not.toBe('0px')
-    expect(getComputedStyle(slotOf('select-field')).paddingInlineStart).not.toBe('0px')
+    if (unlessWebkit('webkitSelectPadding')) expect(getComputedStyle(slotOf('select-field')).paddingInlineStart).not.toBe('0px')
   })
 
   it('anchors the floating label to the end side in RTL and to the start side in LTR', async () => {
