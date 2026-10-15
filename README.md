@@ -165,7 +165,7 @@ Abre a documentação interativa dos componentes em `http://localhost:6006`. O `
 O template inclui uma biblioteca completa de componentes reutilizáveis:
 
 ### Layout
-- **Container** - Container responsivo com larguras máximas configuráveis
+- **Container** - Container responsivo; `maxWidth` (`sm`, `md`, `lg`, `xl`, `xxl` ou `full`) usa os breakpoints configurados no `UIProvider` (`2xl` segue aceito como alias de `xxl`)
 - **Flex** - Layout flexível com props para direção, alinhamento e espaçamento
 - **Grid** - Sistema de grid responsivo
 

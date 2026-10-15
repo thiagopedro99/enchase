@@ -1,6 +1,7 @@
 :where(.container) {
   box-sizing: border-box;
   inline-size: 100%;
+  max-inline-size: var(--enchase-container-max, 100%);
   margin-block: 0;
   margin-inline: auto;
   padding-block: 0;
@@ -13,26 +14,6 @@
 
 :where(.container[data-center='false']) {
   margin-inline: 0;
-}
-
-:where(.container[data-max-width='sm']) {
-  max-inline-size: 640px;
-}
-
-:where(.container[data-max-width='md']) {
-  max-inline-size: 768px;
-}
-
-:where(.container[data-max-width='lg']) {
-  max-inline-size: 1024px;
-}
-
-:where(.container[data-max-width='xl']) {
-  max-inline-size: 1280px;
-}
-
-:where(.container[data-max-width='2xl']) {
-  max-inline-size: 1536px;
 }
 
 :where(.container[data-max-width='full']) {
