@@ -173,6 +173,69 @@ describe('Tooltip at the right edge in a real browser', () => {
   })
 })
 
+describe('Tooltip following its trigger in a real browser', () => {
+  const triggerRect = () => page.getByRole('button', { name: 'Alvo' }).element().getBoundingClientRect()
+  const bubbleRect = () => (bubble() as HTMLElement).getBoundingClientRect()
+
+  it('keeps the bubble attached to the trigger while its container scrolls', async () => {
+    renderInBrowser(
+      <div data-testid="box" style={{ overflow: 'auto', height: 200, width: 400, margin: '100px auto' }}>
+        <div style={{ height: 1000, paddingTop: 80 }}>
+          <Tooltip text="Dica" position="bottom">
+            <button>Alvo</button>
+          </Tooltip>
+        </div>
+      </div>
+    )
+    await userEvent.hover(page.getByRole('button', { name: 'Alvo' }))
+    await expect.poll(bubble).toBeTruthy()
+    const before = bubbleRect().top - triggerRect().bottom
+
+    page.getByTestId('box').element().scrollTop = 40
+
+    await expect.poll(() => Math.abs(bubbleRect().top - triggerRect().bottom - before)).toBeLessThan(1)
+    expect(bubble()).toBeTruthy()
+  })
+
+  it('moves the bubble with the trigger when the layout around it shifts', async () => {
+    renderInBrowser(
+      <div data-testid="frame" style={{ position: 'absolute', top: 150, left: 0, width: 800 }}>
+        <div style={{ marginLeft: '60%', width: 'fit-content' }}>
+          <Tooltip text="Dica" position="top">
+            <button>Alvo</button>
+          </Tooltip>
+        </div>
+      </div>
+    )
+    await userEvent.hover(page.getByRole('button', { name: 'Alvo' }))
+    await expect.poll(bubble).toBeTruthy()
+    const centered = () => Math.abs(bubbleRect().left + bubbleRect().width / 2 - (triggerRect().left + triggerRect().width / 2))
+
+    page.getByTestId('frame').element().style.width = '500px'
+
+    await expect.poll(centered).toBeLessThan(1.5)
+    expect(triggerRect().left).toBeLessThan(400)
+  })
+
+  it('closes once the trigger scrolls out of its clipping container', async () => {
+    renderInBrowser(
+      <div data-testid="box" style={{ overflow: 'auto', height: 120, width: 300, margin: '100px auto' }}>
+        <div style={{ height: 1000, paddingTop: 20 }}>
+          <Tooltip text="Dica" position="bottom">
+            <button>Alvo</button>
+          </Tooltip>
+        </div>
+      </div>
+    )
+    page.getByRole('button', { name: 'Alvo' }).element().focus()
+    await expect.poll(bubble).toBeTruthy()
+
+    page.getByTestId('box').element().scrollTop = 600
+
+    await expect.poll(bubble, { timeout: 3000 }).toBeNull()
+  })
+})
+
 describe('Tooltip in right-to-left in a real browser', () => {
   const rtl = (position: 'start' | 'end') => (
     <div dir="rtl" style={{ margin: '200px auto', width: 100 }}>
