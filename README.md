@@ -1,443 +1,48 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="public/enchase-logo-branco.svg">
-    <img src="public/enchase-logo.svg" alt="Enchase" width="360">
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/thiagopedro99/enchase/main/public/enchase-logo-branco.svg">
+    <img src="https://raw.githubusercontent.com/thiagopedro99/enchase/main/public/enchase-logo.svg" alt="Enchase" width="360">
   </picture>
 </p>
 
 # Enchase
 
-Um template moderno e completo para desenvolvimento de aplicações React, construído com as melhores práticas e tecnologias atuais.
+Componentes React acessíveis por contrato: tema com contraste validado, CSS primeiro, movimento próprio, SSR e RTL, e nenhuma dependência de runtime além do React.
 
-## Visão Geral
+> Versão `0.x`: a API ainda pode mudar entre versões menores.
 
-Este template fornece uma base sólida para iniciar projetos React com TypeScript, incluindo componentes reutilizáveis, sistema de temas, gerenciamento de estado, roteamento e muito mais. Projetado para ser escalável e fácil de manter.
+## O que a biblioteca garante (e o que não garante)
 
-## Características Principais
+**Verificado por testes automatizados:**
+- Todo componente passa no axe (vitest-axe) em jsdom, e os fluxos de foco, `inert`, scroll lock, Esc empilhado e restauração de foco rodam em Chromium real.
+- Os pares de cor da paleta padrão (claro e escuro) atingem 4,5:1 para texto e 3:1 para bordas de campos e anel de foco. O `createTheme` lança erro em valor de cor inválido, e `validateTheme` lista os pares abaixo do mínimo.
+- Alvos interativos têm pelo menos 24 x 24 px, e os componentes respeitam `prefers-reduced-motion` (o deslocamento some, o fade continua).
+- Renderização no servidor e hidratação sem erro em 6 variantes de ambiente (largura, tema salvo, sistema escuro e movimento reduzido), mais um app Next 15 mínimo (`npm run test:next`) importando os componentes num Server Component.
+- O `className` de quem usa vence o da biblioteca (provado em navegador, na variante em camada em qualquer ordem de carregamento).
 
-- **React 19** com TypeScript para desenvolvimento type-safe
-- **Vite** para build ultra-rápido e Hot Module Replacement otimizado
-- **CSS Modules** com variáveis CSS para estilização, sem biblioteca de estilo em tempo de execução
-- **Sistema de temas** (claro, escuro e sistema) configurável com `createTheme`, com validação dos valores e aviso de contraste
-- **Componentes reutilizáveis** prontos para uso
-- **Sistema de notificações** (Toast) integrado
-- **Storybook** com a documentação interativa dos componentes
-- **Estrutura de pastas** organizada e escalável
-- **ESLint** configurado para qualidade de código
-- **Path aliases** para imports mais limpos
-
-## Tecnologias Utilizadas
-
-### Core
-- React 19.1.0
-- TypeScript 5.8.3
-- Vite 6.3.5
-
-### UI e Estilização
-- CSS Modules e variáveis CSS
-- Motion 14 (animações)
-- Figtree (`@fontsource-variable/figtree`)
-
-### Estado
-
-### HTTP Client
-
-### Ferramentas de Desenvolvimento
-- ESLint 9.25.0
-- TypeScript ESLint 8.30.1
-- Vitest, Testing Library e vitest-axe
-- Storybook 10
-
-## Pré-requisitos
-
-- Node.js (versão 16 ou superior)
-- npm ou yarn
+**Não garantido:**
+- Conformidade total com WCAG: a lib verifica o que os tokens e os testes cobrem, e não substitui auditoria nem teste com leitores de tela (nada foi testado com NVDA, JAWS ou VoiceOver).
+- Navegadores além do Chromium nos testes de navegador (Firefox e WebKit ainda não rodam no CI).
+- Contraste de temas personalizados em `hsl()`, `oklch()` ou `oklab()`: esses formatos não são medidos, e o aviso diz quantos pares ficaram sem checar.
+- Gestos com velocidade (arrastar para dispensar, inércia) e presets de design alternativos: ainda não existem.
 
 ## Instalação
 
-### 1. Clone o repositório
-
 ```bash
-git clone <url-do-repositorio>
-cd meu-projeto
+npm install enchase
 ```
 
-### 2. Instale as dependências
+`react` e `react-dom` (versão 19) são peer dependencies. O pacote é ESM e traz os tipos.
 
-```bash
-npm install
-```
+## Início rápido
 
-### 3. Inicie o servidor de desenvolvimento
-
-```bash
-npm run dev
-```
-
-A página de demonstração (`demo/`) estará disponível em `http://localhost:5173`
-
-## Estrutura do Projeto
-
-```
-demo/                # Página de demonstração (só importa da entrada pública)
-lib/                 # Entradas públicas: enchase, enchase/theme e enchase/locales
-src/
-├── assets/          # Recursos estáticos (imagens, fontes, etc)
-├── components/      # Componentes reutilizáveis (index.tsx, styles.module.css, types.ts)
-│   ├── common/      # Componentes básicos (Button, Input, Card, etc)
-│   ├── layout/      # Layout principal da aplicação
-│   ├── navbar/      # Barra de navegação (opção ao menu lateral)
-│   ├── footer/      # Rodapé
-│   └── toast/       # Sistema de notificações
-├── docs/            # Storybook: stories, páginas MDX e decorators
-├── hooks/           # Custom React hooks
-├── motion/          # Catálogo de receitas de animação
-├── locales/         # Textos e direção por idioma (en, ptBR)
-├── styles/          # Sistema de tema
-│   ├── tokens/      # Tokens: cores, sombras, fontes, espaçamento, raios...
-│   ├── theme/       # createTheme, validateTheme e validadores
-│   ├── css/         # Geração das variáveis CSS e do CSS global
-│   └── react.tsx    # GlobalStyles e ThemeVariables
-├── tests/           # Testes, espelhando a estrutura de src
-└── utils/           # Funções utilitárias
-```
-
-## Scripts Disponíveis
-
-### Desenvolvimento
-
-```bash
-npm run dev
-```
-
-Inicia o servidor de desenvolvimento com hot reload.
-
-### Build
-
-```bash
-npm run build
-```
-
-Cria a build otimizada para produção na pasta `dist/`.
-
-### Preview
-
-```bash
-npm run preview
-```
-
-Visualiza a build de produção localmente.
-
-### Linting
-
-```bash
-npm run lint
-```
-
-Executa o ESLint para verificar problemas no código.
-
-### Testes
-
-```bash
-npm run test
-```
-
-Roda os testes (Vitest, Testing Library e axe) uma vez; use `npm run test:watch` durante o desenvolvimento.
-
-### Type Check
-
-```bash
-npm run type-check
-```
-
-Verifica os tipos TypeScript sem emitir arquivos.
-
-### Storybook
-
-```bash
-npm run storybook
-```
-
-Abre a documentação interativa dos componentes em `http://localhost:6006`. O `npm run build-storybook` gera o site estático em `storybook-static/`.
-
-## Componentes Disponíveis
-
-O template inclui uma biblioteca completa de componentes reutilizáveis:
-
-### Layout
-- **Container** - Container responsivo; `maxWidth` (`sm`, `md`, `lg`, `xl`, `xxl` ou `full`) usa os breakpoints configurados no `UIProvider` (`2xl` segue aceito como alias de `xxl`)
-- **Flex** - Layout flexível com props para direção, alinhamento e espaçamento
-- **Grid** - Sistema de grid responsivo
-
-### Formulários
-- **Button** - Botão com múltiplas variantes (primary, secondary, outline, ghost)
-- **Input** - Input com label, validação e mensagens de erro
-- **Select** - Select customizado com suporte a opções desabilitadas
-- **Checkbox** - Checkbox estilizado com label opcional
-
-### Feedback
-- **Modal** - Modal customizável com overlay e animações
-- **ConfirmModal** - Modal de confirmação pré-configurado
-- **Toast** - Sistema de notificações (success, error, warning, info)
-- **Loading** - Indicador de carregamento com tamanhos variados
-- **Skeleton** - Placeholders de carregamento
-
-### Superfície
-- **Card** - Container de conteúdo com variantes (default, elevated, outlined)
-
-### Navegação
-- **Sidebar** - Menu lateral permanente que recolhe para uma barra de ícones e vira um drawer modal no mobile
-- **Breadcrumbs** - Trilha de navegação com última página atual, colapso de trilhas longas e itens por rota ou âncora
-- **Navbar** - Barra de navegação responsiva com menu mobile (alternativa à Sidebar)
-- **Footer** - Rodapé customizável
-
-Para ver todos os componentes em ação, rode `npm run storybook`.
-
-## Layout e Navegação
-
-O `Layout` oferece duas navegações, escolhidas pela prop `navigation`:
-
-```tsx
-<Layout pageTitle="Início">
-  <h1>Conteúdo</h1>
-</Layout>
-
-<Layout navigation="navbar" pageTitle="Início">
-  <h1>Conteúdo</h1>
-</Layout>
-```
-
-- **`navigation="sidebar"` (padrão)**: uma barra superior (`AppBar`) com o botão de menu, o breadcrumb e o botão de tema, e o menu lateral. No desktop o botão recolhe a sidebar para uma barra de ícones; no mobile ele abre o drawer modal. O ícone acompanha o estado (linhas com seta `‹` quando o menu está aberto, hambúrguer quando fechado) e o botão tem tooltip com a ação atual. Com a propriedade `sidebarFooter`, o rodapé da sidebar mostra o que você passar, por exemplo o `SidebarUser`, com avatar, nome e botão de sair.
-- **`navigation="navbar"`**: a barra de navegação clássica no topo.
-- **`navigationSections`**: os itens do menu (sem padrão: o `Layout` não traz navegação própria).
-- **`collapsed`, `defaultCollapsed` e `onCollapsedChange`**: estado da sidebar recolhida, controlado ou não. **`open`, `defaultOpen` e `onOpenChange`** fazem o mesmo para o drawer. **`storageKey`** guarda o estado recolhido no `localStorage` com esse nome, lido só depois de montar (sem a prop nada é salvo).
-- **`pageSections` e `activePageSectionId`**: seções extras no menu para navegar por âncoras dentro da página, ativadas com o hook `useScrollSpy`.
-- **`breadcrumbs`**: trilha explícita (`BreadcrumbItem[]`). Sem ela, o `Layout` deriva a trilha do item de menu da rota atual (`Início › Componentes`) e acrescenta a seção ativa da página (`Início › Componentes › Botões`); em rotas sem item de menu usa o `pageTitle`.
-- **`brand` e `brandLogo`**: nome e imagem da marca (sem padrão). **`footerProps`**: `companyName`, `notice`, `year` e `links` do rodapé. `hideNavbar` esconde a navegação. O `Layout` não altera o `document.title`: defina-o na página.
-
-O `Sidebar` também pode ser usado sozinho:
-
-```tsx
-<Sidebar
-  sections={[{ id: 'app', title: 'Navegação', items: [{ id: 'home', label: 'Início', icon: <HomeIcon />, href: '/' }] }]}
-  collapsed={collapsed}
-  onToggleCollapsed={() => setCollapsed((current) => !current)}
-/>
-```
-
-Cada item pode ser uma rota (`href: '/caminho'`), uma âncora (`href: '#id'`) ou uma ação (`onClick`); `native` faz o link sair do app em vez de navegar por dentro. Com `variant="modal"` ele vira um drawer com foco preso, página inerte e Esc para fechar.
-
-## Responsividade e Breakpoints
-
-Os breakpoints seguem o Bootstrap 5 (mobile-first, `min-width`): `xs` 0, `sm` 576px, `md` 768px, `lg` 992px, `xl` 1200px e `xxl` 1400px. Valores em CSS não podem vir de variáveis dentro de `@media`, então o que muda de comportamento é decidido em JavaScript e exposto por atributo:
-
-```tsx
-<UIProvider breakpoints={{ md: '1000px' }}>
-  <Layout breakpoint="md" navigationSections={sections}>...</Layout>
-</UIProvider>
-```
-
-- **`UIProvider breakpoints`**: sobrescreve qualquer um dos seis valores, e vale para todos os componentes e hooks abaixo.
-- **`Layout breakpoint` e `Navbar breakpoint`** (`sm`, `md`, `lg`, `xl` ou `xxl`, padrão `md`): a partir dele o `Layout` mostra a sidebar permanente e o `Navbar` mostra os links no lugar do botão de menu. A raiz leva `data-layout="compact"` ou `"wide"`, para você estilizar por atributo.
-- **`useBreakpoint()`** (exportado de `enchase`): devolve `{ current, up(name), down(name) }`, lendo os valores do `UIProvider`. No primeiro render usa `matchMedia` do navegador (a decisão de servidor fica para o suporte a SSR).
-- **Sem breakpoint nenhum:** `Grid` (as colunas cabem sozinhas, com `--enchase-grid-min-column`, padrão 14rem), `Footer`, `Modal`, `toast` e `Breadcrumbs` se ajustam pela largura disponível, sem `@media`.
-
-## Acessibilidade e Movimento
-
-Os componentes seguem WCAG 2.2 AA (foco visível, teclado, ARIA, contraste e alvos mínimos) e todas as animações vêm de um catálogo único de receitas (`src/motion/`), em CSS próprio e configurável pelo `UIProvider`:
-
-```tsx
-<UIProvider
-  locale={ptBR}
-  motion={{ preset: 'subtle', recipes: { slide: { distance: 48 } } }}
-  labels={{ closeModal: 'Close dialog', closeToast: 'Dismiss' }}
->
-  <ToastProvider>
-    <App />
-  </ToastProvider>
-</UIProvider>
-```
-
-- **`motion.mode`**: `auto` respeita `prefers-reduced-motion`; `never` desliga todo o movimento.
-- **`motion.preset`**: `off`, `subtle`, `standard` ou `expressive` escalam duração e distância de todas as receitas.
-- **`motion.recipes`**: ajuste fino por receita (`fade`, `pop`, `slide`, `press`, `lift`, `spin`, `shimmer`).
-- **`locale`**: pacote de textos e direção (`{ locale, dir, messages }`); o padrão é inglês (`en`) e o projeto traz também `ptBR`, em `src/locales`. Os dados são só objetos, sem React.
-- **`labels`**: sobrescreve textos avulsos (rótulos de botões, regiões e estados) por cima do `locale`.
-- **Por componente**: `animation={false}` desliga, `animation={{ recipe: 'fade' }}` troca a receita.
-
-Com `prefers-reduced-motion`, o deslocamento e a escala somem e o fade continua; `press` e `lift` somem e os loops viram um pulso de opacidade.
-
-### Movimento próprio, sem biblioteca
-
-A animação é CSS puro (transições, `@starting-style`, `@keyframes` e `linear()`), mais o hook `usePresence`, que mantém o elemento montado até a saída terminar (lendo a duração real do estilo calculado, então mudar a duração só por CSS também funciona). Não há dependência de runtime além do React.
-
-**Reduced motion** é mais suave, não instantâneo: com `prefers-reduced-motion: reduce` o deslocamento e a escala somem, e o fade de opacidade continua. Loops (spinner, shimmer) viram um pulso de opacidade. `motion.mode='never'` desliga tudo.
-
-**Variáveis por componente.** Cada componente que anima lê `--enchase-<componente>-duration` e `--enchase-<componente>-ease` (com os tokens `--enchase-motion-*` como padrão), mais as que fazem sentido para ele. Para mudar um componente por CSS, sobrescreva a variável, sem tocar no código:
-
-| Componente | Variáveis |
-| --- | --- |
-| `modal` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-scale`, `-ease` (mola `gentle` na entrada), `-fade-ease`, `-exit-ease` |
-| `sidebar` (recolher e drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-label-duration` (fade dos rótulos ao recolher), `-width`, `-width-collapsed`, `-item-duration` (hover e press dos itens), `-item-scale` (press), `-indicator-duration` (a pílula que desliza até o item ativo), `-stagger` (intervalo da cascata dos itens do drawer, 30 ms) e `-item-offset` (quanto os itens andam ao entrar) |
-| `navbar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-stagger` (cascata dos links, 30 ms) e `-item-offset` |
-| `toast` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` (mola `snappy` na entrada e no reflow), `-fade-ease`, `-exit-ease`, `-lifetime` (tempo da barra) |
-| `tooltip` | `-duration`, `-scale`, `-ease` (o segundo tooltip aberto em até 300 ms entra sem animação e sem atraso) |
-| `button` (e `theme-toggle`) | `-duration`, `-scale` (press), `-distance` (lift), `-ease` |
-| `card` | `-duration`, `-distance` (lift), `-ease` |
-| `loading` | `-duration` (volta do spinner), `-ease` |
-| `skeleton` | `-duration` (brilho), `-ease` |
-| `checkbox` | `-duration`, `-scale` (marca), `-ease` |
-| `input`, `select`, `link`, `breadcrumbs`, `footer`, `app-bar` | `-duration`, `-ease` |
-| `icon-swap` | `-duration`, `-ease`, `-rotate` (giro do ícone que sai e do que entra; o botão de menu usa 30 graus, invertido em RTL) |
-
-O recolher da `Sidebar` permanente anima a largura (`inline-size`) e a coluna do conteúdo acompanha; é a única animação de layout do pacote, escolhida por custo baixo medido no navegador (cerca de 1,5 ms de layout por quadro com 300 parágrafos). A raiz leva `data-state` com `expanded`, `collapsing`, `collapsed` ou `expanding`, para o seu CSS.
-
-Todas usam o prefixo `--enchase-` (por exemplo `--enchase-modal-duration`). `-dx` e `-dy` são a direção da entrada (-1, 0 ou 1) e `-distance` o quanto ela anda; em RTL o `-dx` inverte.
-
-**Tema.** Os tokens base vêm de `createTheme`, com validação:
-
-```ts
-import { createTheme } from 'enchase/theme'
-
-createTheme({
-  motion: {
-    duration: { fast: '120ms', base: '200ms' },
-    easing: { out: 'cubic-bezier(0.2, 0, 0, 1)' },
-    distance: { md: '2rem' }
-  }
-})
-```
-
-Um valor inválido lança erro. Uma duração acima de 300 ms vira aviso em desenvolvimento (e `validateMotion(tema.base)` a lista, sem React, para CI).
-
-**Mola em CSS.** `spring()` (em `enchase/theme`) devolve uma curva `linear(...)` calculada pela solução analítica de uma mola amortecida, que o CSS usa como `transition-timing-function`:
-
-```ts
-import { spring } from 'enchase/theme'
-
-spring({ duration: 0.4, bounce: 0.2 })
-spring({ stiffness: 170, damping: 15, mass: 1 })
-```
-
-Os tokens `--enchase-motion-spring-gentle`, `-snappy` e `-bouncy` já vêm no tema; hoje o `Tooltip` com `animation={{ recipe: 'pop' }}` entra com o `snappy`. A mola em CSS não herda a velocidade de um gesto: arrastar com inércia fica para uma camada futura.
-
-
-## Sistema de Temas
-
-### Linguagem visual
-
-O template segue o **Material Design 3**, implementado só com CSS Modules e variáveis CSS (sem a biblioteca MUI): paleta tonal em índigo, cantos arredondados (botões em pílula, cards de 24px, diálogos de 28px), elevação suave, camadas de estado em hover/foco/pressionado e a fonte Figtree (self-hosted via `@fontsource-variable/figtree`).
-
-### Estrutura dos Temas
-
-O sistema de tema fica em `src/styles/`:
-
-- `tokens/` - os dados: `base.ts` (fontes, espaçamento, raios, transições, estados, breakpoints, z-index, iguais nos dois modos), `light.ts` e `dark.ts` (só cores e sombras de cada modo)
-- `theme/` - construção e validação: `createTheme`, `validateTheme` e os validadores de cor, família, tamanho e peso de fonte
-- `css/` - geração das variáveis CSS e do CSS global a partir dos tokens
-- `react.tsx` - os componentes `GlobalStyles` e `ThemeVariables`, os únicos que usam React
-
-Os componentes não leem o tema em JavaScript: tudo chega por variáveis CSS `--enchase-*` (`--enchase-color-*`, `--enchase-shadow-*`, `--enchase-font-*`, `--enchase-space-*`, `--enchase-radius-*`, `--enchase-transition-*`, `--enchase-state-*` e `--enchase-z-*`). Trocar o modo muda só o `data-theme` do `<html>`: as cores mudam pelo CSS, sem re-renderizar os componentes que não leem o modo.
-
-### Papéis de cor
-
-As cores são papéis, nunca hex solto nos componentes:
-
-| Papel | Uso |
-|---|---|
-| `primary` / `onPrimary` | Ação principal (botão preenchido, link, foco) e o texto sobre ela |
-| `primaryContainer` / `onPrimaryContainer` | Botão tonal, item ativo da navegação, destaques |
-| `secondary*` | Ações de apoio e elementos neutros tonais |
-| `surface`, `surfaceContainerLow`, `surfaceContainer`, `surfaceContainerHigh` | Fundo da página e camadas de cards, barras e diálogos |
-| `success`, `warning`, `info`, `error` e seus `*Container`/`on*` | Feedback (toasts, erros de campo) |
-| `inverseSurface` / `inverseOnSurface` / `inversePrimary` | Tooltip e superfícies de contraste invertido |
-| `text.primary`, `text.secondary`, `text.placeholder` | Texto sobre as superfícies |
-| `border` (decorativa) e `borderStrong` (campos) | Divisores e bordas de controles |
-
-### Camadas de estado e forma
-
-Hover, foco e pressionado usam uma camada de estado (`--enchase-state-hover` 8%, `--enchase-state-focus` e `--enchase-state-pressed` 10%), em vez de trocar de cor. Os cantos vêm de `--enchase-radius-*` (`xs` 4px, `sm` 8px, `md` 12px, `lg` 16px, `xl` 24px, `2xl` 28px, `full`) e a elevação de `--enchase-shadow-*` (`sm` a `xl`).
-
-### Customização
-
-Passe um tema parcial ao `ColorModeProvider`. Só o que você informar muda; o resto continua com os valores padrão:
-
-```tsx
-<ColorModeProvider
-  theme={{
-    fonts: { primary: "'Inter Variable', system-ui, sans-serif", sizes: { base: '1.0625rem' }, weights: { bold: 800 } },
-    light: { colors: { primary: '#0B6BCB', onPrimary: '#FFFFFF' } },
-    dark: { colors: { primary: '#9CCBFF', onPrimary: '#00325A' } }
-  }}
->
-  <App />
-</ColorModeProvider>
-```
-
-- `fonts` vale para os dois modos (`primary`, `mono`, `sizes` e `weights`). `light` e `dark` aceitam `colors`, com qualquer papel de cor.
-- Todo valor é validado antes de virar CSS: cores em hex, `rgb()`, `hsl()`, `oklch()` ou `oklab()`; famílias de fonte como lista de nomes; tamanhos em `rem`, `em` ou `px`; pesos de 1 a 1000. Um valor inválido ou uma chave desconhecida lança um erro dizendo qual token falhou, e nada é escrito como CSS.
-- Em desenvolvimento, o provider confere o contraste (WCAG) dos pares de cor e avisa no console. `validateTheme(createTheme(...))` faz a mesma checagem e devolve a lista de pares abaixo do mínimo. Cores em `hsl`, `oklch` ou `oklab` não são medidas, e o aviso diz quantos pares ficaram sem checar.
-- O template não traz o arquivo de uma fonte nova: carregue-a (por exemplo com `@fontsource`) e informe só o nome da família.
-- `createTheme` e `validateTheme` também funcionam fora do React (um script de build ou o servidor), importando de `src/styles/index.ts`, que não depende do React.
-
-Para mudar os valores padrão do template, edite os arquivos de `src/styles/tokens/`.
-
-### Paleta e Acessibilidade
-
-A paleta dos dois temas atende WCAG 2.2 AA e isso é verificado por testes (`npm run test`):
-
-| Tokens | Uso | Mínimo |
-|---|---|---|
-| `text.primary`, `text.secondary`, `text.placeholder` | Texto e placeholder sobre qualquer superfície | 4.5:1 |
-| `primary`, `primaryHover`, `error`, `success`, `warning`, `info` | Texto e links sobre qualquer superfície | 4.5:1 |
-| `on*` sobre o respectivo papel (`onPrimary` em `primary`, `onErrorContainer` em `errorContainer`...) | Texto de botões, toasts e destaques | 4.5:1 |
-| `inverseOnSurface` e `inversePrimary` sobre `inverseSurface` | Tooltip e ação de snackbar | 4.5:1 |
-| `borderStrong` | Borda de campos (`Input`, `Select`, `Checkbox`) | 3:1 |
-| `primary`, `error` | Anel de foco, botão outline e campo inválido | 3:1 |
-
-`border` é só para divisores decorativos. Ao trocar uma cor, rode os testes: `src/tests/styles/theme/contrast.test.ts` falha se algum par ficar abaixo do mínimo. Para checar uma cor nova, use `contrastRatio(foreground, background)` de `src/styles/theme/contrast.ts`.
-
-### Alternância de Tema
-
-O tema é controlado pelo `ColorModeProvider` (já usado no `App.tsx`). Ele aceita três modos: `light`, `dark` e `system` (o padrão, que acompanha a preferência do sistema), lembra a escolha no `localStorage` e marca o `<html>` com `data-theme`.
-
-```tsx
-import { useColorMode } from '@hooks/useColorMode.ts'
-
-const { mode, resolvedMode, setMode, toggleMode } = useColorMode()
-
-<button onClick={toggleMode}>
-  Tema: {resolvedMode}
-</button>
-```
-
-Para começar sempre no claro, use `<ColorModeProvider defaultMode="light">`. Para desligar a persistência, `storage={null}`; para controlar de fora, passe `mode` e `onModeChange`.
-
-## Popover e posicionamento
-
-O `Popover` abre um conteúdo ancorado ao gatilho, num portal, e usa um posicionador próprio (`src/positioning`, sem dependências):
-
-```tsx
-<Popover label="Detalhes" placement="bottom-start" arrow content={<p>Conteúdo</p>}>
-  <button>Abrir</button>
-</Popover>
-```
-
-- Aceita `open`, `defaultOpen` e `onOpenChange`; `role` (`dialog`, `listbox`, `tree` ou `grid`, e `menu` não, pois exige navegação por setas própria); `closeOnEsc` e `closeOnOutsideClick`. Aberto por teclado, o foco entra no conteúdo; Esc devolve o foco ao gatilho; Tab no último elemento fecha e segue para o elemento depois do gatilho.
-- Esc e clique fora respeitam a pilha de camadas: sobre um `Modal`, o Esc e o clique no fundo fecham só o popover.
-- O posicionador vira o lado, desliza pela borda, encolhe até o espaço disponível (`--enchase-popover-max-width` e `-max-height`) e segue o gatilho em rolagens, redimensionamentos e movimentos.
-- Em testes de navegador, o posicionador é comparado com o `@floating-ui/dom` (só devDependency) em milhares de disposições aleatórias: 0 divergências acima de 0,5 px com tamanhos fracionários, contêineres com borda e âncoras que escapam do recorte.
-- O que ele não cobre: `zoom` por pinça, `zoom` CSS no `<html>`, blocos contenedores criados por `transform` no `html` ou `body`, iframes, `autoPlacement`, `limitShift`, estratégia `absolute` e `scrollbar-gutter: stable both-edges`. Em `scrollbar-gutter: stable` ele usa a área real de elementos fixos, que o floating-ui subtrai duas vezes.
-
-## Renderização no servidor (Next.js e SSR)
-
-Os componentes renderizam no servidor sem erro de hidratação. Num app com App Router:
+### Next.js (App Router)
 
 ```tsx
 import { ColorModeProvider, ColorModeScript, GlobalStyles, UIProvider } from 'enchase'
 import 'enchase/styles.css'
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <head>
@@ -454,39 +59,104 @@ export default function RootLayout({ children }) {
 }
 ```
 
-- **`ColorModeScript`**: script inline que aplica o `data-theme` antes da primeira pintura, conforme o modo salvo ou o do sistema, sem flash. O `suppressHydrationWarning` no `<html>` evita o aviso por causa desse atributo. Sem JavaScript, o tema escuro do sistema vale por `@media (prefers-color-scheme: dark)`.
-- **`cssLayer`** no `ColorModeProvider`: coloca as variáveis do tema numa `@layer` com o nome que você escolher.
-- **Layout e Navbar** renderizam o modo desktop no servidor e trocam pelo breakpoint com CSS gerado, então não há quadro compacto antes da hidratação.
-- **`'use client'`**: o pacote marca todo o `enchase` como cliente. Páginas e layouts de servidor podem importar os componentes direto; `npm run test:next` prova isso com um app Next mínimo.
-
-## CSS: normal, em camada e tema estático
-
-O pacote entrega o CSS dos componentes em duas variantes e o tema padrão como arquivo. Importe uma das duas primeiras, nunca as duas:
+### Vite
 
 ```tsx
+import { createRoot } from 'react-dom/client'
+import { ColorModeProvider, GlobalStyles, ToastProvider, UIProvider } from 'enchase'
+import { ptBR } from 'enchase/locales'
 import 'enchase/styles.css'
+
+createRoot(document.getElementById('root')!).render(
+  <ColorModeProvider>
+    <GlobalStyles />
+    <UIProvider locale={ptBR}>
+      <ToastProvider>
+        <App />
+      </ToastProvider>
+    </UIProvider>
+  </ColorModeProvider>
+)
 ```
+
+A fonte padrão é Figtree: carregue-a no app (por exemplo com `@fontsource-variable/figtree`) ou troque a família pelo tema.
+
+## Entradas do pacote
+
+| Entrada | Conteúdo |
+| --- | --- |
+| `enchase` | Componentes, provedores, hooks e tipos. Marcada como `'use client'`. |
+| `enchase/theme` | `createTheme`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring` e os tokens. Sem React. |
+| `enchase/locales` | `en` e `ptBR` (`{ locale, dir, messages }`). Só dados. |
+| `enchase/styles.css` | CSS dos componentes. |
+| `enchase/styles.layer.css` | O mesmo CSS dentro de `@layer enchase`. |
+| `enchase/theme.css` | Variáveis do tema padrão, claro e escuro, como arquivo estático. |
+
+Quem consome importa só dessas entradas. O código interno (`src/`) não é público.
+
+## Componentes
+
+Cada componente tem uma story no Storybook (`npm run storybook`, em `Componentes/<Nome>`).
+
+| Componente | Exemplo mínimo |
+| --- | --- |
+| `Button` | `<Button variant="primary">Salvar</Button>` |
+| `ButtonLink` | `<ButtonLink href="/docs">Documentação</ButtonLink>` |
+| `Link` | `<Link href="/sobre">Sobre</Link>` |
+| `Input` | `<Input label="E-mail" type="email" error="Informe um e-mail" />` |
+| `Select` | `<Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />` |
+| `Checkbox` | `<Checkbox label="Aceito os termos" />` |
+| `Card` | `<Card variant="elevated">Conteúdo</Card>` |
+| `Container`, `Flex`, `Grid` | `<Grid minColumnWidth="14rem" gap="1rem">...</Grid>` |
+| `Modal` | `<Modal isOpen={open} onClose={close} title="Editar">...</Modal>` |
+| `ConfirmModal` | `<ConfirmModal isOpen={open} onClose={close} onConfirm={apagar} message="Apagar item?" />` |
+| `Tooltip` | `<Tooltip text="Ajuda"><button>?</button></Tooltip>` |
+| `Popover` | `<Popover label="Detalhes" content={<p>Conteúdo</p>}><button>Abrir</button></Popover>` |
+| `Loading`, `InlineLoading` | `<Loading overlay text="Carregando" />` |
+| `Skeleton` | `<Skeleton variant="text" width="12rem" />` |
+| `Breadcrumbs` | `<Breadcrumbs items={[{ id: 'home', label: 'Início', href: '/' }, { id: 'page', label: 'Atual' }]} />` |
+| `Sidebar` | `<Sidebar sections={sections} collapsed={collapsed} onToggleCollapsed={toggle} />` |
+| `Navbar` | `<Navbar logo="Meu app" sections={sections} />` |
+| `Footer` | `<Footer companyName="Acme" notice="Licença MIT." />` |
+| `Layout` | `<Layout brand="Acme" navigationSections={sections}>...</Layout>` |
+| `ThemeToggle` | `<ThemeToggle />` |
+| `Icon` | `<Icon name="dot"><circle cx="12" cy="12" r="1" /></Icon>` |
+| `VisuallyHidden` | `<VisuallyHidden>Texto só para leitores de tela</VisuallyHidden>` |
+
+Notificações usam o hook `useToast` dentro do `ToastProvider`:
 
 ```tsx
-import 'enchase/styles.layer.css'
-import 'enchase/theme.css'
+import { useToast } from 'enchase'
+
+const { success, error } = useToast()
+
+success('Salvo com sucesso')
 ```
 
-- **`enchase/styles.css` (normal):** o layout (tamanho, padding, raio) usa `:where()` e sempre perde para a classe de quem usa. Cores, borda e hover têm especificidade de uma classe, então o CSS do usuário só vence se carregar depois do da lib.
-- **`enchase/styles.layer.css` (em camada):** o mesmo conteúdo dentro de `@layer enchase`, com a ordem declarada na primeira linha:
+### Layout e navegação
 
-  ```css
-  @layer enchase-theme, enchase-base, enchase;
-  ```
+O `Layout` oferece duas navegações pela prop `navigation`: `sidebar` (padrão, com `AppBar`, breadcrumb e botão de tema, e menu lateral que recolhe para ícones e vira drawer modal no mobile) e `navbar` (barra clássica no topo).
 
-  Qualquer CSS seu sem camada vence o da lib em qualquer ordem de carregamento, inclusive cores e hover. Combine com `<ColorModeProvider cssLayer="enchase-theme">` para as variáveis do tema ficarem na primeira camada; o reset global do pacote (`GlobalStyles`) já usa `enchase-base`.
-- **`enchase/theme.css` (tema estático):** as variáveis do tema padrão, claro e escuro, como arquivo (`:root`, `[data-theme='dark']` e `@media (prefers-color-scheme: dark) { :root:not([data-theme]) }`). É o mesmo CSS que o `ColorModeProvider` injeta sem `theme` personalizado. Use quando quiser o tema na primeira resposta do servidor sem esperar JavaScript, ou para o navegador guardar o CSS em cache. Para um tema personalizado, continue passando `theme` ao `ColorModeProvider`, que injeta as variáveis dele.
+```tsx
+const sections = [
+  { id: 'nav', title: 'Navegação', items: [{ id: 'home', label: 'Início', href: '/' }] }
+]
 
-Os dois arquivos são gerados por `npm run build:lib` (`scripts/buildCssOutputs.mjs`), e `npm run test:browser` os recria antes de rodar os testes que provam a precedência.
+<Layout brand="Acme" navigationSections={sections} storageKey="acme-sidebar">
+  <h1>Conteúdo</h1>
+</Layout>
+```
 
-## Navegação
+- `navigationSections`, `pageSections` e `activePageSectionId`: itens do menu e âncoras da página (use o hook `useScrollSpy`). O `Layout` não traz navegação, marca nem rodapé próprios e não altera o `document.title`.
+- `collapsed`, `defaultCollapsed`, `onCollapsedChange`, `open`, `defaultOpen` e `onOpenChange` controlam a sidebar e o drawer, controlados ou não. `storageKey` guarda o estado recolhido no `localStorage`, lido só depois de montar.
+- `breadcrumbs`: trilha explícita; sem ela o `Layout` a deriva da rota atual.
+- `brand`, `brandLogo`, `sidebarFooter`, `footerProps` e `hideNavbar` completam a casca.
 
-Os componentes não dependem de nenhum roteador. Links internos (`/caminho`) são `<a href>` de verdade: um clique simples chama o `navigate` do `UIProvider`, e Ctrl, Cmd, Shift, botão do meio, `target`, `download`, `native` e URLs externas seguem o comportamento do navegador. Sem `navigate`, todos os links navegam normalmente (recarregando a página).
+Cada item de menu pode ser uma rota (`href: '/caminho'`), uma âncora (`href: '#id'`) ou uma ação (`onClick`); `native: true` faz o link sair do app.
+
+## Navegação sem roteador
+
+Os componentes não dependem de roteador. Links internos são `<a href>` de verdade: um clique simples chama o `navigate` do `UIProvider`, e Ctrl, Cmd, Shift, botão do meio, `target`, `download`, `native` e URLs externas seguem o comportamento do navegador. Sem `navigate`, os links recarregam a página.
 
 ```tsx
 <UIProvider navigate={(href) => router.push(href)} currentHref={pathname}>
@@ -494,114 +164,153 @@ Os componentes não dependem de nenhum roteador. Links internos (`/caminho`) sã
 </UIProvider>
 ```
 
-- **`navigate`**: recebe o `href` e leva o app até ele, com o roteador que você usar.
-- **`currentHref`**: caminho atual, usado para marcar o item ativo (`aria-current="page"`) e derivar os `Breadcrumbs`. A raiz `/` só é ativa por igualdade; os demais itens também ficam ativos nos subcaminhos.
+`currentHref` marca o item ativo (`aria-current="page"`) e deriva os `Breadcrumbs`.
 
-### Usar a entrada pública
+## Tema
 
-Quem consome a biblioteca importa só de `enchase`, `enchase/theme` e `enchase/locales` (a `demo/` e as stories do Storybook seguem essa regra, garantida pelo ESLint); `src/` é interno:
+As cores são papéis (`primary`, `surface`, `error`, `inverseSurface` e outros), nunca hex solto nos componentes, e chegam por variáveis `--enchase-*`. Trocar o modo muda só o `data-theme` do `<html>`.
 
 ```tsx
-import { Layout, UIProvider } from 'enchase'
-import { createTheme } from 'enchase/theme'
+<ColorModeProvider
+  theme={{
+    fonts: { primary: "'Inter Variable', system-ui, sans-serif" },
+    light: { colors: { primary: '#0B6BCB', onPrimary: '#FFFFFF' } },
+    dark: { colors: { primary: '#9CCBFF', onPrimary: '#00325A' } }
+  }}
+>
+  <App />
+</ColorModeProvider>
+```
+
+- Todo valor é validado antes de virar CSS (cores em hex, `rgb()`, `hsl()`, `oklch()` ou `oklab()`; famílias, tamanhos e pesos de fonte). Valor inválido ou chave desconhecida lança erro dizendo qual token falhou.
+- Em desenvolvimento o provider confere o contraste dos pares e avisa no console. Fora do React (build, servidor, CI):
+
+```ts
+import { createTheme, validateTheme } from 'enchase/theme'
+
+const theme = createTheme({ light: { colors: { primary: '#0B6BCB' } } })
+const issues = validateTheme(theme)
+```
+
+- O visual padrão segue a linguagem do Material Design 3 (paleta tonal em índigo, cantos arredondados, camadas de estado). Hoje existe um único preset; os alternativos são trabalho futuro.
+- `useColorMode()` devolve `{ mode, resolvedMode, setMode, toggleMode }`. O modo (`light`, `dark` ou `system`, o padrão) fica no `localStorage`.
+
+## Idiomas e RTL
+
+Os textos de acessibilidade vêm do `locale` do `UIProvider`. O padrão é inglês; `ptBR` acompanha o pacote, e `labels` sobrescreve textos avulsos:
+
+```tsx
 import { ptBR } from 'enchase/locales'
+
+<UIProvider locale={ptBR} labels={{ closeModal: 'Fechar' }}>
+  <App />
+</UIProvider>
 ```
 
-## Path Aliases
+Um `locale` tem a forma `{ locale, dir, messages }`; use `dir: 'rtl'` para línguas da direita para a esquerda. O CSS usa propriedades lógicas, e os ícones direcionais espelham sozinhos. O `dir` do `<html>` continua sendo do app.
 
-O projeto está configurado com aliases para imports mais limpos:
+## Responsividade
 
-```typescript
-import { Button } from '@components/common';
-import Layout from '@components/layout';
+Os breakpoints seguem o Bootstrap 5 (mobile-first, `min-width`): `xs` 0, `sm` 576 px, `md` 768 px, `lg` 992 px, `xl` 1200 px e `xxl` 1400 px.
+
+```tsx
+<UIProvider breakpoints={{ md: '1000px' }}>
+  <Layout breakpoint="md" navigationSections={sections}>...</Layout>
+</UIProvider>
 ```
 
-**Aliases disponíveis:**
-- `@components/*` → `src/components/*`
-- `@locales/*` → `src/locales/*`
-- `@demo/*` → `demo/*`
-- `@hooks/*` → `src/hooks/*`
-- `@utils/*` → `src/utils/*`
-- `@styles/*` → `src/styles/*`
-- `@assets/*` → `src/assets/*`
-- `@motion/*` → `src/motion/*`
-- `@docs/*` → `src/docs/*`
-- `@tests/*` → `src/tests/*`
+- `UIProvider breakpoints` sobrescreve qualquer valor e vale para os componentes e hooks.
+- `Layout` e `Navbar` aceitam `breakpoint` (padrão `md`) e expõem `data-layout="compact"` ou `"wide"` na raiz, para você estilizar por atributo.
+- `useBreakpoint()` devolve `{ current, up(name), down(name) }`.
+- `Grid`, `Footer`, `Modal`, `toast` e `Breadcrumbs` se ajustam pela largura disponível, sem `@media`. O `Container` limita a largura pelo breakpoint escolhido em `maxWidth`.
 
-## Build para Produção
+## Movimento
 
-### Otimizações Incluídas
+O movimento é CSS (transições, `@starting-style`, `@keyframes` só para loops e `linear()` para molas), mais o hook interno `usePresence`, que mantém o elemento montado até a saída terminar, lendo a duração real do estilo calculado. Não há biblioteca de animação.
 
-O template está configurado com várias otimizações de build:
+Quatro níveis de configuração, do mais amplo ao mais específico:
 
-- **Code splitting** automático por vendors
-- **Tree shaking** habilitado
-- **CSS minification**
-- **Compressão de assets**
-- **Chunks otimizados** (react-vendor e vendor)
-
-### Configuração de Build
-
-Personalize em `vite.config.ts`:
-
-```typescript
-export default defineConfig({
-  build: {
-    target: 'esnext',
-    minify: 'esbuild',
-    cssCodeSplit: true,
-    sourcemap: false,
-    chunkSizeWarningLimit: 1000,
-    // ...
-  },
-});
+```tsx
+<UIProvider motion={{ mode: 'auto', preset: 'subtle', recipes: { slide: { distance: 48 } } }}>
+  <Modal animation={{ recipe: 'fade' }} isOpen={open} onClose={close} />
+  <Button animation={false}>Sem animação</Button>
+</UIProvider>
 ```
+
+1. `UIProvider motion`: `mode` (`auto` respeita `prefers-reduced-motion`; `never` desliga tudo), `preset` (`off`, `subtle`, `standard`, `expressive`) e `recipes` (`fade`, `pop`, `slide`, `press`, `lift`, `spin`, `shimmer`).
+2. A prop `animation` de cada componente animado: `false` desliga; `{ recipe, from, tuning }` ajusta.
+3. O tema: `createTheme({ motion: { duration, easing, distance } })` é validado, e duração acima de 300 ms vira aviso. `validateMotion` lista os avisos sem React. Os tokens `--enchase-motion-spring-gentle`, `-snappy` e `-bouncy` vêm no tema, e `spring()` gera uma curva `linear(...)` a partir de `{ stiffness, damping, mass }` ou `{ duration, bounce }`.
+4. O seu CSS: cada componente lê variáveis `--enchase-<componente>-duration`, `-ease`, `-distance` e outras.
+
+| Componente | Variáveis (prefixo `--enchase-<componente>`) |
+| --- | --- |
+| `modal` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-scale`, `-ease`, `-fade-ease`, `-exit-ease` |
+| `sidebar` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-label-duration`, `-width`, `-width-collapsed`, `-item-duration`, `-item-scale`, `-indicator-duration`, `-stagger`, `-item-offset` |
+| `navbar` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-stagger`, `-item-offset` |
+| `toast` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-fade-ease`, `-exit-ease`, `-lifetime` |
+| `tooltip` | `-duration`, `-scale`, `-ease` |
+| `popover` | `-duration`, `-exit-duration`, `-scale`, `-ease`, `-max-width`, `-max-height` |
+| `button`, `theme-toggle` | `-duration`, `-scale`, `-distance`, `-ease` |
+| `card` | `-duration`, `-distance`, `-ease` |
+| `loading` | `-duration`, `-ease` |
+| `skeleton` | `-duration`, `-ease` |
+| `checkbox` | `-duration`, `-scale`, `-ease` |
+| `icon-swap` | `-duration`, `-ease`, `-rotate` |
+| `input`, `select`, `link`, `breadcrumbs`, `footer`, `app-bar` | `-duration`, `-ease` |
+
+`-dx` e `-dy` são a direção da entrada (-1, 0 ou 1) e `-distance` o quanto ela anda; em RTL o `-dx` inverte. Com `prefers-reduced-motion: reduce`, o deslocamento e a escala somem e o fade continua; os loops viram pulso de opacidade.
+
+O recolher da `Sidebar` permanente anima a largura (`inline-size`) e é a única animação de layout do pacote, escolhida por custo baixo medido (cerca de 1,5 ms de layout por quadro com 300 parágrafos). A raiz leva `data-state` com `expanded`, `collapsing`, `collapsed` ou `expanding`.
+
+## Customização por CSS
+
+Toda raiz aceita `className` e `style`, e a classe de quem usa vence a da biblioteca. As partes têm `data-slot="<componente>-<parte>"` (`modal-panel`, `sidebar-item`) e os estados aparecem em `data-state`, `data-variant`, `data-size` e afins; estilize por esses atributos, não pelos nomes de classe internos.
+
+```css
+[data-slot='modal-panel'][data-state='entering'] {
+  transform: translateY(24px);
+}
+```
+
+O CSS vem em duas variantes. Importe uma delas, nunca as duas:
+
+- `enchase/styles.css`: o layout (tamanho, padding, raio) usa `:where()` e sempre perde para a sua classe. Cores, borda e hover só são vencidos se o seu CSS carregar depois.
+- `enchase/styles.layer.css`: o mesmo conteúdo em `@layer enchase`, com a ordem `@layer enchase-theme, enchase-base, enchase;`. Qualquer CSS seu sem camada vence em qualquer ordem. Combine com `<ColorModeProvider cssLayer="enchase-theme">`.
+- `enchase/theme.css`: as variáveis do tema padrão como arquivo, para tê-las na primeira resposta do servidor sem esperar JavaScript. Um tema personalizado continua indo em `ColorModeProvider theme`.
+
+## Renderização no servidor
+
+Os componentes renderizam no servidor sem erro de hidratação.
+
+- `ColorModeScript` aplica o `data-theme` antes da primeira pintura (por isso o `suppressHydrationWarning` no `<html>`). Sem JavaScript, o tema escuro do sistema vale por `@media (prefers-color-scheme: dark)`.
+- `Layout` e `Navbar` renderizam o modo desktop no servidor e trocam pelo breakpoint com CSS gerado, sem quadro compacto antes da hidratação.
+- Portais (`Modal`, `Loading` com overlay, `Tooltip`, `Popover`) abrem só depois da montagem.
+- O pacote marca todo o `enchase` como `'use client'`: páginas e layouts de servidor importam os componentes direto, e a fronteira de cliente é o pacote inteiro.
+
+## Testes
+
+```bash
+npm test                  # jsdom: comportamento, axe, hidratação e SSR
+npm run test:browser      # Chromium real (Playwright)
+npm run test:next         # app Next mínimo com o pacote empacotado
+npm run lint
+npm run build:lib && npm run pack:check && npm run test:consumer
+```
+
+`npm run test:browser:repeat [N]` repete a suíte de navegador para caçar testes instáveis.
+
+## Estado do projeto
+
+Versão `0.x`, em desenvolvimento ativo. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band), presets de design alternativos, props responsivas no `Grid` (`columns={{ base, md }}`) e testes em Firefox e WebKit.
 
 ## Contribuindo
 
-Contribuições são bem-vindas! Para contribuir:
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/NovaFeature`)
-3. Commit suas mudanças seguindo o padrão Conventional Commits
-4. Push para a branch (`git push origin feature/NovaFeature`)
-5. Abra um Pull Request
-
-### Conventional Commits
-
-Este projeto segue a convenção de [Conventional Commits](https://www.conventionalcommits.org/). Use os seguintes prefixos:
-
-- `feat:` - Nova funcionalidade
-- `fix:` - Correção de bug
-- `docs:` - Mudanças na documentação
-- `style:` - Formatação, falta de ponto e vírgula, etc (sem mudança de código)
-- `refactor:` - Refatoração de código
-- `test:` - Adição ou correção de testes
-- `chore:` - Atualização de dependências, configurações, etc
-
-**Exemplos:**
-```bash
-git commit -m "feat: add Accordion component"
-git commit -m "fix: close the confirm modal on Esc"
-git commit -m "docs: update the Button docs"
-git commit -m "chore: update dependencies"
-```
-
-### Diretrizes
-
-- Mantenha o código consistente com o estilo existente
-- Adicione testes quando apropriado
-- Atualize a documentação conforme necessário
-- Certifique-se de que o lint passa antes de commitar
-- Use commits atômicos e descritivos
+Veja o [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+MIT. Veja o arquivo [LICENSE](LICENSE).
 
 ## Autor
 
-**Thiago Silva**
-
-- LinkedIn: [linkedin.com/in/thiago-silva](https://www.linkedin.com/in/thiago-pedro-da-silva/)
-- GitHub: [github.com/thiagopedro99](https://github.com/thiagopedro99)
+**Thiago Silva** — [GitHub](https://github.com/thiagopedro99)

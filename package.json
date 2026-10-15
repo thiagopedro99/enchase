@@ -1,12 +1,28 @@
 {
   "name": "enchase",
   "version": "0.0.0",
-  "description": "Accessible, themeable React components with a validated theme, own icons and a motion catalog",
+  "description": "Accessible React components with a validated theme, CSS-first motion, SSR and RTL support, and no runtime dependency besides React",
   "license": "MIT",
   "type": "module",
   "sideEffects": [
     "**/*.css"
   ],
+  "keywords": [
+    "react",
+    "components",
+    "accessibility",
+    "a11y",
+    "design-system",
+    "theming",
+    "css-modules",
+    "ssr",
+    "rtl",
+    "typescript"
+  ],
+  "homepage": "https://github.com/thiagopedro99/enchase#readme",
+  "bugs": {
+    "url": "https://github.com/thiagopedro99/enchase/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/thiagopedro99/enchase.git"
