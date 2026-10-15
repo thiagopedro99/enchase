@@ -169,8 +169,8 @@ describe('Modal contract', () => {
     )
     const dialog = await screen.findByRole('dialog')
 
-    expect(dialog.style.getPropertyValue('--enchase-modal-duration')).toBe('400ms')
-    expect(dialog.style.getPropertyValue('--enchase-modal-exit-duration')).toBe('280ms')
+    expect(dialog.style.getPropertyValue('--enchase-modal-duration')).toBe('var(--enchase-motion-spring-gentle-duration)')
+    expect(dialog.style.getPropertyValue('--enchase-modal-exit-duration')).toBe('calc(var(--enchase-motion-spring-gentle-duration) * 0.5)')
     expect(dialog.style.getPropertyValue('--enchase-modal-distance')).toBe('0px')
     expect(dialog.style.getPropertyValue('--enchase-modal-scale')).toBe('0.96')
   })

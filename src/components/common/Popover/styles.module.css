@@ -20,7 +20,7 @@
   opacity: 1;
   transform: none;
   transition-property: opacity, transform;
-  transition-duration: var(--enchase-popover-duration, var(--enchase-motion-duration-base));
+  transition-duration: var(--enchase-popover-duration, var(--enchase-motion-spring-snappy-duration));
   transition-timing-function: var(--enchase-popover-ease, var(--enchase-motion-spring-snappy));
 }
 

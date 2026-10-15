@@ -23,6 +23,22 @@ const sample = (read: () => number, ms: number) =>
     tick()
   })
 
+const sampleTimed = (read: () => number, ms: number) =>
+  new Promise<[number, number][]>((resolve) => {
+    const values: [number, number][] = []
+    const start = performance.now()
+    const tick = () => {
+      const elapsed = performance.now() - start
+
+      values.push([elapsed, read()])
+      if (elapsed < ms) requestAnimationFrame(tick)
+      else resolve(values)
+    }
+    tick()
+  })
+
+const seconds = (value: string) => value.split(',').map((part) => (part.trim().endsWith('ms') ? Number.parseFloat(part) / 1000 : Number.parseFloat(part)))
+
 const scaleOf = (element: HTMLElement) => {
   const transform = getComputedStyle(element).transform
 
@@ -74,6 +90,27 @@ describe('springs in a real browser', () => {
     expect(getComputedStyle(element).transitionTimingFunction).toContain('linear(')
     expect(values[values.length - 1]).toBeCloseTo(1, 3)
     expect(Math.max(...values)).toBeLessThanOrEqual(1.002)
+  })
+
+  it('plays the gentle spring over its own 300ms and not over a longer made-up time', async () => {
+    renderInBrowser(<ModalPage />, 'auto')
+    await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
+    await expect.element(page.getByRole('dialog')).toBeVisible()
+    const element = panel() as HTMLElement
+    const samples = await sampleTimed(() => scaleOf(element), 700)
+    const settledAt = samples.filter(([, value]) => Math.abs(value - 1) > 0.002).map(([time]) => time).pop() ?? 0
+
+    expect(Math.max(...seconds(getComputedStyle(element).transitionDuration))).toBeCloseTo(0.3, 2)
+    expect(settledAt).toBeLessThan(360)
+  })
+
+  it('gives the toast and the popover the duration of their spring', async () => {
+    renderInBrowser(<ToastPage />, 'auto')
+    await userEvent.click(page.getByRole('button', { name: 'Avisar' }))
+    await expect.poll(() => document.querySelector('[data-slot="toast"]')).toBeTruthy()
+    const element = document.querySelector<HTMLElement>('[data-slot="toast"]') as HTMLElement
+
+    expect(Math.max(...seconds(getComputedStyle(element).transitionDuration))).toBeCloseTo(0.3, 2)
   })
 
   it('lets a bouncier spring overshoot the final scale', async () => {

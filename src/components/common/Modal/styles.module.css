@@ -34,8 +34,8 @@
   opacity: 1;
   transform: translate(0, 0) scale(1);
   transition:
-    opacity calc(var(--enchase-modal-duration, 400ms) * 0.6) var(--enchase-modal-fade-ease, var(--enchase-motion-ease-out)),
-    transform var(--enchase-modal-duration, 400ms) var(--enchase-modal-ease, var(--enchase-motion-spring-gentle));
+    opacity calc(var(--enchase-modal-duration, var(--enchase-motion-spring-gentle-duration)) * 0.6) var(--enchase-modal-fade-ease, var(--enchase-motion-ease-out)),
+    transform var(--enchase-modal-duration, var(--enchase-motion-spring-gentle-duration)) var(--enchase-modal-ease, var(--enchase-motion-spring-gentle));
 }
 
 .container:where([data-state='entering']) {

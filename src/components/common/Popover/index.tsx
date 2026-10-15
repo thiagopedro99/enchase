@@ -1,7 +1,7 @@
 import { cloneElement, isValidElement, useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
-import { defaultArrow, defaultCloseOnEsc, defaultCloseOnOutsideClick, defaultOffset, defaultOpen, defaultPadding, defaultPlacement, defaultRole } from './defaultData.ts'
+import { defaultArrow, defaultCloseOnEsc, defaultCloseOnOutsideClick, defaultOffset, defaultOpen, defaultPadding, defaultPlacement, defaultRole, popoverBase } from './defaultData.ts'
 import { useControllableState } from '@hooks/useControllableState.ts'
 import { PopoverTreeContext, usePopoverTree } from './popoverTree.ts'
 import { usePopoverDismiss } from './usePopoverDismiss.ts'
@@ -46,7 +46,7 @@ export const Popover = ({
   const triggerRef = useRef<HTMLSpanElement>(null)
   const arrowRef = useRef<HTMLSpanElement>(null)
   const byKeyboard = useRef(false)
-  const motionStyle = useMotionStyle('pop', 'popover', animation)
+  const motionStyle = useMotionStyle('pop', 'popover', animation, undefined, popoverBase)
   const isTop = useOverlayStack(isOpen)
   const { contains, tree } = usePopoverTree(ref, mounted)
 

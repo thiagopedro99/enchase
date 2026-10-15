@@ -3,9 +3,10 @@ import { useMemo } from 'react'
 import { resolveCssMotion } from '../motion/css.ts'
 import { useUIConfig } from './useUIConfig.ts'
 
-import type { BaseTuning, MotionOverride, RecipeName, SlideFrom } from '../motion/types.ts'
+import type { ComponentBase } from '../motion/css.ts'
+import type { MotionOverride, RecipeName, SlideFrom } from '../motion/types.ts'
 
-export const useMotionStyle = (name: RecipeName, component: string, override?: MotionOverride, from?: SlideFrom, base?: Partial<BaseTuning>) => {
+export const useMotionStyle = (name: RecipeName, component: string, override?: MotionOverride, from?: SlideFrom, base?: ComponentBase) => {
   const { motion, dir } = useUIConfig()
   const customRecipe = override ? override.recipe : undefined
   const customFrom = override ? override.from : undefined

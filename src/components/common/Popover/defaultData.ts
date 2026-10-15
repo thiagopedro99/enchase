@@ -18,3 +18,5 @@ export const defaultCloseOnEsc = true
 export const defaultCloseOnOutsideClick = true
 
 export const arrowPadding = 8
+
+export const popoverBase = { spring: 'snappy' } as const

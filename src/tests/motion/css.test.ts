@@ -31,6 +31,20 @@ describe('resolveCssMotion', () => {
     expect(tuned['--enchase-modal-duration']).toBe('100ms')
   })
 
+  it('takes the duration of a spring from its token, scaled by the preset and with a shorter exit', () => {
+    const base = { spring: 'gentle' } as const
+    const plain = read({ name: 'pop', component: 'modal', settings, base })
+    const subtle = read({ name: 'pop', component: 'modal', settings: { ...settings, preset: 'subtle' }, base })
+    const tuned = read({ name: 'pop', component: 'modal', settings: { ...settings, recipes: { pop: { duration: 0.1 } } }, base })
+    const silent = read({ name: 'pop', component: 'modal', settings, base, override: false })
+
+    expect(plain['--enchase-modal-duration']).toBe('var(--enchase-motion-spring-gentle-duration)')
+    expect(plain['--enchase-modal-exit-duration']).toBe('calc(var(--enchase-motion-spring-gentle-duration) * 0.5)')
+    expect(subtle['--enchase-modal-duration']).toBe('calc(var(--enchase-motion-spring-gentle-duration) * 0.75)')
+    expect(tuned['--enchase-modal-duration']).toBe('100ms')
+    expect(silent['--enchase-modal-duration']).toBe('0ms')
+  })
+
   it('names every variable after the component', () => {
     const style = read({ name: 'slide', component: 'toast', settings })
 

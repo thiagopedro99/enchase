@@ -6,6 +6,8 @@ export type RecipeName = 'fade' | 'pop' | 'slide' | 'press' | 'lift' | 'resize' 
 
 export type SlideFrom = 'top' | 'bottom' | 'left' | 'right'
 
+export type SpringName = 'gentle' | 'snappy' | 'bouncy'
+
 export type RecipeTuning = {
   duration?: number
   distance?: number

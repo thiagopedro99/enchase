@@ -96,7 +96,7 @@ const ModalDialog = ({
   )
 }
 
-const modalBase = { duration: 0.4, distance: 0 }
+const modalBase = { distance: 0, spring: 'gentle' } as const
 
 export const Modal = ({
   isOpen,

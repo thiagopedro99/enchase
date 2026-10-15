@@ -25,8 +25,8 @@
   opacity: 1;
   transform: none;
   transition:
-    opacity calc(var(--enchase-toast-duration, 350ms) * 0.6) var(--enchase-toast-fade-ease, var(--enchase-motion-ease-out)),
-    transform var(--enchase-toast-duration, 350ms) var(--enchase-toast-ease, var(--enchase-motion-spring-snappy));
+    opacity calc(var(--enchase-toast-duration, var(--enchase-motion-spring-snappy-duration)) * 0.6) var(--enchase-toast-fade-ease, var(--enchase-motion-ease-out)),
+    transform var(--enchase-toast-duration, var(--enchase-motion-spring-snappy-duration)) var(--enchase-toast-ease, var(--enchase-motion-spring-snappy));
 }
 
 :where(.item) {

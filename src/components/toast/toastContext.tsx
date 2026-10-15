@@ -1,8 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react'
 
-import { defaultToastDuration, reducedMotionQuery, toastBase } from './defaultData.ts'
+import { defaultToastDuration, reducedMotionQuery } from './defaultData.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
-import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import ToastItemComponent from './toastItem.tsx'
@@ -17,10 +16,8 @@ export const ToastProvider = ({ children, animation, className, style }: ToastPr
   const viewportRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
   const reduced = useMediaQuery(reducedMotionQuery)
-  const motionStyle = useMotionStyle('slide', 'toast', animation, 'right', toastBase)
-  const reflowMs = reduced ? 0 : Number.parseFloat(String((motionStyle as Record<string, string>)['--enchase-toast-duration']))
 
-  useFlip(viewportRef, Number.isFinite(reflowMs) ? reflowMs : 0)
+  useFlip(viewportRef, !reduced)
 
   const addToast = useCallback((message: string, type: ToastType, duration = defaultToastDuration, options?: ToastOptions) => {
     const id = Math.random().toString(36).slice(2, 11)

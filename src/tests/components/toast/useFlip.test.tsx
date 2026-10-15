@@ -6,15 +6,15 @@ import { useFlip } from '@components/toast/useFlip.ts'
 
 const tops = new Map<string, number>()
 
-const Stack = ({ ids, duration = 200 }: { ids: string[]; duration?: number }) => {
+const Stack = ({ ids, duration = 200, enabled = true }: { ids: string[]; duration?: number; enabled?: boolean }) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  useFlip(ref, duration)
+  useFlip(ref, enabled)
 
   return (
     <div ref={ref}>
       {ids.map((id) => (
-        <div key={id} data-flip-id={id} />
+        <div key={id} data-flip-id={id} style={{ transitionDuration: `${duration}ms` }} />
       ))}
     </div>
   )
@@ -63,13 +63,35 @@ describe('useFlip', () => {
     expect(animate).not.toHaveBeenCalled()
   })
 
-  it('does nothing when the duration is zero', () => {
+  it('takes the duration from the transition of the item itself', () => {
+    tops.set('a', 0)
+    tops.set('b', 60)
+    const { rerender } = render(<Stack ids={['a', 'b']} duration={300} />)
+
+    tops.set('b', 0)
+    rerender(<Stack ids={['b']} duration={300} />)
+
+    expect(animate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ duration: 300 }))
+  })
+
+  it('does nothing when the items do not transition', () => {
     tops.set('a', 0)
     tops.set('b', 60)
     const { rerender } = render(<Stack ids={['a', 'b']} duration={0} />)
 
     tops.set('b', 0)
     rerender(<Stack ids={['b']} duration={0} />)
+
+    expect(animate).not.toHaveBeenCalled()
+  })
+
+  it('does nothing when it is disabled', () => {
+    tops.set('a', 0)
+    tops.set('b', 60)
+    const { rerender } = render(<Stack ids={['a', 'b']} enabled={false} />)
+
+    tops.set('b', 0)
+    rerender(<Stack ids={['b']} enabled={false} />)
 
     expect(animate).not.toHaveBeenCalled()
   })
