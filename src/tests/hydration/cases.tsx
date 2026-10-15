@@ -7,6 +7,7 @@ import { Breadcrumbs } from '@components/common/Breadcrumbs/index.tsx'
 import { InlineLoading, Loading } from '@components/common/Loading/index.tsx'
 import { Skeleton } from '@components/common/Skeleton/index.tsx'
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
+import { Popover } from '@components/common/Popover/index.tsx'
 import { ConfirmModal, Modal } from '@components/common/Modal/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
@@ -46,6 +47,8 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Card', element: <Card variant="elevated">Content</Card> },
   { name: 'Tooltip', element: <Tooltip text="Help"><Button>Hover</Button></Tooltip> },
   { name: 'ThemeToggle', element: <ThemeToggle /> },
+  { name: 'Popover closed', element: <Popover content={<p>Details</p>}><Button>Open</Button></Popover> },
+  { name: 'Popover open', element: <Popover defaultOpen arrow label="Details" content={<p>Details</p>}><Button>Open</Button></Popover> },
   { name: 'Modal closed', element: <Modal isOpen={false} onClose={noop} title="Title">Body</Modal> },
   { name: 'Modal open', element: <Modal isOpen onClose={noop} title="Title">Body</Modal> },
   { name: 'ConfirmModal open', element: <ConfirmModal isOpen onClose={noop} onConfirm={noop} message="Are you sure?" /> },

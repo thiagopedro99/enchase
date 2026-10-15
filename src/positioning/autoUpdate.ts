@@ -15,16 +15,19 @@ export const autoUpdate = (reference: Element | VirtualElement, floating: HTMLEl
   const run = () => {
     if (state.active) update()
   }
-  const observer: ResizeObserver = new ResizeObserver(([entry]) => {
-    if (entry?.target === element) {
-      observer.unobserve(floating)
-      cancelAnimationFrame(state.reobserve)
-      state.reobserve = requestAnimationFrame(() => observer.observe(floating))
-    }
-    run()
-  })
-  if (element && !everyFrame) observer.observe(element)
-  observer.observe(floating)
+  const observer: ResizeObserver | undefined =
+    typeof ResizeObserver === 'undefined'
+      ? undefined
+      : new ResizeObserver(([entry]) => {
+          if (entry?.target === element) {
+            observer?.unobserve(floating)
+            cancelAnimationFrame(state.reobserve)
+            state.reobserve = requestAnimationFrame(() => observer?.observe(floating))
+          }
+          run()
+        })
+  if (element && !everyFrame) observer?.observe(element)
+  observer?.observe(floating)
 
   const stopMove = element && !everyFrame && observeMovement ? observeMove(element, run) : undefined
   const targets: EventTarget[] = [window, ...(window.visualViewport ? [window.visualViewport] : [])]
@@ -45,7 +48,7 @@ export const autoUpdate = (reference: Element | VirtualElement, floating: HTMLEl
     cancelAnimationFrame(state.frame)
     cancelAnimationFrame(state.reobserve)
     stopMove?.()
-    observer.disconnect()
+    observer?.disconnect()
     targets.forEach((target) => target.removeEventListener('resize', run))
     targets.forEach((target) => target.removeEventListener('scroll', run, { capture: true }))
   }

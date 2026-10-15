@@ -63,7 +63,7 @@ const ModalDialog = ({
 
   return (
     <div ref={rootRef} {...slot('modal')}>
-      <div {...slot('modal', 'overlay')} className={styles.backdrop} style={motionStyle} data-state={state} onClick={closeOnOverlayClick ? onClose : undefined} />
+      <div {...slot('modal', 'overlay')} className={styles.backdrop} style={motionStyle} data-state={state} onClick={closeOnOverlayClick ? () => isTop.wasTopAtPointerDown() && onClose() : undefined} />
 
       <div ref={panelRef} {...panelProps}>
         {(title || showCloseButton) && (

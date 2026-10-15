@@ -1,0 +1,99 @@
+:where(.trigger) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  position: fixed;
+  z-index: var(--enchase-z-popover);
+  box-sizing: border-box;
+  margin: 0;
+  max-inline-size: var(--enchase-popover-max-width, 100vw);
+  max-block-size: var(--enchase-popover-max-height, 100vh);
+  overflow: auto;
+  background-color: var(--enchase-color-surface-container-high);
+  color: var(--enchase-color-text-primary);
+  box-shadow: var(--enchase-shadow-md);
+  opacity: 1;
+  transform: none;
+  transition-property: opacity, transform;
+  transition-duration: var(--enchase-popover-duration, var(--enchase-motion-duration-base));
+  transition-timing-function: var(--enchase-popover-ease, var(--enchase-motion-spring-snappy));
+}
+
+:where(.content) {
+  padding-block: var(--enchase-space-md);
+  padding-inline: var(--enchase-space-md);
+  border-radius: var(--enchase-radius-lg);
+}
+
+.content:focus {
+  outline: none;
+}
+
+.content:where([data-state='entering'], [data-state='exiting']) {
+  opacity: 0;
+  transform: scale(var(--enchase-popover-scale, 1));
+}
+
+.content:where([data-state='exiting']) {
+  transition-duration: var(--enchase-popover-exit-duration, var(--enchase-motion-duration-fast));
+  transition-timing-function: var(--enchase-popover-ease, var(--enchase-motion-ease-out));
+}
+
+.content:where([data-placement='top']) {
+  transform-origin: 50% 100%;
+}
+
+.content:where([data-placement='bottom']) {
+  transform-origin: 50% 0;
+}
+
+.content:where([data-placement='left']) {
+  transform-origin: 100% 50%;
+}
+
+.content:where([data-placement='right']) {
+  transform-origin: 0 50%;
+}
+
+.content:where([data-reference-hidden]) {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.arrow {
+  position: absolute;
+  inline-size: 10px;
+  block-size: 10px;
+  background-color: inherit;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+.content:where([data-placement^='top']) > .arrow {
+  inset-block-end: -5px;
+}
+
+.content:where([data-placement^='bottom']) > .arrow {
+  inset-block-start: -5px;
+}
+
+.content:where([data-placement^='left']) > .arrow {
+  right: -5px;
+}
+
+.content:where([data-placement^='right']) > .arrow {
+  left: -5px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content:where([data-state='entering'], [data-state='exiting']) {
+    transform: none;
+  }
+
+  .content {
+    transition-property: opacity;
+  }
+}

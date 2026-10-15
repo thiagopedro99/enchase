@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 
 import type { RefObject } from 'react'
 
-const focusableSelector = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+export const focusableSelector ='a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
 export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, active: boolean) => {
   useEffect(() => {

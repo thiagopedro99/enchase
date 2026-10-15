@@ -12,6 +12,7 @@ const prefixes: Record<string, string> = {
   'common/Link/styles.module.css': 'link',
   'common/Loading/styles.module.css': 'loading',
   'common/Modal/styles.module.css': 'modal',
+  'common/Popover/styles.module.css': 'popover',
   'common/Select/styles.module.css': 'select',
   'common/Sidebar/styles.module.css': 'sidebar',
   'common/Skeleton/styles.module.css': 'skeleton',
