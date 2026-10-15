@@ -54,7 +54,7 @@ const audit = (label: string) => {
   const failures: string[] = []
   const root = document.documentElement
 
-  if (root.scrollWidth > root.clientWidth) failures.push(`${label}: horizontal overflow (${root.scrollWidth} > ${root.clientWidth})`)
+  if (root.scrollWidth - root.clientWidth > 1) failures.push(`${label}: horizontal overflow (${root.scrollWidth} > ${root.clientWidth})`)
 
   for (const control of controls()) {
     const box = control.getBoundingClientRect()

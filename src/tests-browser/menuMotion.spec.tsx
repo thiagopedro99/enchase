@@ -376,11 +376,18 @@ const DrawerPage = () => {
   )
 }
 
+const toMilliseconds = (value: string) => (value.endsWith('ms') ? parseFloat(value) : parseFloat(value) * 1000)
+
 const opacityDelays = (elements: HTMLElement[]) =>
   elements.map((element) => {
-    const transition = element.getAnimations().find((animation) => (animation as CSSTransition).transitionProperty === 'opacity')
+    const style = getComputedStyle(element)
+    const properties = style.transitionProperty.split(',').map((property) => property.trim())
+    const index = properties.indexOf('opacity')
+    if (index === -1) return undefined
 
-    return transition ? Number(transition.effect?.getComputedTiming().delay) : undefined
+    const delays = style.transitionDelay.split(',').map((delay) => delay.trim())
+
+    return Math.round(toMilliseconds(delays[index % delays.length]))
   })
 
 const drawerItems = () => [...document.querySelectorAll('[data-slot="sidebar"][data-variant="modal"] [data-slot="sidebar-item"]')] as HTMLElement[]
@@ -448,9 +455,7 @@ describe('Drawer cascade in a real browser', () => {
     renderInBrowser(<Navbar sections={routes} />, 'auto')
 
     await userEvent.click(page.getByRole('button', { name: 'Abrir menu' }))
-    await expect.poll(() => opacityDelays(navbarLinks()).every((delay) => delay !== undefined)).toBe(true)
-
-    expect(opacityDelays(navbarLinks())).toEqual([0, 30, 60])
+    await expect.poll(() => opacityDelays(navbarLinks())).toEqual([0, 30, 60])
   })
 
   it('lets the caller change the cascade gap through its css variable', async () => {
