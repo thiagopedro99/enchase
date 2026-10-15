@@ -1,13 +1,16 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
 
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
+import { resetTooltipGroup } from '@components/common/Tooltip/defaultData.ts'
 import { ptBR } from '@locales/ptBR.ts'
 
 const visibleBubble = () => screen.queryByText('Save changes', { selector: '[aria-hidden="true"]' })
+
+beforeEach(resetTooltipGroup)
 
 describe('Tooltip', () => {
   it('describes the trigger through a hidden tooltip element', () => {
@@ -235,6 +238,27 @@ describe('Tooltip contract', () => {
     expect(visibleBubble()).not.toBeInTheDocument()
 
     expect(await bubbleOf()).toBeInTheDocument()
+  })
+
+  it('opens a second tooltip at once and without animation while another is open', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <>
+        <Tooltip text="First" openDelay={200}>
+          <button>One</button>
+        </Tooltip>
+        <Tooltip text="Second" openDelay={200}>
+          <button>Two</button>
+        </Tooltip>
+      </>
+    )
+
+    await user.hover(screen.getByRole('button', { name: 'One' }))
+    expect(await screen.findByText('First', { selector: '[aria-hidden="true"]' })).toBeInTheDocument()
+    await user.hover(screen.getByRole('button', { name: 'Two' }))
+
+    const second = screen.getByText('Second', { selector: '[aria-hidden="true"]' })
+    expect(second).toHaveAttribute('data-animation', 'off')
   })
 
   it('does not open when the pointer leaves before openDelay', async () => {

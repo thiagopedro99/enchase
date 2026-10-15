@@ -6,7 +6,18 @@ import type { TooltipAnchor, TooltipAnimation, TooltipBox, TooltipPlacement, Too
 
 export const defaultPosition: TooltipPosition = 'top'
 
-export const openDelay = 0
+export const openDelay = 100
+
+export const groupWindowMs = 300
+
+export const tooltipGroup = { open: 0, closedAt: Number.NEGATIVE_INFINITY }
+
+export const resetTooltipGroup = () => {
+  tooltipGroup.open = 0
+  tooltipGroup.closedAt = Number.NEGATIVE_INFINITY
+}
+
+export const joinsGroup = (now: number) => tooltipGroup.open > 0 || now - tooltipGroup.closedAt < groupWindowMs
 
 export const closeDelay = 120
 

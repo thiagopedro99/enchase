@@ -1,7 +1,7 @@
 import { cloneElement, isValidElement, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { bubbleBox, closeDelay as defaultCloseDelay, crossAxisShift, defaultPosition, openDelay as defaultOpenDelay, opposite, overflowsMainAxis, placeBubble, resolveAnimation, resolvePlacement } from './defaultData.ts'
+import { bubbleBox, closeDelay as defaultCloseDelay, crossAxisShift, defaultPosition, joinsGroup, openDelay as defaultOpenDelay, opposite, overflowsMainAxis, placeBubble, resolveAnimation, resolvePlacement, tooltipGroup } from './defaultData.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { classNames } from '@utils/classNames.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -32,6 +32,7 @@ export const Tooltip = ({
   const [anchor, setAnchor] = useState<TooltipAnchor>({ top: 0, left: 0 })
   const [placement, setPlacement] = useState(() => resolvePlacement(position, dir))
   const [shift, setShift] = useState(0)
+  const [instant, setInstant] = useState(false)
   const id = useId()
   const wrapperRef = useRef<HTMLDivElement>(null)
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -48,6 +49,7 @@ export const Tooltip = ({
     const resolved = resolvePlacement(position, dir)
 
     flipped.current = false
+    setInstant(joinsGroup(Date.now()))
     setShift(0)
     setPlacement(resolved)
     if (wrapperRef.current) setAnchor(placeBubble(wrapperRef.current.getBoundingClientRect(), resolved))
@@ -56,7 +58,7 @@ export const Tooltip = ({
 
   const show = () => {
     clearTimers()
-    if (openDelay > 0) openTimer.current = setTimeout(reveal, openDelay)
+    if (openDelay > 0 && !joinsGroup(Date.now())) openTimer.current = setTimeout(reveal, openDelay)
     else reveal()
   }
 
@@ -73,6 +75,17 @@ export const Tooltip = ({
   }
 
   useEffect(() => clearTimers, [])
+
+  useEffect(() => {
+    if (!open) return
+
+    tooltipGroup.open += 1
+
+    return () => {
+      tooltipGroup.open -= 1
+      tooltipGroup.closedAt = Date.now()
+    }
+  }, [open])
 
   useEffect(() => {
     if (!open) return
@@ -131,7 +144,7 @@ export const Tooltip = ({
       style: { ...anchor, ...bubbleVariables },
       'data-position': placement,
       'data-state': presence.state,
-      'data-animation': motionSettings.off ? 'off' : motionSettings.pop ? 'pop' : undefined,
+      'data-animation': motionSettings.off || instant ? 'off' : motionSettings.pop ? 'pop' : undefined,
       'aria-hidden': true,
       ...slot('tooltip', 'bubble')
     },
