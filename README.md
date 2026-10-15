@@ -224,6 +224,18 @@ Os breakpoints seguem o Bootstrap 5 (mobile-first, `min-width`): `xs` 0, `sm` 57
 - `useBreakpoint()` devolve `{ current, up(name), down(name) }`.
 - `Grid`, `Footer`, `Modal`, `toast` e `Breadcrumbs` se ajustam pela largura disponível, sem `@media`. O `Container` limita a largura pelo breakpoint escolhido em `maxWidth`.
 
+### Celular e toque
+
+Os componentes já cuidam do que é da biblioteca:
+
+- Controles sem o brilho de toque e sem o atraso do toque duplo (`touch-action: manipulation`), e hover só em ponteiro fino.
+- Campos com fonte de pelo menos 16 px em ponteiro de toque, para o iOS não dar zoom ao focar.
+- Alturas com `dvh` (a barra de endereço do celular muda a altura útil), `env(safe-area-inset-*)` nos elementos fixos nas bordas (toast e gavetas) e `overscroll-behavior: contain` nas áreas rolantes internas (gavetas, corpo do modal, popover).
+- O bloqueio de rolagem da página (`Modal`, gavetas) bloqueia também o encadeamento de rolagem.
+- Textos longos quebram ou encolhem com reticências em vez de empurrar a página para o lado (nomes, e-mails sem espaços, rótulos traduzidos), e a inicial do avatar usa a letra inteira, inclusive emoji.
+
+O que é do seu app, não da biblioteca: a meta `viewport` (use `viewport-fit=cover` para a área segura valer, e `interactive-widget=resizes-content` se quiser que o teclado virtual reduza o layout), a cor da barra de status (`theme-color`, uma por esquema de cor) e a fonte dos seus próprios campos.
+
 ## Movimento
 
 O movimento é CSS (transições, `@starting-style`, `@keyframes` só para loops e `linear()` para molas), mais o hook interno `usePresence`, que mantém o elemento montado até a saída terminar, lendo a duração real do estilo calculado. Não há biblioteca de animação.
