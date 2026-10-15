@@ -39,7 +39,7 @@ export default defineConfig({
       cssFileName: 'styles'
     },
     rolldownOptions: {
-      external: [/^react($|\/)/, /^react-dom($|\/)/, /^motion($|\/)/],
+      external: [/^react($|\/)/, /^react-dom($|\/)/],
       output: {
         entryFileNames: '[name].js',
         chunkFileNames: 'chunks/[name]-[hash].js',

@@ -1,5 +1,3 @@
-import type { HTMLMotionProps } from 'motion/react'
-
 export type MotionMode = 'auto' | 'never'
 
 export type MotionPreset = 'off' | 'subtle' | 'standard' | 'expressive'
@@ -27,17 +25,6 @@ export type MotionOverride =
       from?: SlideFrom
       tuning?: RecipeTuning
     }
-
-export type RecipeProps = Pick<HTMLMotionProps<'div'>, 'initial' | 'animate' | 'exit' | 'transition' | 'whileHover' | 'whileTap'>
-
-export type ResolveRecipeInput = {
-  name: RecipeName
-  settings: MotionSettings
-  prefersReduced: boolean
-  from?: SlideFrom
-  tuning?: RecipeTuning
-  disabled?: boolean
-}
 
 export type BaseTuning = Required<RecipeTuning>
 

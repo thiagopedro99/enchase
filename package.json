@@ -54,9 +54,6 @@
     "test:consumer": "node scripts/testConsumer.mjs",
     "test:next": "node scripts/testNext.mjs"
   },
-  "dependencies": {
-    "motion": "^14.0.0"
-  },
   "peerDependencies": {
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

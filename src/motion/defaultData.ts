@@ -1,7 +1,5 @@
 import type { BaseTuning, MotionPreset, MotionSettings, RecipeName, PresetScale } from './types.ts'
 
-export const defaultEase: [number, number, number, number] = [0.2, 0, 0, 1]
-
 export const presetScale: Record<MotionPreset, PresetScale> = {
   off: { duration: 0, distance: 0 },
   subtle: { duration: 0.75, distance: 0.5 },
@@ -19,12 +17,6 @@ export const baseTuning: Record<RecipeName, BaseTuning> = {
   spin: { duration: 0.8, distance: 0, scale: 1 },
   shimmer: { duration: 1.5, distance: 0, scale: 1 }
 }
-
-export const loopRecipes: RecipeName[] = ['spin', 'shimmer']
-
-export const pulseDuration = 1.6
-
-export const shimmerTravel = 468
 
 export const defaultMotionSettings: MotionSettings = {
   mode: 'auto',

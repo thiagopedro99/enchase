@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { MotionConfig } from 'motion/react'
 
 import { CurrentHrefContext, NavigateContext } from './navigationContext.ts'
 import { defaultMotionSettings } from '../../motion/defaultData.ts'
@@ -36,7 +35,7 @@ export const UIProvider = ({ children, motion, locale, labels, breakpoints, navi
       <NavigateContext.Provider value={stableNavigate}>
         <CurrentHrefContext.Provider value={currentHref}>
           <style>{responsiveCss}</style>
-          <MotionConfig reducedMotion={value.motion.mode === 'never' ? 'always' : 'user'}>{children}</MotionConfig>
+          {children}
         </CurrentHrefContext.Provider>
       </NavigateContext.Provider>
     </UIContext.Provider>
