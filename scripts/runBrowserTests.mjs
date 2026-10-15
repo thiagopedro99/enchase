@@ -15,7 +15,7 @@ if (!['chromium', 'firefox', 'webkit'].includes(browser)) {
 const build = spawnSync(npm, ['run', 'build:lib'], { stdio: 'inherit', shell: windows })
 if (build.status !== 0) process.exit(build.status ?? 1)
 
-const result = spawnSync(npx, ['vitest', 'run', '--config', 'vitest.browser.config.ts', ...extra], {
+const result = spawnSync(npx, ['vitest', 'run', '--config', 'vitest.browser.config.ts', ...(browser === 'chromium' ? [] : ['--no-file-parallelism']), ...extra], {
   encoding: 'utf8',
   shell: windows,
   maxBuffer: 64 * 1024 * 1024,

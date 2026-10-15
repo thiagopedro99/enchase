@@ -16,7 +16,7 @@ if (build.status !== 0) process.exit(build.status ?? 1)
 const failures = []
 
 for (let run = 1; run <= runs; run += 1) {
-  const result = spawnSync(npx, ['vitest', 'run', '--config', 'vitest.browser.config.ts'], { encoding: 'utf8', shell: windows, env: { ...process.env, ENCHASE_BROWSER: browser } })
+  const result = spawnSync(npx, ['vitest', 'run', '--config', 'vitest.browser.config.ts', ...(browser === 'chromium' ? [] : ['--no-file-parallelism'])], { encoding: 'utf8', shell: windows, env: { ...process.env, ENCHASE_BROWSER: browser } })
   const output = `${result.stdout}\n${result.stderr}`
   const failed = [...output.matchAll(/FAIL\s+\|\w+\|\s+(.+)/g)].map((match) => match[1].trim())
   const summary = output.match(/Tests\s+(.+)/)?.[1]?.trim() ?? 'no summary'
