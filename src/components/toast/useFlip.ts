@@ -31,10 +31,12 @@ export const useFlip = (containerRef: RefObject<HTMLElement | null>, durationMs:
     tops.current = next
     if (durationMs <= 0) return
 
+    const spring = getComputedStyle(container).getPropertyValue('--enchase-motion-spring-snappy').trim()
+
     for (const [element, delta] of moved) {
       if (typeof element.animate !== 'function') continue
 
-      const animation = element.animate([{ translate: `0 ${delta}px` }, { translate: '0 0' }], { duration: durationMs, easing: reflowEase })
+      const animation = element.animate([{ translate: `0 ${delta}px` }, { translate: '0 0' }], { duration: durationMs, easing: spring || reflowEase })
       animation.id = flipAnimationId
     }
   })

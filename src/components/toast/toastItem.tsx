@@ -4,7 +4,7 @@ import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { CheckIcon } from '@components/common/Icon/icons/CheckIcon.tsx'
 import { InfoIcon } from '@components/common/Icon/icons/InfoIcon.tsx'
 
-import { defaultToastDuration } from './defaultData.ts'
+import { defaultToastDuration, toastBase } from './defaultData.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { usePresence } from '@hooks/usePresence.ts'
@@ -23,7 +23,7 @@ const Icons = {
 
 const ToastItemComponent = ({ toast, open, onRemove, onDispose, animation }: ToastItemProps) => {
   const { labels } = useUIConfig()
-  const motionStyle = useMotionStyle('slide', 'toast', animation, 'right')
+  const motionStyle = useMotionStyle('slide', 'toast', animation, 'right', toastBase)
   const duration = toast.duration ?? defaultToastDuration
   const sticky = duration === 0
   const [shown, setShown] = useState(false)

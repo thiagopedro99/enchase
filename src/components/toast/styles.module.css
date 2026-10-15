@@ -20,8 +20,8 @@
   opacity: 1;
   transform: none;
   transition:
-    opacity var(--enchase-toast-duration, var(--enchase-motion-duration-base)) var(--enchase-toast-ease, var(--enchase-motion-ease-out)),
-    transform var(--enchase-toast-duration, var(--enchase-motion-duration-base)) var(--enchase-toast-ease, var(--enchase-motion-ease-out));
+    opacity calc(var(--enchase-toast-duration, 350ms) * 0.6) var(--enchase-toast-fade-ease, var(--enchase-motion-ease-out)),
+    transform var(--enchase-toast-duration, 350ms) var(--enchase-toast-ease, var(--enchase-motion-spring-snappy));
 }
 
 :where(.item) {
@@ -48,6 +48,7 @@
   opacity: 0;
   transform: translate(calc(var(--enchase-toast-dx, 0) * var(--enchase-toast-distance, 0px)), calc(var(--enchase-toast-dy, 0) * var(--enchase-toast-distance, 0px)));
   transition-duration: var(--enchase-toast-exit-duration, var(--enchase-motion-duration-fast));
+  transition-timing-function: var(--enchase-toast-exit-ease, var(--enchase-motion-ease-out));
 }
 
 .item:where([data-type='success']) {
