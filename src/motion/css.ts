@@ -1,7 +1,7 @@
 import { baseTuning, presetScale } from './defaultData.ts'
 
 import type { CSSProperties } from 'react'
-import type { MotionOverride, MotionSettings, RecipeName, SlideFrom } from './types.ts'
+import type { BaseTuning, MotionOverride, MotionSettings, RecipeName, SlideFrom } from './types.ts'
 
 export type CssMotionInput = {
   name: RecipeName
@@ -10,6 +10,7 @@ export type CssMotionInput = {
   override?: MotionOverride
   from?: SlideFrom
   rtl?: boolean
+  base?: Partial<BaseTuning>
 }
 
 export const exitRatio = 0.7
@@ -25,10 +26,10 @@ const px = (value: number) => `${Math.round(value * 100) / 100}px`
 
 const ms = (value: number) => `${Math.round(value * 1000)}ms`
 
-export const resolveCssMotion = ({ name, settings, component, override, from = 'bottom', rtl = false }: CssMotionInput): CSSProperties => {
+export const resolveCssMotion = ({ name, settings, component, override, from = 'bottom', rtl = false, base: componentBase }: CssMotionInput): CSSProperties => {
   const silent = override === false || settings.mode === 'never' || settings.preset === 'off'
   const recipe = override ? (override.recipe ?? name) : name
-  const base = baseTuning[recipe]
+  const base = { ...baseTuning[recipe], ...(recipe === name ? componentBase : undefined) }
   const scale = presetScale[settings.preset]
   const custom = { ...settings.recipes[recipe], ...(override ? override.tuning : undefined) }
   const duration = silent ? 0 : (custom.duration ?? base.duration * scale.duration)

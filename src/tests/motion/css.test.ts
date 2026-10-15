@@ -19,6 +19,18 @@ describe('resolveCssMotion', () => {
     expect(style['--enchase-modal-scale']).toBe('0.96')
   })
 
+  it('lets a component start from its own base tuning, still scaled by the preset and beaten by the settings', () => {
+    const base = { duration: 0.4 }
+    const plain = read({ name: 'pop', component: 'modal', settings, base })
+    const expressive = read({ name: 'pop', component: 'modal', settings: { ...settings, preset: 'expressive' }, base })
+    const tuned = read({ name: 'pop', component: 'modal', settings: { ...settings, recipes: { pop: { duration: 0.1 } } }, base })
+
+    expect(plain['--enchase-modal-duration']).toBe('400ms')
+    expect(plain['--enchase-modal-scale']).toBe('0.96')
+    expect(expressive['--enchase-modal-duration']).toBe('560ms')
+    expect(tuned['--enchase-modal-duration']).toBe('100ms')
+  })
+
   it('names every variable after the component', () => {
     const style = read({ name: 'slide', component: 'toast', settings })
 
