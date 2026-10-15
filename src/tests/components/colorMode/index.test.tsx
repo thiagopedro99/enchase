@@ -267,6 +267,17 @@ describe('ColorModeProvider contrast warning', () => {
     warn.mockRestore()
   })
 
+  it('warns about a motion duration longer than 300ms in a custom theme', () => {
+    mockScheme('light')
+    const warn = warnSpy()
+    renderProbe({ theme: { motion: { duration: { slow: '450ms' } } } })
+
+    expect(warn).toHaveBeenCalledTimes(1)
+    expect(warn.mock.calls[0][0]).toContain('motion.duration.slow')
+
+    warn.mockRestore()
+  })
+
   it('stays quiet for a custom theme that is fine, for the default theme and for a theme without contrast problems', () => {
     mockScheme('light')
     const warn = warnSpy()

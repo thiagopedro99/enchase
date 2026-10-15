@@ -4,7 +4,7 @@ const easeOut = 'cubic-bezier(0.2, 0, 0, 1)'
 
 const easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
-const duration = { fast: '150ms', base: '250ms', slow: '350ms' }
+const duration = { fast: '150ms', base: '250ms', slow: '300ms' }
 
 export const baseTokens = {
   fonts: {

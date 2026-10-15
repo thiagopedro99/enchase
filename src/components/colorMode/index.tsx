@@ -5,6 +5,7 @@ import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { defaultTheme } from '@styles/tokens/index.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 import { defaultThemeCss, themeCss } from '@styles/css/declarations.ts'
+import { formatMotionIssues, validateMotion } from '@styles/theme/motion.ts'
 import { formatContrastIssues, validateTheme } from '@styles/theme/validateTheme.ts'
 import { ThemeVariables } from '@styles/react.tsx'
 import { ColorModeContext } from './context.ts'
@@ -54,7 +55,8 @@ export const ColorModeProvider = ({ children, theme, mode: controlledMode, defau
   useEffect(() => {
     if (themeSet === undefined || process.env.NODE_ENV === 'production') return
 
-    const message = formatContrastIssues(validateTheme(themeSet))
+    const parts = [formatContrastIssues(validateTheme(themeSet)), formatMotionIssues(validateMotion(themeSet.base))].filter((part): part is string => part !== null)
+    const message = parts.length === 0 ? null : parts.join('\n')
 
     if (message && message !== lastWarning.current) console.warn(message)
 

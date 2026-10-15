@@ -12,4 +12,8 @@ export { baseTokens, lightTheme, darkTheme }
 
 export { colorRoles, themeModes } from './types.ts'
 
+export { spring, springPosition, springSettleTime } from './spring.ts'
+
+export type { SpringInput, SpringPerceptual, SpringPhysics, SpringResult } from './spring.ts'
+
 export type { BaseTokens, ColorRole, ColorTokens, ModeTokens, ShadowTokens, ThemeMode, ThemeSet } from './types.ts'

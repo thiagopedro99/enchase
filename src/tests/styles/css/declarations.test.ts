@@ -95,7 +95,7 @@ describe('layoutVariables', () => {
   it('declares the motion and control tokens used by the component contract', () => {
     expect(variables['--enchase-motion-duration-fast']).toBe('150ms')
     expect(variables['--enchase-motion-duration-base']).toBe('250ms')
-    expect(variables['--enchase-motion-duration-slow']).toBe('350ms')
+    expect(variables['--enchase-motion-duration-slow']).toBe('300ms')
     expect(variables['--enchase-motion-ease-out']).toBe('cubic-bezier(0.2, 0, 0, 1)')
     expect(variables['--enchase-motion-ease-in-out']).toBe('cubic-bezier(0.4, 0, 0.2, 1)')
     expect(variables['--enchase-motion-distance-sm']).toBe('12px')
