@@ -3,7 +3,7 @@
   text-decoration: underline;
   text-underline-offset: 0.2em;
   border-radius: var(--enchase-radius-sm);
-  transition: color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+  transition: color var(--enchase-link-duration, var(--enchase-motion-duration-fast)) var(--enchase-link-ease, var(--enchase-motion-ease-out));
 }
 
 :where(.link):focus-visible {

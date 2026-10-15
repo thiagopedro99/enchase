@@ -2,10 +2,10 @@
   box-sizing: border-box;
   margin: 0;
   transition:
-    transform var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-motion-ease-out),
-    box-shadow var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    border-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    transform var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-card-ease, var(--enchase-motion-ease-out)),
+    box-shadow var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-card-ease, var(--enchase-motion-ease-out)),
+    background-color var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-card-ease, var(--enchase-motion-ease-out)),
+    border-color var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-card-ease, var(--enchase-motion-ease-out));
 }
 
 :where(.card) {
@@ -33,7 +33,7 @@
   }
 
   :where(.card[data-variant='elevated'][data-motion='lift']:hover) {
-    transform: translateY(calc(-1 * var(--enchase-card-lift, var(--enchase-motion-distance-xs))));
+    transform: translateY(calc(-1 * var(--enchase-card-distance, var(--enchase-motion-distance-xs))));
   }
 }
 

@@ -79,7 +79,7 @@ const ModalSidebarPanel = ({ sections, activeSectionId, currentHref, header, foo
 }
 
 const ModalSidebar = (props: SidebarProps) => {
-  const motionStyle = useMotionStyle('slide', props.animation ?? drawerOverride, 'left')
+  const motionStyle = useMotionStyle('slide', 'sidebar', props.animation ?? drawerOverride, 'left')
   const open = Boolean(props.open)
   const { mounted, state, ref } = usePresence<HTMLDivElement>(open)
 

@@ -39,7 +39,7 @@
 }
 
 .skeleton[data-motion='on']::after {
-  animation: sweep var(--enchase-shimmer-duration, 1.5s) var(--enchase-motion-ease-in-out) infinite;
+  animation: sweep var(--enchase-skeleton-duration, 1.5s) var(--enchase-skeleton-ease, var(--enchase-motion-ease-in-out)) infinite;
 }
 
 .skeleton[data-motion='on']:dir(rtl)::after {
@@ -79,7 +79,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .skeleton[data-motion='on'] {
-    animation: pulse 1.6s var(--enchase-motion-ease-in-out) infinite;
+    animation: pulse 1.6s var(--enchase-skeleton-ease, var(--enchase-motion-ease-in-out)) infinite;
   }
 
   .skeleton[data-motion='on']::after,

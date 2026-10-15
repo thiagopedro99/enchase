@@ -51,9 +51,9 @@
   border: 2px solid var(--enchase-color-border-strong);
   background-color: transparent;
   transition:
-    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    border-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    box-shadow var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    background-color var(--enchase-checkbox-duration, var(--enchase-motion-duration-fast)) var(--enchase-checkbox-ease, var(--enchase-motion-ease-out)),
+    border-color var(--enchase-checkbox-duration, var(--enchase-motion-duration-fast)) var(--enchase-checkbox-ease, var(--enchase-motion-ease-out)),
+    box-shadow var(--enchase-checkbox-duration, var(--enchase-motion-duration-fast)) var(--enchase-checkbox-ease, var(--enchase-motion-ease-out));
 }
 
 :where(.box) {

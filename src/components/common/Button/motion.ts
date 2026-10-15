@@ -30,7 +30,7 @@ export const resolveButtonMotion = (settings: MotionSettings, override?: MotionO
 
   if (duration !== undefined) vars['--enchase-button-duration'] = `${Math.round(duration * 1000)}ms`
   if (requested === 'press' && pressScale !== undefined) vars['--enchase-button-scale'] = String(pressScale)
-  if (requested === 'lift' && lift !== undefined) vars['--enchase-button-lift'] = `${lift}px`
+  if (requested === 'lift' && lift !== undefined) vars['--enchase-button-distance'] = `${lift}px`
 
   return { motion: requested, style: Object.keys(vars).length > 0 ? (vars as CSSProperties) : undefined }
 }

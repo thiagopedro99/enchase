@@ -20,9 +20,9 @@
 
 .button {
   transition:
-    transform var(--enchase-button-duration, var(--enchase-motion-duration-fast)) var(--enchase-motion-ease-out),
-    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    transform var(--enchase-button-duration, var(--enchase-motion-duration-fast)) var(--enchase-theme-toggle-ease, var(--enchase-motion-ease-out)),
+    background-color var(--enchase-theme-toggle-duration, var(--enchase-motion-duration-fast)) var(--enchase-theme-toggle-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-theme-toggle-duration, var(--enchase-motion-duration-fast)) var(--enchase-theme-toggle-ease, var(--enchase-motion-ease-out));
 }
 
 .button:focus-visible {

@@ -4,7 +4,7 @@
   background-color: var(--enchase-color-overlay);
   z-index: var(--enchase-z-backdrop);
   opacity: 1;
-  transition: opacity var(--enchase-presence-duration, var(--enchase-motion-duration-base)) var(--enchase-motion-ease-out);
+  transition: opacity var(--enchase-modal-duration, var(--enchase-motion-duration-base)) var(--enchase-modal-ease, var(--enchase-motion-ease-out));
 }
 
 .backdrop:where([data-state='entering']) {
@@ -13,7 +13,7 @@
 
 .backdrop:where([data-state='exiting']) {
   opacity: 0;
-  transition-duration: var(--enchase-presence-exit-duration, var(--enchase-motion-duration-fast));
+  transition-duration: var(--enchase-modal-exit-duration, var(--enchase-motion-duration-fast));
 }
 
 .container {
@@ -34,19 +34,19 @@
   opacity: 1;
   transform: translate(0, 0) scale(1);
   transition:
-    opacity var(--enchase-presence-duration, var(--enchase-motion-duration-base)) var(--enchase-motion-ease-out),
-    transform var(--enchase-presence-duration, var(--enchase-motion-duration-base)) var(--enchase-motion-ease-out);
+    opacity var(--enchase-modal-duration, var(--enchase-motion-duration-base)) var(--enchase-modal-ease, var(--enchase-motion-ease-out)),
+    transform var(--enchase-modal-duration, var(--enchase-motion-duration-base)) var(--enchase-modal-ease, var(--enchase-motion-ease-out));
 }
 
 .container:where([data-state='entering']) {
   opacity: 0;
-  transform: translate(var(--enchase-presence-x, 0), var(--enchase-presence-y, 0)) scale(var(--enchase-presence-scale, 1));
+  transform: translate(calc(var(--enchase-modal-dx, 0) * var(--enchase-modal-distance, 0px)), calc(var(--enchase-modal-dy, 0) * var(--enchase-modal-distance, 0px))) scale(var(--enchase-modal-scale, 1));
 }
 
 .container:where([data-state='exiting']) {
   opacity: 0;
-  transform: translate(var(--enchase-presence-x, 0), var(--enchase-presence-y, 0)) scale(var(--enchase-presence-scale, 1));
-  transition-duration: var(--enchase-presence-exit-duration, var(--enchase-motion-duration-fast));
+  transform: translate(calc(var(--enchase-modal-dx, 0) * var(--enchase-modal-distance, 0px)), calc(var(--enchase-modal-dy, 0) * var(--enchase-modal-distance, 0px))) scale(var(--enchase-modal-scale, 1));
+  transition-duration: var(--enchase-modal-exit-duration, var(--enchase-motion-duration-fast));
 }
 
 .container:focus {
@@ -115,8 +115,8 @@
   color: var(--enchase-color-text-secondary);
   border-radius: var(--enchase-radius-full);
   transition:
-    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    background-color var(--enchase-modal-duration, var(--enchase-motion-duration-fast)) var(--enchase-modal-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-modal-duration, var(--enchase-motion-duration-fast)) var(--enchase-modal-ease, var(--enchase-motion-ease-out));
   cursor: pointer;
 }
 

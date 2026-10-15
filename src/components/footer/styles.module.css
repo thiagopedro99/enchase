@@ -13,7 +13,7 @@
   color: var(--enchase-color-primary);
   font-size: var(--enchase-font-size-sm);
   font-weight: var(--enchase-font-weight-medium);
-  transition: color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+  transition: color var(--enchase-footer-duration, var(--enchase-motion-duration-fast)) var(--enchase-footer-ease, var(--enchase-motion-ease-out));
 }
 
 @media (hover: hover) and (pointer: fine) {

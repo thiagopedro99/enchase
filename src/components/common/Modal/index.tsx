@@ -105,7 +105,7 @@ export const Modal = ({
   size = 'md',
   ...props
 }: ModalProps) => {
-  const motionStyle = useMotionStyle('pop', props.animation)
+  const motionStyle = useMotionStyle('pop', 'modal', props.animation)
   const isClient = useIsClient()
   const { mounted, state, ref } = usePresence<HTMLDivElement>(isOpen)
 

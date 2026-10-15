@@ -219,13 +219,16 @@ describe('Navbar contract', () => {
     const { unmount } = renderWithProviders(<Navbar sections={sections} />)
 
     await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
-    expect((await screen.findByRole('dialog')).style.getPropertyValue('--enchase-presence-x')).toBe('280px')
+    const ltr = (await screen.findByRole('dialog')).style
+
+    expect(ltr.getPropertyValue('--enchase-navbar-dx')).toBe('1')
+    expect(ltr.getPropertyValue('--enchase-navbar-distance')).toBe('280px')
 
     unmount()
     renderWithProviders(<Navbar sections={sections} />, { locale: { ...ptBR, dir: 'rtl' } })
     await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
 
-    expect((await screen.findByRole('dialog')).style.getPropertyValue('--enchase-presence-x')).toBe('-280px')
+    expect((await screen.findByRole('dialog')).style.getPropertyValue('--enchase-navbar-dx')).toBe('-1')
   })
 
   it('stays mounted while exiting and unmounts after the exit time', async () => {

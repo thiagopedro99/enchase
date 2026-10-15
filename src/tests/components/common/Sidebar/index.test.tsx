@@ -347,20 +347,23 @@ describe('Sidebar contract', () => {
   it('slides from the start side by the drawer width and flips in rtl', async () => {
     const { unmount } = renderWithProviders(<Sidebar sections={sections} variant="modal" open onClose={vi.fn()} />)
 
-    expect((await screen.findByRole('dialog')).style.getPropertyValue('--enchase-presence-x')).toBe('-300px')
+    const ltr = (await screen.findByRole('dialog')).style
+
+    expect(ltr.getPropertyValue('--enchase-sidebar-dx')).toBe('-1')
+    expect(ltr.getPropertyValue('--enchase-sidebar-distance')).toBe('300px')
 
     unmount()
     renderWithProviders(<Sidebar sections={sections} variant="modal" open onClose={vi.fn()} />, { locale: { ...ptBR, dir: 'rtl' } })
 
-    expect((await screen.findByRole('dialog')).style.getPropertyValue('--enchase-presence-x')).toBe('300px')
+    expect((await screen.findByRole('dialog')).style.getPropertyValue('--enchase-sidebar-dx')).toBe('1')
   })
 
   it('turns the presence variables to zero when the animation is off', async () => {
     renderWithProviders(<Sidebar sections={sections} variant="modal" open onClose={vi.fn()} animation={false} />)
     const dialog = await screen.findByRole('dialog')
 
-    expect(dialog.style.getPropertyValue('--enchase-presence-duration')).toBe('0ms')
-    expect(dialog.style.getPropertyValue('--enchase-presence-x')).toBe('0px')
+    expect(dialog.style.getPropertyValue('--enchase-sidebar-duration')).toBe('0ms')
+    expect(dialog.style.getPropertyValue('--enchase-sidebar-distance')).toBe('0px')
   })
 
   it('stays mounted while exiting and unmounts after the exit time', async () => {

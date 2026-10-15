@@ -103,7 +103,7 @@ describe('Loading contract', () => {
     renderWithProviders(<Loading animation={{ tuning: { duration: 1.2 } }} data-testid="loading" />)
     const spinner = screen.getByTestId('loading').querySelector('[data-slot="loading-spinner"]') as HTMLElement
 
-    expect(spinner.style.getPropertyValue('--enchase-spinner-duration')).toBe('1200ms')
+    expect(spinner.style.getPropertyValue('--enchase-loading-duration')).toBe('1200ms')
   })
 
   it('does not put the motion library on the spinner', () => {

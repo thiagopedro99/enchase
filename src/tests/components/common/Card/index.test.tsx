@@ -113,7 +113,7 @@ describe('Card contract', () => {
     )
 
     expect(screen.getByTestId('card').style.getPropertyValue('--enchase-card-duration')).toBe('300ms')
-    expect(screen.getByTestId('card').style.getPropertyValue('--enchase-card-lift')).toBe('6px')
+    expect(screen.getByTestId('card').style.getPropertyValue('--enchase-card-distance')).toBe('6px')
 
     unmount()
     renderWithProviders(
@@ -123,7 +123,7 @@ describe('Card contract', () => {
       { motion: { preset: 'expressive' } }
     )
 
-    expect(screen.getByTestId('card').style.getPropertyValue('--enchase-card-lift')).toBe('3.2px')
+    expect(screen.getByTestId('card').style.getPropertyValue('--enchase-card-distance')).toBe('3.2px')
   })
 
   it('does not use the motion library on the root', () => {

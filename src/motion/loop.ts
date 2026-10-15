@@ -11,8 +11,8 @@ export type LoopMotion = {
 }
 
 export const loopDurationVariable: Record<LoopRecipe, string> = {
-  spin: '--enchase-spinner-duration',
-  shimmer: '--enchase-shimmer-duration'
+  spin: '--enchase-loading-duration',
+  shimmer: '--enchase-skeleton-duration'
 }
 
 const off: LoopMotion = { motion: 'off', style: undefined }

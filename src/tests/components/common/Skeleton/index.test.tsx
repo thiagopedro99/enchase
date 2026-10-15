@@ -72,7 +72,7 @@ describe('Skeleton contract', () => {
   it('maps the tuning duration to a css variable', () => {
     renderWithProviders(<Skeleton animation={{ tuning: { duration: 2.5 } }} data-testid="skeleton" />)
 
-    expect(screen.getByTestId('skeleton').style.getPropertyValue('--enchase-shimmer-duration')).toBe('2500ms')
+    expect(screen.getByTestId('skeleton').style.getPropertyValue('--enchase-skeleton-duration')).toBe('2500ms')
   })
 
   it('does not animate background-position', () => {

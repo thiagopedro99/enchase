@@ -156,9 +156,9 @@ describe('Modal contract', () => {
     )
     const dialog = await screen.findByRole('dialog')
 
-    expect(dialog.style.getPropertyValue('--enchase-presence-duration')).toBe('0ms')
-    expect(dialog.style.getPropertyValue('--enchase-presence-y')).toBe('0px')
-    expect(dialog.style.getPropertyValue('--enchase-presence-scale')).toBe('1')
+    expect(dialog.style.getPropertyValue('--enchase-modal-duration')).toBe('0ms')
+    expect(dialog.style.getPropertyValue('--enchase-modal-distance')).toBe('0px')
+    expect(dialog.style.getPropertyValue('--enchase-modal-scale')).toBe('1')
   })
 
   it('animates from the tuned distance and scale of the pop recipe by default', async () => {
@@ -169,9 +169,9 @@ describe('Modal contract', () => {
     )
     const dialog = await screen.findByRole('dialog')
 
-    expect(dialog.style.getPropertyValue('--enchase-presence-duration')).toBe('200ms')
-    expect(dialog.style.getPropertyValue('--enchase-presence-y')).toBe('12px')
-    expect(dialog.style.getPropertyValue('--enchase-presence-scale')).toBe('0.96')
+    expect(dialog.style.getPropertyValue('--enchase-modal-duration')).toBe('200ms')
+    expect(dialog.style.getPropertyValue('--enchase-modal-distance')).toBe('12px')
+    expect(dialog.style.getPropertyValue('--enchase-modal-scale')).toBe('0.96')
   })
 
   it('stays mounted while exiting and unmounts after the exit time', async () => {

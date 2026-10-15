@@ -28,7 +28,7 @@
   background-color: var(--enchase-color-overlay);
   z-index: var(--enchase-z-backdrop);
   opacity: 1;
-  transition: opacity var(--enchase-presence-duration, var(--enchase-motion-duration-base)) var(--enchase-motion-ease-out);
+  transition: opacity var(--enchase-sidebar-duration, var(--enchase-motion-duration-base)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
 }
 
 .overlay:where([data-state='entering']) {
@@ -37,7 +37,7 @@
 
 .overlay:where([data-state='exiting']) {
   opacity: 0;
-  transition-duration: var(--enchase-presence-exit-duration, var(--enchase-motion-duration-fast));
+  transition-duration: var(--enchase-sidebar-exit-duration, var(--enchase-motion-duration-fast));
 }
 
 :where(.panel) {
@@ -50,16 +50,16 @@
   border-end-end-radius: var(--enchase-radius-2xl);
   box-shadow: var(--enchase-shadow-lg);
   transform: translate(0, 0);
-  transition: transform var(--enchase-presence-duration, var(--enchase-motion-duration-base)) var(--enchase-motion-ease-out);
+  transition: transform var(--enchase-sidebar-duration, var(--enchase-motion-duration-base)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
 }
 
 .panel:where([data-state='entering']) {
-  transform: translate(var(--enchase-presence-x, 0), var(--enchase-presence-y, 0));
+  transform: translate(calc(var(--enchase-sidebar-dx, 0) * var(--enchase-sidebar-distance, 0px)), calc(var(--enchase-sidebar-dy, 0) * var(--enchase-sidebar-distance, 0px)));
 }
 
 .panel:where([data-state='exiting']) {
-  transform: translate(var(--enchase-presence-x, 0), var(--enchase-presence-y, 0));
-  transition-duration: var(--enchase-presence-exit-duration, var(--enchase-motion-duration-fast));
+  transform: translate(calc(var(--enchase-sidebar-dx, 0) * var(--enchase-sidebar-distance, 0px)), calc(var(--enchase-sidebar-dy, 0) * var(--enchase-sidebar-distance, 0px)));
+  transition-duration: var(--enchase-sidebar-exit-duration, var(--enchase-motion-duration-fast));
 }
 
 .panel:focus {
@@ -166,8 +166,8 @@
   color: var(--enchase-color-text-secondary);
   text-decoration: none;
   transition:
-    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    background-color var(--enchase-sidebar-duration, var(--enchase-motion-duration-fast)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-sidebar-duration, var(--enchase-motion-duration-fast)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
 }
 
 :where(.item[data-collapsed]) {
@@ -254,8 +254,8 @@
   appearance: none;
   -webkit-tap-highlight-color: transparent;
   transition:
-    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    background-color var(--enchase-sidebar-duration, var(--enchase-motion-duration-fast)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-sidebar-duration, var(--enchase-motion-duration-fast)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
 }
 
 @media (hover: hover) and (pointer: fine) {

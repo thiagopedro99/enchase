@@ -38,8 +38,8 @@
 
 .menuButton {
   transition:
-    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    background-color var(--enchase-app-bar-duration, var(--enchase-motion-duration-fast)) var(--enchase-app-bar-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-app-bar-duration, var(--enchase-motion-duration-fast)) var(--enchase-app-bar-ease, var(--enchase-motion-ease-out));
 }
 
 .menuButton:focus-visible {

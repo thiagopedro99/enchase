@@ -84,7 +84,7 @@ const Navbar = ({ logo = 'Logo', breakpoint = 'md', sections = defaultSections, 
   const { labels, breakpoints } = useUIConfig()
   const wide = useMediaQuery(`(min-width: ${breakpoints[breakpoint]})`, true)
   const isClient = useIsClient()
-  const motionStyle = useMotionStyle('slide', drawerOverride, 'right')
+  const motionStyle = useMotionStyle('slide', 'navbar', drawerOverride, 'right')
   const { mounted, state, ref } = usePresence<HTMLDivElement>(mobileOpen)
   const items = sections.flatMap((section) => section.items).filter((item) => item.href)
 

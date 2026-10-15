@@ -23,7 +23,7 @@ const Icons = {
 
 const ToastItemComponent = ({ toast, open, onRemove, onDispose, animation }: ToastItemProps) => {
   const { labels } = useUIConfig()
-  const motionStyle = useMotionStyle('slide', animation, 'right')
+  const motionStyle = useMotionStyle('slide', 'toast', animation, 'right')
   const duration = toast.duration ?? defaultToastDuration
   const sticky = duration === 0
   const [shown, setShown] = useState(false)
@@ -63,7 +63,7 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, animation }: Toa
     {
       ...slot('toast'),
       className: styles.item,
-      style: { ...motionStyle, '--enchase-toast-duration': `${duration}ms` } as CSSProperties,
+      style: { ...motionStyle, '--enchase-toast-lifetime': `${duration}ms` } as CSSProperties,
       'data-type': toast.type,
       'data-state': state,
       'data-paused': paused ? '' : undefined,

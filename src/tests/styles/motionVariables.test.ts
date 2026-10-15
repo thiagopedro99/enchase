@@ -1,0 +1,64 @@
+import { readdirSync, readFileSync, statSync } from 'node:fs'
+import path from 'node:path'
+import { describe, expect, it } from 'vitest'
+
+const prefixes: Record<string, string> = {
+  'common/Breadcrumbs/styles.module.css': 'breadcrumbs',
+  'common/Button/styles.module.css': 'button',
+  'common/Card/styles.module.css': 'card',
+  'common/Checkbox/styles.module.css': 'checkbox',
+  'common/Icon/swap.module.css': 'icon-swap',
+  'common/Input/styles.module.css': 'input',
+  'common/Link/styles.module.css': 'link',
+  'common/Loading/styles.module.css': 'loading',
+  'common/Modal/styles.module.css': 'modal',
+  'common/Select/styles.module.css': 'select',
+  'common/Sidebar/styles.module.css': 'sidebar',
+  'common/Skeleton/styles.module.css': 'skeleton',
+  'common/ThemeToggle/styles.module.css': 'theme-toggle',
+  'common/Tooltip/styles.module.css': 'tooltip',
+  'footer/styles.module.css': 'footer',
+  'layout/subcomponentes/AppBar/styles.module.css': 'app-bar',
+  'navbar/styles.module.css': 'navbar',
+  'toast/styles.module.css': 'toast'
+}
+
+const exempt = ['layout/subcomponentes/SidebarUser/styles.module.css']
+
+const root = path.resolve(__dirname, '../../components')
+
+const cssFiles = (dir: string): string[] =>
+  readdirSync(dir).flatMap((name) => {
+    const full = path.join(dir, name)
+
+    return statSync(full).isDirectory() ? cssFiles(full) : full.endsWith('.module.css') ? [full] : []
+  })
+
+const relative = (file: string) => path.relative(root, file).split(path.sep).join('/')
+
+const animated = (css: string) => /(^|[\s;{])(transition|animation)[\s:-]/.test(css) || css.includes('--enchase-motion-')
+
+describe('motion variables per component', () => {
+  const files = cssFiles(root).filter((file) => animated(readFileSync(file, 'utf8')))
+
+  it('names a prefix for every css module that animates', () => {
+    expect(files.map(relative).filter((name) => !(name in prefixes) && !exempt.includes(name))).toEqual([])
+  })
+
+  for (const [name, prefix] of Object.entries(prefixes)) {
+    it(`${name} reads --enchase-${prefix}-duration and never a bare motion token`, () => {
+      const css = readFileSync(path.join(root, name), 'utf8')
+
+      expect(css).toContain(`--enchase-${prefix}-duration`)
+      expect(css.match(/(?<!, )var\(--enchase-motion-(duration|ease)-[\w-]+\)/g)).toBeNull()
+    })
+  }
+
+  it('reads an ease variable wherever it uses an easing token', () => {
+    for (const [name, prefix] of Object.entries(prefixes)) {
+      const css = readFileSync(path.join(root, name), 'utf8')
+
+      if (css.includes('--enchase-motion-ease-')) expect(css, name).toContain(`--enchase-${prefix}-ease`)
+    }
+  })
+})

@@ -50,7 +50,7 @@
 .input::placeholder {
   color: var(--enchase-color-text-placeholder);
   opacity: 1;
-  transition: opacity var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+  transition: opacity var(--enchase-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-input-ease, var(--enchase-motion-ease-out));
 }
 
 .input[data-has-label]::placeholder {
@@ -82,8 +82,8 @@
   transform-origin: left top;
   pointer-events: none;
   transition:
-    transform var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    transform var(--enchase-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-input-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-input-ease, var(--enchase-motion-ease-out));
 }
 
 .label:dir(rtl) {
@@ -126,7 +126,7 @@
   pointer-events: none;
   border: 1px solid var(--enchase-color-border-strong);
   border-radius: var(--enchase-radius-control);
-  transition: border-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+  transition: border-color var(--enchase-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-input-ease, var(--enchase-motion-ease-out));
 }
 
 .outline[data-has-error] {
@@ -142,7 +142,7 @@
   font-size: var(--enchase-font-size-xs);
   visibility: hidden;
   white-space: nowrap;
-  transition: max-inline-size var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+  transition: max-inline-size var(--enchase-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-input-ease, var(--enchase-motion-ease-out));
 }
 
 .outline legend span {
@@ -205,8 +205,8 @@
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   transition:
-    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    background-color var(--enchase-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-input-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-input-ease, var(--enchase-motion-ease-out));
 }
 
 :where(.toggle) {

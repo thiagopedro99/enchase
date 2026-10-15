@@ -12,8 +12,8 @@
   opacity: 1;
   transform: none;
   transition:
-    opacity var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    transform var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    opacity var(--enchase-icon-swap-duration, var(--enchase-motion-duration-fast)) var(--enchase-icon-swap-ease, var(--enchase-motion-ease-out)),
+    transform var(--enchase-icon-swap-duration, var(--enchase-motion-duration-fast)) var(--enchase-icon-swap-ease, var(--enchase-motion-ease-out));
 }
 
 :where(.item[data-state='inactive']) {

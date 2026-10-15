@@ -21,9 +21,9 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition:
-    transform var(--enchase-button-duration, var(--enchase-motion-duration-fast)) var(--enchase-motion-ease-out),
-    box-shadow var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    transform var(--enchase-button-duration, var(--enchase-motion-duration-fast)) var(--enchase-button-ease, var(--enchase-motion-ease-out)),
+    box-shadow var(--enchase-button-duration, var(--enchase-motion-duration-fast)) var(--enchase-button-ease, var(--enchase-motion-ease-out)),
+    background-color var(--enchase-button-duration, var(--enchase-motion-duration-fast)) var(--enchase-button-ease, var(--enchase-motion-ease-out));
 }
 
 :where(.button) {
@@ -40,7 +40,7 @@
   background-color: currentColor;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+  transition: opacity var(--enchase-button-duration, var(--enchase-motion-duration-fast)) var(--enchase-button-ease, var(--enchase-motion-ease-out));
 }
 
 :where(.button[data-size='sm']) {
@@ -145,7 +145,7 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .button[data-motion='lift']:hover:not(:disabled) {
-      transform: translateY(calc(var(--enchase-button-lift, var(--enchase-motion-distance-xs)) * -1));
+      transform: translateY(calc(var(--enchase-button-distance, var(--enchase-motion-distance-xs)) * -1));
     }
   }
 }

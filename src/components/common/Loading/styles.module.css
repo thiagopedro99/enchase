@@ -1,5 +1,5 @@
 .root > * {
-  transition: opacity var(--enchase-motion-duration-base) var(--enchase-motion-ease-out);
+  transition: opacity var(--enchase-loading-duration, var(--enchase-motion-duration-base)) var(--enchase-loading-ease, var(--enchase-motion-ease-out));
 }
 
 .root[data-state='closed'] > *,
@@ -53,7 +53,7 @@
 }
 
 .spinner[data-motion='on'] {
-  animation: spin var(--enchase-spinner-duration, 0.8s) linear infinite;
+  animation: spin var(--enchase-loading-duration, 0.8s) linear infinite;
 }
 
 .spinner[data-size='xs'] {
@@ -116,6 +116,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .spinner[data-motion='on'] {
-    animation: pulse 1.6s var(--enchase-motion-ease-in-out) infinite;
+    animation: pulse 1.6s var(--enchase-loading-ease, var(--enchase-motion-ease-in-out)) infinite;
   }
 }

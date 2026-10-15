@@ -19,8 +19,8 @@ describe('resolveLoopMotion', () => {
   })
 
   it('scales the duration by preset and lets the override tuning win', () => {
-    expect(resolveLoopMotion('spin', { ...defaultMotionSettings, preset: 'expressive' }).style).toEqual({ '--enchase-spinner-duration': '1120ms' })
-    expect(resolveLoopMotion('shimmer', defaultMotionSettings, { tuning: { duration: 2 } }).style).toEqual({ '--enchase-shimmer-duration': '2000ms' })
-    expect(resolveLoopMotion('spin', { ...defaultMotionSettings, recipes: { spin: { duration: 0.5 } } }, { tuning: { duration: 1 } }).style).toEqual({ '--enchase-spinner-duration': '1000ms' })
+    expect(resolveLoopMotion('spin', { ...defaultMotionSettings, preset: 'expressive' }).style).toEqual({ '--enchase-loading-duration': '1120ms' })
+    expect(resolveLoopMotion('shimmer', defaultMotionSettings, { tuning: { duration: 2 } }).style).toEqual({ '--enchase-skeleton-duration': '2000ms' })
+    expect(resolveLoopMotion('spin', { ...defaultMotionSettings, recipes: { spin: { duration: 0.5 } } }, { tuning: { duration: 1 } }).style).toEqual({ '--enchase-loading-duration': '1000ms' })
   })
 })

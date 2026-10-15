@@ -25,7 +25,7 @@ export const resolveCardMotion = (settings: MotionSettings, override?: MotionOve
   const vars: Record<string, string> = {}
 
   if (duration !== undefined) vars['--enchase-card-duration'] = `${Math.round(duration * 1000)}ms`
-  if (distance !== undefined) vars['--enchase-card-lift'] = `${distance}px`
+  if (distance !== undefined) vars['--enchase-card-distance'] = `${distance}px`
 
   return { motion: 'lift', style: Object.keys(vars).length > 0 ? (vars as CSSProperties) : undefined }
 }

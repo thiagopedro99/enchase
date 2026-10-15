@@ -20,7 +20,7 @@
   transform: scale(var(--enchase-tooltip-scale, 1));
   transition-property: opacity, transform;
   transition-duration: var(--enchase-tooltip-duration, var(--enchase-motion-duration-fast));
-  transition-timing-function: var(--enchase-motion-ease-out);
+  transition-timing-function: var(--enchase-tooltip-ease, var(--enchase-motion-ease-out));
 }
 
 .bubble[data-state='open'] {

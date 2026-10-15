@@ -138,6 +138,6 @@ describe('ButtonLink contract', () => {
 
     expect(screen.getByRole('link', { name: 'Press' })).toHaveAttribute('data-motion', 'press')
     expect(screen.getByRole('link', { name: 'Off' })).toHaveAttribute('data-motion', 'off')
-    expect(screen.getByRole('link', { name: 'Lift' }).style.getPropertyValue('--enchase-button-lift')).toBe('4px')
+    expect(screen.getByRole('link', { name: 'Lift' }).style.getPropertyValue('--enchase-button-distance')).toBe('4px')
   })
 })

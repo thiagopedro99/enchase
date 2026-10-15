@@ -17,8 +17,8 @@ export const ToastProvider = ({ children, animation, className, style }: ToastPr
   const viewportRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
   const reduced = useMediaQuery(reducedMotionQuery)
-  const motionStyle = useMotionStyle('slide', animation, 'right')
-  const reflowMs = reduced ? 0 : Number.parseFloat(String((motionStyle as Record<string, string>)['--enchase-presence-duration']))
+  const motionStyle = useMotionStyle('slide', 'toast', animation, 'right')
+  const reflowMs = reduced ? 0 : Number.parseFloat(String((motionStyle as Record<string, string>)['--enchase-toast-duration']))
 
   useFlip(viewportRef, Number.isFinite(reflowMs) ? reflowMs : 0)
 

@@ -165,7 +165,7 @@ describe('Button contract', () => {
     const press = screen.getByRole('button', { name: 'Press' })
 
     expect(lift).toHaveAttribute('data-motion', 'lift')
-    expect(lift.style.getPropertyValue('--enchase-button-lift')).toBe('6px')
+    expect(lift.style.getPropertyValue('--enchase-button-distance')).toBe('6px')
     expect(lift.style.getPropertyValue('--enchase-button-duration')).toBe('300ms')
     expect(press.style.getPropertyValue('--enchase-button-scale')).toBe('0.9')
     expect(screen.getByRole('button', { name: 'Fade' })).toHaveAttribute('data-motion', 'off')

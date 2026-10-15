@@ -85,12 +85,12 @@
     border-radius: var(--enchase-radius-md);
     box-shadow: var(--enchase-shadow-md);
     opacity: 0;
-    transform: translateY(calc(-1 * var(--enchase-motion-distance-xs)));
+    transform: translateY(calc(-1 * var(--enchase-select-distance, var(--enchase-motion-distance-xs))));
     transition:
-      opacity var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-      transform var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-      overlay var(--enchase-motion-duration-fast) allow-discrete,
-      display var(--enchase-motion-duration-fast) allow-discrete;
+      opacity var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out)),
+      transform var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out)),
+      overlay var(--enchase-select-duration, var(--enchase-motion-duration-fast)) allow-discrete,
+      display var(--enchase-select-duration, var(--enchase-motion-duration-fast)) allow-discrete;
   }
 
   .select:open::picker(select) {
@@ -101,7 +101,7 @@
   @starting-style {
     .select:open::picker(select) {
       opacity: 0;
-      transform: translateY(calc(-1 * var(--enchase-motion-distance-xs)));
+      transform: translateY(calc(-1 * var(--enchase-select-distance, var(--enchase-motion-distance-xs))));
     }
   }
 
@@ -115,7 +115,7 @@
     background-color: transparent;
     border-radius: var(--enchase-radius-control);
     cursor: pointer;
-    transition: background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    transition: background-color var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out));
   }
 
   .select option::checkmark {
@@ -167,8 +167,8 @@
   transform-origin: left top;
   pointer-events: none;
   transition:
-    transform var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
-    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+    transform var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out));
 }
 
 .label:dir(rtl) {
@@ -213,7 +213,7 @@
   pointer-events: none;
   border: 1px solid var(--enchase-color-border-strong);
   border-radius: var(--enchase-radius-control);
-  transition: border-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+  transition: border-color var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out));
 }
 
 .outline[data-has-error] {
@@ -229,7 +229,7 @@
   font-size: var(--enchase-font-size-xs);
   visibility: hidden;
   white-space: nowrap;
-  transition: max-inline-size var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+  transition: max-inline-size var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out));
 }
 
 .outline legend span {
@@ -282,7 +282,7 @@
   transform: translateY(-50%);
   pointer-events: none;
   color: var(--enchase-color-text-secondary);
-  transition: transform var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+  transition: transform var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out));
 }
 
 .select:open ~ .icon {
