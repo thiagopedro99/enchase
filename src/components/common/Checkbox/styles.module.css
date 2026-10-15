@@ -26,10 +26,15 @@
 }
 
 .icon {
-  display: none;
+  display: flex;
   color: var(--enchase-color-on-primary);
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  transform: scale(var(--enchase-checkbox-scale, 0.6));
+  transition:
+    opacity var(--enchase-checkbox-duration, var(--enchase-motion-duration-fast)) var(--enchase-checkbox-ease, var(--enchase-motion-ease-out)),
+    transform var(--enchase-checkbox-duration, var(--enchase-motion-duration-fast)) var(--enchase-checkbox-ease, var(--enchase-motion-ease-out));
 }
 
 .icon::after {
@@ -68,7 +73,8 @@
 }
 
 .hidden:checked + .box .icon {
-  display: flex;
+  opacity: 1;
+  transform: none;
 }
 
 .hidden:disabled + .box {
@@ -84,6 +90,13 @@
 .hidden:focus-visible + .box {
   outline: 2px solid var(--enchase-color-primary);
   outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon {
+    transform: none;
+    transition-property: opacity;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
