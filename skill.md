@@ -111,12 +111,14 @@ Especificação, não descrição: os componentes atuais ainda não cumprem tudo
 - Ícones direcionais (setas, chevrons) espelham em RTL por atributo, não por cópia.
 
 **Movimento**
-- Só `transform` e `opacity`; nunca `width`, `height`, `margin`, `top`, `left` nem `transition: all`.
+- Só `transform` e `opacity`; nunca `width`, `height`, `margin`, `top`, `left` nem `transition: all`. Única exceção: o recolher da `Sidebar` permanente anima `inline-size` (e a coluna do conteúdo acompanha), porque o custo medido é de cerca de 1,5 ms de layout por quadro e um teste mantém o limite de um quadro; não crie outra exceção sem medir.
 - Uma curva e durações por token, nunca valor solto no componente: `--enchase-motion-duration-fast|base|slow` (150, 250, 300 ms), `--enchase-motion-ease-out` (`cubic-bezier(0.2, 0, 0, 1)`, a única curva de entrada e saída) e `--enchase-motion-ease-in-out` (`cubic-bezier(0.4, 0, 0.2, 1)`, só para o que já está na tela e se move), mais `--enchase-motion-distance-xs|sm|md` (2, 12 e 32 px: `lift`, `pop` e `slide`). Entrada com `ease-out`; saída mais curta que a entrada.
 - Presença (montar e desmontar com saída animada): `usePresence(open, { exitMs })` de `@hooks/usePresence.ts` devolve `{ mounted, state, ref }`, com `state` em `entering | open | exiting | closed`. O CSS anima por `data-state`; o hook mantém o elemento montado até o `transitionend` ou `animationend` do próprio elemento (ou `exitMs`, padrão 300 ms) e aceita reabrir no meio da saída. Não usa `window` na renderização.
 - Hover só dentro de `@media (hover: hover) and (pointer: fine)` escrito por extenso (custom media não entrou: precisaria do transformador Lightning CSS em todas as configs); o toque ganha feedback por `:active`. O teste `hoverGating` tem uma lista dos componentes que ainda têm `:hover` fora da media query: nenhum entra nela, e quem for corrigido sai dela.
 - `prefers-reduced-motion`: movimento espacial some e o fade continua; nada depende de movimento para ser entendido.
 - Interrompível: reverter no meio do caminho parte do estado atual.
+- Mola: use os tokens `--enchase-motion-spring-gentle|snappy|bouncy` (função `spring()` gera a curva `linear()`), só em entradas ocasionais (`Modal`, `toast`, `Popover`, `Tooltip`); nada que o usuário vê dezenas de vezes por dia. Tooltip: o segundo tooltip aberto em até 300 ms entra sem animação.
+- Posicionamento flutuante: use `src/positioning/` (`computePosition`, `autoUpdate`); nunca recalcule posição à mão em componente novo.
 - Arrastar exige alternativa por clique ou teclado e anúncio em `aria-live` (WCAG 2.5.7).
 
 **Tokens para presets**
