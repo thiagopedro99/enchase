@@ -15,6 +15,7 @@ import { Input } from '@components/common/Input/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
+import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import Layout from '@components/layout/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 import Footer from '@components/footer/index.tsx'
@@ -54,6 +55,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Breadcrumbs', element: <Breadcrumbs items={[{ id: 'home', label: 'Home', href: '/' }, { id: 'page', label: 'Page' }]} /> },
   { name: 'Sidebar permanent', element: <Sidebar sections={sections} /> },
   { name: 'Sidebar modal open', element: <Sidebar variant="modal" open onClose={noop} sections={sections} /> },
+  { name: 'SidebarUser', element: <SidebarUser name="Pedro Lima" collapsed={false} onLogout={noop} /> },
   { name: 'Navbar', element: <Navbar logo="Logo" /> },
   { name: 'Footer', element: <Footer /> },
   { name: 'Layout', element: <Layout pageTitle="Home"><p>Content</p></Layout> },

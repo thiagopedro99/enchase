@@ -36,9 +36,7 @@ const ungatedHovers = (css: string) => {
   return found
 }
 
-const baseline: Record<string, number> = {
-  'layout/subcomponentes/SidebarUser': 1,
-}
+const baseline: Record<string, number> = {}
 
 describe('hover gating', () => {
   const root = path.resolve(__dirname, '../../components')

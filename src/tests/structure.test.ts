@@ -6,7 +6,6 @@ const componentTests = Object.keys(import.meta.glob('/src/tests/components/**/*.
 const withoutExtension = (path: string) => path.replace(/\.(ts|tsx)$/, '')
 
 const exemptions: Record<string, string> = {
-  'layout/subcomponentes/AppSidebar': 'covered by the Layout tests',
   'layout/subcomponentes/Brand': 'covered by the Layout tests'
 }
 

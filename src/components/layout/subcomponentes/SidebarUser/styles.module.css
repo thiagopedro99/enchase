@@ -1,30 +1,33 @@
-.wrapper {
+:where(.wrapper) {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--enchase-space-sm);
   flex: 1;
-  min-width: 0;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
 }
 
-.wrapper[data-collapsed] {
+:where(.wrapper[data-collapsed]) {
   justify-content: center;
 }
 
-.info {
+:where(.info) {
   display: flex;
   align-items: center;
   gap: var(--enchase-space-md);
-  min-width: 0;
+  min-inline-size: 0;
 }
 
-.avatar {
+:where(.avatar) {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  inline-size: 40px;
+  block-size: 40px;
   border-radius: var(--enchase-radius-full);
   background-color: var(--enchase-color-primary);
   color: var(--enchase-color-on-primary);
@@ -32,8 +35,8 @@
   font-weight: var(--enchase-font-weight-bold);
 }
 
-.name {
-  min-width: 0;
+:where(.name) {
+  min-inline-size: 0;
   overflow: hidden;
   color: var(--enchase-color-text-primary);
   font-size: var(--enchase-font-size-sm);
@@ -42,18 +45,32 @@
   white-space: nowrap;
 }
 
-.logout {
+:where(.logout) {
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  min-width: 44px;
-  min-height: 44px;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  margin: 0;
+  padding: 0;
+  border: none;
   border-radius: var(--enchase-radius-full);
+  background: none;
   color: var(--enchase-color-primary);
-  transition: background-color var(--enchase-transition-fast);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
 }
 
-.logout:hover {
-  background-color: color-mix(in srgb, var(--enchase-color-primary) 8%, transparent);
+@media (hover: hover) and (pointer: fine) {
+  .logout:hover {
+    background-color: color-mix(in srgb, var(--enchase-color-primary) 8%, transparent);
+  }
+}
+
+.logout:focus-visible {
+  outline: 2px solid var(--enchase-color-primary);
+  outline-offset: 2px;
 }

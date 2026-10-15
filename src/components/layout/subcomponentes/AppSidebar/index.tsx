@@ -3,7 +3,7 @@ import Brand from '../Brand/index.tsx'
 
 import type { AppSidebarProps } from './types.ts'
 
-export const AppSidebar = ({ brand = '', brandLogo, sections, variant, activeSectionId, navId, footer, collapsed, open, onClose }: AppSidebarProps) => (
+export const AppSidebar = ({ brand = '', brandLogo, sections, variant, activeSectionId, navId, footer, collapsed, open, onClose, className, style }: AppSidebarProps) => (
   <Sidebar
     id={navId}
     variant={variant}
@@ -14,6 +14,8 @@ export const AppSidebar = ({ brand = '', brandLogo, sections, variant, activeSec
     collapsed={collapsed}
     open={open}
     onClose={onClose}
+    className={className}
+    style={style}
   />
 )
 

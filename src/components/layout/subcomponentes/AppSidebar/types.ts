@@ -1,4 +1,5 @@
 import type { SidebarSection, SidebarSlot, SidebarVariant } from '@components/common/Sidebar/types.ts'
+import type { CSSProperties } from 'react'
 
 export type AppSidebarProps = {
   brand?: string
@@ -11,4 +12,6 @@ export type AppSidebarProps = {
   collapsed: boolean
   open: boolean
   onClose: () => void
+  className?: string
+  style?: CSSProperties
 }

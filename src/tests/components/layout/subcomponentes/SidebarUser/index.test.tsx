@@ -46,6 +46,24 @@ describe('SidebarUser', () => {
     expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument()
   })
 
+  it('marks the root and its parts with slots and keeps the caller className and style', () => {
+    renderWithProviders(<SidebarUser name="Pedro Lima" collapsed={false} onLogout={vi.fn()} className="mine" style={{ color: 'rgb(255, 0, 0)' }} data-testid="user" />)
+    const root = screen.getByTestId('user')
+
+    expect(root).toHaveAttribute('data-slot', 'sidebar-user')
+    expect(root.className.split(' ').at(-1)).toBe('mine')
+    expect(root).toHaveStyle({ color: 'rgb(255, 0, 0)' })
+    for (const part of ['info', 'avatar', 'name', 'logout']) {
+      expect(root.querySelector(`[data-slot="sidebar-user-${part}"]`), part).not.toBeNull()
+    }
+  })
+
+  it('exposes the collapsed state as an attribute', () => {
+    renderWithProviders(<SidebarUser name="Pedro Lima" collapsed data-testid="user" />)
+
+    expect(screen.getByTestId('user')).toHaveAttribute('data-collapsed')
+  })
+
   it('has no axe violations', async () => {
     const { container } = renderWithProviders(<SidebarUser name="Pedro Lima" collapsed={false} onLogout={vi.fn()} />)
 
