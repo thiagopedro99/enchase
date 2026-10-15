@@ -103,7 +103,7 @@ Especificação, não descrição: os componentes atuais ainda não cumprem tudo
 - Reset próprio em cada componente (botão, lista, link): nenhum componente depende de um reset global.
 
 **Camadas de CSS**
-- Variante opcional em `@layer enchase`, para quem usa camadas ganhar em qualquer ordem. A variante padrão não usa camada.
+- O CSS-fonte dos componentes não usa camada. O build gera `enchase/styles.css` (normal), `enchase/styles.layer.css` (o mesmo CSS dentro de `@layer enchase`, com a ordem `enchase-theme, enchase-base, enchase`) e `enchase/theme.css` (tema padrão claro e escuro estático). Na variante em camada, qualquer CSS do usuário sem camada vence em qualquer ordem de carregamento; na normal, o layout vence por `:where()` e as cores só vencem se o CSS do usuário vier depois. O reset global do pacote fica em `@layer enchase-base`.
 
 **Direção (RTL)**
 - Só propriedades lógicas (`margin-inline-start`, `inset-inline-end`, `padding-block`, `text-align: start`, `border-start-start-radius`). Exceções (centralização com `translate`, `transform-origin`) documentadas no CSS do componente.
