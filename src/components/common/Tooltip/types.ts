@@ -19,18 +19,6 @@ export interface TooltipProps {
   bubbleStyle?: CSSProperties
 }
 
-export type TooltipAnchor = {
-  top: number
-  left: number
-}
-
-export type TooltipBox = {
-  left: number
-  right: number
-  top: number
-  bottom: number
-}
-
 export type TooltipAnimation = {
   off: boolean
   pop: boolean

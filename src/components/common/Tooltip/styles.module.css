@@ -7,6 +7,7 @@
 
 .bubble {
   position: fixed;
+  inset: 0 auto auto 0;
   z-index: var(--enchase-z-tooltip);
   margin: 0;
   background: var(--enchase-color-inverse-surface);
@@ -37,22 +38,18 @@
 }
 
 .bubble:where([data-position='top']) {
-  translate: calc(-50% + var(--enchase-tooltip-shift, 0px)) -100%;
   transform-origin: 50% 100%;
 }
 
 .bubble:where([data-position='bottom']) {
-  translate: calc(-50% + var(--enchase-tooltip-shift, 0px)) 0;
   transform-origin: 50% 0;
 }
 
 .bubble:where([data-position='left']) {
-  translate: -100% calc(-50% + var(--enchase-tooltip-shift, 0px));
   transform-origin: 100% 50%;
 }
 
 .bubble:where([data-position='right']) {
-  translate: 0 calc(-50% + var(--enchase-tooltip-shift, 0px));
   transform-origin: 0 50%;
 }
 

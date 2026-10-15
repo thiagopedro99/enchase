@@ -115,6 +115,11 @@ describe('Tooltip placement', () => {
 
   const rect = { top: 100, left: 200, width: 40, height: 20, right: 240, bottom: 120, x: 200, y: 100, toJSON: () => ({}) } as DOMRect
 
+  const withViewport = () => {
+    vi.spyOn(document.documentElement, 'clientWidth', 'get').mockReturnValue(1024)
+    vi.spyOn(document.documentElement, 'clientHeight', 'get').mockReturnValue(768)
+  }
+
   it('renders the bubble in a portal on the body, outside any clipping container', async () => {
     const user = userEvent.setup()
     const { container } = renderWithProviders(
@@ -138,6 +143,7 @@ describe('Tooltip placement', () => {
     ['left', { top: '110px', left: '192px' }],
     ['right', { top: '110px', left: '248px' }]
   ] as const)('anchors a %s tooltip to the trigger with fixed coordinates', async (position, expected) => {
+    withViewport()
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(rect)
     renderWithProviders(
       <Tooltip text="Save changes" position={position}>
@@ -151,16 +157,39 @@ describe('Tooltip placement', () => {
     expect(bubble).toHaveStyle(expected)
   })
 
-  it('closes when the page scrolls', async () => {
-    const user = userEvent.setup()
+  it('follows the trigger when the page scrolls instead of closing', async () => {
+    withViewport()
+    const spy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(rect)
+    renderWithProviders(
+      <Tooltip text="Save changes" position="bottom">
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    fireEvent.mouseEnter(screen.getByRole('button', { name: 'Save' }).parentElement as HTMLElement)
+    const bubble = await screen.findByText('Save changes', { selector: '[aria-hidden="true"]' })
+    expect(bubble).toHaveStyle({ top: '128px' })
+
+    spy.mockReturnValue({ ...rect, top: 160, bottom: 180, y: 160 } as DOMRect)
+    fireEvent.scroll(window)
+
+    await waitFor(() => expect(bubble).toHaveStyle({ top: '188px' }))
+    expect(visibleBubble()).toBeInTheDocument()
+  })
+
+  it('closes when the trigger scrolls out of view', async () => {
+    withViewport()
+    const spy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(rect)
     renderWithProviders(
       <Tooltip text="Save changes">
         <button>Save</button>
       </Tooltip>
     )
 
-    await user.hover(screen.getByRole('button', { name: 'Save' }))
+    fireEvent.mouseEnter(screen.getByRole('button', { name: 'Save' }).parentElement as HTMLElement)
     await screen.findByText('Save changes', { selector: '[aria-hidden="true"]' })
+
+    spy.mockReturnValue({ ...rect, top: -400, bottom: -380, y: -400 } as DOMRect)
     fireEvent.scroll(window)
 
     await waitFor(() => expect(visibleBubble()).not.toBeInTheDocument())

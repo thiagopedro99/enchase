@@ -1,7 +1,8 @@
 import { cloneElement, isValidElement, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { bubbleBox, closeDelay as defaultCloseDelay, crossAxisShift, defaultPosition, joinsGroup, openDelay as defaultOpenDelay, opposite, overflowsMainAxis, placeBubble, resolveAnimation, resolvePlacement, tooltipGroup } from './defaultData.ts'
+import { bubbleOffset, closeDelay as defaultCloseDelay, defaultPosition, joinsGroup, openDelay as defaultOpenDelay, resolveAnimation, tooltipGroup, viewportPadding } from './defaultData.ts'
+import { autoUpdate, computePosition, resolvePlacement } from '../../../positioning/index.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { classNames } from '@utils/classNames.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -10,7 +11,7 @@ import { usePresence } from '@hooks/usePresence.ts'
 import styles from './styles.module.css'
 
 import type { CSSProperties, KeyboardEvent, ReactElement } from 'react'
-import type { TooltipAnchor, TooltipProps } from './types.ts'
+import type { TooltipProps } from './types.ts'
 
 export const Tooltip = ({
   text,
@@ -29,15 +30,11 @@ export const Tooltip = ({
   const isClient = useIsClient()
   const motionSettings = resolveAnimation(animation, motion)
   const [open, setOpen] = useState(false)
-  const [anchor, setAnchor] = useState<TooltipAnchor>({ top: 0, left: 0 })
-  const [placement, setPlacement] = useState(() => resolvePlacement(position, dir))
-  const [shift, setShift] = useState(0)
   const [instant, setInstant] = useState(false)
   const id = useId()
   const wrapperRef = useRef<HTMLDivElement>(null)
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const flipped = useRef(false)
   const presence = usePresence<HTMLSpanElement>(open)
 
   const clearTimers = () => {
@@ -46,13 +43,7 @@ export const Tooltip = ({
   }
 
   const reveal = () => {
-    const resolved = resolvePlacement(position, dir)
-
-    flipped.current = false
     setInstant(joinsGroup(Date.now()))
-    setShift(0)
-    setPlacement(resolved)
-    if (wrapperRef.current) setAnchor(placeBubble(wrapperRef.current.getBoundingClientRect(), resolved))
     setOpen(true)
   }
 
@@ -87,42 +78,24 @@ export const Tooltip = ({
     }
   }, [open])
 
-  useEffect(() => {
-    if (!open) return
-
-    const close = () => setOpen(false)
-    window.addEventListener('scroll', close, true)
-    window.addEventListener('resize', close)
-
-    return () => {
-      window.removeEventListener('scroll', close, true)
-      window.removeEventListener('resize', close)
-    }
-  }, [open])
-
   useLayoutEffect(() => {
     const bubble = presence.ref.current
-    const trigger = wrapperRef.current
-    if (!bubble || !trigger || (presence.state !== 'entering' && presence.state !== 'open')) return
+    const reference = wrapperRef.current
+    if (!presence.mounted || !bubble || !reference) return undefined
 
-    const size = { width: bubble.offsetWidth, height: bubble.offsetHeight }
-    if (size.width === 0 && size.height === 0) return
+    let first = true
+    const update = () => {
+      const result = computePosition(reference, bubble, { placement: resolvePlacement(position, dir === 'rtl'), offset: bubbleOffset, padding: viewportPadding })
 
-    const viewport = { width: document.documentElement.clientWidth, height: document.documentElement.clientHeight }
-    const box = bubbleBox(anchor, size, placement)
-
-    if (!flipped.current && overflowsMainAxis(box, placement, viewport)) {
-      const next = opposite[placement]
-
-      flipped.current = true
-      setPlacement(next)
-      setAnchor(placeBubble(trigger.getBoundingClientRect(), next))
-
-      return
+      bubble.style.left = `${result.x}px`
+      bubble.style.top = `${result.y}px`
+      bubble.dataset.position = result.placement.split('-')[0]
+      if (result.referenceHidden && !first) setOpen(false)
+      first = false
     }
 
-    setShift(crossAxisShift(box, placement, viewport))
-  }, [presence.state, presence.ref, placement, anchor, text])
+    return autoUpdate(reference, bubble, update)
+  }, [presence.mounted, presence.ref, position, dir])
 
   const trigger = describe && isValidElement(children) ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, { 'aria-describedby': id }) : children
 
@@ -133,16 +106,14 @@ export const Tooltip = ({
 
   const bubbleVariables = {
     '--enchase-tooltip-duration': `${motionSettings.duration}s`,
-    '--enchase-tooltip-scale': motionSettings.scale,
-    '--enchase-tooltip-shift': `${shift}px`
+    '--enchase-tooltip-scale': motionSettings.scale
   } as CSSProperties
 
   const bubbleProps = mergeProps(
     {
       ref: presence.ref,
       className: styles.bubble,
-      style: { ...anchor, ...bubbleVariables },
-      'data-position': placement,
+      style: bubbleVariables,
       'data-state': presence.state,
       'data-animation': motionSettings.off || instant ? 'off' : motionSettings.pop ? 'pop' : undefined,
       'aria-hidden': true,
