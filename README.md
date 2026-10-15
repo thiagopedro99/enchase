@@ -411,6 +411,22 @@ const { mode, resolvedMode, setMode, toggleMode } = useColorMode()
 
 Para começar sempre no claro, use `<ColorModeProvider defaultMode="light">`. Para desligar a persistência, `storage={null}`; para controlar de fora, passe `mode` e `onModeChange`.
 
+## Popover e posicionamento
+
+O `Popover` abre um conteúdo ancorado ao gatilho, num portal, e usa um posicionador próprio (`src/positioning`, sem dependências):
+
+```tsx
+<Popover label="Detalhes" placement="bottom-start" arrow content={<p>Conteúdo</p>}>
+  <button>Abrir</button>
+</Popover>
+```
+
+- Aceita `open`, `defaultOpen` e `onOpenChange`; `role` (`dialog`, `listbox`, `tree` ou `grid`, e `menu` não, pois exige navegação por setas própria); `closeOnEsc` e `closeOnOutsideClick`. Aberto por teclado, o foco entra no conteúdo; Esc devolve o foco ao gatilho; Tab no último elemento fecha e segue para o elemento depois do gatilho.
+- Esc e clique fora respeitam a pilha de camadas: sobre um `Modal`, o Esc e o clique no fundo fecham só o popover.
+- O posicionador vira o lado, desliza pela borda, encolhe até o espaço disponível (`--enchase-popover-max-width` e `-max-height`) e segue o gatilho em rolagens, redimensionamentos e movimentos.
+- Em testes de navegador, o posicionador é comparado com o `@floating-ui/dom` (só devDependency) em milhares de disposições aleatórias: 0 divergências acima de 0,5 px com tamanhos fracionários, contêineres com borda e âncoras que escapam do recorte.
+- O que ele não cobre: `zoom` por pinça, `zoom` CSS no `<html>`, blocos contenedores criados por `transform` no `html` ou `body`, iframes, `autoPlacement`, `limitShift`, estratégia `absolute` e `scrollbar-gutter: stable both-edges`. Em `scrollbar-gutter: stable` ele usa a área real de elementos fixos, que o floating-ui subtrai duas vezes.
+
 ## Renderização no servidor (Next.js e SSR)
 
 Os componentes renderizam no servidor sem erro de hidratação. Num app com App Router:
