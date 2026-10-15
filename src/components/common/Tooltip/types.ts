@@ -33,6 +33,7 @@ export type TooltipBox = {
 
 export type TooltipAnimation = {
   off: boolean
+  pop: boolean
   duration: number
   scale: number
 }

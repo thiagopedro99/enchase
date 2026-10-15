@@ -131,7 +131,7 @@ export const Tooltip = ({
       style: { ...anchor, ...bubbleVariables },
       'data-position': placement,
       'data-state': presence.state,
-      'data-animation': motionSettings.off ? 'off' : undefined,
+      'data-animation': motionSettings.off ? 'off' : motionSettings.pop ? 'pop' : undefined,
       'aria-hidden': true,
       ...slot('tooltip', 'bubble')
     },

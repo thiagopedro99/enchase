@@ -228,6 +228,34 @@ describe('Tooltip motion in a real browser', () => {
     await expect.poll(() => getComputedStyle(bubble() as HTMLElement).opacity).toBe('1')
   })
 
+  it('enters with the snappy spring easing only for the pop recipe', async () => {
+    renderInBrowser(
+      <div style={{ margin: '200px auto', width: 100 }}>
+        <Tooltip text="Dica" animation={{ recipe: 'pop' }}>
+          <button>Alvo</button>
+        </Tooltip>
+      </div>,
+      'auto'
+    )
+    const pop = await hoverAndRead()
+
+    expect(pop.transitionTimingFunction.startsWith('linear(')).toBe(true)
+  })
+
+  it('keeps the plain ease-out curve for the default fade', async () => {
+    renderInBrowser(
+      <div style={{ margin: '200px auto', width: 100 }}>
+        <Tooltip text="Dica">
+          <button>Alvo</button>
+        </Tooltip>
+      </div>,
+      'auto'
+    )
+    const fade = await hoverAndRead()
+
+    expect(fade.transitionTimingFunction.startsWith('linear(')).toBe(false)
+  })
+
   it('keeps only the opacity transition when the user asks for reduced motion', async () => {
     await setReducedMotion('reduce')
     renderInBrowser(

@@ -79,6 +79,7 @@ export const resolveAnimation = (override: MotionOverride | undefined, settings:
 
   return {
     off,
+    pop: pops,
     duration: custom.duration ?? base.duration * preset.duration,
     scale: pops ? (custom.scale ?? 1 - (1 - base.scale) * preset.distance) : 1
   }
