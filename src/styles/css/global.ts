@@ -9,7 +9,6 @@ export const globalStylesCss = `
   }
 
   html {
-    scroll-behavior: smooth;
     scrollbar-gutter: stable;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -89,10 +88,6 @@ export const globalStylesCss = `
   }
 
   @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-
     *:not([data-motion='on']), *:not([data-motion='on'])::before, *:not([data-motion='on'])::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;

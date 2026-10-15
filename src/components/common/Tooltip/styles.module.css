@@ -32,10 +32,6 @@
   transform: none;
 }
 
-.bubble[data-animation='pop'] {
-  transition-timing-function: var(--enchase-tooltip-ease, var(--enchase-motion-spring-snappy));
-}
-
 .bubble[data-animation='off'] {
   transition: none;
 }

@@ -360,6 +360,35 @@ describe('Tooltip contract', () => {
     expect(bubble.style.getPropertyValue('--enchase-tooltip-scale')).toBe('0.9')
   })
 
+  it('enters from a subtle scale by default, with no spring', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Tooltip text="Save changes">
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await hoverSave(user)
+    const bubble = await bubbleOf()
+
+    expect(bubble.style.getPropertyValue('--enchase-tooltip-scale')).toBe('0.97')
+    expect(bubble.style.getPropertyValue('--enchase-tooltip-duration')).toBe('0.15s')
+  })
+
+  it('only fades when the user asks for the fade recipe', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Tooltip text="Save changes" animation={{ recipe: 'fade' }}>
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await hoverSave(user)
+    const bubble = await bubbleOf()
+
+    expect(bubble.style.getPropertyValue('--enchase-tooltip-scale')).toBe('1')
+  })
+
   it('keeps the description wiring off the visual bubble', async () => {
     const user = userEvent.setup()
     renderWithProviders(

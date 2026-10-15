@@ -24,10 +24,12 @@ export const bubbleOffset = 8
 
 export const viewportPadding = 8
 
+export const popBase = { duration: 0.15, distance: 0, scale: 0.97 }
+
 export const resolveAnimation = (override: MotionOverride | undefined, settings: MotionSettings): TooltipAnimation => {
   const off = override === false || settings.mode === 'never' || settings.preset === 'off'
-  const recipe = override ? (override.recipe ?? 'fade') : 'fade'
-  const base = baseTuning[recipe]
+  const recipe = override ? (override.recipe ?? 'pop') : 'pop'
+  const base = recipe === 'pop' ? popBase : baseTuning[recipe]
   const preset = presetScale[settings.preset]
   const custom = { ...settings.recipes[recipe], ...(override ? override.tuning : undefined) }
   const pops = recipe === 'pop'

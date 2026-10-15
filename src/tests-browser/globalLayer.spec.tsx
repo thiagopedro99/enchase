@@ -25,4 +25,10 @@ describe('global styles next to the components in a real browser', () => {
 
     expect(sheets.some((rule) => rule instanceof CSSLayerBlockRule && rule.name === 'enchase-base')).toBe(true)
   })
+
+  it('jumps at once instead of scrolling smoothly', () => {
+    renderInBrowser(<span>x</span>)
+
+    expect(getComputedStyle(document.documentElement).scrollBehavior).toBe('auto')
+  })
 })
