@@ -287,9 +287,10 @@ A animação é CSS puro (transições, `@starting-style`, `@keyframes` e `linea
 | `card` | `-duration`, `-distance` (lift), `-ease` |
 | `loading` | `-duration` (volta do spinner), `-ease` |
 | `skeleton` | `-duration` (brilho), `-ease` |
-| `icon-swap` | `-duration`, `-ease` |
 | `checkbox` | `-duration`, `-scale` (marca), `-ease` |
 | `input`, `select`, `link`, `breadcrumbs`, `footer`, `app-bar` | `-duration`, `-ease` |
+| `icon-swap` | `-duration`, `-ease`, `-rotate` (giro do ícone que sai e do que entra; o botão de menu usa 30 graus, invertido em RTL) |
+| `input`, `select`, `checkbox`, `link`, `breadcrumbs`, `footer`, `app-bar` | `-duration`, `-ease` |
 
 O recolher da `Sidebar` permanente anima a largura (`inline-size`) e a coluna do conteúdo acompanha; é a única animação de layout do pacote, escolhida por custo baixo medido no navegador (cerca de 1,5 ms de layout por quadro com 300 parágrafos). A raiz leva `data-state` com `expanded`, `collapsing`, `collapsed` ou `expanding`, para o seu CSS.
 

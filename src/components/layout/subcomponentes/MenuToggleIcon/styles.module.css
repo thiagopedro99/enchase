@@ -1,4 +1,9 @@
 :where(.slot) {
   inline-size: 24px;
   block-size: 24px;
+  --enchase-icon-swap-rotate: -30deg;
+}
+
+:where(.slot:dir(rtl)) {
+  --enchase-icon-swap-rotate: 30deg;
 }

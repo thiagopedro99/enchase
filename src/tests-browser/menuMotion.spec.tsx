@@ -448,3 +448,44 @@ describe('Drawer cascade in a real browser', () => {
     style.remove()
   })
 })
+
+const inactiveIcon = (slotName: string) => document.querySelector(`[data-slot="${slotName}"] [data-slot="icon-swap-item"][data-state="inactive"]`) as HTMLElement
+
+const rotationOf = (element: HTMLElement) => {
+  const transform = getComputedStyle(element).transform
+  if (transform === 'none') return 0
+  const [a, b] = transform.slice(7, -1).split(',').map(Number)
+
+  return Math.round((Math.atan2(b, a) * 180) / Math.PI)
+}
+
+describe('Menu button icon in a real browser', () => {
+  it('twists the inactive icon by 30 degrees and swaps in 150 ms', async () => {
+    renderInBrowser(<Page />, 'auto')
+    const icon = inactiveIcon('menu-toggle-icon')
+
+    expect(rotationOf(icon)).toBe(-30)
+    expect(getComputedStyle(icon).transitionDuration.split(',').every((value) => Math.round(parseFloat(value) * 1000) === 150)).toBe(true)
+  })
+
+  it('turns the other way in right-to-left', async () => {
+    document.documentElement.dir = 'rtl'
+    renderInBrowser(<Page />, 'auto')
+
+    expect(rotationOf(inactiveIcon('menu-toggle-icon'))).toBe(30)
+    document.documentElement.removeAttribute('dir')
+  })
+
+  it('does not rotate under reduced motion', async () => {
+    await setReducedMotion('reduce')
+    renderInBrowser(<Page />, 'auto')
+
+    expect(rotationOf(inactiveIcon('menu-toggle-icon'))).toBe(0)
+  })
+
+  it('leaves the theme toggle icons without rotation', async () => {
+    renderInBrowser(<Page />, 'auto')
+
+    expect(rotationOf(inactiveIcon('theme-toggle') ?? inactiveIcon('icon-swap'))).toBe(0)
+  })
+})
