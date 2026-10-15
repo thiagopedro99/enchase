@@ -440,6 +440,31 @@ export default function RootLayout({ children }) {
 - **Layout e Navbar** renderizam o modo desktop no servidor e trocam pelo breakpoint com CSS gerado, então não há quadro compacto antes da hidratação.
 - **`'use client'`**: o pacote marca todo o `enchase` como cliente. Páginas e layouts de servidor podem importar os componentes direto; `npm run test:next` prova isso com um app Next mínimo.
 
+## CSS: normal, em camada e tema estático
+
+O pacote entrega o CSS dos componentes em duas variantes e o tema padrão como arquivo. Importe uma das duas primeiras, nunca as duas:
+
+```tsx
+import 'enchase/styles.css'
+```
+
+```tsx
+import 'enchase/styles.layer.css'
+import 'enchase/theme.css'
+```
+
+- **`enchase/styles.css` (normal):** o layout (tamanho, padding, raio) usa `:where()` e sempre perde para a classe de quem usa. Cores, borda e hover têm especificidade de uma classe, então o CSS do usuário só vence se carregar depois do da lib.
+- **`enchase/styles.layer.css` (em camada):** o mesmo conteúdo dentro de `@layer enchase`, com a ordem declarada na primeira linha:
+
+  ```css
+  @layer enchase-theme, enchase-base, enchase;
+  ```
+
+  Qualquer CSS seu sem camada vence o da lib em qualquer ordem de carregamento, inclusive cores e hover. Combine com `<ColorModeProvider cssLayer="enchase-theme">` para as variáveis do tema ficarem na primeira camada; o reset global do pacote (`GlobalStyles`) já usa `enchase-base`.
+- **`enchase/theme.css` (tema estático):** as variáveis do tema padrão, claro e escuro, como arquivo (`:root`, `[data-theme='dark']` e `@media (prefers-color-scheme: dark) { :root:not([data-theme]) }`). É o mesmo CSS que o `ColorModeProvider` injeta sem `theme` personalizado. Use quando quiser o tema na primeira resposta do servidor sem esperar JavaScript, ou para o navegador guardar o CSS em cache. Para um tema personalizado, continue passando `theme` ao `ColorModeProvider`, que injeta as variáveis dele.
+
+Os dois arquivos são gerados por `npm run build:lib` (`scripts/buildCssOutputs.mjs`), e `npm run test:browser` os recria antes de rodar os testes que provam a precedência.
+
 ## Navegação
 
 Os componentes não dependem de nenhum roteador. Links internos (`/caminho`) são `<a href>` de verdade: um clique simples chama o `navigate` do `UIProvider`, e Ctrl, Cmd, Shift, botão do meio, `target`, `download`, `native` e URLs externas seguem o comportamento do navegador. Sem `navigate`, todos os links navegam normalmente (recarregando a página).
