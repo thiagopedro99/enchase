@@ -34,8 +34,7 @@ describe('SidebarUser in a real browser', () => {
     expect(box.height).toBeGreaterThanOrEqual(24)
 
     button.focus()
-    await new Promise((resolve) => setTimeout(resolve, 50))
-    expect(getComputedStyle(button).outlineStyle).not.toBe('none')
+    await expect.poll(() => getComputedStyle(button).outlineStyle).not.toBe('none')
   })
 
   it('puts the logout button on the end side in right to left', () => {

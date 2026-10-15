@@ -4,8 +4,9 @@ import { page } from 'vitest/browser'
 
 import { usePresence } from '@hooks/usePresence.ts'
 import { renderInBrowser } from './harness.tsx'
+import { soak } from './settle.ts'
 
-const duration = 120
+const duration = 400
 
 const Panel = () => {
   const [open, setOpen] = useState(false)
@@ -28,8 +29,6 @@ const Panel = () => {
 }
 
 const panel = () => document.querySelector<HTMLElement>("[data-testid='panel']")
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 describe('usePresence in a real browser', () => {
   it('fades in from entering to open and stays mounted until the exit transition really ends', async () => {
@@ -76,11 +75,11 @@ describe('usePresence in a real browser', () => {
     await expect.poll(() => panel()?.dataset.state).toBe('open')
 
     await toggle.click()
-    await wait(duration / 3)
+    await expect.poll(() => panel()?.dataset.state).toBe('exiting')
     await toggle.click()
 
     await expect.poll(() => panel()?.dataset.state).toBe('open')
-    await wait(duration * 2)
+    await soak(duration * 2)
     expect(panel()).not.toBeNull()
   })
 })

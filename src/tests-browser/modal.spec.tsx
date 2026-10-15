@@ -4,12 +4,11 @@ import { cdp, page, userEvent } from 'vitest/browser'
 
 import { Modal } from '@components/common/Modal/index.tsx'
 import { renderInBrowser } from './harness.tsx'
+import { waitForSettled } from './settle.ts'
 
 import type { MotionOverride } from '@motion/types.ts'
 
 const panel = () => document.querySelector<HTMLElement>('[data-slot="modal-panel"]')
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 const setReducedMotion = (value: 'reduce' | 'no-preference') => cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] })
 
@@ -50,9 +49,9 @@ describe('Modal motion in a real browser', () => {
     renderInBrowser(<Page />, 'auto')
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.element(page.getByRole('dialog')).toBeVisible()
-    await wait(500)
+    await expect.poll(() => panel()?.getAttribute('data-state')).toBe('open')
+    await waitForSettled(panel)
 
-    expect(panel()?.getAttribute('data-state')).toBe('open')
     expect(getComputedStyle(panel() as HTMLElement).opacity).toBe('1')
   })
 
@@ -60,13 +59,12 @@ describe('Modal motion in a real browser', () => {
     renderInBrowser(<Page animation={slow} />, 'auto')
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.element(page.getByRole('dialog')).toBeVisible()
-    await wait(800)
+    await waitForSettled(panel)
 
     await userEvent.keyboard('{Escape}')
-    await wait(60)
+    await expect.poll(() => panel()?.getAttribute('data-state')).toBe('exiting')
 
     expect(panel()).not.toBeNull()
-    expect(panel()?.getAttribute('data-state')).toBe('exiting')
 
     await expect.poll(() => panel(), { timeout: 2000 }).toBeNull()
   })
@@ -75,13 +73,13 @@ describe('Modal motion in a real browser', () => {
     renderInBrowser(<Page animation={slow} />, 'auto')
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.element(page.getByRole('dialog')).toBeVisible()
-    await wait(800)
+    await waitForSettled(panel)
 
     await userEvent.keyboard('{Escape}')
-    await wait(80)
-    expect(panel()?.getAttribute('data-state')).toBe('exiting')
+    await expect.poll(() => panel()?.getAttribute('data-state')).toBe('exiting')
     ;(document.querySelector('button') as HTMLButtonElement).click()
-    await wait(1200)
+    await expect.poll(() => panel()?.getAttribute('data-state')).toBe('open')
+    await waitForSettled(panel)
 
     expect(document.querySelectorAll('[data-slot="modal-panel"]')).toHaveLength(1)
     expect(panel()?.getAttribute('data-state')).toBe('open')
@@ -118,7 +116,7 @@ describe('Modal motion in a real browser', () => {
     renderInBrowser(<Page />, 'auto')
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.element(page.getByRole('dialog')).toBeVisible()
-    await wait(500)
+    await waitForSettled(panel)
     const box = (panel() as HTMLElement).getBoundingClientRect()
     const overlay = (document.querySelector('[data-slot="modal-overlay"]') as HTMLElement).getBoundingClientRect()
 
@@ -131,7 +129,7 @@ describe('Modal motion in a real browser', () => {
     renderInBrowser(<Page />, 'auto')
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.element(page.getByRole('dialog')).toBeVisible()
-    await wait(500)
+    await waitForSettled(panel)
     const box = (panel() as HTMLElement).getBoundingClientRect()
     const overlay = (document.querySelector('[data-slot="modal-overlay"]') as HTMLElement).getBoundingClientRect()
 

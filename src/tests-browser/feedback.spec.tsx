@@ -5,6 +5,7 @@ import { Card } from '@components/common/Card/index.tsx'
 import { InlineLoading, Loading } from '@components/common/Loading/index.tsx'
 import { Skeleton } from '@components/common/Skeleton/index.tsx'
 import { renderInBrowser } from './harness.tsx'
+import { frames } from './settle.ts'
 
 const setReducedMotion = (value: 'reduce' | 'no-preference') => cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] })
 
@@ -188,7 +189,7 @@ describe('Card in a real browser', () => {
 
       expect(matchMedia('(hover: none)').matches).toBe(true)
       await card.hover()
-      await new Promise((resolve) => setTimeout(resolve, 300))
+      await frames(4)
 
       expect(getComputedStyle(card.element()).transform).toBe('none')
     } finally {
@@ -202,7 +203,7 @@ describe('Card in a real browser', () => {
     const card = page.getByTestId('card')
 
     await card.hover()
-    await new Promise((resolve) => setTimeout(resolve, 100))
+    await frames(4)
 
     expect(getComputedStyle(card.element()).transform).toBe('none')
   })

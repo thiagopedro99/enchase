@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { cdp, page, userEvent } from 'vitest/browser'
 
 import { render } from '@testing-library/react'
@@ -9,6 +9,7 @@ import { ToastProvider, useToast } from '@components/toast/index.ts'
 import { GlobalStyles } from '@styles/react.tsx'
 import { ptBR } from '@locales/ptBR.ts'
 import { renderInBrowser } from './harness.tsx'
+import { isSettled, isStable, soak } from './settle.ts'
 
 import type { ReactElement } from 'react'
 
@@ -71,7 +72,8 @@ const Launcher = ({ duration = 60000 }: { duration?: number }) => {
 const fire = async (...names: string[]) => {
   for (const name of names) await userEvent.click(page.getByRole('button', { name }))
   await expect.poll(() => items().filter((item) => item.dataset.state === 'open').length).toBe(names.length)
-  await new Promise((resolve) => setTimeout(resolve, 400))
+  await expect.poll(() => items().every((item) => isSettled(item))).toBe(true)
+  await expect.poll(async () => (await Promise.all(items().map((item) => isStable(() => item)))).every(Boolean), { timeout: 4000 }).toBe(true)
 }
 
 describe('Toast in a real browser', () => {
@@ -101,36 +103,34 @@ describe('Toast in a real browser', () => {
     await setReducedMotion('reduce')
     renderInBrowser(<Launcher />, 'auto')
     await fire('alfa', 'beta')
-    let seen = 0
+    const animate = vi.spyOn(HTMLElement.prototype, 'animate')
 
     await userEvent.click(page.getByRole('button', { name: 'Fechar notificação' }).first())
-    const stop = Date.now() + 600
+    await expect.poll(() => items().length).toBe(1)
 
-    while (Date.now() < stop) {
-      seen += flipAnimations().length
-      await new Promise((resolve) => setTimeout(resolve, 16))
-    }
+    const flips = animate.mock.calls.filter(([, options]) => typeof options === 'object' && options?.id === 'enchase-flip')
+    animate.mockRestore()
 
-    expect(items().length).toBe(1)
-    expect(seen).toBe(0)
+    expect(flips).toHaveLength(0)
   })
 
   it('drains the progress bar and pauses it, and the timer, while hovered', async () => {
-    renderInBrowser(<Launcher duration={1200} />, 'auto')
+    renderInBrowser(<Launcher duration={4000} />, 'auto')
     await fire('alfa')
     const item = items()[0]
     const bar = () => item.querySelector<HTMLElement>('[data-slot="toast-progress"]') as HTMLElement
     const state = () => bar().getAnimations()[0]?.playState
 
-    expect(state()).toBe('running')
+    await expect.poll(state).toBe('running')
 
-    await userEvent.hover(item)
+    await page.elementLocator(item).hover()
     await expect.poll(state).toBe('paused')
-    await new Promise((resolve) => setTimeout(resolve, 1600))
+    const timing = bar().getAnimations()[0]?.effect?.getComputedTiming()
+    await soak(Number(timing?.endTime ?? 1200) - Number(timing?.localTime ?? 0) + 400)
 
     expect(items()).toHaveLength(1)
 
-    await userEvent.unhover(item)
+    await page.elementLocator(document.body).hover({ position: { x: 2, y: 2 } })
     await expect.poll(state).toBe('running')
     await expect.poll(() => items().length, { timeout: 4000 }).toBe(0)
   })

@@ -7,6 +7,7 @@ import Layout from '@components/layout/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { renderInBrowser } from './harness.tsx'
+import { frames } from './settle.ts'
 
 const setReducedMotion = (value: 'reduce' | 'no-preference') => cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] })
 
@@ -96,9 +97,18 @@ describe('Sidebar collapse motion in a real browser', () => {
     await userEvent.click(collapse())
     await expect.poll(() => asideOf().getAttribute('data-state')).toBe('collapsed')
 
+    const startOpacities: number[] = []
+    const watcher = new MutationObserver(() => {
+      if (asideOf().getAttribute('data-state') === 'expanding') startOpacities.push(Number(getComputedStyle(labelOf() as HTMLElement).opacity))
+    })
+    watcher.observe(asideOf(), { attributes: true, attributeFilter: ['data-state'] })
+
     await userEvent.click(expand())
-    expect(Number(getComputedStyle(labelOf() as HTMLElement).opacity)).toBeLessThan(0.05)
     await expect.poll(() => asideOf().getAttribute('data-state')).toBe('expanded')
+    watcher.disconnect()
+
+    expect(startOpacities.length).toBeGreaterThan(0)
+    expect(startOpacities[0]).toBeLessThan(0.05)
     await expect.poll(() => Number(getComputedStyle(labelOf() as HTMLElement).opacity)).toBeGreaterThan(0.95)
   })
 
@@ -108,15 +118,21 @@ describe('Sidebar collapse motion in a real browser', () => {
     const start = icon().left
 
     await userEvent.click(collapse())
-    const lefts = await sample(() => icon().left, 12)
+    const lefts: number[] = []
 
+    for (let index = 0; index < 200 && asideOf().getAttribute('data-state') === 'collapsing'; index += 1) {
+      lefts.push(icon().left)
+      await frames(1)
+    }
+
+    expect(lefts.length).toBeGreaterThan(2)
     expect(lefts.every((left) => Math.abs(left - start) < 1)).toBe(true)
   })
 
   it('retargets when toggled in the middle and ends expanded', async () => {
     renderInBrowser(<Page />, 'auto')
     await userEvent.click(collapse())
-    await new Promise((resolve) => setTimeout(resolve, 90))
+    await expect.poll(() => asideOf().getAttribute('data-state')).toBe('collapsing')
     await userEvent.click(expand())
 
     await expect.poll(() => asideOf().getAttribute('data-state')).toBe('expanded')
@@ -153,9 +169,10 @@ describe('Sidebar collapse motion in a real browser', () => {
     renderInBrowser(<Page />, 'auto')
 
     await userEvent.click(collapse())
-    await new Promise((resolve) => setTimeout(resolve, 160))
+    const durations = asideOf().getAnimations().map((animation) => Number(animation.effect?.getTiming().duration ?? 0))
 
-    expect(asideOf().getAttribute('data-state')).toBe('collapsed')
+    await expect.poll(() => asideOf().getAttribute('data-state'), { timeout: 1000 }).toBe('collapsed')
+    expect(Math.max(...durations)).toBeLessThanOrEqual(100)
     style.remove()
   })
 })
@@ -206,7 +223,7 @@ describe('Sidebar item motion in a real browser', () => {
     renderInBrowser(<Page />, 'never')
 
     await press()
-    await new Promise((resolve) => setTimeout(resolve, 80))
+    await frames(4)
 
     expect(scaleOf(itemOf())).toBe(1)
     await release()
@@ -217,7 +234,7 @@ describe('Sidebar item motion in a real browser', () => {
     renderInBrowser(<Page />, 'auto')
 
     await press()
-    await new Promise((resolve) => setTimeout(resolve, 200))
+    await frames(4)
 
     expect(scaleOf(itemOf())).toBe(1)
     await release()
