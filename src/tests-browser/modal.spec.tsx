@@ -100,9 +100,18 @@ describe('Modal motion in a real browser', () => {
     expect(parseFloat(style.transitionDuration)).toBeGreaterThan(0.01)
     expect(['none', 'matrix(1, 0, 0, 1, 0, 0)']).toContain(style.transform)
 
+    const transforms = new Set<string>()
+    const sample = new MutationObserver(() => {
+      const current = panel()
+      if (current) transforms.add(getComputedStyle(current).transform)
+    })
+    sample.observe(document.body, { attributes: true, childList: true, subtree: true })
+
     await userEvent.keyboard('{Escape}')
-    expect(['none', 'matrix(1, 0, 0, 1, 0, 0)']).toContain(getComputedStyle(panel() as HTMLElement).transform)
     await expect.poll(() => panel(), { timeout: 3000 }).toBeNull()
+    sample.disconnect()
+
+    for (const transform of transforms) expect(['none', 'matrix(1, 0, 0, 1, 0, 0)']).toContain(transform)
   })
 
   it('centers the panel horizontally and vertically without physical offsets', async () => {
