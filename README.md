@@ -22,7 +22,7 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 
 **Não garantido:**
 - Conformidade total com WCAG: a lib verifica o que os tokens e os testes cobrem, e não substitui auditoria nem teste com leitores de tela (nada foi testado com NVDA, JAWS ou VoiceOver).
-- Navegadores além do Chromium nos testes de navegador (Firefox e WebKit ainda não rodam no CI).
+- Firefox e WebKit rodam a suíte de navegador, mas com testes pulados: 7 no Firefox e 14 no WebKit (lista central com o motivo de cada um em `src/tests-browser/browserSkips.ts`). O WebKit não move o foco para botões e links ao clicar ou ao usar Tab por padrão, então a devolução de foco e as armadilhas de Tab não são observáveis nele; em Safari de verdade isso exige revisão manual.
 - Contraste de temas personalizados em `hsl()`, `oklch()` ou `oklab()`: esses formatos não são medidos, e o aviso diz quantos pares ficaram sem checar.
 - Gestos com velocidade (arrastar para dispensar, inércia) e presets de design alternativos: ainda não existem.
 
@@ -291,7 +291,9 @@ Os componentes renderizam no servidor sem erro de hidratação.
 
 ```bash
 npm test                  # jsdom: comportamento, axe, hidratação e SSR
-npm run test:browser      # Chromium real (Playwright)
+npm run test:browser          # Chromium real (Playwright)
+npm run test:browser:firefox  # Firefox
+npm run test:browser:webkit   # WebKit
 npm run test:next         # app Next mínimo com o pacote empacotado
 npm run lint
 npm run build:lib && npm run pack:check && npm run test:consumer
