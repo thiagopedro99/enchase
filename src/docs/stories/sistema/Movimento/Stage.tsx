@@ -1,0 +1,21 @@
+import { ColorModeProvider, ToastProvider, UIProvider, useColorMode } from 'enchase'
+import { ptBR } from 'enchase/locales'
+
+import { buildMotionTheme } from './defaultData.ts'
+
+import type { ReactNode } from 'react'
+import type { MotionStoryArgs } from './types.ts'
+
+type StageProps = { args: MotionStoryArgs; children: ReactNode }
+
+export const Stage = ({ args, children }: StageProps) => {
+  const { mode } = useColorMode()
+
+  return (
+    <ColorModeProvider mode={mode} theme={buildMotionTheme(args)} storage={null}>
+      <UIProvider locale={ptBR} motion={{ mode: args.mode, preset: args.preset }}>
+        <ToastProvider>{children}</ToastProvider>
+      </UIProvider>
+    </ColorModeProvider>
+  )
+}

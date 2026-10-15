@@ -1,0 +1,80 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { variableRows } from '../stories/sistema/Movimento/defaultData.ts'
+
+<Meta title="Sistema/Guia de movimento" />
+
+# Movimento
+
+O movimento do Enchase é CSS puro: transições, `@starting-style`, `@keyframes` só para loops e `linear()` para a mola. O hook `usePresence` mantém o elemento montado até a saída terminar. Não há biblioteca de animação, só o React. Veja tudo funcionando, com controles ao vivo, em **Sistema/Movimento**.
+
+## Quatro níveis de configuração
+
+**1. Global, no `UIProvider`.**
+
+```tsx
+<UIProvider motion={{ mode: 'auto', preset: 'subtle', recipes: { slide: { duration: 0.2, distance: 24 } } }}>
+```
+
+`mode` liga ou desliga o movimento, `preset` (`off`, `subtle`, `standard`, `expressive`) escala duração e distância de tudo e `recipes` ajusta uma receita (`fade`, `pop`, `slide`, `press`, `lift`, `spin`, `shimmer`).
+
+**2. Por componente, na prop `animation`.**
+
+```tsx
+<Modal animation={{ recipe: 'fade' }} />
+<Button animation={false} />
+```
+
+`false` desliga só naquele componente. Um objeto troca a receita ou ajusta a duração, a distância e a escala.
+
+**3. Por tema, nos tokens.**
+
+```tsx
+createTheme({ motion: { duration: { base: '200ms' }, spring: { gentle: spring({ duration: 0.6 }).easing } } })
+```
+
+Os tokens são `--enchase-motion-duration-fast|base|slow`, `--enchase-motion-ease-out|in-out`, `--enchase-motion-distance-xs|sm|md` e `--enchase-motion-spring-gentle|snappy|bouncy`. O `createTheme` valida os valores: durações acima de 300 ms em interface geram aviso.
+
+**4. Por CSS, sem JavaScript.** Cada componente expõe `data-slot` e `data-state` (`entering`, `open`, `exiting`) e lê variáveis próprias, que você sobrescreve no seu CSS:
+
+```css
+[data-slot='modal-panel'] { --enchase-modal-duration: 400ms; }
+```
+
+## Variáveis por componente
+
+Todas usam o prefixo `--enchase-` (por exemplo, `--enchase-modal-duration`). `-dx` e `-dy` são a direção da entrada (-1, 0 ou 1) e `-distance` o quanto ela anda; em RTL o `-dx` inverte.
+
+<table>
+  <thead>
+    <tr>
+      <th>Componente</th>
+      <th>Variáveis</th>
+    </tr>
+  </thead>
+  <tbody>
+    {variableRows.map((row) => (
+      <tr key={row.component}>
+        <td>
+          <code>{row.component}</code>
+        </td>
+        <td>
+          <code>{row.variables}</code>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Princípios
+
+- **Frequência decide a intensidade.** Ação feita dezenas de vezes por dia (botão, troca de aba, teclado) fica curta e sem mola. Ações ocasionais (modal, toast, drawer) podem ter mais vida.
+- **Menos de 300 ms** para interface. Mais que isso precisa de motivo.
+- **Origem correta.** Tooltip e popover crescem a partir do gatilho; modal fica no centro. Nada nasce de `scale(0)`: começa em 0,95 a 0,97 com fade.
+- **Só `transform` e `opacity`.** A única exceção é a largura da `Sidebar` ao recolher, escolhida por custo baixo medido.
+- **Saída mais rápida que a entrada.** Resposta do sistema não faz o usuário esperar.
+- **Interrompível.** Reverter no meio parte do estado atual, sem recomeçar.
+- **Reduced motion suave.** Com `prefers-reduced-motion: reduce`, o deslocamento e a escala somem e o fade continua. Loops viram pulso de opacidade. `mode: 'never'` desliga tudo.
+
+## O que ainda não existe
+
+Gestos e velocidade: arrastar para dispensar, inércia, rubber-band e mola que herda a velocidade do dedo. Isso entra quando um componente pedir (toast ou drawer arrastável), com alternativa por clique e teclado.

@@ -33,6 +33,6 @@ export const parameters: NonNullable<Preview['parameters']> = {
   layout: 'centered',
   controls: { expanded: true },
   options: {
-    storySort: { order: ['Introdução', 'Fundamentos', 'Componentes'] }
+    storySort: { order: ['Introdução', 'Fundamentos', 'Sistema', 'Componentes'] }
   }
 }
