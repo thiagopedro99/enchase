@@ -33,6 +33,8 @@
       "default": "./dist-lib/locales.js"
     },
     "./styles.css": "./dist-lib/styles.css",
+    "./styles.layer.css": "./dist-lib/styles.layer.css",
+    "./theme.css": "./dist-lib/theme.css",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -46,11 +48,11 @@
     "type-check": "tsc -b",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:browser": "vitest run --config vitest.browser.config.ts",
+    "test:browser": "npm run build:lib && vitest run --config vitest.browser.config.ts",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -o storybook-static",
-    "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json && node scripts/fixDeclarations.mjs",
-    "pack:check": "npm pack --dry-run && publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css",
+    "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json && node scripts/fixDeclarations.mjs && node scripts/buildCssOutputs.mjs",
+    "pack:check": "npm pack --dry-run && publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./styles.layer.css ./theme.css",
     "test:consumer": "node scripts/testConsumer.mjs",
     "test:next": "node scripts/testNext.mjs"
   },
