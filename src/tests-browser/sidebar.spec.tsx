@@ -101,7 +101,7 @@ describe('Sidebar drawer in a real browser', () => {
     await userEvent.keyboard('{Escape}')
 
     await expect.poll(() => page.getByRole('dialog').elements().length).toBe(0)
-    expect(document.activeElement).toBe(trigger.element())
+    await expect.poll(() => document.activeElement).toBe(trigger.element())
   })
 
   it('lands on the left edge in left-to-right and on the right edge in right-to-left', async () => {
@@ -140,7 +140,7 @@ describe('Navbar drawer in a real browser', () => {
 
     await userEvent.keyboard('{Escape}')
     await expect.poll(() => page.getByRole('dialog').elements().length).toBe(0)
-    expect(document.activeElement).toBe(trigger.element())
+    await expect.poll(() => document.activeElement).toBe(trigger.element())
   })
 
   it('closes only the modal on top when Escape is pressed with a modal over the drawer', async () => {

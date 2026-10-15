@@ -23,11 +23,16 @@ afterEach(async () => {
   await setReducedMotion('no-preference')
 })
 
-const sampleTransforms = async (read: () => string) => {
-  const first = read()
-  await new Promise((resolve) => setTimeout(resolve, 120))
+const expectTransformToChange = async (read: () => string) => {
+  const seen = new Set<string>()
 
-  return [first, read()]
+  await expect
+    .poll(() => {
+      seen.add(read())
+
+      return seen.size
+    })
+    .toBeGreaterThan(1)
 }
 
 describe('Skeleton in a real browser', () => {
@@ -42,9 +47,7 @@ describe('Skeleton in a real browser', () => {
     expect(sweep.animationIterationCount).toBe('infinite')
     expect(getComputedStyle(element).animationName).toBe('none')
 
-    const [first, second] = await sampleTransforms(() => getComputedStyle(element, '::after').transform)
-
-    expect(first).not.toBe(second)
+    await expectTransformToChange(() => getComputedStyle(element, '::after').transform)
   })
 
   it('sweeps the other way in right-to-left', () => {
@@ -109,9 +112,7 @@ describe('Loading in a real browser', () => {
     expect(style.animationIterationCount).toBe('infinite')
     expect(style.animationTimingFunction).toBe('linear')
 
-    const [first, second] = await sampleTransforms(() => getComputedStyle(spinner).transform)
-
-    expect(first).not.toBe(second)
+    await expectTransformToChange(() => getComputedStyle(spinner).transform)
   })
 
   it('does not spin with animation false or the never mode', () => {

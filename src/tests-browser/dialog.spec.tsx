@@ -69,7 +69,7 @@ describe('Modal in a real browser', () => {
 
     await userEvent.keyboard('{Escape}')
     await expect.element(page.getByRole('dialog')).not.toBeInTheDocument()
-    expect(getComputedStyle(document.body).overflow).toBe(before)
+    await expect.poll(() => getComputedStyle(document.body).overflow).toBe(before)
   })
 
   it('closes with Escape and gives focus back to the trigger', async () => {
@@ -81,7 +81,7 @@ describe('Modal in a real browser', () => {
     await userEvent.keyboard('{Escape}')
     await expect.element(page.getByRole('dialog')).not.toBeInTheDocument()
 
-    expect(document.activeElement).toBe(trigger.element())
+    await expect.poll(() => document.activeElement).toBe(trigger.element())
   })
 })
 
@@ -107,6 +107,6 @@ describe('Layout drawer in a real browser', () => {
 
     await userEvent.keyboard('{Escape}')
     await expect.element(page.getByRole('dialog')).not.toBeInTheDocument()
-    expect(document.activeElement).toBe(menu.element())
+    await expect.poll(() => document.activeElement).toBe(menu.element())
   })
 })

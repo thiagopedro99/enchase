@@ -43,11 +43,29 @@ describe('usePresence in a real browser', () => {
     await expect.poll(() => panel()?.dataset.state).toBe('open')
     await expect.poll(() => Number(getComputedStyle(panel() as HTMLElement).opacity)).toBe(1)
 
+    const element = panel() as HTMLElement
+    let transitionEnded = false
+    let endedBeforeRemoval = false
+    let removedAt = 0
+
+    element.addEventListener('transitionend', (event) => {
+      if (event.target === element && event.propertyName === 'opacity') transitionEnded = true
+    })
+    new MutationObserver((_, observer) => {
+      if (element.isConnected) return
+      endedBeforeRemoval = transitionEnded
+      removedAt = performance.now()
+      observer.disconnect()
+    }).observe(document.body, { childList: true, subtree: true })
+
+    const exitStartedAt = performance.now()
+
     await toggle.click()
-    expect(panel()?.dataset.state).toBe('exiting')
-    await wait(duration / 3)
-    expect(panel()).not.toBeNull()
-    await expect.poll(() => panel(), { timeout: 800 }).toBeNull()
+    expect(element.dataset.state).toBe('exiting')
+    await expect.poll(() => panel(), { timeout: 2000 }).toBeNull()
+
+    expect(endedBeforeRemoval).toBe(true)
+    expect(removedAt - exitStartedAt).toBeLessThan(900)
   })
 
   it('can be reopened in the middle of the exit and ends up open', async () => {
