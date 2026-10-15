@@ -14,6 +14,7 @@ The script packs the library, copies this folder to a temporary directory (nothi
 - the page is a Server Component that imports `Button`, `Layout` and `ToastProvider` straight from `enchase`;
 - the `ColorModeScript` in the head and `suppressHydrationWarning` on `<html>`;
 - the theme variables inside `@layer enchase-theme` with the `prefers-color-scheme: dark` fallback;
+- the stylesheets `enchase/styles.layer.css` and `enchase/theme.css`, fetched from the built page and checked for the layer order and the theme variables;
 - the layout rendered in the wide default (`data-layout="auto"`) with the generated responsive rules.
 
 It does not publish anything and removes the temporary directory and the server process at the end.

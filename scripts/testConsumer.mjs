@@ -15,6 +15,8 @@ import { createTheme, validateTheme } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
 import 'enchase/styles.css'
+import 'enchase/styles.layer.css'
+import 'enchase/theme.css'
 
 const sections: SidebarSection[] = [{ id: 'main', items: [{ id: 'home', label: 'Home', href: '/' }] }]
 const labels: Partial<UILabels> = { closeModal: 'Close' }

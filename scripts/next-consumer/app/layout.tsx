@@ -1,5 +1,6 @@
 import { ColorModeProvider, ColorModeScript, GlobalStyles, UIProvider } from 'enchase'
-import 'enchase/styles.css'
+import 'enchase/styles.layer.css'
+import 'enchase/theme.css'
 
 import type { ReactNode } from 'react'
 

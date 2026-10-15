@@ -21,6 +21,12 @@ const expectations = [
   ['the generated responsive rules', "[data-slot='layout'][data-layout='auto']"]
 ]
 
+const cssExpectations = [
+  ['the layer order from the layered stylesheet', '@layer enchase-theme, enchase-base, enchase'],
+  ['the components inside the enchase layer', '@layer enchase'],
+  ['the static theme variables', '--enchase-color-primary']
+]
+
 const waitFor = async (url) => {
   for (let attempt = 0; attempt < 60; attempt += 1) {
     try {
@@ -51,11 +57,15 @@ try {
   const response = await waitFor(`http://127.0.0.1:${port}/`)
   const html = await response.text()
   const missing = expectations.filter(([, needle]) => !html.includes(needle))
+  const stylesheets = [...html.matchAll(/href="([^"]+\.css)"/g)].map((match) => match[1])
+  const css = (await Promise.all(stylesheets.map(async (href) => (await fetch(new URL(href, `http://127.0.0.1:${port}/`))).text()))).join('\n')
+
+  for (const [label, needle] of cssExpectations) if (!css.includes(needle)) missing.push([label])
 
   if (response.status !== 200) throw new Error(`unexpected status ${response.status}`)
   if (missing.length > 0) throw new Error(`the server html is missing:\n${missing.map(([label]) => `  - ${label}`).join('\n')}`)
 
-  console.log(`next consumer rendered ${expectations.length} server checks on port ${port}`)
+  console.log(`next consumer rendered ${expectations.length + cssExpectations.length} server checks on port ${port}`)
 } finally {
   if (server && server.exitCode === null) {
     const exited = new Promise((resolveExit) => server.once('exit', resolveExit))
