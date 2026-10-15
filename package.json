@@ -49,6 +49,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:browser": "npm run build:lib && vitest run --config vitest.browser.config.ts",
+    "test:browser:repeat": "node scripts/repeatBrowserTests.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -o storybook-static",
     "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json && node scripts/fixDeclarations.mjs && node scripts/buildCssOutputs.mjs",
