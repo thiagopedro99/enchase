@@ -403,9 +403,7 @@ describe('Drawer cascade in a real browser', () => {
     renderInBrowser(<DrawerPage />, 'auto')
 
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
-    await expect.poll(() => opacityDelays(drawerItems()).every((delay) => delay !== undefined)).toBe(true)
-
-    expect(opacityDelays(drawerItems())).toEqual([0, 30, 60])
+    await expect.poll(() => opacityDelays(drawerItems())).toEqual([0, 30, 60])
   })
 
   it('starts the items hidden and ends with all of them fully visible', async () => {
@@ -465,9 +463,7 @@ describe('Drawer cascade in a real browser', () => {
     renderInBrowser(<DrawerPage />, 'auto')
 
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
-    await expect.poll(() => opacityDelays(drawerItems()).every((delay) => delay !== undefined)).toBe(true)
-
-    expect(opacityDelays(drawerItems())).toEqual([0, 90, 180])
+    await expect.poll(() => opacityDelays(drawerItems())).toEqual([0, 90, 180])
     style.remove()
   })
 })
