@@ -8,7 +8,9 @@ export type MotionStoryArgs = {
   baseDuration: number
   distance: number
   gentleDuration: number
+  snappyDuration: number
   snappyBounce: number
+  bouncyDuration: number
   bouncyBounce: number
 }
 

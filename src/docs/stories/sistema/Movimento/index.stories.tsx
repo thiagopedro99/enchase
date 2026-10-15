@@ -34,8 +34,10 @@ const meta = {
     mode: { description: 'auto respeita prefers-reduced-motion; never desliga todo o movimento.', control: 'inline-radio', options: modes },
     baseDuration: { description: 'Duração base em ms (token --enchase-motion-duration-base). A rápida vale 60% e a lenta 120%.', control: { type: 'range', min: 50, max: 600, step: 10 } },
     distance: { description: 'Distância maior de entrada em px (--enchase-motion-distance-md).', control: { type: 'range', min: 0, max: 80, step: 2 } },
-    gentleDuration: { description: 'Duração da mola gentle (usada no Modal), em segundos.', control: { type: 'range', min: 0.2, max: 1.2, step: 0.05 } },
-    snappyBounce: { description: 'Elasticidade da mola snappy (toast, popover, tooltip).', control: { type: 'range', min: 0, max: 0.6, step: 0.05 } },
+    gentleDuration: { description: 'Duração da mola gentle (Modal), em ms. A curva toca inteira nesse tempo (--enchase-motion-spring-gentle-duration). Acima de 300 ms o tema avisa.', control: { type: 'range', min: 100, max: 600, step: 10 } },
+    snappyDuration: { description: 'Duração da mola snappy (toast e popover), em ms (--enchase-motion-spring-snappy-duration).', control: { type: 'range', min: 100, max: 600, step: 10 } },
+    snappyBounce: { description: 'Elasticidade da mola snappy, de 0 a 0,95.', control: { type: 'range', min: 0, max: 0.6, step: 0.05 } },
+    bouncyDuration: { description: 'Duração da mola bouncy, em ms (até 400 ms sem aviso).', control: { type: 'range', min: 100, max: 700, step: 10 } },
     bouncyBounce: { description: 'Elasticidade da mola bouncy.', control: { type: 'range', min: 0, max: 0.8, step: 0.05 } }
   }
 } satisfies Meta<MotionStoryArgs>

@@ -251,17 +251,17 @@ Quatro níveis de configuração, do mais amplo ao mais específico:
 
 1. `UIProvider motion`: `mode` (`auto` respeita `prefers-reduced-motion`; `never` desliga tudo), `preset` (`off`, `subtle`, `standard`, `expressive`) e `recipes` (`fade`, `pop`, `slide`, `press`, `lift`, `spin`, `shimmer`).
 2. A prop `animation` de cada componente animado: `false` desliga; `{ recipe, from, tuning }` ajusta.
-3. O tema: `createTheme({ motion: { duration, easing, distance } })` é validado, e duração acima de 300 ms vira aviso. `validateMotion` lista os avisos sem React. Os tokens `--enchase-motion-spring-gentle`, `-snappy` e `-bouncy` vêm no tema, e `spring()` gera uma curva `linear(...)` a partir de `{ stiffness, damping, mass }` ou `{ duration, bounce }`.
+3. O tema: `createTheme({ motion: { duration, easing, distance } })` é validado, e duração acima de 300 ms vira aviso. `validateMotion` lista os avisos sem React. Cada mola vem no tema com a curva e a duração juntas: `--enchase-motion-spring-gentle` e `--enchase-motion-spring-gentle-duration` (300 ms, sem elasticidade), `-snappy` e `-snappy-duration` (300 ms, elasticidade 0,15) e `-bouncy` e `-bouncy-duration` (400 ms, elasticidade 0,3). A curva toca inteira nessa duração, então o overshoot não muda quando o componente a usa. Troque no tema com `createTheme({ motion: { spring: { snappy: { duration: '240ms', bounce: 0.2 } } } })`; o aviso de duração acima de 300 ms vale para `gentle` e `snappy`, e `bouncy` tem até 400 ms. `spring()` gera a curva a partir de `{ stiffness, damping, mass }` ou `{ duration, bounce }`, e `timedSpring({ duration, bounce })` a faz caber exatamente numa duração em segundos.
 4. O seu CSS: cada componente lê variáveis `--enchase-<componente>-duration`, `-ease`, `-distance` e outras.
 
 | Componente | Variáveis (prefixo `--enchase-<componente>`) |
 | --- | --- |
-| `modal` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-scale`, `-ease`, `-fade-ease`, `-exit-ease` |
+| `modal` | `-duration` (padrão: `--enchase-motion-spring-gentle-duration`), `-exit-duration` (metade da entrada), `-distance`, `-dx`, `-dy`, `-scale`, `-ease`, `-fade-ease`, `-exit-ease` |
 | `sidebar` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-label-duration`, `-width`, `-width-collapsed`, `-item-duration`, `-item-scale`, `-indicator-duration`, `-stagger`, `-item-offset` |
 | `navbar` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-stagger`, `-item-offset` |
-| `toast` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-fade-ease`, `-exit-ease`, `-lifetime` |
+| `toast` | `-duration` (padrão: `--enchase-motion-spring-snappy-duration`), `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-fade-ease`, `-exit-ease`, `-lifetime` |
 | `tooltip` | `-duration`, `-scale`, `-ease` |
-| `popover` | `-duration`, `-exit-duration`, `-scale`, `-ease`, `-max-width`, `-max-height` |
+| `popover` | `-duration` (padrão: `--enchase-motion-spring-snappy-duration`), `-exit-duration`, `-scale`, `-ease`, `-max-width`, `-max-height` |
 | `button`, `theme-toggle` | `-duration`, `-scale`, `-distance`, `-ease` |
 | `card` | `-duration`, `-distance`, `-ease` |
 | `loading` | `-duration`, `-ease` |

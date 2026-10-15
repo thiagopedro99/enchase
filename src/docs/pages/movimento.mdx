@@ -29,15 +29,15 @@ O movimento do Enchase é CSS puro: transições, `@starting-style`, `@keyframes
 **3. Por tema, nos tokens.**
 
 ```tsx
-createTheme({ motion: { duration: { base: '200ms' }, spring: { gentle: spring({ duration: 0.6 }).easing } } })
+createTheme({ motion: { duration: { base: '200ms' }, spring: { gentle: { duration: '260ms' }, snappy: { duration: '240ms', bounce: 0.2 } } } })
 ```
 
-Os tokens são `--enchase-motion-duration-fast|base|slow`, `--enchase-motion-ease-out|in-out`, `--enchase-motion-distance-xs|sm|md` e `--enchase-motion-spring-gentle|snappy|bouncy`. O `createTheme` valida os valores: durações acima de 300 ms em interface geram aviso.
+Os tokens são `--enchase-motion-duration-fast|base|slow`, `--enchase-motion-ease-out|in-out`, `--enchase-motion-distance-xs|sm|md` e `--enchase-motion-spring-gentle|snappy|bouncy`, cada mola com a sua duração em `--enchase-motion-spring-gentle|snappy|bouncy-duration`: a curva toca inteira nessa duração. O `createTheme` valida os valores: durações acima de 300 ms em interface geram aviso (a `bouncy` vai até 400 ms).
 
 **4. Por CSS, sem JavaScript.** Cada componente expõe `data-slot` e `data-state` (`entering`, `open`, `exiting`) e lê variáveis próprias, que você sobrescreve no seu CSS:
 
 ```css
-[data-slot='modal-panel'] { --enchase-modal-duration: 400ms; }
+[data-slot='modal-panel'] { --enchase-modal-duration: 240ms; }
 ```
 
 ## Variáveis por componente

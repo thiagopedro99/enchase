@@ -1,5 +1,3 @@
-import { spring } from 'enchase/theme'
-
 import type { SidebarSection } from 'enchase'
 import type { MotionStoryArgs, VariableRow } from './types.ts'
 
@@ -8,16 +6,18 @@ export const defaultArgs: MotionStoryArgs = {
   mode: 'auto',
   baseDuration: 250,
   distance: 32,
-  gentleDuration: 0.5,
+  gentleDuration: 300,
+  snappyDuration: 300,
   snappyBounce: 0.15,
-  bouncyBounce: 0.35
+  bouncyDuration: 400,
+  bouncyBounce: 0.3
 }
 
 export const presets = ['off', 'subtle', 'standard', 'expressive'] as const
 
 export const modes = ['auto', 'never'] as const
 
-export const buildMotionTheme = ({ baseDuration, distance, gentleDuration, snappyBounce, bouncyBounce }: MotionStoryArgs) => ({
+export const buildMotionTheme = ({ baseDuration, distance, gentleDuration, snappyDuration, snappyBounce, bouncyDuration, bouncyBounce }: MotionStoryArgs) => ({
   motion: {
     duration: {
       fast: `${Math.round(baseDuration * 0.6)}ms`,
@@ -26,9 +26,9 @@ export const buildMotionTheme = ({ baseDuration, distance, gentleDuration, snapp
     },
     distance: { xs: `${Math.max(1, Math.round(distance / 16))}px`, sm: `${Math.round(distance * 0.375)}px`, md: `${distance}px` },
     spring: {
-      gentle: spring({ duration: gentleDuration }).easing,
-      snappy: spring({ duration: 0.35, bounce: snappyBounce }).easing,
-      bouncy: spring({ duration: 0.5, bounce: bouncyBounce }).easing
+      gentle: { duration: `${gentleDuration}ms` },
+      snappy: { duration: `${snappyDuration}ms`, bounce: snappyBounce },
+      bouncy: { duration: `${bouncyDuration}ms`, bounce: bouncyBounce }
     }
   }
 })
