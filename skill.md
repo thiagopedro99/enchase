@@ -66,7 +66,7 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 - Pasta com `index.tsx`, `styles.module.css`, `types.ts` e, se houver valor padrão, `defaultData.ts`.
 - Props públicas sem `$`, aceitando e mesclando `className`.
 - Variantes por `data-*` e valores do tema por `var(--enchase-*)`.
-- Animação por `useMotionRecipe` e prop `animation`; textos de acessibilidade por `useUIConfig().labels`.
+- Animação por CSS com `usePresence` e a prop `animation`; textos de acessibilidade por `useUIConfig().labels`.
 - Teste de comportamento e `axe` espelhado em `src/tests/`.
 - Story com Playground em `src/docs/stories/`, com as descrições das props em `argTypes`.
 - Conferido no navegador nos dois temas.
@@ -112,10 +112,10 @@ Especificação, não descrição: os componentes atuais ainda não cumprem tudo
 
 **Movimento**
 - Só `transform` e `opacity`; nunca `width`, `height`, `margin`, `top`, `left` nem `transition: all`.
-- Uma curva e durações por token, nunca valor solto no componente: `--enchase-motion-duration-fast|base|slow` (150, 250, 350 ms), `--enchase-motion-ease-out` (`cubic-bezier(0.2, 0, 0, 1)`, a única curva de entrada e saída; o `defaultEase` do catálogo é a mesma) e `--enchase-motion-ease-in-out` (`cubic-bezier(0.4, 0, 0.2, 1)`, só para o que já está na tela e se move), mais `--enchase-motion-distance-xs|sm|md` (2, 12 e 32 px: `lift`, `pop` e `slide`). Entrada com `ease-out`; saída mais curta que a entrada.
+- Uma curva e durações por token, nunca valor solto no componente: `--enchase-motion-duration-fast|base|slow` (150, 250, 300 ms), `--enchase-motion-ease-out` (`cubic-bezier(0.2, 0, 0, 1)`, a única curva de entrada e saída) e `--enchase-motion-ease-in-out` (`cubic-bezier(0.4, 0, 0.2, 1)`, só para o que já está na tela e se move), mais `--enchase-motion-distance-xs|sm|md` (2, 12 e 32 px: `lift`, `pop` e `slide`). Entrada com `ease-out`; saída mais curta que a entrada.
 - Presença (montar e desmontar com saída animada): `usePresence(open, { exitMs })` de `@hooks/usePresence.ts` devolve `{ mounted, state, ref }`, com `state` em `entering | open | exiting | closed`. O CSS anima por `data-state`; o hook mantém o elemento montado até o `transitionend` ou `animationend` do próprio elemento (ou `exitMs`, padrão 300 ms) e aceita reabrir no meio da saída. Não usa `window` na renderização.
 - Hover só dentro de `@media (hover: hover) and (pointer: fine)` escrito por extenso (custom media não entrou: precisaria do transformador Lightning CSS em todas as configs); o toque ganha feedback por `:active`. O teste `hoverGating` tem uma lista dos componentes que ainda têm `:hover` fora da media query: nenhum entra nela, e quem for corrigido sai dela.
-- `prefers-reduced-motion`: movimento espacial vira fade; nada depende de movimento para ser entendido.
+- `prefers-reduced-motion`: movimento espacial some e o fade continua; nada depende de movimento para ser entendido.
 - Interrompível: reverter no meio do caminho parte do estado atual.
 - Arrastar exige alternativa por clique ou teclado e anúncio em `aria-live` (WCAG 2.5.7).
 
@@ -130,16 +130,16 @@ Especificação, não descrição: os componentes atuais ainda não cumprem tudo
 **API pública**
 - Só o que está em `lib/` é público. Tipos de props exportados junto do componente. Exportar pouco.
 
-## Animação (`motion`, catálogo de receitas)
+## Animação (motor próprio, CSS primeiro)
 
-- Importar sempre de `motion/react`.
-- **Toda animação vem do catálogo em `src/motion/`** (`fade`, `pop`, `slide`, `press`, `lift`, `spin`, `shimmer`), consumido pelo hook `useMotionRecipe(nome, override?, from?)`. Nunca declarar `keyframes`, `animation:` nem `transition: all` em componente; precisando de um movimento novo, adicione uma receita ao catálogo.
-- Componente animado: `motion.div`, `motion.button` etc. com o `className` do CSS Module, espalhando o resultado do hook no elemento: `<motion.div {...useMotionRecipe('fade')} className={styles.overlay} />`.
-- Posicionamento com `translate` (propriedade individual), nunca `transform`, quando o elemento é animado pelo `motion` — o `motion` controla o `transform` inline.
-- Saída animada com `AnimatePresence`; nunca `setTimeout` para esperar animação terminar.
-- Todo componente animado aceita a prop `animation?: MotionOverride` (`false` desliga; `{ recipe, from, tuning }` ajusta) e usa o valor global do `UIProvider` (`mode`, `preset`, `recipes`).
-- `prefers-reduced-motion` é tratado pelo catálogo (movimento espacial vira fade, `press`/`lift` somem, `spin`/`shimmer` viram pulso de opacidade). Não verificar `useReducedMotion()` dentro de componente.
-- Props de handler que o `motion` redefine (`onDrag`, `onDragStart`, `onDragEnd`, `onAnimationStart`) são omitidas do tipo das props do componente.
+- Sem biblioteca de animação: o movimento é CSS (transições, `@starting-style`, `@keyframes` só para loops, `linear()` para mola) mais o hook `usePresence` para montar e desmontar com saída. Nada de importar `motion`.
+- Os tokens (`--enchase-motion-duration-*`, `-ease-*`, `-distance-*`, `-spring-*`) vêm do tema (`createTheme({ motion })`, validado: duração acima de 300 ms em UI gera aviso). Nunca valor solto no CSS do componente.
+- Cada componente com animação lê as próprias variáveis `--enchase-<componente>-duration|exit-duration|distance|dx|dy|scale|ease` (tabela no README); o usuário muda por tema, pela prop `animation` ou pelo CSS dele.
+- Os dados das receitas (`fade`, `pop`, `slide`, `press`, `lift`, `spin`, `shimmer`) ficam em `src/motion/`; `resolveCssMotion` e `resolveLoopMotion` os transformam em variáveis e atributos (`data-motion`).
+- Todo componente animado aceita `animation?: MotionOverride` (`false` desliga; `{ recipe, from, tuning }` ajusta) e respeita o `UIProvider` (`mode`, `preset`, `recipes`). `mode='never'` desliga tudo.
+- Saída animada com `usePresence`; ele lê a duração real do estilo calculado, então nunca `setTimeout` para esperar a animação.
+- `prefers-reduced-motion`: o deslocamento e a escala viram `none` e a opacidade continua (fade curto); loops (`data-motion='on'`) viram pulso de opacidade. O CSS de cada componente decide isso; não há regra global que zere as transições.
+- Gesto e velocidade (arrastar, inércia, rubber-band) ainda não existem: ficam para a camada 2 e entram só quando um componente pedir.
 
 ## Nomenclatura e tipagem
 
