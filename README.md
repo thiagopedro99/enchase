@@ -244,7 +244,7 @@ Os breakpoints seguem o Bootstrap 5 (mobile-first, `min-width`): `xs` 0, `sm` 57
 
 ## Acessibilidade e Movimento
 
-Os componentes seguem WCAG 2.2 AA (foco visível, teclado, ARIA, contraste e alvos mínimos) e todas as animações vêm de um catálogo único de receitas (`src/motion/`), configurável pelo `UIProvider`:
+Os componentes seguem WCAG 2.2 AA (foco visível, teclado, ARIA, contraste e alvos mínimos) e todas as animações vêm de um catálogo único de receitas (`src/motion/`), em CSS próprio e configurável pelo `UIProvider`:
 
 ```tsx
 <UIProvider
@@ -265,7 +265,59 @@ Os componentes seguem WCAG 2.2 AA (foco visível, teclado, ARIA, contraste e alv
 - **`labels`**: sobrescreve textos avulsos (rótulos de botões, regiões e estados) por cima do `locale`.
 - **Por componente**: `animation={false}` desliga, `animation={{ recipe: 'fade' }}` troca a receita.
 
-Com `prefers-reduced-motion`, movimento espacial vira fade, `press` e `lift` somem e os loops viram um pulso de opacidade.
+Com `prefers-reduced-motion`, o deslocamento e a escala somem e o fade continua; `press` e `lift` somem e os loops viram um pulso de opacidade.
+
+### Movimento próprio, sem biblioteca
+
+A animação é CSS puro (transições, `@starting-style`, `@keyframes` e `linear()`), mais o hook `usePresence`, que mantém o elemento montado até a saída terminar (lendo a duração real do estilo calculado, então mudar a duração só por CSS também funciona). Não há dependência de runtime além do React.
+
+**Reduced motion** é mais suave, não instantâneo: com `prefers-reduced-motion: reduce` o deslocamento e a escala somem, e o fade de opacidade continua. Loops (spinner, shimmer) viram um pulso de opacidade. `motion.mode='never'` desliga tudo.
+
+**Variáveis por componente.** Cada componente que anima lê `--enchase-<componente>-duration` e `--enchase-<componente>-ease` (com os tokens `--enchase-motion-*` como padrão), mais as que fazem sentido para ele. Para mudar um componente por CSS, sobrescreva a variável, sem tocar no código:
+
+| Componente | Variáveis |
+| --- | --- |
+| `modal` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-scale`, `-ease` |
+| `sidebar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` |
+| `navbar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` |
+| `toast` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-lifetime` (tempo da barra) |
+| `tooltip` | `-duration`, `-scale`, `-ease` |
+| `button` (e `theme-toggle`) | `-duration`, `-scale` (press), `-distance` (lift), `-ease` |
+| `card` | `-duration`, `-distance` (lift), `-ease` |
+| `loading` | `-duration` (volta do spinner), `-ease` |
+| `skeleton` | `-duration` (brilho), `-ease` |
+| `icon-swap` | `-duration`, `-ease` |
+| `input`, `select`, `checkbox`, `link`, `breadcrumbs`, `footer`, `app-bar` | `-duration`, `-ease` |
+
+Todas usam o prefixo `--enchase-` (por exemplo `--enchase-modal-duration`). `-dx` e `-dy` são a direção da entrada (-1, 0 ou 1) e `-distance` o quanto ela anda; em RTL o `-dx` inverte.
+
+**Tema.** Os tokens base vêm de `createTheme`, com validação:
+
+```ts
+import { createTheme } from 'enchase/theme'
+
+createTheme({
+  motion: {
+    duration: { fast: '120ms', base: '200ms' },
+    easing: { out: 'cubic-bezier(0.2, 0, 0, 1)' },
+    distance: { md: '2rem' }
+  }
+})
+```
+
+Um valor inválido lança erro. Uma duração acima de 300 ms vira aviso em desenvolvimento (e `validateMotion(tema.base)` a lista, sem React, para CI).
+
+**Mola em CSS.** `spring()` (em `enchase/theme`) devolve uma curva `linear(...)` calculada pela solução analítica de uma mola amortecida, que o CSS usa como `transition-timing-function`:
+
+```ts
+import { spring } from 'enchase/theme'
+
+spring({ duration: 0.4, bounce: 0.2 })
+spring({ stiffness: 170, damping: 15, mass: 1 })
+```
+
+Os tokens `--enchase-motion-spring-gentle`, `-snappy` e `-bouncy` já vêm no tema; hoje o `Tooltip` com `animation={{ recipe: 'pop' }}` entra com o `snappy`. A mola em CSS não herda a velocidade de um gesto: arrastar com inércia fica para uma camada futura.
+
 
 ## Sistema de Temas
 
