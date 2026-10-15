@@ -74,6 +74,21 @@ export const springSettleTime = (input: SpringInput): number => {
 
 const round = (value: number) => Math.round(value * 1000) / 1000
 
+export type SpringTiming = {
+  duration: number
+  bounce?: number
+}
+
+export const timedSpring = ({ duration, bounce = 0 }: SpringTiming): SpringResult => {
+  if (!Number.isFinite(duration) || duration <= 0) throw new Error('A timed spring needs a positive duration in seconds')
+
+  const reference = springSettleTime({ duration: 1, bounce })
+  const perceptual = duration / reference
+  const result = spring({ duration: perceptual, bounce })
+
+  return { easing: result.easing, duration: Math.round(duration * 1000) }
+}
+
 export const spring = (input: SpringInput): SpringResult => {
   assertValid(toPhysics(input))
 

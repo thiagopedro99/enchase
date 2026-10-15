@@ -32,6 +32,28 @@ describe('the public theme entry protects the contrast contract', () => {
     expect(validateMotion(createTheme().base)).toEqual([])
   })
 
+  it('takes a spring as a duration and a bounce and keeps the duration next to the curve', () => {
+    const theme = createTheme({ motion: { spring: { gentle: { duration: '250ms' }, bouncy: { duration: '0.35s', bounce: 0.4 } } } })
+
+    expect(theme.base.motion.spring.gentleDuration).toBe('250ms')
+    expect(theme.base.motion.spring.bouncyDuration).toBe('350ms')
+    expect(theme.base.motion.spring.gentle.startsWith('linear(')).toBe(true)
+    expect(theme.base.motion.spring.snappyDuration).toBe('300ms')
+    expect(createTheme({ motion: { spring: { gentle: 'linear(0, 1)' } } }).base.motion.spring.gentleDuration).toBe('300ms')
+  })
+
+  it('rejects a bad spring and warns about a long one', () => {
+    expect(() => createTheme({ motion: { spring: { gentle: { duration: 'soon' } } } })).toThrow(/duration/)
+    expect(() => createTheme({ motion: { spring: { gentle: { duration: '200ms', bounce: 2 } } } })).toThrow(/bounce/)
+    expect(() => createTheme({ motion: { spring: { gentle: { duration: '200ms', stiffness: 3 } } } } as never)).toThrow(/Unknown spring option/)
+    expect(() => createTheme({ motion: { spring: { wobbly: { duration: '200ms' } } } } as never)).toThrow(/Unknown motion token/)
+
+    const long = createTheme({ motion: { spring: { snappy: { duration: '350ms' }, bouncy: { duration: '450ms' } } } })
+
+    expect(validateMotion(long.base).map((issue) => issue.label)).toEqual(['motion.spring.snappyDuration', 'motion.spring.bouncyDuration'])
+    expect(validateMotion(createTheme({ motion: { spring: { bouncy: { duration: '400ms' } } } }).base)).toEqual([])
+  })
+
   it('throws for an invalid motion value or an unknown motion token', () => {
     expect(() => createTheme({ motion: { duration: { base: 'fast' } } } as never)).toThrow(/Invalid duration/)
     expect(() => createTheme({ motion: { easing: { out: 'cubic-bezier(2, 0, 0, 1)' } } } as never)).toThrow(/Invalid easing/)

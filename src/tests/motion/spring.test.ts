@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { spring, springPosition, springSettleTime } from '@motion/spring.ts'
+import { spring, springPosition, springSettleTime, timedSpring } from '@motion/spring.ts'
 import { baseTokens } from '@styles/tokens/base.ts'
 
 const numeric = (stiffness: number, damping: number, mass: number, seconds: number) => {
@@ -91,9 +91,48 @@ describe('spring', () => {
   })
 })
 
+describe('timed spring', () => {
+  it('plays the whole curve in exactly the requested duration', () => {
+    const { easing, duration } = timedSpring({ duration: 0.3, bounce: 0.15 })
+    const values = points(easing)
+
+    expect(duration).toBe(300)
+    expect(values[0]).toBe(0)
+    expect(values[values.length - 1]).toBe(1)
+  })
+
+  it('settles at the requested time whatever the bounce', () => {
+    for (const bounce of [0, 0.15, 0.3]) {
+      const perceptual = springSettleTime({ duration: 1, bounce })
+      const settle = springSettleTime({ duration: 0.3 / perceptual, bounce })
+
+      expect(settle).toBeCloseTo(0.3, 1)
+    }
+  })
+
+  it('keeps the same overshoot at any duration', () => {
+    const fast = Math.max(...points(timedSpring({ duration: 0.2, bounce: 0.3 }).easing))
+    const slow = Math.max(...points(timedSpring({ duration: 0.6, bounce: 0.3 }).easing))
+
+    expect(fast).toBeCloseTo(slow, 2)
+    expect(fast).toBeGreaterThan(1)
+  })
+
+  it('rejects a duration that is not positive', () => {
+    expect(() => timedSpring({ duration: 0 })).toThrow()
+    expect(() => timedSpring({ duration: Number.NaN })).toThrow()
+  })
+})
+
 describe('spring tokens', () => {
   it('ships a gentle, a snappy and a bouncy easing as linear() strings', () => {
     for (const name of ['gentle', 'snappy', 'bouncy'] as const) expect(baseTokens.motion.spring[name].startsWith('linear(')).toBe(true)
+  })
+
+  it('carries the duration of each spring next to its curve', () => {
+    expect(baseTokens.motion.spring.gentleDuration).toBe('300ms')
+    expect(baseTokens.motion.spring.snappyDuration).toBe('300ms')
+    expect(baseTokens.motion.spring.bouncyDuration).toBe('400ms')
   })
 
   it('makes the bouncy token overshoot and the gentle one stay below one', () => {

@@ -1,10 +1,16 @@
-import { spring } from './spring.ts'
+import { timedSpring } from './spring.ts'
 
 const easeOut = 'cubic-bezier(0.2, 0, 0, 1)'
 
 const easeInOut = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
 const duration = { fast: '150ms', base: '250ms', slow: '300ms' }
+
+const gentle = timedSpring({ duration: 0.3 })
+
+const snappy = timedSpring({ duration: 0.3, bounce: 0.15 })
+
+const bouncy = timedSpring({ duration: 0.4, bounce: 0.3 })
 
 export const baseTokens = {
   fonts: {
@@ -60,9 +66,12 @@ export const baseTokens = {
     duration,
     ease: { out: easeOut, inOut: easeInOut },
     spring: {
-      gentle: spring({ duration: 0.5 }).easing,
-      snappy: spring({ duration: 0.35, bounce: 0.15 }).easing,
-      bouncy: spring({ duration: 0.5, bounce: 0.35 }).easing
+      gentle: gentle.easing,
+      gentleDuration: `${gentle.duration}ms`,
+      snappy: snappy.easing,
+      snappyDuration: `${snappy.duration}ms`,
+      bouncy: bouncy.easing,
+      bouncyDuration: `${bouncy.duration}ms`
     },
     distance: { xs: '2px', sm: '12px', md: '32px' }
   },

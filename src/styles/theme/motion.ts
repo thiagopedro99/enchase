@@ -1,17 +1,25 @@
-import { baseTokens } from '../tokens/index.ts'
+import { baseTokens, timedSpring } from '../tokens/index.ts'
 
 import type { BaseTokens } from '../tokens/types.ts'
+
+export type SpringName = 'gentle' | 'snappy' | 'bouncy'
+
+export type SpringOverride = string | { duration: string; bounce?: number }
 
 export type MotionOverrides = {
   duration?: Partial<BaseTokens['motion']['duration']>
   easing?: Partial<BaseTokens['motion']['ease']>
   distance?: Partial<BaseTokens['motion']['distance']>
-  spring?: Partial<BaseTokens['motion']['spring']>
+  spring?: Partial<Record<SpringName, SpringOverride>>
 }
 
 export type MotionIssue = { label: string; value: string; milliseconds: number; maximum: number }
 
 export const maxUiDuration = 300
+
+export const maxPlayfulDuration = 400
+
+const springNames: readonly SpringName[] = ['gentle', 'snappy', 'bouncy']
 
 const maxDurationMilliseconds = 10000
 
@@ -85,9 +93,46 @@ const mergeGroup = <Group extends Record<string, string>>(base: Group, overrides
 const groups = {
   duration: { valid: isValidDuration, what: 'duration', key: 'duration' },
   easing: { valid: isValidEasing, what: 'easing', key: 'ease' },
-  distance: { valid: isValidDistance, what: 'distance', key: 'distance' },
-  spring: { valid: isValidEasing, what: 'easing', key: 'spring' }
+  distance: { valid: isValidDistance, what: 'distance', key: 'distance' }
 } as const
+
+const mergeSprings = (base: BaseTokens['motion']['spring'], overrides: unknown): BaseTokens['motion']['spring'] => {
+  if (!isRecord(overrides)) throw new Error('Expected an object for "motion.spring"')
+
+  const result: Record<string, string> = { ...base }
+
+  for (const [name, value] of Object.entries(overrides)) {
+    if (!springNames.includes(name as SpringName)) throw new Error(`Unknown motion token "motion.spring.${name}"`)
+    if (value === undefined) continue
+
+    if (typeof value === 'string') {
+      if (!isValidEasing(value)) throw new Error(`Invalid easing for "motion.spring.${name}": ${JSON.stringify(value)}`)
+
+      result[name] = value
+
+      continue
+    }
+
+    if (!isRecord(value)) throw new Error(`Invalid spring for "motion.spring.${name}": ${JSON.stringify(value)}`)
+
+    for (const key of Object.keys(value)) if (key !== 'duration' && key !== 'bounce') throw new Error(`Unknown spring option "motion.spring.${name}.${key}"`)
+    if (!isValidDuration(value.duration)) throw new Error(`Invalid duration for "motion.spring.${name}.duration": ${JSON.stringify(value.duration)}`)
+    if (value.bounce !== undefined && (typeof value.bounce !== 'number' || !Number.isFinite(value.bounce) || value.bounce < 0 || value.bounce > 0.95)) {
+      throw new Error(`Invalid bounce for "motion.spring.${name}.bounce": ${JSON.stringify(value.bounce)} (use a number from 0 to 0.95)`)
+    }
+
+    const milliseconds = toMilliseconds(value.duration) as number
+
+    if (milliseconds <= 0) throw new Error(`Invalid duration for "motion.spring.${name}.duration": ${JSON.stringify(value.duration)}`)
+
+    const timed = timedSpring({ duration: milliseconds / 1000, bounce: value.bounce })
+
+    result[name] = timed.easing
+    result[`${name}Duration`] = `${timed.duration}ms`
+  }
+
+  return result as BaseTokens['motion']['spring']
+}
 
 export const mergeMotion = (overrides: unknown): BaseTokens['motion'] => {
   if (!isRecord(overrides)) throw new Error('Expected an object for "motion"')
@@ -95,8 +140,14 @@ export const mergeMotion = (overrides: unknown): BaseTokens['motion'] => {
   const result = { ...baseTokens.motion } as Record<string, unknown>
 
   for (const [name, group] of Object.entries(overrides)) {
-    if (!Object.prototype.hasOwnProperty.call(groups, name)) throw new Error(`Unknown motion section "motion.${name}"`)
+    if (name !== 'spring' && !Object.prototype.hasOwnProperty.call(groups, name)) throw new Error(`Unknown motion section "motion.${name}"`)
     if (group === undefined) continue
+
+    if (name === 'spring') {
+      result.spring = mergeSprings(baseTokens.motion.spring, group)
+
+      continue
+    }
 
     const { valid, what, key } = groups[name as keyof typeof groups]
 
@@ -112,17 +163,28 @@ export const motionTransitions = (motion: BaseTokens['motion']): BaseTokens['tra
   slow: `${motion.duration.slow} ${motion.ease.out}`
 })
 
-export const validateMotion = (base: BaseTokens): MotionIssue[] =>
-  Object.entries(base.motion.duration).flatMap(([name, value]): MotionIssue[] => {
+const durationIssues = (label: string, entries: [string, string, number][]): MotionIssue[] =>
+  entries.flatMap(([name, value, maximum]): MotionIssue[] => {
     const milliseconds = toMilliseconds(value)
 
-    return milliseconds !== null && milliseconds > maxUiDuration ? [{ label: `motion.duration.${name}`, value, milliseconds, maximum: maxUiDuration }] : []
+    return milliseconds !== null && milliseconds > maximum ? [{ label: `${label}.${name}`, value, milliseconds, maximum }] : []
   })
+
+export const validateMotion = (base: BaseTokens): MotionIssue[] => [
+  ...durationIssues(
+    'motion.duration',
+    Object.entries(base.motion.duration).map(([name, value]): [string, string, number] => [name, value, maxUiDuration])
+  ),
+  ...durationIssues(
+    'motion.spring',
+    springNames.map((name): [string, string, number] => [`${name}Duration`, base.motion.spring[`${name}Duration`], name === 'bouncy' ? maxPlayfulDuration : maxUiDuration])
+  )
+]
 
 export const formatMotionIssues = (issues: MotionIssue[]): string | null => {
   if (issues.length === 0) return null
 
   const lines = issues.map((issue) => `  ${issue.label}: ${issue.value} (UI motion should stay at ${issue.maximum}ms or less)`)
 
-  return [`[enchase] ${issues.length} motion duration(s) of the theme are longer than ${maxUiDuration}ms`, ...lines].join('\n')
+  return [`[enchase] ${issues.length} motion duration(s) of the theme are longer than recommended`, ...lines].join('\n')
 }
