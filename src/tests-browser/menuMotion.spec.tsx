@@ -489,3 +489,21 @@ describe('Menu button icon in a real browser', () => {
     expect(rotationOf(inactiveIcon('theme-toggle') ?? inactiveIcon('icon-swap'))).toBe(0)
   })
 })
+
+describe('Sidebar animation prop in a real browser', () => {
+  const Silent = () => {
+    const [collapsed, setCollapsed] = useState(false)
+
+    return <Sidebar sections={routes} currentHref="/b" animation={false} collapsed={collapsed} onToggleCollapsed={() => setCollapsed((value) => !value)} />
+  }
+
+  it('collapses at once, with no fade, no slide and no press scale, when animation is false', async () => {
+    renderInBrowser(<Silent />, 'auto')
+
+    await userEvent.click(page.getByRole('button', { name: 'Recolher menu lateral' }))
+
+    expect(document.querySelector('[data-slot="sidebar"]')).toHaveAttribute('data-state', 'collapsed')
+    expect(Math.round((document.querySelector('[data-slot="sidebar"]') as HTMLElement).getBoundingClientRect().width)).toBe(80)
+    expect(getComputedStyle(document.querySelector('[data-slot="sidebar"]') as HTMLElement).getPropertyValue('--enchase-sidebar-item-scale').trim()).toBe('1')
+  })
+})
