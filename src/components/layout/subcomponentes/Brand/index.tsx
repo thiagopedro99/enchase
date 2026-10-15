@@ -1,4 +1,5 @@
 import { VisuallyHidden } from '@components/common/VisuallyHidden/index.tsx'
+import { initialOf } from '@utils/initial.ts'
 import { Link } from '@components/common/Link/index.tsx'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import styles from './styles.module.css'
@@ -14,7 +15,7 @@ export const Brand = ({ name, logo, compact = false, ...props }: BrandProps) => 
         <img src={logo} alt="" className={styles.image} {...slot('brand', 'image')} />
       ) : (
         <span className={styles.mark} {...slot('brand', 'mark')} aria-hidden="true">
-          {name.charAt(0).toUpperCase()}
+          {initialOf(name)}
         </span>
       )}
       {compact ? <VisuallyHidden>{name}</VisuallyHidden> : name}

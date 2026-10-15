@@ -1,4 +1,5 @@
 import { LogOutIcon } from '@components/common/Icon/icons/LogOutIcon.tsx'
+import { initialOf } from '@utils/initial.ts'
 
 import { VisuallyHidden } from '@components/common/VisuallyHidden/index.tsx'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
@@ -15,7 +16,7 @@ export const SidebarUser = ({ name, collapsed, onLogout, ...props }: SidebarUser
     <div {...mergeProps(own, props)}>
       <div className={styles.info} {...slot('sidebar-user', 'info')}>
         <span className={styles.avatar} {...slot('sidebar-user', 'avatar')} aria-hidden="true">
-          {name.charAt(0).toUpperCase()}
+          {initialOf(name)}
         </span>
         {collapsed ? (
           <VisuallyHidden>{name}</VisuallyHidden>

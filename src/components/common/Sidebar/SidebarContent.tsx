@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { initialOf } from '@utils/initial.ts'
 
 import { ChevronsRightIcon } from '../Icon/icons/ChevronsRightIcon.tsx'
 import { ChevronsLeftIcon } from '../Icon/icons/ChevronsLeftIcon.tsx'
@@ -25,7 +26,7 @@ const SidebarItemView = ({ item, current, collapsed, index, onSelect }: SidebarI
   const content = (
     <>
       <span {...slot('sidebar', 'item-icon')} className={styles.itemIcon} aria-hidden="true">
-        {item.icon ?? item.label.charAt(0).toUpperCase()}
+        {item.icon ?? initialOf(item.label)}
       </span>
       {collapsed ? (
         <VisuallyHidden>{item.label}</VisuallyHidden>
