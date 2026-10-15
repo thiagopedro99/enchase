@@ -13,9 +13,10 @@ import { currentOf } from './defaultData.ts'
 import Tooltip from '../Tooltip/index.tsx'
 import styles from './styles.module.css'
 
+import type { CSSProperties } from 'react'
 import type { SidebarContentProps, SidebarItemViewProps } from './types.ts'
 
-const SidebarItemView = ({ item, current, collapsed, onSelect }: SidebarItemViewProps) => {
+const SidebarItemView = ({ item, current, collapsed, index, onSelect }: SidebarItemViewProps) => {
   const handleClick = () => {
     item.onClick?.()
     onSelect?.()
@@ -52,7 +53,7 @@ const SidebarItemView = ({ item, current, collapsed, onSelect }: SidebarItemView
   )
 
   return (
-    <li {...slot('sidebar', 'item')} className={styles.listItem}>
+    <li {...slot('sidebar', 'item')} className={styles.listItem} style={{ '--enchase-sidebar-index': index } as CSSProperties}>
       {collapsed ? (
         <Tooltip text={item.label} position="end" describe={false}>
           {element}
@@ -69,6 +70,7 @@ export const SidebarContent = ({ sections, activeSectionId, currentHref, header,
   const contextHref = useCurrentHref()
   const location = currentHref ?? contextHref
   const navRef = useRef<HTMLElement>(null)
+  const order = new Map(sections.flatMap((section) => section.items).map((item, position) => [item.id, position]))
   const activeKey = sections.flatMap((section) => section.items).find((item) => currentOf(item, activeSectionId, location))?.id
   const indicator = useActiveIndicator(navRef, activeKey, compact, sections)
   const toggleLabel = collapsed ? labels.expandSidebar : labels.collapseSidebar
@@ -102,7 +104,7 @@ export const SidebarContent = ({ sections, activeSectionId, currentHref, header,
             {compact && index > 0 && <hr {...slot('sidebar', 'section-divider')} className={styles.sectionDivider} />}
             <ul className={styles.itemList} aria-label={section.title}>
               {section.items.map((item) => (
-                <SidebarItemView key={item.id} item={item} current={currentOf(item, activeSectionId, location)} collapsed={compact} onSelect={onSelect} />
+                <SidebarItemView key={item.id} item={item} current={currentOf(item, activeSectionId, location)} collapsed={compact} index={order.get(item.id) ?? 0} onSelect={onSelect} />
               ))}
             </ul>
           </div>

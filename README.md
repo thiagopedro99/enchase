@@ -279,10 +279,10 @@ A animação é CSS puro (transições, `@starting-style`, `@keyframes` e `linea
 | --- | --- |
 | `sidebar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` |
 | `modal` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-scale`, `-ease` |
-| `sidebar` (recolher e drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-label-duration` (fade dos rótulos ao recolher), `-width`, `-width-collapsed`, `-item-duration` (hover e press dos itens), `-item-scale` (press), `-indicator-duration` (a pílula que desliza até o item ativo) |
-| `navbar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` |
-| `toast` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` (mola `snappy` na entrada e no reflow), `-fade-ease`, `-exit-ease`, `-lifetime` (tempo da barra) |
-| `tooltip` | `-duration`, `-scale`, `-ease` (o segundo tooltip aberto em até 300 ms entra sem animação e sem atraso) |
+| `sidebar` (recolher e drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-label-duration` (fade dos rótulos ao recolher), `-width`, `-width-collapsed`, `-item-duration` (hover e press dos itens), `-item-scale` (press), `-indicator-duration` (a pílula que desliza até o item ativo), `-stagger` (intervalo da cascata dos itens do drawer, 30 ms) e `-item-offset` (quanto os itens andam ao entrar) |
+| `navbar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-stagger` (cascata dos links, 30 ms) e `-item-offset` |
+| `toast` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-lifetime` (tempo da barra) |
+| `tooltip` | `-duration`, `-scale`, `-ease` |
 | `button` (e `theme-toggle`) | `-duration`, `-scale` (press), `-distance` (lift), `-ease` |
 | `card` | `-duration`, `-distance` (lift), `-ease` |
 | `loading` | `-duration` (volta do spinner), `-ease` |

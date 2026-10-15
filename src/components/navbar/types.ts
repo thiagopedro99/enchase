@@ -17,6 +17,7 @@ export interface NavbarLinksProps {
   activeSectionId?: string
   linkClassName: string
   onSelect?: () => void
+  staggered?: boolean
 }
 
 export interface MobileDrawerProps {

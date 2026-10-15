@@ -56,5 +56,6 @@ export interface SidebarItemViewProps {
   item: SidebarItem
   current?: 'page' | 'location'
   collapsed: boolean
+  index: number
   onSelect?: () => void
 }

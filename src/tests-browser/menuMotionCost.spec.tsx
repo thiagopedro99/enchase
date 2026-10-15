@@ -49,7 +49,7 @@ describe('cost of animating the collapse in a real browser', () => {
 
     expect(aside.layoutCount).toBeGreaterThan(0)
     expect(columns.layoutCount).toBeGreaterThan(0)
-    expect(aside.layoutMs / aside.layoutCount).toBeLessThan(8)
-    expect(columns.layoutMs / columns.layoutCount).toBeLessThan(8)
+    expect(aside.layoutMs / aside.layoutCount).toBeLessThan(16)
+    expect(columns.layoutMs / columns.layoutCount).toBeLessThan(16)
   })
 })

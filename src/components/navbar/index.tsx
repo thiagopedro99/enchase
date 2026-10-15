@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
 
-import { defaultSections, drawerOverride } from './defaultData.ts'
+import { defaultSections, drawerOverride, staggerVariables } from './defaultData.ts'
 import { currentOf } from '../common/Sidebar/defaultData.ts'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { Link } from '@components/common/Link/index.tsx'
@@ -18,14 +18,16 @@ import { Container } from '@components/common/index.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import styles from './styles.module.css'
 
+import type { CSSProperties } from 'react'
 import type { MobileDrawerProps, NavbarLinksProps, NavbarProps } from './types.ts'
 
-const NavbarLinks = ({ items, activeSectionId, linkClassName, onSelect }: NavbarLinksProps) => {
+const NavbarLinks = ({ items, activeSectionId, linkClassName, onSelect, staggered = false }: NavbarLinksProps) => {
   const currentHref = useCurrentHref()
 
-  return items.map((item) => (
+  return items.map((item, index) => (
     <Link
       key={item.id}
+      style={staggered ? ({ '--enchase-navbar-index': index } as CSSProperties) : undefined}
       href={item.href as string}
       native={item.native}
       aria-current={currentOf(item, activeSectionId, currentHref)}
@@ -56,7 +58,7 @@ const MobileDrawer = ({ layout, id, items, activeSectionId, open, state, drawerR
         {...slot('navbar', 'drawer')}
         id={id}
         className={styles.mobileMenu}
-        style={motionStyle}
+        style={{ ...motionStyle, ...staggerVariables(motionStyle) }}
         data-state={state}
         role="dialog"
         aria-modal="true"
@@ -71,7 +73,7 @@ const MobileDrawer = ({ layout, id, items, activeSectionId, open, state, drawerR
         </div>
 
         <nav {...slot('navbar', 'drawer-nav')} className={styles.mobileNav} aria-label={labels.mobileNavigation}>
-          <NavbarLinks items={items} activeSectionId={activeSectionId} linkClassName={styles.mobileMenuLink} onSelect={onClose} />
+          <NavbarLinks items={items} activeSectionId={activeSectionId} linkClassName={styles.mobileMenuLink} onSelect={onClose} staggered />
         </nav>
       </div>
     </div>

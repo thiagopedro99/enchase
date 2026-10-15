@@ -4,6 +4,7 @@ import { cdp, page, userEvent } from 'vitest/browser'
 
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import Layout from '@components/layout/index.tsx'
+import Navbar from '@components/navbar/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { renderInBrowser } from './harness.tsx'
 
@@ -65,14 +66,17 @@ describe('Sidebar collapse motion in a real browser', () => {
   it('passes through collapsing and settles on collapsed, then expanding and expanded', async () => {
     renderInBrowser(<Page />, 'auto')
     expect(asideOf()).toHaveAttribute('data-state', 'expanded')
+    const seen: string[] = []
+    const observer = new MutationObserver(() => seen.push(asideOf().getAttribute('data-state') as string))
+    observer.observe(asideOf(), { attributes: true, attributeFilter: ['data-state'] })
 
     await userEvent.click(collapse())
-    expect(asideOf()).toHaveAttribute('data-state', 'collapsing')
     await expect.poll(() => asideOf().getAttribute('data-state')).toBe('collapsed')
-
     await userEvent.click(expand())
-    expect(asideOf()).toHaveAttribute('data-state', 'expanding')
     await expect.poll(() => asideOf().getAttribute('data-state')).toBe('expanded')
+    observer.disconnect()
+
+    expect(seen).toEqual(['collapsing', 'collapsed', 'expanding', 'expanded'])
   })
 
   it('fades the labels out before the width ends and removes them only once collapsed', async () => {
@@ -339,6 +343,108 @@ describe('Sidebar active indicator in a real browser', () => {
     await userEvent.click(page.getByRole('button', { name: 'Ir ao terceiro' }))
 
     expect(getComputedStyle(indicatorOf()).transitionDuration.split(',')[0]).toBe('0.48s')
+    style.remove()
+  })
+})
+
+const DrawerPage = () => {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Abrir</button>
+      <Sidebar variant="modal" open={open} onClose={() => setOpen(false)} sections={routes} />
+    </>
+  )
+}
+
+const opacityDelays = (elements: HTMLElement[]) =>
+  elements.map((element) => {
+    const transition = element.getAnimations().find((animation) => (animation as CSSTransition).transitionProperty === 'opacity')
+
+    return transition ? Number(transition.effect?.getComputedTiming().delay) : undefined
+  })
+
+const drawerItems = () => [...document.querySelectorAll('[data-slot="sidebar"][data-variant="modal"] [data-slot="sidebar-item"]')] as HTMLElement[]
+
+const navbarLinks = () => [...document.querySelectorAll('[data-slot="navbar-drawer-nav"] a')] as HTMLElement[]
+
+afterEach(async () => {
+  await page.viewport(1280, 800)
+})
+
+describe('Drawer cascade in a real browser', () => {
+  it('brings the sidebar drawer items in one after the other, 30 ms apart', async () => {
+    renderInBrowser(<DrawerPage />, 'auto')
+
+    await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
+    await expect.poll(() => opacityDelays(drawerItems()).every((delay) => delay !== undefined)).toBe(true)
+
+    expect(opacityDelays(drawerItems())).toEqual([0, 30, 60])
+  })
+
+  it('starts the items hidden and ends with all of them fully visible', async () => {
+    renderInBrowser(<DrawerPage />, 'auto')
+
+    await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
+    await expect.poll(() => Number(getComputedStyle(drawerItems()[2]).opacity)).toBeLessThan(0.5)
+    await expect.poll(() => drawerItems().every((item) => Number(getComputedStyle(item).opacity) > 0.99)).toBe(true)
+  })
+
+  it('does not run the cascade again when closing or when focus moves between items', async () => {
+    renderInBrowser(<DrawerPage />, 'auto')
+    await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
+    await expect.poll(() => page.getByRole('dialog').element().getAttribute('data-state')).toBe('open')
+    await expect.poll(() => drawerItems().every((item) => item.getAnimations().length === 0)).toBe(true)
+
+    await userEvent.tab()
+    await userEvent.tab()
+    expect(drawerItems().every((item) => item.getAnimations().length === 0)).toBe(true)
+
+    await userEvent.keyboard('{Escape}')
+    expect(drawerItems().every((item) => item.getAnimations().length === 0)).toBe(true)
+  })
+
+  it('shows every item at once without delays when the motion mode is never', async () => {
+    renderInBrowser(<DrawerPage />, 'never')
+
+    await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
+
+    await expect.poll(() => drawerItems().every((item) => Number(getComputedStyle(item).opacity) === 1)).toBe(true)
+    expect(opacityDelays(drawerItems()).every((delay) => delay === undefined || delay === 0)).toBe(true)
+  })
+
+  it('has no cascade under reduced motion', async () => {
+    await setReducedMotion('reduce')
+    renderInBrowser(<DrawerPage />, 'auto')
+
+    await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
+
+    await expect.poll(() => drawerItems().length).toBe(3)
+    expect(drawerItems().every((item) => Number(getComputedStyle(item).opacity) === 1)).toBe(true)
+    expect(drawerItems().every((item) => getComputedStyle(item).translate === 'none')).toBe(true)
+  })
+
+  it('slides the navbar drawer links in with the same 30 ms cascade', async () => {
+    await page.viewport(600, 800)
+    renderInBrowser(<Navbar sections={routes} />, 'auto')
+
+    await userEvent.click(page.getByRole('button', { name: 'Abrir menu' }))
+    await expect.poll(() => opacityDelays(navbarLinks()).every((delay) => delay !== undefined)).toBe(true)
+
+    expect(opacityDelays(navbarLinks())).toEqual([0, 30, 60])
+  })
+
+  it('lets the caller change the cascade gap through its css variable', async () => {
+    const style = document.createElement('style')
+    style.textContent = '[data-slot="sidebar"][data-variant="modal"] { --enchase-sidebar-stagger: 90ms !important; }'
+    document.head.append(style)
+    renderInBrowser(<DrawerPage />, 'auto')
+
+    await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
+    await expect.poll(() => opacityDelays(drawerItems()).every((delay) => delay !== undefined)).toBe(true)
+
+    expect(opacityDelays(drawerItems())).toEqual([0, 90, 180])
     style.remove()
   })
 })
