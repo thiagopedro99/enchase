@@ -98,6 +98,8 @@
   font-weight: var(--enchase-font-weight-medium);
   color: var(--enchase-color-text-primary);
   margin: 0;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
 }
 
 .close {

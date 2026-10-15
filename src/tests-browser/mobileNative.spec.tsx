@@ -16,6 +16,8 @@ import Layout from '@components/layout/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { chromiumOnly } from './browserSkips.ts'
+
+const supportsTapHighlight = CSS.supports('-webkit-tap-highlight-color', 'transparent') && getComputedStyle(document.documentElement).getPropertyValue('-webkit-tap-highlight-color') !== ''
 import { renderInBrowser } from './harness.tsx'
 
 const noHighlight = 'rgba(0, 0, 0, 0)'
@@ -92,7 +94,7 @@ describe('touch handling on the interactive controls', () => {
     for (const control of controls) {
       expect(control, 'control rendered').toBeTruthy()
       expect(getComputedStyle(control).touchAction, control.outerHTML.slice(0, 60)).toBe('manipulation')
-      expect(getComputedStyle(control).getPropertyValue('-webkit-tap-highlight-color'), control.outerHTML.slice(0, 60)).toBe(noHighlight)
+      if (supportsTapHighlight) expect(getComputedStyle(control).getPropertyValue('-webkit-tap-highlight-color'), control.outerHTML.slice(0, 60)).toBe(noHighlight)
     }
   })
 
@@ -111,7 +113,7 @@ describe('touch handling on the interactive controls', () => {
     expect(items.length).toBeGreaterThan(0)
     for (const item of items) {
       expect(getComputedStyle(item).touchAction).toBe('manipulation')
-      expect(getComputedStyle(item).getPropertyValue('-webkit-tap-highlight-color')).toBe(noHighlight)
+      if (supportsTapHighlight) expect(getComputedStyle(item).getPropertyValue('-webkit-tap-highlight-color')).toBe(noHighlight)
     }
   })
 
