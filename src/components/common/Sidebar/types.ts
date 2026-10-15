@@ -46,6 +46,7 @@ export interface SidebarContentProps {
   header?: SidebarSlot
   footer?: SidebarSlot
   collapsed: boolean
+  compact?: boolean
   onToggleCollapsed?: () => void
   onSelect?: () => void
   ariaLabel: string

@@ -186,23 +186,21 @@ describe('Sidebar collapse in a real browser', () => {
 
   const asideOf = () => document.querySelector('[data-slot="sidebar"]') as HTMLElement
 
-  it('does not transition the width or the inline size', async () => {
-    renderInBrowser(<CollapsePage />)
+  it('transitions only the inline size, never the other layout properties', async () => {
+    renderInBrowser(<CollapsePage />, 'auto')
     const style = getComputedStyle(asideOf())
 
-    expect(style.transitionDuration.split(',').every((duration) => parseFloat(duration) === 0)).toBe(true)
+    expect(style.transitionProperty).toBe('inline-size')
+    expect(parseFloat(style.transitionDuration)).toBeGreaterThan(0)
   })
 
-  it('snaps to the collapsed width right after the click, with no intermediate size', async () => {
+  it('reaches the collapsed width after the click', async () => {
     renderInBrowser(<CollapsePage />, 'auto')
     expect(Math.round(asideOf().getBoundingClientRect().width)).toBe(280)
 
     await userEvent.click(page.getByRole('button', { name: 'Recolher menu lateral' }))
-    const widths = [asideOf().getBoundingClientRect().width]
-    await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)))
-    widths.push(asideOf().getBoundingClientRect().width)
 
-    expect(widths.map(Math.round)).toEqual([80, 80])
+    await expect.poll(() => Math.round(asideOf().getBoundingClientRect().width)).toBe(80)
   })
 
   it('keeps the className of the caller winning over the width even when its css loads first', async () => {

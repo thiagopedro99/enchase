@@ -4,6 +4,7 @@ import { drawerOverride, drawerWidth } from './defaultData.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
+import { useCollapsePhase } from '@hooks/useCollapsePhase.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -14,20 +15,23 @@ import type { PresenceState } from '@hooks/usePresence.ts'
 import type { CSSProperties, RefObject } from 'react'
 import type { SidebarProps } from './types.ts'
 
-const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, footer, collapsed = false, onToggleCollapsed, ariaLabel, id, className, style }: SidebarProps) => {
+const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, footer, collapsed = false, onToggleCollapsed, ariaLabel, id, className, style, animation }: SidebarProps) => {
   const { labels } = useUIConfig()
+  const motionStyle = useMotionStyle('resize', 'sidebar', animation)
+  const { phase, ref, compact } = useCollapsePhase<HTMLDivElement>(collapsed)
   const rootProps = mergeProps(
     {
       ...slot('sidebar'),
       className: styles.aside,
+      style: motionStyle,
       'data-variant': 'permanent',
-      'data-state': collapsed ? 'collapsed' : 'expanded'
+      'data-state': phase
     },
     { className, style }
   )
 
   return (
-    <div id={id} {...rootProps}>
+    <div ref={ref} id={id} {...rootProps}>
       <SidebarContent
         sections={sections}
         activeSectionId={activeSectionId}
@@ -35,6 +39,7 @@ const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, foot
         header={header}
         footer={footer}
         collapsed={collapsed}
+        compact={compact}
         onToggleCollapsed={onToggleCollapsed}
         ariaLabel={ariaLabel ?? labels.mainNavigation}
       />

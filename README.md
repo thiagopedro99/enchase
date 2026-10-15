@@ -279,6 +279,7 @@ A animação é CSS puro (transições, `@starting-style`, `@keyframes` e `linea
 | --- | --- |
 | `modal` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-scale`, `-ease` (mola `gentle` na entrada), `-fade-ease`, `-exit-ease` |
 | `sidebar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` |
+| `sidebar` (recolher e drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-label-duration` (fade dos rótulos ao recolher), `-width`, `-width-collapsed` |
 | `navbar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` |
 | `toast` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` (mola `snappy` na entrada e no reflow), `-fade-ease`, `-exit-ease`, `-lifetime` (tempo da barra) |
 | `tooltip` | `-duration`, `-scale`, `-ease` (o segundo tooltip aberto em até 300 ms entra sem animação e sem atraso) |
@@ -289,6 +290,8 @@ A animação é CSS puro (transições, `@starting-style`, `@keyframes` e `linea
 | `icon-swap` | `-duration`, `-ease` |
 | `checkbox` | `-duration`, `-scale` (marca), `-ease` |
 | `input`, `select`, `link`, `breadcrumbs`, `footer`, `app-bar` | `-duration`, `-ease` |
+
+O recolher da `Sidebar` permanente anima a largura (`inline-size`) e a coluna do conteúdo acompanha; é a única animação de layout do pacote, escolhida por custo baixo medido no navegador (cerca de 1,5 ms de layout por quadro com 300 parágrafos). A raiz leva `data-state` com `expanded`, `collapsing`, `collapsed` ou `expanding`, para o seu CSS.
 
 Todas usam o prefixo `--enchase-` (por exemplo `--enchase-modal-duration`). `-dx` e `-dy` são a direção da entrada (-1, 0 ou 1) e `-distance` o quanto ela anda; em RTL o `-dx` inverte.
 

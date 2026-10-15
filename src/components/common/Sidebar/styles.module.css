@@ -13,13 +13,30 @@
   flex-shrink: 0;
   inline-size: var(--enchase-sidebar-width, 280px);
   block-size: 100vh;
+  overflow-x: clip;
   z-index: var(--enchase-z-sticky);
   border-start-end-radius: var(--enchase-radius-lg);
   border-end-end-radius: var(--enchase-radius-lg);
+  transition: inline-size var(--enchase-sidebar-duration, var(--enchase-motion-duration-base)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
 }
 
-:where(.aside[data-state='collapsed']) {
+:where(.aside[data-state='collapsing'], .aside[data-state='collapsed']) {
   inline-size: var(--enchase-sidebar-width-collapsed, 80px);
+}
+
+:where(.itemText, .itemBadge, .sectionTitle) {
+  opacity: 1;
+  transition: opacity var(--enchase-sidebar-label-duration, calc(var(--enchase-sidebar-duration, var(--enchase-motion-duration-base)) * 0.4)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
+}
+
+:where(.aside[data-state='collapsing'], .aside[data-state='expanding']) :where(.itemText, .itemBadge, .sectionTitle) {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.aside) {
+    transition-property: opacity;
+  }
 }
 
 :where(.overlay) {

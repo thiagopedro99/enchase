@@ -61,18 +61,18 @@ const SidebarItemView = ({ item, current, collapsed, onSelect }: SidebarItemView
   )
 }
 
-export const SidebarContent = ({ sections, activeSectionId, currentHref, header, footer, collapsed, onToggleCollapsed, onSelect, ariaLabel }: SidebarContentProps) => {
+export const SidebarContent = ({ sections, activeSectionId, currentHref, header, footer, collapsed, compact = collapsed, onToggleCollapsed, onSelect, ariaLabel }: SidebarContentProps) => {
   const { labels } = useUIConfig()
   const contextHref = useCurrentHref()
   const location = currentHref ?? contextHref
   const toggleLabel = collapsed ? labels.expandSidebar : labels.collapseSidebar
-  const headerContent = typeof header === 'function' ? header({ collapsed }) : header
-  const footerContent = typeof footer === 'function' ? footer({ collapsed }) : footer
+  const headerContent = typeof header === 'function' ? header({ collapsed: compact }) : header
+  const footerContent = typeof footer === 'function' ? footer({ collapsed: compact }) : footer
 
   return (
     <>
       {headerContent && (
-        <div {...slot('sidebar', 'header')} className={styles.headerSlot} data-collapsed={collapsed ? '' : undefined}>
+        <div {...slot('sidebar', 'header')} className={styles.headerSlot} data-collapsed={compact ? '' : undefined}>
           {headerContent}
         </div>
       )}
@@ -80,15 +80,15 @@ export const SidebarContent = ({ sections, activeSectionId, currentHref, header,
       <nav {...slot('sidebar', 'nav')} className={styles.nav} aria-label={ariaLabel}>
         {sections.map((section, index) => (
           <div key={section.id} {...slot('sidebar', 'section')} className={styles.section}>
-            {section.title && !collapsed && (
+            {section.title && !compact && (
               <p {...slot('sidebar', 'section-title')} className={styles.sectionTitle} aria-hidden="true">
                 {section.title}
               </p>
             )}
-            {collapsed && index > 0 && <hr {...slot('sidebar', 'section-divider')} className={styles.sectionDivider} />}
+            {compact && index > 0 && <hr {...slot('sidebar', 'section-divider')} className={styles.sectionDivider} />}
             <ul className={styles.itemList} aria-label={section.title}>
               {section.items.map((item) => (
-                <SidebarItemView key={item.id} item={item} current={currentOf(item, activeSectionId, location)} collapsed={collapsed} onSelect={onSelect} />
+                <SidebarItemView key={item.id} item={item} current={currentOf(item, activeSectionId, location)} collapsed={compact} onSelect={onSelect} />
               ))}
             </ul>
           </div>
@@ -96,7 +96,7 @@ export const SidebarContent = ({ sections, activeSectionId, currentHref, header,
       </nav>
 
       {(footerContent || onToggleCollapsed) && (
-        <div {...slot('sidebar', 'footer')} className={styles.footerSlot} data-collapsed={collapsed ? '' : undefined}>
+        <div {...slot('sidebar', 'footer')} className={styles.footerSlot} data-collapsed={compact ? '' : undefined}>
           {footerContent}
           {onToggleCollapsed && (
             <button {...slot('sidebar', 'collapse-button')} type="button" className={styles.collapseButton} onClick={onToggleCollapsed} aria-label={toggleLabel} aria-expanded={!collapsed}>
