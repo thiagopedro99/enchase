@@ -17,6 +17,10 @@ import Navbar from '@components/navbar/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { chromiumOnly } from './browserSkips.ts'
 
+const supportsOverscroll = CSS.supports('overscroll-behavior', 'contain')
+
+const overscrollSuite = supportsOverscroll ? describe : describe.skip
+
 const supportsTapHighlight = CSS.supports('-webkit-tap-highlight-color', 'transparent') && getComputedStyle(document.documentElement).getPropertyValue('-webkit-tap-highlight-color') !== ''
 import { renderInBrowser } from './harness.tsx'
 
@@ -191,7 +195,7 @@ describe('viewport units and safe areas', () => {
   })
 })
 
-describe('scrolling inside the overlays', () => {
+overscrollSuite('scrolling inside the overlays', () => {
   const overscrollOf = (slot: string) => getComputedStyle(document.querySelector(`[data-slot="${slot}"]`) as HTMLElement).overscrollBehaviorY
 
   it('contains the overscroll inside the modal body', async () => {

@@ -29,6 +29,9 @@
 
 :where(.copyright) {
   margin: 0;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
   text-align: center;
   font-size: var(--enchase-font-size-sm);
   color: var(--enchase-color-text-secondary);

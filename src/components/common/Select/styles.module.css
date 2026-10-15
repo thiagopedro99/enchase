@@ -9,6 +9,8 @@
 :where(.wrapper) {
   gap: var(--enchase-space-xs);
   inline-size: auto;
+  min-inline-size: 0;
+  max-inline-size: 100%;
 }
 
 :where(.wrapper[data-full-width]) {
