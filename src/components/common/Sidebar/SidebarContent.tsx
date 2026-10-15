@@ -1,7 +1,10 @@
+import { useRef } from 'react'
+
 import { ChevronsRightIcon } from '../Icon/icons/ChevronsRightIcon.tsx'
 import { ChevronsLeftIcon } from '../Icon/icons/ChevronsLeftIcon.tsx'
 
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
+import { useActiveIndicator } from '@hooks/useActiveIndicator.ts'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { slot } from '@utils/mergeProps.ts'
@@ -65,6 +68,9 @@ export const SidebarContent = ({ sections, activeSectionId, currentHref, header,
   const { labels } = useUIConfig()
   const contextHref = useCurrentHref()
   const location = currentHref ?? contextHref
+  const navRef = useRef<HTMLElement>(null)
+  const activeKey = sections.flatMap((section) => section.items).find((item) => currentOf(item, activeSectionId, location))?.id
+  const indicator = useActiveIndicator(navRef, activeKey, compact, sections)
   const toggleLabel = collapsed ? labels.expandSidebar : labels.collapseSidebar
   const headerContent = typeof header === 'function' ? header({ collapsed: compact }) : header
   const footerContent = typeof footer === 'function' ? footer({ collapsed: compact }) : footer
@@ -77,7 +83,15 @@ export const SidebarContent = ({ sections, activeSectionId, currentHref, header,
         </div>
       )}
 
-      <nav {...slot('sidebar', 'nav')} className={styles.nav} aria-label={ariaLabel}>
+      <nav ref={navRef} {...slot('sidebar', 'nav')} className={styles.nav} aria-label={ariaLabel} data-indicator={indicator.visible ? '' : undefined}>
+        <span
+          {...slot('sidebar', 'indicator')}
+          className={styles.indicator}
+          style={{ translate: `0 ${indicator.top}px`, blockSize: indicator.height }}
+          data-visible={indicator.visible ? '' : undefined}
+          data-animate={indicator.animate ? '' : undefined}
+          aria-hidden="true"
+        />
         {sections.map((section, index) => (
           <div key={section.id} {...slot('sidebar', 'section')} className={styles.section}>
             {section.title && !compact && (

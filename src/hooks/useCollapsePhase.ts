@@ -27,7 +27,7 @@ export const useCollapsePhase = <Element extends HTMLElement = HTMLElement>(coll
 
     const finish = () => setPhase(settled)
     const handleEnd = (event: TransitionEvent) => {
-      if (event.target === element && event.propertyName === 'inline-size') finish()
+      if (event.target === element && (event.propertyName === 'inline-size' || event.propertyName === 'width')) finish()
     }
     const timer = setTimeout(finish, measured + marginMs)
 

@@ -277,9 +277,9 @@ A animação é CSS puro (transições, `@starting-style`, `@keyframes` e `linea
 
 | Componente | Variáveis |
 | --- | --- |
-| `modal` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-scale`, `-ease` (mola `gentle` na entrada), `-fade-ease`, `-exit-ease` |
 | `sidebar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` |
-| `sidebar` (recolher e drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-label-duration` (fade dos rótulos ao recolher), `-width`, `-width-collapsed` |
+| `modal` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-scale`, `-ease` |
+| `sidebar` (recolher e drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-label-duration` (fade dos rótulos ao recolher), `-width`, `-width-collapsed`, `-item-duration` (hover e press dos itens), `-item-scale` (press), `-indicator-duration` (a pílula que desliza até o item ativo) |
 | `navbar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` |
 | `toast` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` (mola `snappy` na entrada e no reflow), `-fade-ease`, `-exit-ease`, `-lifetime` (tempo da barra) |
 | `tooltip` | `-duration`, `-scale`, `-ease` (o segundo tooltip aberto em até 300 ms entra sem animação e sem atraso) |

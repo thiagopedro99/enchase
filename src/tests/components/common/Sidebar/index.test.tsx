@@ -38,6 +38,18 @@ const sections: SidebarSection[] = [
 ]
 
 describe('Sidebar (permanent)', () => {
+  it('draws a decorative indicator behind the current item and none when nothing is current', () => {
+    const { rerender } = renderWithProviders(<Sidebar sections={sections} currentHref="/components" />)
+    const indicator = () => document.querySelector('[data-slot="sidebar-indicator"]') as HTMLElement
+
+    expect(indicator()).toHaveAttribute('aria-hidden', 'true')
+    expect(indicator()).toHaveAttribute('data-visible')
+
+    rerender(<Sidebar sections={sections} currentHref="/nowhere" />)
+
+    expect(indicator()).not.toHaveAttribute('data-visible')
+  })
+
   it('renders a labelled navigation with a named list per section', () => {
     renderWithProviders(<Sidebar sections={sections} />)
 

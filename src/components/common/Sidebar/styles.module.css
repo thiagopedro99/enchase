@@ -108,6 +108,7 @@
 }
 
 :where(.nav) {
+  position: relative;
   flex: 1;
   min-block-size: 0;
   display: flex;
@@ -117,6 +118,30 @@
   padding-inline: var(--enchase-space-md);
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+:where(.indicator) {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: var(--enchase-space-md);
+  border-radius: var(--enchase-radius-full);
+  background-color: var(--enchase-color-primary-container);
+  opacity: 0;
+  pointer-events: none;
+  translate: 0 0;
+}
+
+:where(.indicator[data-visible]) {
+  opacity: 1;
+}
+
+:where(.indicator[data-animate]) {
+  transition: translate var(--enchase-sidebar-indicator-duration, var(--enchase-sidebar-duration, var(--enchase-motion-duration-base))) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
+}
+
+.nav[data-indicator] .item[aria-current] {
+  position: relative;
+  background-color: transparent;
 }
 
 :where(.section) {

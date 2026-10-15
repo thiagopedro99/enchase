@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { cdp, page, userEvent } from 'vitest/browser'
 
+import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import Layout from '@components/layout/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { renderInBrowser } from './harness.tsx'
@@ -37,14 +39,17 @@ const sample = async (read: () => number, frames: number) => {
 }
 
 describe('Sidebar collapse motion in a real browser', () => {
-  it('grows and shrinks through intermediate widths instead of snapping', async () => {
+  it('runs a real inline-size transition instead of snapping', async () => {
     renderInBrowser(<Page />, 'auto')
     expect(Math.round(asideOf().getBoundingClientRect().width)).toBe(280)
 
     await userEvent.click(collapse())
-    const widths = await sample(() => asideOf().getBoundingClientRect().width, 20)
+    const transition = asideOf()
+      .getAnimations()
+      .find((animation) => ['inline-size', 'width'].includes((animation as CSSTransition).transitionProperty))
 
-    expect(widths.some((width) => width > 90 && width < 270)).toBe(true)
+    expect(transition).toBeTruthy()
+    expect(Math.round(Number(transition?.effect?.getComputedTiming().duration))).toBe(250)
     await expect.poll(() => Math.round(asideOf().getBoundingClientRect().width)).toBe(80)
   })
 
@@ -221,6 +226,119 @@ describe('Sidebar item motion in a real browser', () => {
     renderInBrowser(<Page />, 'auto')
 
     expect(getComputedStyle(itemOf()).transitionDuration.split(',')[0]).toBe('0.32s')
+    style.remove()
+  })
+})
+
+const routes = [
+  {
+    id: 'main',
+    title: 'Principal',
+    items: [
+      { id: 'a', label: 'Primeiro', href: '/a' },
+      { id: 'b', label: 'Segundo', href: '/b' },
+      { id: 'c', label: 'Terceiro', href: '/c' }
+    ]
+  }
+]
+
+const RoutePage = ({ start = '/a' }: { start?: string }) => {
+  const [href, setHref] = useState(start)
+
+  return (
+    <>
+      <button onClick={() => setHref('/c')}>Ir ao terceiro</button>
+      <button onClick={() => setHref('/zzz')}>Ir a nenhum</button>
+      <Sidebar sections={routes} currentHref={href} collapsed={false} onToggleCollapsed={() => undefined} />
+    </>
+  )
+}
+
+const indicatorOf = () => document.querySelector('[data-slot="sidebar-indicator"]') as HTMLElement
+
+const itemByName = (name: string) => [...document.querySelectorAll('[data-slot="sidebar-item"] a')].find((element) => element.textContent?.includes(name)) as HTMLElement
+
+const indicatorTop = () => indicatorOf().getBoundingClientRect().top
+
+describe('Sidebar active indicator in a real browser', () => {
+  it('sits on the current item with its size, without animating on the first paint', async () => {
+    renderInBrowser(<RoutePage />, 'auto')
+    const item = itemByName('Primeiro').getBoundingClientRect()
+    const pill = indicatorOf().getBoundingClientRect()
+
+    expect(indicatorOf()).toHaveAttribute('data-visible')
+    expect(indicatorOf()).not.toHaveAttribute('data-animate')
+    expect(Math.abs(pill.top - item.top)).toBeLessThan(1)
+    expect(Math.round(pill.height)).toBe(Math.round(item.height))
+    expect(Math.abs(pill.left - item.left)).toBeLessThan(1)
+    expect(Math.abs(pill.width - item.width)).toBeLessThan(1)
+  })
+
+  it('takes over the current item background so the pill is the only highlight', async () => {
+    renderInBrowser(<RoutePage />, 'auto')
+
+    await expect.poll(() => getComputedStyle(itemByName('Primeiro')).backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    expect(getComputedStyle(indicatorOf()).backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
+  })
+
+  it('slides through intermediate positions to the new current item', async () => {
+    renderInBrowser(<RoutePage />, 'auto')
+    const start = indicatorTop()
+
+    await userEvent.click(page.getByRole('button', { name: 'Ir ao terceiro' }))
+    const tops = await sample(indicatorTop, 24)
+    const target = itemByName('Terceiro').getBoundingClientRect().top
+
+    expect(tops.some((top) => top > start + 5 && top < target - 5)).toBe(true)
+    await expect.poll(() => Math.abs(indicatorTop() - target)).toBeLessThan(1)
+    expect(indicatorOf()).toHaveAttribute('data-animate')
+  })
+
+  it('hides the pill and gives the background back when no item is current', async () => {
+    renderInBrowser(<RoutePage />, 'auto')
+
+    await userEvent.click(page.getByRole('button', { name: 'Ir a nenhum' }))
+
+    await expect.poll(() => indicatorOf().hasAttribute('data-visible')).toBe(false)
+    expect(getComputedStyle(indicatorOf()).opacity).toBe('0')
+  })
+
+  it('jumps at once when the motion mode is never', async () => {
+    renderInBrowser(<RoutePage />, 'never')
+
+    await userEvent.click(page.getByRole('button', { name: 'Ir ao terceiro' }))
+    const target = itemByName('Terceiro').getBoundingClientRect().top
+    await new Promise((resolve) => requestAnimationFrame(() => resolve(undefined)))
+
+    expect(Math.abs(indicatorTop() - target)).toBeLessThan(1)
+  })
+
+  it('follows the item when the sidebar collapses and the section titles go away', async () => {
+    const Collapsible = () => {
+      const [collapsed, setCollapsed] = useState(false)
+
+      return <Sidebar sections={routes} currentHref="/b" collapsed={collapsed} onToggleCollapsed={() => setCollapsed((value) => !value)} />
+    }
+    renderInBrowser(<Collapsible />, 'auto')
+
+    await userEvent.click(page.getByRole('button', { name: 'Recolher menu lateral' }))
+    await expect.poll(() => document.querySelector('[data-slot="sidebar"]')?.getAttribute('data-state')).toBe('collapsed')
+
+    const item = document.querySelector('[data-slot="sidebar-item-control"], [data-slot="sidebar-item"] a') as HTMLElement
+    const current = document.querySelector('[aria-current]') as HTMLElement
+    await expect.poll(() => Math.abs(indicatorTop() - current.getBoundingClientRect().top)).toBeLessThan(1)
+    expect(item).toBeTruthy()
+  })
+
+  it('lets the caller change the slide duration through its css variable', async () => {
+    const style = document.createElement('style')
+    style.textContent = '[data-slot="sidebar"] { --enchase-sidebar-indicator-duration: 480ms !important; }'
+    document.head.append(style)
+    renderInBrowser(<RoutePage />, 'auto')
+
+    await userEvent.click(page.getByRole('button', { name: 'Ir ao terceiro' }))
+
+    expect(getComputedStyle(indicatorOf()).transitionDuration.split(',')[0]).toBe('0.48s')
     style.remove()
   })
 })
