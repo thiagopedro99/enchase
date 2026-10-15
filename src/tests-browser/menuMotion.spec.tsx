@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { chromiumOnly } from './browserSkips.ts'
 import { afterEach, describe, expect, it } from 'vitest'
 import { cdp, page, userEvent } from 'vitest/browser'
 
@@ -7,9 +8,9 @@ import Layout from '@components/layout/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { renderInBrowser } from './harness.tsx'
+import { setReducedMotion } from './media.ts'
 import { frames } from './settle.ts'
 
-const setReducedMotion = (value: 'reduce' | 'no-preference') => cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] })
 
 afterEach(() => setReducedMotion('no-preference'))
 
@@ -209,7 +210,7 @@ describe('Sidebar item motion in a real browser', () => {
     expect(style.transitionDuration.split(',').map((value) => Math.round(parseFloat(value) * 1000))).toEqual([150, 150, 150])
   })
 
-  it('presses the item down to a scale of 0.98 and back', async () => {
+  chromiumOnly('rawMouseInput')('presses the item down to a scale of 0.98 and back', async () => {
     renderInBrowser(<Page />, 'auto')
 
     await press()
@@ -219,7 +220,7 @@ describe('Sidebar item motion in a real browser', () => {
     await expect.poll(() => Number(scaleOf(itemOf()).toFixed(2))).toBe(1)
   })
 
-  it('does not scale the item when the motion mode is never', async () => {
+  chromiumOnly('rawMouseInput')('does not scale the item when the motion mode is never', async () => {
     renderInBrowser(<Page />, 'never')
 
     await press()
@@ -229,7 +230,7 @@ describe('Sidebar item motion in a real browser', () => {
     await release()
   })
 
-  it('does not scale the item under reduced motion', async () => {
+  chromiumOnly('rawMouseInput')('does not scale the item under reduced motion', async () => {
     await setReducedMotion('reduce')
     renderInBrowser(<Page />, 'auto')
 

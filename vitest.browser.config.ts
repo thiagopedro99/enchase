@@ -3,6 +3,12 @@ import { playwright } from '@vitest/browser-playwright'
 
 import base from './vite.config.ts'
 
+const browsers = ['chromium', 'firefox', 'webkit'] as const
+const requested = process.env.ENCHASE_BROWSER ?? 'chromium'
+const browser = browsers.find((name) => name === requested)
+
+if (!browser) throw new Error(`unknown browser: ${requested}`)
+
 export default defineConfig({
   plugins: base.plugins,
   resolve: base.resolve,
@@ -14,7 +20,12 @@ export default defineConfig({
       enabled: true,
       headless: true,
       provider: playwright(),
-      instances: [{ browser: 'chromium' }],
+      commands: {
+        emulateMedia: async (context: { page: { emulateMedia: (options: Record<string, string>) => Promise<void> } }, options: Record<string, string>) => {
+          await context.page.emulateMedia(options)
+        }
+      },
+      instances: [{ browser }],
       viewport: { width: 1280, height: 800 }
     }
   }

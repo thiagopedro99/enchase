@@ -1,16 +1,16 @@
 import { useState } from 'react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { cdp, page, userEvent } from 'vitest/browser'
+import { page, userEvent } from 'vitest/browser'
 
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import { resetTooltipGroup } from '@components/common/Tooltip/defaultData.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
 import { ptBR } from '@locales/ptBR.ts'
 import { renderInBrowser } from './harness.tsx'
+import { setReducedMotion } from './media.ts'
 
 const bubble = () => document.body.querySelector<HTMLElement>('[data-slot="tooltip-bubble"]')
 
-const setReducedMotion = (value: 'reduce' | 'no-preference') => cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] })
 
 beforeEach(resetTooltipGroup)
 

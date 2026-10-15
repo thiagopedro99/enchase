@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { cdp, page, userEvent } from 'vitest/browser'
+import { page, userEvent } from 'vitest/browser'
 
 import { render } from '@testing-library/react'
 
@@ -9,6 +9,7 @@ import { ToastProvider, useToast } from '@components/toast/index.ts'
 import { GlobalStyles } from '@styles/react.tsx'
 import { ptBR } from '@locales/ptBR.ts'
 import { renderInBrowser } from './harness.tsx'
+import { setReducedMotion } from './media.ts'
 import { isSettled, isStable, soak } from './settle.ts'
 
 import type { ReactElement } from 'react'
@@ -26,7 +27,6 @@ const renderWithDir = (ui: ReactElement, dir: 'ltr' | 'rtl') => {
   )
 }
 
-const setReducedMotion = (value: 'reduce' | 'no-preference') => cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] })
 
 const items = () => [...document.querySelectorAll<HTMLElement>('[data-slot="toast"]')]
 

@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect } from 'vitest'
+import { chromiumOnly } from './browserSkips.ts'
 import { cdp } from 'vitest/browser'
 
 import { frames, waitForSettled } from './settle.ts'
@@ -46,7 +47,7 @@ const run = async (variant: 'aside' | 'columns') => {
 }
 
 describe('cost of animating the collapse in a real browser', () => {
-  it('compares the sidebar inline size against grid columns', async () => {
+  chromiumOnly('layoutMetrics')('compares the sidebar inline size against grid columns', async () => {
     const measure = async (variant: 'aside' | 'columns') => {
       const runs = [await run(variant), await run(variant), await run(variant)]
 

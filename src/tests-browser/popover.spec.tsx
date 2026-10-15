@@ -1,18 +1,18 @@
 import { useState } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
-import { cdp, page, userEvent } from 'vitest/browser'
+import { page, userEvent } from 'vitest/browser'
 
 import { Popover } from '@components/common/Popover/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
 import { ptBR } from '@locales/ptBR.ts'
 import { renderInBrowser } from './harness.tsx'
+import { setReducedMotion } from './media.ts'
 
 import type { CSSProperties, ReactNode } from 'react'
 
 const content = () => document.body.querySelector<HTMLElement>('[data-slot="popover-content"]')
 
-const setReducedMotion = (value: 'reduce' | 'no-preference') => cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] })
 
 const added: HTMLStyleElement[] = []
 

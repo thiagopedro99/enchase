@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react'
+import { exceptWebkit } from './browserSkips.ts'
 import { useState } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
@@ -76,7 +77,7 @@ const NavbarModalPage = () => {
 const dialogOf = (name: string) => page.getByRole('dialog', { name }).element() as HTMLElement
 
 describe('Sidebar drawer in a real browser', () => {
-  it('moves focus into the drawer, traps Tab and makes the page inert', async () => {
+  exceptWebkit('webkitFocus')('moves focus into the drawer, traps Tab and makes the page inert', async () => {
     renderInBrowser(<DrawerPage />)
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.element(page.getByRole('dialog')).toBeVisible()
@@ -92,7 +93,7 @@ describe('Sidebar drawer in a real browser', () => {
     expect(behind.closest('[inert]')).not.toBeNull()
   })
 
-  it('closes with Escape and gives the focus back to the trigger', async () => {
+  exceptWebkit('webkitFocus')('closes with Escape and gives the focus back to the trigger', async () => {
     renderInBrowser(<DrawerPage />)
     const trigger = page.getByRole('button', { name: 'Abrir' })
     await userEvent.click(trigger)
@@ -124,7 +125,7 @@ describe('Sidebar drawer in a real browser', () => {
 })
 
 describe('Navbar drawer in a real browser', () => {
-  it('opens a focus-trapped drawer on a narrow viewport and closes it with Escape', async () => {
+  exceptWebkit('webkitFocus')('opens a focus-trapped drawer on a narrow viewport and closes it with Escape', async () => {
     await page.viewport(600, 800)
     renderInBrowser(<NavbarModalPage />)
     const trigger = page.getByRole('button', { name: 'Abrir menu' })

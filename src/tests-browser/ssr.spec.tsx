@@ -1,6 +1,7 @@
+import { setColorScheme } from './media.ts'
 import { renderToString } from 'react-dom/server'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { cdp, page } from 'vitest/browser'
+import { page } from 'vitest/browser'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
@@ -11,7 +12,7 @@ import { darkTheme, lightTheme } from '@styles/tokens/index.ts'
 import type { UIProviderProps } from '@components/uiProvider/types.ts'
 import type { ReactElement } from 'react'
 
-const setScheme =(value: 'dark' | 'light') => cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value }] })
+const setScheme = setColorScheme
 
 const mount = () => {
   const host = document.createElement('div')

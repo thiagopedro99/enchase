@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { exceptWebkit } from './browserSkips.ts'
 import { describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
@@ -72,7 +73,7 @@ describe('Modal in a real browser', () => {
     await expect.poll(() => getComputedStyle(document.body).overflow).toBe(before)
   })
 
-  it('closes with Escape and gives focus back to the trigger', async () => {
+  exceptWebkit('webkitFocus')('closes with Escape and gives focus back to the trigger', async () => {
     renderInBrowser(<ModalPage />)
     const trigger = page.getByRole('button', { name: 'Abrir' })
     await userEvent.click(trigger)
@@ -92,7 +93,7 @@ describe('Layout drawer in a real browser', () => {
     </Layout>
   )
 
-  it('opens the drawer from the menu button, traps focus and returns it on Escape', async () => {
+  exceptWebkit('webkitFocus')('opens the drawer from the menu button, traps focus and returns it on Escape', async () => {
     await page.viewport(600, 800)
     renderInBrowser(layout())
     const menu = page.getByRole('button', { name: 'Abrir menu' })

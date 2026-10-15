@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
+import { chromiumOnly, isChromium } from './browserSkips.ts'
 import { cdp, page } from 'vitest/browser'
 
 import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
@@ -9,7 +10,7 @@ const added: HTMLStyleElement[] = []
 afterEach(async () => {
   added.splice(0).forEach((style) => style.remove())
   document.documentElement.removeAttribute('dir')
-  await cdp().send('Emulation.setTouchEmulationEnabled', { enabled: false })
+  if (isChromium) await cdp().send('Emulation.setTouchEmulationEnabled', { enabled: false })
 })
 
 describe('SidebarUser in a real browser', () => {
@@ -52,7 +53,7 @@ describe('SidebarUser in a real browser', () => {
     expect(avatar.getBoundingClientRect().right).toBeGreaterThan(root.left + root.width / 2)
   })
 
-  it('does not tint the logout button on hover with a touch pointer', async () => {
+  chromiumOnly('touchEmulation')('does not tint the logout button on hover with a touch pointer', async () => {
     renderInBrowser(<SidebarUser name="Pedro Lima" collapsed={false} onLogout={() => undefined} />)
     await cdp().send('Emulation.setTouchEmulationEnabled', { enabled: true })
     const rules = [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules])

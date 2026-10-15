@@ -65,6 +65,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:browser": "npm run build:lib && vitest run --config vitest.browser.config.ts",
+    "test:browser:firefox": "node scripts/runBrowserTests.mjs firefox",
+    "test:browser:webkit": "node scripts/runBrowserTests.mjs webkit",
     "test:browser:repeat": "node scripts/repeatBrowserTests.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -o storybook-static",

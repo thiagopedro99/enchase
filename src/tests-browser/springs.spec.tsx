@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { cdp, page, userEvent } from 'vitest/browser'
+import { page, userEvent } from 'vitest/browser'
 
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
@@ -8,8 +8,8 @@ import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import { resetTooltipGroup } from '@components/common/Tooltip/defaultData.ts'
 import { useToast } from '@components/toast/index.ts'
 import { renderInBrowser } from './harness.tsx'
+import { setReducedMotion } from './media.ts'
 
-const setReducedMotion = (value: 'reduce' | 'no-preference') => cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] })
 
 const sample = (read: () => number, ms: number) =>
   new Promise<number[]>((resolve) => {

@@ -1,6 +1,7 @@
+import { setReducedMotion } from './media.ts'
 import { cleanup } from '@testing-library/react'
 import { afterEach } from 'vitest'
-import { cdp, page } from 'vitest/browser'
+import { page } from 'vitest/browser'
 
 afterEach(async () => {
   cleanup()
@@ -9,6 +10,6 @@ afterEach(async () => {
   document.body.removeAttribute('style')
   window.localStorage.clear()
   window.scrollTo(0, 0)
-  await cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] })
+  await setReducedMotion('no-preference')
   await page.viewport(1280, 800)
 })

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
+import { exceptWebkit } from './browserSkips.ts'
 import { page, userEvent } from 'vitest/browser'
 
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
@@ -36,7 +37,7 @@ describe('fields in a real browser', () => {
     expect(getComputedStyle(slotOf('input')).rowGap).toBe('17px')
   })
 
-  it('renders a correct input, select and checkbox with the global reset in place', () => {
+  exceptWebkit('webkitSelectPadding')('renders a correct input, select and checkbox with the global reset in place', () => {
     renderInBrowser(
       <>
         <Input label="Nome" />

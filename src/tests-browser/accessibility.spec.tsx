@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { cdp, page, userEvent } from 'vitest/browser'
+import { page, userEvent } from 'vitest/browser'
 
 import { Button } from '@components/common/Button/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
@@ -11,10 +11,10 @@ import { useToast } from '@components/toast/index.ts'
 import Layout from '@components/layout/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { renderInBrowser } from './harness.tsx'
+import { setReducedMotion } from './media.ts'
 
 const minimum = 24
 
-const setReducedMotion = (value: 'reduce' | 'no-preference') => cdp().send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value }] })
 
 afterEach(() => setReducedMotion('no-preference'))
 
