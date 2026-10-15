@@ -277,12 +277,11 @@ A animação é CSS puro (transições, `@starting-style`, `@keyframes` e `linea
 
 | Componente | Variáveis |
 | --- | --- |
-| `sidebar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` |
-| `modal` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-scale`, `-ease` |
+| `modal` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-scale`, `-ease` (mola `gentle` na entrada), `-fade-ease`, `-exit-ease` |
 | `sidebar` (recolher e drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-label-duration` (fade dos rótulos ao recolher), `-width`, `-width-collapsed`, `-item-duration` (hover e press dos itens), `-item-scale` (press), `-indicator-duration` (a pílula que desliza até o item ativo), `-stagger` (intervalo da cascata dos itens do drawer, 30 ms) e `-item-offset` (quanto os itens andam ao entrar) |
 | `navbar` (drawer) | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-stagger` (cascata dos links, 30 ms) e `-item-offset` |
-| `toast` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease`, `-lifetime` (tempo da barra) |
-| `tooltip` | `-duration`, `-scale`, `-ease` |
+| `toast` | `-duration`, `-exit-duration`, `-distance`, `-dx`, `-dy`, `-ease` (mola `snappy` na entrada e no reflow), `-fade-ease`, `-exit-ease`, `-lifetime` (tempo da barra) |
+| `tooltip` | `-duration`, `-scale`, `-ease` (o segundo tooltip aberto em até 300 ms entra sem animação e sem atraso) |
 | `button` (e `theme-toggle`) | `-duration`, `-scale` (press), `-distance` (lift), `-ease` |
 | `card` | `-duration`, `-distance` (lift), `-ease` |
 | `loading` | `-duration` (volta do spinner), `-ease` |
@@ -290,7 +289,6 @@ A animação é CSS puro (transições, `@starting-style`, `@keyframes` e `linea
 | `checkbox` | `-duration`, `-scale` (marca), `-ease` |
 | `input`, `select`, `link`, `breadcrumbs`, `footer`, `app-bar` | `-duration`, `-ease` |
 | `icon-swap` | `-duration`, `-ease`, `-rotate` (giro do ícone que sai e do que entra; o botão de menu usa 30 graus, invertido em RTL) |
-| `input`, `select`, `checkbox`, `link`, `breadcrumbs`, `footer`, `app-bar` | `-duration`, `-ease` |
 
 O recolher da `Sidebar` permanente anima a largura (`inline-size`) e a coluna do conteúdo acompanha; é a única animação de layout do pacote, escolhida por custo baixo medido no navegador (cerca de 1,5 ms de layout por quadro com 300 parágrafos). A raiz leva `data-state` com `expanded`, `collapsing`, `collapsed` ou `expanding`, para o seu CSS.
 
