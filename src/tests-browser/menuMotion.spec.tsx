@@ -150,3 +150,77 @@ describe('Sidebar collapse motion in a real browser', () => {
     style.remove()
   })
 })
+
+const itemOf = () => document.querySelector('[data-slot="sidebar-item"] a') as HTMLElement
+
+const press = async () => {
+  const box = itemOf().getBoundingClientRect()
+  const x = box.left + box.width / 2
+  const y = box.top + box.height / 2
+
+  await cdp().send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y })
+  await cdp().send('Input.dispatchMouseEvent', { type: 'mousePressed', x, y, button: 'left', clickCount: 1 })
+}
+
+const release = async () => {
+  const box = itemOf().getBoundingClientRect()
+
+  await cdp().send('Input.dispatchMouseEvent', { type: 'mouseReleased', x: box.left + box.width / 2, y: box.top + box.height / 2, button: 'left', clickCount: 1 })
+}
+
+const scaleOf = (element: HTMLElement) => {
+  const transform = getComputedStyle(element).transform
+
+  return transform === 'none' ? 1 : Number(transform.slice(7, -1).split(',')[0])
+}
+
+describe('Sidebar item motion in a real browser', () => {
+  it('fades the item background and color in about 150 ms', async () => {
+    renderInBrowser(<Page />, 'auto')
+    const style = getComputedStyle(itemOf())
+
+    expect(style.transitionProperty).toContain('background-color')
+    expect(style.transitionDuration.split(',').map((value) => Math.round(parseFloat(value) * 1000))).toEqual([150, 150, 150])
+  })
+
+  it('presses the item down to a scale of 0.98 and back', async () => {
+    renderInBrowser(<Page />, 'auto')
+
+    await press()
+    await expect.poll(() => Number(scaleOf(itemOf()).toFixed(2))).toBe(0.98)
+
+    await release()
+    await expect.poll(() => Number(scaleOf(itemOf()).toFixed(2))).toBe(1)
+  })
+
+  it('does not scale the item when the motion mode is never', async () => {
+    renderInBrowser(<Page />, 'never')
+
+    await press()
+    await new Promise((resolve) => setTimeout(resolve, 80))
+
+    expect(scaleOf(itemOf())).toBe(1)
+    await release()
+  })
+
+  it('does not scale the item under reduced motion', async () => {
+    await setReducedMotion('reduce')
+    renderInBrowser(<Page />, 'auto')
+
+    await press()
+    await new Promise((resolve) => setTimeout(resolve, 200))
+
+    expect(scaleOf(itemOf())).toBe(1)
+    await release()
+  })
+
+  it('lets the caller change the item duration through its css variable', async () => {
+    const style = document.createElement('style')
+    style.textContent = '[data-slot="sidebar"] { --enchase-sidebar-item-duration: 320ms !important; }'
+    document.head.append(style)
+    renderInBrowser(<Page />, 'auto')
+
+    expect(getComputedStyle(itemOf()).transitionDuration.split(',')[0]).toBe('0.32s')
+    style.remove()
+  })
+})

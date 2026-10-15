@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 
-import { drawerOverride, drawerWidth } from './defaultData.ts'
+import { drawerOverride, drawerWidth, itemMotionVariables } from './defaultData.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
@@ -23,7 +23,7 @@ const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, foot
     {
       ...slot('sidebar'),
       className: styles.aside,
-      style: motionStyle,
+      style: { ...motionStyle, ...itemMotionVariables(motionStyle) },
       'data-variant': 'permanent',
       'data-state': phase
     },
@@ -61,7 +61,7 @@ const ModalSidebarPanel = ({ sections, activeSectionId, currentHref, header, foo
     {
       ...slot('sidebar', 'panel'),
       className: styles.panel,
-      style: { ...motionStyle, inlineSize: drawerWidth },
+      style: { ...motionStyle, ...itemMotionVariables(motionStyle), inlineSize: drawerWidth },
       'data-variant': 'modal',
       'data-state': state,
       role: 'dialog',

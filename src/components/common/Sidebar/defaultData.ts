@@ -1,8 +1,12 @@
 import { isCurrentHref, isSectionHref } from '@utils/href.ts'
 
+import type { CSSProperties } from 'react'
 import type { SidebarItem } from './types.ts'
 
 export const drawerWidth = 300
+
+export const itemMotionVariables = (motionStyle: CSSProperties): CSSProperties =>
+  (motionStyle as Record<string, unknown>)['--enchase-sidebar-duration'] === '0ms' ? ({ '--enchase-sidebar-item-duration': '0ms', '--enchase-sidebar-item-scale': '1' } as CSSProperties) : {}
 
 export const drawerOverride = { tuning: { distance: drawerWidth } }
 
