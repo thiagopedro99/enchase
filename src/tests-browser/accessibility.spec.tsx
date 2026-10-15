@@ -21,7 +21,7 @@ afterEach(() => setReducedMotion('no-preference'))
 describe('prefers-reduced-motion in a real browser', () => {
   const transitionOf = (name: string) => getComputedStyle(page.getByRole('button', { name }).element()).transitionDuration
 
-  it('collapses transitions when the user asks for reduced motion', async () => {
+  it('keeps the short color transitions when the user asks for reduced motion', async () => {
     renderInBrowser(<Button>Salvar</Button>, 'auto')
     const normal = parseFloat(transitionOf('Salvar'))
 
@@ -29,7 +29,25 @@ describe('prefers-reduced-motion in a real browser', () => {
     const reduced = parseFloat(transitionOf('Salvar'))
 
     expect(normal).toBeGreaterThan(0.01)
-    expect(reduced).toBeLessThan(0.001)
+    expect(reduced).toBeGreaterThan(0.01)
+  })
+
+  it('does not force the transitions of arbitrary elements to zero', async () => {
+    renderInBrowser(<div data-testid="plain" style={{ transition: 'opacity 300ms' }} />, 'auto')
+
+    await setReducedMotion('reduce')
+
+    expect(parseFloat(getComputedStyle(page.getByTestId('plain').element()).transitionDuration)).toBeCloseTo(0.3, 2)
+  })
+
+  it('drops the movement of the icon swap but keeps its fade', async () => {
+    renderInBrowser(<ThemeToggle />, 'auto')
+    await setReducedMotion('reduce')
+    const item = document.querySelector('[data-slot="icon-swap-item"]') as HTMLElement
+    const style = getComputedStyle(item)
+
+    expect(style.transitionProperty).toBe('opacity')
+    expect(style.transform).toBe('none')
   })
 })
 

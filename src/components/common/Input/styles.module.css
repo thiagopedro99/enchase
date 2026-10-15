@@ -244,3 +244,9 @@
   font-size: var(--enchase-font-size-xs);
   color: var(--enchase-color-text-secondary);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .label {
+    transition-property: color;
+  }
+}

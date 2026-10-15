@@ -57,3 +57,10 @@
     display: none;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble {
+    transform: none;
+    transition-property: opacity;
+  }
+}

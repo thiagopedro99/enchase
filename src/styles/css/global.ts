@@ -95,10 +95,6 @@ export const globalStylesCss = `
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
     }
-
-    *, *::before, *::after {
-      transition-duration: 0.01ms !important;
-    }
   }
 
   ::selection {

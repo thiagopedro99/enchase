@@ -70,6 +70,10 @@
   .panel:where([data-state='entering'], [data-state='exiting']) {
     transform: none;
   }
+
+  .panel {
+    transition-property: opacity;
+  }
 }
 
 :where(.headerSlot) {

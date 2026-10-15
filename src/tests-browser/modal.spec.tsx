@@ -88,19 +88,21 @@ describe('Modal motion in a real browser', () => {
     expect(getComputedStyle(panel() as HTMLElement).opacity).toBe('1')
   })
 
-  it('under reduced motion shows no movement and leaves quickly', async () => {
+  it('under reduced motion shows no movement but still fades', async () => {
     await setReducedMotion('reduce')
     renderInBrowser(<Page animation={slow} />, 'auto')
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.element(page.getByRole('dialog')).toBeVisible()
 
-    expect(parseFloat(getComputedStyle(panel() as HTMLElement).transitionDuration)).toBeLessThan(0.001)
-    expect(['none', 'matrix(1, 0, 0, 1, 0, 0)']).toContain(getComputedStyle(panel() as HTMLElement).transform)
+    const style = getComputedStyle(panel() as HTMLElement)
+
+    expect(style.transitionProperty).toBe('opacity')
+    expect(parseFloat(style.transitionDuration)).toBeGreaterThan(0.01)
+    expect(['none', 'matrix(1, 0, 0, 1, 0, 0)']).toContain(style.transform)
 
     await userEvent.keyboard('{Escape}')
-    const started = performance.now()
+    expect(['none', 'matrix(1, 0, 0, 1, 0, 0)']).toContain(getComputedStyle(panel() as HTMLElement).transform)
     await expect.poll(() => panel(), { timeout: 3000 }).toBeNull()
-    expect(performance.now() - started).toBeLessThan(300)
   })
 
   it('centers the panel horizontally and vertically without physical offsets', async () => {

@@ -309,3 +309,23 @@
   font-size: var(--enchase-font-size-xs);
   color: var(--enchase-color-text-secondary);
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .label,
+  .icon {
+    transition-property: color;
+  }
+
+  @supports (appearance: base-select) {
+    .select::picker(select) {
+      transform: none;
+      transition-property: opacity, overlay, display;
+    }
+
+    @starting-style {
+      .select:open::picker(select) {
+        transform: none;
+      }
+    }
+  }
+}

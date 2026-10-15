@@ -171,4 +171,8 @@
   .item:where([data-state='entering'], [data-state='exiting']) {
     transform: none;
   }
+
+  .item {
+    transition-property: opacity;
+  }
 }

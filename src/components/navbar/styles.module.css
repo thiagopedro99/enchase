@@ -200,6 +200,10 @@
   .mobileMenu:where([data-state='entering'], [data-state='exiting']) {
     transform: none;
   }
+
+  .mobileMenu {
+    transition-property: opacity;
+  }
 }
 
 :where(.drawerHeader) {

@@ -77,6 +77,10 @@
   .container:where([data-state='entering'], [data-state='exiting']) {
     transform: none;
   }
+
+  .container {
+    transition-property: opacity;
+  }
 }
 
 .header {

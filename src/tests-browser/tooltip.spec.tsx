@@ -228,7 +228,7 @@ describe('Tooltip motion in a real browser', () => {
     await expect.poll(() => getComputedStyle(bubble() as HTMLElement).opacity).toBe('1')
   })
 
-  it('collapses the transition when the user asks for reduced motion', async () => {
+  it('keeps only the opacity transition when the user asks for reduced motion', async () => {
     await setReducedMotion('reduce')
     renderInBrowser(
       <div style={{ margin: '200px auto', width: 100 }}>
@@ -240,7 +240,8 @@ describe('Tooltip motion in a real browser', () => {
     )
     const style = await hoverAndRead()
 
-    expect(parseFloat(style.transitionDuration)).toBeLessThan(0.001)
+    expect(style.transitionProperty).toBe('opacity')
+    expect(parseFloat(style.transitionDuration)).toBeGreaterThan(0.01)
   })
 
   it('removes the bubble from the page after the exit transition', async () => {
