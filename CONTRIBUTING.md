@@ -54,7 +54,9 @@ A versão do `package.json` só muda no commit de release, e é esse commit que 
 
 O workflow fica vermelho se a versão não for maior que a maior já publicada, ou se a tag existir sem a versão estar no npm. A versão `0.0.0` nunca publica. Versões com sufixo (`0.2.0-rc.1`) saem com a tag `next` do npm, e as demais com `latest`. Se uma publicação falhar, por exemplo porque o CI do commit ficou vermelho, corrija e envie um novo commit: como a decisão é pelo registro, o push seguinte tenta de novo sem precisar mexer na versão.
 
-A primeira versão (`0.1.0`) é publicada à mão com `npm publish`, porque o trusted publisher só pode ser configurado no npmjs.com depois que o pacote existe. O `prepublishOnly` constrói a biblioteca e confere os arquivos exportados e o tamanho antes de publicar.
+A primeira versão (`0.1.0`) foi publicada à mão com `npm publish`, porque o trusted publisher só pode ser configurado no npmjs.com depois que o pacote existe. Isso exige 2FA ativo na conta do npm (sem ele o registro responde 403), e depois de publicar o registro leva alguns minutos para mostrar a versão, que aparece como "Validating". Essa versão saiu de uma build no Windows, sem a diretiva `'use client'`, e foi corrigida na `0.1.1`: a saída da build muda entre sistemas (quebras de linha, hashes das classes do CSS Modules), então daí em diante só o CI publica. O `prepublishOnly` constrói a biblioteca e confere os arquivos exportados, a diretiva `'use client'` no `index.js` e o tamanho antes de publicar.
+
+O trusted publisher fica em npmjs.com > `enchase` > Settings > Trusted Publisher > GitHub Actions, com usuário `thiagopedro99`, repositório `enchase`, workflow `release.yml` e ambiente vazio. Ele aparece como "Pending validation" até a primeira publicação feita por ele (a `0.1.1`). Uma versão publicada com defeito não pode ser trocada nem reaproveitada: publique uma versão nova e marque a ruim com `npm deprecate enchase@X.Y.Z "mensagem"`.
 
 ## Pull requests
 
