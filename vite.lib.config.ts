@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url'
 
 const root = dirname(fileURLToPath(import.meta.url))
 
-const clientEntry = resolve(root, 'lib/index.ts')
+const clientEntryName = 'index'
 
 export default defineConfig({
   plugins: [react()],
@@ -46,7 +46,7 @@ export default defineConfig({
         preserveModules: true,
         preserveModulesRoot: 'src',
         entryFileNames: '[name].js',
-        banner: (chunk) => (chunk.facadeModuleId === clientEntry ? "'use client'" : '')
+        banner: (chunk) => (chunk.isEntry && chunk.name === clientEntryName ? "'use client'" : '')
       }
     }
   }

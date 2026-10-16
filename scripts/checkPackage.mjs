@@ -15,4 +15,11 @@ if (broken.length > 0) {
   process.exit(1)
 }
 
-console.log(`package outputs checked: ${built.length} export targets exist and are not empty`)
+const clientEntry = exports['.'].import
+
+if (!/^["']use client["'];?\r?\n/.test(readFileSync(join(root, clientEntry), 'utf8'))) {
+  console.error(`${clientEntry} must start with the "use client" directive, or React Server Components cannot import the package`)
+  process.exit(1)
+}
+
+console.log(`package outputs checked: ${built.length} export targets exist and are not empty, and ${clientEntry} starts with "use client"`)
