@@ -1,0 +1,18 @@
+{
+  "types": {
+    "feat": { "title": "Enhancements", "semver": "minor" },
+    "perf": { "title": "Performance", "semver": "patch" },
+    "fix": { "title": "Fixes", "semver": "patch" },
+    "refactor": { "title": "Refactors", "semver": "patch" },
+    "docs": false,
+    "build": false,
+    "types": false,
+    "chore": false,
+    "examples": false,
+    "test": false,
+    "style": false,
+    "ci": false
+  },
+  "noAuthors": true,
+  "excludeAuthors": ["@"]
+}
