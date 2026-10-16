@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.1.1
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.1.0...v0.1.1)
+
+### Fixes
+
+- Emit the use client directive on every platform ([230db91](https://github.com/thiagopedro99/enchase/commit/230db91))
+
+### Notes
+
+v0.1.0 was built on Windows and shipped without the `'use client'` directive in `index.js`, so a Next.js App Router build failed with `createContext is not a function`. Use v0.1.1 or newer.
+
 ## v0.1.0
 
 First public release of Enchase, a set of accessible React 19 components with no runtime dependency besides React. While the version is `0.x`, the API may still change between minor versions.
