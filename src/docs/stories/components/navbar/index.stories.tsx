@@ -1,4 +1,4 @@
-import { Navbar } from 'enchase'
+import { Icon, Navbar } from 'enchase'
 
 import type { SidebarSection } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -20,7 +20,8 @@ const meta = {
   parameters: { layout: 'fullscreen' },
   args: { logo: 'Enchase', sections },
   argTypes: {
-    logo: { description: 'Nome exibido à esquerda (ou à direita em rtl), que leva à raiz.', control: 'text' },
+    logo: { description: 'Marca exibida à esquerda (ou à direita em rtl). Aceita texto ou qualquer nó React, como uma imagem ou um SVG. É um link para logoHref (data-slot="navbar-logo").', control: 'text' },
+    logoHref: { description: 'Destino do link da marca. Aceita uma rota, uma âncora (#inicio) ou uma URL.', control: 'text', table: { defaultValue: { summary: '/' } } },
     activeSectionId: { description: 'Id do item de âncora marcado como localização atual.', control: 'text' },
     className: {
       description: 'Classe do cabeçalho (data-slot="navbar"). As partes seguem data-slot="navbar-*"; o drawer mobile é navbar-drawer, com data-state.',
@@ -36,3 +37,17 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Padrao: Story = {}
+
+export const LogoComImagem: Story = {
+  args: {
+    logo: (
+      <>
+        <Icon size={28}>
+          <path d="M12 3 3 8v8l9 5 9-5V8z" />
+        </Icon>{' '}
+        Enchase
+      </>
+    ),
+    logoHref: '#inicio'
+  }
+}

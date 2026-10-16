@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
 
-import { defaultSections, drawerOverride, staggerVariables } from './defaultData.ts'
+import { defaultLogo, defaultLogoHref, defaultSections, drawerOverride, staggerVariables } from './defaultData.ts'
 import { currentOf } from '../common/Sidebar/defaultData.ts'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { Link } from '@components/common/Link/index.tsx'
@@ -80,7 +80,7 @@ const MobileDrawer = ({ layout, id, items, activeSectionId, open, state, drawerR
   )
 }
 
-const Navbar = ({ logo = 'Logo', breakpoint = 'md', sections = defaultSections, activeSectionId, className, style }: NavbarProps) => {
+const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = 'md', sections = defaultSections, activeSectionId, className, style }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const drawerId = useId()
   const { labels, breakpoints } = useUIConfig()
@@ -106,7 +106,7 @@ const Navbar = ({ logo = 'Logo', breakpoint = 'md', sections = defaultSections, 
       <header {...headerProps}>
         <Container maxWidth="xl">
           <div {...slot('navbar', 'bar')} className={styles.headerBar}>
-            <Link href="/" className={styles.logo}>
+            <Link href={logoHref} className={styles.logo} {...slot('navbar', 'logo')}>
               {logo}
             </Link>
 

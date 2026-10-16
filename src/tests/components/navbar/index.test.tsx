@@ -161,6 +161,41 @@ describe('Navbar', () => {
     expect(navigate.mock.calls).toEqual([['/'], ['/docs']])
   })
 
+  it('accepts a node as the logo and names the link from its text', () => {
+    renderWithProviders(
+      <Navbar
+        logo={
+          <>
+            <img src="/marca.svg" alt="" data-testid="mark" />
+            <span>Acme</span>
+          </>
+        }
+      />
+    )
+    const link = screen.getByRole('link', { name: 'Acme' })
+
+    expect(link).toContainElement(screen.getByTestId('mark'))
+    expect(link).toHaveAttribute('data-slot', 'navbar-logo')
+  })
+
+  it('points the logo to logoHref and navigates there through the provider', () => {
+    const navigate = vi.fn()
+    render(
+      <ColorModeProvider storage={null}>
+        <UIProvider navigate={navigate} currentHref="/">
+          <Navbar logoHref="/inicio" />
+        </UIProvider>
+      </ColorModeProvider>
+    )
+    const logo = screen.getByRole('link', { name: 'Logo' })
+
+    expect(logo).toHaveAttribute('href', '/inicio')
+
+    fireEvent.click(logo)
+
+    expect(navigate).toHaveBeenCalledWith('/inicio')
+  })
+
   it('navigates and closes the drawer when a drawer link is chosen', async () => {
     const user = userEvent.setup()
     const navigate = vi.fn()
@@ -195,7 +230,7 @@ describe('Navbar contract', () => {
     expect(root).toHaveAttribute('data-slot', 'navbar')
     expect(root.className.split(' ').at(-1)).toBe('mine')
     expect(root.style.color).toBe('red')
-    for (const name of ['navbar-bar', 'navbar-actions', 'navbar-menu', 'navbar-menu-button']) {
+    for (const name of ['navbar-bar', 'navbar-logo', 'navbar-actions', 'navbar-menu', 'navbar-menu-button']) {
       expect(container.querySelector(`[data-slot="${name}"]`), name).toBeInTheDocument()
     }
   })

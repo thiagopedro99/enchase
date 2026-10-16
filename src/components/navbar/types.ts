@@ -1,10 +1,11 @@
 import type { BreakpointName } from '../uiProvider/types.ts'
-import type { CSSProperties, RefObject } from 'react'
+import type { CSSProperties, ReactNode, RefObject } from 'react'
 import type { PresenceState } from '@hooks/usePresence.ts'
 import type { SidebarItem, SidebarSection } from '../common/Sidebar/types.ts'
 
 export interface NavbarProps {
-  logo?: string
+  logo?: ReactNode
+  logoHref?: string
   breakpoint?: BreakpointName
   sections?: SidebarSection[]
   activeSectionId?: string

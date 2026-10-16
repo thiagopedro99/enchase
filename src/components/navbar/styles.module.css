@@ -32,6 +32,10 @@
   letter-spacing: -0.01em;
 }
 
+:where(.logo) :where(img, svg) {
+  vertical-align: middle;
+}
+
 .logo {
   color: var(--enchase-color-text-primary);
   text-decoration: none;
