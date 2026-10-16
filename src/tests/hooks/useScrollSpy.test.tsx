@@ -49,12 +49,36 @@ describe('useScrollSpy', () => {
     vi.unstubAllGlobals()
   })
 
-  it('starts on the first id and observes every existing section', () => {
+  it('starts without an active section and observes every existing section', () => {
     const ids = ['one', 'two', 'three']
     const { result } = renderHook(() => useScrollSpy(ids))
 
-    expect(result.current).toBe('one')
+    expect(result.current).toBeUndefined()
     expect(observers[0].observed.map((element) => element.id)).toEqual(ids)
+  })
+
+  it('stays without an active section while nothing reached the band and the first section is still below it', () => {
+    const ids = ['one', 'two', 'three']
+    const { result } = renderHook(() => useScrollSpy(ids))
+
+    vi.spyOn(document.getElementById('one') as HTMLElement, 'getBoundingClientRect').mockReturnValue({ top: 640 } as DOMRect)
+    report({ one: false, two: false, three: false })
+
+    expect(result.current).toBeUndefined()
+  })
+
+  it('clears the active section when the page goes back above the first section', () => {
+    const ids = ['one', 'two', 'three']
+    const { result } = renderHook(() => useScrollSpy(ids))
+
+    report({ one: true })
+
+    expect(result.current).toBe('one')
+
+    vi.spyOn(document.getElementById('one') as HTMLElement, 'getBoundingClientRect').mockReturnValue({ top: 400 } as DOMRect)
+    report({ one: false })
+
+    expect(result.current).toBeUndefined()
   })
 
   it('activates the section that enters the viewport band', () => {
@@ -85,6 +109,17 @@ describe('useScrollSpy', () => {
     expect(result.current).toBe('two')
   })
 
+  it('keeps the last active section when the page went past the last one', () => {
+    const ids = ['one', 'two', 'three']
+    const { result } = renderHook(() => useScrollSpy(ids))
+
+    report({ three: true })
+    vi.spyOn(document.getElementById('one') as HTMLElement, 'getBoundingClientRect').mockReturnValue({ top: -2400 } as DOMRect)
+    report({ three: false })
+
+    expect(result.current).toBe('three')
+  })
+
   it('applies the top offset to the observation band', () => {
     const ids = ['one', 'two', 'three']
     renderHook(() => useScrollSpy(ids, 120))
@@ -108,7 +143,7 @@ describe('useScrollSpy', () => {
     const ids = ['one', 'two']
     const { result } = renderHook(() => useScrollSpy(ids))
 
-    expect(result.current).toBe('one')
+    expect(result.current).toBeUndefined()
     expect(observers).toHaveLength(0)
   })
 })

@@ -158,6 +158,18 @@ const sections = [
 
 Cada item de menu pode ser uma rota (`href: '/caminho'`), uma âncora (`href: '#id'`) ou uma ação (`onClick`); `native: true` faz o link sair do app.
 
+Para marcar a âncora da seção que está na tela, use `useScrollSpy(ids, topOffset = 96)` e passe o resultado em `activeSectionId` (`Navbar` e `Sidebar`) ou `activePageSectionId` (`Layout`):
+
+```tsx
+const sectionIds = ['recursos', 'demos', 'contato']
+
+const active = useScrollSpy(sectionIds)
+
+<Navbar logo="Acme" sections={sections} activeSectionId={active} />
+```
+
+O hook devolve o `id` da seção que está na faixa de leitura (de `topOffset` px do topo até 45% da altura da tela) ou `undefined` enquanto nenhuma chegou, por exemplo com um hero acima da primeira seção: nenhum item fica marcado. Depois da última seção, ela continua ativa. Mantenha o array de `ids` estável (uma constante fora do componente ou um `useMemo`).
+
 ## Navegação sem roteador
 
 Os componentes não dependem de roteador. Links internos são `<a href>` de verdade: um clique simples chama o `navigate` do `UIProvider`, e Ctrl, Cmd, Shift, botão do meio, `target`, `download`, `native` e URLs externas seguem o comportamento do navegador. Sem `navigate`, os links recarregam a página.

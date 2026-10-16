@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 export const useScrollSpy = (ids: string[], topOffset = 96) => {
-  const [activeId, setActiveId] = useState(ids[0])
+  const [activeId, setActiveId] = useState<string>()
 
   useEffect(() => {
     const elements = ids.map((id) => document.getElementById(id)).filter((element): element is HTMLElement => element !== null)
@@ -12,7 +12,9 @@ export const useScrollSpy = (ids: string[], topOffset = 96) => {
       (entries) => {
         entries.forEach((entry) => (entry.isIntersecting ? visible.add(entry.target.id) : visible.delete(entry.target.id)))
         const current = ids.find((id) => visible.has(id))
-        if (current) setActiveId(current)
+        const aboveFirst = !current && elements[0].getBoundingClientRect().top > topOffset
+
+        if (current || aboveFirst) setActiveId(current)
       },
       { rootMargin: `-${topOffset}px 0px -55% 0px`, threshold: 0 }
     )
