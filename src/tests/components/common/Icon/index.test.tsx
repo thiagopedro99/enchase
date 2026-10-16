@@ -61,6 +61,14 @@ describe('Icon', () => {
     expect(svg).toHaveAttribute('data-icon', 'dot')
   })
 
+  it('does not need a name and then leaves data-icon out', () => {
+    const { container } = render(<Icon><circle cx="12" cy="12" r="1" /></Icon>)
+
+    expect(svgOf(container)).not.toHaveAttribute('data-icon')
+    expect(svgOf(container)).toHaveAttribute('data-slot', 'icon')
+    expect(svgOf(container).querySelector('circle')).not.toBeNull()
+  })
+
   it('is hidden from assistive technology and not focusable by default', () => {
     const { container } = render(<Icon name="dot"><circle cx="12" cy="12" r="1" /></Icon>)
 

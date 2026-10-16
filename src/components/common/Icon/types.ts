@@ -12,7 +12,7 @@ export type IconProps = Omit<SVGProps<SVGSVGElement>, 'name'> & {
 }
 
 export type BaseIconProps = IconProps & {
-  name: string
+  name?: string
   directional?: boolean
   children: ReactNode
 }
