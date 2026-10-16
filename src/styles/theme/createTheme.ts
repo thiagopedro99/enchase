@@ -1,11 +1,13 @@
-import { assertValidColor } from './color.ts'
 import { assertValidFontFamily, assertValidFontSize, assertValidFontWeight } from './font.ts'
 import { mergeMotion, motionTransitions } from './motion.ts'
 import { baseTokens, darkTheme, lightTheme } from '../tokens/index.ts'
+import { assertValidColor } from './color.ts'
+import { brandPalette } from './brand.ts'
 import { themeModes } from '../tokens/types.ts'
 
-import type { MotionOverrides } from './motion.ts'
 import type { BaseTokens, ColorTokens, ModeTokens, ThemeSet } from '../tokens/types.ts'
+import type { BrandColors } from './brand.ts'
+import type { MotionOverrides } from './motion.ts'
 
 type DeepPartial<T> = { [K in keyof T]?: T[K] extends string ? string : DeepPartial<T[K]> }
 
@@ -18,13 +20,13 @@ export type FontOverrides = {
   weights?: Partial<BaseTokens['fonts']['weights']>
 }
 
-export type ThemeInput = { fonts?: FontOverrides; motion?: MotionOverrides; light?: ThemeOverrides; dark?: ThemeOverrides }
+export type ThemeInput = { brand?: string; fonts?: FontOverrides; motion?: MotionOverrides; light?: ThemeOverrides; dark?: ThemeOverrides }
 
 type Validate = (name: string, value: unknown) => string | number
 
 type Validators = Validate | { [key: string]: Validators }
 
-const inputSections = [...themeModes, 'fonts', 'motion']
+const inputSections = [...themeModes, 'brand', 'fonts', 'motion']
 
 const customizableSections = ['colors']
 
@@ -71,6 +73,8 @@ const mergeMode = (base: ModeTokens, overrides: ThemeOverrides | undefined, mode
   return { ...base, colors: mergeTokens(base.colors, overrides.colors, `${mode}.colors`, assertValidColor, 'color') as ColorTokens }
 }
 
+const withBrand = (theme: ModeTokens, palette: BrandColors | undefined, mode: string): ModeTokens => (palette === undefined ? theme : { ...theme, colors: mergeTokens(theme.colors, palette, `${mode}.colors`, assertValidColor, 'color') as ColorTokens })
+
 const base = (fonts: BaseTokens['fonts'], motion: BaseTokens['motion']): BaseTokens => {
   if (fonts === baseTokens.fonts && motion === baseTokens.motion) return baseTokens
 
@@ -87,10 +91,11 @@ export const createTheme = (input: ThemeInput = {}): ThemeSet => {
   const fonts = input.fonts === undefined ? baseTokens.fonts : (mergeTokens(baseTokens.fonts, input.fonts, 'fonts', fontValidators, 'font') as BaseTokens['fonts'])
 
   const motion = input.motion === undefined ? baseTokens.motion : mergeMotion(input.motion)
+  const palette = input.brand === undefined ? undefined : brandPalette(input.brand)
 
   return {
     base: base(fonts, motion),
-    light: mergeMode(lightTheme, input.light, 'light'),
-    dark: mergeMode(darkTheme, input.dark, 'dark')
+    light: mergeMode(withBrand(lightTheme, palette?.light, 'light'), input.light, 'light'),
+    dark: mergeMode(withBrand(darkTheme, palette?.dark, 'dark'), input.dark, 'dark')
   }
 }

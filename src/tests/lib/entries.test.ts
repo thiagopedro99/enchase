@@ -22,6 +22,13 @@ describe('public entries', () => {
     expect(theme).toHaveProperty('validateTheme')
   })
 
+  it('keeps the brand palette internals out of enchase/theme', () => {
+    expect(theme).not.toHaveProperty('brandPalette')
+    expect(theme).not.toHaveProperty('oklchToHex')
+    expect(theme).not.toHaveProperty('rgbToOklch')
+    expect(theme).not.toHaveProperty('parseColor')
+  })
+
   it('exports the locale data from enchase/locales', () => {
     expect(locales.en.locale).toBe('en')
     expect(locales.ptBR.locale).toBe('pt-BR')

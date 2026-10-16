@@ -245,6 +245,22 @@ const issues = validateTheme(theme)
 - O visual padrão segue a linguagem do Material Design 3 (paleta tonal em índigo, cantos arredondados, camadas de estado). Hoje existe um único preset; os alternativos são trabalho futuro.
 - `useColorMode()` devolve `{ mode, resolvedMode, setMode, toggleMode }`. O modo (`light`, `dark` ou `system`, o padrão) fica no `localStorage`.
 
+### Paleta a partir da cor da marca
+
+Passe só a cor da marca e o `createTheme` gera as paletas clara e escura:
+
+```tsx
+<ColorModeProvider theme={{ brand: '#0F766E' }}>
+  <App />
+</ColorModeProvider>
+```
+
+- `brand` é um hex (`#0F766E`, `#0fe`) ou `rgb()`, sem transparência. Outro formato lança erro dizendo o motivo.
+- No tema claro, o `primary` é a sua cor quando ela passa nos contrastes que o tema exige (texto e link sobre as superfícies, texto sobre o próprio `primary`). Se for clara demais para ser lida como texto, como um amarelo, o `primary` é a mesma cor, com o mesmo matiz, escurecida o mínimo necessário. No tema escuro, o `primary` é a versão clara da cor.
+- O resto do primário (`onPrimary`, os contêineres, `primaryHover`, `inversePrimary`), o secundário e os neutros (superfícies, texto e bordas) saem do matiz da marca, com as mesmas luminosidades do tema padrão. Erro, sucesso, aviso, info, sombras, fontes e movimento não mudam.
+- O que você passar em `light.colors` e `dark.colors` vence o gerado, token a token: `createTheme({ brand: '#0F766E', dark: { colors: { primary: '#7FE0D6' } } })`.
+- Para qualquer cor de marca o `validateTheme` não aponta nenhum par abaixo do contraste mínimo. O teste da biblioteca percorre centenas de cores, de todos os matizes, do muito claro ao muito escuro e do cinza ao vibrante, e exige zero pares reprovados. A página Sistema/Marca do Storybook deixa você experimentar a sua cor.
+
 ## Idiomas e RTL
 
 Os textos de acessibilidade vêm do `locale` do `UIProvider`. O padrão é inglês; `ptBR` acompanha o pacote, e `labels` sobrescreve textos avulsos:
