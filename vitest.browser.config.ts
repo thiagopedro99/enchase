@@ -1,5 +1,6 @@
 import { defineConfig } from 'vitest/config'
 import { playwright } from '@vitest/browser-playwright'
+import { devices } from 'playwright'
 
 import base from './vite.config.ts'
 
@@ -11,10 +12,10 @@ if (!browser) throw new Error(`unknown browser: ${requested}`)
 
 const touchSpec = 'src/tests-browser/touch.spec.tsx'
 
-const browserOptions = () => ({
+const browserOptions = (provider = playwright()) => ({
   enabled: true,
   headless: true,
-  provider: playwright(),
+  provider,
   commands: {
     emulateMedia: async (context: { page: { emulateMedia: (options: Record<string, string>) => Promise<void> } }, options: Record<string, string>) => {
       await context.page.emulateMedia(options)
@@ -32,7 +33,7 @@ export default defineConfig({
     css: true,
     projects: [
       { extends: true, test: { name: 'pointer', include: ['src/tests-browser/**/*.spec.{ts,tsx}'], exclude: [touchSpec], browser: browserOptions() } },
-      { extends: true, test: { name: 'touch', include: [touchSpec], browser: browserOptions() } }
+      { extends: true, test: { name: 'touch', include: [touchSpec], browser: browserOptions(browser === 'webkit' ? playwright({ contextOptions: devices['iPhone 15'] }) : playwright()) } }
     ]
   }
 })
