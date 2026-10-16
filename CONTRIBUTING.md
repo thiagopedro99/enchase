@@ -19,6 +19,8 @@ npm run build             # tsc -b e build do app
 npm run lint
 npm test                  # jsdom: comportamento, axe, hidratação e SSR
 npm run test:browser      # Chromium real (Playwright)
+npm run test:browser:firefox
+npm run test:browser:webkit
 npm run build:lib
 npm run pack:check
 npm run test:consumer
@@ -33,6 +35,8 @@ Mudança em foco, `inert`, layout ou animação também deve ser conferida no na
 - **Commits** no padrão [Conventional Commits](https://www.conventionalcommits.org/), em inglês, com uma linha curta, no imperativo e sem ponto final (`feat: add the Popover`, `fix: close the confirm modal on Esc`). Prefixos: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`.
 - **API pública pequena:** só o que está em `lib/` é público (`enchase`, `enchase/theme`, `enchase/locales`). `src/` é interno, e `demo/` e as stories importam só da entrada pública. Exportar pouco: remover um export depois é uma quebra de versão.
 - **Testes:** todo componente tem um teste espelho em `src/tests/components`. Comportamento novo ganha teste, e o que o jsdom não cobre ganha teste de navegador em `src/tests-browser`.
+- **Testes de toque:** depois de ligar a emulação de toque do Chromium (`Emulation.setTouchEmulationEnabled`), a página não volta mais a `hover: hover`, e qualquer teste de ponteiro fino que rodar depois falha. Por isso os testes que ligam toque ficam todos em `src/tests-browser/touch.spec.tsx`, que roda num projeto do Vitest com página própria (`vitest.browser.config.ts`). Não ligue a emulação em outro arquivo.
+- **WebKit sem GPU:** a primeira composição de um painel fixo com transformação e opacidade pode passar de 1 s em Linux sem cache de shaders. Em testes que esperam essa primeira abertura, use `expect.poll(..., { timeout: 5000 })`.
 - **Acessibilidade e movimento:** siga a seção "Contrato de componente" do `skill.md` (`className`, `data-slot`, propriedades lógicas, tokens de movimento, hover só em ponteiro fino, `prefers-reduced-motion`).
 
 ## Pull requests
