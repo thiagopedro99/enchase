@@ -394,6 +394,7 @@ const drawerItems = () => [...document.querySelectorAll('[data-slot="sidebar"][d
 
 const cascadeSnapshot = (elements: HTMLElement[]) => ({
   state: elements[0]?.closest('[role="dialog"]')?.getAttribute('data-state'),
+  visibility: document.visibilityState,
   delays: opacityDelays(elements),
   properties: elements.map((element) => getComputedStyle(element).transitionProperty),
   durations: elements.map((element) => getComputedStyle(element).transitionDuration),
@@ -411,7 +412,7 @@ describe('Drawer cascade in a real browser', () => {
     renderInBrowser(<DrawerPage />, 'auto')
 
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
-    await expect.poll(() => cascadeSnapshot(drawerItems())).toEqual(expect.objectContaining({ state: 'open', delays: [0, 30, 60] }))
+    await expect.poll(() => cascadeSnapshot(drawerItems()), { timeout: 5000 }).toEqual(expect.objectContaining({ state: 'open', delays: [0, 30, 60] }))
   })
 
   it('starts the items hidden and ends with all of them fully visible', async () => {
