@@ -71,7 +71,7 @@
     "test:browser:repeat": "node scripts/repeatBrowserTests.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -o storybook-static",
-    "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json && node scripts/fixDeclarations.mjs && node scripts/buildCssOutputs.mjs",
+    "build:lib": "vite build -c vite.lib.config.ts && tsc -p tsconfig.lib.json && node scripts/fixDeclarations.mjs && node scripts/buildCssOutputs.mjs && node scripts/checkPackage.mjs",
     "pack:check": "npm pack --dry-run && publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./styles.layer.css ./theme.css",
     "test:consumer": "node scripts/testConsumer.mjs",
     "test:next": "node scripts/testNext.mjs",
