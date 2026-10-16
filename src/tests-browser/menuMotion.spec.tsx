@@ -392,6 +392,14 @@ const opacityDelays = (elements: HTMLElement[]) =>
 
 const drawerItems = () => [...document.querySelectorAll('[data-slot="sidebar"][data-variant="modal"] [data-slot="sidebar-item"]')] as HTMLElement[]
 
+const cascadeSnapshot = (elements: HTMLElement[]) => ({
+  state: elements[0]?.closest('[role="dialog"]')?.getAttribute('data-state'),
+  delays: opacityDelays(elements),
+  properties: elements.map((element) => getComputedStyle(element).transitionProperty),
+  durations: elements.map((element) => getComputedStyle(element).transitionDuration),
+  rawDelays: elements.map((element) => getComputedStyle(element).transitionDelay)
+})
+
 const navbarLinks = () => [...document.querySelectorAll('[data-slot="navbar-drawer-nav"] a')] as HTMLElement[]
 
 afterEach(async () => {
@@ -403,7 +411,7 @@ describe('Drawer cascade in a real browser', () => {
     renderInBrowser(<DrawerPage />, 'auto')
 
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
-    await expect.poll(() => opacityDelays(drawerItems())).toEqual([0, 30, 60])
+    await expect.poll(() => cascadeSnapshot(drawerItems())).toEqual(expect.objectContaining({ state: 'open', delays: [0, 30, 60] }))
   })
 
   it('starts the items hidden and ends with all of them fully visible', async () => {
