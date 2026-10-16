@@ -1,9 +1,10 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
 import { docsUrl, repositoryUrl } from '@demo/pages/home/defaultData.tsx'
+import App from '@demo/App.tsx'
 import Home from '@demo/pages/home/index.tsx'
 
 const pages = [['Home', Home]] as const
@@ -62,5 +63,21 @@ describe('Home links', () => {
     expect(link).toHaveAttribute('href', repositoryUrl)
     expect(link).toHaveAttribute('target', '_blank')
     expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+})
+
+describe('App navigation state', () => {
+  it('does not repeat the home item in a breadcrumb trail', () => {
+    render(<App />)
+
+    expect(screen.queryByRole('navigation', { name: 'Trilha de navegação' })).not.toBeInTheDocument()
+  })
+
+  it('marks the home link of the menu as the current page', () => {
+    render(<App />)
+
+    const links = screen.getAllByRole('link', { name: 'Início' })
+
+    expect(links.filter((link) => link.getAttribute('aria-current') === 'page')).toHaveLength(1)
   })
 })

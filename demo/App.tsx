@@ -6,7 +6,7 @@ import Home from './pages/home/index.tsx'
 const App = () => (
   <ColorModeProvider>
     <GlobalStyles />
-    <UIProvider locale={ptBR}>
+    <UIProvider locale={ptBR} currentHref="/">
       <ToastProvider>
         <Home />
       </ToastProvider>
