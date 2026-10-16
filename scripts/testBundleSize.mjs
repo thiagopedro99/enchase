@@ -10,7 +10,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const windows = process.platform === 'win32'
 const npm = windows ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-size-'))
-const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: windows })
+const env = { ...process.env, npm_config_dry_run: 'false' }
+const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: windows, env })
 
 const budgets = [
   { label: 'Icon', source: "export { Icon } from 'enchase'\n", maxBytes: 4096 },
@@ -38,7 +39,7 @@ const bundle = async (project, entry) => {
 }
 
 try {
-  const packed = execFileSync(npm, ['pack', '--pack-destination', workdir, '--json'], { cwd: root, shell: windows }).toString()
+  const packed = execFileSync(npm, ['pack', '--pack-destination', workdir, '--json'], { cwd: root, shell: windows, env }).toString()
   const tarball = join(workdir, JSON.parse(packed)[0].filename)
   const consumer = join(workdir, 'app')
 

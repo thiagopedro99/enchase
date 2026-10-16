@@ -75,7 +75,8 @@
     "pack:check": "npm pack --dry-run && publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./styles.layer.css ./theme.css",
     "test:consumer": "node scripts/testConsumer.mjs",
     "test:next": "node scripts/testNext.mjs",
-    "test:size": "node scripts/testBundleSize.mjs"
+    "test:size": "node scripts/testBundleSize.mjs",
+    "prepublishOnly": "npm run build:lib && npm run test:size"
   },
   "peerDependencies": {
     "react": "^19.0.0",
