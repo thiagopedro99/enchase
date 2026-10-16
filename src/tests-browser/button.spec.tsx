@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react'
-import { chromiumOnly } from './browserSkips.ts'
 import { afterEach, describe, expect, it } from 'vitest'
-import { cdp, page } from 'vitest/browser'
+import { page } from 'vitest/browser'
 
 import { Button } from '@components/common/Button/index.tsx'
 import { ButtonLink } from '@components/common/ButtonLink/index.tsx'
@@ -105,21 +104,5 @@ describe('Button hover in a real browser', () => {
     await button.hover()
 
     expect(parseFloat(getComputedStyle(button.element(), '::after').opacity)).toBeGreaterThan(0)
-  })
-
-  chromiumOnly('touchEmulation')('does not apply the hover state on a touch device', async () => {
-    await cdp().send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 })
-    try {
-      render(<Button variant="primary">Salvar</Button>)
-      const button = page.getByRole('button', { name: 'Salvar' })
-
-      expect(matchMedia('(hover: none)').matches).toBe(true)
-      await button.hover()
-
-      expect(getComputedStyle(button.element(), '::after').opacity).toBe('0')
-      expect(getComputedStyle(button.element()).boxShadow).toBe('none')
-    } finally {
-      await cdp().send('Emulation.setTouchEmulationEnabled', { enabled: false })
-    }
   })
 })

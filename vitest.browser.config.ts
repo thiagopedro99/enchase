@@ -9,24 +9,30 @@ const browser = browsers.find((name) => name === requested)
 
 if (!browser) throw new Error(`unknown browser: ${requested}`)
 
+const touchSpec = 'src/tests-browser/touch.spec.tsx'
+
+const browserOptions = () => ({
+  enabled: true,
+  headless: true,
+  provider: playwright(),
+  commands: {
+    emulateMedia: async (context: { page: { emulateMedia: (options: Record<string, string>) => Promise<void> } }, options: Record<string, string>) => {
+      await context.page.emulateMedia(options)
+    }
+  },
+  instances: [{ browser }],
+  viewport: { width: 1280, height: 800 }
+})
+
 export default defineConfig({
   plugins: base.plugins,
   resolve: base.resolve,
   test: {
-    include: ['src/tests-browser/**/*.spec.{ts,tsx}'],
     setupFiles: ['./src/tests-browser/setup.ts'],
     css: true,
-    browser: {
-      enabled: true,
-      headless: true,
-      provider: playwright(),
-      commands: {
-        emulateMedia: async (context: { page: { emulateMedia: (options: Record<string, string>) => Promise<void> } }, options: Record<string, string>) => {
-          await context.page.emulateMedia(options)
-        }
-      },
-      instances: [{ browser }],
-      viewport: { width: 1280, height: 800 }
-    }
+    projects: [
+      { extends: true, test: { name: 'pointer', include: ['src/tests-browser/**/*.spec.{ts,tsx}'], exclude: [touchSpec], browser: browserOptions() } },
+      { extends: true, test: { name: 'touch', include: [touchSpec], browser: browserOptions() } }
+    ]
   }
 })

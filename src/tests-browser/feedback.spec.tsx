@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest'
-import { chromiumOnly } from './browserSkips.ts'
-import { cdp, page } from 'vitest/browser'
+import { page } from 'vitest/browser'
 
 import { Card } from '@components/common/Card/index.tsx'
 import { InlineLoading, Loading } from '@components/common/Loading/index.tsx'
@@ -180,22 +179,6 @@ describe('Card in a real browser', () => {
     await card.hover()
 
     await expect.poll(() => getComputedStyle(card.element()).transform).not.toBe('none')
-  })
-
-  chromiumOnly('touchEmulation')('does not lift on a touch device', async () => {
-    await cdp().send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 })
-    try {
-      renderInBrowser(<Card variant="elevated" data-testid="card">Conteúdo</Card>, 'auto')
-      const card = page.getByTestId('card')
-
-      expect(matchMedia('(hover: none)').matches).toBe(true)
-      await card.hover()
-      await frames(4)
-
-      expect(getComputedStyle(card.element()).transform).toBe('none')
-    } finally {
-      await cdp().send('Emulation.setTouchEmulationEnabled', { enabled: false })
-    }
   })
 
   it('does not lift under reduced motion', async () => {
