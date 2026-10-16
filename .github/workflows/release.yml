@@ -1,0 +1,76 @@
+name: release
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  decide:
+    if: github.repository == 'thiagopedro99/enchase'
+    runs-on: ubuntu-24.04
+    outputs:
+      action: ${{ steps.decide.outputs.action }}
+      version: ${{ steps.decide.outputs.version }}
+      tag: ${{ steps.decide.outputs.tag }}
+      prerelease: ${{ steps.decide.outputs.prerelease }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - id: decide
+        run: node scripts/release.mjs check
+
+  package:
+    needs: decide
+    if: needs.decide.outputs.action == 'publish'
+    uses: ./.github/workflows/package.yml
+
+  browsers:
+    needs: decide
+    if: needs.decide.outputs.action == 'publish'
+    uses: ./.github/workflows/browser-tests.yml
+
+  publish:
+    needs: [decide, package, browsers]
+    if: ${{ !failure() && !cancelled() && (needs.decide.outputs.action == 'publish' || needs.decide.outputs.action == 'tag') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      id-token: write
+    env:
+      VERSION: ${{ needs.decide.outputs.version }}
+      DIST_TAG: ${{ needs.decide.outputs.tag }}
+      PRERELEASE: ${{ needs.decide.outputs.prerelease }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install dependencies
+        if: needs.decide.outputs.action == 'publish'
+        run: |
+          npm install --global npm@11
+          npm ci
+      - name: Publish to npm
+        if: needs.decide.outputs.action == 'publish'
+        run: npm publish --provenance --access public --tag "$DIST_TAG"
+      - name: Tag and release
+        run: |
+          node scripts/release.mjs notes "$VERSION" > notes.md
+          if gh release view "v$VERSION" > /dev/null 2>&1; then
+            echo "the release v$VERSION already exists"
+          elif [ "$PRERELEASE" = "true" ]; then
+            gh release create "v$VERSION" --target "$GITHUB_SHA" --title "v$VERSION" --notes-file notes.md --prerelease
+          else
+            gh release create "v$VERSION" --target "$GITHUB_SHA" --title "v$VERSION" --notes-file notes.md
+          fi
