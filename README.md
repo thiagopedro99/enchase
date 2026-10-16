@@ -188,6 +188,22 @@ const active = useScrollSpy(sectionIds)
 
 O hook devolve o `id` da seção que está na faixa de leitura (de `topOffset` px do topo até 45% da altura da tela) ou `undefined` enquanto nenhuma chegou, por exemplo com um hero acima da primeira seção: nenhum item fica marcado. Depois da última seção, ela continua ativa. Mantenha o array de `ids` estável (uma constante fora do componente ou um `useMemo`).
 
+Na `Navbar`, `logo` aceita texto ou qualquer nó React (uma imagem, ou um SVG com texto) e leva a `logoHref` (padrão `/`; pode ser uma âncora como `#inicio`). `actions` recebe nós, como um botão de chamada: em telas largas ficam na barra, entre o menu e o botão de tema, e em telas estreitas vão para o drawer, abaixo dos links; um clique em link dentro delas fecha o drawer. O nó é renderizado em um lugar por vez.
+
+```tsx
+<Navbar
+  logo={<img src="/marca.svg" alt="Acme" height={28} />}
+  logoHref="#inicio"
+  sections={sections}
+  activeSectionId={active}
+  actions={
+    <ButtonLink href="#contato" variant="primary">
+      Fale conosco
+    </ButtonLink>
+  }
+/>
+```
+
 ## Navegação sem roteador
 
 Os componentes não dependem de roteador. Links internos são `<a href>` de verdade: um clique simples chama o `navigate` do `UIProvider`, e Ctrl, Cmd, Shift, botão do meio, `target`, `download`, `native` e URLs externas seguem o comportamento do navegador. Sem `navigate`, os links recarregam a página.

@@ -18,7 +18,7 @@ import { Container } from '@components/common/index.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import styles from './styles.module.css'
 
-import type { CSSProperties } from 'react'
+import type { CSSProperties, MouseEvent } from 'react'
 import type { MobileDrawerProps, NavbarLinksProps, NavbarProps } from './types.ts'
 
 const NavbarLinks = ({ items, activeSectionId, linkClassName, onSelect, staggered = false }: NavbarLinksProps) => {
@@ -42,12 +42,16 @@ const NavbarLinks = ({ items, activeSectionId, linkClassName, onSelect, staggere
   ))
 }
 
-const MobileDrawer = ({ layout, id, items, activeSectionId, open, state, drawerRef, motionStyle, onClose }: MobileDrawerProps) => {
+const MobileDrawer = ({ layout, id, items, activeSectionId, actions, open, state, drawerRef, motionStyle, onClose }: MobileDrawerProps) => {
   const rootRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
   const isTop = useOverlayStack(open)
 
   useModalBehavior({ rootRef, dialogRef: drawerRef, onEscape: () => isTop() && onClose() })
+
+  const closeOnLink = (event: MouseEvent<HTMLElement>) => {
+    if ((event.target as Element).closest('a[href]')) onClose()
+  }
 
   return (
     <div ref={rootRef} {...slot('navbar', 'drawer-root')} className={styles.drawerRoot} data-layout={layout}>
@@ -75,12 +79,18 @@ const MobileDrawer = ({ layout, id, items, activeSectionId, open, state, drawerR
         <nav {...slot('navbar', 'drawer-nav')} className={styles.mobileNav} aria-label={labels.mobileNavigation}>
           <NavbarLinks items={items} activeSectionId={activeSectionId} linkClassName={styles.mobileMenuLink} onSelect={onClose} staggered />
         </nav>
+
+        {actions ? (
+          <div {...slot('navbar', 'drawer-cta')} className={styles.drawerCta} onClick={closeOnLink}>
+            {actions}
+          </div>
+        ) : null}
       </div>
     </div>
   )
 }
 
-const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = 'md', sections = defaultSections, activeSectionId, className, style }: NavbarProps) => {
+const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = 'md', sections = defaultSections, activeSectionId, actions, className, style }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const drawerId = useId()
   const { labels, breakpoints } = useUIConfig()
@@ -89,6 +99,7 @@ const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = '
   const motionStyle = useMotionStyle('slide', 'navbar', drawerOverride, 'right')
   const { mounted, state, ref } = usePresence<HTMLDivElement>(mobileOpen)
   const items = sections.flatMap((section) => section.items).filter((item) => item.href)
+  const showBarActions = Boolean(actions) && (!isClient || wide)
 
   const handleClose = () => setMobileOpen(false)
 
@@ -115,6 +126,12 @@ const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = '
                 <NavbarLinks items={items} activeSectionId={activeSectionId} linkClassName={styles.menuLink} />
               </nav>
 
+              {showBarActions ? (
+                <div {...slot('navbar', 'cta')} className={styles.cta}>
+                  {actions}
+                </div>
+              ) : null}
+
               <ThemeToggle />
 
               <button
@@ -134,7 +151,7 @@ const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = '
         </Container>
       </header>
 
-      {mounted && <MobileDrawer layout={wide ? 'wide' : 'compact'} id={drawerId} items={items} activeSectionId={activeSectionId} open={mobileOpen} state={state} drawerRef={ref} motionStyle={motionStyle} onClose={handleClose} />}
+      {mounted && <MobileDrawer layout={wide ? 'wide' : 'compact'} id={drawerId} items={items} activeSectionId={activeSectionId} actions={actions} open={mobileOpen} state={state} drawerRef={ref} motionStyle={motionStyle} onClose={handleClose} />}
     </>
   )
 }

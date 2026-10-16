@@ -9,6 +9,7 @@ export interface NavbarProps {
   breakpoint?: BreakpointName
   sections?: SidebarSection[]
   activeSectionId?: string
+  actions?: ReactNode
   className?: string
   style?: CSSProperties
 }
@@ -26,6 +27,7 @@ export interface MobileDrawerProps {
   layout: 'wide' | 'compact'
   items: SidebarItem[]
   activeSectionId?: string
+  actions?: ReactNode
   open: boolean
   state: PresenceState
   drawerRef: RefObject<HTMLDivElement | null>

@@ -114,6 +114,20 @@ describe('layout and navbar in the server html, without hydration', () => {
     expect(shown(narrow, "[data-slot='navbar-menu']")).toBe(false)
     expect(shown(narrow, "[data-slot='navbar-menu-button']")).toBe(true)
   })
+
+  it('shows the navbar actions only on wide screens before hydration', async () => {
+    const actions = <button type="button">Começar</button>
+
+    await page.viewport(1100, 800)
+    const wide = mountPage(<Navbar sections={sections} actions={actions} />)
+
+    expect(shown(wide, "[data-slot='navbar-cta']")).toBe(true)
+    wide.remove()
+
+    await page.viewport(500, 800)
+
+    expect(shown(mountPage(<Navbar sections={sections} actions={actions} />), "[data-slot='navbar-cta']")).toBe(false)
+  })
 })
 
 describe('server html before any javascript runs', () => {

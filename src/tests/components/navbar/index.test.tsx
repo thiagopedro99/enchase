@@ -1,9 +1,10 @@
 import { describeDialogContract } from '@tests/shared/contracts/dialogContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { setViewportWidth } from '@tests/viewport.ts'
 import { useState } from 'react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
 import { ptBR } from '@locales/ptBR.ts'
@@ -217,6 +218,77 @@ describe('Navbar', () => {
 
   it('has no axe violations while closed', async () => {
     const { container } = renderWithProviders(<Navbar />)
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Navbar actions', () => {
+  afterEach(() => setViewportWidth(1024))
+
+  const enter = <button type="button">Entrar</button>
+
+  it('puts the actions between the menu and the theme toggle on a wide screen', () => {
+    setViewportWidth(1280)
+    const { container } = renderWithProviders(<Navbar sections={sections} actions={enter} />)
+    const cta = container.querySelector('[data-slot="navbar-cta"]') as HTMLElement
+    const menu = container.querySelector('[data-slot="navbar-menu"]') as HTMLElement
+    const toggle = screen.getByRole('button', { name: 'Mudar para tema escuro' })
+
+    expect(within(cta).getByRole('button', { name: 'Entrar' })).toBeInTheDocument()
+    expect(cta.parentElement).toBe(menu.parentElement)
+    expect(menu.compareDocumentPosition(cta) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(cta.compareDocumentPosition(toggle) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
+
+  it('renders no actions container without the prop', () => {
+    const { container } = renderWithProviders(<Navbar />)
+
+    expect(container.querySelector('[data-slot="navbar-cta"]')).toBeNull()
+  })
+
+  it('keeps the actions out of the bar on a compact screen and shows them under the links inside the drawer', async () => {
+    setViewportWidth(500)
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<Navbar sections={sections} actions={enter} />)
+
+    expect(container.querySelector('[data-slot="navbar-cta"]')).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Entrar' })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+    const dialog = await screen.findByRole('dialog')
+    const cta = dialog.querySelector('[data-slot="navbar-drawer-cta"]') as HTMLElement
+
+    expect(within(cta).getByRole('button', { name: 'Entrar' })).toBeInTheDocument()
+    expect(dialog.querySelector('[data-slot="navbar-drawer-nav"]')?.nextElementSibling).toBe(cta)
+  })
+
+  it('closes the drawer when a link inside the actions is chosen, but not for a button', async () => {
+    setViewportWidth(500)
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Navbar
+        actions={
+          <>
+            <button type="button">Entrar</button>
+            <a href="#contato">Contato</a>
+          </>
+        }
+      />
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+    await user.click(within(await screen.findByRole('dialog')).getByRole('button', { name: 'Entrar' }))
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+
+    await user.click(within(screen.getByRole('dialog')).getByRole('link', { name: 'Contato' }))
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+  })
+
+  it('has no axe violations with actions in the bar', async () => {
+    setViewportWidth(1280)
+    const { container } = renderWithProviders(<Navbar actions={enter} />)
 
     expect(await axe(container)).toHaveNoViolations()
   })
