@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.1.2
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.1.1...v0.1.2)
+
+### Fixes
+
+- Start the scroll spy without an active section ([ee9251f](https://github.com/thiagopedro99/enchase/commit/ee9251f))
+- Avoid a double period after the footer company name ([01159f4](https://github.com/thiagopedro99/enchase/commit/01159f4))
+- Use the library link in the footer ([9496ce2](https://github.com/thiagopedro99/enchase/commit/9496ce2))
+- Make the icon name optional ([b4e47f2](https://github.com/thiagopedro99/enchase/commit/b4e47f2))
+
+### Notes
+
+`useScrollSpy` used to return the first id before any section was reached. It now returns `undefined` until a section reaches the reading band, and goes back to `undefined` above the first section, so a hero before the first section no longer marks the first menu item. Make sure the prop that receives the value (`activeSectionId`, `activePageSectionId`) accepts `undefined`.
+
 ## v0.1.1
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.1.0...v0.1.1)
