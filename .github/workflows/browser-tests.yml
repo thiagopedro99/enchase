@@ -8,7 +8,7 @@ on:
 jobs:
   browser:
     name: ${{ matrix.browser }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     continue-on-error: ${{ matrix.experimental }}
     strategy:
       fail-fast: false
@@ -17,9 +17,9 @@ jobs:
           - browser: chromium
             experimental: false
           - browser: firefox
-            experimental: true
+            experimental: false
           - browser: webkit
-            experimental: true
+            experimental: false
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
