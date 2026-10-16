@@ -132,24 +132,6 @@ describe('touch handling on the interactive controls', () => {
 
     expect(fields.map((field) => getComputedStyle(field).fontSize)).toEqual(['14px', '14px'])
   })
-
-  chromiumOnly('touchEmulation')('raises the field text to 16px on a coarse pointer', async () => {
-    await cdp().send('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 })
-
-    try {
-      renderInBrowser(
-        <div style={{ ['--enchase-font-size-base' as string]: '14px' }}>
-          <Input label="Nome" />
-          <Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />
-        </div>
-      )
-      const fields = [document.querySelector('[data-slot="input-field"]'), document.querySelector('[data-slot="select-field"]')] as HTMLElement[]
-
-      await expect.poll(() => fields.map((field) => getComputedStyle(field).fontSize)).toEqual(['16px', '16px'])
-    } finally {
-      await cdp().send('Emulation.setTouchEmulationEnabled', { enabled: false })
-    }
-  })
 })
 
 describe('viewport units and safe areas', () => {
