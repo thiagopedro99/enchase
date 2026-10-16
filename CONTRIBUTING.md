@@ -41,6 +41,21 @@ Mudança em foco, `inert`, layout ou animação também deve ser conferida no na
 - **Pacote e tree-shaking:** `npm run build:lib` gera um arquivo por módulo em `dist-lib` (`preserveModules` em `vite.lib.config.ts`), com `'use client'` só no `index.js`. Não chame funções no nível do módulo em arquivos que os componentes importam (constantes calculadas, registros globais): o bundler de quem usa não consegue descartar esse módulo. O `npm run test:size` empacota só o `Icon` e só o `Button` como um consumidor (a partir do tarball) e falha se passarem do limite em `scripts/testBundleSize.mjs` (hoje cerca de 1,4 KB e 7,2 KB minificados, com limites de 4 KB e 12 KB). Se um limite estourar por um motivo legítimo, suba o limite no mesmo commit.
 - **Acessibilidade e movimento:** siga a seção "Contrato de componente" do `skill.md` (`className`, `data-slot`, propriedades lógicas, tokens de movimento, hover só em ponteiro fino, `prefers-reduced-motion`).
 
+## Publicação
+
+A versão do `package.json` só muda no commit de release, e é esse commit que dispara a publicação. Nada sobe a versão sozinho.
+
+1. `npm run changelog` mostra o que entraria no próximo CHANGELOG, a partir dos commits desde a última tag. Só entram `feat`, `fix`, `perf`, `refactor` e mudanças que quebram (`changelog.config.json`), e os autores ficam de fora de propósito: o `changelogen` envia o e-mail dos autores a um serviço externo quando eles são listados.
+2. `npm run release -- 0.2.0` confere que a versão é maior que a atual, escreve a seção no `CHANGELOG.md`, atualiza a versão no `package.json` e no `package-lock.json` e cria o commit `chore(release): v0.2.0`. Leia o commit com `git show`, ajuste o texto do CHANGELOG se quiser (`git commit --amend`) e só então envie.
+3. `git push` na `main`. O `.github/workflows/release.yml` roda em todo push na `main` e decide pelo registro do npm (`scripts/release.mjs`):
+   - versão ainda não publicada: roda `package.yml` e `browser-tests.yml` nesse mesmo commit e, só se passarem, publica por trusted publishing, com proveniência, e cria a tag `v0.2.0` e a GitHub Release com a seção do CHANGELOG;
+   - versão já publicada e sem tag: só cria a tag e a Release;
+   - versão já publicada e com tag: não faz nada.
+
+O workflow fica vermelho se a versão não for maior que a maior já publicada, ou se a tag existir sem a versão estar no npm. A versão `0.0.0` nunca publica. Versões com sufixo (`0.2.0-rc.1`) saem com a tag `next` do npm, e as demais com `latest`. Se uma publicação falhar, por exemplo porque o CI do commit ficou vermelho, corrija e envie um novo commit: como a decisão é pelo registro, o push seguinte tenta de novo sem precisar mexer na versão.
+
+A primeira versão (`0.1.0`) é publicada à mão com `npm publish`, porque o trusted publisher só pode ser configurado no npmjs.com depois que o pacote existe. O `prepublishOnly` constrói a biblioteca e confere os arquivos exportados e o tamanho antes de publicar.
+
 ## Pull requests
 
 1. Faça um fork e crie uma branch (`git checkout -b feat/nova-coisa`).
