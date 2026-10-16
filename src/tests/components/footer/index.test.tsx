@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 
+import UIProvider from '@components/uiProvider/index.tsx'
 import Footer from '@components/footer/index.tsx'
 import { axe } from '@tests/axe.ts'
 
@@ -32,6 +33,34 @@ describe('Footer', () => {
     render(<Footer links={[{ label: 'Termos', href: '/termos' }]} />)
 
     expect(screen.getByRole('link', { name: 'Termos' })).toHaveAttribute('data-slot', 'footer-link')
+  })
+
+  it('navigates through the provider on a plain click of a link', () => {
+    const navigate = vi.fn()
+    render(
+      <UIProvider navigate={navigate}>
+        <Footer links={[{ label: 'Termos', href: '/termos' }]} />
+      </UIProvider>
+    )
+
+    const notPrevented = fireEvent.click(screen.getByRole('link', { name: 'Termos' }))
+
+    expect(navigate).toHaveBeenCalledWith('/termos')
+    expect(notPrevented).toBe(false)
+  })
+
+  it('leaves external links to the browser', () => {
+    const navigate = vi.fn()
+    render(
+      <UIProvider navigate={navigate}>
+        <Footer links={[{ label: 'GitHub', href: 'https://github.com/thiagopedro99/enchase' }]} />
+      </UIProvider>
+    )
+
+    const notPrevented = fireEvent.click(screen.getByRole('link', { name: 'GitHub' }))
+
+    expect(navigate).not.toHaveBeenCalled()
+    expect(notPrevented).toBe(true)
   })
 
   it('keeps the caller className, style and attributes', () => {

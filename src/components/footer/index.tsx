@@ -1,5 +1,6 @@
 import { defaultCompanyName, defaultLinks, defaultNotice, getCurrentYear } from './defaultData.ts'
 import { Container, Flex } from '@components/common/index.ts'
+import { Link } from '@components/common/Link/index.tsx'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import styles from './styles.module.css'
 
@@ -17,9 +18,9 @@ const Footer = ({ companyName = defaultCompanyName, notice = defaultNotice, year
           {links.length > 0 && (
             <Flex gap="1.5rem" wrap>
               {links.map((link) => (
-                <a key={link.href} href={link.href} className={styles.link} {...slot('footer', 'link')}>
+                <Link key={link.href} href={link.href} className={styles.link} {...slot('footer', 'link')}>
                   {link.label}
-                </a>
+                </Link>
               ))}
             </Flex>
           )}
