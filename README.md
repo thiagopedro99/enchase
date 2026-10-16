@@ -96,6 +96,8 @@ A fonte padrão é Figtree: carregue-a no app (por exemplo com `@fontsource-vari
 
 Quem consome importa só dessas entradas. O código interno (`src/`) não é público.
 
+O pacote traz um arquivo por módulo e declara `sideEffects` só para CSS, então o bundler de quem usa descarta o que não for importado.
+
 ## Componentes
 
 Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosilva.com.br/docs/) (ou `npm run storybook`, em `Componentes/<Nome>`).
