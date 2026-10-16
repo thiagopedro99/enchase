@@ -124,8 +124,26 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Footer` | `<Footer companyName="Acme" notice="Licença MIT." />` |
 | `Layout` | `<Layout brand="Acme" navigationSections={sections}>...</Layout>` |
 | `ThemeToggle` | `<ThemeToggle />` |
-| `Icon` | `<Icon name="dot"><circle cx="12" cy="12" r="1" /></Icon>` |
+| `Icon` | `<Icon><circle cx="12" cy="12" r="1" /></Icon>` |
 | `VisuallyHidden` | `<VisuallyHidden>Texto só para leitores de tela</VisuallyHidden>` |
+
+A biblioteca não exporta um conjunto de ícones: os que os componentes usam por dentro (menu, fechar, setas, olho, sol e lua) são internos. O `Icon` é um contêiner SVG de 24x24, com traço de 2 px e a cor do texto, para os seus próprios caminhos. Para ícones prontos, use uma biblioteca de ícones (lucide-react, Phosphor, Heroicons) direto, sem o `Icon`: qualquer nó React serve no conteúdo de um `Button` ou na prop `icon` de um item da `Sidebar`.
+
+```tsx
+import { Rocket } from 'lucide-react'
+import { Button, Icon } from 'enchase'
+
+<Button variant="primary">
+  <Rocket size={18} aria-hidden="true" />
+  Começar
+</Button>
+
+<Icon title="Adicionar" size={20}>
+  <path d="M12 5v14M5 12h14" />
+</Icon>
+```
+
+Sem `title`, o ícone é decorativo (`aria-hidden`); com `title`, vira uma imagem com nome acessível. Use `directional` em setas e chevrons para espelharem em RTL.
 
 Notificações usam o hook `useToast` dentro do `ToastProvider`:
 
