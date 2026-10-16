@@ -11,10 +11,12 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 
 > Versão `0.x`: a API ainda pode mudar entre versões menores.
 
+[Documentação no Storybook](https://enchase.othiagosilva.com.br/docs/) · [Demonstração](https://enchase.othiagosilva.com.br/)
+
 ## O que a biblioteca garante (e o que não garante)
 
 **Verificado por testes automatizados:**
-- Todo componente passa no axe (vitest-axe) em jsdom, e os fluxos de foco, `inert`, scroll lock, Esc empilhado e restauração de foco rodam em Chromium real.
+- Todo componente passa no axe (vitest-axe) em jsdom, e os fluxos de foco, `inert`, scroll lock, Esc empilhado e restauração de foco rodam em Chromium, Firefox e WebKit reais.
 - Os pares de cor da paleta padrão (claro e escuro) atingem 4,5:1 para texto e 3:1 para bordas de campos e anel de foco. O `createTheme` lança erro em valor de cor inválido, e `validateTheme` lista os pares abaixo do mínimo.
 - Alvos interativos têm pelo menos 24 x 24 px, e os componentes respeitam `prefers-reduced-motion` (o deslocamento some, o fade continua).
 - Renderização no servidor e hidratação sem erro em 6 variantes de ambiente (largura, tema salvo, sistema escuro e movimento reduzido), mais um app Next 15 mínimo (`npm run test:next`) importando os componentes num Server Component.
@@ -96,7 +98,7 @@ Quem consome importa só dessas entradas. O código interno (`src/`) não é pú
 
 ## Componentes
 
-Cada componente tem uma story no Storybook (`npm run storybook`, em `Componentes/<Nome>`).
+Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosilva.com.br/docs/) (ou `npm run storybook`, em `Componentes/<Nome>`).
 
 | Componente | Exemplo mínimo |
 | --- | --- |
@@ -315,7 +317,7 @@ npm run build:lib && npm run pack:check && npm run test:consumer
 
 ## Estado do projeto
 
-Versão `0.x`, em desenvolvimento ativo. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band), presets de design alternativos, props responsivas no `Grid` (`columns={{ base, md }}`) e testes em Firefox e WebKit.
+Versão `0.x`, em desenvolvimento ativo. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band), presets de design alternativos e props responsivas no `Grid` (`columns={{ base, md }}`).
 
 ## Contribuindo
 
