@@ -5,6 +5,8 @@ import styles from './styles.module.css'
 
 import type { FooterProps } from './types.ts'
 
+const closeSentence = (text: string) => (/[.!?]$/.test(text) ? text : `${text}.`)
+
 const Footer = ({ companyName = defaultCompanyName, notice = defaultNotice, year = getCurrentYear(), links = defaultLinks, ...props }: FooterProps) => {
   const own = { ...slot('footer'), className: styles.footer }
 
@@ -23,7 +25,7 @@ const Footer = ({ companyName = defaultCompanyName, notice = defaultNotice, year
           )}
 
           <p className={styles.copyright} {...slot('footer', 'copyright')}>
-            {[`© ${year}`, companyName && `${companyName}.`, notice].filter(Boolean).join(' ')}
+            {[`© ${year}`, companyName && closeSentence(companyName), notice].filter(Boolean).join(' ')}
           </p>
         </Flex>
       </Container>

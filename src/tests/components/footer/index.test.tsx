@@ -18,6 +18,16 @@ describe('Footer', () => {
     expect(screen.getByRole('contentinfo')).toHaveTextContent('© 2030 Acme. Todos os direitos reservados.')
   })
 
+  it.each([
+    ['Acme', '© 2030 Acme. Todos os direitos reservados.'],
+    ['Acme Inc.', '© 2030 Acme Inc. Todos os direitos reservados.'],
+    ['Acme!', '© 2030 Acme! Todos os direitos reservados.']
+  ])('ends the company name "%s" with a single punctuation mark', (companyName, expected) => {
+    render(<Footer year={2030} companyName={companyName} notice="Todos os direitos reservados." />)
+
+    expect(screen.getByRole('contentinfo').textContent).toBe(expected)
+  })
+
   it('lists the links with slots', () => {
     render(<Footer links={[{ label: 'Termos', href: '/termos' }]} />)
 
