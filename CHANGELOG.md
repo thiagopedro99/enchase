@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.2.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.1.2...v0.2.0)
+
+### Enhancements
+
+- Accept a node and a link for the navbar logo ([c5326b5](https://github.com/thiagopedro99/enchase/commit/c5326b5))
+- Add an actions slot to the navbar ([93376e7](https://github.com/thiagopedro99/enchase/commit/93376e7))
+- Generate a theme from a brand color ([7cabfcd](https://github.com/thiagopedro99/enchase/commit/7cabfcd))
+
+### Refactors
+
+- Move the rgb color reader out of the contrast module ([a7407ec](https://github.com/thiagopedro99/enchase/commit/a7407ec))
+
+### Notes
+
+- `createTheme({ brand })` builds the light and dark palettes from one opaque hex or `rgb()` color, and it also works in `<ColorModeProvider theme={{ brand }}>`. The brand color is the light `primary` when it passes the contrast checks of the theme, and otherwise a darker shade of the same hue is used, so a yellow or an amber becomes a mustard or a brown on light surfaces. The semantic colors, shadows, fonts and motion are not changed, and the `light.colors` and `dark.colors` you pass still win over the generated ones. `validateTheme` reports no pair for any brand color.
+- The generator adds about 1.7 kB gzip to an app that imports `ColorModeProvider`, because the provider uses `createTheme`. Importing only components such as `Button` or `Icon` is unchanged.
+- The navbar `actions` are rendered in one place at a time: in the bar on wide screens and in the drawer, under the links, on compact ones. The navbar logo link now has `data-slot="navbar-logo"`; it used to carry the generic `data-slot="link"`.
+
 ## v0.1.2
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.1.1...v0.1.2)
