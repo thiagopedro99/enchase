@@ -1,0 +1,16 @@
+# Enchase
+
+> Biblioteca de componentes React 19 e TypeScript, com CSS Modules, tema por variáveis `--enchase-*` e acessibilidade WCAG 2.2 AA. Não depende de roteador nem de estado global. Pacote npm: `enchase`.
+
+Instalação: `npm install enchase`. Entradas do pacote: `enchase` (componentes, provedores, hooks e tipos), `enchase/theme` (`createTheme`, tokens), `enchase/locales` (`en`, `ptBR`), `enchase/styles.css` e `enchase/theme.css`. O pacote traz o `API.md` em `node_modules/enchase/API.md`.
+
+## Documentação
+
+- [README](https://raw.githubusercontent.com/thiagopedro99/enchase/main/README.md): instalação, início rápido (Next.js e Vite), navegação sem roteador e como cada `href` é tratado, tema e paleta pela cor da marca, movimento e renderização no servidor
+- [API](https://raw.githubusercontent.com/thiagopedro99/enchase/main/API.md): props, tipos, valores padrão e hooks de todos os componentes
+- [Storybook](https://enchase.othiagosilva.com.br/docs/): demonstrações interativas de cada componente
+
+## Opcional
+
+- [CHANGELOG](https://raw.githubusercontent.com/thiagopedro99/enchase/main/CHANGELOG.md): mudanças por versão
+- [CONTRIBUTING](https://raw.githubusercontent.com/thiagopedro99/enchase/main/CONTRIBUTING.md): convenções do projeto

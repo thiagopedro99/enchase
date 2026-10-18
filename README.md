@@ -157,7 +157,7 @@ success('Salvo com sucesso')
 
 ### Props comuns
 
-Os componentes repetem o mesmo vocabulário. A lista completa de cada um está no [API.md](API.md).
+Os componentes repetem o mesmo vocabulário. A lista completa de cada um está no [API.md](API.md), que também vai dentro do pacote (`node_modules/enchase/API.md`).
 
 | Prop | Onde | O que faz |
 | --- | --- | --- |
