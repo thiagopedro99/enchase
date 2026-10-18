@@ -1,7 +1,7 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
-import { screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+import { fireEvent, screen } from '@testing-library/react'
 import { axe } from '@tests/axe.ts'
 
 import { ButtonLink } from '@components/common/ButtonLink/index.tsx'
@@ -139,5 +139,92 @@ describe('ButtonLink contract', () => {
     expect(screen.getByRole('link', { name: 'Press' })).toHaveAttribute('data-motion', 'press')
     expect(screen.getByRole('link', { name: 'Off' })).toHaveAttribute('data-motion', 'off')
     expect(screen.getByRole('link', { name: 'Lift' }).style.getPropertyValue('--enchase-button-distance')).toBe('4px')
+  })
+})
+
+describe('ButtonLink navigation', () => {
+  const link = () => screen.getByRole('link', { name: /^Docs/ })
+
+  const renderLink = (props: Partial<Parameters<typeof ButtonLink>[0]> = {}, route = '/') =>
+    renderWithProviders(
+      <ButtonLink href="/docs" {...props}>
+        Docs
+      </ButtonLink>,
+      { route }
+    )
+
+  it('navigates through the provider on a plain click and cancels the browser navigation', () => {
+    const { navigate } = renderLink()
+
+    const notPrevented = fireEvent.click(link())
+
+    expect(navigate).toHaveBeenCalledTimes(1)
+    expect(navigate).toHaveBeenCalledWith('/docs')
+    expect(notPrevented).toBe(false)
+  })
+
+  it('runs the click handler of the caller first and respects its preventDefault', () => {
+    const onClick = vi.fn((event: { preventDefault: () => void }) => event.preventDefault())
+    const { navigate } = renderLink({ onClick })
+
+    fireEvent.click(link())
+
+    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(navigate).not.toHaveBeenCalled()
+  })
+
+  it.each([
+    ['ctrl', { ctrlKey: true }],
+    ['meta', { metaKey: true }],
+    ['shift', { shiftKey: true }],
+    ['alt', { altKey: true }],
+    ['the middle button', { button: 1 }]
+  ])('leaves the click to the browser with %s', (_name, init) => {
+    const { navigate } = renderLink()
+
+    const notPrevented = fireEvent.click(link(), init)
+
+    expect(navigate).not.toHaveBeenCalled()
+    expect(notPrevented).toBe(true)
+  })
+
+  it.each([
+    ['a link that opens in a new tab', { target: '_blank' }, '/'],
+    ['a download', { download: '' }, '/'],
+    ['an external url', { href: 'https://example.com/docs' }, '/'],
+    ['a section of the page', { href: '#intro' }, '/'],
+    ['a hash of the current page', { href: '/docs#intro' }, '/docs'],
+    ['a relative path', { href: 'docs' }, '/']
+  ])('leaves %s to the browser', (_name, props, route) => {
+    const { navigate } = renderLink(props, route)
+
+    const notPrevented = fireEvent.click(link())
+
+    expect(navigate).not.toHaveBeenCalled()
+    expect(notPrevented).toBe(true)
+  })
+
+  it('navigates to a hash of another page', () => {
+    const { navigate } = renderLink({ href: '/docs#intro' }, '/')
+
+    fireEvent.click(link())
+
+    expect(navigate).toHaveBeenCalledWith('/docs#intro')
+  })
+
+  it('leaves the click to the browser when the link is native, without passing the prop to the page', () => {
+    const { navigate } = renderLink({ native: true })
+
+    const notPrevented = fireEvent.click(link())
+
+    expect(navigate).not.toHaveBeenCalled()
+    expect(notPrevented).toBe(true)
+    expect(link()).not.toHaveAttribute('native')
+  })
+
+  it('keeps the download attribute on the anchor', () => {
+    renderLink({ download: 'manual.pdf' })
+
+    expect(link()).toHaveAttribute('download', 'manual.pdf')
   })
 })

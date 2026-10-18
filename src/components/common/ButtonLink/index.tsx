@@ -3,6 +3,7 @@ import { ExternalLinkIcon } from '../Icon/icons/ExternalLinkIcon.tsx'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
 import { resolveButtonMotion } from '../Button/motion.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { useLinkClick } from '@hooks/useLinkClick.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { classNames } from '@utils/classNames.ts'
 import buttonStyles from '../Button/styles.module.css'
@@ -10,18 +11,22 @@ import styles from './styles.module.css'
 
 import type { ButtonLinkProps } from './types.ts'
 
-export const ButtonLink = ({ children, animation, variant = defaultVariant, size = defaultSize, fullWidth = defaultFullWidth, target, rel, ...props }: ButtonLinkProps) => {
+export const ButtonLink = ({ children, animation, variant = defaultVariant, size = defaultSize, fullWidth = defaultFullWidth, href, onClick, target, download, native, rel, ...props }: ButtonLinkProps) => {
   const { labels, motion: settings } = useUIConfig()
   const { motion, style } = resolveButtonMotion(settings, animation)
+  const handleClick = useLinkClick({ href, onClick, target, download, native })
   const opensNewTab = target === '_blank'
   const own = {
     ...slot('button-link'),
     className: classNames(buttonStyles.button, styles.link),
     style,
+    href,
+    download,
     'data-variant': variant,
     'data-size': size,
     'data-motion': motion,
-    'data-full-width': fullWidth ? '' : undefined
+    'data-full-width': fullWidth ? '' : undefined,
+    onClick: handleClick
   }
 
   return (
