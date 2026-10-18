@@ -31,6 +31,7 @@
   "files": [
     "dist-lib",
     "README.md",
+    "API.md",
     "LICENSE"
   ],
   "exports": {
@@ -76,9 +77,11 @@
     "test:consumer": "node scripts/testConsumer.mjs",
     "test:next": "node scripts/testNext.mjs",
     "test:size": "node scripts/testBundleSize.mjs",
+    "docs:api": "node scripts/buildApiDocs.mjs",
+    "docs:api:check": "node scripts/buildApiDocs.mjs --check",
     "changelog": "node scripts/release.mjs preview",
     "release": "node scripts/release.mjs prepare",
-    "prepublishOnly": "npm run build:lib && npm run test:size"
+    "prepublishOnly": "npm run docs:api:check && npm run build:lib && npm run test:size"
   },
   "peerDependencies": {
     "react": "^19.0.0",
