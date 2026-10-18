@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { isCurrentHref, isInternalHref, isSectionHref, shouldNavigate } from '@utils/href.ts'
+import { isCurrentHref, isInternalHref, isSamePageHash, isSectionHref, shouldNavigate } from '@utils/href.ts'
 
 const plainClick = { button: 0, metaKey: false, ctrlKey: false, shiftKey: false, altKey: false, defaultPrevented: false }
 
@@ -25,6 +25,33 @@ describe('isInternalHref', () => {
       expect(isInternalHref(href)).toBe(false)
     }
   )
+})
+
+describe('isSamePageHash', () => {
+  it.each([
+    ['/#recursos', '/'],
+    ['/sobre#equipe', '/sobre'],
+    ['/sobre/#equipe', '/sobre'],
+    ['/sobre?a=1#equipe', '/sobre'],
+    ['/sobre#equipe', '/sobre?b=2#contato'],
+    ['/docs/api#props', '/docs/api/']
+  ])('treats %s as a section of the current page %s', (href, currentHref) => {
+    expect(isSamePageHash(href, currentHref)).toBe(true)
+  })
+
+  it.each([
+    ['/sobre#equipe', '/'],
+    ['/docs/api#props', '/docs'],
+    ['/docs#props', '/docs/api'],
+    ['/sobre', '/sobre'],
+    ['/sobre#', '/sobre'],
+    ['#equipe', '/'],
+    ['https://example.com/#equipe', '/'],
+    ['//example.com/#equipe', '/'],
+    ['/sobre#equipe', undefined]
+  ])('does not treat %s as a section of the current page %s', (href, currentHref) => {
+    expect(isSamePageHash(href, currentHref)).toBe(false)
+  })
 })
 
 describe('isCurrentHref', () => {
@@ -100,5 +127,11 @@ describe('shouldNavigate', () => {
 
   it.each(['https://example.com', '//example.com/a', 'mailto:a@b.co', 'tel:123', '#section', 'docs', ''])('leaves %j to the browser', (href) => {
     expect(shouldNavigate(href, plainClick, {})).toBe(false)
+  })
+
+  it('leaves a hash link of the current page to the browser and still navigates to the same hash on another page', () => {
+    expect(shouldNavigate('/sobre#equipe', plainClick, {}, '/sobre')).toBe(false)
+    expect(shouldNavigate('/sobre#equipe', plainClick, {}, '/')).toBe(true)
+    expect(shouldNavigate('/sobre#equipe', plainClick, {})).toBe(true)
   })
 })

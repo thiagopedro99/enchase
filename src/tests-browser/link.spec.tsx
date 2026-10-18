@@ -1,12 +1,15 @@
-import { afterEach, describe, expect, it } from 'vitest'
-import { userEvent } from 'vitest/browser'
+import { render } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { page, userEvent } from 'vitest/browser'
 
 import { Link } from '@components/common/Link/index.tsx'
+import UIProvider from '@components/uiProvider/index.tsx'
 import { renderInBrowser } from './harness.tsx'
 
 afterEach(() => {
   document.head.querySelectorAll('style[data-test]').forEach((style) => style.remove())
   document.body.innerHTML = ''
+  window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`)
 })
 
 describe('Link in a real browser', () => {
@@ -46,5 +49,26 @@ describe('Link in a real browser', () => {
 
     expect(getComputedStyle(anchor).outlineStyle).toBe('solid')
     expect(getComputedStyle(anchor).outlineWidth).toBe('2px')
+  })
+
+  it('scrolls to a section of the current page without handing the click to navigate', async () => {
+    const navigate = vi.fn()
+    const { pathname, search } = window.location
+
+    render(
+      <UIProvider navigate={navigate} currentHref={pathname}>
+        <Link href={`${pathname}${search}#fim`}>Ir ao fim</Link>
+        <div style={{ height: 3000 }} />
+        <section id="fim">Fim</section>
+      </UIProvider>
+    )
+
+    await userEvent.click(page.getByRole('link', { name: 'Ir ao fim' }))
+
+    await expect.poll(() => window.scrollY).toBeGreaterThan(1000)
+
+    expect(window.location.hash).toBe('#fim')
+    expect(window.location.pathname).toBe(pathname)
+    expect(navigate).not.toHaveBeenCalled()
   })
 })

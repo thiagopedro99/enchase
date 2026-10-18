@@ -73,4 +73,20 @@ describe('deriveBreadcrumbs', () => {
     expect(ids).not.toContain('reference')
     expect(ids).toEqual(['home', 'docs'])
   })
+
+  it('does not take a hash link of the current page for a route', () => {
+    const landing: SidebarSection[] = [
+      {
+        id: 'nav',
+        items: [
+          { id: 'home', label: 'Início', href: '/' },
+          { id: 'features', label: 'Recursos', href: '/#recursos' },
+          { id: 'about', label: 'Sobre', href: '/sobre#equipe' }
+        ]
+      }
+    ]
+
+    expect(derive('/', undefined, { sections: landing })).toEqual([{ id: 'home', label: 'Início', href: '/' }])
+    expect(derive('/sobre', undefined, { sections: landing }).map((item) => item.id)).toEqual(['home', 'current-page'])
+  })
 })

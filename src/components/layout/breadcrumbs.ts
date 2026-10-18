@@ -1,4 +1,4 @@
-import { isCurrentHref, isInternalHref } from '@utils/href.ts'
+import { isCurrentHref, isInternalHref, isSamePageHash } from '@utils/href.ts'
 
 import type { BreadcrumbItem } from '../common/Breadcrumbs/types.ts'
 import type { SidebarItem } from '../common/Sidebar/types.ts'
@@ -6,10 +6,13 @@ import type { DeriveBreadcrumbsInput } from './types.ts'
 
 type RouteItem = SidebarItem & { href: string }
 
-const isRoute = (item: SidebarItem): item is RouteItem => Boolean(item.href) && !item.native && isInternalHref(item.href as string)
+const isRouteOf =
+  (currentHref: string | undefined) =>
+  (item: SidebarItem): item is RouteItem =>
+    Boolean(item.href) && !item.native && isInternalHref(item.href as string) && !isSamePageHash(item.href as string, currentHref)
 
 export const deriveBreadcrumbs = ({ sections, pageSections, currentHref, pageTitle, activePageSectionId }: DeriveBreadcrumbsInput): BreadcrumbItem[] => {
-  const routes = sections.flatMap((section) => section.items).filter(isRoute)
+  const routes = sections.flatMap((section) => section.items).filter(isRouteOf(currentHref))
   const home = routes.find((item) => item.href === '/')
   const current = routes.filter((item) => isCurrentHref(item.href, currentHref)).sort((a, b) => b.href.length - a.href.length)[0]
   const section = pageSections.flatMap((group) => group.items).find((item) => item.id === activePageSectionId)

@@ -145,6 +145,26 @@ describe('Navbar', () => {
     expect(current('API')).toBeNull()
   })
 
+  it('marks hash links of the current page as locations, never as the current page', () => {
+    const anchors: SidebarSection[] = [
+      {
+        id: 'main',
+        items: [
+          { id: 'recursos', label: 'Recursos', href: '/#recursos' },
+          { id: 'contato', label: 'Contato', href: '/#contato' },
+          { id: 'sobre', label: 'Sobre', href: '/sobre#equipe' }
+        ]
+      }
+    ]
+    renderWithProviders(<Navbar sections={anchors} activeSectionId="contato" />, { route: '/' })
+    const nav = screen.getByRole('navigation', { name: 'Navegação principal', hidden: true })
+    const current = (name: string) => within(nav).getByRole('link', { name, hidden: true }).getAttribute('aria-current')
+
+    expect(current('Recursos')).toBeNull()
+    expect(current('Contato')).toBe('location')
+    expect(current('Sobre')).toBeNull()
+  })
+
   it('navigates through the provider from the logo and the menu links', () => {
     const navigate = vi.fn()
     render(

@@ -12,6 +12,10 @@ export const isSectionHref = (href: string) => href.startsWith('#')
 
 export const isInternalHref = (href: string) => href.startsWith('/') && !href.startsWith('//')
 
+const hasHash = (href: string) => href.includes('#') && href.slice(href.indexOf('#') + 1) !== ''
+
+export const isSamePageHash = (href: string, currentHref: string | undefined) => currentHref !== undefined && isInternalHref(href) && hasHash(href) && pathOf(href) === pathOf(currentHref)
+
 export const isCurrentHref = (href: string, currentHref: string | undefined) => {
   if (currentHref === undefined || !isInternalHref(href)) return false
 
@@ -21,11 +25,11 @@ export const isCurrentHref = (href: string, currentHref: string | undefined) => 
   return target === '/' ? location === '/' : location === target || location.startsWith(`${target}/`)
 }
 
-export const shouldNavigate = (href: string, event: ClickLike, { target, download, native }: LinkAttributes) => {
+export const shouldNavigate = (href: string, event: ClickLike, { target, download, native }: LinkAttributes, currentHref?: string) => {
   if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false
   if (native) return false
   if (target && target !== '_self') return false
   if (download !== undefined && download !== false) return false
 
-  return isInternalHref(href)
+  return isInternalHref(href) && !isSamePageHash(href, currentHref)
 }

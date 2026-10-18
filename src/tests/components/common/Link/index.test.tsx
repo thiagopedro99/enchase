@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
@@ -161,5 +161,66 @@ describe('Link', () => {
     render(<Link href="/x" {...{ 'data-slot': 'sidebar-item-control' }}>Item</Link>)
 
     expect(screen.getByRole('link', { name: 'Item' })).toHaveAttribute('data-slot', 'sidebar-item-control')
+  })
+})
+
+describe('Link to a section of the current page', () => {
+  const renderAt = (href: string, currentHref?: string) => {
+    const navigate = vi.fn()
+
+    render(
+      <UIProvider navigate={navigate} currentHref={currentHref}>
+        <Link href={href}>Docs</Link>
+      </UIProvider>
+    )
+
+    return navigate
+  }
+
+  it.each([
+    ['the home page with a hash', '/#recursos', '/'],
+    ['a route with a hash that is the current page', '/sobre#equipe', '/sobre'],
+    ['the current page written with a trailing slash and a query', '/sobre/?a=1#equipe', '/sobre'],
+    ['the current page when the current href also has a hash', '/sobre#equipe', '/sobre#contato']
+  ])('leaves %s to the browser', (_name, href, currentHref) => {
+    const navigate = renderAt(href, currentHref)
+
+    const notPrevented = fireEvent.click(link())
+
+    expect(navigate).not.toHaveBeenCalled()
+    expect(notPrevented).toBe(true)
+  })
+
+  it.each([
+    ['another route with a hash', '/sobre#equipe', '/'],
+    ['a nested route with a hash', '/docs/api#props', '/docs'],
+    ['the current route without a hash', '/sobre', '/sobre']
+  ])('still navigates through the provider for %s', (_name, href, currentHref) => {
+    const navigate = renderAt(href, currentHref)
+
+    const notPrevented = fireEvent.click(link())
+
+    expect(navigate).toHaveBeenCalledWith(href)
+    expect(notPrevented).toBe(false)
+  })
+
+  it('reads the current page from the browser when the provider has no currentHref', () => {
+    window.history.replaceState(null, '', '/sobre')
+
+    try {
+      const same = renderAt('/sobre#equipe')
+
+      fireEvent.click(link())
+      cleanup()
+
+      const other = renderAt('/outra#equipe')
+
+      fireEvent.click(link())
+
+      expect(same).not.toHaveBeenCalled()
+      expect(other).toHaveBeenCalledWith('/outra#equipe')
+    } finally {
+      window.history.replaceState(null, '', '/')
+    }
   })
 })
