@@ -155,6 +155,25 @@ const { success, error } = useToast()
 success('Salvo com sucesso')
 ```
 
+### Props comuns
+
+Os componentes repetem o mesmo vocabulário. A lista completa de cada um está no [API.md](API.md).
+
+| Prop | Onde | O que faz |
+| --- | --- | --- |
+| `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`. |
+| `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
+| `label` | `Input`, `Select`, `Checkbox` | Rótulo visível, ligado ao controle. |
+| `error` | `Input`, `Select` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
+| `helperText` | `Input`, `Select` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
+| `fullWidth` | `Button`, `ButtonLink`, `Input`, `Select` | Ocupa toda a largura disponível. |
+| `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
+| `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. |
+| `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
+| `open`, `defaultOpen` e `onOpenChange` | `Popover` e o drawer do `Layout` | Controlados ou não. A `Sidebar` modal usa `open` e `onClose`. |
+
+Componentes que estendem um elemento HTML (`Button`, `Input`, `Card`, `Footer`, `Layout` e outros) repassam os demais atributos para ele, como `id`, `aria-*`, `data-*` e handlers.
+
 ### Layout e navegação
 
 O `Layout` oferece duas navegações pela prop `navigation`: `sidebar` (padrão, com `AppBar`, breadcrumb e botão de tema, e menu lateral que recolhe para ícones e vira drawer modal no mobile) e `navbar` (barra clássica no topo).
@@ -206,7 +225,7 @@ Na `Navbar`, `logo` aceita texto ou qualquer nó React (uma imagem, ou um SVG co
 
 ## Navegação sem roteador
 
-Os componentes não dependem de roteador. Links internos são `<a href>` de verdade: um clique simples chama o `navigate` do `UIProvider`, e Ctrl, Cmd, Shift, botão do meio, `target`, `download`, `native` e URLs externas seguem o comportamento do navegador. Sem `navigate`, os links recarregam a página.
+Os componentes não dependem de roteador. `Link`, `ButtonLink`, os itens da `Sidebar` e da `Navbar`, os `Breadcrumbs` e os links do `Footer` são `<a href>` de verdade, e um clique simples em uma rota do app chama o `navigate` do `UIProvider`. Sem `navigate`, os links recarregam a página.
 
 ```tsx
 <UIProvider navigate={(href) => router.push(href)} currentHref={pathname}>
@@ -214,7 +233,25 @@ Os componentes não dependem de roteador. Links internos são `<a href>` de verd
 </UIProvider>
 ```
 
-`currentHref` marca o item ativo (`aria-current="page"`) e deriva os `Breadcrumbs`.
+Como cada `href` é tratado:
+
+| `href` | Quem trata o clique |
+| --- | --- |
+| `/rota`, `/rota?a=1` | `navigate`, quando o provider tem um |
+| `/rota#id`, em outra página | `navigate`, com o hash no `href` |
+| `/rota#id`, na página atual | O navegador rola até o elemento; o `navigate` não é chamado |
+| `#id` | O navegador |
+| `https://...`, `//host`, `mailto:`, `tel:` e caminhos relativos (`sobre`, `?a=1`) | O navegador |
+| Qualquer `href` com `native`, `target` diferente de `_self` ou `download` | O navegador |
+| Ctrl, Cmd, Shift, Alt ou botão do meio | O navegador |
+
+A página atual é o caminho de `currentHref` ou, quando o provider não tem `currentHref`, o `window.location.pathname` no momento do clique. Por isso `/#recursos` na home e `/sobre#equipe` em `/sobre` rolam a página sem `native` e sem passar pelo roteador.
+
+`currentHref` também marca o item ativo do menu e deriva os `Breadcrumbs` do `Layout`:
+
+- Uma rota (`/docs`) recebe `aria-current="page"` quando `currentHref` é essa rota ou está dentro dela (`/docs/api`); `/` marca só a home.
+- Uma âncora (`#recursos`, ou `/#recursos` estando em `/`) recebe `aria-current="location"` quando é o `activeSectionId`, nunca `page`. Use `useScrollSpy` para ele.
+- Itens `native`, externos e âncoras da página não entram na trilha dos `Breadcrumbs`, e os `native` nunca são marcados.
 
 ## Tema
 
