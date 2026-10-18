@@ -34,6 +34,26 @@ const meta = {
   parameters: { layout: 'fullscreen' },
   args: { sections, variant: 'permanent', collapsed: false },
   argTypes: {
+    sections: {
+      description: 'Seções do menu, como [{ id, title?, items: [{ id, label, icon?, href?, native?, badge?, onClick? }] }]. Um item com href é um link; sem href é um botão que chama onClick. Sem icon, o item mostra a inicial do rótulo.',
+      control: false
+    },
+    activeSectionId: {
+      description: 'Id do item de âncora (href que começa com #, ou aponta para a página atual) marcado como localização atual (aria-current="location"). Use useScrollSpy para obtê-lo.',
+      control: 'text'
+    },
+    currentHref: {
+      description: 'Caminho atual, que marca o item da página (aria-current="page") e vale também para o hash da página atual. Sem ele vale o currentHref do UIProvider.',
+      control: 'text'
+    },
+    header: {
+      description: 'Conteúdo fixo no topo, como a marca. Pode ser uma função que recebe { collapsed } para trocar o conteúdo na barra recolhida.',
+      control: false
+    },
+    footer: {
+      description: 'Conteúdo fixo no rodapé, acima do botão de recolher. Pode ser uma função que recebe { collapsed }.',
+      control: false
+    },
     variant: {
       description: 'permanent fica na página; modal vira um drawer com foco preso, página inerte e Esc para fechar, que só fecha a camada de cima.',
       control: 'inline-radio',
@@ -41,12 +61,32 @@ const meta = {
       table: { defaultValue: { summary: 'permanent' } }
     },
     collapsed: {
-      description: 'Barra de ícones (80px) em vez da barra completa. A largura muda de uma vez, sem animação.',
+      description: 'Barra só de ícones (80px) em vez da completa. A largura anima por data-state (expanded, collapsing, collapsed e expanding); com animation={false} muda de uma vez. Só vale em permanent.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
+    onToggleCollapsed: {
+      description: 'Mostra o botão de recolher no rodapé e é chamado ao clicar nele. Sem esta prop o botão não aparece; quem usa guarda o estado de collapsed.',
+      control: false
+    },
+    open: {
+      description: 'Só em modal: abre o drawer. Fechado, nada é renderizado.',
+      control: 'boolean'
+    },
+    onClose: {
+      description: 'Só em modal: chamado ao clicar no fundo, apertar Esc ou escolher um item.',
+      control: false
+    },
+    ariaLabel: {
+      description: 'Nome acessível da navegação. O padrão vem do UIProvider: labels.mainNavigation em permanent e labels.mobileNavigation em modal.',
+      control: 'text'
+    },
+    id: {
+      description: 'id da raiz em permanent ou do painel em modal, útil para o aria-controls do botão que abre o menu.',
+      control: 'text'
+    },
     animation: {
-      description: 'Só vale para o drawer. false desliga o deslize; { tuning: { distance, duration } } ajusta a distância e a duração.',
+      description: 'false desliga o movimento. Em permanent ajusta o recolher ({ tuning: { duration } }); em modal, o deslize do drawer ({ tuning: { distance, duration } }).',
       control: 'object',
       table: { type: { summary: 'false | { recipe, from, tuning }' } }
     },
@@ -54,10 +94,7 @@ const meta = {
       description: 'Classe da raiz (data-slot="sidebar"); no drawer, do painel (data-slot="sidebar-panel"). Também dá para estilizar por data-slot, data-state e data-variant.',
       control: 'text'
     },
-    sections: { control: false },
-    header: { control: false },
-    footer: { control: false },
-    style: { control: false }
+    style: { description: 'Estilo da raiz em permanent ou do painel em modal.', control: false }
   }
 } satisfies Meta<typeof Sidebar>
 

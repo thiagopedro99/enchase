@@ -22,7 +22,20 @@ const meta = {
   argTypes: {
     logo: { description: 'Marca exibida à esquerda (ou à direita em rtl). Aceita texto ou qualquer nó React, como uma imagem ou um SVG. É um link para logoHref (data-slot="navbar-logo").', control: 'text' },
     logoHref: { description: 'Destino do link da marca. Aceita uma rota, uma âncora (#inicio) ou uma URL.', control: 'text', table: { defaultValue: { summary: '/' } } },
-    activeSectionId: { description: 'Id do item de âncora marcado como localização atual.', control: 'text' },
+    breakpoint: {
+      description: 'Breakpoint a partir do qual os links aparecem na barra. Abaixo dele, a barra mostra o botão de menu e os links vão para o drawer. Os valores vêm do UIProvider.',
+      control: 'select',
+      options: ['sm', 'md', 'lg', 'xl', 'xxl'],
+      table: { defaultValue: { summary: 'md' } }
+    },
+    sections: {
+      description: 'Itens do menu, no mesmo formato da Sidebar: [{ id, items: [{ id, label, href }] }]. Só os itens com href aparecem, e os títulos das seções não são exibidos.',
+      control: false
+    },
+    activeSectionId: {
+      description: 'Id do item de âncora (href #id, ou /pagina#id na página atual) marcado como localização atual (aria-current="location"). Use useScrollSpy para obtê-lo.',
+      control: 'text'
+    },
     actions: {
       description:
         'Ações ao lado do menu, como um botão de chamada. Em telas largas ficam na barra, entre o menu e o botão de tema (data-slot="navbar-cta"). Em telas estreitas vão para o drawer, abaixo dos links (data-slot="navbar-drawer-cta"), e um clique em um link dentro delas fecha o drawer. O nó é renderizado em um lugar por vez.',
@@ -32,8 +45,7 @@ const meta = {
       description: 'Classe do cabeçalho (data-slot="navbar"). As partes seguem data-slot="navbar-*"; o drawer mobile é navbar-drawer, com data-state.',
       control: 'text'
     },
-    sections: { control: false },
-    style: { control: false }
+    style: { description: 'Estilo do cabeçalho.', control: false }
   }
 } satisfies Meta<typeof Navbar>
 

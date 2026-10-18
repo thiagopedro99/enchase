@@ -94,6 +94,45 @@ const refElementOf = (checker, symbol) => {
   return /RefAttributes<(\w+)>/.exec(checker.typeToString(type, undefined, typeFlags))?.[1]
 }
 
+const resolved = (checker, symbol) => (symbol && symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol)
+
+const literalText = (checker, expression, depth = 0) => {
+  if (ts.isStringLiteralLike(expression)) return `'${expression.text}'`
+  if (ts.isNumericLiteral(expression) || ts.isPrefixUnaryExpression(expression)) return expression.getText()
+  if (expression.kind === ts.SyntaxKind.TrueKeyword || expression.kind === ts.SyntaxKind.FalseKeyword) return expression.getText()
+  if (ts.isArrayLiteralExpression(expression) && expression.elements.length === 0) return '[]'
+  if (ts.isIdentifier(expression) && depth < 4) {
+    const declaration = resolved(checker, checker.getSymbolAtLocation(expression))?.valueDeclaration
+
+    return declaration && ts.isVariableDeclaration(declaration) && declaration.initializer ? literalText(checker, declaration.initializer, depth + 1) : undefined
+  }
+
+  return undefined
+}
+
+const componentFunction = (declaration) => {
+  const expression = declaration && ts.isVariableDeclaration(declaration) ? declaration.initializer : declaration
+
+  if (!expression) return undefined
+  if (ts.isArrowFunction(expression) || ts.isFunctionExpression(expression) || ts.isFunctionDeclaration(expression)) return expression
+  if (ts.isCallExpression(expression)) return expression.arguments.map(componentFunction).find(Boolean)
+
+  return undefined
+}
+
+const codeDefaults = (checker, symbol) => {
+  const pattern = componentFunction(symbol.valueDeclaration)?.parameters[0]?.name
+
+  if (!pattern || !ts.isObjectBindingPattern(pattern)) return new Map()
+
+  return new Map(
+    pattern.elements
+      .filter((element) => element.initializer)
+      .map((element) => [(element.propertyName ?? element.name).getText(), literalText(checker, element.initializer)])
+      .filter(([, value]) => value !== undefined && value !== "''")
+  )
+}
+
 const componentDoc = (checker, name, symbol, argTypes) => {
   const signature = callSignatureOf(checker, symbol)
   const parameter = signature.parameters[0]
@@ -102,6 +141,7 @@ const componentDoc = (checker, name, symbol, argTypes) => {
   const own = properties.filter((property) => property.declarations?.some(isOwn))
   const inherited = properties.some((property) => !property.declarations?.some(isOwn))
   const refTag = refElementOf(checker, symbol)
+  const defaults = codeDefaults(checker, symbol)
 
   return {
     name,
@@ -114,7 +154,9 @@ const componentDoc = (checker, name, symbol, argTypes) => {
         name: property.getName(),
         type: argType.table?.type?.summary ?? typeOf(checker, property),
         required: !(property.flags & ts.SymbolFlags.Optional),
-        default: argType.table?.defaultValue?.summary,
+        default: defaults.get(property.getName()) ?? argType.table?.defaultValue?.summary,
+        storyDefault: argType.table?.defaultValue?.summary,
+        codeDefault: defaults.get(property.getName()),
         description: argType.description
       }
     })
@@ -183,14 +225,22 @@ const buildModel = async () => {
 
 const model = await buildModel()
 const markdown = renderApiDocs(model)
-const undocumented = model.components.flatMap(({ name, props }) => props.filter((prop) => !prop.description).map((prop) => `${name}.${prop.name}`))
 const normalize = (text) => text.replace(/\r\n/g, '\n')
+const list = (entries) => entries.map((entry) => `  - ${entry}`).join('\n')
+const unquoted = (value) => String(value).replace(/['"]/g, '')
+
+const divergentDefaults = model.components.flatMap(({ name, props }) =>
+  props.filter((prop) => prop.codeDefault !== undefined && prop.storyDefault !== undefined && unquoted(prop.codeDefault) !== unquoted(prop.storyDefault)).map((prop) => `${name}.${prop.name}: the code uses ${prop.codeDefault} and the story says ${prop.storyDefault}`)
+)
+const undocumented = model.components.flatMap(({ name, props }) => props.filter((prop) => !prop.description).map((prop) => `${name}.${prop.name}`))
+const problems = divergentDefaults.length > 0 ? [`defaults that differ between the code and the story:\n${list(divergentDefaults)}`] : []
 
 if (check) {
   const current = existsSync(outputPath) ? normalize(readFileSync(outputPath, 'utf8')) : ''
 
-  if (current !== markdown) {
-    console.error('API.md is out of date: run "npm run docs:api" and commit the result')
+  if (current !== markdown) problems.unshift('API.md is out of date: run "npm run docs:api" and commit the result')
+  if (problems.length > 0) {
+    console.error(problems.join('\n'))
     process.exit(1)
   }
 
@@ -198,7 +248,11 @@ if (check) {
 } else {
   writeFileSync(outputPath, markdown)
   console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks, ${undocumented.length} props without a description`)
-  if (undocumented.length > 0) console.log(undocumented.map((entry) => `  - ${entry}`).join('\n'))
+  if (undocumented.length > 0) console.log(list(undocumented))
+  if (problems.length > 0) {
+    console.error(problems.join('\n'))
+    process.exit(1)
+  }
 }
 
 process.exit(0)

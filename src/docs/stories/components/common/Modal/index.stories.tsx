@@ -44,7 +44,22 @@ const meta = {
     closeOnEsc: true
   },
   argTypes: {
-    title: { description: 'Título do diálogo. Sem ele, use ariaLabel.', control: 'text' },
+    isOpen: {
+      description: 'Abre e fecha o modal. Ele é sempre controlado: quem usa guarda o estado e o muda em onClose. Renderiza em um portal no body, só depois de montar, e continua montado até a animação de saída terminar.',
+      control: false
+    },
+    onClose: {
+      description: 'Chamado quando o usuário pede para fechar: botão de fechar, clique no fundo ou Esc, conforme showCloseButton, closeOnOverlayClick e closeOnEsc. O modal não se fecha sozinho.',
+      control: false
+    },
+    title: { description: 'Título do diálogo (h2), que dá o nome acessível. Sem ele, use ariaLabel.', control: 'text' },
+    ariaLabel: { description: 'Nome acessível do diálogo quando não há title.', control: 'text' },
+    role: {
+      description: 'dialog é o padrão. alertdialog é para confirmações que exigem uma resposta: o corpo passa a ser a descrição acessível (aria-describedby).',
+      control: 'inline-radio',
+      options: ['dialog', 'alertdialog'],
+      table: { defaultValue: { summary: 'dialog' } }
+    },
     size: {
       description: 'Largura máxima do painel.',
       control: 'inline-radio',
@@ -55,11 +70,10 @@ const meta = {
     closeOnOverlayClick: { description: 'Fecha ao clicar no fundo.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
     closeOnEsc: { description: 'Fecha com Esc. Com modais empilhados, só o de cima fecha.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
     className: { description: 'Classe do painel. Vence a da biblioteca sem !important.', control: false },
+    style: { description: 'Estilo do painel, mesclado com o da biblioteca (o seu vence).', control: false },
     animation: { description: 'false desliga o movimento; { recipe, tuning } ajusta a duração, a distância e a escala.', control: false },
-    isOpen: { control: false },
-    onClose: { control: false },
-    children: { control: 'text' },
-    footer: { control: false }
+    children: { description: 'Conteúdo do corpo do modal.', control: 'text' },
+    footer: { description: 'Conteúdo fixo abaixo do corpo, como os botões de ação.', control: false }
   }
 } satisfies Meta<typeof Modal>
 

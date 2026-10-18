@@ -54,6 +54,10 @@ const meta = {
     wrapperClassName: {
       description: 'Classe da raiz (data-slot="input"). className e style continuam no input nativo (data-slot="input-field").',
       control: 'text'
+    },
+    wrapperStyle: {
+      description: 'Estilo da raiz (data-slot="input"). style continua no input nativo.',
+      control: false
     }
   }
 } satisfies Meta<typeof Input>

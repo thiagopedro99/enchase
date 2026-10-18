@@ -50,6 +50,10 @@ const meta = {
       description: 'Classe da raiz (data-slot="select"). className e style continuam no select nativo (data-slot="select-field").',
       control: 'text'
     },
+    wrapperStyle: {
+      description: 'Estilo da raiz (data-slot="select"). style continua no select nativo.',
+      control: false
+    },
     defaultValue: {
       description: 'Valor inicial quando o campo não é controlado. Use vazio para mostrar o placeholder.',
       control: false

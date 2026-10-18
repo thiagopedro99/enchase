@@ -13,8 +13,8 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `items` | `BreadcrumbItem[]` | *obrigatória* | Trilha em ordem. O último item é a página atual; os demais viram links quando têm href. |
-| `maxItems` | `number` | — | Acima desse número, o miolo vira um botão de reticências que mostra o caminho completo. |
-| `ariaLabel` | `string` | — |  |
+| `maxItems` | `number` | `4` | Acima desse número, o miolo vira um botão de reticências que mostra o caminho completo. |
+| `ariaLabel` | `string` | — | Nome acessível da navegação. O padrão vem do UIProvider (labels.breadcrumb). |
 
 Aceita também os demais atributos HTML do elemento raiz.
 
@@ -22,8 +22,8 @@ Aceita também os demais atributos HTML do elemento raiz.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `primary` | Estilo visual do botão. |
-| `size` | `'sm' \| 'md' \| 'lg'` | `md` | Tamanho do botão. |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Estilo visual do botão. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Tamanho do botão. |
 | `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
 | `animation` | `false \| { recipe, from, tuning }` | `press` | Receita de motion do botão, feita só com CSS. Use false para desligar a animação, ou { recipe, tuning } com press (escala ao pressionar) ou lift (sobe ao passar o mouse); outras receitas são ignoradas. A duração, a escala e a distância viram as variáveis --enchase-button-duration, --enchase-button-scale e --enchase-button-distance. Use os controles do grupo Motion para experimentar. O elemento raiz aceita className e style, e expõe data-slot="button". |
 
@@ -36,8 +36,8 @@ Aceita também os demais atributos de `<button>`, repassados ao elemento.
 | `href` | `string` | *obrigatória* | Destino do link, com as mesmas regras do `Link`: uma rota do app vai para o `navigate` do `UIProvider`; âncoras, o hash da página atual e URLs externas ficam com o navegador. |
 | `native` | `boolean` | `false` | Deixa o clique com o navegador mesmo em uma rota do app. |
 | `animation` | `false \| { recipe, from, tuning }` | `press` | Receita de motion do `Button`. Use false para desligar, ou { recipe, tuning } com press ou lift. |
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `primary` | Estilo visual, o mesmo do `Button`. |
-| `size` | `'sm' \| 'md' \| 'lg'` | `md` | Tamanho, o mesmo do `Button`. |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Estilo visual, o mesmo do `Button`. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Tamanho, o mesmo do `Button`. |
 | `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
 
 Aceita também os demais atributos de `<a>`, repassados ao elemento.
@@ -46,7 +46,7 @@ Aceita também os demais atributos de `<a>`, repassados ao elemento.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `variant` | `'default' \| 'elevated' \| 'outlined'` | `default` | Aparência do cartão. Só o elevated sobe ao passar o ponteiro. |
+| `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Aparência do cartão. Só o elevated sobe ao passar o ponteiro. |
 | `padding` | `string` | — | Espaçamento interno (qualquer valor CSS). Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence. |
 | `animation` | `false \| { recipe, tuning }` | `lift` | false desliga o movimento. { tuning: { duration, distance } } ajusta o lift (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido. |
 
@@ -58,8 +58,8 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 | --- | --- | --- | --- |
 | `label` | `string` | — | Texto do rótulo. Clicar nele também marca a caixa. |
 | `wrapperClassName` | `string` | — | Classe da raiz (data-slot="checkbox"). className continua no input nativo (data-slot="checkbox-input"). |
-| `wrapperStyle` | `CSSProperties` | — |  |
-| `animation` | `MotionOverride` | — |  |
+| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="checkbox"). style continua no input nativo. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | Animação do traço de marcado, que cresce com um pop curto. false desliga; { tuning: { duration, scale } } ajusta a duração em segundos e a escala inicial. |
 
 Aceita também os demais atributos de `<input>`, repassados ao elemento. Encaminha o `ref` para `<input>`.
 
@@ -70,10 +70,10 @@ Aceita também os demais atributos de `<input>`, repassados ao elemento. Encamin
 | `children` | `ReactNode` | *obrigatória* |  |
 | `theme` | `ThemeInput` | — |  |
 | `mode` | `'light' \| 'dark' \| 'system'` | — |  |
-| `defaultMode` | `'light' \| 'dark' \| 'system'` | — |  |
+| `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` |  |
 | `onModeChange` | `(mode: ColorMode) => void` | — |  |
 | `storage` | `ColorModeStorage \| null` | — |  |
-| `storageKey` | `string` | — |  |
+| `storageKey` | `string` | `'enchase-color-mode'` |  |
 | `cssLayer` | `string` | — |  |
 
 ### ColorModeScript
@@ -95,7 +95,7 @@ Aceita também os demais atributos de `<input>`, repassados ao elemento. Encamin
 | `message` | `string` | *obrigatória* |  |
 | `confirmText` | `string` | — |  |
 | `cancelText` | `string` | — |  |
-| `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | — |  |
+| `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` |  |
 | `animation` | `MotionOverride` | — |  |
 | `className` | `string` | — |  |
 | `style` | `CSSProperties` | — |  |
@@ -104,7 +104,7 @@ Aceita também os demais atributos de `<input>`, repassados ao elemento. Encamin
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `lg` | Largura máxima, tirada dos breakpoints do UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px por padrão). full não limita. 2xl continua aceito como alias de xxl. |
+| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Largura máxima, tirada dos breakpoints do UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px por padrão). full não limita. 2xl continua aceito como alias de xxl. |
 | `padding` | `boolean \| string` | `true` | true usa o espaçamento padrão nas laterais, false remove, e um texto CSS define o valor (variável --enchase-container-padding). |
 | `center` | `boolean` | `true` | Centraliza o container. Com false ele fica no início, e em RTL no lado direito. |
 
@@ -114,9 +114,9 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `direction` | `'row' \| 'column' \| 'row-reverse' \| 'column-reverse'` | — | Eixo principal. Em RTL, row começa pelo lado direito. |
-| `align` | `'start' \| 'center' \| 'end' \| 'stretch' \| 'baseline'` | — | Alinhamento no eixo cruzado. |
-| `justify` | `'start' \| 'center' \| 'end' \| 'between' \| 'around' \| 'evenly'` | — | Distribuição no eixo principal. |
+| `direction` | `'row' \| 'column' \| 'row-reverse' \| 'column-reverse'` | `'row'` | Eixo principal. Em RTL, row começa pelo lado direito. |
+| `align` | `'start' \| 'center' \| 'end' \| 'stretch' \| 'baseline'` | `'stretch'` | Alinhamento no eixo cruzado. |
+| `justify` | `'start' \| 'center' \| 'end' \| 'between' \| 'around' \| 'evenly'` | `'start'` | Distribuição no eixo principal. |
 | `gap` | `string` | — | Espaço entre os filhos, passado por variável CSS. O padrão vem do token de espaçamento. |
 | `wrap` | `boolean` | `false` | Permite quebrar linha. |
 
@@ -129,7 +129,7 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 | `companyName` | `string` | — | Nome exibido depois do ano. Sem valor padrão. |
 | `notice` | `string` | — | Aviso depois do nome, como a licença. Sem valor padrão. |
 | `year` | `number` | — | Ano exibido. O padrão é o ano atual. |
-| `links` | `FooterLink[]` | — | Links exibidos antes do aviso, como [{ label, href }]. |
+| `links` | `FooterLink[]` | `[]` | Links exibidos antes do aviso, como [{ label, href }]. |
 
 Aceita também os demais atributos HTML do elemento raiz.
 
@@ -163,7 +163,7 @@ Aceita também os demais atributos de `<svg>`, repassados ao elemento.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `size` | `'xs' \| 'sm' \| 'md'` | — |  |
+| `size` | `'xs' \| 'sm' \| 'md'` | `'sm'` |  |
 | `color` | `string` | — |  |
 | `label` | `string` | — |  |
 | `animation` | `MotionOverride` | — |  |
@@ -180,7 +180,7 @@ Aceita também os demais atributos de `<span>`, repassados ao elemento.
 | `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
 | `passwordToggle` | `boolean` | `true` | Mostra o botão para revelar ou ocultar a senha. Só vale quando type é password. Os textos do botão vêm do UIProvider. |
 | `wrapperClassName` | `string` | — | Classe da raiz (data-slot="input"). className e style continuam no input nativo (data-slot="input-field"). |
-| `wrapperStyle` | `CSSProperties` | — |  |
+| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="input"). style continua no input nativo. |
 
 Aceita também os demais atributos de `<input>`, repassados ao elemento. Encaminha o `ref` para `<input>`.
 
@@ -188,30 +188,30 @@ Aceita também os demais atributos de `<input>`, repassados ao elemento. Encamin
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *obrigatória* |  |
-| `pageTitle` | `string` | — |  |
-| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | — | Largura máxima do conteúdo, tirada dos breakpoints. |
-| `padding` | `boolean \| string` | — |  |
-| `hideNavbar` | `boolean` | — | Esconde a navegação. |
-| `hideFooter` | `boolean` | — | Esconde o rodapé. |
-| `centered` | `boolean` | — | Centraliza o conteúdo na vertical. |
-| `navigation` | `'sidebar' \| 'navbar'` | `sidebar` | sidebar mostra a barra superior com o botão de menu e o menu lateral. navbar mostra a barra de navegação clássica no topo. |
-| `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | `md` | Breakpoint em que a sidebar deixa de ser um drawer e passa a ser permanente. Os valores vêm do UIProvider. |
-| `brand` | `string` | — |  |
-| `brandLogo` | `string` | — |  |
+| `children` | `ReactNode` | *obrigatória* | Conteúdo da página. Fica em <main id="main-content">, dentro de um Container, e é o destino do link para pular ao conteúdo. |
+| `pageTitle` | `string` | — | Título da página. Entra na trilha de navegação quando nenhum item do menu corresponde à página atual. O Layout não altera document.title. |
+| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Largura máxima do conteúdo, tirada dos breakpoints. |
+| `padding` | `boolean \| string` | `true` | Espaçamento lateral do conteúdo, como no Container: true usa o padrão, false remove, e um texto CSS define o valor. |
+| `hideNavbar` | `boolean` | `false` | Esconde a navegação (a barra superior, a sidebar e a navbar). |
+| `hideFooter` | `boolean` | `false` | Esconde o rodapé. |
+| `centered` | `boolean` | `false` | Centraliza o conteúdo na vertical. |
+| `navigation` | `'sidebar' \| 'navbar'` | `'sidebar'` | sidebar mostra a barra superior com o botão de menu e o menu lateral. navbar mostra a barra de navegação clássica no topo. |
+| `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | `'md'` | Breakpoint em que a sidebar deixa de ser um drawer e passa a ser permanente. Os valores vêm do UIProvider. |
+| `brand` | `string` | — | Nome da marca. No topo da sidebar é um link para a raiz, com a inicial do nome no lugar da imagem; com navigation="navbar" vira o logo da Navbar. |
+| `brandLogo` | `string` | — | URL de uma imagem para a marca da sidebar, no lugar da inicial do nome. A imagem é decorativa, e o nome continua como texto. |
 | `footerProps` | `FooterProps` | — | companyName, notice, year e links do rodapé. |
-| `sidebarFooter` | `SidebarSlot` | — |  |
-| `navigationSections` | `SidebarSection[]` | — |  |
-| `pageSections` | `SidebarSection[]` | — | Seções de âncora acrescentadas ao menu. |
-| `activePageSectionId` | `string` | — |  |
+| `sidebarFooter` | `SidebarSlot` | — | Conteúdo fixo no rodapé da sidebar, acima do botão de recolher. Pode ser uma função que recebe { collapsed }. |
+| `navigationSections` | `SidebarSection[]` | `[]` | Seções do menu principal, como em Sidebar: [{ id, title?, items: [{ id, label, href?, native?, icon?, badge?, onClick? }] }]. |
+| `pageSections` | `SidebarSection[]` | `[]` | Seções de âncora acrescentadas ao menu. |
+| `activePageSectionId` | `string` | — | Id do item de âncora que está na tela (use useScrollSpy): fica marcado no menu (aria-current="location") e vira o último item da trilha. |
 | `breadcrumbs` | `BreadcrumbItem[]` | — | Trilha explícita. Sem ela o Layout deriva a trilha do menu e da página atual. |
-| `collapsed` | `boolean` | — |  |
-| `defaultCollapsed` | `boolean` | — | Estado inicial da sidebar recolhida. collapsed e onCollapsedChange controlam de fora. |
-| `onCollapsedChange` | `(collapsed: boolean) => void` | — |  |
-| `storageKey` | `string` | — | Guarda o estado recolhido no localStorage com esse nome, lido só depois de montar. |
-| `open` | `boolean` | — |  |
-| `defaultOpen` | `boolean` | — |  |
-| `onOpenChange` | `(open: boolean) => void` | — |  |
+| `collapsed` | `boolean` | — | Sidebar recolhida, controlada de fora junto com onCollapsedChange. Sem ela o estado é interno (defaultCollapsed) e pode ser guardado com storageKey. |
+| `defaultCollapsed` | `boolean` | `false` | Estado inicial da sidebar recolhida. collapsed e onCollapsedChange controlam de fora. |
+| `onCollapsedChange` | `(collapsed: boolean) => void` | — | Chamado com o novo valor quando a sidebar é recolhida ou expandida. |
+| `storageKey` | `string` | — | Guarda o estado recolhido no localStorage com esse nome, lido só depois de montar. Ignorado quando collapsed é controlado. |
+| `open` | `boolean` | — | Drawer do menu em telas estreitas (abaixo do breakpoint), controlado de fora junto com onOpenChange. Sem ele o estado é interno (defaultOpen). |
+| `defaultOpen` | `boolean` | `false` | Estado inicial do drawer quando ele não é controlado. |
+| `onOpenChange` | `(open: boolean) => void` | — | Chamado com o novo valor quando o drawer abre ou fecha. |
 
 Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
@@ -228,7 +228,7 @@ Aceita também os demais atributos de `<a>`, repassados ao elemento.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `md` | Diâmetro do anel. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Diâmetro do anel. |
 | `overlay` | `boolean` | `false` | Cobre a página, deixa o resto inerte e trava a rolagem enquanto estiver montado. |
 | `text` | `string` | — | Texto visível. Sem ele o leitor de tela anuncia labels.loading. |
 | `color` | `string` | — | Cor do trecho que gira (qualquer cor CSS). |
@@ -240,56 +240,56 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `isOpen` | `boolean` | *obrigatória* |  |
-| `onClose` | `() => void` | *obrigatória* |  |
-| `title` | `string` | — | Título do diálogo. Sem ele, use ariaLabel. |
-| `ariaLabel` | `string` | — |  |
-| `role` | `'dialog' \| 'alertdialog'` | — |  |
-| `children` | `ReactNode` | *obrigatória* |  |
-| `footer` | `ReactNode` | — |  |
+| `isOpen` | `boolean` | *obrigatória* | Abre e fecha o modal. Ele é sempre controlado: quem usa guarda o estado e o muda em onClose. Renderiza em um portal no body, só depois de montar, e continua montado até a animação de saída terminar. |
+| `onClose` | `() => void` | *obrigatória* | Chamado quando o usuário pede para fechar: botão de fechar, clique no fundo ou Esc, conforme showCloseButton, closeOnOverlayClick e closeOnEsc. O modal não se fecha sozinho. |
+| `title` | `string` | — | Título do diálogo (h2), que dá o nome acessível. Sem ele, use ariaLabel. |
+| `ariaLabel` | `string` | — | Nome acessível do diálogo quando não há title. |
+| `role` | `'dialog' \| 'alertdialog'` | `'dialog'` | dialog é o padrão. alertdialog é para confirmações que exigem uma resposta: o corpo passa a ser a descrição acessível (aria-describedby). |
+| `children` | `ReactNode` | *obrigatória* | Conteúdo do corpo do modal. |
+| `footer` | `ReactNode` | — | Conteúdo fixo abaixo do corpo, como os botões de ação. |
 | `showCloseButton` | `boolean` | `true` | Mostra o botão de fechar no cabeçalho. |
 | `closeOnOverlayClick` | `boolean` | `true` | Fecha ao clicar no fundo. |
 | `closeOnEsc` | `boolean` | `true` | Fecha com Esc. Com modais empilhados, só o de cima fecha. |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `md` | Largura máxima do painel. |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Largura máxima do painel. |
 | `animation` | `MotionOverride` | — | false desliga o movimento; { recipe, tuning } ajusta a duração, a distância e a escala. |
 | `className` | `string` | — | Classe do painel. Vence a da biblioteca sem !important. |
-| `style` | `CSSProperties` | — |  |
+| `style` | `CSSProperties` | — | Estilo do painel, mesclado com o da biblioteca (o seu vence). |
 
 ### Navbar
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `logo` | `ReactNode` | — | Marca exibida à esquerda (ou à direita em rtl). Aceita texto ou qualquer nó React, como uma imagem ou um SVG. É um link para logoHref (data-slot="navbar-logo"). |
-| `logoHref` | `string` | `/` | Destino do link da marca. Aceita uma rota, uma âncora (#inicio) ou uma URL. |
-| `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | — |  |
-| `sections` | `SidebarSection[]` | — |  |
-| `activeSectionId` | `string` | — | Id do item de âncora marcado como localização atual. |
+| `logo` | `ReactNode` | `'Logo'` | Marca exibida à esquerda (ou à direita em rtl). Aceita texto ou qualquer nó React, como uma imagem ou um SVG. É um link para logoHref (data-slot="navbar-logo"). |
+| `logoHref` | `string` | `'/'` | Destino do link da marca. Aceita uma rota, uma âncora (#inicio) ou uma URL. |
+| `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | `'md'` | Breakpoint a partir do qual os links aparecem na barra. Abaixo dele, a barra mostra o botão de menu e os links vão para o drawer. Os valores vêm do UIProvider. |
+| `sections` | `SidebarSection[]` | — | Itens do menu, no mesmo formato da Sidebar: [{ id, items: [{ id, label, href }] }]. Só os itens com href aparecem, e os títulos das seções não são exibidos. |
+| `activeSectionId` | `string` | — | Id do item de âncora (href #id, ou /pagina#id na página atual) marcado como localização atual (aria-current="location"). Use useScrollSpy para obtê-lo. |
 | `actions` | `ReactNode` | — | Ações ao lado do menu, como um botão de chamada. Em telas largas ficam na barra, entre o menu e o botão de tema (data-slot="navbar-cta"). Em telas estreitas vão para o drawer, abaixo dos links (data-slot="navbar-drawer-cta"), e um clique em um link dentro delas fecha o drawer. O nó é renderizado em um lugar por vez. |
 | `className` | `string` | — | Classe do cabeçalho (data-slot="navbar"). As partes seguem data-slot="navbar-*"; o drawer mobile é navbar-drawer, com data-state. |
-| `style` | `CSSProperties` | — |  |
+| `style` | `CSSProperties` | — | Estilo do cabeçalho. |
 
 ### Popover
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *obrigatória* |  |
-| `content` | `ReactNode` | *obrigatória* |  |
+| `children` | `ReactNode` | *obrigatória* | O gatilho: um clique nele abre e fecha o popover. Fica dentro de um span (data-slot="popover-trigger") e, sendo um elemento React, recebe aria-expanded, aria-controls e aria-haspopup. |
+| `content` | `ReactNode` | *obrigatória* | Conteúdo do popover. Renderiza em um portal no body, só enquanto o popover está aberto e durante a saída. |
 | `open` | `boolean` | — | Estado controlado. Sem ele, o componente guarda o próprio estado (defaultOpen e onOpenChange). |
-| `defaultOpen` | `boolean` | — |  |
-| `onOpenChange` | `(open: boolean) => void` | — |  |
-| `placement` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-start' \| 'bottom-end' \| 'left-start' \| 'left-end' \| 'start-start' \| 'start-end' \| 'end-start' \| 'end-end'` | `bottom` | Lado e alinhamento em relação ao gatilho. start e end seguem a direção do UIProvider. Perto da borda o popover inverte o lado, desliza para caber e encolhe até o espaço disponível. |
+| `defaultOpen` | `boolean` | `false` | Estado inicial quando o popover não é controlado. |
+| `onOpenChange` | `(open: boolean) => void` | — | Chamado com o novo estado quando o usuário abre ou fecha: clique no gatilho, Esc ou clique fora. Combine com open para controlar de fora. |
+| `placement` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-start' \| 'bottom-end' \| 'left-start' \| 'left-end' \| 'start-start' \| 'start-end' \| 'end-start' \| 'end-end'` | `'bottom'` | Lado e alinhamento em relação ao gatilho. start e end seguem a direção do UIProvider. Perto da borda o popover inverte o lado, desliza para caber e encolhe até o espaço disponível. |
 | `offset` | `number` | `8` | Distância em px entre o gatilho e o popover. |
 | `padding` | `number` | `8` | Margem em px até a borda da janela. |
-| `role` | `'dialog' \| 'listbox' \| 'tree' \| 'grid'` | `dialog` | Papel do conteúdo, que também vira aria-haspopup no gatilho. O padrão é dialog; menu não é suportado porque exige navegação própria por setas. |
+| `role` | `'dialog' \| 'listbox' \| 'tree' \| 'grid'` | `'dialog'` | Papel do conteúdo, que também vira aria-haspopup no gatilho. O padrão é dialog; menu não é suportado porque exige navegação própria por setas. |
 | `label` | `string` | — | Nome acessível do conteúdo (aria-label). |
 | `arrow` | `boolean` | `false` | Mostra uma seta apontando para o gatilho. |
 | `closeOnEsc` | `boolean` | `true` | Esc fecha só a camada de cima e devolve o foco ao gatilho. |
 | `closeOnOutsideClick` | `boolean` | `true` | Um clique fora fecha o popover sem tirar o foco de onde o clique caiu. |
 | `animation` | `false \| { recipe, tuning }` | `pop` | false desliga a transição. { recipe: "fade" } troca o pop por um fade; { tuning: { duration, scale } } ajusta duração e escala. |
 | `className` | `string` | — | Classe do elemento que envolve o gatilho (data-slot="popover-trigger"). |
-| `style` | `CSSProperties` | — |  |
+| `style` | `CSSProperties` | — | Estilo do elemento que envolve o gatilho. |
 | `contentClassName` | `string` | — | Classe do conteúdo (data-slot="popover-content"). Também dá para estilizar por data-state e data-placement. |
-| `contentStyle` | `CSSProperties` | — |  |
+| `contentStyle` | `CSSProperties` | — | Estilo do conteúdo. |
 
 ### Select
 
@@ -302,7 +302,7 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 | `placeholder` | `string` | — | Texto da opção inicial, exibido enquanto nada foi escolhido. Para aparecer, o campo precisa começar com defaultValue vazio. |
 | `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
 | `wrapperClassName` | `string` | — | Classe da raiz (data-slot="select"). className e style continuam no select nativo (data-slot="select-field"). |
-| `wrapperStyle` | `CSSProperties` | — |  |
+| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="select"). style continua no select nativo. |
 
 Aceita também os demais atributos de `<select>`, repassados ao elemento. Encaminha o `ref` para `<select>`.
 
@@ -310,27 +310,27 @@ Aceita também os demais atributos de `<select>`, repassados ao elemento. Encami
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `sections` | `SidebarSection[]` | *obrigatória* |  |
-| `activeSectionId` | `string` | — |  |
-| `currentHref` | `string` | — |  |
-| `header` | `SidebarSlot` | — |  |
-| `footer` | `SidebarSlot` | — |  |
-| `variant` | `'permanent' \| 'modal'` | `permanent` | permanent fica na página; modal vira um drawer com foco preso, página inerte e Esc para fechar, que só fecha a camada de cima. |
-| `collapsed` | `boolean` | `false` | Barra de ícones (80px) em vez da barra completa. A largura muda de uma vez, sem animação. |
-| `onToggleCollapsed` | `() => void` | — |  |
-| `open` | `boolean` | — |  |
-| `onClose` | `() => void` | — |  |
-| `ariaLabel` | `string` | — |  |
-| `id` | `string` | — |  |
-| `animation` | `false \| { recipe, from, tuning }` | — | Só vale para o drawer. false desliga o deslize; { tuning: { distance, duration } } ajusta a distância e a duração. |
+| `sections` | `SidebarSection[]` | *obrigatória* | Seções do menu, como [{ id, title?, items: [{ id, label, icon?, href?, native?, badge?, onClick? }] }]. Um item com href é um link; sem href é um botão que chama onClick. Sem icon, o item mostra a inicial do rótulo. |
+| `activeSectionId` | `string` | — | Id do item de âncora (href que começa com #, ou aponta para a página atual) marcado como localização atual (aria-current="location"). Use useScrollSpy para obtê-lo. |
+| `currentHref` | `string` | — | Caminho atual, que marca o item da página (aria-current="page") e vale também para o hash da página atual. Sem ele vale o currentHref do UIProvider. |
+| `header` | `SidebarSlot` | — | Conteúdo fixo no topo, como a marca. Pode ser uma função que recebe { collapsed } para trocar o conteúdo na barra recolhida. |
+| `footer` | `SidebarSlot` | — | Conteúdo fixo no rodapé, acima do botão de recolher. Pode ser uma função que recebe { collapsed }. |
+| `variant` | `'permanent' \| 'modal'` | `'permanent'` | permanent fica na página; modal vira um drawer com foco preso, página inerte e Esc para fechar, que só fecha a camada de cima. |
+| `collapsed` | `boolean` | `false` | Barra só de ícones (80px) em vez da completa. A largura anima por data-state (expanded, collapsing, collapsed e expanding); com animation={false} muda de uma vez. Só vale em permanent. |
+| `onToggleCollapsed` | `() => void` | — | Mostra o botão de recolher no rodapé e é chamado ao clicar nele. Sem esta prop o botão não aparece; quem usa guarda o estado de collapsed. |
+| `open` | `boolean` | — | Só em modal: abre o drawer. Fechado, nada é renderizado. |
+| `onClose` | `() => void` | — | Só em modal: chamado ao clicar no fundo, apertar Esc ou escolher um item. |
+| `ariaLabel` | `string` | — | Nome acessível da navegação. O padrão vem do UIProvider: labels.mainNavigation em permanent e labels.mobileNavigation em modal. |
+| `id` | `string` | — | id da raiz em permanent ou do painel em modal, útil para o aria-controls do botão que abre o menu. |
+| `animation` | `false \| { recipe, from, tuning }` | — | false desliga o movimento. Em permanent ajusta o recolher ({ tuning: { duration } }); em modal, o deslize do drawer ({ tuning: { distance, duration } }). |
 | `className` | `string` | — | Classe da raiz (data-slot="sidebar"); no drawer, do painel (data-slot="sidebar-panel"). Também dá para estilizar por data-slot, data-state e data-variant. |
-| `style` | `CSSProperties` | — |  |
+| `style` | `CSSProperties` | — | Estilo da raiz em permanent ou do painel em modal. |
 
 ### Skeleton
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `variant` | `'text' \| 'circular' \| 'rectangular'` | `text` | Forma do espaço reservado. |
+| `variant` | `'text' \| 'circular' \| 'rectangular'` | `'text'` | Forma do espaço reservado. |
 | `width` | `string` | — | Largura (qualquer valor CSS). No circular, width ou height define os dois lados. |
 | `height` | `string` | — | Altura (qualquer valor CSS). |
 | `animation` | `false \| { recipe, tuning }` | `shimmer` | false desliga o brilho. { tuning: { duration } } muda a duração em segundos. Com movimento reduzido o brilho vira um pulso de opacidade. |
@@ -365,16 +365,16 @@ Aceita também os demais atributos de `<button>`, repassados ao elemento.
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `text` | `string` | *obrigatória* | Texto da dica. Com describe ligado, ele também vira a descrição acessível do gatilho. |
-| `children` | `ReactNode` | *obrigatória* |  |
-| `position` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left'` | `top` | Lado do gatilho onde a dica aparece. start e end seguem a direção do UIProvider (esquerda e direita em ltr, o inverso em rtl). Perto da borda da tela a dica inverte o lado e se desloca para caber. |
+| `children` | `ReactNode` | *obrigatória* | O gatilho. Fica dentro de um div (data-slot="tooltip-trigger") e, com describe ligado, recebe aria-describedby. |
+| `position` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Lado do gatilho onde a dica aparece. start e end seguem a direção do UIProvider (esquerda e direita em ltr, o inverso em rtl). Perto da borda da tela a dica inverte o lado e se desloca para caber. |
 | `describe` | `boolean` | `true` | Liga a descrição acessível do gatilho. Desligue quando o gatilho já tem o mesmo texto como nome, como um botão só com ícone. |
 | `animation` | `false \| { recipe, tuning }` | `fade` | false desliga a transição. { recipe: "pop" } acrescenta uma escala leve; { tuning: { duration } } muda a duração em segundos. |
-| `openDelay` | `number` | `0` | Milissegundos entre entrar no gatilho e mostrar a dica. |
+| `openDelay` | `number` | `100` | Milissegundos entre entrar no gatilho e mostrar a dica. 0 mostra na hora. Com outra dica aberta, ou fechada há menos de 300 ms, a próxima abre sem esperar e sem animação. |
 | `closeDelay` | `number` | `120` | Milissegundos entre sair do gatilho e esconder a dica. Mover o ponteiro para a própria dica mantém ela aberta. |
 | `className` | `string` | — | Classe do elemento que envolve o gatilho (data-slot="tooltip-trigger"). |
-| `style` | `CSSProperties` | — |  |
+| `style` | `CSSProperties` | — | Estilo do elemento que envolve o gatilho. |
 | `bubbleClassName` | `string` | — | Classe da dica (data-slot="tooltip-bubble"). Também dá para estilizar por data-slot, data-position e data-state. |
-| `bubbleStyle` | `CSSProperties` | — |  |
+| `bubbleStyle` | `CSSProperties` | — | Estilo da dica. |
 
 ### UIProvider
 

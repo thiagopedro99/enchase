@@ -22,6 +22,10 @@ const meta = {
       description: 'Acima desse número, o miolo vira um botão de reticências que mostra o caminho completo.',
       control: 'number'
     },
+    ariaLabel: {
+      description: 'Nome acessível da navegação. O padrão vem do UIProvider (labels.breadcrumb).',
+      control: 'text'
+    },
     className: {
       description: 'Classe do usuário, aplicada na raiz depois da classe da biblioteca. Também aceita style e data-slot nas partes.',
       control: false

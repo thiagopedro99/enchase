@@ -30,9 +30,9 @@ const meta = {
       table: { defaultValue: { summary: 'true' } }
     },
     openDelay: {
-      description: 'Milissegundos entre entrar no gatilho e mostrar a dica.',
+      description: 'Milissegundos entre entrar no gatilho e mostrar a dica. 0 mostra na hora. Com outra dica aberta, ou fechada há menos de 300 ms, a próxima abre sem esperar e sem animação.',
       control: 'number',
-      table: { defaultValue: { summary: '0' } }
+      table: { defaultValue: { summary: '100' } }
     },
     closeDelay: {
       description: 'Milissegundos entre sair do gatilho e esconder a dica. Mover o ponteiro para a própria dica mantém ela aberta.',
@@ -52,9 +52,9 @@ const meta = {
       description: 'Classe da dica (data-slot="tooltip-bubble"). Também dá para estilizar por data-slot, data-position e data-state.',
       control: 'text'
     },
-    children: { control: false },
-    style: { control: false },
-    bubbleStyle: { control: false }
+    children: { description: 'O gatilho. Fica dentro de um div (data-slot="tooltip-trigger") e, com describe ligado, recebe aria-describedby.', control: false },
+    style: { description: 'Estilo do elemento que envolve o gatilho.', control: false },
+    bubbleStyle: { description: 'Estilo da dica.', control: false }
   }
 } satisfies Meta<typeof Tooltip>
 

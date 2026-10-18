@@ -30,6 +30,15 @@ const meta = {
     wrapperClassName: {
       description: 'Classe da raiz (data-slot="checkbox"). className continua no input nativo (data-slot="checkbox-input").',
       control: 'text'
+    },
+    wrapperStyle: {
+      description: 'Estilo da raiz (data-slot="checkbox"). style continua no input nativo.',
+      control: false
+    },
+    animation: {
+      description: 'Animação do traço de marcado, que cresce com um pop curto. false desliga; { tuning: { duration, scale } } ajusta a duração em segundos e a escala inicial.',
+      control: false,
+      table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'pop' } }
     }
   }
 } satisfies Meta<typeof Checkbox>

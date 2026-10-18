@@ -75,6 +75,15 @@ const meta = {
       description: 'Estado controlado. Sem ele, o componente guarda o próprio estado (defaultOpen e onOpenChange).',
       control: 'boolean'
     },
+    defaultOpen: {
+      description: 'Estado inicial quando o popover não é controlado.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } }
+    },
+    onOpenChange: {
+      description: 'Chamado com o novo estado quando o usuário abre ou fecha: clique no gatilho, Esc ou clique fora. Combine com open para controlar de fora.',
+      control: false
+    },
     animation: {
       description: 'false desliga a transição. { recipe: "fade" } troca o pop por um fade; { tuning: { duration, scale } } ajusta duração e escala.',
       control: 'object',
@@ -88,10 +97,16 @@ const meta = {
       description: 'Classe do conteúdo (data-slot="popover-content"). Também dá para estilizar por data-state e data-placement.',
       control: 'text'
     },
-    children: { control: false },
-    content: { control: false },
-    style: { control: false },
-    contentStyle: { control: false }
+    children: {
+      description: 'O gatilho: um clique nele abre e fecha o popover. Fica dentro de um span (data-slot="popover-trigger") e, sendo um elemento React, recebe aria-expanded, aria-controls e aria-haspopup.',
+      control: false
+    },
+    content: {
+      description: 'Conteúdo do popover. Renderiza em um portal no body, só enquanto o popover está aberto e durante a saída.',
+      control: false
+    },
+    style: { description: 'Estilo do elemento que envolve o gatilho.', control: false },
+    contentStyle: { description: 'Estilo do conteúdo.', control: false }
   }
 } satisfies Meta<typeof Popover>
 
