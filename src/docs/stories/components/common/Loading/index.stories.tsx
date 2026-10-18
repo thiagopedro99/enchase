@@ -9,6 +9,13 @@ const meta = {
     size: 'md',
     overlay: false
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Indicador de carregamento em anel, com texto opcional. Com `overlay`, cobre a página, deixa o resto inerte e trava a rolagem.'
+      }
+    }
+  },
   argTypes: {
     size: {
       description: 'Diâmetro do anel.',

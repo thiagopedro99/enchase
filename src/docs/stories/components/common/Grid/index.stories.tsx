@@ -17,6 +17,13 @@ const meta = {
     columns: 3,
     children: cells
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query.'
+      }
+    }
+  },
   argTypes: {
     columns: {
       description: 'Número de colunas em telas largas. Quando não cabem, o grid reduz as colunas sozinho, sem media query.',

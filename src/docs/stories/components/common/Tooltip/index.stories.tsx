@@ -13,6 +13,13 @@ const meta = {
     closeDelay: 120,
     children: <Button>Salvar</Button>
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Dica de texto para um gatilho, aberta por ponteiro e por foco. Dá uma descrição acessível ao gatilho e ajusta a posição perto da borda da tela.'
+      }
+    }
+  },
   argTypes: {
     text: {
       description: 'Texto da dica. Com describe ligado, ele também vira a descrição acessível do gatilho.',

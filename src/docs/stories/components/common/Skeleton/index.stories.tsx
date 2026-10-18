@@ -8,6 +8,13 @@ const meta = {
   args: {
     variant: 'text'
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Espaço reservado enquanto o conteúdo carrega, com brilho animado, nas formas texto, círculo e retângulo.'
+      }
+    }
+  },
   argTypes: {
     variant: {
       description: 'Forma do espaço reservado.',

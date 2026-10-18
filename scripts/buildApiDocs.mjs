@@ -10,7 +10,7 @@ import { hookNotes, renderApiDocs } from './apiDocs.mjs'
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const posixRoot = root.replaceAll('\\', '/')
 const outputPath = join(root, 'API.md')
-const storiesRoot = join(root, 'src', 'docs', 'stories', 'components')
+const storiesRoot = join(root, 'src', 'docs', 'stories')
 const check = process.argv.includes('--check')
 
 const elementTags = {
@@ -133,7 +133,7 @@ const codeDefaults = (checker, symbol) => {
   )
 }
 
-const componentDoc = (checker, name, symbol, argTypes) => {
+const componentDoc = (checker, name, symbol, { argTypes, description }) => {
   const signature = callSignatureOf(checker, symbol)
   const parameter = signature.parameters[0]
   const propsType = parameter ? checker.getTypeOfSymbolAtLocation(parameter, parameter.declarations[0]) : undefined
@@ -145,6 +145,7 @@ const componentDoc = (checker, name, symbol, argTypes) => {
 
   return {
     name,
+    description,
     element: inherited ? elementOf(checker, propsType) : undefined,
     refElement: refTag ? (elementTags[refTag] ?? 'root') : undefined,
     props: own.map((property) => {
@@ -200,7 +201,15 @@ const loadStoryDocs = async (server) => {
     const { default: meta } = await server.ssrLoadModule(`/${relative(root, file).replaceAll('\\', '/')}`)
     const name = names.get(meta.component)
 
-    if (name && !docs.has(name)) docs.set(name, meta.argTypes ?? {})
+    if (name && !docs.has(name)) docs.set(name, { argTypes: meta.argTypes ?? {}, description: meta.parameters?.docs?.description?.component })
+  }
+
+  const { apiNotes } = await server.ssrLoadModule('/src/docs/shared/apiNotes.ts')
+
+  for (const [name, notes] of Object.entries(apiNotes)) {
+    if (docs.has(name)) throw new Error(`apiNotes documents ${name}, which already has a story: keep one of them`)
+
+    docs.set(name, { argTypes: notes.argTypes, description: notes.description })
   }
 
   return docs
@@ -215,7 +224,7 @@ const buildModel = async () => {
     const exported = valueExports(program, checker)
 
     return {
-      components: exported.filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(checker, symbol)).map(({ name, symbol }) => componentDoc(checker, name, symbol, docs.get(name) ?? {})),
+      components: exported.filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(checker, symbol)).map(({ name, symbol }) => componentDoc(checker, name, symbol, docs.get(name) ?? { argTypes: {} })),
       hooks: exported.filter(({ name }) => /^use[A-Z]/.test(name)).map(({ name, symbol }) => hookDoc(checker, name, symbol))
     }
   } finally {
@@ -233,7 +242,18 @@ const divergentDefaults = model.components.flatMap(({ name, props }) =>
   props.filter((prop) => prop.codeDefault !== undefined && prop.storyDefault !== undefined && unquoted(prop.codeDefault) !== unquoted(prop.storyDefault)).map((prop) => `${name}.${prop.name}: the code uses ${prop.codeDefault} and the story says ${prop.storyDefault}`)
 )
 const undocumented = model.components.flatMap(({ name, props }) => props.filter((prop) => !prop.description).map((prop) => `${name}.${prop.name}`))
-const problems = divergentDefaults.length > 0 ? [`defaults that differ between the code and the story:\n${list(divergentDefaults)}`] : []
+const withoutCode = (text) => text.replace(/```[\s\S]*?```/g, '').replace(/`[^`]*`/g, '')
+const unsafeMarkdown = model.components
+  .flatMap(({ name, description, props }) => [[name, description], ...props.map((prop) => [`${name}.${prop.name}`, prop.description])])
+  .filter(([, text]) => text && /<[a-zA-Z/!]|\*/.test(withoutCode(text)))
+  .map(([where]) => where)
+const undescribed = model.components.filter((component) => !component.description).map((component) => component.name)
+const problems = [
+  ...(divergentDefaults.length > 0 ? [`defaults that differ between the code and the story:\n${list(divergentDefaults)}`] : []),
+  ...(undocumented.length > 0 ? [`props without a description in the story argTypes:\n${list(undocumented)}`] : []),
+  ...(unsafeMarkdown.length > 0 ? [`descriptions with an HTML tag or an asterisk outside a code span (wrap it in backticks):\n${list(unsafeMarkdown)}`] : []),
+  ...(undescribed.length > 0 ? [`components without a description (parameters.docs.description.component in the story):\n${list(undescribed)}`] : [])
+]
 
 if (check) {
   const current = existsSync(outputPath) ? normalize(readFileSync(outputPath, 'utf8')) : ''
@@ -247,8 +267,7 @@ if (check) {
   console.log(`API.md is up to date: ${model.components.length} components, ${model.hooks.length} hooks`)
 } else {
   writeFileSync(outputPath, markdown)
-  console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks, ${undocumented.length} props without a description`)
-  if (undocumented.length > 0) console.log(list(undocumented))
+  console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks`)
   if (problems.length > 0) {
     console.error(problems.join('\n'))
     process.exit(1)

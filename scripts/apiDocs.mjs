@@ -18,11 +18,11 @@ const propRow = (prop) => `| ${code(prop.name)} | ${code(prop.type)} | ${default
 
 const attributeNote = (element) => (element === 'root' ? 'Aceita também os demais atributos HTML do elemento raiz.' : `Aceita também os demais atributos de ${code(`<${element}>`)}, repassados ao elemento.`)
 
-const componentSection = ({ name, props, element, refElement }) => {
+const componentSection = ({ name, description, props, element, refElement }) => {
   const notes = [element && attributeNote(element), refElement && `Encaminha o \`ref\` para ${code(`<${refElement}>`)}.`].filter(Boolean)
   const table = props.length > 0 ? ['| Prop | Tipo | Padrão | Descrição |', '| --- | --- | --- | --- |', ...props.map(propRow)] : ['Sem props próprias.']
 
-  return [`### ${name}`, '', ...table, ...(notes.length > 0 ? ['', notes.join(' ')] : [])].join('\n')
+  return [`### ${name}`, '', ...(description ? [description, ''] : []), ...table, ...(notes.length > 0 ? ['', notes.join(' ')] : [])].join('\n')
 }
 
 const hookSection = ({ name, signature, note, members }) => {

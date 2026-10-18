@@ -7,7 +7,14 @@ const box = { background: 'var(--enchase-color-surface-container)', padding: '1r
 const meta = {
   title: 'Componentes/Container',
   component: Container,
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'Limita a largura do conteúdo pelos breakpoints do `UIProvider`, com espaçamento lateral e centralização opcionais.'
+      }
+    }
+  },
   args: {
     maxWidth: 'lg',
     padding: true,

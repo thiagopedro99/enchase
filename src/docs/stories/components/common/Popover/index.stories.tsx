@@ -29,6 +29,13 @@ const meta = {
     content: panel,
     children: <Button>Abrir detalhes</Button>
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Painel flutuante ligado a um gatilho. A posição se ajusta sozinha perto da borda (inverte o lado, desliza e encolhe), o foco é gerenciado, e Esc ou um clique fora fecham.'
+      }
+    }
+  },
   argTypes: {
     placement: {
       description: 'Lado e alinhamento em relação ao gatilho. start e end seguem a direção do UIProvider. Perto da borda o popover inverte o lado, desliza para caber e encolhe até o espaço disponível.',

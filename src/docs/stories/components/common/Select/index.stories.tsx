@@ -14,6 +14,13 @@ const meta = {
     fullWidth: defaultFullWidth,
     disabled: false
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Seleção nativa estilizada, com rótulo, mensagem de erro, texto de ajuda e `placeholder`. Aceita `ref` e os atributos do `<select>`.'
+      }
+    }
+  },
   argTypes: {
     label: {
       description: 'Rótulo do campo, associado ao select para leitores de tela.',

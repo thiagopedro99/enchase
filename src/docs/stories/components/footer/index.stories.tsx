@@ -5,7 +5,14 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 const meta = {
   title: 'Componentes/Footer',
   component: Footer,
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'Rodapé com o ano, o nome da empresa, um aviso e links. O ano padrão é o atual.'
+      }
+    }
+  },
   args: {
     companyName: 'Enchase',
     notice: 'Licença MIT.'

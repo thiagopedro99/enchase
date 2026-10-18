@@ -22,7 +22,14 @@ const pageSections: SidebarSection[] = [
 const meta = {
   title: 'Componentes/Layout',
   component: Layout,
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'Casca de página: barra superior com a trilha de navegação e o menu lateral (permanente ou drawer), ou uma `Navbar`; o conteúdo em `<main>` e o rodapé. Não traz navegação, marca nem rodapé próprios, e não altera `document.title`.'
+      }
+    }
+  },
   args: {
     pageTitle: 'Componentes',
     brand: 'Enchase',
@@ -31,7 +38,7 @@ const meta = {
   },
   argTypes: {
     children: {
-      description: 'Conteúdo da página. Fica em <main id="main-content">, dentro de um Container, e é o destino do link para pular ao conteúdo.',
+      description: 'Conteúdo da página. Fica em `<main id="main-content">`, dentro de um `Container`, e é o destino do link para pular ao conteúdo.',
       control: false
     },
     pageTitle: {

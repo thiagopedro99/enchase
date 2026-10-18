@@ -10,6 +10,8 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ### Breadcrumbs
 
+Trilha de navegação: um `<nav>` com lista ordenada, em que o último item é a página atual. Trilhas longas escondem o miolo atrás de um botão de reticências que mostra o caminho completo.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `items` | `BreadcrumbItem[]` | *obrigatória* | Trilha em ordem. O último item é a página atual; os demais viram links quando têm href. |
@@ -19,6 +21,8 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 Aceita também os demais atributos HTML do elemento raiz.
 
 ### Button
+
+Botão com quatro variantes e três tamanhos, e feedback de toque feito só com CSS. É um `<button>` de verdade e aceita os atributos dele.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -30,6 +34,8 @@ Aceita também os demais atributos HTML do elemento raiz.
 Aceita também os demais atributos de `<button>`, repassados ao elemento.
 
 ### ButtonLink
+
+Link com a aparência de um `Button`. É um `<a href>` de verdade, e passa pelo `navigate` do `UIProvider` nas rotas do app, como o `Link`.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -44,6 +50,8 @@ Aceita também os demais atributos de `<a>`, repassados ao elemento.
 
 ### Card
 
+Superfície para agrupar conteúdo, nas variantes `default`, `elevated` e `outlined`. Só a `elevated` sobe ao passar o ponteiro.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Aparência do cartão. Só o elevated sobe ao passar o ponteiro. |
@@ -53,6 +61,8 @@ Aceita também os demais atributos de `<a>`, repassados ao elemento.
 Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 ### Checkbox
+
+Caixa de seleção nativa estilizada, com rótulo clicável e traço animado. Aceita `ref` e os atributos do `<input>`.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -65,42 +75,50 @@ Aceita também os demais atributos de `<input>`, repassados ao elemento. Encamin
 
 ### ColorModeProvider
 
+Aplica o tema: injeta as variáveis `--enchase-*`, define `data-theme` e `color-scheme` no `<html>` e guarda o modo (`light`, `dark` ou `system`). Os componentes leem as variáveis, e `useColorMode` devolve `{ mode, resolvedMode, setMode, toggleMode }`.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *obrigatória* |  |
-| `theme` | `ThemeInput` | — |  |
-| `mode` | `'light' \| 'dark' \| 'system'` | — |  |
-| `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` |  |
-| `onModeChange` | `(mode: ColorMode) => void` | — |  |
-| `storage` | `ColorModeStorage \| null` | — |  |
-| `storageKey` | `string` | `'enchase-color-mode'` |  |
-| `cssLayer` | `string` | — |  |
+| `children` | `ReactNode` | *obrigatória* | A aplicação. |
+| `theme` | `ThemeInput` | — | Tema personalizado, como { brand, fonts, motion, light, dark }, o mesmo que createTheme aceita: a cor da marca gera a paleta, e light e dark ajustam cores por modo. Todo valor é validado, e em desenvolvimento o provedor avisa no console sobre contraste e duração. Sem ele vale o tema padrão. |
+| `mode` | `'light' \| 'dark' \| 'system'` | — | Modo controlado: light, dark ou system. Com ele o provedor não guarda a escolha, e quem usa muda o valor em onModeChange. |
+| `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Modo usado enquanto não há escolha guardada nem a prop mode. system segue a preferência do sistema. |
+| `onModeChange` | `(mode: ColorMode) => void` | — | Chamado com o novo modo quando setMode ou toggleMode são usados, inclusive com mode controlado. |
+| `storage` | `{ getItem, setItem } \| null` | `localStorage` | Onde guardar a escolha, com getItem e setItem. O padrão é o localStorage, lido só depois de montar. null desliga a persistência. |
+| `storageKey` | `string` | `'enchase-color-mode'` | Chave da escolha no storage. Use a mesma no ColorModeScript. |
+| `cssLayer` | `string` | — | Nome de uma @layer para as variáveis do tema. Use com enchase/styles.layer.css, como cssLayer="enchase-theme". |
 
 ### ColorModeScript
 
+Script inline que aplica `data-theme` e `color-scheme` no `<html>` antes da primeira pintura, para a página renderizada no servidor não mostrar o tema errado por um instante. Renderize-o no começo do `<body>` ou no `<head>`, com `suppressHydrationWarning` no `<html>`.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `storageKey` | `string` | — |  |
-| `defaultMode` | `'light' \| 'dark' \| 'system'` | — |  |
-| `nonce` | `string` | — |  |
+| `storageKey` | `string` | `'enchase-color-mode'` | Chave lida no `localStorage`. Use a mesma do `ColorModeProvider`. |
+| `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Modo usado quando não há escolha guardada. `system` segue a preferência do sistema. |
+| `nonce` | `string` | — | `nonce` da Content-Security-Policy, para o script inline ser aceito. |
 
 ### ConfirmModal
 
+Modal de confirmação pronto: um alertdialog com a pergunta e os botões de cancelar e confirmar. Use o Modal quando precisar de conteúdo próprio.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `isOpen` | `boolean` | *obrigatória* |  |
-| `onClose` | `() => void` | *obrigatória* |  |
-| `onConfirm` | `() => void` | *obrigatória* |  |
-| `title` | `string` | — |  |
-| `message` | `string` | *obrigatória* |  |
-| `confirmText` | `string` | — |  |
-| `cancelText` | `string` | — |  |
-| `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` |  |
-| `animation` | `MotionOverride` | — |  |
-| `className` | `string` | — |  |
-| `style` | `CSSProperties` | — |  |
+| `isOpen` | `boolean` | *obrigatória* | Abre e fecha a confirmação. Como o Modal, ela é sempre controlada: quem usa guarda o estado e o muda em onClose. |
+| `onClose` | `() => void` | *obrigatória* | Chamado ao cancelar, ao fechar por Esc, pelo botão de fechar ou pelo fundo, e logo depois de onConfirm. |
+| `onConfirm` | `() => void` | *obrigatória* | Chamado ao clicar no botão de confirmar. O modal chama onClose em seguida, então não é preciso fechar aqui. |
+| `title` | `string` | — | Título da confirmação. Sem ele, usa o texto labels.confirmAction do UIProvider. |
+| `message` | `string` | *obrigatória* | Texto da pergunta, no corpo do modal. O diálogo é um alertdialog e o corpo vira a descrição acessível. |
+| `confirmText` | `string` | — | Texto do botão de confirmar. Sem ele, usa labels.confirm do UIProvider. |
+| `cancelText` | `string` | — | Texto do botão de cancelar, que recebe o foco inicial. Sem ele, usa labels.cancel do UIProvider. |
+| `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Estilo do botão de confirmar, o mesmo do Button. |
+| `animation` | `MotionOverride` | — | false desliga o movimento; { recipe, tuning } ajusta a duração, a distância e a escala, como no Modal. |
+| `className` | `string` | — | Classe do painel. Vence a da biblioteca sem !important. |
+| `style` | `CSSProperties` | — | Estilo do painel, mesclado com o da biblioteca (o seu vence). |
 
 ### Container
+
+Limita a largura do conteúdo pelos breakpoints do `UIProvider`, com espaçamento lateral e centralização opcionais.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -111,6 +129,8 @@ Aceita também os demais atributos de `<input>`, repassados ao elemento. Encamin
 Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 ### Flex
+
+Contêiner flexbox configurado por props: direção, alinhamento, distribuição, espaço entre os filhos e quebra de linha. Em RTL, `row` começa pelo lado direito.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -124,6 +144,8 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 ### Footer
 
+Rodapé com o ano, o nome da empresa, um aviso e links. O ano padrão é o atual.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `companyName` | `string` | — | Nome exibido depois do ano. Sem valor padrão. |
@@ -135,9 +157,13 @@ Aceita também os demais atributos HTML do elemento raiz.
 
 ### GlobalStyles
 
+Reset e base tipográfica da biblioteca em um `<style>`: `box-sizing`, margens zeradas, fonte, cor e fundo do `body` a partir do tema, tamanho dos títulos e imagens responsivas. O CSS fica na camada `enchase-base`. Renderize uma vez, na raiz do app.
+
 Sem props próprias.
 
 ### Grid
+
+Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -148,6 +174,20 @@ Sem props próprias.
 Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 ### Icon
+
+Contêiner SVG de 24x24, com traço de 2 px e a cor do texto (`currentColor`). Use-o para desenhar os seus ícones a partir de caminhos SVG.
+
+A biblioteca não exporta um conjunto de ícones: os que os componentes usam por dentro (menu, fechar, setas, olho, sol e lua) são internos. Para ícones prontos, use uma biblioteca de ícones direto, sem o `Icon`. Qualquer nó React serve onde há conteúdo ou uma prop `icon`:
+
+```tsx
+import { Rocket } from 'lucide-react'
+import { Button } from 'enchase'
+
+<Button variant="primary">
+  <Rocket size={18} aria-hidden="true" />
+  Começar
+</Button>
+```
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -161,16 +201,20 @@ Aceita também os demais atributos de `<svg>`, repassados ao elemento.
 
 ### InlineLoading
 
+Indicador de carregamento em linha: um span com role="status" e o anel. Para cobrir um bloco ou a página inteira, use o Loading.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `size` | `'xs' \| 'sm' \| 'md'` | `'sm'` |  |
-| `color` | `string` | — |  |
-| `label` | `string` | — |  |
-| `animation` | `MotionOverride` | — |  |
+| `size` | `'xs' \| 'sm' \| 'md'` | `'sm'` | Diâmetro do anel, para usar ao lado de um texto ou dentro de um botão. |
+| `color` | `string` | — | Cor do trecho que gira (qualquer cor CSS). |
+| `label` | `string` | — | Texto só para leitores de tela. Sem ele, anuncia labels.loading do UIProvider. |
+| `animation` | `false \| { recipe, tuning }` | `spin` | false para de girar. { tuning: { duration } } muda a volta completa em segundos. Com movimento reduzido o giro vira um pulso de opacidade. |
 
 Aceita também os demais atributos de `<span>`, repassados ao elemento.
 
 ### Input
+
+Campo de texto com rótulo, mensagem de erro, texto de ajuda e botão para revelar a senha. Aceita `ref` e os atributos do `<input>`.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -186,9 +230,11 @@ Aceita também os demais atributos de `<input>`, repassados ao elemento. Encamin
 
 ### Layout
 
+Casca de página: barra superior com a trilha de navegação e o menu lateral (permanente ou drawer), ou uma `Navbar`; o conteúdo em `<main>` e o rodapé. Não traz navegação, marca nem rodapé próprios, e não altera `document.title`.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *obrigatória* | Conteúdo da página. Fica em <main id="main-content">, dentro de um Container, e é o destino do link para pular ao conteúdo. |
+| `children` | `ReactNode` | *obrigatória* | Conteúdo da página. Fica em `<main id="main-content">`, dentro de um `Container`, e é o destino do link para pular ao conteúdo. |
 | `pageTitle` | `string` | — | Título da página. Entra na trilha de navegação quando nenhum item do menu corresponde à página atual. O Layout não altera document.title. |
 | `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Largura máxima do conteúdo, tirada dos breakpoints. |
 | `padding` | `boolean \| string` | `true` | Espaçamento lateral do conteúdo, como no Container: true usa o padrão, false remove, e um texto CSS define o valor. |
@@ -217,6 +263,8 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 ### Link
 
+Link de texto que passa pelo `navigate` do `UIProvider` quando o destino é uma rota do app, sem depender de um roteador. Sem `navigate`, é um `<a href>` comum. A story "Quem trata cada href" mostra cada caso.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `href` | `string` | *obrigatória* | Destino do link. Uma rota do app (`/sobre`, `/sobre#equipe`) vai para o `navigate` do `UIProvider` quando ele existe. Âncoras (`#id`), o hash da página atual, URLs externas, `mailto:` e `tel:` ficam com o navegador, assim como Ctrl, Cmd, Shift e o botão do meio. |
@@ -225,6 +273,8 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 Aceita também os demais atributos de `<a>`, repassados ao elemento.
 
 ### Loading
+
+Indicador de carregamento em anel, com texto opcional. Com `overlay`, cobre a página, deixa o resto inerte e trava a rolagem.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -237,6 +287,8 @@ Aceita também os demais atributos de `<a>`, repassados ao elemento.
 Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 ### Modal
+
+Diálogo modal renderizado em um portal: o foco fica preso no painel, a página atrás fica inerte, e Esc ou o clique no fundo fecham. Entra e sai com animação. É sempre controlado por `isOpen` e `onClose`.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -257,6 +309,8 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 ### Navbar
 
+Barra de navegação no topo, com a marca, os links, ações e o botão de tema. Abaixo do breakpoint, os links vão para um drawer.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `logo` | `ReactNode` | `'Logo'` | Marca exibida à esquerda (ou à direita em rtl). Aceita texto ou qualquer nó React, como uma imagem ou um SVG. É um link para logoHref (data-slot="navbar-logo"). |
@@ -265,10 +319,12 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 | `sections` | `SidebarSection[]` | — | Itens do menu, no mesmo formato da Sidebar: [{ id, items: [{ id, label, href }] }]. Só os itens com href aparecem, e os títulos das seções não são exibidos. |
 | `activeSectionId` | `string` | — | Id do item de âncora (href #id, ou /pagina#id na página atual) marcado como localização atual (aria-current="location"). Use useScrollSpy para obtê-lo. |
 | `actions` | `ReactNode` | — | Ações ao lado do menu, como um botão de chamada. Em telas largas ficam na barra, entre o menu e o botão de tema (data-slot="navbar-cta"). Em telas estreitas vão para o drawer, abaixo dos links (data-slot="navbar-drawer-cta"), e um clique em um link dentro delas fecha o drawer. O nó é renderizado em um lugar por vez. |
-| `className` | `string` | — | Classe do cabeçalho (data-slot="navbar"). As partes seguem data-slot="navbar-*"; o drawer mobile é navbar-drawer, com data-state. |
+| `className` | `string` | — | Classe do cabeçalho (`data-slot="navbar"`). As partes seguem `data-slot="navbar-*"`; o drawer mobile é `navbar-drawer`, com `data-state`. |
 | `style` | `CSSProperties` | — | Estilo do cabeçalho. |
 
 ### Popover
+
+Painel flutuante ligado a um gatilho. A posição se ajusta sozinha perto da borda (inverte o lado, desliza e encolhe), o foco é gerenciado, e Esc ou um clique fora fecham.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -293,6 +349,8 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 ### Select
 
+Seleção nativa estilizada, com rótulo, mensagem de erro, texto de ajuda e `placeholder`. Aceita `ref` e os atributos do `<select>`.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `label` | `string` | — | Rótulo do campo, associado ao select para leitores de tela. |
@@ -307,6 +365,8 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 Aceita também os demais atributos de `<select>`, repassados ao elemento. Encaminha o `ref` para `<select>`.
 
 ### Sidebar
+
+Menu lateral. `permanent` fica na página e recolhe para uma barra de ícones; `modal` vira um drawer com foco preso. Cada item é uma rota, uma âncora ou uma ação.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -328,6 +388,8 @@ Aceita também os demais atributos de `<select>`, repassados ao elemento. Encami
 
 ### Skeleton
 
+Espaço reservado enquanto o conteúdo carrega, com brilho animado, nas formas texto, círculo e retângulo.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `variant` | `'text' \| 'circular' \| 'rectangular'` | `'text'` | Forma do espaço reservado. |
@@ -339,6 +401,8 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 ### ThemeToggle
 
+Botão que alterna entre o modo claro e o escuro, com o ícone trocando por crossfade. Precisa de um `ColorModeProvider`.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `animation` | `MotionOverride` | — | false desliga o feedback de toque; { recipe } ajusta. O ícone troca por crossfade de CSS em até 150 ms. |
@@ -347,20 +411,26 @@ Aceita também os demais atributos de `<button>`, repassados ao elemento.
 
 ### ThemeVariables
 
+Um `<style>` com as variáveis CSS `--enchase-*` do tema. O `ColorModeProvider` já faz isso; use `ThemeVariables` só para renderizar um CSS de tema seu, como o resultado de `themeCss`, de `enchase/theme`.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `css` | `string` | *obrigatória* |  |
+| `css` | `string` | *obrigatória* | O CSS das variáveis do tema, usado como conteúdo do `<style>`. |
 
 ### ToastProvider
 
+Guarda a fila de notificações e a região onde elas aparecem (role="region", com aria-live). Os métodos success, error, warning e info de useToast abrem as notificações.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *obrigatória* |  |
-| `animation` | `MotionOverride` | — |  |
-| `className` | `string` | — |  |
-| `style` | `CSSProperties` | — |  |
+| `children` | `ReactNode` | *obrigatória* | A aplicação. Os componentes dentro dela usam useToast para abrir notificações. |
+| `animation` | `false \| { recipe, from, tuning }` | `slide` | Movimento de entrada e saída das notificações, que deslizam da direita com uma mola curta. false desliga; { recipe, from, tuning } ajusta a receita, o lado e a duração. |
+| `className` | `string` | — | Classe da região de notificações (data-slot="toast-viewport"), que vence a da biblioteca. |
+| `style` | `CSSProperties` | — | Estilo da região de notificações. |
 
 ### Tooltip
+
+Dica de texto para um gatilho, aberta por ponteiro e por foco. Dá uma descrição acessível ao gatilho e ajusta a posição perto da borda da tela.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -378,17 +448,21 @@ Aceita também os demais atributos de `<button>`, repassados ao elemento.
 
 ### UIProvider
 
+Configuração compartilhada por todos os componentes: idioma e textos, breakpoints, movimento e navegação (navigate e currentHref). É opcional: sem ele, os componentes usam inglês, os breakpoints do Bootstrap 5, movimento automático e links que recarregam a página.
+
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *obrigatória* |  |
-| `motion` | `Partial<MotionSettings>` | — |  |
-| `locale` | `Locale` | — |  |
-| `labels` | `Partial<UILabels>` | — |  |
-| `breakpoints` | `Partial<Breakpoints>` | — |  |
-| `navigate` | `(href: string) => void` | — |  |
-| `currentHref` | `string` | — |  |
+| `children` | `ReactNode` | *obrigatória* | A aplicação. Os componentes leem a configuração do UIProvider mais próximo; sem nenhum, valem os padrões. |
+| `motion` | `{ mode?, preset?, recipes? }` | `{ mode: 'auto', preset: 'standard' }` | Movimento de todos os componentes: { mode, preset, recipes }. mode "auto" respeita prefers-reduced-motion e "never" desliga todo o movimento. preset escala a duração e a distância: "off", "subtle", "standard" ou "expressive". recipes ajusta fade, pop, slide, press, lift, resize, spin e shimmer, como { slide: { distance: 48 } }. |
+| `locale` | `Locale` | `en` | Idioma, no formato { locale, dir, messages }, como o ptBR e o en de enchase/locales. Define os textos de acessibilidade dos componentes e a direção (ltr ou rtl) que eles usam. O `dir` do `<html>` continua sendo do app. |
+| `labels` | `Partial<UILabels>` | — | Troca textos avulsos, como { closeModal: "Dispensar" }, sobre os do locale. |
+| `breakpoints` | `Partial<Breakpoints>` | `{ xs: '0px', sm: '576px', md: '768px', lg: '992px', xl: '1200px', xxl: '1400px' }` | Largura de cada breakpoint (xs, sm, md, lg, xl e xxl) em qualquer valor CSS de largura, como { md: "1000px" }. Valem para Container, Layout, Navbar, Sidebar e useBreakpoint. |
+| `navigate` | `(href: string) => void` | — | Chamado com o href quando há um clique simples em uma rota do app (um href que começa com /). Ligue ao seu roteador, como (href) => router.push(href). Sem ele, os links recarregam a página. |
+| `currentHref` | `string` | — | Caminho atual do app. Marca o item ativo dos menus (aria-current="page"), deriva os Breadcrumbs do Layout e faz um link com hash para a própria página (/docs#props) rolar sem passar pelo navigate. Sem ele, o hash é comparado com a URL do navegador. |
 
 ### VisuallyHidden
+
+Esconde o texto da tela mas o mantém na árvore de acessibilidade. Serve para dar nome a controles que só têm ícone.
 
 Sem props próprias.
 

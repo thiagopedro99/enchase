@@ -13,6 +13,13 @@ const meta = {
     wrap: false,
     children: ['Um', 'Dois', 'Três'].map((label) => <span key={label}>{label}</span>)
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Contêiner flexbox configurado por props: direção, alinhamento, distribuição, espaço entre os filhos e quebra de linha. Em RTL, `row` começa pelo lado direito.'
+      }
+    }
+  },
   argTypes: {
     direction: { control: 'inline-radio', options: ['row', 'column', 'row-reverse', 'column-reverse'], description: 'Eixo principal. Em RTL, row começa pelo lado direito.' },
     align: { control: 'select', options: ['start', 'center', 'end', 'stretch', 'baseline'], description: 'Alinhamento no eixo cruzado.' },

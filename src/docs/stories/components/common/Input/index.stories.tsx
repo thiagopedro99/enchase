@@ -13,6 +13,13 @@ const meta = {
     fullWidth: defaultFullWidth,
     disabled: false
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Campo de texto com rótulo, mensagem de erro, texto de ajuda e botão para revelar a senha. Aceita `ref` e os atributos do `<input>`.'
+      }
+    }
+  },
   argTypes: {
     label: {
       description: 'Rótulo do campo, associado ao input para leitores de tela.',

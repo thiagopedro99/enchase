@@ -3,12 +3,13 @@ import { UIProvider, useUIConfig } from 'enchase'
 
 import type { MouseEvent, ReactNode } from 'react'
 
-type ClickProbeProps = { currentHref?: string; children: ReactNode }
+type ClickReportProps = { children: ReactNode }
+
+type ClickProbeProps = ClickReportProps & { currentHref?: string }
 
 const idleMessage = 'Clique em um link para ver quem trata o clique.'
 
-export const ClickProbe = ({ currentHref = '/docs', children }: ClickProbeProps) => {
-  const { labels, motion } = useUIConfig()
+export const ClickReport = ({ children }: ClickReportProps) => {
   const [message, setMessage] = useState(idleMessage)
 
   const report = (event: MouseEvent<HTMLDivElement>) => {
@@ -20,11 +21,19 @@ export const ClickProbe = ({ currentHref = '/docs', children }: ClickProbeProps)
   }
 
   return (
+    <div onClick={report} style={{ display: 'grid', gap: '1rem', justifyItems: 'start' }}>
+      {children}
+      <output style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>{message}</output>
+    </div>
+  )
+}
+
+export const ClickProbe = ({ currentHref = '/docs', children }: ClickProbeProps) => {
+  const { labels, motion } = useUIConfig()
+
+  return (
     <UIProvider labels={labels} motion={motion} navigate={() => undefined} currentHref={currentHref}>
-      <div onClick={report} style={{ display: 'grid', gap: '1rem', justifyItems: 'start' }}>
-        {children}
-        <output style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>{message}</output>
-      </div>
+      <ClickReport>{children}</ClickReport>
     </UIProvider>
   )
 }

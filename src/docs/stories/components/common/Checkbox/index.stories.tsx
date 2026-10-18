@@ -9,6 +9,13 @@ const meta = {
     label: 'Aceito os termos',
     disabled: false
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Caixa de seleção nativa estilizada, com rótulo clicável e traço animado. Aceita `ref` e os atributos do `<input>`.'
+      }
+    }
+  },
   argTypes: {
     label: {
       description: 'Texto do rótulo. Clicar nele também marca a caixa.',

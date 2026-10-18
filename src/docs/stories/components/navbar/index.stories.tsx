@@ -17,7 +17,14 @@ const sections: SidebarSection[] = [
 const meta = {
   title: 'Componentes/Navbar',
   component: Navbar,
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'Barra de navegação no topo, com a marca, os links, ações e o botão de tema. Abaixo do breakpoint, os links vão para um drawer.'
+      }
+    }
+  },
   args: { logo: 'Enchase', sections },
   argTypes: {
     logo: { description: 'Marca exibida à esquerda (ou à direita em rtl). Aceita texto ou qualquer nó React, como uma imagem ou um SVG. É um link para logoHref (data-slot="navbar-logo").', control: 'text' },
@@ -42,7 +49,7 @@ const meta = {
       control: false
     },
     className: {
-      description: 'Classe do cabeçalho (data-slot="navbar"). As partes seguem data-slot="navbar-*"; o drawer mobile é navbar-drawer, com data-state.',
+      description: 'Classe do cabeçalho (`data-slot="navbar"`). As partes seguem `data-slot="navbar-*"`; o drawer mobile é `navbar-drawer`, com `data-state`.',
       control: 'text'
     },
     style: { description: 'Estilo do cabeçalho.', control: false }

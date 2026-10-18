@@ -9,6 +9,13 @@ const meta = {
     variant: 'default',
     children: 'Conteúdo do cartão'
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Superfície para agrupar conteúdo, nas variantes `default`, `elevated` e `outlined`. Só a `elevated` sobe ao passar o ponteiro.'
+      }
+    }
+  },
   argTypes: {
     variant: {
       description: 'Aparência do cartão. Só o elevated sobe ao passar o ponteiro.',

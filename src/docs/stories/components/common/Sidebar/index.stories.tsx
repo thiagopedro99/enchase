@@ -31,7 +31,14 @@ const sections: SidebarSection[] = [
 const meta = {
   title: 'Componentes/Sidebar',
   component: Sidebar,
-  parameters: { layout: 'fullscreen' },
+  parameters: {
+    layout: 'fullscreen',
+    docs: {
+      description: {
+        component: 'Menu lateral. `permanent` fica na página e recolhe para uma barra de ícones; `modal` vira um drawer com foco preso. Cada item é uma rota, uma âncora ou uma ação.'
+      }
+    }
+  },
   args: { sections, variant: 'permanent', collapsed: false },
   argTypes: {
     sections: {

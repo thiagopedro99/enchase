@@ -15,6 +15,13 @@ const meta = {
     disabled: defaultDisabled,
     motionRecipe: 'default'
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Botão com quatro variantes e três tamanhos, e feedback de toque feito só com CSS. É um `<button>` de verdade e aceita os atributos dele.'
+      }
+    }
+  },
   argTypes: {
     variant: {
       description: 'Estilo visual do botão.',

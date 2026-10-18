@@ -13,6 +13,13 @@ const meta = {
     ],
     maxItems: 4
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Trilha de navegação: um `<nav>` com lista ordenada, em que o último item é a página atual. Trilhas longas escondem o miolo atrás de um botão de reticências que mostra o caminho completo.'
+      }
+    }
+  },
   argTypes: {
     items: {
       description: 'Trilha em ordem. O último item é a página atual; os demais viram links quando têm href.',

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, ConfirmModal, Modal } from 'enchase'
+import { Button, Modal } from 'enchase'
 
 import type { ComponentProps } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -17,19 +17,6 @@ const ModalDemo = ({ label, ...args }: ModalDemoProps) => {
   )
 }
 
-const ConfirmDemo = () => {
-  const [open, setOpen] = useState(false)
-
-  return (
-    <>
-      <Button variant="outline" onClick={() => setOpen(true)}>
-        Excluir item
-      </Button>
-      <ConfirmModal isOpen={open} onClose={() => setOpen(false)} onConfirm={() => undefined} message="Esta ação não pode ser desfeita." />
-    </>
-  )
-}
-
 const meta = {
   title: 'Componentes/Modal',
   component: Modal,
@@ -42,6 +29,13 @@ const meta = {
     showCloseButton: true,
     closeOnOverlayClick: true,
     closeOnEsc: true
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: 'Diálogo modal renderizado em um portal: o foco fica preso no painel, a página atrás fica inerte, e Esc ou o clique no fundo fecham. Entra e sai com animação. É sempre controlado por `isOpen` e `onClose`.'
+      }
+    }
   },
   argTypes: {
     isOpen: {
@@ -83,10 +77,6 @@ type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {
   render: (args) => <ModalDemo {...args} label="Abrir modal" footer={<Button>Salvar</Button>} />
-}
-
-export const Confirmation: Story = {
-  render: () => <ConfirmDemo />
 }
 
 export const WithoutMotion: Story = {
