@@ -22,7 +22,7 @@ const sections: SidebarSection[] = [{ id: 'main', items: [{ id: 'home', label: '
 const labels: Partial<UILabels> = { closeModal: 'Close', previousPage: 'Back', increaseValue: 'More' }
 const locale: Locale = ptBR
 const props: LayoutProps = { children: null, navigationSections: sections }
-const docsLink: ButtonLinkProps = { href: '/docs', native: true }
+const docsLink: ButtonLinkProps = { href: '/docs', native: true, externalIcon: false }
 const alertProps: AlertProps = { variant: 'warning', title: 'Heads up', onClose: () => undefined }
 const badgeProps: BadgeProps = { variant: 'success', size: 'sm' }
 const areaProps: TextareaProps = { label: 'Message', rows: 4, resize: 'none' }
