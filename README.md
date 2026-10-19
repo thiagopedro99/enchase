@@ -111,6 +111,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Textarea` | `<Textarea label="Mensagem" rows={4} helperText="Conte o que aconteceu" />` |
 | `Select` | `<Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />` |
 | `Checkbox` | `<Checkbox label="Aceito os termos" />` |
+| `Switch` | `<Switch label="Receber notificações" defaultChecked />` |
 | `Card` | `<Card variant="elevated">Conteúdo</Card>` |
 | `Badge` | `<Badge variant="success">Pago</Badge>` |
 | `Alert` | `<Alert variant="warning" title="Atenção" onClose={fechar}>O prazo termina hoje.</Alert>` |
@@ -166,7 +167,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | --- | --- | --- |
 | `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
 | `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
-| `label` | `Input`, `Textarea`, `Select`, `Checkbox` | Rótulo visível, ligado ao controle. |
+| `label` | `Input`, `Textarea`, `Select`, `Checkbox`, `Switch` | Rótulo visível, ligado ao controle. |
 | `error` | `Input`, `Textarea`, `Select` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
 | `helperText` | `Input`, `Textarea`, `Select` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
 | `fullWidth` | `Button`, `ButtonLink`, `Input`, `Textarea`, `Select` | Ocupa toda a largura disponível. |
@@ -375,7 +376,7 @@ Quatro níveis de configuração, do mais amplo ao mais específico:
 | `skeleton` | `-duration`, `-ease` |
 | `checkbox` | `-duration`, `-scale`, `-ease` |
 | `icon-swap` | `-duration`, `-ease`, `-rotate` |
-| `input`, `textarea`, `select`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
+| `input`, `textarea`, `select`, `switch`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
 
 `-dx` e `-dy` são a direção da entrada (-1, 0 ou 1) e `-distance` o quanto ela anda; em RTL o `-dx` inverte. Com `prefers-reduced-motion: reduce`, o deslocamento e a escala somem e o fade continua; os loops viram pulso de opacidade.
 

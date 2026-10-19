@@ -9,6 +9,7 @@ import { Input } from '@components/common/Input/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
+import { Switch } from '@components/common/Switch/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import { ToastProvider, useToast } from '@components/toast/index.ts'
@@ -144,6 +145,8 @@ describe.each(widths)('worst case data at %ipx', (width) => {
         <Select label={worstCase.frenchLabel} defaultValue="a" options={[{ value: 'a', label: worstCase.longTitle }, { value: 'b', label: worstCase.fileName }]} />
         <Checkbox label={`${worstCase.frenchLabel} ${worstCase.longEmail}`} />
         <Checkbox label={worstCase.shortName} />
+        <Switch label={`${worstCase.frenchLabel} ${worstCase.longEmail}`} />
+        <Switch label={worstCase.shortName} />
       </div>
     )
 

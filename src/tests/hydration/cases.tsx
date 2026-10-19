@@ -2,6 +2,7 @@ import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
 
 import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
+import { Switch } from '@components/common/Switch/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import { Breadcrumbs } from '@components/common/Breadcrumbs/index.tsx'
 import { InlineLoading, Loading } from '@components/common/Loading/index.tsx'
@@ -48,6 +49,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Textarea', element: <Textarea label="Message" helperText="Tell us more" /> },
   { name: 'Select', element: <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} /> },
   { name: 'Checkbox', element: <Checkbox label="Accept" /> },
+  { name: 'Switch', element: <Switch label="Notifications" defaultChecked /> },
   { name: 'Card', element: <Card variant="elevated">Content</Card> },
   { name: 'Badge', element: <Badge variant="success">New</Badge> },
   { name: 'Alert', element: <Alert variant="warning" title="Heads up" onClose={noop}>The deadline is today.</Alert> },

@@ -6,7 +6,7 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ## Componentes
 
-[Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Alert
 
@@ -422,6 +422,19 @@ Espaço reservado enquanto o conteúdo carrega, com brilho animado, nas formas t
 | `animation` | `false \| { recipe, tuning }` | `shimmer` | false desliga o brilho. { tuning: { duration } } muda a duração em segundos. Com movimento reduzido o brilho vira um pulso de opacidade. |
 
 Aceita também os demais atributos de `<div>`, repassados ao elemento.
+
+### Switch
+
+Interruptor de liga e desliga para uma configuração que vale na hora, com rótulo clicável. É um `<input type="checkbox">` com `role="switch"`, então leitores de tela o anunciam como interruptor e o formulário envia o valor só quando ligado. Aceita `ref` e os atributos do `<input>`. Para uma escolha que só vale ao enviar o formulário, prefira o `Checkbox`.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `label` | `string` | — | Texto do rótulo. Clicar nele também liga e desliga. Sem rótulo visível, passe aria-label. |
+| `wrapperClassName` | `string` | — | Classe da raiz (data-slot="switch"). className continua no input nativo (data-slot="switch-input"). |
+| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="switch"). style continua no input nativo. |
+| `animation` | `false \| { recipe, tuning }` | `fade` | Animação da troca: a bolinha desliza e a trilha muda de cor. false desliga; { tuning: { duration } } ajusta a duração em segundos. |
+
+Aceita também os demais atributos de `<input>`, repassados ao elemento. Encaminha o `ref` para `<input>`.
 
 ### Textarea
 
