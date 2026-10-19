@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.4.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.3.0...v0.4.0)
+
+### Enhancements
+
+- Add the Switch ([4202cc2](https://github.com/thiagopedro99/enchase/commit/4202cc2))
+- Add the RadioGroup ([5141364](https://github.com/thiagopedro99/enchase/commit/5141364))
+- Add the Tabs ([8ff3563](https://github.com/thiagopedro99/enchase/commit/8ff3563))
+- Add the Accordion ([ddec340](https://github.com/thiagopedro99/enchase/commit/ddec340))
+
+### Notes
+
+- New components: `Switch`, `RadioGroup`, `Tabs` and `Accordion`. Each one has a story with controls, and the props of all four are in `API.md`. Nothing else changed at runtime: no new theme tokens, no new keys in the locales and no change to the existing components.
+- `Switch` is a native `<input type="checkbox">` with `role="switch"`, so screen readers announce a switch and a form submits its value only while it is on. It takes `label`, `wrapperClassName`, `wrapperStyle`, `animation`, a `ref` and the attributes of the input. Use the `Checkbox` for a choice that only counts when the form is sent.
+- `RadioGroup` takes its choices as `options` (`{ value, label, disabled? }`), and there is no standalone `Radio` yet. It renders a `<fieldset role="radiogroup">` titled by `label`, with `value`, `defaultValue` and `onValueChange(value)` (pass `value=""` to control it with nothing selected), `name` (generated when missing), `required`, `error`, `helperText`, `orientation` (`vertical` by default, or `horizontal`) and `disabled`, for the whole group or for one option. `className` and `style` go to the `<fieldset>`, and the arrow keys are the native ones of radio buttons.
+- `Tabs` takes `items` (`{ value, label, content, disabled? }`), `value`, `defaultValue` and `onValueChange(value)`, `activation` (`automatic` by default, where an arrow key selects the tab, or `manual`, where it only moves the focus and Enter or Space selects) and `ariaLabel`, which names the tab list for screen readers. The tabs are horizontal only. The selected tab is the single tab stop, the arrow keys (swapped in right-to-left text), Home and End move between tabs, and disabled tabs are skipped. Every panel stays in the document and only the selected one is shown, so the state of the others is kept. A list that does not fit scrolls horizontally.
+- The indicator of the `Tabs` slides under the selected tab with `translate` and `scale`. It is measured from its own position, so right-to-left text needs no special case, and it is placed again when the tabs change size or when the `dir` of the `UIProvider` changes. If you flip the `dir` of the page by hand without rendering the `Tabs` again, it is only placed again at the next selection.
+- `Accordion` takes `items` (`{ value, title, content, disabled? }`), `multiple` (several items open at once; by default one at a time, and the open one can still be closed), `value`, `defaultValue` and `onValueChange(values)` with the list of open items, and `headingLevel` (2 to 6, 3 by default). Each item is a heading with a button (`aria-expanded`), and its panel is a region linked to the button. Tab goes through the buttons, and the arrow keys, Home and End move the focus. Closed panels stay in the document. The height does not animate, because the collapse of the permanent `Sidebar` is still the only layout animation of the package: the panel fades in with a 6 px slide and the arrow turns.
+- The thumb of the `Switch`, the dot of the `RadioGroup` and the indicator of the `Tabs` are drawn with borders, so they stay visible in forced colors (the Windows high contrast mode). The new components read `--enchase-switch-*`, `--enchase-radio-group-*`, `--enchase-tabs-*` and `--enchase-accordion-*` for their motion, listed in the Movimento table of the README.
+
 ## v0.3.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.2.1...v0.3.0)
