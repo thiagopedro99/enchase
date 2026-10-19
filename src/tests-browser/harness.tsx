@@ -8,9 +8,9 @@ import { ptBR } from '@locales/ptBR.ts'
 
 import type { ReactElement } from 'react'
 
-export const renderInBrowser = (ui: ReactElement, motion: 'auto' | 'never' = 'never') =>
+export const renderInBrowser = (ui: ReactElement, motion: 'auto' | 'never' = 'never', mode: 'light' | 'dark' = 'light') =>
   render(
-    <ColorModeProvider defaultMode="light" storage={null}>
+    <ColorModeProvider defaultMode={mode} storage={null}>
       <GlobalStyles />
       <UIProvider locale={ptBR} motion={{ mode: motion }} navigate={() => undefined} currentHref="/">
         <ToastProvider>{ui}</ToastProvider>

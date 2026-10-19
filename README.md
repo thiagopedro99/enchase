@@ -112,6 +112,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Select` | `<Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />` |
 | `Checkbox` | `<Checkbox label="Aceito os termos" />` |
 | `Card` | `<Card variant="elevated">Conteúdo</Card>` |
+| `Badge` | `<Badge variant="success">Pago</Badge>` |
 | `Container`, `Flex`, `Grid` | `<Grid minColumnWidth="14rem" gap="1rem">...</Grid>` |
 | `Modal` | `<Modal isOpen={open} onClose={close} title="Editar">...</Modal>` |
 | `ConfirmModal` | `<ConfirmModal isOpen={open} onClose={close} onConfirm={apagar} message="Apagar item?" />` |
@@ -162,8 +163,8 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 
 | Prop | Onde | O que faz |
 | --- | --- | --- |
-| `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`. |
-| `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
+| `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, e o de `Badge`, `neutral`. |
+| `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
 | `label` | `Input`, `Textarea`, `Select`, `Checkbox` | Rótulo visível, ligado ao controle. |
 | `error` | `Input`, `Textarea`, `Select` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
 | `helperText` | `Input`, `Textarea`, `Select` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |

@@ -14,6 +14,7 @@ import { Select } from '@components/common/Select/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
+import { Badge } from '@components/common/Badge/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
@@ -47,6 +48,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Select', element: <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} /> },
   { name: 'Checkbox', element: <Checkbox label="Accept" /> },
   { name: 'Card', element: <Card variant="elevated">Content</Card> },
+  { name: 'Badge', element: <Badge variant="success">New</Badge> },
   { name: 'Tooltip', element: <Tooltip text="Help"><Button>Hover</Button></Tooltip> },
   { name: 'ThemeToggle', element: <ThemeToggle /> },
   { name: 'Popover closed', element: <Popover content={<p>Details</p>}><Button>Open</Button></Popover> },

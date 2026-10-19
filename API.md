@@ -6,7 +6,18 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ## Componentes
 
-[Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+
+### Badge
+
+Etiqueta pequena para um estado ou uma contagem, como "Novo", "Pago" ou "3". A cor vem de pares de papéis do tema, com o contraste conferido, e o texto sempre carrega o significado: nunca dependa só da cor. É um `<span>` e aceita os atributos dele.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `variant` | `'neutral' \| 'primary' \| 'success' \| 'warning' \| 'error' \| 'info'` | `'neutral'` | Cor da etiqueta, por papel do tema: neutral é cinza, primary usa a cor principal e success, warning, error e info seguem os estados. |
+| `size` | `'sm' \| 'md'` | `'md'` | Tamanho da etiqueta: sm tem 20 px de altura e md, 24 px. |
+
+Aceita também os demais atributos de `<span>`, repassados ao elemento.
 
 ### Breadcrumbs
 
@@ -41,9 +52,9 @@ Link com a aparência de um `Button`. É um `<a href>` de verdade, e passa pelo 
 | --- | --- | --- | --- |
 | `href` | `string` | *obrigatória* | Destino do link, com as mesmas regras do `Link`: uma rota do app vai para o `navigate` do `UIProvider`; âncoras, o hash da página atual e URLs externas ficam com o navegador. |
 | `native` | `boolean` | `false` | Deixa o clique com o navegador mesmo em uma rota do app. |
-| `animation` | `false \| { recipe, from, tuning }` | `press` | Receita de motion do `Button`. Use false para desligar, ou { recipe, tuning } com press ou lift. |
 | `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Estilo visual, o mesmo do `Button`. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Tamanho, o mesmo do `Button`. |
+| `animation` | `false \| { recipe, from, tuning }` | `press` | Receita de motion do `Button`. Use false para desligar, ou { recipe, tuning } com press ou lift. |
 | `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
 
 Aceita também os demais atributos de `<a>`, repassados ao elemento.

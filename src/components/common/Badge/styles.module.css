@@ -1,0 +1,58 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  font-family: inherit;
+  font-weight: var(--enchase-font-weight-medium);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+:where(.badge) {
+  gap: var(--enchase-space-xs);
+  border-radius: var(--enchase-radius-full);
+}
+
+:where(.badge[data-size='sm']) {
+  min-block-size: 1.25rem;
+  padding-inline: var(--enchase-space-sm);
+  font-size: var(--enchase-font-size-xs);
+}
+
+:where(.badge[data-size='md']) {
+  min-block-size: 1.5rem;
+  padding-inline: 0.625rem;
+  font-size: var(--enchase-font-size-sm);
+}
+
+:where(.badge[data-variant='neutral']) {
+  background-color: var(--enchase-color-surface-container-high);
+  color: var(--enchase-color-text-primary);
+}
+
+:where(.badge[data-variant='primary']) {
+  background-color: var(--enchase-color-primary-container);
+  color: var(--enchase-color-on-primary-container);
+}
+
+:where(.badge[data-variant='success']) {
+  background-color: var(--enchase-color-success-container);
+  color: var(--enchase-color-on-success-container);
+}
+
+:where(.badge[data-variant='warning']) {
+  background-color: var(--enchase-color-warning-container);
+  color: var(--enchase-color-on-warning-container);
+}
+
+:where(.badge[data-variant='error']) {
+  background-color: var(--enchase-color-error-container);
+  color: var(--enchase-color-on-error-container);
+}
+
+:where(.badge[data-variant='info']) {
+  background-color: var(--enchase-color-info-container);
+  color: var(--enchase-color-on-info-container);
+}
