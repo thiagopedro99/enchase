@@ -1,0 +1,174 @@
+.group {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+:where(.group) {
+  max-inline-size: 100%;
+}
+
+.legend {
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  padding: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-font-size-base);
+  font-weight: var(--enchase-font-weight-medium);
+  color: var(--enchase-color-text-secondary);
+}
+
+:where(.legend) {
+  margin-block-end: var(--enchase-space-sm);
+}
+
+.group[data-invalid] .legend {
+  color: var(--enchase-color-error);
+}
+
+.options {
+  display: flex;
+}
+
+:where(.options) {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--enchase-space-xs);
+}
+
+:where(.group[data-orientation='horizontal'] .options) {
+  flex-flow: row wrap;
+  column-gap: var(--enchase-space-lg);
+}
+
+.option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:where(.option) {
+  gap: var(--enchase-space-md);
+  min-block-size: 40px;
+  min-inline-size: 24px;
+}
+
+.hidden {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  inline-size: 0;
+  block-size: 0;
+}
+
+.control {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 2px solid var(--enchase-color-border-strong);
+  border-radius: var(--enchase-radius-full);
+  background-color: transparent;
+  transition:
+    border-color var(--enchase-radio-group-duration, var(--enchase-motion-duration-fast)) var(--enchase-radio-group-ease, var(--enchase-motion-ease-out)),
+    box-shadow var(--enchase-radio-group-duration, var(--enchase-motion-duration-fast)) var(--enchase-radio-group-ease, var(--enchase-motion-ease-out));
+}
+
+:where(.control) {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+.dot {
+  box-sizing: border-box;
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  border: 0.3125rem solid var(--enchase-color-primary);
+  border-radius: var(--enchase-radius-full);
+  opacity: 0;
+  transform: scale(var(--enchase-radio-group-scale, 0.6));
+  transition:
+    opacity var(--enchase-radio-group-duration, var(--enchase-motion-duration-fast)) var(--enchase-radio-group-ease, var(--enchase-motion-ease-out)),
+    transform var(--enchase-radio-group-duration, var(--enchase-motion-duration-fast)) var(--enchase-radio-group-ease, var(--enchase-motion-ease-out));
+}
+
+.hidden:checked + .control {
+  border-color: var(--enchase-color-primary);
+}
+
+.hidden:checked + .control .dot {
+  opacity: 1;
+  transform: none;
+}
+
+.group[data-invalid] .hidden:not(:checked, :disabled) + .control {
+  border-color: var(--enchase-color-error);
+}
+
+.hidden:disabled + .control {
+  border-color: color-mix(in srgb, var(--enchase-color-text-primary) 38%, transparent);
+  cursor: not-allowed;
+}
+
+.hidden:disabled + .control .dot {
+  border-color: color-mix(in srgb, var(--enchase-color-text-primary) 38%, transparent);
+}
+
+.hidden:focus-visible + .control {
+  outline: 2px solid var(--enchase-color-primary);
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option:hover .hidden:not(:disabled) + .control {
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--enchase-color-primary) 8%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot {
+    transform: none;
+    transition-property: opacity;
+  }
+}
+
+.label {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-font-size-base);
+  color: var(--enchase-color-text-primary);
+}
+
+.hidden:disabled ~ .label {
+  color: var(--enchase-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.error {
+  display: block;
+  margin-block-start: var(--enchase-space-xs);
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-font-size-xs);
+  font-weight: var(--enchase-font-weight-medium);
+  color: var(--enchase-color-error);
+}
+
+.helper {
+  display: block;
+  margin-block-start: var(--enchase-space-xs);
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-font-size-xs);
+  color: var(--enchase-color-text-secondary);
+}

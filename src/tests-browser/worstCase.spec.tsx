@@ -8,6 +8,7 @@ import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
+import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
@@ -147,6 +148,8 @@ describe.each(widths)('worst case data at %ipx', (width) => {
         <Checkbox label={worstCase.shortName} />
         <Switch label={`${worstCase.frenchLabel} ${worstCase.longEmail}`} />
         <Switch label={worstCase.shortName} />
+        <RadioGroup label={worstCase.germanCompound} helperText={worstCase.longUrl} options={[{ value: 'a', label: `${worstCase.frenchLabel} ${worstCase.longEmail}` }, { value: 'b', label: worstCase.shortName }]} />
+        <RadioGroup label={worstCase.longTitle} error={worstCase.longUrl} orientation="horizontal" options={[{ value: 'a', label: worstCase.longEmail }, { value: 'b', label: worstCase.fileName }]} />
       </div>
     )
 

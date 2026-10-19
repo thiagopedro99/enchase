@@ -10,7 +10,8 @@ export const browserSkips = {
   rawMouseInput: 'raw mouse dispatch uses a Chromium-only protocol call',
   layoutMetrics: 'layout cost is read from Chromium performance metrics',
   webkitSelectPadding: 'WebKit base-select keeps the select padding on an inner part, so the element reads 0px although its text is indented like the input',
-  forcedColors: 'WebKit has no forced colors emulation to switch on'
+  forcedColors: 'WebKit has no forced colors emulation to switch on',
+  radioWrap: 'WebKit does not wrap the arrow keys around the ends of a native radio group'
 } as const
 
 export const chromiumOnly = (reason: keyof typeof browserSkips) => {

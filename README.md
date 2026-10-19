@@ -112,6 +112,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Select` | `<Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />` |
 | `Checkbox` | `<Checkbox label="Aceito os termos" />` |
 | `Switch` | `<Switch label="Receber notificações" defaultChecked />` |
+| `RadioGroup` | `<RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }]} defaultValue="free" />` |
 | `Card` | `<Card variant="elevated">Conteúdo</Card>` |
 | `Badge` | `<Badge variant="success">Pago</Badge>` |
 | `Alert` | `<Alert variant="warning" title="Atenção" onClose={fechar}>O prazo termina hoje.</Alert>` |
@@ -167,13 +168,14 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | --- | --- | --- |
 | `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
 | `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
-| `label` | `Input`, `Textarea`, `Select`, `Checkbox`, `Switch` | Rótulo visível, ligado ao controle. |
-| `error` | `Input`, `Textarea`, `Select` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
-| `helperText` | `Input`, `Textarea`, `Select` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
+| `label` | `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `RadioGroup` | Rótulo visível, ligado ao controle. No `RadioGroup`, é o título do grupo. |
+| `error` | `Input`, `Textarea`, `Select`, `RadioGroup` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
+| `helperText` | `Input`, `Textarea`, `Select`, `RadioGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
 | `fullWidth` | `Button`, `ButtonLink`, `Input`, `Textarea`, `Select` | Ocupa toda a largura disponível. |
 | `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
-| `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. |
+| `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup`, vão para o `<fieldset>`, que é a raiz. |
 | `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
+| `value`, `defaultValue` e `onValueChange` | `RadioGroup` | Valor da opção marcada, controlado ou não. `onValueChange` recebe o valor da opção que o usuário acabou de marcar. |
 | `onClose` | `Alert` | Mostra o botão de fechar. O `Alert` não some sozinho: quem usa o remove ao receber o evento. |
 | `open`, `defaultOpen` e `onOpenChange` | `Popover` e o drawer do `Layout` | Controlados ou não. A `Sidebar` modal usa `open` e `onClose`. |
 
@@ -374,7 +376,7 @@ Quatro níveis de configuração, do mais amplo ao mais específico:
 | `card` | `-duration`, `-distance`, `-ease` |
 | `loading` | `-duration`, `-ease` |
 | `skeleton` | `-duration`, `-ease` |
-| `checkbox` | `-duration`, `-scale`, `-ease` |
+| `checkbox`, `radio-group` | `-duration`, `-scale`, `-ease` |
 | `icon-swap` | `-duration`, `-ease`, `-rotate` |
 | `input`, `textarea`, `select`, `switch`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
 

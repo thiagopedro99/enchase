@@ -6,7 +6,7 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ## Componentes
 
-[Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Alert
 
@@ -370,6 +370,26 @@ Painel flutuante ligado a um gatilho. A posição se ajusta sozinha perto da bor
 | `style` | `CSSProperties` | — | Estilo do elemento que envolve o gatilho. |
 | `contentClassName` | `string` | — | Classe do conteúdo (data-slot="popover-content"). Também dá para estilizar por data-state e data-placement. |
 | `contentStyle` | `CSSProperties` | — | Estilo do conteúdo. |
+
+### RadioGroup
+
+Grupo de botões de opção para escolher uma entre poucas alternativas que cabem na tela de uma vez; para muitas, use o `Select`. Monta um `<fieldset>` com `role="radiogroup"`, título, texto de ajuda e mensagem de erro, como os outros campos. Cada opção é um `<input type="radio">` nativo de mesmo `name`, então o teclado já funciona: Tab entra no grupo e as setas movem e marcam a opção. Aceita `ref`, que vai para o `<fieldset>`, e os atributos dele; `className` e `style` também vão para ele.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `options` | `RadioGroupOption[]` | *obrigatória* | Opções do grupo, cada uma com `value`, `label` e, se quiser, `disabled`. A ordem do array é a ordem na tela. |
+| `label` | `string` | — | Título do grupo, desenhado como a `<legend>` do `<fieldset>`. Sem título visível, passe aria-label ao grupo. |
+| `name` | `string` | — | Nome do campo no formulário, igual para todas as opções. Sem ele, o grupo usa um nome gerado, que mantém as opções ligadas entre si e separa um grupo do outro. |
+| `value` | `string` | — | Valor da opção marcada quando o grupo é controlado. Exige também onValueChange. Para controlar sem nenhuma marcada, passe uma string vazia. Veja a story Controlled. |
+| `defaultValue` | `string` | — | Valor da opção marcada no início, para uso sem controle externo. Veja a story WithDefaultValue. |
+| `onValueChange` | `(value: string) => void` | — | Chamada com o valor da opção que o usuário acabou de marcar, por clique ou pelas setas do teclado. |
+| `required` | `boolean` | `false` | Exige uma opção marcada ao enviar o formulário e avisa leitores de tela com aria-required. |
+| `error` | `string` | — | Mensagem de erro. Marca o grupo como inválido (aria-invalid), pinta o título e as opções de vermelho e é anunciada como alerta. Substitui o helperText. |
+| `helperText` | `string` | — | Texto de ajuda sob o grupo. Fica ligado a ele por aria-describedby e some quando há erro. |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Direção da lista: vertical empilha as opções e horizontal as põe lado a lado, quebrando a linha quando falta espaço. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | Animação do ponto de marcado, que cresce com um pop curto. false desliga; { tuning: { duration, scale } } ajusta a duração em segundos e a escala inicial. |
+
+Aceita também os demais atributos de `<fieldset>`, repassados ao elemento. Encaminha o `ref` para `<fieldset>`.
 
 ### Select
 

@@ -4,6 +4,7 @@ import { page, userEvent } from 'vitest/browser'
 import { Button } from '@components/common/Button/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
+import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
@@ -60,6 +61,7 @@ describe('minimum target size in a real browser', () => {
         <Button size="sm">Pequeno</Button>
         <Checkbox label="Aceito" />
         <Switch label="Ligado" />
+        <RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }]} />
         <Input label="Nome" />
         <Textarea label="Mensagem" />
         <Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />
@@ -70,6 +72,7 @@ describe('minimum target size in a real browser', () => {
       page.getByRole('button', { name: 'Pequeno' }),
       page.getByRole('checkbox', { name: 'Aceito' }),
       page.getByRole('switch', { name: 'Ligado' }),
+      page.getByRole('radio', { name: 'Grátis' }),
       page.getByRole('textbox', { name: 'Nome' }),
       page.getByRole('textbox', { name: 'Mensagem' }),
       page.getByRole('combobox', { name: 'País' }),
