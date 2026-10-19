@@ -25,7 +25,10 @@ export const en: Locale = {
     logout: 'Log out',
     showPassword: 'Show password',
     opensInNewTab: '(opens in a new tab)',
-    hidePassword: 'Hide password'
+    hidePassword: 'Hide password',
+    pagination: 'Pagination',
+    previousPage: 'Previous page',
+    nextPage: 'Next page'
   }
 }
 

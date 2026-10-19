@@ -10,8 +10,14 @@ describe('locales', () => {
   it('has no empty message', () => {
     for (const locale of [en, ptBR]) {
       for (const [key, value] of Object.entries(locale.messages)) {
-        expect(value.trim(), `${locale.locale}.${key}`).not.toBe('')
+        expect((value ?? '').trim(), `${locale.locale}.${key}`).not.toBe('')
       }
+    }
+  })
+
+  it('defines the pagination texts in every locale, which are optional in the type', () => {
+    for (const locale of [en, ptBR]) {
+      for (const key of ['pagination', 'previousPage', 'nextPage'] as const) expect(locale.messages[key], `${locale.locale}.${key}`).toBeTruthy()
     }
   })
 

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 
 import { ChevronRightIcon } from '@components/common/Icon/icons/ChevronRightIcon.tsx'
+import { ChevronLeftIcon } from '@components/common/Icon/icons/ChevronLeftIcon.tsx'
 import { ExternalLinkIcon } from '@components/common/Icon/icons/ExternalLinkIcon.tsx'
 import { LogOutIcon } from '@components/common/Icon/icons/LogOutIcon.tsx'
 import { MenuOpenIcon } from '@components/common/Icon/icons/MenuOpenIcon.tsx'
@@ -10,7 +11,7 @@ import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
 import { Icon } from '@components/common/Icon/index.tsx'
 import { renderInBrowser } from './harness.tsx'
 
-const directional = [ChevronRightIcon, ChevronsLeftIcon, ChevronsRightIcon, ExternalLinkIcon, LogOutIcon, MenuOpenIcon]
+const directional = [ChevronRightIcon, ChevronLeftIcon, ChevronsLeftIcon, ChevronsRightIcon, ExternalLinkIcon, LogOutIcon, MenuOpenIcon]
 
 const transformOf = (element: Element) => getComputedStyle(element).transform
 

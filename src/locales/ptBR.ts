@@ -25,7 +25,10 @@ export const ptBR: Locale = {
     logout: 'Sair',
     showPassword: 'Mostrar senha',
     opensInNewTab: '(abre em nova aba)',
-    hidePassword: 'Ocultar senha'
+    hidePassword: 'Ocultar senha',
+    pagination: 'Paginação',
+    previousPage: 'Página anterior',
+    nextPage: 'Próxima página'
   }
 }
 

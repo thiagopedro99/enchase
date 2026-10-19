@@ -114,6 +114,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Switch` | `<Switch label="Receber notificações" defaultChecked />` |
 | `RadioGroup` | `<RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }]} defaultValue="free" />` |
 | `Accordion` | `<Accordion items={[{ value: 'envio', title: 'Quanto tempo leva o envio?', content: <p>Até dois dias úteis.</p> }]} />` |
+| `Pagination` | `<Pagination pageCount={20} page={page} onPageChange={setPage} />` |
 | `Tabs` | `<Tabs ariaLabel="Conta" items={[{ value: 'perfil', label: 'Perfil', content: <p>Seus dados</p> }, { value: 'plano', label: 'Plano', content: <p>Sua assinatura</p> }]} />` |
 | `Card` | `<Card variant="elevated">Conteúdo</Card>` |
 | `Badge` | `<Badge variant="success">Pago</Badge>` |
@@ -169,7 +170,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | Prop | Onde | O que faz |
 | --- | --- | --- |
 | `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
-| `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
+| `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
 | `label` | `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `RadioGroup` | Rótulo visível, ligado ao controle. No `RadioGroup`, é o título do grupo. |
 | `error` | `Input`, `Textarea`, `Select`, `RadioGroup` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
 | `helperText` | `Input`, `Textarea`, `Select`, `RadioGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
@@ -178,6 +179,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup`, vão para o `<fieldset>`, que é a raiz. |
 | `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
 | `value`, `defaultValue` e `onValueChange` | `RadioGroup`, `Tabs`, `Accordion` | Valor da opção marcada, da aba escolhida ou, no `Accordion`, a lista dos itens abertos (`string[]`), controlado ou não. `onValueChange` recebe o valor que o usuário acabou de escolher. |
+| `page`, `defaultPage` e `onPageChange` | `Pagination` | Página atual (a primeira é 1), controlada ou não. `onPageChange` recebe o número da página que o usuário escolheu. |
 | `onClose` | `Alert` | Mostra o botão de fechar. O `Alert` não some sozinho: quem usa o remove ao receber o evento. |
 | `open`, `defaultOpen` e `onOpenChange` | `Popover` e o drawer do `Layout` | Controlados ou não. A `Sidebar` modal usa `open` e `onClose`. |
 
@@ -319,7 +321,7 @@ import { ptBR } from 'enchase/locales'
 </UIProvider>
 ```
 
-Um `locale` tem a forma `{ locale, dir, messages }`; use `dir: 'rtl'` para línguas da direita para a esquerda. O CSS usa propriedades lógicas, e os ícones direcionais espelham sozinhos. O `dir` do `<html>` continua sendo do app.
+Um `locale` tem a forma `{ locale, dir, messages }`; use `dir: 'rtl'` para línguas da direita para a esquerda. O CSS usa propriedades lógicas, e os ícones direcionais espelham sozinhos. As chaves `pagination`, `previousPage` e `nextPage` (os textos da `Pagination`) são opcionais num `locale` próprio: sem elas, valem as do inglês. O `dir` do `<html>` continua sendo do app.
 
 ## Responsividade
 
@@ -381,7 +383,7 @@ Quatro níveis de configuração, do mais amplo ao mais específico:
 | `checkbox`, `radio-group` | `-duration`, `-scale`, `-ease` |
 | `accordion` | `-duration`, `-distance`, `-ease` |
 | `icon-swap` | `-duration`, `-ease`, `-rotate` |
-| `input`, `textarea`, `select`, `switch`, `tabs`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
+| `input`, `textarea`, `select`, `switch`, `tabs`, `pagination`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
 
 `-dx` e `-dy` são a direção da entrada (-1, 0 ou 1) e `-distance` o quanto ela anda; em RTL o `-dx` inverte. Com `prefers-reduced-motion: reduce`, o deslocamento e a escala somem e o fade continua; os loops viram pulso de opacidade.
 

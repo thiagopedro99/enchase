@@ -32,6 +32,9 @@ export type UILabels = {
   showPassword: string
   opensInNewTab: string
   hidePassword: string
+  pagination?: string
+  previousPage?: string
+  nextPage?: string
 }
 
 export type UIConfig = {

@@ -6,7 +6,7 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ## Componentes
 
-[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -361,6 +361,24 @@ Barra de navegação no topo, com a marca, os links, ações e o botão de tema.
 | `actions` | `ReactNode` | — | Ações ao lado do menu, como um botão de chamada. Em telas largas ficam na barra, entre o menu e o botão de tema (data-slot="navbar-cta"). Em telas estreitas vão para o drawer, abaixo dos links (data-slot="navbar-drawer-cta"), e um clique em um link dentro delas fecha o drawer. O nó é renderizado em um lugar por vez. |
 | `className` | `string` | — | Classe do cabeçalho (`data-slot="navbar"`). As partes seguem `data-slot="navbar-*"`; o drawer mobile é `navbar-drawer`, com `data-state`. |
 | `style` | `CSSProperties` | — | Estilo do cabeçalho. |
+
+### Pagination
+
+Navegação entre as páginas de uma lista ou tabela: botões numerados, anterior e próxima, com reticências quando a lista é longa. É uma `<nav>` com uma lista de botões, e a página atual leva `aria-current="page"`. Anterior e próxima ficam indisponíveis (`aria-disabled`) nas pontas, sem tirar o foco de quem acabou de clicar. Os textos para leitores de tela vêm de `labels.pagination`, `labels.previousPage` e `labels.nextPage` do `UIProvider`. Aceita `ref`, que vai para a `<nav>`, e os atributos dela.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `pageCount` | `number` | *obrigatória* | Total de páginas. Com menos de 1, o componente não mostra nada. |
+| `page` | `number` | — | Página atual quando o componente é controlado; a primeira é 1. Exige também onPageChange. Fora do intervalo, vale a primeira ou a última. Veja a story Controlled. |
+| `defaultPage` | `number` | `1` | Página inicial, para uso sem controle externo. |
+| `onPageChange` | `(page: number) => void` | — | Chamada com o número da página que o usuário escolheu, pelos números ou por anterior e próxima. |
+| `siblingCount` | `number` | `1` | Quantas páginas aparecem de cada lado da atual antes das reticências. |
+| `boundaryCount` | `number` | `1` | Quantas páginas ficam sempre visíveis no começo e no fim da lista. |
+| `size` | `'sm' \| 'md'` | `'md'` | Tamanho dos botões: sm tem 2 rem de lado e md, 2,5 rem. |
+| `ariaLabel` | `string` | — | Nome da navegação para leitores de tela. Sem ele, vale labels.pagination do UIProvider. |
+| `animation` | `false \| { recipe, tuning }` | `fade` | Animação do realce dos botões ao passar o mouse e ao pressionar. false desliga; { tuning: { duration } } ajusta a duração em segundos. |
+
+Aceita também os demais atributos HTML do elemento raiz. Encaminha o `ref` para o elemento raiz.
 
 ### Popover
 

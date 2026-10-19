@@ -1,0 +1,119 @@
+.pagination {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:where(.pagination) {
+  max-inline-size: 100%;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:where(.list) {
+  gap: var(--enchase-space-xs);
+}
+
+.item {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  font-family: inherit;
+  font-weight: var(--enchase-font-weight-medium);
+  line-height: 1;
+  color: var(--enchase-color-text-primary);
+  background-color: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:where(.control) {
+  min-inline-size: var(--enchase-control-height-md, 2.5rem);
+  min-block-size: var(--enchase-control-height-md, 2.5rem);
+  padding-inline: var(--enchase-space-sm);
+  font-size: var(--enchase-font-size-base);
+  border-radius: var(--enchase-radius-control);
+}
+
+:where(.pagination[data-size='sm'] .control) {
+  min-inline-size: var(--enchase-control-height-sm, 2rem);
+  min-block-size: var(--enchase-control-height-sm, 2rem);
+  padding-inline: var(--enchase-space-xs);
+  font-size: var(--enchase-font-size-sm);
+}
+
+.control::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: currentColor;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--enchase-pagination-duration, var(--enchase-motion-duration-fast)) var(--enchase-pagination-ease, var(--enchase-motion-ease-out));
+}
+
+.control[aria-current='page'] {
+  color: var(--enchase-color-on-primary);
+  background-color: var(--enchase-color-primary);
+  border-width: 2px;
+}
+
+.control[aria-disabled='true'] {
+  color: var(--enchase-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.control:focus-visible {
+  outline: 2px solid var(--enchase-color-primary);
+  outline-offset: 2px;
+}
+
+.control:active:not([aria-disabled='true'])::after {
+  opacity: var(--enchase-state-pressed);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .control:hover:not([aria-disabled='true'])::after {
+    opacity: var(--enchase-state-hover);
+  }
+}
+
+.ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--enchase-color-text-secondary);
+  user-select: none;
+}
+
+:where(.ellipsis) {
+  min-inline-size: var(--enchase-control-height-md, 2.5rem);
+  min-block-size: var(--enchase-control-height-md, 2.5rem);
+  font-size: var(--enchase-font-size-base);
+}
+
+:where(.pagination[data-size='sm'] .ellipsis) {
+  min-inline-size: var(--enchase-control-height-sm, 2rem);
+  min-block-size: var(--enchase-control-height-sm, 2rem);
+  font-size: var(--enchase-font-size-sm);
+}

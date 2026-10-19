@@ -6,7 +6,7 @@ import * as theme from 'enchase/theme'
 
 describe('public entries', () => {
   it('exports the components, providers and hooks from enchase', () => {
-    for (const name of ['Button', 'Textarea', 'Badge', 'Alert', 'Switch', 'RadioGroup', 'Tabs', 'Accordion', 'Modal', 'Popover', 'Sidebar', 'Layout', 'Navbar', 'Footer', 'Icon', 'Link', 'UIProvider', 'ColorModeProvider', 'ToastProvider', 'GlobalStyles', 'useToast', 'useColorMode', 'useScrollSpy', 'useUIConfig']) {
+    for (const name of ['Button', 'Textarea', 'Badge', 'Alert', 'Switch', 'RadioGroup', 'Tabs', 'Accordion', 'Pagination', 'Modal', 'Popover', 'Sidebar', 'Layout', 'Navbar', 'Footer', 'Icon', 'Link', 'UIProvider', 'ColorModeProvider', 'ToastProvider', 'GlobalStyles', 'useToast', 'useColorMode', 'useScrollSpy', 'useUIConfig']) {
       expect(main, name).toHaveProperty(name)
     }
   })

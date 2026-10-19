@@ -12,6 +12,7 @@ import { ChevronsLeftIcon } from '@components/common/Icon/icons/ChevronsLeftIcon
 import { ExternalLinkIcon } from '@components/common/Icon/icons/ExternalLinkIcon.tsx'
 import { ChevronRightIcon } from '@components/common/Icon/icons/ChevronRightIcon.tsx'
 import { ChevronDownIcon } from '@components/common/Icon/icons/ChevronDownIcon.tsx'
+import { ChevronLeftIcon } from '@components/common/Icon/icons/ChevronLeftIcon.tsx'
 import { MoonIcon } from '@components/common/Icon/icons/MoonIcon.tsx'
 import { SunIcon } from '@components/common/Icon/icons/SunIcon.tsx'
 import { MenuOpenIcon } from '@components/common/Icon/icons/MenuOpenIcon.tsx'
@@ -30,6 +31,7 @@ const icons = [
   ['close', CloseIcon],
   ['chevron-right', ChevronRightIcon],
   ['chevron-down', ChevronDownIcon],
+  ['chevron-left', ChevronLeftIcon],
   ['chevrons-right', ChevronsRightIcon],
   ['chevrons-left', ChevronsLeftIcon],
   ['external-link', ExternalLinkIcon],
