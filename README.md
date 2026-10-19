@@ -113,6 +113,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Checkbox` | `<Checkbox label="Aceito os termos" />` |
 | `Card` | `<Card variant="elevated">Conteúdo</Card>` |
 | `Badge` | `<Badge variant="success">Pago</Badge>` |
+| `Alert` | `<Alert variant="warning" title="Atenção" onClose={fechar}>O prazo termina hoje.</Alert>` |
 | `Container`, `Flex`, `Grid` | `<Grid minColumnWidth="14rem" gap="1rem">...</Grid>` |
 | `Modal` | `<Modal isOpen={open} onClose={close} title="Editar">...</Modal>` |
 | `ConfirmModal` | `<ConfirmModal isOpen={open} onClose={close} onConfirm={apagar} message="Apagar item?" />` |
@@ -163,7 +164,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 
 | Prop | Onde | O que faz |
 | --- | --- | --- |
-| `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, e o de `Badge`, `neutral`. |
+| `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
 | `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
 | `label` | `Input`, `Textarea`, `Select`, `Checkbox` | Rótulo visível, ligado ao controle. |
 | `error` | `Input`, `Textarea`, `Select` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
@@ -172,6 +173,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
 | `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. |
 | `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
+| `onClose` | `Alert` | Mostra o botão de fechar. O `Alert` não some sozinho: quem usa o remove ao receber o evento. |
 | `open`, `defaultOpen` e `onOpenChange` | `Popover` e o drawer do `Layout` | Controlados ou não. A `Sidebar` modal usa `open` e `onClose`. |
 
 Componentes que estendem um elemento HTML (`Button`, `Input`, `Card`, `Footer`, `Layout` e outros) repassam os demais atributos para ele, como `id`, `aria-*`, `data-*` e handlers.
@@ -373,7 +375,7 @@ Quatro níveis de configuração, do mais amplo ao mais específico:
 | `skeleton` | `-duration`, `-ease` |
 | `checkbox` | `-duration`, `-scale`, `-ease` |
 | `icon-swap` | `-duration`, `-ease`, `-rotate` |
-| `input`, `textarea`, `select`, `link`, `breadcrumbs`, `footer`, `app-bar` | `-duration`, `-ease` |
+| `input`, `textarea`, `select`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
 
 `-dx` e `-dy` são a direção da entrada (-1, 0 ou 1) e `-distance` o quanto ela anda; em RTL o `-dx` inverte. Com `prefers-reduced-motion: reduce`, o deslocamento e a escala somem e o fade continua; os loops viram pulso de opacidade.
 

@@ -3,6 +3,7 @@ import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 
 const prefixes: Record<string, string> = {
+  'common/Alert/styles.module.css': 'alert',
   'common/Breadcrumbs/styles.module.css': 'breadcrumbs',
   'common/Button/styles.module.css': 'button',
   'common/Card/styles.module.css': 'card',

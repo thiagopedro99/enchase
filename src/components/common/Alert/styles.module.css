@@ -1,0 +1,106 @@
+.alert {
+  --alert-row-size: 2rem;
+  display: flex;
+  align-items: flex-start;
+  box-sizing: border-box;
+  margin: 0;
+  font-family: inherit;
+}
+
+:where(.alert) {
+  gap: var(--enchase-space-sm);
+  padding-block: var(--enchase-space-sm);
+  padding-inline: var(--enchase-space-md);
+  border-radius: var(--enchase-radius-md);
+  font-size: var(--enchase-font-size-sm);
+  line-height: 1.5;
+}
+
+:where(.alert[data-variant='info']) {
+  background-color: var(--enchase-color-info-container);
+  color: var(--enchase-color-on-info-container);
+}
+
+:where(.alert[data-variant='success']) {
+  background-color: var(--enchase-color-success-container);
+  color: var(--enchase-color-on-success-container);
+}
+
+:where(.alert[data-variant='warning']) {
+  background-color: var(--enchase-color-warning-container);
+  color: var(--enchase-color-on-warning-container);
+}
+
+:where(.alert[data-variant='error']) {
+  background-color: var(--enchase-color-error-container);
+  color: var(--enchase-color-on-error-container);
+}
+
+.icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  block-size: var(--alert-row-size);
+  color: inherit;
+}
+
+.content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+:where(.content) {
+  gap: var(--enchase-space-xs);
+  padding-block: calc((var(--alert-row-size) - 1.5em) / 2);
+}
+
+.title {
+  margin: 0;
+  font-weight: var(--enchase-font-weight-semibold);
+  overflow-wrap: anywhere;
+}
+
+.message {
+  overflow-wrap: anywhere;
+}
+
+.close {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color var(--enchase-alert-duration, var(--enchase-motion-duration-fast)) var(--enchase-alert-ease, var(--enchase-motion-ease-out));
+}
+
+:where(.close) {
+  inline-size: var(--alert-row-size);
+  block-size: var(--alert-row-size);
+  border-radius: var(--enchase-radius-full);
+}
+
+.close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .close:hover {
+    background-color: color-mix(in srgb, currentColor 8%, transparent);
+  }
+}
+
+.close:active {
+  background-color: color-mix(in srgb, currentColor 12%, transparent);
+}
