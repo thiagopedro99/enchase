@@ -117,6 +117,7 @@ const componentFunction = (declaration) => {
 
   if (!expression) return undefined
   if (ts.isArrowFunction(expression) || ts.isFunctionExpression(expression) || ts.isFunctionDeclaration(expression)) return expression
+  if (ts.isAsExpression(expression) || ts.isParenthesizedExpression(expression)) return componentFunction(expression.expression)
   if (ts.isCallExpression(expression)) return expression.arguments.map(componentFunction).find(Boolean)
 
   return undefined

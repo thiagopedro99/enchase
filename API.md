@@ -6,7 +6,7 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ## Componentes
 
-[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -489,6 +489,23 @@ Interruptor de liga e desliga para uma configuração que vale na hora, com rót
 | `animation` | `false \| { recipe, tuning }` | `fade` | Animação da troca: a bolinha desliza e a trilha muda de cor. false desliga; { tuning: { duration } } ajusta a duração em segundos. |
 
 Aceita também os demais atributos de `<input>`, repassados ao elemento. Encaminha o `ref` para `<input>`.
+
+### Table
+
+Tabela de dados semântica, montada a partir de `columns` e `rows`: uma `<table>` com legenda (`<caption>`), cabeçalhos de coluna (`scope="col"`), cabeçalhos de linha opcionais e células que aceitam qualquer conteúdo pela função `cell`. É genérica: o tipo da linha passa das `rows` para as colunas. Quando a tabela é mais larga que o espaço, o contêiner rola na horizontal e vira uma região focável com o nome da tabela, para quem usa só o teclado. Não ordena nem pagina: ordene os dados antes e use a `Pagination` ao lado. Aceita `ref`, que vai para o contêiner, e os atributos do `<div>`; `className` e `style` também vão para ele.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `columns` | `TableColumn<Row>[]` | *obrigatória* | Colunas da tabela, na ordem da tela. Cada uma tem `key` (o campo da linha que ela mostra), `header` (texto do cabeçalho) e, se quiser, `cell` (função que devolve o conteúdo da célula de uma linha), `align` (`start`, `center` ou `end`), `width` (largura CSS, como `8rem`) e `rowHeader` (as células dela viram cabeçalhos de linha). Sem `cell`, a coluna mostra `row[key]` como texto. |
+| `rows` | `Row[]` | *obrigatória* | Linhas da tabela, um objeto por linha. O tipo das linhas liga as colunas a elas: `TableColumn<Pedido>[]` com `rows` de `Pedido`. |
+| `getRowKey` | `(row: Row, index: number) => string \| number` | — | Devolve a chave estável de uma linha, como o id, para o React reaproveitar a linha quando a ordem muda. Sem ela, vale a posição. |
+| `caption` | `string` | — | Título da tabela, escrito como `<caption>` acima dela, que também dá o nome acessível. Para um nome que não aparece, passe ariaLabel. |
+| `ariaLabel` | `string` | — | Nome da tabela para leitores de tela, útil quando não há legenda. Com as duas, vale ariaLabel. |
+| `empty` | `ReactNode` | — | Conteúdo mostrado em uma célula que ocupa todas as colunas quando não há linhas. Sem ele, só o cabeçalho aparece. |
+| `size` | `'sm' \| 'md'` | `'md'` | Densidade das linhas: sm é compacta e md é a padrão. |
+| `striped` | `boolean` | `false` | Alterna o fundo das linhas para ajudar a seguir uma linha comprida. |
+
+Aceita também os demais atributos de `<div>`, repassados ao elemento. Encaminha o `ref` para `<div>`.
 
 ### Tabs
 

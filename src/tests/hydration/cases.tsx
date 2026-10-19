@@ -4,6 +4,7 @@ import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
+import { Table } from '@components/common/Table/index.tsx'
 import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
@@ -54,6 +55,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Select', element: <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} /> },
   { name: 'Checkbox', element: <Checkbox label="Accept" /> },
   { name: 'Switch', element: <Switch label="Notifications" defaultChecked /> },
+  { name: 'Table', element: <Table caption="Orders" striped columns={[{ key: 'id', header: 'Order', rowHeader: true }, { key: 'total', header: 'Total', align: 'end' }]} rows={[{ id: '#1', total: 10 }, { id: '#2', total: 20 }]} /> },
   { name: 'Pagination', element: <Pagination pageCount={12} defaultPage={6} size="sm" /> },
   { name: 'Accordion', element: <Accordion defaultValue={['b']} items={[{ value: 'a', title: 'First', content: <p>One</p> }, { value: 'b', title: 'Second', content: <p>Two</p> }, { value: 'c', title: 'Third', content: <p>Three</p>, disabled: true }]} /> },
   { name: 'Tabs', element: <Tabs ariaLabel="Sections" defaultValue="b" items={[{ value: 'a', label: 'First', content: <p>One</p> }, { value: 'b', label: 'Second', content: <p>Two</p> }, { value: 'c', label: 'Third', content: <p>Three</p>, disabled: true }]} /> },

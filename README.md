@@ -115,6 +115,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `RadioGroup` | `<RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }]} defaultValue="free" />` |
 | `Accordion` | `<Accordion items={[{ value: 'envio', title: 'Quanto tempo leva o envio?', content: <p>Até dois dias úteis.</p> }]} />` |
 | `Pagination` | `<Pagination pageCount={20} page={page} onPageChange={setPage} />` |
+| `Table` | `<Table caption="Pedidos" columns={[{ key: 'id', header: 'Pedido' }, { key: 'total', header: 'Total', align: 'end' }]} rows={pedidos} />` |
 | `Tabs` | `<Tabs ariaLabel="Conta" items={[{ value: 'perfil', label: 'Perfil', content: <p>Seus dados</p> }, { value: 'plano', label: 'Plano', content: <p>Sua assinatura</p> }]} />` |
 | `Card` | `<Card variant="elevated">Conteúdo</Card>` |
 | `Badge` | `<Badge variant="success">Pago</Badge>` |
@@ -170,7 +171,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | Prop | Onde | O que faz |
 | --- | --- | --- |
 | `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
-| `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
+| `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` e `Table` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
 | `label` | `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `RadioGroup` | Rótulo visível, ligado ao controle. No `RadioGroup`, é o título do grupo. |
 | `error` | `Input`, `Textarea`, `Select`, `RadioGroup` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
 | `helperText` | `Input`, `Textarea`, `Select`, `RadioGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |

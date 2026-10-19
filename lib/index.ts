@@ -1,4 +1,4 @@
-export { Accordion, Alert, Badge, Breadcrumbs, Button, ButtonLink, Card, Checkbox, ConfirmModal, Container, Flex, Grid, InlineLoading, Input, Loading, Modal, Pagination, Popover, RadioGroup, Select, Sidebar, Skeleton, Switch, Tabs, Textarea, ThemeToggle, Tooltip, VisuallyHidden } from '../src/components/common/index.ts'
+export { Accordion, Alert, Badge, Breadcrumbs, Button, ButtonLink, Card, Checkbox, ConfirmModal, Container, Flex, Grid, InlineLoading, Input, Loading, Modal, Pagination, Popover, RadioGroup, Select, Sidebar, Skeleton, Switch, Table, Tabs, Textarea, ThemeToggle, Tooltip, VisuallyHidden } from '../src/components/common/index.ts'
 export { Icon } from '../src/components/common/Icon/index.tsx'
 export { Link } from '../src/components/common/Link/index.tsx'
 export { ColorModeProvider, ColorModeScript } from '../src/components/colorMode/index.tsx'
@@ -37,6 +37,7 @@ export type { RadioGroupProps } from '../src/components/common/RadioGroup/types.
 export type { TabsProps } from '../src/components/common/Tabs/types.ts'
 export type { AccordionProps } from '../src/components/common/Accordion/types.ts'
 export type { PaginationProps } from '../src/components/common/Pagination/types.ts'
+export type { TableColumn, TableProps } from '../src/components/common/Table/types.ts'
 export type { CardProps } from '../src/components/common/Card/types.ts'
 export type { LoadingProps, InlineLoadingProps } from '../src/components/common/Loading/types.ts'
 export type { SkeletonProps } from '../src/components/common/Skeleton/types.ts'

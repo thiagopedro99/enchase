@@ -4,6 +4,7 @@ import { page, userEvent } from 'vitest/browser'
 
 import { Breadcrumbs } from '@components/common/Breadcrumbs/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
+import { Table } from '@components/common/Table/index.tsx'
 import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
@@ -177,6 +178,29 @@ describe.each(widths)('worst case data at %ipx', (width) => {
     await setup(<Pagination pageCount={999999} defaultPage={500000} siblingCount={2} boundaryCount={2} />)
 
     expect(audit(`pagination@${width}`).join(' | ')).toBe('')
+  })
+
+  it('keeps the table inside the page with long values and scrolls its box instead', async () => {
+    await setup(
+      <Table
+        caption={worstCase.longTitle}
+        columns={[
+          { key: 'name', header: worstCase.germanCompound },
+          { key: 'email', header: 'E-mail' },
+          { key: 'file', header: 'Arquivo' },
+          { key: 'url', header: 'Endereço' }
+        ]}
+        rows={[
+          { name: worstCase.longName, email: worstCase.longEmail, file: worstCase.fileName, url: worstCase.longUrl },
+          { name: worstCase.thaiName, email: worstCase.uuid, file: worstCase.longTag, url: worstCase.longStatus }
+        ]}
+      />
+    )
+    const box = document.querySelector('[data-slot="table"]') as HTMLElement
+
+    expect(audit(`table@${width}`).join(' | ')).toBe('')
+    if (width === 320) expect(box.scrollWidth).toBeGreaterThan(box.clientWidth)
+    expect(box.getBoundingClientRect().right).toBeLessThanOrEqual(document.documentElement.clientWidth + 0.5)
   })
 
   it('keeps the breadcrumbs inside the page', async () => {
