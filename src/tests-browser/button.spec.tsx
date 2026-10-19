@@ -69,6 +69,42 @@ describe('Button customization in a real browser', () => {
   })
 })
 
+describe('ButtonLink external icon in a real browser', () => {
+  it('is narrower without the external icon, which is what an icon only link needs', () => {
+    render(
+      <>
+        <ButtonLink href="https://example.com" target="_blank" aria-label="Com ícone externo">
+          <svg width="24" height="24" aria-hidden="true" />
+        </ButtonLink>
+        <ButtonLink href="https://example.com" target="_blank" externalIcon={false} aria-label="Sem ícone externo">
+          <svg width="24" height="24" aria-hidden="true" />
+        </ButtonLink>
+      </>
+    )
+    const withIcon = page.getByRole('link', { name: 'Com ícone externo' }).element()
+    const withoutIcon = page.getByRole('link', { name: 'Sem ícone externo' }).element()
+    const widthOf = (element: Element) => element.getBoundingClientRect().width
+
+    expect(withIcon.querySelectorAll('svg')).toHaveLength(2)
+    expect(withoutIcon.querySelectorAll('svg')).toHaveLength(1)
+    expect(widthOf(withIcon) - widthOf(withoutIcon)).toBeGreaterThanOrEqual(16)
+  })
+
+  it('does not leave the hidden warning taking up room', () => {
+    render(
+      <ButtonLink href="https://example.com" target="_blank" externalIcon={false}>
+        Site
+      </ButtonLink>
+    )
+    const link = page.getByRole('link', { name: /Site/ }).element()
+    const hidden = link.querySelector('[data-slot="visually-hidden"]') as HTMLElement
+
+    expect(hidden).not.toBeNull()
+    expect(getComputedStyle(hidden).position).toBe('absolute')
+    expect(hidden.getBoundingClientRect().width).toBeLessThanOrEqual(1)
+  })
+})
+
 describe('Button hover in a real browser', () => {
   const hoverRules = () => {
     const rules: { selector: string; gated: boolean }[] = []

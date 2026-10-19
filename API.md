@@ -81,6 +81,7 @@ Link com a aparência de um `Button`. É um `<a href>` de verdade, e passa pelo 
 | --- | --- | --- | --- |
 | `href` | `string` | *obrigatória* | Destino do link, com as mesmas regras do `Link`: uma rota do app vai para o `navigate` do `UIProvider`; âncoras, o hash da página atual e URLs externas ficam com o navegador. |
 | `native` | `boolean` | `false` | Deixa o clique com o navegador mesmo em uma rota do app. |
+| `externalIcon` | `boolean` | `true` | Com `target="_blank"`, mostra o ícone de link externo depois do conteúdo. `false` tira só o ícone (útil em um botão só de ícone) e mantém o texto "abre em nova aba" para leitores de tela; em um link só de ícone com `aria-label`, ponha o aviso no próprio rótulo. |
 | `animation` | `false \| { recipe, from, tuning }` | `press` | Receita de motion do `Button`. Use false para desligar, ou { recipe, tuning } com press ou lift. |
 | `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Estilo visual, o mesmo do `Button`. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Tamanho, o mesmo do `Button`. |

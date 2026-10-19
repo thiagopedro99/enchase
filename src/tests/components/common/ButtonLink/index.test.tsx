@@ -63,6 +63,62 @@ describe('ButtonLink', () => {
     expect(link).toHaveAttribute('rel', 'noopener noreferrer')
   })
 
+  it('draws the external link icon by default', () => {
+    renderWithProviders(
+      <ButtonLink href="https://example.com" target="_blank">
+        Site
+      </ButtonLink>
+    )
+
+    const link = screen.getByRole('link')
+    const icon = link.querySelector('[data-slot="button-link-icon"]')
+
+    expect(icon).toBeInTheDocument()
+    expect(icon).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('takes the icon away with externalIcon={false} and keeps the warning, the name and the rel', () => {
+    renderWithProviders(
+      <ButtonLink href="https://example.com" target="_blank" externalIcon={false} className="mine">
+        Site
+      </ButtonLink>
+    )
+
+    const link = screen.getByRole('link', { name: 'Site (abre em nova aba)' })
+
+    expect(link.querySelector('[data-slot="button-link-icon"]')).toBeNull()
+    expect(link.querySelector('svg')).toBeNull()
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(link).toHaveAttribute('data-slot', 'button-link')
+    expect(link).not.toHaveAttribute('externalicon')
+    expect(link).toHaveTextContent('Site (abre em nova aba)')
+  })
+
+  it('leaves an icon of the caller alone and alone in the link when the external one is off', () => {
+    renderWithProviders(
+      <ButtonLink href="https://example.com" target="_blank" externalIcon={false} aria-label="Repositório (abre em nova aba)">
+        <svg data-testid="mine" aria-hidden="true" />
+      </ButtonLink>
+    )
+
+    const link = screen.getByRole('link', { name: 'Repositório (abre em nova aba)' })
+
+    expect(link.querySelectorAll('svg')).toHaveLength(1)
+    expect(screen.getByTestId('mine')).toBeInTheDocument()
+  })
+
+  it('has nothing to take away when the link does not open a new tab', () => {
+    renderWithProviders(
+      <ButtonLink href="/docs" externalIcon={false}>
+        Docs
+      </ButtonLink>
+    )
+
+    expect(screen.getByRole('link', { name: 'Docs' })).not.toHaveAttribute('externalicon')
+    expect(document.querySelector('[data-slot="button-link-icon"]')).toBeNull()
+  })
+
   it('keeps a custom rel and uses the configurable new tab label', () => {
     renderWithProviders(
       <ButtonLink href="https://example.com" target="_blank" rel="noopener">

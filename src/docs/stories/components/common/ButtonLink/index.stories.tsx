@@ -1,4 +1,5 @@
-import { ButtonLink } from 'enchase'
+import { ButtonLink, Icon } from 'enchase'
+import { defaultExternalIcon } from './defaultData.ts'
 
 import { ClickProbe } from '@docs/shared/components/ClickProbe.tsx'
 
@@ -41,8 +42,13 @@ const meta = {
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
+    externalIcon: {
+      description: 'Com `target="_blank"`, mostra o ícone de link externo depois do conteúdo. `false` tira só o ícone (útil em um botão só de ícone) e mantém o texto "abre em nova aba" para leitores de tela; em um link só de ícone com `aria-label`, ponha o aviso no próprio rótulo.',
+      control: 'boolean',
+      table: { defaultValue: { summary: String(defaultExternalIcon) } }
+    },
     target: {
-      description: 'Com `_blank`, abre em nova aba, mostra um ícone e acrescenta o texto "abre em nova aba" para leitores de tela. O `rel` padrão passa a ser `noopener noreferrer`.',
+      description: 'Com `_blank`, abre em nova aba, mostra um ícone (veja `externalIcon`) e acrescenta o texto "abre em nova aba" para leitores de tela. O `rel` padrão passa a ser `noopener noreferrer`.',
       control: 'inline-radio',
       options: ['_self', '_blank']
     },
@@ -111,4 +117,19 @@ export const Variants: Story = {
 
 export const OpensInNewTab: Story = {
   args: { href: 'https://github.com/thiagopedro99/enchase', target: '_blank', variant: 'outline', children: 'Repositório' }
+}
+
+export const IconOnly: Story = {
+  parameters: { controls: { disable: true } },
+  render: () => (
+    <ClickProbe>
+      <ButtonLink href="https://github.com/thiagopedro99/enchase" target="_blank" externalIcon={false} variant="outline" aria-label="Código no GitHub (abre em nova aba)">
+        <Icon>
+          <path d="M8 8l-4 4 4 4" />
+          <path d="M16 8l4 4-4 4" />
+          <path d="M14 5l-4 14" />
+        </Icon>
+      </ButtonLink>
+    </ClickProbe>
+  )
 }
