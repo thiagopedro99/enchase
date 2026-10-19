@@ -113,6 +113,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Checkbox` | `<Checkbox label="Aceito os termos" />` |
 | `Switch` | `<Switch label="Receber notificações" defaultChecked />` |
 | `RadioGroup` | `<RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }]} defaultValue="free" />` |
+| `Tabs` | `<Tabs ariaLabel="Conta" items={[{ value: 'perfil', label: 'Perfil', content: <p>Seus dados</p> }, { value: 'plano', label: 'Plano', content: <p>Sua assinatura</p> }]} />` |
 | `Card` | `<Card variant="elevated">Conteúdo</Card>` |
 | `Badge` | `<Badge variant="success">Pago</Badge>` |
 | `Alert` | `<Alert variant="warning" title="Atenção" onClose={fechar}>O prazo termina hoje.</Alert>` |
@@ -175,7 +176,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
 | `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup`, vão para o `<fieldset>`, que é a raiz. |
 | `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
-| `value`, `defaultValue` e `onValueChange` | `RadioGroup` | Valor da opção marcada, controlado ou não. `onValueChange` recebe o valor da opção que o usuário acabou de marcar. |
+| `value`, `defaultValue` e `onValueChange` | `RadioGroup`, `Tabs` | Valor da opção marcada ou da aba escolhida, controlado ou não. `onValueChange` recebe o valor que o usuário acabou de escolher. |
 | `onClose` | `Alert` | Mostra o botão de fechar. O `Alert` não some sozinho: quem usa o remove ao receber o evento. |
 | `open`, `defaultOpen` e `onOpenChange` | `Popover` e o drawer do `Layout` | Controlados ou não. A `Sidebar` modal usa `open` e `onClose`. |
 
@@ -378,7 +379,7 @@ Quatro níveis de configuração, do mais amplo ao mais específico:
 | `skeleton` | `-duration`, `-ease` |
 | `checkbox`, `radio-group` | `-duration`, `-scale`, `-ease` |
 | `icon-swap` | `-duration`, `-ease`, `-rotate` |
-| `input`, `textarea`, `select`, `switch`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
+| `input`, `textarea`, `select`, `switch`, `tabs`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
 
 `-dx` e `-dy` são a direção da entrada (-1, 0 ou 1) e `-distance` o quanto ela anda; em RTL o `-dx` inverte. Com `prefers-reduced-motion: reduce`, o deslocamento e a escala somem e o fade continua; os loops viram pulso de opacidade.
 

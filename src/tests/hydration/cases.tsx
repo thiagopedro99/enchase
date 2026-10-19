@@ -3,6 +3,7 @@ import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
 import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
+import { Tabs } from '@components/common/Tabs/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import { Breadcrumbs } from '@components/common/Breadcrumbs/index.tsx'
@@ -51,6 +52,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Select', element: <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} /> },
   { name: 'Checkbox', element: <Checkbox label="Accept" /> },
   { name: 'Switch', element: <Switch label="Notifications" defaultChecked /> },
+  { name: 'Tabs', element: <Tabs ariaLabel="Sections" defaultValue="b" items={[{ value: 'a', label: 'First', content: <p>One</p> }, { value: 'b', label: 'Second', content: <p>Two</p> }, { value: 'c', label: 'Third', content: <p>Three</p>, disabled: true }]} /> },
   { name: 'RadioGroup', element: <RadioGroup label="Plan" defaultValue="pro" helperText="Billed monthly" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }]} /> },
   { name: 'Card', element: <Card variant="elevated">Content</Card> },
   { name: 'Badge', element: <Badge variant="success">New</Badge> },

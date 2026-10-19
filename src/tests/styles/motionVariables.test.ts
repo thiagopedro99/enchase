@@ -19,6 +19,7 @@ const prefixes: Record<string, string> = {
   'common/Skeleton/styles.module.css': 'skeleton',
   'common/Switch/styles.module.css': 'switch',
   'common/RadioGroup/styles.module.css': 'radio-group',
+  'common/Tabs/styles.module.css': 'tabs',
   'common/Textarea/styles.module.css': 'textarea',
   'common/ThemeToggle/styles.module.css': 'theme-toggle',
   'common/Tooltip/styles.module.css': 'tooltip',

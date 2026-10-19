@@ -11,6 +11,7 @@ import { Popover } from '@components/common/Popover/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
+import { Tabs } from '@components/common/Tabs/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import { ToastProvider, useToast } from '@components/toast/index.ts'
@@ -154,6 +155,14 @@ describe.each(widths)('worst case data at %ipx', (width) => {
     )
 
     expect(audit(`fields@${width}`).join(' | ')).toBe('')
+  })
+
+  it('keeps the tabs inside the page and scrolls the list when the labels do not fit', async () => {
+    await setup(<Tabs ariaLabel="Pior caso" items={worstLabels.map((label) => ({ value: label, label, content: <p>{`${worstCase.longTitle} ${worstCase.fileName}`}</p> }))} />)
+    const list = document.querySelector('[data-slot="tabs-list"]') as HTMLElement
+
+    expect(audit(`tabs@${width}`).join(' | ')).toBe('')
+    expect(list.scrollWidth).toBeGreaterThan(list.clientWidth)
   })
 
   it('keeps the breadcrumbs inside the page', async () => {

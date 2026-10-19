@@ -6,7 +6,7 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ## Componentes
 
-[Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Alert
 
@@ -455,6 +455,22 @@ Interruptor de liga e desliga para uma configuração que vale na hora, com rót
 | `animation` | `false \| { recipe, tuning }` | `fade` | Animação da troca: a bolinha desliza e a trilha muda de cor. false desliga; { tuning: { duration } } ajusta a duração em segundos. |
 
 Aceita também os demais atributos de `<input>`, repassados ao elemento. Encaminha o `ref` para `<input>`.
+
+### Tabs
+
+Abas para dividir um conteúdo em painéis e mostrar um por vez. Seguem o padrão ARIA de abas: `role="tablist"`, uma única parada do Tab na aba escolhida, setas, Home e End para navegar e cada painel ligado à sua aba. Um indicador desliza até a aba escolhida, e a lista rola na horizontal quando as abas não cabem. As abas são horizontais. Aceita `ref`, que vai para a raiz, e os atributos do `<div>`.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `items` | `TabsItem[]` | *obrigatória* | Abas da lista, na ordem da tela. Cada item tem `value` (único), `label` (texto da aba), `content` (conteúdo do painel) e, se quiser, `disabled`. Todos os painéis ficam no documento e só o da aba escolhida aparece, então o estado dos outros se mantém. |
+| `value` | `string` | — | Valor da aba escolhida quando o componente é controlado. Exige também onValueChange. Veja a story Controlled. |
+| `defaultValue` | `string` | — | Valor da aba escolhida no início, para uso sem controle externo. Sem ele, vale a primeira aba que não está desativada. |
+| `onValueChange` | `(value: string) => void` | — | Chamada com o valor da aba que o usuário acabou de escolher, por clique ou pelo teclado. |
+| `activation` | `'automatic' \| 'manual'` | `'automatic'` | Quando a aba focada pelas setas passa a valer: automatic escolhe a aba ao focá-la e manual só move o foco, e Enter ou Espaço escolhe. Prefira manual quando o painel demora a carregar. |
+| `ariaLabel` | `string` | — | Nome da lista de abas para leitores de tela. Não aparece na tela: descreva o que as abas organizam, como Seções da conta. |
+| `animation` | `false \| { recipe, tuning }` | `fade` | Animação do indicador, que desliza até a aba escolhida, e do painel, que aparece com um fade. false desliga; { tuning: { duration } } ajusta a duração em segundos. |
+
+Aceita também os demais atributos de `<div>`, repassados ao elemento. Encaminha o `ref` para `<div>`.
 
 ### Textarea
 
