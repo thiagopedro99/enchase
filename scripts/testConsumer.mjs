@@ -9,8 +9,8 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
 
-const entry = `import { Alert, Badge, Button, ButtonLink, Layout, Link, Modal, Textarea, ToastProvider, UIProvider, useToast } from 'enchase'
-import type { AlertProps, BadgeProps, ButtonLinkProps, LayoutProps, SidebarSection, TextareaProps, UILabels } from 'enchase'
+const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Layout, Link, Modal, RadioGroup, Switch, Tabs, Textarea, ToastProvider, UIProvider, useToast } from 'enchase'
+import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, LayoutProps, RadioGroupProps, SidebarSection, SwitchProps, TabsProps, TextareaProps, UILabels } from 'enchase'
 import { createTheme, validateTheme } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
@@ -26,6 +26,10 @@ const docsLink: ButtonLinkProps = { href: '/docs', native: true }
 const alertProps: AlertProps = { variant: 'warning', title: 'Heads up', onClose: () => undefined }
 const badgeProps: BadgeProps = { variant: 'success', size: 'sm' }
 const areaProps: TextareaProps = { label: 'Message', rows: 4, resize: 'none' }
+const switchProps: SwitchProps = { label: 'Notifications', defaultChecked: true }
+const radioProps: RadioGroupProps = { label: 'Plan', options: [{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro', disabled: true }], defaultValue: 'free', orientation: 'horizontal', onValueChange: () => undefined }
+const tabsProps: TabsProps = { ariaLabel: 'Sections', items: [{ value: 'a', label: 'One', content: 'First' }, { value: 'b', label: 'Two', content: 'Second' }], activation: 'manual', onValueChange: () => undefined }
+const accordionProps: AccordionProps = { items: [{ value: 'a', title: 'One', content: 'First' }], multiple: true, defaultValue: ['a'], headingLevel: 2, onValueChange: () => undefined }
 
 const Toaster = () => {
   const toast = useToast()
@@ -42,6 +46,10 @@ export const App = () => (
         <Alert {...alertProps}>Saved</Alert>
         <Badge {...badgeProps}>New</Badge>
         <Textarea {...areaProps} />
+        <Switch {...switchProps} />
+        <RadioGroup {...radioProps} />
+        <Tabs {...tabsProps} />
+        <Accordion {...accordionProps} />
         <Link href="/about#team" native>
           About
         </Link>

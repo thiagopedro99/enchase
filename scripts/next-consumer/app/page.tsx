@@ -1,4 +1,4 @@
-import { Alert, Badge, Button, Layout, Textarea, ToastProvider } from 'enchase'
+import { Accordion, Alert, Badge, Button, Layout, RadioGroup, Switch, Tabs, Textarea, ToastProvider } from 'enchase'
 
 import Counter from './counter'
 
@@ -15,6 +15,10 @@ export default function Page() {
           Rendered without client code
         </Alert>
         <Textarea label="Server textarea" />
+        <Switch label="Server switch" defaultChecked />
+        <RadioGroup label="Server plan" defaultValue="free" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }]} />
+        <Tabs ariaLabel="Server tabs" items={[{ value: 'a', label: 'One', content: <p>First</p> }, { value: 'b', label: 'Two', content: <p>Second</p> }]} />
+        <Accordion items={[{ value: 'a', title: 'Server accordion', content: <p>Hidden until opened</p> }]} />
         <Counter />
       </Layout>
     </ToastProvider>
