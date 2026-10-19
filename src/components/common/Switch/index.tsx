@@ -1,7 +1,7 @@
 import { forwardRef } from 'react'
 
-import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
+import { mergeProps, slot } from '@utils/mergeProps.ts'
 import styles from './styles.module.css'
 
 import type { SwitchProps } from './types.ts'
