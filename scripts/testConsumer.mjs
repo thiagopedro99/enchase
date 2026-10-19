@@ -9,8 +9,8 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
 
-const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Layout, Link, Modal, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast } from 'enchase'
-import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, LayoutProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
+const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Layout, Link, Modal, NumberInput, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
+import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, LayoutProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
 import { createTheme, validateTheme } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
@@ -19,7 +19,7 @@ import 'enchase/styles.layer.css'
 import 'enchase/theme.css'
 
 const sections: SidebarSection[] = [{ id: 'main', items: [{ id: 'home', label: 'Home', href: '/' }] }]
-const labels: Partial<UILabels> = { closeModal: 'Close', previousPage: 'Back' }
+const labels: Partial<UILabels> = { closeModal: 'Close', previousPage: 'Back', increaseValue: 'More' }
 const locale: Locale = ptBR
 const props: LayoutProps = { children: null, navigationSections: sections }
 const docsLink: ButtonLinkProps = { href: '/docs', native: true }
@@ -30,10 +30,18 @@ const switchProps: SwitchProps = { label: 'Notifications', defaultChecked: true 
 const radioProps: RadioGroupProps = { label: 'Plan', options: [{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro', disabled: true }], defaultValue: 'free', orientation: 'horizontal', onValueChange: () => undefined }
 const tabsProps: TabsProps = { ariaLabel: 'Sections', items: [{ value: 'a', label: 'One', content: 'First' }, { value: 'b', label: 'Two', content: 'Second' }], activation: 'manual', onValueChange: () => undefined }
 const accordionProps: AccordionProps = { items: [{ value: 'a', title: 'One', content: 'First' }], multiple: true, defaultValue: ['a'], headingLevel: 2, onValueChange: () => undefined }
+const priceFormat: NumberInputFormat = { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 }
+const numberProps: NumberInputProps = { label: 'Price', min: 0, max: 100, step: 0.5, largeStep: 5, defaultValue: 10, formatOptions: priceFormat, name: 'price', onValueChange: (value: number | null) => void value }
 const pagerProps: PaginationProps = { pageCount: 12, defaultPage: 3, siblingCount: 2, boundaryCount: 1, size: 'sm', onPageChange: (page: number) => void page }
 type Order = { id: string; total: number }
 const orderColumns: TableColumn<Order>[] = [{ key: 'id', header: 'Order', rowHeader: true }, { key: 'total', header: 'Total', align: 'end', cell: (row) => row.total.toFixed(2) }]
 const tableProps: TableProps<Order> = { columns: orderColumns, rows: [{ id: '#1', total: 10 }], caption: 'Orders', striped: true, size: 'sm', getRowKey: (row) => row.id }
+
+const Language = () => {
+  const { locale } = useUIConfig()
+
+  return <span>{locale.toUpperCase()}</span>
+}
 
 const Toaster = () => {
   const toast = useToast()
@@ -54,6 +62,9 @@ export const App = () => (
         <RadioGroup {...radioProps} />
         <Tabs {...tabsProps} />
         <Accordion {...accordionProps} />
+        <Language />
+        <NumberInput {...numberProps} />
+        <NumberInput label="Empty" value={null} onValueChange={() => undefined} steppers={false} />
         <Pagination {...pagerProps} />
         <Table {...tableProps} />
         <Table<Order> columns={orderColumns} rows={[]} empty="No orders" />
