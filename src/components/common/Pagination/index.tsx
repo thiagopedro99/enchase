@@ -12,14 +12,16 @@ import styles from './styles.module.css'
 
 import type { PaginationProps } from './types.ts'
 
+const count = (value: number, fallback: number) => (Number.isFinite(value) ? Math.max(Math.floor(value), 0) : fallback)
+
 export const Pagination = forwardRef<HTMLElement, PaginationProps>(
   ({ pageCount, page, defaultPage: initialPage = defaultPage, onPageChange, siblingCount = defaultSiblingCount, boundaryCount = defaultBoundaryCount, size = defaultSize, ariaLabel, animation, ...props }, ref) => {
     const { labels } = useUIConfig()
     const [selected, setSelected] = useControllableState<number>(page, initialPage, onPageChange)
     const motionStyle = useMotionStyle('fade', 'pagination', animation)
-    const total = Math.max(Math.floor(pageCount), 0)
-    const current = Math.min(Math.max(selected, 1), Math.max(total, 1))
-    const items = paginationItems(current, total, Math.max(Math.floor(siblingCount), 0), Math.max(Math.floor(boundaryCount), 0))
+    const total = count(pageCount, 0)
+    const current = Math.min(Math.max(count(selected, 1), 1), Math.max(total, 1))
+    const items = paginationItems(current, total, count(siblingCount, defaultSiblingCount), count(boundaryCount, defaultBoundaryCount))
     const root = mergeProps({ ...slot('pagination'), className: styles.pagination, style: motionStyle, 'data-size': size, 'aria-label': ariaLabel ?? labels.pagination }, props)
 
     if (total < 1) return null

@@ -163,6 +163,34 @@ describe('Pagination', () => {
     expect(container.querySelector('nav')).toBeNull()
   })
 
+  it('renders nothing for a page count that is not a finite number', () => {
+    const { container, unmount } = renderWithProviders(<Pagination pageCount={Infinity} />)
+
+    expect(container.querySelector('nav')).toBeNull()
+    unmount()
+
+    const other = renderWithProviders(<Pagination pageCount={Number.NaN} />)
+
+    expect(other.container.querySelector('nav')).toBeNull()
+  })
+
+  it('rounds a fractional page down and falls back to the first page for a page that is not a number', () => {
+    const { unmount } = renderWithProviders(<Pagination pageCount={5} page={2.7} onPageChange={() => undefined} />)
+
+    expect(current()).toHaveTextContent('2')
+    unmount()
+
+    renderWithProviders(<Pagination pageCount={5} page={Number.NaN} onPageChange={() => undefined} />)
+
+    expect(current()).toHaveTextContent('1')
+  })
+
+  it('falls back to the default neighbors when they are not finite numbers', () => {
+    renderWithProviders(<Pagination pageCount={30} defaultPage={15} siblingCount={Infinity} boundaryCount={Number.NaN} />)
+
+    expect(pageButtons().map((button) => button.textContent)).toEqual(['1', '14', '15', '16', '30'])
+  })
+
   it('renders a single page without room to go anywhere', () => {
     renderWithProviders(<Pagination pageCount={1} />)
 
