@@ -41,7 +41,7 @@ const meta = {
       control: 'text'
     },
     variant: {
-      description: 'Tipo da mensagem: define a cor, o ícone e o papel ARIA. Só error usa role="alert" e é anunciado na hora; os outros usam role="status".',
+      description: 'Tipo da mensagem: define a cor, o ícone e o papel ARIA. Só error usa role="alert" e é anunciado na hora; os outros usam role="status", que leitores de tela costumam não anunciar quando o alerta já aparece com o texto. Para um aviso inserido depois do carregamento da página e que precise ser lido, passe role="alert".',
       control: 'inline-radio',
       options: variants,
       table: { defaultValue: { summary: `'${defaultVariant}'` } }

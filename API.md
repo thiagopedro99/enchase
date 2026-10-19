@@ -14,7 +14,7 @@ Mensagem de status dentro da página, em quatro tipos (`info`, `success`, `warni
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `variant` | `'info' \| 'success' \| 'warning' \| 'error'` | `'info'` | Tipo da mensagem: define a cor, o ícone e o papel ARIA. Só error usa role="alert" e é anunciado na hora; os outros usam role="status". |
+| `variant` | `'info' \| 'success' \| 'warning' \| 'error'` | `'info'` | Tipo da mensagem: define a cor, o ícone e o papel ARIA. Só error usa role="alert" e é anunciado na hora; os outros usam role="status", que leitores de tela costumam não anunciar quando o alerta já aparece com o texto. Para um aviso inserido depois do carregamento da página e que precise ser lido, passe role="alert". |
 | `title` | `string` | — | Título em destaque, acima da mensagem. |
 | `icon` | `ReactNode` | — | Ícone no lugar do padrão de cada tipo. Com null ou false, não mostra ícone. O ícone é decorativo (aria-hidden), então o texto precisa dizer tudo. |
 | `onClose` | `() => void` | — | Mostra o botão de fechar e é chamado ao clicar nele. O Alert não some sozinho: quem usa o remove. O nome do botão vem de labels.closeToast do UIProvider. |
