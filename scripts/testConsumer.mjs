@@ -9,8 +9,8 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
 
-const entry = `import { Button, Layout, Modal, ToastProvider, UIProvider, useToast } from 'enchase'
-import type { LayoutProps, SidebarSection, UILabels } from 'enchase'
+const entry = `import { Button, ButtonLink, Layout, Link, Modal, ToastProvider, UIProvider, useToast } from 'enchase'
+import type { ButtonLinkProps, LayoutProps, SidebarSection, UILabels } from 'enchase'
 import { createTheme, validateTheme } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
@@ -22,6 +22,7 @@ const sections: SidebarSection[] = [{ id: 'main', items: [{ id: 'home', label: '
 const labels: Partial<UILabels> = { closeModal: 'Close' }
 const locale: Locale = ptBR
 const props: LayoutProps = { children: null, navigationSections: sections }
+const docsLink: ButtonLinkProps = { href: '/docs', native: true }
 
 const Toaster = () => {
   const toast = useToast()
@@ -34,6 +35,10 @@ export const App = () => (
     <ToastProvider>
       <Layout {...props}>
         <Toaster />
+        <ButtonLink {...docsLink}>Docs</ButtonLink>
+        <Link href="/about#team" native>
+          About
+        </Link>
         <Modal isOpen onClose={() => undefined} title="Title">
           Body
         </Modal>
@@ -42,7 +47,7 @@ export const App = () => (
   </UIProvider>
 )
 
-export const theme = createTheme({})
+export const theme = createTheme({ brand: '#0f766e' })
 export const problems = validateTheme(theme)
 `
 
