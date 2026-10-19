@@ -46,7 +46,7 @@ const meta = {
       control: false
     },
     activeSectionId: {
-      description: 'Id do item de âncora (href que começa com #, ou aponta para a página atual) marcado como localização atual (aria-current="location"). Use useScrollSpy para obtê-lo.',
+      description: 'Id do item de âncora marcado como localização atual (aria-current="location"): um item com href #id, ou /pagina#id na própria página. Use useScrollSpy para obtê-lo.',
       control: 'text'
     },
     currentHref: {

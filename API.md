@@ -371,7 +371,7 @@ Menu lateral. `permanent` fica na página e recolhe para uma barra de ícones; `
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `sections` | `SidebarSection[]` | *obrigatória* | Seções do menu, como [{ id, title?, items: [{ id, label, icon?, href?, native?, badge?, onClick? }] }]. Um item com href é um link; sem href é um botão que chama onClick. Sem icon, o item mostra a inicial do rótulo. |
-| `activeSectionId` | `string` | — | Id do item de âncora (href que começa com #, ou aponta para a página atual) marcado como localização atual (aria-current="location"). Use useScrollSpy para obtê-lo. |
+| `activeSectionId` | `string` | — | Id do item de âncora marcado como localização atual (aria-current="location"): um item com href #id, ou /pagina#id na própria página. Use useScrollSpy para obtê-lo. |
 | `currentHref` | `string` | — | Caminho atual, que marca o item da página (aria-current="page") e vale também para o hash da página atual. Sem ele vale o currentHref do UIProvider. |
 | `header` | `SidebarSlot` | — | Conteúdo fixo no topo, como a marca. Pode ser uma função que recebe { collapsed } para trocar o conteúdo na barra recolhida. |
 | `footer` | `SidebarSlot` | — | Conteúdo fixo no rodapé, acima do botão de recolher. Pode ser uma função que recebe { collapsed }. |
