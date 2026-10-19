@@ -6,7 +6,7 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ## Componentes
 
-[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -362,6 +362,30 @@ Barra de navegação no topo, com a marca, os links, ações e o botão de tema.
 | `className` | `string` | — | Classe do cabeçalho (`data-slot="navbar"`). As partes seguem `data-slot="navbar-*"`; o drawer mobile é `navbar-drawer`, com `data-state`. |
 | `style` | `CSSProperties` | — | Estilo do cabeçalho. |
 
+### NumberInput
+
+Campo para digitar um número, com rótulo, mensagem de erro, texto de ajuda e botões para diminuir e aumentar. É um `<input type="text">` com `role="spinbutton"` e teclado numérico no celular, em vez de `type="number"`: o texto segue o idioma do `UIProvider` (vírgula decimal e ponto de milhar em pt-BR), aceita moeda e porcentagem por `formatOptions`, e o valor sai como `number`, ou `null` com o campo vazio. As setas mudam o valor por `step`; Shift com as setas e Page Up e Page Down, por `largeStep`; Home e End vão ao `min` e ao `max`. O valor é confirmado ao sair do campo ou com Enter, limitado ao intervalo e arredondado às casas do formato. Com `name`, o número vai para o formulário num campo oculto, sem a formatação da tela. Os botões ficam fora da ordem do Tab, porque o teclado já tem as setas, e seus nomes vêm de `labels.increaseValue` e `labels.decreaseValue` do `UIProvider`. Aceita `ref`, que vai para o `<input>`, e os atributos dele.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `value` | `number \| null` | — | Valor quando o componente é controlado; `null` é o campo vazio. Exige também onValueChange. Veja a story Controlled. |
+| `defaultValue` | `number \| null` | `null` | Valor inicial, para uso sem controle externo. `null` começa com o campo vazio. |
+| `onValueChange` | `(value: number \| null) => void` | — | Chamada com o número confirmado, ou `null` se o campo ficou vazio. Acontece ao sair do campo, com Enter, com as setas e com os botões, nunca a cada tecla digitada. |
+| `min` | `number` | — | Menor valor aceito. O que for digitado abaixo dele volta ao mínimo ao sair do campo, o botão de diminuir se desativa nele e Home vai até ele. Com `min` de zero ou mais, o sinal de menos não é aceito. No iPhone o teclado numérico não tem o sinal de menos: para aceitar negativos, passe `inputMode="text"`. |
+| `max` | `number` | — | Maior valor aceito. O que for digitado acima dele volta ao máximo ao sair do campo, o botão de aumentar se desativa nele e End vai até ele. |
+| `step` | `number` | `1` | Quanto o valor muda com as setas e com os botões. Os passos contam a partir de `min` (ou de 0), e as casas decimais do passo entram no formato. Um valor que não seja positivo vale 1. |
+| `largeStep` | `number` | — | Passo grande, de Shift com as setas e de Page Up e Page Down. Sem ele, vale dez vezes o `step`. |
+| `formatOptions` | `NumberInputFormat` | — | Formato do número, como no `Intl.NumberFormat`: `style` (`decimal`, `currency` ou `percent`), `currency` (código como `BRL`), `currencyDisplay`, `minimumFractionDigits`, `maximumFractionDigits` e `useGrouping`. O idioma vem do `UIProvider`. Sem `maximumFractionDigits`, valem as casas do estilo (3 no decimal, 2 na moeda, 0 no percentual) ou as que o `step` pedir. No percentual o valor é a fração: 0,15 aparece como 15%, e o `step` costuma ser 0,01. |
+| `label` | `string` | — | Rótulo do campo, associado ao input para leitores de tela. |
+| `error` | `string` | — | Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta. |
+| `helperText` | `string` | — | Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro. |
+| `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
+| `steppers` | `boolean` | `true` | Mostra os botões de diminuir e aumentar, e o aviso por voz do novo valor quando um deles é usado. Sem eles, o teclado continua com as setas. |
+| `wrapperClassName` | `string` | — | Classe da raiz (data-slot="number-input"). className e style continuam no input (data-slot="number-input-field"). |
+| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="number-input"). style continua no input. |
+
+Aceita também os demais atributos de `<input>`, repassados ao elemento. Encaminha o `ref` para `<input>`.
+
 ### Pagination
 
 Navegação entre as páginas de uma lista ou tabela: botões numerados, anterior e próxima, com reticências quando a lista é longa. É uma `<nav>` com uma lista de botões, e a página atual leva `aria-current="page"`. Anterior e próxima ficam indisponíveis (`aria-disabled`) nas pontas, sem tirar o foco de quem acabou de clicar. Os textos para leitores de tela vêm de `labels.pagination`, `labels.previousPage` e `labels.nextPage` do `UIProvider`. Aceita `ref`, que vai para a `<nav>`, e os atributos dela.
@@ -679,7 +703,7 @@ Retorno:
 useUIConfig(): UIConfig
 ```
 
-Configuração do `UIProvider` mais próximo: motion, rótulos, direção do texto e breakpoints. Sem provedor, devolve os valores padrão.
+Configuração do `UIProvider` mais próximo: motion, rótulos, direção do texto, código do idioma (`locale`, como `pt-BR`) e breakpoints. Sem provedor, devolve os valores padrão.
 
 Retorno:
 
@@ -688,4 +712,5 @@ Retorno:
 | `motion` | `MotionSettings` |
 | `labels` | `UILabels` |
 | `dir` | `Direction` |
+| `locale` | `string` |
 | `breakpoints` | `Breakpoints` |

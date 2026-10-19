@@ -28,7 +28,9 @@ export const ptBR: Locale = {
     hidePassword: 'Ocultar senha',
     pagination: 'Paginação',
     previousPage: 'Página anterior',
-    nextPage: 'Próxima página'
+    nextPage: 'Próxima página',
+    increaseValue: 'Aumentar valor',
+    decreaseValue: 'Diminuir valor'
   }
 }
 

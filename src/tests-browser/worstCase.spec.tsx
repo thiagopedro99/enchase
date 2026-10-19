@@ -10,6 +10,7 @@ import { Button } from '@components/common/Button/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
+import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
@@ -167,10 +168,24 @@ describe.each(widths)('worst case data at %ipx', (width) => {
         <Input label={worstCase.longTitle} />
         <Textarea label={worstCase.longTitle} />
         <Select label={worstCase.longTitle} options={[{ value: 'a', label: worstCase.shortName }]} />
+        <NumberInput label={worstCase.longTitle} />
       </div>
     )
 
     expect(audit(`long labels@${width}`).join(' | ')).toBe('')
+  })
+
+  it('keeps the number fields inside the page with long labels, long messages and huge numbers', async () => {
+    await setup(
+      <div style={{ display: 'grid', gap: 12 }}>
+        <NumberInput label={worstCase.longTitle} defaultValue={Number.MAX_SAFE_INTEGER} helperText={worstCase.longUrl} />
+        <NumberInput label={worstCase.germanCompound} defaultValue={123456789.123456} error={worstCase.longEmail} formatOptions={{ style: 'currency', currency: 'BRL' }} fullWidth />
+        <NumberInput label={worstCase.frenchLabel} defaultValue={1e21} min={0} />
+        <NumberInput label={worstCase.shortName} defaultValue={-0.000001} formatOptions={{ maximumFractionDigits: 6 }} steppers={false} />
+      </div>
+    )
+
+    expect(audit(`number fields@${width}`).join(' | ')).toBe('')
   })
 
   it('keeps the tabs inside the page and scrolls the list when the labels do not fit', async () => {

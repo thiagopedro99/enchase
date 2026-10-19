@@ -15,9 +15,9 @@ describe('locales', () => {
     }
   })
 
-  it('defines the pagination texts in every locale, which are optional in the type', () => {
+  it('defines the pagination and number input texts in every locale, which are optional in the type', () => {
     for (const locale of [en, ptBR]) {
-      for (const key of ['pagination', 'previousPage', 'nextPage'] as const) expect(locale.messages[key], `${locale.locale}.${key}`).toBeTruthy()
+      for (const key of ['pagination', 'previousPage', 'nextPage', 'increaseValue', 'decreaseValue'] as const) expect(locale.messages[key], `${locale.locale}.${key}`).toBeTruthy()
     }
   })
 

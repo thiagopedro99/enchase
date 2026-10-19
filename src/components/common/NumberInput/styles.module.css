@@ -1,0 +1,282 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:where(.wrapper) {
+  gap: var(--enchase-space-xs);
+  inline-size: auto;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+:where(.wrapper[data-full-width]) {
+  inline-size: 100%;
+}
+
+.field {
+  position: relative;
+  display: flex;
+}
+
+.input {
+  box-sizing: border-box;
+  margin: 0;
+  font-family: inherit;
+  font-variant-numeric: tabular-nums;
+  color: var(--enchase-color-text-primary);
+  background-color: transparent;
+  border: none;
+}
+
+:where(.input) {
+  inline-size: 100%;
+  min-inline-size: 200px;
+  block-size: var(--enchase-input-height, 3.5rem);
+  padding-block: 0;
+  padding-inline: var(--enchase-space-md);
+  font-size: var(--enchase-font-size-base);
+  border-radius: var(--enchase-radius-control);
+}
+
+:where(.input[data-has-steppers]) {
+  padding-inline-end: calc(80px + var(--enchase-space-xs) + var(--enchase-space-sm) * 2);
+}
+
+.input:focus {
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--enchase-color-text-placeholder);
+  opacity: 1;
+  transition: opacity var(--enchase-number-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-number-input-ease, var(--enchase-motion-ease-out));
+}
+
+.input[data-has-label]::placeholder {
+  opacity: 0;
+}
+
+.input:focus::placeholder {
+  opacity: 1;
+}
+
+.input:disabled {
+  color: var(--enchase-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.label {
+  position: absolute;
+  inset-inline-start: var(--enchase-space-md);
+  inset-block-start: 50%;
+  max-inline-size: calc(100% - 2rem);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--enchase-font-size-base);
+  font-weight: var(--enchase-font-weight-regular);
+  color: var(--enchase-color-text-secondary);
+  transform: translateY(-50%);
+  transform-origin: left top;
+  pointer-events: none;
+  transition:
+    transform var(--enchase-number-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-number-input-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-number-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-number-input-ease, var(--enchase-motion-ease-out));
+}
+
+.label:dir(rtl) {
+  transform-origin: right top;
+}
+
+.input[data-has-steppers] ~ .label {
+  max-inline-size: calc(100% - 7rem);
+}
+
+.input:focus ~ .label,
+.input:not(:placeholder-shown) ~ .label {
+  transform: translateY(calc(-50% - 28px)) scale(0.75);
+}
+
+.label[data-has-error] {
+  color: var(--enchase-color-error);
+}
+
+.input:focus ~ .label {
+  color: var(--enchase-color-primary);
+}
+
+.input:focus ~ .label[data-has-error] {
+  color: var(--enchase-color-error);
+}
+
+.input:disabled ~ .label {
+  color: var(--enchase-color-text-disabled);
+}
+
+.outline {
+  position: absolute;
+  inset-block: -5px 0;
+  inset-inline: 0;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--enchase-space-sm);
+  font: inherit;
+  text-align: start;
+  pointer-events: none;
+  border: 1px solid var(--enchase-color-border-strong);
+  border-radius: var(--enchase-radius-control);
+  transition: border-color var(--enchase-number-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-number-input-ease, var(--enchase-motion-ease-out));
+}
+
+.outline[data-has-error] {
+  border-color: var(--enchase-color-error);
+}
+
+.outline legend {
+  display: block;
+  inline-size: auto;
+  max-inline-size: 0.01px;
+  block-size: 11px;
+  padding: 0;
+  font-size: var(--enchase-font-size-xs);
+  visibility: hidden;
+  white-space: nowrap;
+  transition: max-inline-size var(--enchase-number-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-number-input-ease, var(--enchase-motion-ease-out));
+}
+
+.outline legend span {
+  display: inline-block;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  visibility: visible;
+}
+
+.outline[data-has-label] legend span {
+  padding-block: 0;
+  padding-inline: var(--enchase-space-sm);
+}
+
+.input:focus ~ .outline legend,
+.input:not(:placeholder-shown) ~ .outline legend {
+  max-inline-size: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .input:hover:not(:disabled):not(:focus) ~ .outline {
+    border-color: var(--enchase-color-text-primary);
+  }
+
+  .input:hover:not(:disabled):not(:focus) ~ .outline[data-has-error] {
+    border-color: var(--enchase-color-error);
+  }
+}
+
+.input:focus ~ .outline {
+  border-width: 2px;
+  border-color: var(--enchase-color-primary);
+}
+
+.input:focus ~ .outline[data-has-error] {
+  border-color: var(--enchase-color-error);
+}
+
+.input:disabled ~ .outline {
+  border-color: color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent);
+}
+
+.steppers {
+  position: absolute;
+  inset-block: 0;
+  display: flex;
+  align-items: center;
+}
+
+:where(.steppers) {
+  inset-inline-end: var(--enchase-space-sm);
+  gap: var(--enchase-space-xs);
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  background-color: transparent;
+  border: none;
+  color: var(--enchase-color-text-secondary);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--enchase-number-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-number-input-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-number-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-number-input-ease, var(--enchase-motion-ease-out));
+}
+
+:where(.stepper) {
+  inline-size: 40px;
+  block-size: 40px;
+  min-inline-size: 24px;
+  min-block-size: 24px;
+  border-radius: var(--enchase-radius-full);
+}
+
+.stepper:focus-visible {
+  outline: 2px solid var(--enchase-color-primary);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stepper:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    color: var(--enchase-color-text-primary);
+  }
+}
+
+.stepper:active:not(:disabled) {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent);
+}
+
+.stepper:disabled {
+  color: var(--enchase-color-text-disabled);
+  cursor: not-allowed;
+}
+
+.error {
+  font-size: var(--enchase-font-size-xs);
+  color: var(--enchase-color-error);
+  font-weight: var(--enchase-font-weight-medium);
+}
+
+.helper {
+  font-size: var(--enchase-font-size-xs);
+  color: var(--enchase-color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .label {
+    transition-property: color;
+  }
+}
+
+@media (pointer: coarse) {
+  :where(.input) {
+    font-size: max(16px, var(--enchase-font-size-base));
+  }
+}

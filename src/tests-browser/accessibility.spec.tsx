@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
+import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
 import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
@@ -70,6 +71,7 @@ describe('minimum target size in a real browser', () => {
         <Pagination pageCount={3} size="sm" />
         <Input label="Nome" />
         <Textarea label="Mensagem" />
+        <NumberInput label="Quantidade" />
         <Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />
         <ThemeToggle />
       </div>
@@ -85,6 +87,9 @@ describe('minimum target size in a real browser', () => {
       page.getByRole('button', { name: 'Próxima página' }),
       page.getByRole('textbox', { name: 'Nome' }),
       page.getByRole('textbox', { name: 'Mensagem' }),
+      page.getByRole('spinbutton', { name: 'Quantidade' }),
+      page.getByRole('button', { name: 'Aumentar valor' }),
+      page.getByRole('button', { name: 'Diminuir valor' }),
       page.getByRole('combobox', { name: 'País' }),
       page.getByRole('button', { name: /tema/i })
     ]

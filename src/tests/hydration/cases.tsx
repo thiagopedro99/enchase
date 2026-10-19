@@ -3,6 +3,7 @@ import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
 import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
+import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
 import { Accordion } from '@components/common/Accordion/index.tsx'
@@ -57,6 +58,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Switch', element: <Switch label="Notifications" defaultChecked /> },
   { name: 'Table', element: <Table caption="Orders" striped columns={[{ key: 'id', header: 'Order', rowHeader: true }, { key: 'total', header: 'Total', align: 'end' }]} rows={[{ id: '#1', total: 10 }, { id: '#2', total: 20 }]} /> },
   { name: 'Pagination', element: <Pagination pageCount={12} defaultPage={6} size="sm" /> },
+  { name: 'NumberInput', element: <NumberInput label="Price" name="price" defaultValue={1234.5} min={0} formatOptions={{ style: 'currency', currency: 'BRL' }} helperText="In reais" /> },
   { name: 'Accordion', element: <Accordion defaultValue={['b']} items={[{ value: 'a', title: 'First', content: <p>One</p> }, { value: 'b', title: 'Second', content: <p>Two</p> }, { value: 'c', title: 'Third', content: <p>Three</p>, disabled: true }]} /> },
   { name: 'Tabs', element: <Tabs ariaLabel="Sections" defaultValue="b" items={[{ value: 'a', label: 'First', content: <p>One</p> }, { value: 'b', label: 'Second', content: <p>Two</p> }, { value: 'c', label: 'Third', content: <p>Three</p>, disabled: true }]} /> },
   { name: 'RadioGroup', element: <RadioGroup label="Plan" defaultValue="pro" helperText="Billed monthly" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }]} /> },

@@ -23,6 +23,8 @@ import { BookOpenIcon } from '@components/common/Icon/icons/BookOpenIcon.tsx'
 import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
 import { LayoutGridIcon } from '@components/common/Icon/icons/LayoutGridIcon.tsx'
 import { RocketIcon } from '@components/common/Icon/icons/RocketIcon.tsx'
+import { MinusIcon } from '@components/common/Icon/icons/MinusIcon.tsx'
+import { PlusIcon } from '@components/common/Icon/icons/PlusIcon.tsx'
 import { Icon } from '@components/common/Icon/index.tsx'
 
 const icons = [
@@ -46,7 +48,9 @@ const icons = [
   ['home', HomeIcon],
   ['book-open', BookOpenIcon],
   ['layout-grid', LayoutGridIcon],
-  ['rocket', RocketIcon]
+  ['rocket', RocketIcon],
+  ['plus', PlusIcon],
+  ['minus', MinusIcon]
 ] as const
 
 const svgOf = (container: HTMLElement) => container.querySelector('svg') as SVGSVGElement

@@ -3,7 +3,7 @@ export const hookNotes = {
   useColorMode: 'Modo de cor escolhido (`light`, `dark` ou `system`), o modo resolvido (`light` ou `dark`) e as funções para trocá-lo. Lança um erro fora do `ColorModeProvider`.',
   useScrollSpy: 'Devolve o `id` da seção que está na faixa de leitura, de `topOffset` px (padrão 96) do topo até 45% da altura da tela, ou `undefined` enquanto nenhuma chegou. Mantenha o array de `ids` estável.',
   useToast: 'Abre notificações pelos métodos `success`, `error`, `warning` e `info`, por exemplo `success("Salvo", 3000)`. `duration` está em milissegundos e 0 mantém a notificação aberta. Lança um erro fora do `ToastProvider`.',
-  useUIConfig: 'Configuração do `UIProvider` mais próximo: motion, rótulos, direção do texto e breakpoints. Sem provedor, devolve os valores padrão.'
+  useUIConfig: 'Configuração do `UIProvider` mais próximo: motion, rótulos, direção do texto, código do idioma (`locale`, como `pt-BR`) e breakpoints. Sem provedor, devolve os valores padrão.'
 }
 
 const collator = (first, second) => (first.name < second.name ? -1 : first.name > second.name ? 1 : 0)

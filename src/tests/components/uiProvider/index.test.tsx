@@ -8,6 +8,7 @@ import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { useNavigator } from '@hooks/useNavigator.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
+import { en, ptBR } from '@locales/index.ts'
 
 const renders = { navigator: 0, currentHref: 0, config: 0 }
 
@@ -33,6 +34,12 @@ const ConfigProbe = () => {
   renders.config += 1
 
   return <output data-testid="label">{labels.closeModal}</output>
+}
+
+const LocaleProbe = () => {
+  const { locale } = useUIConfig()
+
+  return <output data-testid="locale">{locale}</output>
 }
 
 const probes = (
@@ -114,6 +121,39 @@ describe('UIProvider navigation', () => {
     render(<UIProvider labels={{ closeModal: 'Close dialog' }}>{probes}</UIProvider>)
 
     expect(screen.getByTestId('label')).toHaveTextContent('Close dialog')
+  })
+})
+
+describe('UIProvider locale', () => {
+  it('exposes the language tag of the locale, English without one', () => {
+    const { unmount } = render(
+      <UIProvider>
+        <LocaleProbe />
+      </UIProvider>
+    )
+
+    expect(screen.getByTestId('locale')).toHaveTextContent('en')
+    unmount()
+
+    render(
+      <UIProvider locale={ptBR}>
+        <LocaleProbe />
+      </UIProvider>
+    )
+
+    expect(screen.getByTestId('locale')).toHaveTextContent('pt-BR')
+  })
+
+  it('takes the tag of a locale of your own and keeps the labels working', () => {
+    render(
+      <UIProvider locale={{ ...en, locale: 'de-DE' }} labels={{ closeModal: 'Schließen' }}>
+        <LocaleProbe />
+        <ConfigProbe />
+      </UIProvider>
+    )
+
+    expect(screen.getByTestId('locale')).toHaveTextContent('de-DE')
+    expect(screen.getByTestId('label')).toHaveTextContent('Schließen')
   })
 })
 

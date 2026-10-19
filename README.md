@@ -109,6 +109,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Link` | `<Link href="/sobre">Sobre</Link>` |
 | `Input` | `<Input label="E-mail" type="email" error="Informe um e-mail" />` |
 | `Textarea` | `<Textarea label="Mensagem" rows={4} helperText="Conte o que aconteceu" />` |
+| `NumberInput` | `<NumberInput label="Preço" min={0} step={0.5} formatOptions={{ style: 'currency', currency: 'BRL' }} onValueChange={setPreco} />` |
 | `Select` | `<Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />` |
 | `Checkbox` | `<Checkbox label="Aceito os termos" />` |
 | `Switch` | `<Switch label="Receber notificações" defaultChecked />` |
@@ -172,14 +173,15 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | --- | --- | --- |
 | `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
 | `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` e `Table` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
-| `label` | `Input`, `Textarea`, `Select`, `Checkbox`, `Switch`, `RadioGroup` | Rótulo visível, ligado ao controle. No `RadioGroup`, é o título do grupo. |
-| `error` | `Input`, `Textarea`, `Select`, `RadioGroup` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
-| `helperText` | `Input`, `Textarea`, `Select`, `RadioGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
-| `fullWidth` | `Button`, `ButtonLink`, `Input`, `Textarea`, `Select` | Ocupa toda a largura disponível. |
+| `label` | `Input`, `Textarea`, `NumberInput`, `Select`, `Checkbox`, `Switch`, `RadioGroup` | Rótulo visível, ligado ao controle. No `RadioGroup`, é o título do grupo. |
+| `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
+| `helperText` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
+| `fullWidth` | `Button`, `ButtonLink`, `Input`, `Textarea`, `NumberInput`, `Select` | Ocupa toda a largura disponível. |
 | `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
 | `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup`, vão para o `<fieldset>`, que é a raiz. |
 | `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
 | `value`, `defaultValue` e `onValueChange` | `RadioGroup`, `Tabs`, `Accordion` | Valor da opção marcada, da aba escolhida ou, no `Accordion`, a lista dos itens abertos (`string[]`), controlado ou não. `onValueChange` recebe o valor que o usuário acabou de escolher. |
+| `value`, `defaultValue` e `onValueChange` (numérico) | `NumberInput` | O número do campo, ou `null` com o campo vazio, controlado ou não. `onValueChange` recebe o número já confirmado (ao sair do campo, com Enter, com as setas e com os botões), limitado a `min` e `max` e arredondado às casas do formato, nunca a cada tecla. |
 | `page`, `defaultPage` e `onPageChange` | `Pagination` | Página atual (a primeira é 1), controlada ou não. `onPageChange` recebe o número da página que o usuário escolheu. |
 | `onClose` | `Alert` | Mostra o botão de fechar. O `Alert` não some sozinho: quem usa o remove ao receber o evento. |
 | `open`, `defaultOpen` e `onOpenChange` | `Popover` e o drawer do `Layout` | Controlados ou não. A `Sidebar` modal usa `open` e `onClose`. |
@@ -322,7 +324,7 @@ import { ptBR } from 'enchase/locales'
 </UIProvider>
 ```
 
-Um `locale` tem a forma `{ locale, dir, messages }`; use `dir: 'rtl'` para línguas da direita para a esquerda. O CSS usa propriedades lógicas, e os ícones direcionais espelham sozinhos. As chaves `pagination`, `previousPage` e `nextPage` (os textos da `Pagination`) são opcionais num `locale` próprio: sem elas, valem as do inglês. O `dir` do `<html>` continua sendo do app.
+Um `locale` tem a forma `{ locale, dir, messages }`; use `dir: 'rtl'` para línguas da direita para a esquerda. O CSS usa propriedades lógicas, e os ícones direcionais espelham sozinhos. As chaves `pagination`, `previousPage`, `nextPage` (os textos da `Pagination`), `increaseValue` e `decreaseValue` (os botões do `NumberInput`) são opcionais num `locale` próprio: sem elas, valem as do inglês. O `locale` também decide como o `NumberInput` escreve e lê os números (`1.234,5` em `pt-BR`, `1,234.5` em `en`); `useUIConfig().locale` devolve o código do idioma. O `dir` do `<html>` continua sendo do app.
 
 ## Responsividade
 
@@ -384,7 +386,7 @@ Quatro níveis de configuração, do mais amplo ao mais específico:
 | `checkbox`, `radio-group` | `-duration`, `-scale`, `-ease` |
 | `accordion` | `-duration`, `-distance`, `-ease` |
 | `icon-swap` | `-duration`, `-ease`, `-rotate` |
-| `input`, `textarea`, `select`, `switch`, `tabs`, `pagination`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
+| `input`, `textarea`, `number-input`, `select`, `switch`, `tabs`, `pagination`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
 
 `-dx` e `-dy` são a direção da entrada (-1, 0 ou 1) e `-distance` o quanto ela anda; em RTL o `-dx` inverte. Com `prefers-reduced-motion: reduce`, o deslocamento e a escala somem e o fade continua; os loops viram pulso de opacidade.
 

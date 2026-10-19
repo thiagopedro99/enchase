@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 
 import { CurrentHrefContext, NavigateContext } from './navigationContext.ts'
 import { defaultMotionSettings } from '../../motion/defaultData.ts'
-import { defaultBreakpoints, defaultDir, defaultLabels } from './defaultData.ts'
+import { defaultBreakpoints, defaultDir, defaultLabels, defaultLocale } from './defaultData.ts'
 import { breakpointCss } from './breakpointCss.ts'
 import { UIContext } from './context.ts'
 
@@ -17,6 +17,7 @@ export const UIProvider = ({ children, motion, locale, labels, breakpoints, navi
       motion: { ...defaultMotionSettings, ...motion, recipes: { ...defaultMotionSettings.recipes, ...motion?.recipes } },
       labels: { ...defaultLabels, ...locale?.messages, ...labels },
       dir: locale?.dir ?? defaultDir,
+      locale: locale?.locale ?? defaultLocale,
       breakpoints: { ...defaultBreakpoints, ...breakpoints }
     }),
     [motion, locale, labels, breakpoints]

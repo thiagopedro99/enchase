@@ -28,7 +28,9 @@ export const en: Locale = {
     hidePassword: 'Hide password',
     pagination: 'Pagination',
     previousPage: 'Previous page',
-    nextPage: 'Next page'
+    nextPage: 'Next page',
+    increaseValue: 'Increase value',
+    decreaseValue: 'Decrease value'
   }
 }
 

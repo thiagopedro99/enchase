@@ -35,12 +35,15 @@ export type UILabels = {
   pagination?: string
   previousPage?: string
   nextPage?: string
+  increaseValue?: string
+  decreaseValue?: string
 }
 
 export type UIConfig = {
   motion: MotionSettings
   labels: UILabels
   dir: Direction
+  locale: string
   breakpoints: Breakpoints
 }
 
