@@ -790,7 +790,12 @@ describe('NumberInput language and format', () => {
         <NumberInput label="Preço" defaultValue={1234.5} />
       </UIProvider>
     )
-    expect(field()).toHaveValue('1’234.5')
+
+    const swiss = new Intl.NumberFormat('de-CH').format(1234.5)
+
+    expect(field()).toHaveValue(swiss)
+    expect(swiss).not.toBe('1,234.5')
+    expect(swiss).not.toBe('1.234,5')
   })
 
   it('formats again when the format options change, without a new identity each time being a change', async () => {

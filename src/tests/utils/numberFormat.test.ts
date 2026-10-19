@@ -131,7 +131,7 @@ describe('createNumberFormat in Brazilian Portuguese', () => {
 
 describe('createNumberFormat in other writing systems', () => {
   it('reads the digits, the marks and the minus of Arabic', () => {
-    const arabic = createNumberFormat('ar-EG')
+    const arabic = createNumberFormat('ar-EG-u-nu-arab')
 
     expect(arabic.parse(arabic.format(-123.5))).toBe(-123.5)
     expect(arabic.parse('١٢٣٫٥')).toBe(123.5)
