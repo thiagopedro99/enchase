@@ -13,6 +13,9 @@ const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'i
 
 const expectations = [
   ['the shell rendered by a server component', 'Server component page'],
+  ['the badge of a server component', 'data-slot="badge"'],
+  ['the alert of a server component', 'data-slot="alert"'],
+  ['the textarea of a server component', 'data-slot="textarea-field"'],
   ['the layout markup in the wide default', 'data-layout="auto"'],
   ['the permanent sidebar', 'data-slot="layout-sidebar"'],
   ['the color mode script in the head', 'localStorage.getItem'],

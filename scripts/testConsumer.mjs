@@ -9,8 +9,8 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
 
-const entry = `import { Button, ButtonLink, Layout, Link, Modal, ToastProvider, UIProvider, useToast } from 'enchase'
-import type { ButtonLinkProps, LayoutProps, SidebarSection, UILabels } from 'enchase'
+const entry = `import { Alert, Badge, Button, ButtonLink, Layout, Link, Modal, Textarea, ToastProvider, UIProvider, useToast } from 'enchase'
+import type { AlertProps, BadgeProps, ButtonLinkProps, LayoutProps, SidebarSection, TextareaProps, UILabels } from 'enchase'
 import { createTheme, validateTheme } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
@@ -23,6 +23,9 @@ const labels: Partial<UILabels> = { closeModal: 'Close' }
 const locale: Locale = ptBR
 const props: LayoutProps = { children: null, navigationSections: sections }
 const docsLink: ButtonLinkProps = { href: '/docs', native: true }
+const alertProps: AlertProps = { variant: 'warning', title: 'Heads up', onClose: () => undefined }
+const badgeProps: BadgeProps = { variant: 'success', size: 'sm' }
+const areaProps: TextareaProps = { label: 'Message', rows: 4, resize: 'none' }
 
 const Toaster = () => {
   const toast = useToast()
@@ -36,6 +39,9 @@ export const App = () => (
       <Layout {...props}>
         <Toaster />
         <ButtonLink {...docsLink}>Docs</ButtonLink>
+        <Alert {...alertProps}>Saved</Alert>
+        <Badge {...badgeProps}>New</Badge>
+        <Textarea {...areaProps} />
         <Link href="/about#team" native>
           About
         </Link>
