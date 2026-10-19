@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.5.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.4.0...v0.5.0)
+
+### Enhancements
+
+- Add the Pagination ([8f567bf](https://github.com/thiagopedro99/enchase/commit/8f567bf))
+- Add the Table ([a1c6740](https://github.com/thiagopedro99/enchase/commit/a1c6740))
+
+### Notes
+
+- New components: `Pagination` and `Table`. Each one has a story with controls, and the props of both are in `API.md`. Besides three optional label keys (below), nothing else changed at runtime: no new theme tokens and no change to the existing components.
+- `Pagination` is a `<nav>` with a list of buttons: previous, the numbered pages and next. It takes `pageCount`, `page`, `defaultPage` and `onPageChange(page)`, `siblingCount` and `boundaryCount` (1 each by default: the pages kept beside the current one and at both ends of the list before an ellipsis) and `size` (`md` by default, or `sm`). The current page has `aria-current="page"` and the ellipsis is hidden from screen readers. A `pageCount` below 1 renders nothing, and a `page` outside the range or that is not a whole number is brought back to a valid page. There is no `href` mode yet: it renders buttons only, so with a router, navigate inside `onPageChange`.
+- Previous and next are `aria-disabled` at the ends of the list instead of `disabled`, so the focus stays on the button that was just pressed. Their chevrons mirror in right-to-left text. The current page gets a thicker border so it stays visible in forced colors, and the highlight of the buttons reads `--enchase-pagination-*` for its motion, listed in the Movimento table of the README.
+- Three keys were added to `UILabels`, all optional: `pagination` (the name of the `<nav>`), `previousPage` and `nextPage`. They are optional so that a `Locale` of your own, written before this version, still type-checks. The `en` and `ptBR` locales define them, and a locale or a `labels` object that leaves them out falls back to the English text. `Pagination` also takes `ariaLabel`, to tell two paginations on the same page apart.
+- `Table` takes `columns` and `rows` and renders a real `<table>` with scoped headers and cells, and a `<caption>` when you pass `caption`. It is generic: `TableColumn<Row>` ties each column to the type of the rows. A column has `key`, `header` and, optionally, `cell(row, index)` for custom content (without it the column shows `row[key]` as text), `align` (`start`, `center` or `end`), `width` and `rowHeader` (its cells become row headers). The table also takes `getRowKey`, `caption`, `ariaLabel`, `empty` (shown in one cell across all columns when there are no rows), `size` (`md` by default, or `sm`) and `striped`. `className`, `style` and the other attributes go to the container `<div>`, and so does the `ref`.
+- A table wider than its space scrolls horizontally inside the container. Only then does the container become a tab stop, so the keyboard can scroll it, and, when the table has a `caption` or an `ariaLabel`, a `region` named after it. The `Table` does not sort, select rows, paginate or keep the header fixed: sort the data before passing it, and put the `Pagination` beside it.
+
 ## v0.4.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.3.0...v0.4.0)
