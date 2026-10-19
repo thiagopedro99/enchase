@@ -14,6 +14,7 @@ import { Popover } from '@components/common/Popover/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
+import { Textarea } from '@components/common/Textarea/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
@@ -158,6 +159,18 @@ describe.each(widths)('worst case data at %ipx', (width) => {
     )
 
     expect(audit(`fields@${width}`).join(' | ')).toBe('')
+  })
+
+  it('keeps the outline of a field inside the page when its label is longer than the field', async () => {
+    await setup(
+      <div style={{ display: 'grid', gap: 12 }}>
+        <Input label={worstCase.longTitle} />
+        <Textarea label={worstCase.longTitle} />
+        <Select label={worstCase.longTitle} options={[{ value: 'a', label: worstCase.shortName }]} />
+      </div>
+    )
+
+    expect(audit(`long labels@${width}`).join(' | ')).toBe('')
   })
 
   it('keeps the tabs inside the page and scrolls the list when the labels do not fit', async () => {

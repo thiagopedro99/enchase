@@ -238,7 +238,11 @@
 
 .outline legend span {
   display: inline-block;
+  box-sizing: border-box;
+  max-inline-size: 100%;
   padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
   opacity: 0;
   visibility: visible;
 }
