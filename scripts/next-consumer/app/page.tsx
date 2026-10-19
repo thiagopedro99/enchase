@@ -1,4 +1,4 @@
-import { Accordion, Alert, Badge, Button, Layout, RadioGroup, Switch, Tabs, Textarea, ToastProvider } from 'enchase'
+import { Accordion, Alert, Badge, Button, Layout, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider } from 'enchase'
 
 import Counter from './counter'
 
@@ -19,6 +19,8 @@ export default function Page() {
         <RadioGroup label="Server plan" defaultValue="free" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }]} />
         <Tabs ariaLabel="Server tabs" items={[{ value: 'a', label: 'One', content: <p>First</p> }, { value: 'b', label: 'Two', content: <p>Second</p> }]} />
         <Accordion items={[{ value: 'a', title: 'Server accordion', content: <p>Hidden until opened</p> }]} />
+        <Pagination pageCount={9} defaultPage={4} />
+        <Table caption="Server table" columns={[{ key: 'id', header: 'Order', rowHeader: true }, { key: 'total', header: 'Total', align: 'end' }]} rows={[{ id: '#1', total: 10 }, { id: '#2', total: 20 }]} />
         <Counter />
       </Layout>
     </ToastProvider>

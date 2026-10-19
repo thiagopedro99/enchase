@@ -9,8 +9,8 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
 
-const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Layout, Link, Modal, RadioGroup, Switch, Tabs, Textarea, ToastProvider, UIProvider, useToast } from 'enchase'
-import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, LayoutProps, RadioGroupProps, SidebarSection, SwitchProps, TabsProps, TextareaProps, UILabels } from 'enchase'
+const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Layout, Link, Modal, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast } from 'enchase'
+import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, LayoutProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
 import { createTheme, validateTheme } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
@@ -19,7 +19,7 @@ import 'enchase/styles.layer.css'
 import 'enchase/theme.css'
 
 const sections: SidebarSection[] = [{ id: 'main', items: [{ id: 'home', label: 'Home', href: '/' }] }]
-const labels: Partial<UILabels> = { closeModal: 'Close' }
+const labels: Partial<UILabels> = { closeModal: 'Close', previousPage: 'Back' }
 const locale: Locale = ptBR
 const props: LayoutProps = { children: null, navigationSections: sections }
 const docsLink: ButtonLinkProps = { href: '/docs', native: true }
@@ -30,6 +30,10 @@ const switchProps: SwitchProps = { label: 'Notifications', defaultChecked: true 
 const radioProps: RadioGroupProps = { label: 'Plan', options: [{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro', disabled: true }], defaultValue: 'free', orientation: 'horizontal', onValueChange: () => undefined }
 const tabsProps: TabsProps = { ariaLabel: 'Sections', items: [{ value: 'a', label: 'One', content: 'First' }, { value: 'b', label: 'Two', content: 'Second' }], activation: 'manual', onValueChange: () => undefined }
 const accordionProps: AccordionProps = { items: [{ value: 'a', title: 'One', content: 'First' }], multiple: true, defaultValue: ['a'], headingLevel: 2, onValueChange: () => undefined }
+const pagerProps: PaginationProps = { pageCount: 12, defaultPage: 3, siblingCount: 2, boundaryCount: 1, size: 'sm', onPageChange: (page: number) => void page }
+type Order = { id: string; total: number }
+const orderColumns: TableColumn<Order>[] = [{ key: 'id', header: 'Order', rowHeader: true }, { key: 'total', header: 'Total', align: 'end', cell: (row) => row.total.toFixed(2) }]
+const tableProps: TableProps<Order> = { columns: orderColumns, rows: [{ id: '#1', total: 10 }], caption: 'Orders', striped: true, size: 'sm', getRowKey: (row) => row.id }
 
 const Toaster = () => {
   const toast = useToast()
@@ -50,6 +54,9 @@ export const App = () => (
         <RadioGroup {...radioProps} />
         <Tabs {...tabsProps} />
         <Accordion {...accordionProps} />
+        <Pagination {...pagerProps} />
+        <Table {...tableProps} />
+        <Table<Order> columns={orderColumns} rows={[]} empty="No orders" />
         <Link href="/about#team" native>
           About
         </Link>
