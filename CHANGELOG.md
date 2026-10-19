@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.3.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.2.1...v0.3.0)
+
+### Enhancements
+
+- Add the Textarea ([f4511c3](https://github.com/thiagopedro99/enchase/commit/f4511c3))
+- Add the Badge ([1937652](https://github.com/thiagopedro99/enchase/commit/1937652))
+- Add the Alert ([88147ad](https://github.com/thiagopedro99/enchase/commit/88147ad))
+
+### Notes
+
+- New components: `Textarea`, `Badge` and `Alert`. Each one has a story with controls, and the props of all three are in `API.md`. Nothing else changed at runtime: no new theme tokens, no new keys in the locales and no change to the existing components.
+- `Textarea` takes the props of the `Input` (`label`, `error`, `helperText`, `fullWidth`, `wrapperClassName`, `wrapperStyle` and a `ref`) and adds `rows` (3 by default) and `resize` (`vertical` by default, or `none`, `horizontal` and `both`). It has no character counter and does not grow with its content.
+- `Badge` has the variants `neutral` (default), `primary`, `success`, `warning`, `error` and `info`, and the sizes `sm` and `md` (default). The colors come from the container pairs of the theme, so a custom theme keeps them readable, but the text of the badge has to carry the meaning, not only the color.
+- `Alert` has the variants `info` (default), `success`, `warning` and `error`, an optional `title`, an optional `icon` (`null` or `false` hides it) and `onClose`, which shows the close button. The `Alert` never removes itself: remove it when `onClose` runs. The close button is named by `labels.closeToast`, so no key was added to `UILabels`.
+- Only the `error` variant of the `Alert` has `role="alert"`. The others have `role="status"`, which screen readers usually do not announce when the alert already appears with its text: pass `role="alert"` for a message inserted after the page has loaded.
+
 ## v0.2.1
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.2.0...v0.2.1)
