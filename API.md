@@ -6,7 +6,7 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ## Componentes
 
-[Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Breadcrumbs
 
@@ -398,6 +398,23 @@ Espaço reservado enquanto o conteúdo carrega, com brilho animado, nas formas t
 | `animation` | `false \| { recipe, tuning }` | `shimmer` | false desliga o brilho. { tuning: { duration } } muda a duração em segundos. Com movimento reduzido o brilho vira um pulso de opacidade. |
 
 Aceita também os demais atributos de `<div>`, repassados ao elemento.
+
+### Textarea
+
+Campo de texto de várias linhas, com rótulo, mensagem de erro e texto de ajuda, como o `Input`. Aceita `ref` e os atributos do `<textarea>`.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `label` | `string` | — | Rótulo do campo, associado ao textarea para leitores de tela. |
+| `error` | `string` | — | Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta. |
+| `helperText` | `string` | — | Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro. |
+| `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
+| `resize` | `'none' \| 'vertical' \| 'horizontal' \| 'both'` | `'vertical'` | Como o usuário redimensiona o campo pela alça do canto: none não deixa, vertical muda só a altura, horizontal só a largura e both as duas. |
+| `rows` | `number` | `3` | Número de linhas visíveis. O campo rola quando o texto passa disso. |
+| `wrapperClassName` | `string` | — | Classe da raiz (data-slot="textarea"). className e style continuam no textarea nativo (data-slot="textarea-field"). |
+| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="textarea"). style continua no textarea nativo. |
+
+Aceita também os demais atributos de `<textarea>`, repassados ao elemento. Encaminha o `ref` para `<textarea>`.
 
 ### ThemeToggle
 

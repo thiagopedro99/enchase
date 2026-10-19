@@ -12,6 +12,7 @@ import { ConfirmModal, Modal } from '@components/common/Modal/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
+import { Textarea } from '@components/common/Textarea/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
@@ -42,6 +43,7 @@ export type HydrationCase = { name: string; element: ReactElement; bare?: boolea
 export const hydrationCases: HydrationCase[] = [
   { name: 'Button', element: <Button>Send</Button> },
   { name: 'Input', element: <Input label="Email" type="password" /> },
+  { name: 'Textarea', element: <Textarea label="Message" helperText="Tell us more" /> },
   { name: 'Select', element: <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} /> },
   { name: 'Checkbox', element: <Checkbox label="Accept" /> },
   { name: 'Card', element: <Card variant="elevated">Content</Card> },

@@ -20,6 +20,7 @@ const elementTags = {
   HTMLInputElement: 'input',
   HTMLSelectElement: 'select',
   HTMLSpanElement: 'span',
+  HTMLTextAreaElement: 'textarea',
   SVGSVGElement: 'svg'
 }
 

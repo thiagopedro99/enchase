@@ -53,6 +53,13 @@ describe('renderApiDocs', () => {
     expect(markdown).toContain('Aceita também os demais atributos HTML do elemento raiz.')
   })
 
+  it('does not print a made up tag when the element of the ref is unknown', () => {
+    const markdown = render([{ name: 'Field', element: 'root', refElement: 'root', props: [] }])
+
+    expect(markdown).toContain('Encaminha o `ref` para o elemento raiz.')
+    expect(markdown).not.toContain('<root>')
+  })
+
   it('says so when a component has no props of its own', () => {
     expect(render([{ name: 'Plain', props: [] }])).toContain('### Plain\n\nSem props próprias.')
   })
