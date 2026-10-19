@@ -113,6 +113,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Checkbox` | `<Checkbox label="Aceito os termos" />` |
 | `Switch` | `<Switch label="Receber notificações" defaultChecked />` |
 | `RadioGroup` | `<RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }]} defaultValue="free" />` |
+| `Accordion` | `<Accordion items={[{ value: 'envio', title: 'Quanto tempo leva o envio?', content: <p>Até dois dias úteis.</p> }]} />` |
 | `Tabs` | `<Tabs ariaLabel="Conta" items={[{ value: 'perfil', label: 'Perfil', content: <p>Seus dados</p> }, { value: 'plano', label: 'Plano', content: <p>Sua assinatura</p> }]} />` |
 | `Card` | `<Card variant="elevated">Conteúdo</Card>` |
 | `Badge` | `<Badge variant="success">Pago</Badge>` |
@@ -176,7 +177,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
 | `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup`, vão para o `<fieldset>`, que é a raiz. |
 | `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
-| `value`, `defaultValue` e `onValueChange` | `RadioGroup`, `Tabs` | Valor da opção marcada ou da aba escolhida, controlado ou não. `onValueChange` recebe o valor que o usuário acabou de escolher. |
+| `value`, `defaultValue` e `onValueChange` | `RadioGroup`, `Tabs`, `Accordion` | Valor da opção marcada, da aba escolhida ou, no `Accordion`, a lista dos itens abertos (`string[]`), controlado ou não. `onValueChange` recebe o valor que o usuário acabou de escolher. |
 | `onClose` | `Alert` | Mostra o botão de fechar. O `Alert` não some sozinho: quem usa o remove ao receber o evento. |
 | `open`, `defaultOpen` e `onOpenChange` | `Popover` e o drawer do `Layout` | Controlados ou não. A `Sidebar` modal usa `open` e `onClose`. |
 
@@ -378,6 +379,7 @@ Quatro níveis de configuração, do mais amplo ao mais específico:
 | `loading` | `-duration`, `-ease` |
 | `skeleton` | `-duration`, `-ease` |
 | `checkbox`, `radio-group` | `-duration`, `-scale`, `-ease` |
+| `accordion` | `-duration`, `-distance`, `-ease` |
 | `icon-swap` | `-duration`, `-ease`, `-rotate` |
 | `input`, `textarea`, `select`, `switch`, `tabs`, `link`, `breadcrumbs`, `footer`, `app-bar`, `alert` | `-duration`, `-ease` |
 

@@ -6,7 +6,23 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ## Componentes
 
-[Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+
+### Accordion
+
+Lista de itens que abrem e fecham para mostrar um conteúdo por vez, ou vários com `multiple`, como em perguntas frequentes. Segue o padrão ARIA de acordeão: cada item é um botão com `aria-expanded` dentro de um título (`<h3>` por padrão), e o painel é uma região ligada ao botão. Tab percorre os botões, Enter e Espaço abrem e fecham, e as setas, Home e End movem o foco. Os painéis fechados ficam no documento, então o estado do conteúdo se mantém. Aceita `ref`, que vai para a raiz, e os atributos do `<div>`.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `items` | `AccordionItem[]` | *obrigatória* | Itens do acordeão, na ordem da tela. Cada item tem `value` (único), `title` (texto do botão), `content` (conteúdo do painel) e, se quiser, `disabled`. Os painéis fechados ficam no documento, então o estado do conteúdo se mantém. |
+| `multiple` | `boolean` | `false` | Deixa vários itens abertos ao mesmo tempo. Sem ela, abrir um item fecha o que estava aberto, e o item aberto ainda pode ser fechado de novo. |
+| `value` | `string[]` | — | Valores dos itens abertos quando o componente é controlado, em uma lista. Exige também onValueChange. Veja a story Controlled. |
+| `defaultValue` | `string[]` | — | Valores dos itens abertos no início, em uma lista, para uso sem controle externo. Sem multiple, vale só o primeiro. |
+| `onValueChange` | `(value: string[]) => void` | — | Chamada com a lista dos itens abertos depois de cada clique. |
+| `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3` | Nível do título, de h2 a h6, que envolve o botão de cada item. Escolha o nível que continua a hierarquia de títulos da página. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | Animação do painel, que aparece com um fade e um pequeno deslize, e da seta, que gira. A altura não anima. false desliga; { tuning: { duration, distance } } ajusta a duração em segundos e o deslize em pixels. |
+
+Aceita também os demais atributos de `<div>`, repassados ao elemento. Encaminha o `ref` para `<div>`.
 
 ### Alert
 
@@ -65,9 +81,9 @@ Link com a aparência de um `Button`. É um `<a href>` de verdade, e passa pelo 
 | --- | --- | --- | --- |
 | `href` | `string` | *obrigatória* | Destino do link, com as mesmas regras do `Link`: uma rota do app vai para o `navigate` do `UIProvider`; âncoras, o hash da página atual e URLs externas ficam com o navegador. |
 | `native` | `boolean` | `false` | Deixa o clique com o navegador mesmo em uma rota do app. |
+| `animation` | `false \| { recipe, from, tuning }` | `press` | Receita de motion do `Button`. Use false para desligar, ou { recipe, tuning } com press ou lift. |
 | `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Estilo visual, o mesmo do `Button`. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Tamanho, o mesmo do `Button`. |
-| `animation` | `false \| { recipe, from, tuning }` | `press` | Receita de motion do `Button`. Use false para desligar, ou { recipe, tuning } com press ou lift. |
 | `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
 
 Aceita também os demais atributos de `<a>`, repassados ao elemento.

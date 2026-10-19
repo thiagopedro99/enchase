@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
 import { Breadcrumbs } from '@components/common/Breadcrumbs/index.tsx'
+import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
@@ -163,6 +164,12 @@ describe.each(widths)('worst case data at %ipx', (width) => {
 
     expect(audit(`tabs@${width}`).join(' | ')).toBe('')
     expect(list.scrollWidth).toBeGreaterThan(list.clientWidth)
+  })
+
+  it('keeps the accordion inside the page with long titles and content', async () => {
+    await setup(<Accordion multiple defaultValue={worstLabels} items={worstLabels.map((label) => ({ value: label, title: label, content: <p>{`${worstCase.longTitle} ${worstCase.fileName}`}</p> }))} />)
+
+    expect(audit(`accordion@${width}`).join(' | ')).toBe('')
   })
 
   it('keeps the breadcrumbs inside the page', async () => {

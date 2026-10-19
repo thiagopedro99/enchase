@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
+import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
@@ -64,6 +65,7 @@ describe('minimum target size in a real browser', () => {
         <Switch label="Ligado" />
         <RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }]} />
         <Tabs items={[{ value: 'a', label: 'Aba', content: 'Conteúdo' }]} />
+        <Accordion items={[{ value: 'a', title: 'Pergunta', content: 'Resposta' }]} />
         <Input label="Nome" />
         <Textarea label="Mensagem" />
         <Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />
@@ -76,6 +78,7 @@ describe('minimum target size in a real browser', () => {
       page.getByRole('switch', { name: 'Ligado' }),
       page.getByRole('radio', { name: 'Grátis' }),
       page.getByRole('tab', { name: 'Aba' }),
+      page.getByRole('button', { name: 'Pergunta' }),
       page.getByRole('textbox', { name: 'Nome' }),
       page.getByRole('textbox', { name: 'Mensagem' }),
       page.getByRole('combobox', { name: 'País' }),
