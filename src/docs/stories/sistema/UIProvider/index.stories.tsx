@@ -1,26 +1,55 @@
+import { Fragment } from 'react'
 import { Link, UIProvider, useUIConfig } from 'enchase'
 import { en, ptBR } from 'enchase/locales'
 
 import { ClickReport } from '@docs/shared/components/ClickProbe.tsx'
+import { configMeanings, linkCases } from './defaultData.ts'
 
+import type { CSSProperties } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+
+const headingStyle: CSSProperties = { margin: 0, fontWeight: 600 }
+
+const meaningStyle: CSSProperties = { margin: 0, fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }
 
 const Inspector = () => {
   const { dir, labels, breakpoints, motion } = useUIConfig()
+  const rows = [
+    ['dir', dir, configMeanings.dir],
+    ['labels.closeModal', labels.closeModal, configMeanings.closeModal],
+    ['breakpoints.md', breakpoints.md, configMeanings.breakpoint],
+    ['motion', `${motion.mode} / ${motion.preset}`, configMeanings.motion]
+  ]
 
   return (
-    <dl style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '0.25rem 1rem', margin: 0 }}>
-      <dt>dir</dt>
-      <dd style={{ margin: 0 }}>{dir}</dd>
-      <dt>labels.closeModal</dt>
-      <dd style={{ margin: 0 }}>{labels.closeModal}</dd>
-      <dt>breakpoints.md</dt>
-      <dd style={{ margin: 0 }}>{breakpoints.md}</dd>
-      <dt>motion</dt>
-      <dd style={{ margin: 0 }}>{`${motion.mode} / ${motion.preset}`}</dd>
-    </dl>
+    <div style={{ display: 'grid', gap: '0.5rem' }}>
+      <p style={headingStyle}>O que os componentes recebem do UIProvider (useUIConfig)</p>
+      <dl style={{ display: 'grid', gridTemplateColumns: 'auto auto 1fr', gap: '0.25rem 1rem', margin: 0 }}>
+        {rows.map(([name, value, meaning]) => (
+          <Fragment key={name}>
+            <dt>{name}</dt>
+            <dd style={{ margin: 0 }}>{value}</dd>
+            <dd style={meaningStyle}>{meaning}</dd>
+          </Fragment>
+        ))}
+      </dl>
+    </div>
   )
 }
+
+const Links = () => (
+  <div style={{ display: 'grid', gap: '0.5rem' }}>
+    <p style={headingStyle}>navigate e currentHref: quem trata o clique em cada link</p>
+    <ul style={{ display: 'grid', gap: '0.5rem', margin: 0, paddingInlineStart: '1.25rem' }}>
+      {linkCases.map(({ href, outcome }) => (
+        <li key={href}>
+          <Link href={href}>{href}</Link>
+          <div style={meaningStyle}>{outcome}</div>
+        </li>
+      ))}
+    </ul>
+  </div>
+)
 
 const meta = {
   title: 'Sistema/UIProvider',
@@ -70,11 +99,7 @@ const meta = {
     <UIProvider {...args} navigate={() => undefined}>
       <ClickReport>
         <Inspector />
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          <Link href="/sobre">/sobre</Link>
-          <Link href="/docs#props">/docs#props</Link>
-          <Link href="https://example.com">https://example.com</Link>
-        </div>
+        <Links />
       </ClickReport>
     </UIProvider>
   )
