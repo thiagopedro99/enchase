@@ -676,7 +676,7 @@ Retorno:
 useScrollSpy(ids: string[], topOffset?: number): string | undefined
 ```
 
-Devolve o `id` da seção que está na faixa de leitura, de `topOffset` px (padrão 96) do topo até 45% da altura da tela, ou `undefined` enquanto nenhuma chegou. Mantenha o array de `ids` estável.
+Devolve o `id` da seção que está na faixa de leitura, de `topOffset` px (padrão 96) do topo até 45% da altura da tela, ou `undefined` enquanto nenhuma chegou. Acompanha as seções que montam depois, remontam ou saem da página, e só o conteúdo do array de `ids` conta, não a identidade dele.
 
 ### useToast
 

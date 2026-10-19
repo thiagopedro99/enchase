@@ -11,12 +11,17 @@ class FakeIntersectionObserver {
   private record: ObserverRecord
 
   constructor(callback: ObserverCallback, options?: IntersectionObserverInit) {
-    this.record = { callback, observed: [], disconnected: false, options }
+    this.record = { callback, observed: [], unobserved: [], disconnected: false, options }
     observers.push(this.record)
   }
 
   observe(element: Element) {
     this.record.observed.push(element)
+  }
+
+  unobserve(element: Element) {
+    this.record.observed = this.record.observed.filter((observed) => observed !== element)
+    this.record.unobserved.push(element)
   }
 
   disconnect() {
@@ -31,6 +36,11 @@ const addSection = (id: string) => {
 
   return element
 }
+
+const flush = () =>
+  act(async () => {
+    await Promise.resolve()
+  })
 
 const report = (sections: Record<string, boolean>) =>
   act(() => {
@@ -145,5 +155,156 @@ describe('useScrollSpy', () => {
 
     expect(result.current).toBeUndefined()
     expect(observers).toHaveLength(0)
+  })
+})
+
+describe('useScrollSpy following the page', () => {
+  beforeEach(() => {
+    observers.length = 0
+    vi.stubGlobal('IntersectionObserver', FakeIntersectionObserver)
+    ;['one', 'two', 'three'].forEach(addSection)
+  })
+
+  afterEach(() => {
+    document.body.innerHTML = ''
+    vi.unstubAllGlobals()
+  })
+
+  it('keeps following a section that is rendered again as a new element', async () => {
+    const { result } = renderHook(() => useScrollSpy(['one', 'two', 'three']))
+    const old = document.getElementById('two') as HTMLElement
+
+    old.remove()
+
+    const replacement = addSection('two')
+
+    await flush()
+
+    expect(observers[0].observed).toContain(replacement)
+    expect(observers[0].observed).not.toContain(old)
+    expect(observers[0].unobserved).toEqual([old])
+
+    report({ two: true })
+
+    expect(result.current).toBe('two')
+  })
+
+  it('ignores a late report about an element that was replaced', async () => {
+    const { result } = renderHook(() => useScrollSpy(['one', 'two', 'three']))
+    const old = document.getElementById('two') as HTMLElement
+
+    old.remove()
+    addSection('two')
+    await flush()
+    act(() => observers[0].callback([{ target: old, isIntersecting: true }]))
+
+    expect(result.current).toBeUndefined()
+  })
+
+  it('keeps the active section when only its element is replaced', async () => {
+    const { result } = renderHook(() => useScrollSpy(['one', 'two', 'three']))
+
+    report({ two: true })
+    document.getElementById('two')?.remove()
+    addSection('two')
+    await flush()
+
+    expect(result.current).toBe('two')
+  })
+
+  it('observes a section that is rendered after the hook mounted, in the order of the ids', async () => {
+    renderHook(() => useScrollSpy(['one', 'late', 'three']))
+
+    expect(observers[0].observed.map((element) => element.id)).toEqual(['one', 'three'])
+
+    const late = addSection('late')
+
+    await flush()
+
+    expect(observers[0].observed).toContain(late)
+    expect(observers[0].observed).toHaveLength(3)
+  })
+
+  it('observes an element that receives the id later', async () => {
+    renderHook(() => useScrollSpy(['one', 'later']))
+
+    const element = document.createElement('section')
+
+    document.body.appendChild(element)
+    await flush()
+    expect(observers[0].observed.map((item) => item.id)).toEqual(['one'])
+
+    element.id = 'later'
+    await flush()
+
+    expect(observers[0].observed).toContain(element)
+  })
+
+  it('clears the active section when its element leaves the page', async () => {
+    const { result } = renderHook(() => useScrollSpy(['one', 'two', 'three']))
+
+    report({ two: true })
+    expect(result.current).toBe('two')
+
+    document.getElementById('two')?.remove()
+    await flush()
+
+    expect(result.current).toBeUndefined()
+  })
+
+  it('moves to another visible section when the active one leaves the page', async () => {
+    const { result } = renderHook(() => useScrollSpy(['one', 'two', 'three']))
+
+    report({ two: true, three: true })
+    expect(result.current).toBe('two')
+
+    document.getElementById('two')?.remove()
+    await flush()
+
+    expect(result.current).toBe('three')
+  })
+
+  it('does not subscribe again for an array with the same content and another identity', () => {
+    const { rerender } = renderHook(({ ids }) => useScrollSpy(ids), { initialProps: { ids: ['one', 'two'] } })
+
+    rerender({ ids: ['one', 'two'] })
+    rerender({ ids: ['one', 'two'] })
+
+    expect(observers).toHaveLength(1)
+    expect(observers[0].disconnected).toBe(false)
+
+    rerender({ ids: ['one', 'three'] })
+
+    expect(observers).toHaveLength(2)
+    expect(observers[0].disconnected).toBe(true)
+    expect(observers[1].observed.map((element) => element.id)).toEqual(['one', 'three'])
+  })
+
+  it('stops following the page after it unmounts', async () => {
+    const { unmount } = renderHook(() => useScrollSpy(['one', 'late']))
+
+    unmount()
+    addSection('late')
+    await flush()
+
+    expect(observers[0].observed.map((element) => element.id)).toEqual(['one'])
+  })
+
+  it('still observes the sections that exist when MutationObserver is unavailable', () => {
+    vi.stubGlobal('MutationObserver', undefined)
+    renderHook(() => useScrollSpy(['one', 'two']))
+
+    expect(observers[0].observed.map((element) => element.id)).toEqual(['one', 'two'])
+  })
+
+  it('does not run while no section has changed', async () => {
+    const { result } = renderHook(() => useScrollSpy(['one', 'two', 'three']))
+
+    report({ two: true })
+    document.body.appendChild(document.createElement('div'))
+    await flush()
+
+    expect(result.current).toBe('two')
+    expect(observers[0].unobserved).toEqual([])
   })
 })
