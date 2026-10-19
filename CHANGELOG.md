@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.2.1
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.2.0...v0.2.1)
+
+### Fixes
+
+- Leave hash links of the current page to the browser ([02af617](https://github.com/thiagopedro99/enchase/commit/02af617))
+- Route internal button links through navigate ([e87b2d9](https://github.com/thiagopedro99/enchase/commit/e87b2d9))
+
+### Notes
+
+- A link whose `href` has a hash and points to the current page (`/#recursos` on `/`, `/sobre#equipe` on `/sobre`) is now left to the browser, which scrolls to the element. It used to go through the `navigate` of the `UIProvider`, so it needed `native: true` to scroll. The current page is the path of `currentHref` or, when the provider has none, `window.location.pathname` at the time of the click. A hash link to another page still goes through `navigate`, with the hash in the `href`.
+- In the `Sidebar`, the `Navbar` and the breadcrumbs derived by the `Layout`, those same-page hash links count as sections, not as routes: they get `aria-current="location"` only when they are the active section, never `aria-current="page"`, and they are left out of the breadcrumb trail.
+- `ButtonLink` now calls the `navigate` of the `UIProvider` on a plain click on an internal route, like `Link`, and accepts `native` to skip it. Before, it was always a plain anchor, so an internal `ButtonLink` reloaded the page even with a router connected. Use `native` (or `target`) where you want the browser to load the page.
+- The package now ships an `API.md` with the props, types, defaults and hooks of every component (`node_modules/enchase/API.md`), generated from the types and the Storybook stories. The README has a table with how each `href` is handled and the common props, and Storybook has pages for `Link`, `ButtonLink`, `ConfirmModal`, `InlineLoading`, `UIProvider`, `ColorModeProvider` and `ToastProvider`.
+
 ## v0.2.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.1.2...v0.2.0)
