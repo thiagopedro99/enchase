@@ -11,6 +11,11 @@ import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
 import { Icon } from '@components/common/Icon/index.tsx'
 import { renderInBrowser } from './harness.tsx'
 
+import type { ComponentType } from 'react'
+import type { IconProps } from '@components/common/Icon/types.ts'
+
+const modules = import.meta.glob<Record<string, ComponentType<IconProps>>>('../components/common/Icon/icons/*.tsx', { eager: true })
+
 const directional = [ChevronRightIcon, ChevronLeftIcon, ChevronsLeftIcon, ChevronsRightIcon, ExternalLinkIcon, LogOutIcon, MenuOpenIcon]
 
 const transformOf = (element: Element) => getComputedStyle(element).transform
@@ -69,5 +74,51 @@ describe('Icon in a real browser', () => {
     expect(computed.verticalAlign).toBe('top')
 
     style.remove()
+  })
+})
+
+describe('the icons of enchase/icons in a real browser', () => {
+  const entries = Object.values(modules).flatMap((module) => Object.entries(module))
+
+  it('draws every icon with the size asked and in the color of the text around it', () => {
+    const { container } = renderInBrowser(
+      <div style={{ color: 'rgb(200, 0, 0)', display: 'flex' }}>
+        {entries.map(([name, Component]) => (
+          <Component key={name} size={20} />
+        ))}
+      </div>
+    )
+    const icons = Array.from(container.querySelectorAll('svg[data-icon]'))
+
+    expect(icons).toHaveLength(entries.length)
+
+    for (const icon of icons) {
+      const box = icon.getBoundingClientRect()
+      const style = getComputedStyle(icon)
+
+      expect(box.width, icon.getAttribute('data-icon') ?? '').toBeCloseTo(20, 0)
+      expect(box.height).toBeCloseTo(20, 0)
+      expect(style.stroke).toBe('rgb(200, 0, 0)')
+      expect(style.flexShrink).toBe('0')
+    }
+  })
+
+  it('mirrors in right-to-left text exactly the icons that are flagged as directional', () => {
+    const { container } = renderInBrowser(
+      <div>
+        {entries.map(([name, Component]) => (
+          <Component key={name} />
+        ))}
+      </div>
+    )
+    const icons = Array.from(container.querySelectorAll('svg[data-icon]'))
+
+    document.documentElement.setAttribute('dir', 'rtl')
+
+    const mirrored = icons.filter((icon) => transformOf(icon) === 'matrix(-1, 0, 0, 1, 0, 0)').map((icon) => icon.getAttribute('data-icon'))
+    const flagged = icons.filter((icon) => icon.hasAttribute('data-directional')).map((icon) => icon.getAttribute('data-icon'))
+
+    expect(mirrored).toEqual(flagged)
+    expect(flagged).toHaveLength(7)
   })
 })

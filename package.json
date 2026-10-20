@@ -50,6 +50,11 @@
       "import": "./dist-lib/locales.js",
       "default": "./dist-lib/locales.js"
     },
+    "./icons": {
+      "types": "./dist-lib/types/lib/icons.d.ts",
+      "import": "./dist-lib/icons.js",
+      "default": "./dist-lib/icons.js"
+    },
     "./styles.css": "./dist-lib/styles.css",
     "./styles.layer.css": "./dist-lib/styles.layer.css",
     "./theme.css": "./dist-lib/theme.css",

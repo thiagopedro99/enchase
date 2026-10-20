@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import * as main from 'enchase'
+import * as icons from 'enchase/icons'
 import * as locales from 'enchase/locales'
 import * as theme from 'enchase/theme'
 
@@ -27,6 +28,15 @@ describe('public entries', () => {
     expect(theme).not.toHaveProperty('oklchToHex')
     expect(theme).not.toHaveProperty('rgbToOklch')
     expect(theme).not.toHaveProperty('parseColor')
+  })
+
+  it('exports the icons of the components from enchase/icons and nothing else', () => {
+    expect(Object.keys(icons)).toHaveLength(19)
+    expect(icons).toHaveProperty('CloseIcon')
+    expect(icons).toHaveProperty('ChevronDownIcon')
+    expect(icons).not.toHaveProperty('Icon')
+    expect(icons).not.toHaveProperty('Button')
+    expect(icons).not.toHaveProperty('HomeIcon')
   })
 
   it('exports the locale data from enchase/locales', () => {

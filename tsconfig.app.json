@@ -23,6 +23,7 @@
       "enchase": ["./lib/index.ts"],
       "enchase/theme": ["./lib/theme.ts"],
       "enchase/locales": ["./lib/locales.ts"],
+      "enchase/icons": ["./lib/icons.ts"],
       "@components/*": ["./src/components/*"],
       "@assets/*": ["./src/assets/*"],
       "@styles/*": ["./src/styles/*"],

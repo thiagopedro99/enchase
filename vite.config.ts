@@ -13,6 +13,7 @@ export default defineConfig({
     alias: {
       'enchase/theme': resolve(__dirname, './lib/theme.ts'),
       'enchase/locales': resolve(__dirname, './lib/locales.ts'),
+      'enchase/icons': resolve(__dirname, './lib/icons.ts'),
       enchase: resolve(__dirname, './lib/index.ts'),
       '@components': resolve(__dirname, './src/components'),
       '@assets': resolve(__dirname, './src/assets'),

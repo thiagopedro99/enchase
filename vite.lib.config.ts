@@ -35,7 +35,8 @@ export default defineConfig({
       entry: {
         index: resolve(root, 'lib/index.ts'),
         theme: resolve(root, 'lib/theme.ts'),
-        locales: resolve(root, 'lib/locales.ts')
+        locales: resolve(root, 'lib/locales.ts'),
+        icons: resolve(root, 'lib/icons.ts')
       },
       formats: ['es'],
       cssFileName: 'styles'
