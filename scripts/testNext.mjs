@@ -21,6 +21,8 @@ const expectations = [
   ['the tabs of a server component', 'data-slot="tabs-tab"'],
   ['the accordion of a server component', 'data-slot="accordion-trigger"'],
   ['the number input of a server component', 'data-slot="number-input-field"'],
+  ['an icon of enchase/icons in a server component', 'data-icon="close"'],
+  ['a directional icon of enchase/icons in a server component', 'data-directional'],
   ['the formatted number of a server component', 'value="$12.50"'],
   ['the pagination of a server component', 'data-slot="pagination-page"'],
   ['the table of a server component', 'data-slot="table-cell"'],

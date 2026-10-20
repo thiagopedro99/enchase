@@ -15,6 +15,8 @@ const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'i
 
 const budgets = [
   { label: 'Icon', source: "export { Icon } from 'enchase'\n", maxBytes: 4096 },
+  { label: 'CloseIcon', source: "export { CloseIcon } from 'enchase/icons'\n", maxBytes: 4096 },
+  { label: 'AllIcons', source: "export * from 'enchase/icons'\n", maxBytes: 8192 },
   { label: 'Button', source: "export { Button } from 'enchase'\n", maxBytes: 12288 }
 ]
 
