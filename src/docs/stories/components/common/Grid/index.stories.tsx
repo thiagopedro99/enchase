@@ -18,17 +18,20 @@ const meta = {
     children: cells
   },
   parameters: {
+    layout: 'padded',
     docs: {
       description: {
-        component: 'Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query.'
+        component:
+          'Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query. Com `columns` em objeto, o número de colunas muda nos breakpoints do `UIProvider`, em CSS puro e sem quadro errado antes da hidratação. Com `centerLastRow`, a última linha incompleta fica centralizada.'
       }
     }
   },
   argTypes: {
     columns: {
-      description: 'Número de colunas em telas largas. Quando não cabem, o grid reduz as colunas sozinho, sem media query.',
+      description:
+        'Um número, que é o máximo de colunas em telas largas: quando elas não cabem, o grid reduz sozinho, sem media query. Ou um objeto com o número de colunas a partir de cada breakpoint (`{ xs: 1, md: 2, lg: 4 }`): é mobile first, um breakpoint sem valor repete o menor que veio antes, e os valores dos breakpoints são os do `UIProvider`. Números vão para inteiros de pelo menos 1.',
       control: { type: 'number', min: 1, max: 6 },
-      table: { defaultValue: { summary: '1' } }
+      table: { defaultValue: { summary: '1' }, type: { summary: 'number | { xs?: number, sm?: number, md?: number, lg?: number, xl?: number, xxl?: number }' } }
     },
     minColumnWidth: {
       description: 'Largura mínima de cada coluna (qualquer valor CSS). Quando definida, vale no lugar de columns e o grid usa auto-fit.',
@@ -37,6 +40,12 @@ const meta = {
     gap: {
       description: 'Espaço entre as células, por variável CSS. O padrão vem do token de espaçamento.',
       control: 'text'
+    },
+    centerLastRow: {
+      description:
+        'Centraliza a última linha quando ela fica incompleta, como os dois últimos cards de cinco em três colunas. O grid passa a ser uma linha flexível que quebra: cada célula tem a largura de uma coluna e as linhas cheias continuam alinhadas nas colunas. Vale com `columns` (número ou objeto) e é ignorado com `minColumnWidth`, porque o número de colunas então depende da largura.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } }
     },
     className: { description: 'Classe da raiz (data-slot="grid").', control: 'text' },
     style: { control: false }
@@ -55,4 +64,19 @@ export const FixedColumns: Story = {
 
 export const MinimumColumnWidth: Story = {
   args: { columns: undefined, minColumnWidth: '12rem' }
+}
+
+export const ResponsiveColumns: Story = {
+  args: { columns: { xs: 1, sm: 2, lg: 4 }, children: ['Um', 'Dois', 'Três', 'Quatro', 'Cinco', 'Seis', 'Sete', 'Oito'].map(cell) },
+  parameters: { docs: { description: { story: 'Uma coluna no celular, duas a partir de `sm` e quatro a partir de `lg`. Mude a largura do quadro (ou o viewport do Storybook) para ver as colunas trocarem nos breakpoints.' } } }
+}
+
+export const CenteredLastRow: Story = {
+  args: { columns: 3, centerLastRow: true, children: ['Um', 'Dois', 'Três', 'Quatro', 'Cinco'].map(cell) },
+  parameters: { docs: { description: { story: 'Cinco células em três colunas: as duas da última linha ficam centralizadas, e a primeira linha continua nas colunas.' } } }
+}
+
+export const CenteredAndResponsive: Story = {
+  args: { columns: { xs: 2, lg: 4 }, centerLastRow: true, children: ['Um', 'Dois', 'Três', 'Quatro', 'Cinco', 'Seis', 'Sete'].map(cell) },
+  parameters: { docs: { description: { story: 'As duas coisas juntas: a última linha de cada breakpoint fica centralizada (três células em quatro colunas, uma em duas).' } } }
 }

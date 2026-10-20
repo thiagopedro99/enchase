@@ -366,7 +366,21 @@ Os breakpoints seguem o Bootstrap 5 (mobile-first, `min-width`): `xs` 0, `sm` 57
 - `UIProvider breakpoints` sobrescreve qualquer valor e vale para os componentes e hooks.
 - `Layout` e `Navbar` aceitam `breakpoint` (padrão `md`) e expõem `data-layout="compact"` ou `"wide"` na raiz, para você estilizar por atributo.
 - `useBreakpoint()` devolve `{ current, up(name), down(name) }`.
-- `Grid`, `Footer`, `Modal`, `toast` e `Breadcrumbs` se ajustam pela largura disponível, sem `@media`. O `Container` limita a largura pelo breakpoint escolhido em `maxWidth`.
+- `Footer`, `Modal`, `toast` e `Breadcrumbs` se ajustam pela largura disponível, sem `@media`, e o `Grid` também enquanto `columns` for um número (o máximo de colunas, que ele reduz sozinho quando não cabem). O `Container` limita a largura pelo breakpoint escolhido em `maxWidth`.
+- `Grid` aceita `columns` em objeto, com o número de colunas a partir de cada breakpoint, e `centerLastRow` (veja abaixo).
+
+### Colunas do Grid por breakpoint
+
+```tsx
+<Grid columns={{ xs: 1, md: 2, lg: 4 }} gap="1rem" centerLastRow>
+  {cards}
+</Grid>
+```
+
+- É mobile first: o valor de um breakpoint vale dele para cima, e um breakpoint sem valor repete o menor que veio antes. Sem `xs`, a grade começa com uma coluna. Os números viram inteiros de pelo menos 1.
+- Os breakpoints são os do `UIProvider` (`breakpoints` personalizado vale aqui também). As regras são CSS puro, geradas pelo `UIProvider`, então a coluna certa já vem no HTML do servidor, sem JavaScript e sem quadro errado antes da hidratação. Sem `UIProvider`, valem os breakpoints padrão.
+- `centerLastRow` centraliza a última linha incompleta (os dois últimos cards de cinco em três colunas, por exemplo). Para isso o `Grid` vira uma linha flexível que quebra: cada célula tem a largura de uma coluna, as linhas cheias continuam alinhadas nas colunas e as células de uma linha têm a mesma altura. Vale com `columns` (número ou objeto); com `minColumnWidth` ele é ignorado, porque o número de colunas então depende da largura.
+- O número `columns` e o `minColumnWidth` continuam como antes: o `Grid` reduz as colunas sozinho, sem `@media`.
 
 ### Celular e toque
 

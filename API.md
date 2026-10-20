@@ -204,13 +204,14 @@ Sem props próprias.
 
 ### Grid
 
-Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query.
+Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query. Com `columns` em objeto, o número de colunas muda nos breakpoints do `UIProvider`, em CSS puro e sem quadro errado antes da hidratação. Com `centerLastRow`, a última linha incompleta fica centralizada.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `columns` | `number` | `1` | Número de colunas em telas largas. Quando não cabem, o grid reduz as colunas sozinho, sem media query. |
+| `columns` | `number \| { xs?: number, sm?: number, md?: number, lg?: number, xl?: number, xxl?: number }` | `1` | Um número, que é o máximo de colunas em telas largas: quando elas não cabem, o grid reduz sozinho, sem media query. Ou um objeto com o número de colunas a partir de cada breakpoint (`{ xs: 1, md: 2, lg: 4 }`): é mobile first, um breakpoint sem valor repete o menor que veio antes, e os valores dos breakpoints são os do `UIProvider`. Números vão para inteiros de pelo menos 1. |
 | `gap` | `string` | — | Espaço entre as células, por variável CSS. O padrão vem do token de espaçamento. |
 | `minColumnWidth` | `string` | — | Largura mínima de cada coluna (qualquer valor CSS). Quando definida, vale no lugar de columns e o grid usa auto-fit. |
+| `centerLastRow` | `boolean` | `false` | Centraliza a última linha quando ela fica incompleta, como os dois últimos cards de cinco em três colunas. O grid passa a ser uma linha flexível que quebra: cada célula tem a largura de uma coluna e as linhas cheias continuam alinhadas nas colunas. Vale com `columns` (número ou objeto) e é ignorado com `minColumnWidth`, porque o número de colunas então depende da largura. |
 
 Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
