@@ -22,6 +22,9 @@
 
 :where(.navbarArea) {
   grid-area: appbar;
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--enchase-z-sticky);
 }
 
 :where(.footerArea) {
