@@ -20,6 +20,7 @@ const expectations = [
   ['the radio group of a server component', 'data-slot="radio-group-control"'],
   ['the tabs of a server component', 'data-slot="tabs-tab"'],
   ['the accordion of a server component', 'data-slot="accordion-trigger"'],
+  ['the translucent navbar of a server component', 'data-translucent'],
   ['the number input of a server component', 'data-slot="number-input-field"'],
   ['an icon of enchase/icons in a server component', 'data-icon="close"'],
   ['a directional icon of enchase/icons in a server component', 'data-directional'],
