@@ -14,6 +14,7 @@ import { Modal } from '@components/common/Modal/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 
 import type { SidebarSection } from '@components/common/Sidebar/types.ts'
+import type { CSSProperties, ReactElement } from 'react'
 
 import type { DialogContractAdapter } from '@tests/shared/contracts/types.ts'
 
@@ -310,6 +311,40 @@ describe('Navbar actions', () => {
     setViewportWidth(1280)
     const { container } = renderWithProviders(<Navbar actions={enter} />)
 
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Navbar translucent', () => {
+  it('is opaque by default and marks the root with data-translucent when asked', () => {
+    const attributeOf = (element: ReactElement) => {
+      const { container, unmount } = renderWithProviders(element)
+      const value = (container.querySelector('header') as HTMLElement).getAttribute('data-translucent')
+
+      unmount()
+
+      return value
+    }
+
+    expect(attributeOf(<Navbar sections={sections} />)).toBeNull()
+    expect(attributeOf(<Navbar sections={sections} translucent />)).toBe('')
+    expect(attributeOf(<Navbar sections={sections} translucent={false} />)).toBeNull()
+  })
+
+  it('does not leak the prop to the DOM and keeps className, style and the variables of the caller', () => {
+    const { container } = renderWithProviders(<Navbar sections={sections} translucent className="mine" style={{ '--enchase-navbar-blur': '20px' } as CSSProperties} />)
+    const root = container.querySelector('header') as HTMLElement
+
+    expect(root).not.toHaveAttribute('translucent')
+    expect(root.className.split(' ').at(-1)).toBe('mine')
+    expect(root.style.getPropertyValue('--enchase-navbar-blur')).toBe('20px')
+  })
+
+  it('keeps the same landmarks and has no axe violations', async () => {
+    const { container } = renderWithProviders(<Navbar sections={sections} translucent actions={<button type="button">Começar</button>} />)
+
+    expect(screen.getByRole('banner')).toBeInTheDocument()
+    expect(screen.getAllByRole('navigation', { hidden: true })).toHaveLength(1)
     expect(await axe(container)).toHaveNoViolations()
   })
 })

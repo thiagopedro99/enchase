@@ -83,6 +83,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Sidebar modal open', element: <Sidebar variant="modal" open onClose={noop} sections={sections} /> },
   { name: 'SidebarUser', element: <SidebarUser name="Pedro Lima" collapsed={false} onLogout={noop} /> },
   { name: 'Navbar', element: <Navbar logo="Logo" /> },
+  { name: 'Navbar translucent', element: <Navbar logo="Logo" translucent /> },
   { name: 'Footer', element: <Footer /> },
   { name: 'Layout', element: <Layout pageTitle="Home"><p>Content</p></Layout> },
   { name: 'Layout navbar', element: <Layout navigation="navbar" pageTitle="Home"><p>Content</p></Layout> },

@@ -10,6 +10,7 @@ export interface NavbarProps {
   sections?: SidebarSection[]
   activeSectionId?: string
   actions?: ReactNode
+  translucent?: boolean
   className?: string
   style?: CSSProperties
 }

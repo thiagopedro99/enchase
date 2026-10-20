@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
 
-import { defaultLogo, defaultLogoHref, defaultSections, drawerOverride, staggerVariables } from './defaultData.ts'
+import { defaultLogo, defaultLogoHref, defaultSections, defaultTranslucent, drawerOverride, staggerVariables } from './defaultData.ts'
 import { currentOf } from '../common/Sidebar/defaultData.ts'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { Link } from '@components/common/Link/index.tsx'
@@ -90,7 +90,7 @@ const MobileDrawer = ({ layout, id, items, activeSectionId, actions, open, state
   )
 }
 
-const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = 'md', sections = defaultSections, activeSectionId, actions, className, style }: NavbarProps) => {
+const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = 'md', sections = defaultSections, activeSectionId, actions, translucent = defaultTranslucent, className, style }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const drawerId = useId()
   const { labels, breakpoints } = useUIConfig()
@@ -110,7 +110,16 @@ const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = '
     wasWide.current = wide
   }, [wide])
 
-  const headerProps = mergeProps({ ...slot('navbar'), className: styles.header, 'data-layout': isClient ? (wide ? 'wide' : 'compact') : 'auto', 'data-breakpoint': breakpoint }, { className, style })
+  const headerProps = mergeProps(
+    {
+      ...slot('navbar'),
+      className: styles.header,
+      'data-layout': isClient ? (wide ? 'wide' : 'compact') : 'auto',
+      'data-breakpoint': breakpoint,
+      'data-translucent': translucent ? '' : undefined
+    },
+    { className, style }
+  )
 
   return (
     <>

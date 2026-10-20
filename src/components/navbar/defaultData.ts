@@ -5,6 +5,8 @@ export const defaultLogo = 'Logo'
 
 export const defaultLogoHref = '/'
 
+export const defaultTranslucent = false
+
 export const defaultSections: SidebarSection[] = [{ id: 'main', items: [{ id: 'home', label: 'Home', href: '/' }] }]
 
 export const drawerSlideDistance = 280

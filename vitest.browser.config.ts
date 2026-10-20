@@ -4,6 +4,8 @@ import { devices } from 'playwright'
 
 import base from './vite.config.ts'
 
+import type { CDPSession, Page } from 'playwright'
+
 const browsers = ['chromium', 'firefox', 'webkit'] as const
 const requested = process.env.ENCHASE_BROWSER ?? 'chromium'
 const browser = browsers.find((name) => name === requested)
@@ -12,6 +14,20 @@ if (!browser) throw new Error(`unknown browser: ${requested}`)
 
 const touchSpec = 'src/tests-browser/touch.spec.tsx'
 
+const protocolSessions = new WeakMap<Page, Promise<CDPSession>>()
+
+const protocolSessionOf = (page: Page) => {
+  const existing = protocolSessions.get(page)
+
+  if (existing) return existing
+
+  const created = page.context().newCDPSession(page)
+
+  protocolSessions.set(page, created)
+
+  return created
+}
+
 const browserOptions = (provider = playwright()) => ({
   enabled: true,
   headless: true,
@@ -19,6 +35,11 @@ const browserOptions = (provider = playwright()) => ({
   commands: {
     emulateMedia: async (context: { page: { emulateMedia: (options: Record<string, string>) => Promise<void> } }, options: Record<string, string>) => {
       await context.page.emulateMedia(options)
+    },
+    emulateReducedTransparency: async (context: { page: Page }, value: string) => {
+      const session = await protocolSessionOf(context.page)
+
+      await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value }] })
     }
   },
   instances: [{ browser }],
