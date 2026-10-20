@@ -291,6 +291,7 @@ Casca de página: barra superior com a trilha de navegação e o menu lateral (p
 | `centered` | `boolean` | `false` | Centraliza o conteúdo na vertical. |
 | `navigation` | `'sidebar' \| 'navbar'` | `'sidebar'` | sidebar mostra a barra superior com o botão de menu e o menu lateral. navbar mostra a barra de navegação clássica no topo. |
 | `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | `'md'` | Breakpoint em que a sidebar deixa de ser um drawer e passa a ser permanente. Os valores vêm do UIProvider. |
+| `translucent` | `boolean` | `false` | Deixa a barra do topo semitransparente, com desfoque do conteúdo que rola por baixo: a `AppBar` com a navegação sidebar, ou a `Navbar` com a navegação navbar. O fundo e o desfoque vêm de `--enchase-app-bar-background` e `--enchase-app-bar-blur` na AppBar (padrão: 80% da cor `surface` do tema e `12px`) e de `--enchase-navbar-background` e `--enchase-navbar-blur` na Navbar (80% da `surfaceContainer`). Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco. |
 | `brand` | `string` | — | Nome da marca. No topo da sidebar é um link para a raiz, com a inicial do nome no lugar da imagem; com navigation="navbar" vira o logo da Navbar. |
 | `brandLogo` | `string` | — | URL de uma imagem para a marca da sidebar, no lugar da inicial do nome. A imagem é decorativa, e o nome continua como texto. |
 | `footerProps` | `FooterProps` | — | companyName, notice, year e links do rodapé. |

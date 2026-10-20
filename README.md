@@ -218,6 +218,7 @@ const sections = [
 - `collapsed`, `defaultCollapsed`, `onCollapsedChange`, `open`, `defaultOpen` e `onOpenChange` controlam a sidebar e o drawer, controlados ou não. `storageKey` guarda o estado recolhido no `localStorage`, lido só depois de montar.
 - `breadcrumbs`: trilha explícita; sem ela o `Layout` a deriva da rota atual.
 - `brand`, `brandLogo`, `sidebarFooter`, `footerProps` e `hideNavbar` completam a casca.
+- `translucent` deixa a barra do topo semitransparente, a `AppBar` (navegação `sidebar`) ou a `Navbar` (navegação `navbar`); veja a `Navbar` abaixo. Nas duas navegações a barra fica fixa no topo enquanto a página rola.
 
 Cada item de menu pode ser uma rota (`href: '/caminho'`), uma âncora (`href: '#id'`) ou uma ação (`onClick`); `native: true` faz o link sair do app.
 
@@ -249,7 +250,7 @@ Na `Navbar`, `logo` aceita texto ou qualquer nó React (uma imagem, ou um SVG co
 />
 ```
 
-`translucent` deixa a barra da `Navbar` semitransparente, com desfoque do conteúdo que rola por baixo (`backdrop-filter`). O fundo e o desfoque saem de duas variáveis, que você muda no seu CSS ou no `style` da barra: `--enchase-navbar-background` (padrão: 80% da cor `surfaceContainer` do tema) e `--enchase-navbar-blur` (padrão `12px`). Sem `translucent`, as duas variáveis não fazem nada e a barra continua opaca.
+`translucent` deixa a barra da `Navbar` semitransparente, com desfoque do conteúdo que rola por baixo (`backdrop-filter`). O fundo e o desfoque saem de duas variáveis, que você muda no seu CSS ou no `style` da barra: `--enchase-navbar-background` (padrão: 80% da cor `surfaceContainer` do tema) e `--enchase-navbar-blur` (padrão `12px`). Sem `translucent`, as duas variáveis não fazem nada e a barra continua opaca. No `Layout`, a prop `translucent` vale para a barra do topo da navegação escolhida: com `sidebar`, a `AppBar` usa `--enchase-app-bar-background` (80% da cor `surface`) e `--enchase-app-bar-blur`, com as mesmas regras de volta ao fundo opaco.
 
 ```tsx
 <Navbar logo="Acme" sections={sections} translucent />

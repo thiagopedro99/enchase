@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Layout } from 'enchase'
 
 import type { SidebarSection } from 'enchase'
@@ -18,6 +19,27 @@ const navigationSections: SidebarSection[] = [
 const pageSections: SidebarSection[] = [
   { id: 'guide', title: 'Nesta página', items: [{ id: 'usage', label: 'Uso', href: '#uso' }, { id: 'api', label: 'API', href: '#api' }] }
 ]
+
+const vivid = 'linear-gradient(160deg, var(--enchase-color-primary), var(--enchase-color-error) 35%, var(--enchase-color-warning) 65%, var(--enchase-color-success))'
+
+const cards = ['Primeiro', 'Segundo', 'Terceiro', 'Quarto', 'Quinto', 'Sexto']
+
+const ScrolledContent = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 140 })
+  }, [])
+
+  return (
+    <div style={{ display: 'grid', gap: '1rem', padding: '1rem', borderRadius: 'var(--enchase-radius-lg)', background: vivid }}>
+      {cards.map((name) => (
+        <div key={name} style={{ minBlockSize: '8rem', padding: '1rem', borderRadius: 'var(--enchase-radius-lg)', backgroundColor: 'var(--enchase-color-surface)', color: 'var(--enchase-color-text-primary)' }}>
+          <strong>{name} quadro</strong>
+          <p style={{ margin: 0 }}>Role a página: a cor e as bordas que passam por baixo da barra do topo aparecem desfocadas.</p>
+        </div>
+      ))}
+    </div>
+  )
+}
 
 const meta = {
   title: 'Componentes/Layout',
@@ -50,6 +72,12 @@ const meta = {
       control: 'inline-radio',
       options: ['sidebar', 'navbar'],
       table: { defaultValue: { summary: 'sidebar' } }
+    },
+    translucent: {
+      description:
+        'Deixa a barra do topo semitransparente, com desfoque do conteúdo que rola por baixo: a `AppBar` com a navegação sidebar, ou a `Navbar` com a navegação navbar. O fundo e o desfoque vêm de `--enchase-app-bar-background` e `--enchase-app-bar-blur` na AppBar (padrão: 80% da cor `surface` do tema e `12px`) e de `--enchase-navbar-background` e `--enchase-navbar-blur` na Navbar (80% da `surfaceContainer`). Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } }
     },
     breakpoint: {
       description: 'Breakpoint em que a sidebar deixa de ser um drawer e passa a ser permanente. Os valores vêm do UIProvider.',
@@ -126,4 +154,14 @@ export const WithPageSections: Story = {
 
 export const WithFooter: Story = {
   args: { footerProps: { companyName: 'Enchase', notice: 'Licença MIT.' } }
+}
+
+export const TranslucentSidebar: Story = {
+  args: { translucent: true, children: <ScrolledContent /> },
+  parameters: { docs: { story: { inline: false, iframeHeight: 520 }, description: { story: 'A `AppBar` translúcida com a navegação sidebar: a página já está rolada, e a cor que passa por baixo da barra aparece desfocada.' } } }
+}
+
+export const TranslucentNavbar: Story = {
+  args: { navigation: 'navbar', translucent: true, children: <ScrolledContent /> },
+  parameters: { docs: { story: { inline: false, iframeHeight: 520 }, description: { story: 'A `Navbar` translúcida com a navegação navbar. A barra fica fixa no topo enquanto a página rola.' } } }
 }
