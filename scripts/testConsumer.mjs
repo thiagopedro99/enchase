@@ -24,7 +24,7 @@ import 'enchase/theme.css'
 const sections: SidebarSection[] = [{ id: 'main', items: [{ id: 'home', label: 'Home', href: '/' }] }]
 const labels: Partial<UILabels> = { closeModal: 'Close', previousPage: 'Back', increaseValue: 'More' }
 const locale: Locale = ptBR
-const props: LayoutProps = { children: null, navigationSections: sections }
+const props: LayoutProps = { children: null, navigationSections: sections, translucent: true }
 const docsLink: ButtonLinkProps = { href: '/docs', native: true, externalIcon: false }
 const navbarProps: NavbarProps = { logo: 'Acme', sections, translucent: true, actions: <Button>Start</Button> }
 const gridProps: GridProps = { columns: { xs: 1, md: 2, xxl: 4 }, gap: '1rem', centerLastRow: true }

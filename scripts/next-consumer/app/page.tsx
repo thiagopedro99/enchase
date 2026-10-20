@@ -8,7 +8,7 @@ const sections = [{ id: 'main', items: [{ id: 'home', label: 'Home', href: '/' }
 export default function Page() {
   return (
     <ToastProvider>
-      <Layout pageTitle="Home" brand="Next consumer" navigationSections={sections}>
+      <Layout pageTitle="Home" brand="Next consumer" navigationSections={sections} translucent>
         <h1>Server component page</h1>
         <Navbar logo="Server navbar" sections={sections} translucent />
         <Grid columns={{ xs: 1, md: 3 }} centerLastRow>

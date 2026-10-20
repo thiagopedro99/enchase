@@ -21,6 +21,7 @@ const expectations = [
   ['the tabs of a server component', 'data-slot="tabs-tab"'],
   ['the accordion of a server component', 'data-slot="accordion-trigger"'],
   ['the translucent navbar of a server component', 'data-translucent'],
+  ['the translucent app bar of the layout next to the navbar', 'data-translucent=""', 2],
   ['the grid with columns by breakpoint of a server component', 'data-responsive'],
   ['the grid that centers its last row of a server component', 'data-center-last'],
   ['the columns of the first breakpoint on the grid', '--enchase-grid-n-xs:1'],
@@ -46,6 +47,8 @@ const cssExpectations = [
   ['the components inside the enchase layer', '@layer enchase'],
   ['the static theme variables', '--enchase-color-primary']
 ]
+
+const occurrences = (text, needle) => text.split(needle).length - 1
 
 const waitFor = async (url) => {
   for (let attempt = 0; attempt < 60; attempt += 1) {
@@ -76,7 +79,7 @@ try {
 
   const response = await waitFor(`http://127.0.0.1:${port}/`)
   const html = await response.text()
-  const missing = expectations.filter(([, needle]) => !html.includes(needle))
+  const missing = expectations.filter(([, needle, minimum = 1]) => occurrences(html, needle) < minimum)
   const stylesheets = [...html.matchAll(/href="([^"]+\.css)"/g)].map((match) => match[1])
   const css = (await Promise.all(stylesheets.map(async (href) => (await fetch(new URL(href, `http://127.0.0.1:${port}/`))).text()))).join('\n')
 
