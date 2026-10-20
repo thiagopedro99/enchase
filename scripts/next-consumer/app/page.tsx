@@ -1,4 +1,4 @@
-import { Accordion, Alert, Badge, Button, Layout, Navbar, NumberInput, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider } from 'enchase'
+import { Accordion, Alert, Badge, Button, Grid, Layout, Navbar, NumberInput, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider } from 'enchase'
 import { ChevronRightIcon, CloseIcon } from 'enchase/icons'
 
 import Counter from './counter'
@@ -11,6 +11,12 @@ export default function Page() {
       <Layout pageTitle="Home" brand="Next consumer" navigationSections={sections}>
         <h1>Server component page</h1>
         <Navbar logo="Server navbar" sections={sections} translucent />
+        <Grid columns={{ xs: 1, md: 3 }} centerLastRow>
+          <p>First cell</p>
+          <p>Second cell</p>
+          <p>Third cell</p>
+          <p>Fourth cell</p>
+        </Grid>
         <Button>Rendered on the server</Button>
         <Badge variant="success">Server badge</Badge>
         <Alert variant="warning" title="Server alert">

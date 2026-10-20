@@ -9,8 +9,8 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
 
-const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
-import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
+const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Grid, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
+import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
 import { ChevronDownIcon, CloseIcon } from 'enchase/icons'
 import type { IconProps } from 'enchase/icons'
 import { createTheme, validateTheme } from 'enchase/theme'
@@ -26,6 +26,8 @@ const locale: Locale = ptBR
 const props: LayoutProps = { children: null, navigationSections: sections }
 const docsLink: ButtonLinkProps = { href: '/docs', native: true, externalIcon: false }
 const navbarProps: NavbarProps = { logo: 'Acme', sections, translucent: true, actions: <Button>Start</Button> }
+const gridProps: GridProps = { columns: { xs: 1, md: 2, xxl: 4 }, gap: '1rem', centerLastRow: true }
+const fixedGridProps: GridProps = { columns: 3, minColumnWidth: '12rem' }
 const alertProps: AlertProps = { variant: 'warning', title: 'Heads up', onClose: () => undefined }
 const badgeProps: BadgeProps = { variant: 'success', size: 'sm' }
 const areaProps: TextareaProps = { label: 'Message', rows: 4, resize: 'none' }
@@ -59,6 +61,12 @@ export const App = () => (
       <Layout {...props}>
         <Toaster />
         <Navbar {...navbarProps} />
+        <Grid {...gridProps}>
+          <p>One</p>
+          <p>Two</p>
+          <p>Three</p>
+        </Grid>
+        <Grid {...fixedGridProps} />
         <ButtonLink {...docsLink}>Docs</ButtonLink>
         <Alert {...alertProps}>Saved</Alert>
         <Badge {...badgeProps}>New</Badge>
