@@ -1,6 +1,6 @@
 import { useEffect, useId } from 'react'
 
-import { defaultCentered, defaultNavigationSections } from './defaultData.ts'
+import { defaultCentered, defaultNavigationSections, defaultTranslucent } from './defaultData.ts'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import AppSidebar from './subcomponentes/AppSidebar/index.tsx'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
@@ -31,6 +31,7 @@ const Layout = ({
   centered = defaultCentered,
   navigation = 'sidebar',
   breakpoint = 'md',
+  translucent = defaultTranslucent,
   brand,
   brandLogo,
   footerProps,
@@ -82,12 +83,13 @@ const Layout = ({
           menuHasPopup={!isDesktop}
           onMenuToggle={isDesktop ? () => setCollapsed((previous) => !previous) : () => setSidebarOpen(true)}
           actions={<ThemeToggle />}
+          translucent={translucent}
         />
       )}
 
       {navigation === 'navbar' && !hideNavbar && (
         <div className={styles.navbarArea} {...slot('layout', 'navbar')}>
-          <Navbar logo={brand} breakpoint={breakpoint} sections={sections} activeSectionId={activePageSectionId} />
+          <Navbar logo={brand} breakpoint={breakpoint} sections={sections} activeSectionId={activePageSectionId} translucent={translucent} />
         </div>
       )}
 

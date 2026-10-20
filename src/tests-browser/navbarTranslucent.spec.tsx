@@ -1,15 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { page } from 'vitest/browser'
 
-import { contrastRatio } from '@styles/theme/contrast.ts'
+import { backdropOf, rootVariable, supportsTranslucency, surfaceOf as surfaceOfElement, worstContrast } from './translucency.ts'
 import { setContrast, setForcedColors, setReducedTransparency } from './media.ts'
 import { chromiumOnly, unlessFirefox, unlessWebkit } from './browserSkips.ts'
-import { parseComputedColor } from './color.ts'
 import Navbar from '@components/navbar/index.tsx'
 import { renderInBrowser } from './harness.tsx'
 import { waitForSettled } from './settle.ts'
 
-import type { Rgba } from './color.ts'
 import type { CSSProperties, ReactElement } from 'react'
 
 const sections = [
@@ -22,29 +20,13 @@ const sections = [
   }
 ]
 
-const supportsBlur = CSS.supports('backdrop-filter', 'blur(1px)') || CSS.supports('-webkit-backdrop-filter', 'blur(1px)')
-
-const supportsColorMix = CSS.supports('color', 'color-mix(in srgb, red 50%, transparent)')
-
-const translucentIt = supportsBlur && supportsColorMix ? it : it.skip
+const translucentIt = supportsTranslucency ? it : it.skip
 
 const header = () => document.querySelector('[data-slot="navbar"]') as HTMLElement
 
 const slotOf = (name: string) => document.querySelector(`[data-slot="${name}"]`) as HTMLElement
 
-const backdropOf = (element: HTMLElement) => {
-  const style = getComputedStyle(element)
-
-  return style.backdropFilter || style.getPropertyValue('-webkit-backdrop-filter') || 'none'
-}
-
-const surfaceOf = () => parseComputedColor(getComputedStyle(header()).backgroundColor)
-
-const blended = (surface: Rgba, behind: number) => `rgb(${[surface.r, surface.g, surface.b].map((channel) => Math.round(channel * surface.a + behind * (1 - surface.a))).join(', ')})`
-
-const worstContrast = (foreground: string, surface: Rgba) => Math.min(contrastRatio(foreground, blended(surface, 0)), contrastRatio(foreground, blended(surface, 255)))
-
-const rootVariable = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+const surfaceOf = () => surfaceOfElement(header())
 
 const heightOf = (ui: ReactElement) => {
   const { unmount } = renderInBrowser(ui)
@@ -159,7 +141,7 @@ describe('Navbar translucent falls back to the solid surface', () => {
     expect(getComputedStyle(header()).boxShadow).toBe('none')
   }
 
-  const contrast = supportsBlur && supportsColorMix && unlessFirefox('contrastEmulation') ? it : it.skip
+  const contrast = supportsTranslucency && unlessFirefox('contrastEmulation') ? it : it.skip
 
   contrast('when the system prefers more contrast', async () => {
     renderInBrowser(<Navbar sections={sections} translucent />)
@@ -174,7 +156,7 @@ describe('Navbar translucent falls back to the solid surface', () => {
     await expect.poll(() => surfaceOf().a).toBeCloseTo(0.8, 2)
   })
 
-  const forced = supportsBlur && supportsColorMix && unlessWebkit('forcedColors') ? it : it.skip
+  const forced = supportsTranslucency && unlessWebkit('forcedColors') ? it : it.skip
 
   forced('in forced colors', async () => {
     renderInBrowser(<Navbar sections={sections} translucent style={{ '--enchase-navbar-background': 'rgb(10 20 30 / 50%)' } as CSSProperties} />)
@@ -185,7 +167,7 @@ describe('Navbar translucent falls back to the solid surface', () => {
     await expect.poll(() => surfaceOf().a).toBeCloseTo(0.5, 2)
   })
 
-  const reduced = supportsBlur && supportsColorMix ? chromiumOnly('reducedTransparency') : it.skip
+  const reduced = supportsTranslucency ? chromiumOnly('reducedTransparency') : it.skip
 
   reduced('when the system asks for reduced transparency, even with a translucent color of the caller', async () => {
     renderInBrowser(<Navbar sections={sections} translucent style={{ '--enchase-navbar-background': 'rgb(10 20 30 / 50%)' } as CSSProperties} />)

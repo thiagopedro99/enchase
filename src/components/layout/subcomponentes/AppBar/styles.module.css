@@ -16,6 +16,22 @@
   border-block-end: 1px solid var(--enchase-color-border);
 }
 
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) and (color: color-mix(in srgb, red 50%, transparent)) {
+  :where(.bar[data-translucent]) {
+    background-color: var(--enchase-app-bar-background, color-mix(in srgb, var(--enchase-color-surface) 80%, transparent));
+    -webkit-backdrop-filter: blur(var(--enchase-app-bar-blur, 12px));
+    backdrop-filter: blur(var(--enchase-app-bar-blur, 12px));
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+  :where(.bar[data-translucent]) {
+    background-color: var(--enchase-color-surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 :where(.menuButton) {
   box-sizing: border-box;
   display: flex;

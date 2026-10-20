@@ -416,3 +416,58 @@ describe('Layout with navbar option', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Layout with a translucent top bar', () => {
+  const marked = (container: HTMLElement) => [...container.querySelectorAll('[data-translucent]')].map((element) => element.getAttribute('data-slot'))
+
+  it('leaves the top bar of both navigations opaque by default', () => {
+    for (const navigation of ['sidebar', 'navbar'] as const) {
+      const { container, unmount } = renderWithProviders(page({ navigation }))
+
+      expect(marked(container), navigation).toEqual([])
+      unmount()
+    }
+  })
+
+  it('makes the app bar translucent with the sidebar navigation', () => {
+    const { container } = renderWithProviders(page({ translucent: true }))
+
+    expect(marked(container)).toEqual(['layout-header'])
+    expect(screen.getByRole('banner')).toHaveAttribute('data-translucent', '')
+  })
+
+  it('makes the navbar translucent with the navbar navigation', () => {
+    const { container } = renderWithProviders(page({ navigation: 'navbar', translucent: true }))
+
+    expect(marked(container)).toEqual(['navbar'])
+    expect(screen.getByRole('banner')).toHaveAttribute('data-translucent', '')
+  })
+
+  it('follows the app bar in the narrow layout too, where the sidebar becomes a drawer', () => {
+    setViewportWidth(500)
+    const { container } = renderWithProviders(page({ translucent: true }))
+
+    expect(marked(container)).toEqual(['layout-header'])
+  })
+
+  it('does not render a bar to mark when the navigation is hidden', () => {
+    const { container } = renderWithProviders(page({ translucent: true, hideNavbar: true }))
+
+    expect(marked(container)).toEqual([])
+  })
+
+  it('does not hand the prop to the root of the Layout', () => {
+    const { container } = renderWithProviders(page({ translucent: true }))
+
+    expect(container.querySelector('[data-slot="layout"]')).not.toHaveAttribute('translucent')
+  })
+
+  it('has no axe violations in either navigation', async () => {
+    for (const navigation of ['sidebar', 'navbar'] as const) {
+      const { container, unmount } = renderWithProviders(page({ navigation, translucent: true }))
+
+      expect(await axe(container), navigation).toHaveNoViolations()
+      unmount()
+    }
+  })
+})

@@ -9,4 +9,5 @@ export interface AppBarProps extends Omit<HTMLAttributes<HTMLElement>, 'children
   menuHasPopup?: boolean
   onMenuToggle: () => void
   actions?: ReactNode
+  translucent?: boolean
 }

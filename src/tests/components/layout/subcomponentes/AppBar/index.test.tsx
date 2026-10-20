@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { AppBar } from '@components/layout/subcomponentes/AppBar/index.tsx'
 
 import type { AppBarProps } from '@components/layout/subcomponentes/AppBar/types.ts'
+import type { CSSProperties } from 'react'
 
 const baseProps: AppBarProps = {
   items: [
@@ -134,5 +135,26 @@ describe('AppBar', () => {
     )
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('AppBar translucent', () => {
+  it('is opaque by default and marks the root with data-translucent when asked', () => {
+    const { unmount } = renderWithProviders(<AppBar {...baseProps} />)
+
+    expect(screen.getByRole('banner')).not.toHaveAttribute('data-translucent')
+    unmount()
+    renderWithProviders(<AppBar {...baseProps} translucent />)
+
+    expect(screen.getByRole('banner')).toHaveAttribute('data-translucent', '')
+    expect(screen.getByRole('banner')).not.toHaveAttribute('translucent')
+  })
+
+  it('keeps the caller className and style next to the variables', () => {
+    renderWithProviders(<AppBar {...baseProps} translucent className="mine" style={{ '--enchase-app-bar-blur': '20px' } as CSSProperties} />)
+    const root = screen.getByRole('banner')
+
+    expect(root.className.split(' ').at(-1)).toBe('mine')
+    expect(root.style.getPropertyValue('--enchase-app-bar-blur')).toBe('20px')
   })
 })

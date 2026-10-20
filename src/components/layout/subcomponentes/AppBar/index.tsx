@@ -2,12 +2,13 @@ import Breadcrumbs from '@components/common/Breadcrumbs/index.tsx'
 import Tooltip from '@components/common/Tooltip/index.tsx'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import MenuToggleIcon from '../MenuToggleIcon/index.tsx'
+import { defaultTranslucent } from './defaultData.ts'
 import styles from './styles.module.css'
 
 import type { AppBarProps } from './types.ts'
 
-export const AppBar = ({ items, menuLabel, menuExpanded, menuControls, menuHasPopup = false, onMenuToggle, actions, ...props }: AppBarProps) => {
-  const own = { ...slot('layout-header'), className: styles.bar }
+export const AppBar = ({ items, menuLabel, menuExpanded, menuControls, menuHasPopup = false, onMenuToggle, actions, translucent = defaultTranslucent, ...props }: AppBarProps) => {
+  const own = { ...slot('layout-header'), className: styles.bar, 'data-translucent': translucent ? '' : undefined }
 
   return (
     <header {...mergeProps(own, props)}>

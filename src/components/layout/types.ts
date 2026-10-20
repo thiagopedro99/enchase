@@ -17,6 +17,7 @@ export interface LayoutProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
   centered?: boolean
   navigation?: LayoutNavigation
   breakpoint?: BreakpointName
+  translucent?: boolean
   brand?: string
   brandLogo?: string
   footerProps?: FooterProps

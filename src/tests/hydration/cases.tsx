@@ -89,6 +89,8 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Footer', element: <Footer /> },
   { name: 'Layout', element: <Layout pageTitle="Home"><p>Content</p></Layout> },
   { name: 'Layout navbar', element: <Layout navigation="navbar" pageTitle="Home"><p>Content</p></Layout> },
+  { name: 'Layout translucent', element: <Layout translucent pageTitle="Home"><p>Content</p></Layout> },
+  { name: 'Layout navbar translucent', element: <Layout navigation="navbar" translucent pageTitle="Home"><p>Content</p></Layout> },
   { name: 'Layout collapsed with storage', element: <Layout storageKey="hydration-layout" defaultCollapsed pageTitle="Home"><p>Content</p></Layout> },
   { name: 'Providers only', element: <p>Content</p> },
   { name: 'ColorModeProvider alone', element: <ColorModeProvider><p>Content</p></ColorModeProvider>, bare: true },
