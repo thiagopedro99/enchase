@@ -26,7 +26,7 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 - Conformidade total com WCAG: a lib verifica o que os tokens e os testes cobrem, e não substitui auditoria nem teste com leitores de tela (nada foi testado com NVDA, JAWS ou VoiceOver).
 - Firefox e WebKit rodam a mesma suíte de navegador do Chromium, um arquivo por vez. No Linux ficam pulados 9 testes no Firefox e 5 no WebKit, todos porque dependem de chamadas só do Chromium (emulação de toque, mouse cru e métricas de layout; lista central com o motivo em `src/tests-browser/browserSkips.ts`), e os testes que dependem de um recurso que o navegador não tem são pulados só onde ele falta. Os testes de toque rodam no WebKit com o perfil de um iPhone (toque nativo), o mais perto do Safari que dá para automatizar. Os três navegadores passam no CI em Linux (Ubuntu 24.04) e bloqueiam o workflow. A devolução do foco ao gatilho e a armadilha de Tab funcionam também no Safari, onde clicar num botão não o focaliza: a biblioteca guarda o gatilho a partir do último ponteiro ou tecla. Revisão manual em Safari de verdade e com leitores de tela continua necessária.
 - Contraste de temas personalizados em `hsl()`, `oklch()` ou `oklab()`: esses formatos não são medidos, e o aviso diz quantos pares ficaram sem checar.
-- Gestos com velocidade (arrastar para dispensar, inércia) e presets de design alternativos: ainda não existem.
+- Gestos com velocidade (arrastar para dispensar, inércia) e presets de design além da forma dos cantos (densidade, tipografia): ainda não existem.
 
 ## Instalação
 
@@ -320,7 +320,7 @@ const theme = createTheme({ light: { colors: { primary: '#0B6BCB' } } })
 const issues = validateTheme(theme)
 ```
 
-- O visual padrão segue a linguagem do Material Design 3 (paleta tonal em índigo, cantos arredondados, camadas de estado). Hoje existe um único preset; os alternativos são trabalho futuro.
+- O visual padrão segue a linguagem do Material Design 3 (paleta tonal em índigo, cantos arredondados, camadas de estado). A forma dos cantos tem três presets (`shape`, veja abaixo); paleta, fonte e movimento são seções à parte do `createTheme`.
 - `useColorMode()` devolve `{ mode, resolvedMode, setMode, toggleMode }`. O modo (`light`, `dark` ou `system`, o padrão) fica no `localStorage`.
 
 ### Paleta a partir da cor da marca
@@ -338,6 +338,32 @@ Passe só a cor da marca e o `createTheme` gera as paletas clara e escura:
 - O resto do primário (`onPrimary`, os contêineres, `primaryHover`, `inversePrimary`), o secundário e os neutros (superfícies, texto e bordas) saem do matiz da marca, com as mesmas luminosidades do tema padrão. Erro, sucesso, aviso, info, sombras, fontes e movimento não mudam.
 - O que você passar em `light.colors` e `dark.colors` vence o gerado, token a token: `createTheme({ brand: '#0F766E', dark: { colors: { primary: '#7FE0D6' } } })`.
 - Para qualquer cor de marca o `validateTheme` não aponta nenhum par abaixo do contraste mínimo. O teste da biblioteca percorre centenas de cores, de todos os matizes, do muito claro ao muito escuro e do cinza ao vibrante, e exige zero pares reprovados. A página Sistema/Marca do Storybook deixa você experimentar a sua cor.
+
+### Forma dos cantos
+
+O `createTheme` troca os raios com a seção `shape` (um preset) e com `radius` (um ou mais tokens, por cima do preset):
+
+```tsx
+<ColorModeProvider theme={{ shape: 'soft' }}>
+  <App />
+</ColorModeProvider>
+
+<ColorModeProvider theme={{ shape: 'square', radius: { button: '0.5rem' } }}>
+  <App />
+</ColorModeProvider>
+```
+
+| Preset | Botões, itens de menu e badges | Campos | Cartões | Diálogos |
+| --- | --- | --- | --- | --- |
+| `pill` (padrão) | pílula | `0.5rem` | `1.5rem` | `1.75rem` |
+| `soft` | `0.75rem` | `0.75rem` | `1rem` | `1.25rem` |
+| `square` | `0.25rem` | `0.25rem` | `0.375rem` | `0.5rem` |
+
+- Os tokens de `radius` são `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `control` (campos e a paginação), `button` (botões, botões de ícone, itens de menu e de navegação, links de trilha e badges) e `full`. Cada um vira `--enchase-radius-<nome>`. O `full` segue sendo a pílula de verdade (a chave, a bolinha do radio e o avatar), em todos os presets.
+- Um valor é `0` ou um número com `rem`, `em`, `px` ou `%`. Valor inválido, token desconhecido ou preset que não existe lançam erro dizendo qual falhou.
+- Sem `shape` e sem `radius`, nada muda: o `pill` é o visual de sempre, e `--enchase-radius-button` aponta para `--enchase-radius-full`, então quem já sobrescrevia `--enchase-radius-full` no CSS continua vendo os botões acompanharem.
+- O `Button` ainda lê `--enchase-button-radius` antes do tema, para mudar um botão só.
+- O `shape` muda só os raios: o contraste das cores e o movimento ficam como estão. A página Sistema/Forma do Storybook mostra os presets no kit inteiro.
 
 ## Idiomas e RTL
 
@@ -474,7 +500,7 @@ npm run build:lib && npm run pack:check && npm run test:consumer
 
 ## Estado do projeto
 
-Versão `0.x`, em desenvolvimento ativo. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band), presets de design alternativos e props responsivas no `Grid` (`columns={{ base, md }}`).
+Versão `0.x`, em desenvolvimento ativo. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band) e presets de design além da forma dos cantos (densidade, tipografia).
 
 ## Contribuindo
 

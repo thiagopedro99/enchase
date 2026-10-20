@@ -77,7 +77,7 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 - Cor sempre por papel do tema (`primary`, `primaryContainer`, `surfaceContainer*`, `on*`, `inverse*`, `error`...); proibido hex ou `rgba` solto em `.module.css`; use `var(--enchase-color-*)`. Texto sobre um papel usa o `on*` dele.
 - Camadas de superfície: página em `surface`/`background`; cards, barras e diálogos em `surfaceContainerLow`, `surfaceContainer` ou `surfaceContainerHigh`. Elevação por `shadows` só em elementos que flutuam (elevated card, menus, diálogos).
 - Hover, foco e pressionado por camada de estado: pseudo-elemento `::after` com `currentColor` e opacidade `var(--enchase-state-hover)` ou `var(--enchase-state-pressed)`, ou `color-mix(in srgb, <cor> 12%, transparent)`; não trocar a cor para escurecer.
-- Variantes de botão: `primary` (preenchido), `secondary` (tonal), `outline` e `ghost` (texto). Formas por `--enchase-radius-*`: botões e chips `full`, campos `sm`, cards `xl`, diálogos `2xl`.
+- Variantes de botão: `primary` (preenchido), `secondary` (tonal), `outline` e `ghost` (texto). Formas por `--enchase-radius-*`: botões, itens de menu e badges `button` (o papel que um preset de forma troca, por padrão a pílula `full`), campos `control`, cards `xl`, diálogos `2xl`. `full` fica só para o que precisa ser redondo em qualquer preset (chave, bolinha do radio, avatar); o teste `radiusRoles` lista onde ele ainda aparece.
 - Tipografia: fonte `var(--enchase-font-primary)` (Figtree, importada em `demo/main.tsx`); títulos com peso `medium`.
 
 ## Layout e navegação
@@ -122,7 +122,7 @@ Especificação, não descrição: os componentes atuais ainda não cumprem tudo
 - Arrastar exige alternativa por clique ou teclado e anúncio em `aria-live` (WCAG 2.5.7).
 
 **Tokens para presets**
-- Altura de controle (`--enchase-control-height-sm|md|lg`: 2, 2,5 e 3 rem), raio de controle (`--enchase-radius-control`, 0,5 rem), sombra (`--enchase-shadow-*`) e duração (`--enchase-motion-duration-*`) vêm de variáveis do tema, para um preset trocar a pele sem mexer na estrutura. Sem valor fixo desses quatro dentro do CSS do componente.
+- Altura de controle (`--enchase-control-height-sm|md|lg`: 2, 2,5 e 3 rem), raio de controle (`--enchase-radius-control`, 0,5 rem), raio de botão (`--enchase-radius-button`), sombra (`--enchase-shadow-*`) e duração (`--enchase-motion-duration-*`) vêm de variáveis do tema, para um preset trocar a pele sem mexer na estrutura. Sem valor fixo desses cinco dentro do CSS do componente. Os presets de forma (`shape: 'pill' | 'soft' | 'square'` no `createTheme`) trocam só os raios, em `src/styles/theme/shape.ts`.
 
 **Acessibilidade e testes**
 - Alvo mínimo de 24x24 px (WCAG 2.5.8); foco visível; nome acessível vem de `labels`, nunca de texto fixo.

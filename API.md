@@ -121,7 +121,7 @@ Aplica o tema: injeta as variáveis `--enchase-*`, define `data-theme` e `color-
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `children` | `ReactNode` | *obrigatória* | A aplicação. |
-| `theme` | `ThemeInput` | — | Tema personalizado, como { brand, fonts, motion, light, dark }, o mesmo que createTheme aceita: a cor da marca gera a paleta, e light e dark ajustam cores por modo. Todo valor é validado, e em desenvolvimento o provedor avisa no console sobre contraste e duração. Sem ele vale o tema padrão. |
+| `theme` | `ThemeInput` | — | Tema personalizado, como { brand, fonts, motion, shape, radius, light, dark }, o mesmo que createTheme aceita: a cor da marca gera a paleta, shape escolhe a forma dos cantos (pill, soft ou square) e radius ajusta um raio, e light e dark ajustam cores por modo. Todo valor é validado, e em desenvolvimento o provedor avisa no console sobre contraste e duração. Sem ele vale o tema padrão. |
 | `mode` | `'light' \| 'dark' \| 'system'` | — | Modo controlado: light, dark ou system. Com ele o provedor não guarda a escolha, e quem usa muda o valor em onModeChange. |
 | `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Modo usado enquanto não há escolha guardada nem a prop mode. system segue a preferência do sistema. |
 | `onModeChange` | `(mode: ColorMode) => void` | — | Chamado com o novo modo quando setMode ou toggleMode são usados, inclusive com mode controlado. |
