@@ -11,7 +11,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ColorModeScript />
       </head>
       <body>
-        <ColorModeProvider cssLayer="enchase-theme">
+        <ColorModeProvider cssLayer="enchase-theme" theme={{ shape: 'soft' }}>
           <GlobalStyles />
           <UIProvider>{children}</UIProvider>
         </ColorModeProvider>

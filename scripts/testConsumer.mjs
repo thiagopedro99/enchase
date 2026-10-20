@@ -14,6 +14,7 @@ import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, GridProps
 import { ChevronDownIcon, CloseIcon } from 'enchase/icons'
 import type { IconProps } from 'enchase/icons'
 import { createTheme, validateTheme } from 'enchase/theme'
+import type { RadiusOverrides, ShapePreset, ThemeInput } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
 import 'enchase/styles.css'
@@ -94,7 +95,11 @@ export const App = () => (
   </UIProvider>
 )
 
-export const theme = createTheme({ brand: '#0f766e' })
+const shape: ShapePreset = 'soft'
+const radius: RadiusOverrides = { button: '1rem', control: '0.5rem', xl: '2rem' }
+const shaped: ThemeInput = { brand: '#0f766e', shape, radius }
+export const theme = createTheme(shaped)
+export const buttonRadius: string = theme.base.borderRadius.button
 export const problems = validateTheme(theme)
 `
 

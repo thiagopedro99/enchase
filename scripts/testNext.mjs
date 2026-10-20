@@ -36,6 +36,8 @@ const expectations = [
   ['the color mode script in the head', 'localStorage.getItem'],
   ['the theme variables inside the css layer', '@layer enchase-theme'],
   ['the dark fallback without javascript', 'prefers-color-scheme: dark'],
+  ['the radius of the shape preset in the theme variables', '--enchase-radius-button: 0.75rem'],
+  ['the control radius of the shape preset in the theme variables', '--enchase-radius-control: 0.75rem'],
   ['the generated responsive rules', "[data-slot='layout'][data-layout='auto']"]
 ]
 
