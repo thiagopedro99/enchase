@@ -54,7 +54,7 @@
   justify-content: center;
   flex-shrink: 0;
   box-sizing: border-box;
-  border: 2px solid var(--enchase-color-border-strong);
+  border: var(--enchase-border-width-strong, 2px) solid var(--enchase-color-border-strong);
   background-color: transparent;
   transition:
     background-color var(--enchase-checkbox-duration, var(--enchase-motion-duration-fast)) var(--enchase-checkbox-ease, var(--enchase-motion-ease-out)),
@@ -89,8 +89,8 @@
 }
 
 .hidden:focus-visible + .box {
-  outline: 2px solid var(--enchase-color-primary);
-  outline-offset: 3px;
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset-selector, 3px);
 }
 
 @media (prefers-reduced-motion: reduce) {

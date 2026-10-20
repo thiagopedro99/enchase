@@ -13,7 +13,7 @@
   padding-block: 0;
   padding-inline: var(--enchase-space-md);
   background-color: var(--enchase-color-surface);
-  border-block-end: 1px solid var(--enchase-color-border);
+  border-block-end: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) and (color: color-mix(in srgb, red 50%, transparent)) {
@@ -59,8 +59,8 @@
 }
 
 .menuButton:focus-visible {
-  outline: 2px solid var(--enchase-color-primary);
-  outline-offset: 2px;
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset, 2px);
 }
 
 @media (hover: hover) and (pointer: fine) {

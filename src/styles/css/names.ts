@@ -1,6 +1,6 @@
 const prefix = '--enchase'
 
-export type VariableGroup = 'color' | 'shadow' | 'font' | 'font-size' | 'font-weight' | 'space' | 'radius' | 'transition' | 'motion' | 'control' | 'state' | 'z'
+export type VariableGroup = 'color' | 'shadow' | 'font' | 'font-size' | 'font-weight' | 'space' | 'radius' | 'transition' | 'motion' | 'control' | 'focus' | 'border' | 'state' | 'z'
 
 const toKebabCase = (key: string) => key.replace(/([A-Z])/g, '-$1').toLowerCase()
 

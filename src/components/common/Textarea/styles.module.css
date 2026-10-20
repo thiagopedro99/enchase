@@ -145,7 +145,7 @@
   font: inherit;
   text-align: start;
   pointer-events: none;
-  border: 1px solid var(--enchase-color-border-strong);
+  border: var(--enchase-border-width, 1px) solid var(--enchase-color-border-strong);
   border-radius: var(--enchase-radius-control);
   transition: border-color var(--enchase-textarea-duration, var(--enchase-motion-duration-fast)) var(--enchase-textarea-ease, var(--enchase-motion-ease-out));
 }
@@ -199,7 +199,7 @@
 }
 
 .textarea:focus ~ .outline {
-  border-width: 2px;
+  border-width: var(--enchase-border-width-strong, 2px);
   border-color: var(--enchase-color-primary);
 }
 

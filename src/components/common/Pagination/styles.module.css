@@ -39,7 +39,7 @@
   line-height: 1;
   color: var(--enchase-color-text-primary);
   background-color: transparent;
-  border: 1px solid transparent;
+  border: var(--enchase-border-width, 1px) solid transparent;
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -75,7 +75,7 @@
 .control[aria-current='page'] {
   color: var(--enchase-color-on-primary);
   background-color: var(--enchase-color-primary);
-  border-width: 2px;
+  border-width: var(--enchase-border-width-strong, 2px);
 }
 
 .control[aria-disabled='true'] {
@@ -84,8 +84,8 @@
 }
 
 .control:focus-visible {
-  outline: 2px solid var(--enchase-color-primary);
-  outline-offset: 2px;
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset, 2px);
 }
 
 .control:active:not([aria-disabled='true'])::after {

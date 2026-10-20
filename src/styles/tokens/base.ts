@@ -63,6 +63,18 @@ export const baseTokens = {
     height: { sm: '2rem', md: '2.5rem', lg: '3rem' }
   },
 
+  focus: {
+    width: '2px',
+    offset: '2px',
+    offsetInset: '-2px',
+    offsetSelector: '3px'
+  },
+
+  border: {
+    width: '1px',
+    widthStrong: '2px'
+  },
+
   motion: {
     duration,
     ease: { out: easeOut, inOut: easeInOut },

@@ -3,7 +3,7 @@
   margin: 0;
   padding: 0;
   overflow-x: auto;
-  border: 1px solid var(--enchase-color-border);
+  border: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
   border-radius: var(--enchase-radius-md);
 }
 
@@ -12,8 +12,8 @@
 }
 
 .container:focus-visible {
-  outline: 2px solid var(--enchase-color-primary);
-  outline-offset: -2px;
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset-inset, -2px);
 }
 
 .table {
@@ -48,7 +48,7 @@
 .cell,
 .rowHeader {
   box-sizing: border-box;
-  border-block-end: 1px solid var(--enchase-color-border);
+  border-block-end: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
   vertical-align: middle;
 }
 

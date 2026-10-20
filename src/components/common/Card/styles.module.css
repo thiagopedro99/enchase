@@ -24,7 +24,7 @@
 
 :where(.card[data-variant='outlined']) {
   background-color: var(--enchase-color-surface);
-  border: 1px solid var(--enchase-color-border);
+  border: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
 }
 
 @media (hover: hover) and (pointer: fine) {

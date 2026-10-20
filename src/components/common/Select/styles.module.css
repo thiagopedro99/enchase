@@ -135,8 +135,8 @@
 
   .select option:focus-visible {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
-    outline: 2px solid var(--enchase-color-primary);
-    outline-offset: -2px;
+    outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+    outline-offset: var(--enchase-focus-offset-inset, -2px);
   }
 
   .select option:checked {
@@ -215,7 +215,7 @@
   font: inherit;
   text-align: start;
   pointer-events: none;
-  border: 1px solid var(--enchase-color-border-strong);
+  border: var(--enchase-border-width, 1px) solid var(--enchase-color-border-strong);
   border-radius: var(--enchase-radius-control);
   transition: border-color var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out));
 }
@@ -270,7 +270,7 @@
 
 .select:focus ~ .outline,
 .select:open ~ .outline {
-  border-width: 2px;
+  border-width: var(--enchase-border-width-strong, 2px);
   border-color: var(--enchase-color-primary);
 }
 

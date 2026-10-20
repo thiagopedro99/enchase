@@ -126,7 +126,7 @@
   font: inherit;
   text-align: start;
   pointer-events: none;
-  border: 1px solid var(--enchase-color-border-strong);
+  border: var(--enchase-border-width, 1px) solid var(--enchase-color-border-strong);
   border-radius: var(--enchase-radius-control);
   transition: border-color var(--enchase-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-input-ease, var(--enchase-motion-ease-out));
 }
@@ -180,7 +180,7 @@
 }
 
 .input:focus ~ .outline {
-  border-width: 2px;
+  border-width: var(--enchase-border-width-strong, 2px);
   border-color: var(--enchase-color-primary);
 }
 
@@ -224,8 +224,8 @@
 }
 
 .toggle:focus-visible {
-  outline: 2px solid var(--enchase-color-primary);
-  outline-offset: 2px;
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset, 2px);
 }
 
 @media (hover: hover) and (pointer: fine) {

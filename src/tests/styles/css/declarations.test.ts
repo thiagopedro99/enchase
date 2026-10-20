@@ -79,13 +79,15 @@ describe('fontVariables', () => {
 describe('layoutVariables', () => {
   const variables = layoutVariables(baseTokens)
 
-  it('creates one variable for every spacing, radius, transition, state and z-index token', () => {
+  it('creates one variable for every spacing, radius, transition, focus, border, state and z-index token', () => {
     const expected =
       Object.keys(baseTokens.spacing).length +
       Object.keys(baseTokens.borderRadius).length +
       Object.keys(baseTokens.transitions).length +
       leafPaths(baseTokens.motion).length +
       leafPaths(baseTokens.control).length +
+      Object.keys(baseTokens.focus).length +
+      Object.keys(baseTokens.border).length +
       Object.keys(baseTokens.state).length +
       Object.keys(baseTokens.zIndex).length
 
@@ -101,6 +103,15 @@ describe('layoutVariables', () => {
     expect(variables['--enchase-motion-distance-sm']).toBe('12px')
     expect(variables['--enchase-control-height-md']).toBe('2.5rem')
     expect(variables['--enchase-radius-control']).toBe('0.5rem')
+  })
+
+  it('declares the focus ring and the border width tokens the components read', () => {
+    expect(variables['--enchase-focus-width']).toBe('2px')
+    expect(variables['--enchase-focus-offset']).toBe('2px')
+    expect(variables['--enchase-focus-offset-inset']).toBe('-2px')
+    expect(variables['--enchase-focus-offset-selector']).toBe('3px')
+    expect(variables['--enchase-border-width']).toBe('1px')
+    expect(variables['--enchase-border-width-strong']).toBe('2px')
   })
 
   it('derives the transition shorthands from the motion tokens', () => {

@@ -78,7 +78,7 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border: 2px solid var(--enchase-color-border-strong);
+  border: var(--enchase-border-width-strong, 2px) solid var(--enchase-color-border-strong);
   border-radius: var(--enchase-radius-full);
   background-color: transparent;
   transition:
@@ -127,8 +127,8 @@
 }
 
 .hidden:focus-visible + .control {
-  outline: 2px solid var(--enchase-color-primary);
-  outline-offset: 3px;
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset-selector, 3px);
 }
 
 @media (hover: hover) and (pointer: fine) {

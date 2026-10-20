@@ -186,7 +186,7 @@
   margin-block: var(--enchase-space-xs);
   margin-inline: var(--enchase-space-md);
   border: 0;
-  border-block-start: 1px solid var(--enchase-color-border);
+  border-block-start: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
 }
 
 :where(.itemList) {

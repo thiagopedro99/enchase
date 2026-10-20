@@ -33,7 +33,7 @@
   flex-shrink: 0;
   align-items: center;
   box-sizing: border-box;
-  border: 2px solid var(--enchase-color-border-strong);
+  border: var(--enchase-border-width-strong, 2px) solid var(--enchase-color-border-strong);
   background-color: var(--enchase-color-surface-container-high);
   transition:
     background-color var(--enchase-switch-duration, var(--enchase-motion-duration-fast)) var(--enchase-switch-ease, var(--enchase-motion-ease-out)),
@@ -55,7 +55,7 @@
   inline-size: 1.5rem;
   block-size: 1.5rem;
   margin-block: auto;
-  border: 2px solid transparent;
+  border: var(--enchase-border-width-strong, 2px) solid transparent;
   border-radius: var(--enchase-radius-full);
   background-color: var(--enchase-color-border-strong);
   transform: translateX(0) scale(0.667);
@@ -98,8 +98,8 @@
 }
 
 .hidden:focus-visible + .track {
-  outline: 2px solid var(--enchase-color-primary);
-  outline-offset: 3px;
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset-selector, 3px);
 }
 
 @media (hover: hover) and (pointer: fine) {

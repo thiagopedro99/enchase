@@ -17,6 +17,11 @@ describe('variableName', () => {
     [['space', 'md'], '--enchase-space-md'],
     [['radius', 'full'], '--enchase-radius-full'],
     [['transition', 'fast'], '--enchase-transition-fast'],
+    [['focus', 'width'], '--enchase-focus-width'],
+    [['focus', 'offsetInset'], '--enchase-focus-offset-inset'],
+    [['focus', 'offsetSelector'], '--enchase-focus-offset-selector'],
+    [['border', 'width'], '--enchase-border-width'],
+    [['border', 'widthStrong'], '--enchase-border-width-strong'],
     [['state', 'pressed'], '--enchase-state-pressed'],
     [['z', 'modal'], '--enchase-z-modal']
   ] as const)('names %j as %s', ([group, ...path], expected) => {

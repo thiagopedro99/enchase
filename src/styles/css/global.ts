@@ -83,8 +83,8 @@ export const globalStylesCss = `
   }
 
   *:focus-visible {
-    outline: 2px solid ${vars.color.primary};
-    outline-offset: 2px;
+    outline: ${vars.focus.width} solid var(--enchase-focus-color, ${vars.color.primary});
+    outline-offset: ${vars.focus.offset};
   }
 
   @media (prefers-reduced-motion: reduce) {

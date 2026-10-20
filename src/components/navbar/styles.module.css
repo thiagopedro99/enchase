@@ -8,7 +8,7 @@
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) and (color: color-mix(in srgb, red 50%, transparent)) {
   :where(.header[data-translucent]) {
     background-color: var(--enchase-navbar-background, color-mix(in srgb, var(--enchase-color-surface-container) 80%, transparent));
-    box-shadow: inset 0 -1px 0 var(--enchase-color-border);
+    box-shadow: inset 0 calc(var(--enchase-border-width, 1px) * -1) 0 var(--enchase-color-border);
     -webkit-backdrop-filter: blur(var(--enchase-navbar-blur, 12px));
     backdrop-filter: blur(var(--enchase-navbar-blur, 12px));
   }

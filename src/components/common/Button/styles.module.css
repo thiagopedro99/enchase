@@ -16,7 +16,7 @@
   max-inline-size: 100%;
   overflow-wrap: anywhere;
   white-space: normal;
-  border: 1px solid transparent;
+  border: var(--enchase-border-width, 1px) solid transparent;
   background-color: transparent;
   cursor: pointer;
   user-select: none;
@@ -112,8 +112,8 @@
 }
 
 .button:focus-visible {
-  outline: 2px solid var(--enchase-color-primary);
-  outline-offset: 2px;
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset, 2px);
 }
 
 .button:focus-visible::after,

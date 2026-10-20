@@ -4,7 +4,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  border: 1px solid var(--enchase-color-border);
+  border: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
   border-radius: var(--enchase-radius-md);
 }
 
@@ -13,7 +13,7 @@
 }
 
 .item + .item {
-  border-block-start: 1px solid var(--enchase-color-border);
+  border-block-start: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
 }
 
 .heading {
@@ -66,8 +66,8 @@
 }
 
 .trigger:focus-visible {
-  outline: 2px solid var(--enchase-color-primary);
-  outline-offset: -2px;
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset-inset, -2px);
 }
 
 .trigger:active:not(:disabled)::after {
