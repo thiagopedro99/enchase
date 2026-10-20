@@ -12,7 +12,7 @@
 
 :where(.badge) {
   gap: var(--enchase-space-xs);
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
 }
 
 :where(.badge[data-size='sm']) {

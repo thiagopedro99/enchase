@@ -30,7 +30,7 @@
 
 :where(.button) {
   gap: var(--enchase-space-sm);
-  border-radius: var(--enchase-button-radius, var(--enchase-radius-full));
+  border-radius: var(--enchase-button-radius, var(--enchase-radius-button));
   min-block-size: 24px;
   min-inline-size: 24px;
 }

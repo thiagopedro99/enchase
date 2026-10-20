@@ -55,6 +55,7 @@ export const baseTokens = {
     xl: '1.5rem',
     '2xl': '1.75rem',
     control: '0.5rem',
+    button: 'var(--enchase-radius-full)',
     full: '9999px'
   },
 

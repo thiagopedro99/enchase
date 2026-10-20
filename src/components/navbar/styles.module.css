@@ -99,7 +99,7 @@
 
 .menuLink,
 .mobileMenuLink {
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
   color: var(--enchase-color-text-secondary);
   text-decoration: none;
   transition:
@@ -151,7 +151,7 @@
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
   background-color: transparent;
   color: var(--enchase-color-text-secondary);
   font: inherit;

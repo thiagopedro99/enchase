@@ -116,7 +116,7 @@
   font: inherit;
   appearance: none;
   color: var(--enchase-color-text-secondary);
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
   transition:
     background-color var(--enchase-modal-duration, var(--enchase-motion-duration-fast)) var(--enchase-modal-ease, var(--enchase-motion-ease-out)),
     color var(--enchase-modal-duration, var(--enchase-motion-duration-fast)) var(--enchase-modal-ease, var(--enchase-motion-ease-out));

@@ -56,7 +56,7 @@
   min-block-size: 28px;
   padding-block: 0;
   padding-inline: var(--enchase-space-sm);
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
   color: var(--enchase-color-text-secondary);
   font-weight: var(--enchase-font-weight-medium);
   text-decoration: none;
@@ -102,7 +102,7 @@
   padding: 0;
   border: 0;
   background-color: transparent;
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
   color: var(--enchase-color-text-secondary);
   font-family: inherit;
   font-weight: var(--enchase-font-weight-bold);

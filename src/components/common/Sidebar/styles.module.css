@@ -147,7 +147,7 @@
   position: absolute;
   inset-block-start: 0;
   inset-inline: var(--enchase-space-md);
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
   background-color: var(--enchase-color-primary-container);
   opacity: 0;
   pointer-events: none;
@@ -228,7 +228,7 @@
 }
 
 .item {
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
   color: var(--enchase-color-text-secondary);
   text-decoration: none;
   transition:
@@ -289,7 +289,7 @@
 :where(.itemBadge) {
   padding-block: 2px;
   padding-inline: var(--enchase-space-sm);
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
   background-color: var(--enchase-color-secondary-container);
   color: var(--enchase-color-on-secondary-container);
   font-size: var(--enchase-font-size-xs);
@@ -320,7 +320,7 @@
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
   background-color: transparent;
   color: var(--enchase-color-text-secondary);
   font: inherit;

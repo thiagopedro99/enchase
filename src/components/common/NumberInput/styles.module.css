@@ -234,7 +234,7 @@
   block-size: 40px;
   min-inline-size: 24px;
   min-block-size: 24px;
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
 }
 
 .stepper:focus-visible {

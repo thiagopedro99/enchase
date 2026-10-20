@@ -1,4 +1,5 @@
 import { assertValidFontFamily, assertValidFontSize, assertValidFontWeight } from './font.ts'
+import { assertShapePreset, assertValidRadius, shapePresets } from './shape.ts'
 import { mergeMotion, motionTransitions } from './motion.ts'
 import { baseTokens, darkTheme, lightTheme } from '../tokens/index.ts'
 import { assertValidColor } from './color.ts'
@@ -8,6 +9,7 @@ import { themeModes } from '../tokens/types.ts'
 import type { BaseTokens, ColorTokens, ModeTokens, ThemeSet } from '../tokens/types.ts'
 import type { BrandColors } from './brand.ts'
 import type { MotionOverrides } from './motion.ts'
+import type { RadiusOverrides, RadiusTokens, ShapePreset } from './shape.ts'
 
 type DeepPartial<T> = { [K in keyof T]?: T[K] extends string ? string : DeepPartial<T[K]> }
 
@@ -20,13 +22,13 @@ export type FontOverrides = {
   weights?: Partial<BaseTokens['fonts']['weights']>
 }
 
-export type ThemeInput = { brand?: string; fonts?: FontOverrides; motion?: MotionOverrides; light?: ThemeOverrides; dark?: ThemeOverrides }
+export type ThemeInput = { brand?: string; fonts?: FontOverrides; motion?: MotionOverrides; shape?: ShapePreset; radius?: RadiusOverrides; light?: ThemeOverrides; dark?: ThemeOverrides }
 
 type Validate = (name: string, value: unknown) => string | number
 
 type Validators = Validate | { [key: string]: Validators }
 
-const inputSections = [...themeModes, 'brand', 'fonts', 'motion']
+const inputSections = [...themeModes, 'brand', 'fonts', 'motion', 'shape', 'radius']
 
 const customizableSections = ['colors']
 
@@ -41,7 +43,7 @@ const hasOwn = (target: object, key: string) => Object.prototype.hasOwnProperty.
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value)
 
-const mergeTokens = (base: Record<string, unknown>, overrides: unknown, path: string, validators: Validators, kind: 'color' | 'font'): Record<string, unknown> => {
+const mergeTokens = (base: Record<string, unknown>, overrides: unknown, path: string, validators: Validators, kind: 'color' | 'font' | 'radius'): Record<string, unknown> => {
   if (!isRecord(overrides)) throw new Error(`Expected an object for "${path}"`)
 
   const result = { ...base }
@@ -75,10 +77,20 @@ const mergeMode = (base: ModeTokens, overrides: ThemeOverrides | undefined, mode
 
 const withBrand = (theme: ModeTokens, palette: BrandColors | undefined, mode: string): ModeTokens => (palette === undefined ? theme : { ...theme, colors: mergeTokens(theme.colors, palette, `${mode}.colors`, assertValidColor, 'color') as ColorTokens })
 
-const base = (fonts: BaseTokens['fonts'], motion: BaseTokens['motion']): BaseTokens => {
-  if (fonts === baseTokens.fonts && motion === baseTokens.motion) return baseTokens
+const base = (fonts: BaseTokens['fonts'], motion: BaseTokens['motion'], borderRadius: RadiusTokens): BaseTokens => {
+  if (fonts === baseTokens.fonts && motion === baseTokens.motion && borderRadius === baseTokens.borderRadius) return baseTokens
 
-  return { ...baseTokens, fonts, motion, transitions: motion === baseTokens.motion ? baseTokens.transitions : motionTransitions(motion) }
+  return { ...baseTokens, fonts, motion, borderRadius, transitions: motion === baseTokens.motion ? baseTokens.transitions : motionTransitions(motion) }
+}
+
+const resolveRadius = (shape: ShapePreset | undefined, overrides: RadiusOverrides | undefined): RadiusTokens => {
+  const preset = shape === undefined ? shapePresets.pill : shapePresets[assertShapePreset(shape)]
+
+  if (overrides === undefined) return preset
+
+  const { none, ...overridable } = preset
+
+  return { none, ...mergeTokens(overridable, overrides, 'radius', assertValidRadius, 'radius') } as RadiusTokens
 }
 
 export const createTheme = (input: ThemeInput = {}): ThemeSet => {
@@ -91,10 +103,11 @@ export const createTheme = (input: ThemeInput = {}): ThemeSet => {
   const fonts = input.fonts === undefined ? baseTokens.fonts : (mergeTokens(baseTokens.fonts, input.fonts, 'fonts', fontValidators, 'font') as BaseTokens['fonts'])
 
   const motion = input.motion === undefined ? baseTokens.motion : mergeMotion(input.motion)
+  const radius = resolveRadius(input.shape, input.radius)
   const palette = input.brand === undefined ? undefined : brandPalette(input.brand)
 
   return {
-    base: base(fonts, motion),
+    base: base(fonts, motion, radius),
     light: mergeMode(withBrand(lightTheme, palette?.light, 'light'), input.light, 'light'),
     dark: mergeMode(withBrand(darkTheme, palette?.dark, 'dark'), input.dark, 'dark')
   }

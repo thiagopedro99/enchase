@@ -127,7 +127,7 @@
   cursor: pointer;
   align-self: center;
   z-index: 1;
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: background-color var(--enchase-toast-duration, var(--enchase-motion-duration-fast)) var(--enchase-toast-ease, var(--enchase-motion-ease-out));

@@ -87,7 +87,7 @@
 :where(.close) {
   inline-size: var(--alert-row-size);
   block-size: var(--alert-row-size);
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radius-button);
 }
 
 .close:focus-visible {
