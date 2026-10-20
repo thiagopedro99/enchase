@@ -39,6 +39,9 @@ const expectations = [
   ['the dark fallback without javascript', 'prefers-color-scheme: dark'],
   ['the radius of the shape preset in the theme variables', '--enchase-radius-button: 0.75rem'],
   ['the control radius of the shape preset in the theme variables', '--enchase-radius-control: 0.75rem'],
+  ['the focus ring width in the theme variables', '--enchase-focus-width: 2px'],
+  ['the offset of the focus ring inside a container in the theme variables', '--enchase-focus-offset-inset: -2px'],
+  ['the strong border width in the theme variables', '--enchase-border-width-strong: 2px'],
   ['the generated responsive rules', "[data-slot='layout'][data-layout='auto']"]
 ]
 

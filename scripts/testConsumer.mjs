@@ -100,6 +100,8 @@ const radius: RadiusOverrides = { button: '1rem', control: '0.5rem', xl: '2rem' 
 const shaped: ThemeInput = { brand: '#0f766e', shape, radius }
 export const theme = createTheme(shaped)
 export const buttonRadius: string = theme.base.borderRadius.button
+export const focusWidth: string = theme.base.focus.width
+export const strongBorder: string = theme.base.border.widthStrong
 export const problems = validateTheme(theme)
 `
 
