@@ -5,8 +5,7 @@ import { act, fireEvent, render, screen, waitFor, within } from '@testing-librar
 import { useState } from 'react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
-import { LayoutGridIcon } from '@components/common/Icon/icons/LayoutGridIcon.tsx'
+import { HomeIcon, LayoutGridIcon } from '@tests/shared/fixtures/exampleIcons.tsx'
 import { axe } from '@tests/axe.ts'
 
 import { ptBR } from '@locales/ptBR.ts'

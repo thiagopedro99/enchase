@@ -1,4 +1,4 @@
-import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
+import { HomeIcon } from '@tests/shared/fixtures/exampleIcons.tsx'
 
 import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'

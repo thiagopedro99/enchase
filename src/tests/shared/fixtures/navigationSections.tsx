@@ -1,6 +1,4 @@
-import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
-import { LayoutGridIcon } from '@components/common/Icon/icons/LayoutGridIcon.tsx'
-import { RocketIcon } from '@components/common/Icon/icons/RocketIcon.tsx'
+import { HomeIcon, LayoutGridIcon, RocketIcon } from './exampleIcons.tsx'
 
 import type { SidebarSection } from '@components/common/Sidebar/types.ts'
 

@@ -1,5 +1,4 @@
-import { BookOpenIcon } from '@components/common/Icon/icons/BookOpenIcon.tsx'
-import { HomeIcon } from '@components/common/Icon/icons/HomeIcon.tsx'
+import { BookOpenIcon, HomeIcon } from './exampleIcons.tsx'
 
 import type { SidebarSection } from '@components/common/Sidebar/types.ts'
 
