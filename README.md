@@ -90,6 +90,7 @@ A fonte padrão é Figtree: carregue-a no app (por exemplo com `@fontsource-vari
 | `enchase` | Componentes, provedores, hooks e tipos. Marcada como `'use client'`. |
 | `enchase/theme` | `createTheme`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring` e os tokens. Sem React. |
 | `enchase/locales` | `en` e `ptBR` (`{ locale, dir, messages }`). Só dados. |
+| `enchase/icons` | Os 19 ícones que os componentes usam por dentro, um componente por ícone. Funciona em Server Components. |
 | `enchase/styles.css` | CSS dos componentes. |
 | `enchase/styles.layer.css` | O mesmo CSS dentro de `@layer enchase`. |
 | `enchase/theme.css` | Variáveis do tema padrão, claro e escuro, como arquivo estático. |
@@ -137,13 +138,23 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Icon` | `<Icon><circle cx="12" cy="12" r="1" /></Icon>` |
 | `VisuallyHidden` | `<VisuallyHidden>Texto só para leitores de tela</VisuallyHidden>` |
 
-A biblioteca não exporta um conjunto de ícones: os que os componentes usam por dentro (menu, fechar, setas, olho, sol e lua) são internos. O `Icon` é um contêiner SVG de 24x24, com traço de 2 px e a cor do texto, para os seus próprios caminhos. Para ícones prontos, use uma biblioteca de ícones (lucide-react, Phosphor, Heroicons) direto, sem o `Icon`: qualquer nó React serve no conteúdo de um `Button` ou na prop `icon` de um item da `Sidebar`.
+`enchase/icons` exporta os 19 ícones que os componentes usam por dentro, um componente por ícone: `AlertTriangleIcon`, `CheckIcon`, `ChevronDownIcon`, `ChevronLeftIcon`, `ChevronRightIcon`, `ChevronsLeftIcon`, `ChevronsRightIcon`, `CloseIcon`, `ExternalLinkIcon`, `EyeIcon`, `EyeOffIcon`, `InfoIcon`, `LogOutIcon`, `MenuIcon`, `MenuOpenIcon`, `MinusIcon`, `MoonIcon`, `PlusIcon` e `SunIcon`. Só entra nessa lista o que algum componente usa, então ela não é uma biblioteca de ícones: para os demais, use uma (lucide-react, Phosphor, Heroicons) direto, ou o `Icon`, o contêiner SVG de 24x24, com traço de 2 px e a cor do texto, para os seus próprios caminhos. Qualquer nó React serve no conteúdo de um `Button` ou na prop `icon` de um item da `Sidebar`.
 
 ```tsx
-import { Rocket } from 'lucide-react'
 import { Button, Icon } from 'enchase'
+import { ChevronRightIcon, CloseIcon } from 'enchase/icons'
+import { Rocket } from 'lucide-react'
+
+<Button variant="ghost" aria-label="Fechar">
+  <CloseIcon size={20} />
+</Button>
 
 <Button variant="primary">
+  Continuar
+  <ChevronRightIcon size={18} />
+</Button>
+
+<Button variant="outline">
   <Rocket size={18} aria-hidden="true" />
   Começar
 </Button>
@@ -153,7 +164,7 @@ import { Button, Icon } from 'enchase'
 </Icon>
 ```
 
-Sem `title`, o ícone é decorativo (`aria-hidden`); com `title`, vira uma imagem com nome acessível. Use `directional` em setas e chevrons para espelharem em RTL.
+Cada ícone aceita `size` (24 por padrão), `title` e os atributos de um `<svg>`. Sem `title`, o ícone é decorativo (`aria-hidden`); com `title`, vira uma imagem com nome acessível, e um botão só de ícone precisa de `aria-label`. Os que apontam para um lado (setas, chevrons, sair, link externo e o menu aberto) espelham em RTL sozinhos; no `Icon` próprio, use `directional`. O `enchase/icons` não leva `'use client'`: pode ser importado em um Server Component. Mudar o desenho de um ícone não é uma quebra; renomear ou remover é.
 
 Notificações usam o hook `useToast` dentro do `ToastProvider`:
 

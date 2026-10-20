@@ -27,13 +27,22 @@ const componentSection = ({ name, description, props, element, refElement }) => 
   return [`### ${name}`, '', ...(description ? [description, ''] : []), ...table, ...(notes.length > 0 ? ['', notes.join(' ')] : [])].join('\n')
 }
 
+const iconsIntro = 'Exportados por `enchase/icons`, um componente por ícone, e só os que algum componente usa por dentro. Funcionam em Server Components. Todos têm as mesmas props. Sem `title` o ícone é decorativo (`aria-hidden`); com `title` vira uma imagem com nome acessível. O atributo `data-icon` leva o nome em kebab case, para estilizar de fora ou nos testes, e os que apontam para um lado espelham em RTL sozinhos. Mudar o desenho de um ícone não é uma quebra; renomear ou remover é.'
+
+const iconsSection = ({ props, element, items }) => {
+  const table = ['| Prop | Tipo | Padrão | Descrição |', '| --- | --- | --- | --- |', ...props.map(propRow)]
+  const rows = [...items].sort(collator).map(({ name, dataIcon, directional }) => `| ${code(name)} | ${code(dataIcon)} | ${directional ? 'sim' : '—'} |`)
+
+  return ['## Ícones', '', iconsIntro, '', ...table, '', attributeNote(element), '', '| Ícone | `data-icon` | Espelha em RTL |', '| --- | --- | --- |', ...rows].join('\n')
+}
+
 const hookSection = ({ name, signature, note, members }) => {
   const returned = members.length > 0 ? ['', 'Retorno:', '', '| Membro | Tipo |', '| --- | --- |', ...members.map((member) => `| ${code(member.name)} | ${code(member.type)} |`)] : []
 
   return [`### ${name}`, '', '```ts', signature, '```', ...(note ? ['', note] : []), ...returned].join('\n')
 }
 
-export const renderApiDocs = ({ components, hooks }) => {
+export const renderApiDocs = ({ components, hooks, icons }) => {
   const sortedComponents = [...components].sort(collator)
   const sortedHooks = [...hooks].sort(collator)
   const index = sortedComponents.map(({ name }) => `[${name}](#${name.toLowerCase()})`).join(' · ')
@@ -42,7 +51,7 @@ export const renderApiDocs = ({ components, hooks }) => {
     [
       '# API',
       '',
-      'Referência das props e dos hooks exportados por `enchase`, gerada por `npm run docs:api` a partir dos tipos do pacote e das stories do Storybook. Não edite este arquivo à mão: mude o tipo ou o `argTypes` da story e gere de novo.',
+      'Referência das props, dos hooks e dos ícones exportados por `enchase` e `enchase/icons`, gerada por `npm run docs:api` a partir dos tipos do pacote e das stories do Storybook. Não edite este arquivo à mão: mude o tipo ou o `argTypes` da story e gere de novo.',
       '',
       'Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.othiagosilva.com.br/docs/).',
       '',
@@ -56,7 +65,9 @@ export const renderApiDocs = ({ components, hooks }) => {
       '',
       sortedHooks.map(({ name }) => `[${name}](#${name.toLowerCase()})`).join(' · '),
       '',
-      sortedHooks.map(hookSection).join('\n\n')
+      sortedHooks.map(hookSection).join('\n\n'),
+      '',
+      iconsSection(icons)
     ].join('\n') + '\n'
   )
 }

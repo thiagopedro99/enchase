@@ -27,21 +27,22 @@ const elementTags = {
 
 const typeFlags = ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.UseSingleQuotesForStringLiteralType
 
-const createProgram = () => {
+const createProgram = (file = 'index.ts') => {
   const config = ts.readConfigFile(join(root, 'tsconfig.app.json'), ts.sys.readFile)
   const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, root)
-  const program = ts.createProgram({ rootNames: [join(root, 'lib', 'index.ts')], options: parsed.options })
+  const entry = join(root, 'lib', file)
+  const program = ts.createProgram({ rootNames: [entry], options: parsed.options })
 
-  return { program, checker: program.getTypeChecker() }
+  return { program, checker: program.getTypeChecker(), entry }
 }
 
 const isOwn = (declaration) => declaration.getSourceFile().fileName.startsWith(`${posixRoot}/src/`)
 
-const valueExports = (program, checker) => {
-  const entry = program.getSourceFile(join(root, 'lib', 'index.ts'))
+const valueExports = ({ program, checker, entry }) => {
+  const source = program.getSourceFile(entry)
 
   return checker
-    .getExportsOfModule(checker.getSymbolAtLocation(entry))
+    .getExportsOfModule(checker.getSymbolAtLocation(source))
     .map((symbol) => ({ name: symbol.getName(), symbol: symbol.flags & ts.SymbolFlags.Alias ? checker.getAliasedSymbol(symbol) : symbol }))
     .filter(({ symbol }) => symbol.flags & ts.SymbolFlags.Value)
 }
@@ -190,6 +191,24 @@ const hookDoc = (checker, name, symbol) => {
   return { name, signature: `${name}(${parameters}): ${checker.typeToString(returned, undefined, typeFlags | ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope)}`, note: hookNotes[name], members }
 }
 
+const iconElementOf = (declaration) => {
+  const find = (node) => {
+    if ((ts.isJsxSelfClosingElement(node) || ts.isJsxOpeningElement(node)) && node.tagName.getText() === 'Icon') return node
+
+    return ts.forEachChild(node, find)
+  }
+
+  return find(declaration)
+}
+
+const iconDoc = (name, symbol) => {
+  const attributes = iconElementOf(symbol.valueDeclaration)?.attributes.properties.filter(ts.isJsxAttribute) ?? []
+  const named = (attribute) => attributes.find(({ name: attributeName }) => attributeName.getText() === attribute)
+  const label = named('name')?.initializer
+
+  return { name, dataIcon: label && ts.isStringLiteral(label) ? label.text : '', directional: Boolean(named('directional')) }
+}
+
 const storyFiles = (directory) =>
   readdirSync(directory, { withFileTypes: true })
     .flatMap((entry) => (entry.isDirectory() ? storyFiles(join(directory, entry.name)) : entry.name === 'index.stories.tsx' ? [join(directory, entry.name)] : []))
@@ -219,16 +238,22 @@ const loadStoryDocs = async (server) => {
 }
 
 const buildModel = async () => {
-  const { program, checker } = createProgram()
+  const main = createProgram()
+  const icons = createProgram('icons.ts')
+  const { checker } = main
   const server = await createServer({ root, configFile: join(root, 'vite.config.ts'), appType: 'custom', logLevel: 'error', server: { middlewareMode: true, hmr: false, watch: null } })
 
   try {
     const docs = await loadStoryDocs(server)
-    const exported = valueExports(program, checker)
+    const exported = valueExports(main)
+    const iconExports = valueExports(icons).filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(icons.checker, symbol))
+    const [firstIcon] = iconExports
+    const { props, element } = componentDoc(icons.checker, firstIcon.name, firstIcon.symbol, docs.get('Icon') ?? { argTypes: {} })
 
     return {
       components: exported.filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(checker, symbol)).map(({ name, symbol }) => componentDoc(checker, name, symbol, docs.get(name) ?? { argTypes: {} })),
-      hooks: exported.filter(({ name }) => /^use[A-Z]/.test(name)).map(({ name, symbol }) => hookDoc(checker, name, symbol))
+      hooks: exported.filter(({ name }) => /^use[A-Z]/.test(name)).map(({ name, symbol }) => hookDoc(checker, name, symbol)),
+      icons: { props, element, items: iconExports.map(({ name, symbol }) => iconDoc(name, symbol)) }
     }
   } finally {
     await server.close()
@@ -241,12 +266,14 @@ const normalize = (text) => text.replace(/\r\n/g, '\n')
 const list = (entries) => entries.map((entry) => `  - ${entry}`).join('\n')
 const unquoted = (value) => String(value).replace(/['"]/g, '')
 
-const divergentDefaults = model.components.flatMap(({ name, props }) =>
+const documented = [...model.components, { name: 'icons', props: model.icons.props }]
+const divergentDefaults = documented.flatMap(({ name, props }) =>
   props.filter((prop) => prop.codeDefault !== undefined && prop.storyDefault !== undefined && unquoted(prop.codeDefault) !== unquoted(prop.storyDefault)).map((prop) => `${name}.${prop.name}: the code uses ${prop.codeDefault} and the story says ${prop.storyDefault}`)
 )
-const undocumented = model.components.flatMap(({ name, props }) => props.filter((prop) => !prop.description).map((prop) => `${name}.${prop.name}`))
+const undocumented = documented.flatMap(({ name, props }) => props.filter((prop) => !prop.description).map((prop) => `${name}.${prop.name}`))
+const unnamedIcons = model.icons.items.filter(({ dataIcon }) => !dataIcon).map(({ name }) => name)
 const withoutCode = (text) => text.replace(/```[\s\S]*?```/g, '').replace(/`[^`]*`/g, '')
-const unsafeMarkdown = model.components
+const unsafeMarkdown = documented
   .flatMap(({ name, description, props }) => [[name, description], ...props.map((prop) => [`${name}.${prop.name}`, prop.description])])
   .filter(([, text]) => text && /<[a-zA-Z/!]|\*/.test(withoutCode(text)))
   .map(([where]) => where)
@@ -255,7 +282,8 @@ const problems = [
   ...(divergentDefaults.length > 0 ? [`defaults that differ between the code and the story:\n${list(divergentDefaults)}`] : []),
   ...(undocumented.length > 0 ? [`props without a description in the story argTypes:\n${list(undocumented)}`] : []),
   ...(unsafeMarkdown.length > 0 ? [`descriptions with an HTML tag or an asterisk outside a code span (wrap it in backticks):\n${list(unsafeMarkdown)}`] : []),
-  ...(undescribed.length > 0 ? [`components without a description (parameters.docs.description.component in the story):\n${list(undescribed)}`] : [])
+  ...(undescribed.length > 0 ? [`components without a description (parameters.docs.description.component in the story):\n${list(undescribed)}`] : []),
+  ...(unnamedIcons.length > 0 ? [`icons without a name for data-icon (the Icon needs a literal name):\n${list(unnamedIcons)}`] : [])
 ]
 
 if (check) {
@@ -267,10 +295,10 @@ if (check) {
     process.exit(1)
   }
 
-  console.log(`API.md is up to date: ${model.components.length} components, ${model.hooks.length} hooks`)
+  console.log(`API.md is up to date: ${model.components.length} components, ${model.hooks.length} hooks, ${model.icons.items.length} icons`)
 } else {
   writeFileSync(outputPath, markdown)
-  console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks`)
+  console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks, ${model.icons.items.length} icons`)
   if (problems.length > 0) {
     console.error(problems.join('\n'))
     process.exit(1)

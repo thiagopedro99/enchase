@@ -1,6 +1,6 @@
 # API
 
-Referência das props e dos hooks exportados por `enchase`, gerada por `npm run docs:api` a partir dos tipos do pacote e das stories do Storybook. Não edite este arquivo à mão: mude o tipo ou o `argTypes` da story e gere de novo.
+Referência das props, dos hooks e dos ícones exportados por `enchase` e `enchase/icons`, gerada por `npm run docs:api` a partir dos tipos do pacote e das stories do Storybook. Não edite este arquivo à mão: mude o tipo ou o `argTypes` da story e gere de novo.
 
 Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.othiagosilva.com.br/docs/).
 
@@ -218,13 +218,19 @@ Aceita também os demais atributos de `<div>`, repassados ao elemento.
 
 Contêiner SVG de 24x24, com traço de 2 px e a cor do texto (`currentColor`). Use-o para desenhar os seus ícones a partir de caminhos SVG.
 
-A biblioteca não exporta um conjunto de ícones: os que os componentes usam por dentro (menu, fechar, setas, olho, sol e lua) são internos. Para ícones prontos, use uma biblioteca de ícones direto, sem o `Icon`. Qualquer nó React serve onde há conteúdo ou uma prop `icon`:
+Os ícones que os componentes usam por dentro (menu, fechar, setas, mais, menos, olho, sol e lua, entre outros) saem prontos de `enchase/icons`, um componente por ícone, na story Gallery. Não é uma biblioteca de ícones: só tem o que algum componente usa. Para os demais, use uma biblioteca de ícones direto, sem o `Icon`. Qualquer nó React serve onde há conteúdo ou uma prop `icon`:
 
 ```tsx
 import { Rocket } from 'lucide-react'
 import { Button } from 'enchase'
+import { CheckIcon } from 'enchase/icons'
 
 <Button variant="primary">
+  <CheckIcon size={18} />
+  Confirmar
+</Button>
+
+<Button variant="outline">
   <Rocket size={18} aria-hidden="true" />
   Começar
 </Button>
@@ -715,3 +721,36 @@ Retorno:
 | `dir` | `Direction` |
 | `locale` | `string` |
 | `breakpoints` | `Breakpoints` |
+
+## Ícones
+
+Exportados por `enchase/icons`, um componente por ícone, e só os que algum componente usa por dentro. Funcionam em Server Components. Todos têm as mesmas props. Sem `title` o ícone é decorativo (`aria-hidden`); com `title` vira uma imagem com nome acessível. O atributo `data-icon` leva o nome em kebab case, para estilizar de fora ou nos testes, e os que apontam para um lado espelham em RTL sozinhos. Mudar o desenho de um ícone não é uma quebra; renomear ou remover é.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `size` | `number` | `24` | Lado do ícone em pixels. |
+| `title` | `string` | — | Nome acessível. Sem ele o ícone é decorativo (aria-hidden="true"); com ele vira role="img" e ganha um elemento title dentro do SVG. |
+
+Aceita também os demais atributos de `<svg>`, repassados ao elemento.
+
+| Ícone | `data-icon` | Espelha em RTL |
+| --- | --- | --- |
+| `AlertTriangleIcon` | `alert-triangle` | — |
+| `CheckIcon` | `check` | — |
+| `ChevronDownIcon` | `chevron-down` | — |
+| `ChevronLeftIcon` | `chevron-left` | sim |
+| `ChevronRightIcon` | `chevron-right` | sim |
+| `ChevronsLeftIcon` | `chevrons-left` | sim |
+| `ChevronsRightIcon` | `chevrons-right` | sim |
+| `CloseIcon` | `close` | — |
+| `ExternalLinkIcon` | `external-link` | sim |
+| `EyeIcon` | `eye` | — |
+| `EyeOffIcon` | `eye-off` | — |
+| `InfoIcon` | `info` | — |
+| `LogOutIcon` | `log-out` | sim |
+| `MenuIcon` | `menu` | — |
+| `MenuOpenIcon` | `menu-open` | sim |
+| `MinusIcon` | `minus` | — |
+| `MoonIcon` | `moon` | — |
+| `PlusIcon` | `plus` | — |
+| `SunIcon` | `sun` | — |

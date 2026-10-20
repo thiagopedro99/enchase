@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { escapeCell, renderApiDocs } from '../../../scripts/apiDocs.mjs'
 
-import type { ComponentDoc, HookDoc } from '../../../scripts/apiDocs.mjs'
+import type { ComponentDoc, HookDoc, IconsDoc } from '../../../scripts/apiDocs.mjs'
 
 const button: ComponentDoc = {
   name: 'Button',
@@ -21,7 +21,16 @@ const hook: HookDoc = {
   members: [{ name: 'value', type: 'string | number' }]
 }
 
-const render = (components: ComponentDoc[] = [button], hooks: HookDoc[] = [hook]) => renderApiDocs({ components, hooks })
+const icons: IconsDoc = {
+  element: 'svg',
+  props: [{ name: 'size', type: 'number', required: false, default: '24', description: 'Lado do ícone.' }],
+  items: [
+    { name: 'PlusIcon', dataIcon: 'plus', directional: false },
+    { name: 'ChevronLeftIcon', dataIcon: 'chevron-left', directional: true }
+  ]
+}
+
+const render = (components: ComponentDoc[] = [button], hooks: HookDoc[] = [hook], iconsDoc: IconsDoc = icons) => renderApiDocs({ components, hooks, icons: iconsDoc })
 
 describe('escapeCell', () => {
   it('escapes the pipes so a union stays in one table cell', () => {
@@ -81,6 +90,22 @@ describe('renderApiDocs', () => {
     expect(markdown.indexOf('### Alpha')).toBeLessThan(markdown.indexOf('### Zeta'))
     expect(markdown.indexOf('### useA')).toBeLessThan(markdown.indexOf('### useB'))
     expect(markdown).toContain('[Alpha](#alpha) · [Zeta](#zeta)')
+  })
+
+  it('lists the icons with the props they share, the data-icon and whether they mirror in right-to-left text', () => {
+    const markdown = render()
+
+    expect(markdown).toContain('## Ícones')
+    expect(markdown).toContain('Exportados por `enchase/icons`')
+    expect(markdown).toContain('| `size` | `number` | `24` | Lado do ícone. |')
+    expect(markdown).toContain('Aceita também os demais atributos de `<svg>`, repassados ao elemento.')
+    expect(markdown).toContain('| Ícone | `data-icon` | Espelha em RTL |\n| --- | --- | --- |\n| `ChevronLeftIcon` | `chevron-left` | sim |\n| `PlusIcon` | `plus` | — |')
+  })
+
+  it('puts the icons after the hooks', () => {
+    const markdown = render()
+
+    expect(markdown.indexOf('## Hooks')).toBeLessThan(markdown.indexOf('## Ícones'))
   })
 
   it('ends with a single newline and uses no carriage returns', () => {

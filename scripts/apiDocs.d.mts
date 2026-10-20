@@ -6,8 +6,12 @@ export type MemberDoc = { name: string; type: string }
 
 export type HookDoc = { name: string; signature: string; note?: string; members: MemberDoc[] }
 
+export type IconDoc = { name: string; dataIcon: string; directional: boolean }
+
+export type IconsDoc = { props: PropDoc[]; element?: string; items: IconDoc[] }
+
 export const hookNotes: Record<string, string>
 
 export const escapeCell: (text: string) => string
 
-export const renderApiDocs: (model: { components: ComponentDoc[]; hooks: HookDoc[] }) => string
+export const renderApiDocs: (model: { components: ComponentDoc[]; hooks: HookDoc[]; icons: IconsDoc }) => string

@@ -1,17 +1,25 @@
 import { Button, Icon } from 'enchase'
+import { CloseIcon } from 'enchase/icons'
+import * as icons from 'enchase/icons'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
-const thirdPartyRecipe = [
+const iconsRecipe = [
   'Contêiner SVG de 24x24, com traço de 2 px e a cor do texto (`currentColor`). Use-o para desenhar os seus ícones a partir de caminhos SVG.',
   '',
-  'A biblioteca não exporta um conjunto de ícones: os que os componentes usam por dentro (menu, fechar, setas, olho, sol e lua) são internos. Para ícones prontos, use uma biblioteca de ícones direto, sem o `Icon`. Qualquer nó React serve onde há conteúdo ou uma prop `icon`:',
+  'Os ícones que os componentes usam por dentro (menu, fechar, setas, mais, menos, olho, sol e lua, entre outros) saem prontos de `enchase/icons`, um componente por ícone, na story Gallery. Não é uma biblioteca de ícones: só tem o que algum componente usa. Para os demais, use uma biblioteca de ícones direto, sem o `Icon`. Qualquer nó React serve onde há conteúdo ou uma prop `icon`:',
   '',
   '```tsx',
   "import { Rocket } from 'lucide-react'",
   "import { Button } from 'enchase'",
+  "import { CheckIcon } from 'enchase/icons'",
   '',
   '<Button variant="primary">',
+  '  <CheckIcon size={18} />',
+  '  Confirmar',
+  '</Button>',
+  '',
+  '<Button variant="outline">',
   '  <Rocket size={18} aria-hidden="true" />',
   '  Começar',
   '</Button>',
@@ -55,7 +63,7 @@ const meta = {
   },
   parameters: {
     docs: {
-      description: { component: thirdPartyRecipe }
+      description: { component: iconsRecipe }
     }
   }
 } satisfies Meta<typeof Icon>
@@ -82,6 +90,35 @@ export const InsideAButton: Story = {
         <path d="M20 6 9 17l-5-5" />
       </Icon>
       Confirmar
+    </Button>
+  )
+}
+
+export const Gallery: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: { description: { story: 'Os ícones de `enchase/icons`. Cada um aceita `size`, `title` e os atributos de um `<svg>`; sem `title` é decorativo. Os que apontam para um lado espelham em RTL sozinhos.' } }
+  },
+  render: () => (
+    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.75rem', maxInlineSize: '48rem' }}>
+      {Object.entries(icons).map(([name, Component]) => (
+        <div key={name} style={{ display: 'grid', justifyItems: 'center', alignContent: 'start', gap: '0.5rem', inlineSize: '10rem', padding: '1rem', border: '1px solid var(--enchase-color-border)', borderRadius: 'var(--enchase-radius-md)' }}>
+          <Component size={28} />
+          <span style={{ fontSize: '0.75rem', color: 'var(--enchase-color-text-secondary)', textAlign: 'center', overflowWrap: 'anywhere' }}>{name}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+export const IconOnlyButton: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: { description: { story: 'Um botão só com ícone precisa de `aria-label`: o ícone é decorativo e o botão ganha o nome dele.' } }
+  },
+  render: () => (
+    <Button variant="ghost" aria-label="Fechar">
+      <CloseIcon />
     </Button>
   )
 }
