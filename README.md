@@ -249,6 +249,21 @@ Na `Navbar`, `logo` aceita texto ou qualquer nó React (uma imagem, ou um SVG co
 />
 ```
 
+`translucent` deixa a barra da `Navbar` semitransparente, com desfoque do conteúdo que rola por baixo (`backdrop-filter`). O fundo e o desfoque saem de duas variáveis, que você muda no seu CSS ou no `style` da barra: `--enchase-navbar-background` (padrão: 80% da cor `surfaceContainer` do tema) e `--enchase-navbar-blur` (padrão `12px`). Sem `translucent`, as duas variáveis não fazem nada e a barra continua opaca.
+
+```tsx
+<Navbar logo="Acme" sections={sections} translucent />
+```
+
+```css
+[data-slot='navbar'] {
+  --enchase-navbar-background: color-mix(in srgb, var(--enchase-color-primary-container) 60%, transparent);
+  --enchase-navbar-blur: 20px;
+}
+```
+
+A barra volta ao fundo opaco do tema, mesmo com uma cor sua em `--enchase-navbar-background`, quando o sistema pede menos transparência (`prefers-reduced-transparency`) ou mais contraste (`prefers-contrast: more`), em cores forçadas (o alto contraste do Windows) e em navegadores sem `backdrop-filter`. Com o tema padrão, o texto da marca e do menu mantém 4,5:1 mesmo sobre preto ou branco puro (3:1 na cor de destaque da marca ao passar o mouse), e um teste de navegador mede isso nos dois modos de cor. Com outra cor de fundo ou um tema próprio, confira o contraste sobre o conteúdo que passa por trás da barra.
+
 ## Navegação sem roteador
 
 Os componentes não dependem de roteador. `Link`, `ButtonLink`, os itens da `Sidebar` e da `Navbar`, os `Breadcrumbs` e os links do `Footer` são `<a href>` de verdade, e um clique simples em uma rota do app chama o `navigate` do `UIProvider`. Sem `navigate`, os links recarregam a página.

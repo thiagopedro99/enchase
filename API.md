@@ -356,7 +356,7 @@ Diálogo modal renderizado em um portal: o foco fica preso no painel, a página 
 
 ### Navbar
 
-Barra de navegação no topo, com a marca, os links, ações e o botão de tema. Abaixo do breakpoint, os links vão para um drawer.
+Barra de navegação no topo, com a marca, os links, ações e o botão de tema. Abaixo do breakpoint, os links vão para um drawer. Com `translucent`, o fundo fica semitransparente e desfoca o que rola por baixo, e volta ao fundo opaco quando o sistema pede menos transparência ou mais contraste, em cores forçadas e em navegadores sem `backdrop-filter`.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
@@ -366,6 +366,7 @@ Barra de navegação no topo, com a marca, os links, ações e o botão de tema.
 | `sections` | `SidebarSection[]` | — | Itens do menu, no mesmo formato da Sidebar: [{ id, items: [{ id, label, href }] }]. Só os itens com href aparecem, e os títulos das seções não são exibidos. |
 | `activeSectionId` | `string` | — | Id do item de âncora (href #id, ou /pagina#id na página atual) marcado como localização atual (aria-current="location"). Use useScrollSpy para obtê-lo. |
 | `actions` | `ReactNode` | — | Ações ao lado do menu, como um botão de chamada. Em telas largas ficam na barra, entre o menu e o botão de tema (data-slot="navbar-cta"). Em telas estreitas vão para o drawer, abaixo dos links (data-slot="navbar-drawer-cta"), e um clique em um link dentro delas fecha o drawer. O nó é renderizado em um lugar por vez. |
+| `translucent` | `boolean` | `false` | Deixa o fundo da barra semitransparente, com desfoque do que passa por trás. O fundo vem de `--enchase-navbar-background` (padrão: 80% da cor `surfaceContainer` do tema) e o desfoque de `--enchase-navbar-blur` (padrão `12px`), que você muda no `style` ou no CSS. Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco. Com o tema padrão, o texto da marca e do menu mantém 4,5:1 mesmo sobre preto ou branco puro (3:1 na cor de destaque da marca ao passar o mouse); confira o contraste se mudar a cor ou o tema. |
 | `className` | `string` | — | Classe do cabeçalho (`data-slot="navbar"`). As partes seguem `data-slot="navbar-*"`; o drawer mobile é `navbar-drawer`, com `data-state`. |
 | `style` | `CSSProperties` | — | Estilo do cabeçalho. |
 
