@@ -171,6 +171,20 @@ describe('UIProvider on the server', () => {
     expect(html).toContain('@media (min-width: 992px)')
   })
 
+  it('writes the rules of the Grid columns from the configured breakpoints, starting with the smallest', () => {
+    const html = renderToString(
+      <UIProvider breakpoints={{ md: '900px' }}>
+        <p>x</p>
+      </UIProvider>
+    )
+    const base = "[data-slot='grid'][data-responsive] {\n  --enchase-grid-n: var(--enchase-grid-n-xs, 1);"
+    const rule = (name: string, min: string) => `@media (min-width: ${min}) {\n  [data-slot='grid'][data-responsive] {\n    --enchase-grid-n: var(--enchase-grid-n-${name}, 1);`
+    const order = [base, rule('sm', '576px'), rule('md', '900px'), rule('lg', '992px'), rule('xl', '1200px'), rule('xxl', '1400px')].map((text) => html.indexOf(text))
+
+    expect(order.every((index) => index >= 0)).toBe(true)
+    expect([...order].sort((first, second) => first - second)).toEqual(order)
+  })
+
   it('renders the layout with the wide default and an automatic layout marker', () => {
     const html = renderToString(
       <ColorModeProvider>
