@@ -362,7 +362,7 @@ O `createTheme` troca os raios com a seção `shape` (um preset) e com `radius` 
 
 - Os tokens de `radius` são `xs`, `sm`, `md`, `lg`, `xl`, `2xl`, `control` (campos e a paginação), `button` (botões, botões de ícone, itens de menu e de navegação, links de trilha e badges) e `full`. Cada um vira `--enchase-radius-<nome>`. O `full` segue sendo a pílula de verdade (a chave, a bolinha do radio e o avatar), em todos os presets.
 - Um valor é `0` ou um número com `rem`, `em`, `px` ou `%`. Valor inválido, token desconhecido ou preset que não existe lançam erro dizendo qual falhou.
-- Sem `shape` e sem `radius`, nada muda: o `pill` é o visual de sempre, e `--enchase-radius-button` aponta para `--enchase-radius-full`, então quem já sobrescrevia `--enchase-radius-full` no CSS continua vendo os botões acompanharem.
+- Sem `shape` e sem `radius`, nada muda: o `pill` é o visual de sempre, e `--enchase-radius-button` aponta para `--enchase-radius-full`, então quem já sobrescrevia `--enchase-radius-full` no `:root` continua vendo os botões acompanharem. Uma sobrescrita de `--enchase-radius-full` só em um trecho da página não chega mais aos botões desse trecho, porque o alias já foi resolvido no `:root`: ali, sobrescreva `--enchase-radius-button`.
 - O `Button` ainda lê `--enchase-button-radius` antes do tema, para mudar um botão só.
 - O `shape` muda só os raios: o contraste das cores e o movimento ficam como estão. A página Sistema/Forma do Storybook mostra os presets no kit inteiro.
 
