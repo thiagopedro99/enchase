@@ -123,6 +123,8 @@ Especificação, não descrição: os componentes atuais ainda não cumprem tudo
 
 **Tokens para presets**
 - Altura de controle (`--enchase-control-height-sm|md|lg`: 2, 2,5 e 3 rem), raio de controle (`--enchase-radius-control`, 0,5 rem), raio de botão (`--enchase-radius-button`), sombra (`--enchase-shadow-*`) e duração (`--enchase-motion-duration-*`) vêm de variáveis do tema, para um preset trocar a pele sem mexer na estrutura. Sem valor fixo desses cinco dentro do CSS do componente. Os presets de forma (`shape: 'pill' | 'soft' | 'square'` no `createTheme`) trocam só os raios, em `src/styles/theme/shape.ts`.
+- O anel de foco (`--enchase-focus-width|offset|offset-inset|offset-selector`: 2, 2, -2 e 3 px) e a largura de borda (`--enchase-border-width` e `--enchase-border-width-strong`: 1 e 2 px) também vêm de variáveis do tema. A cor do anel é `--enchase-focus-color`, opcional: o componente lê `var(--enchase-focus-color, var(--enchase-color-primary))`, para o anel continuar seguindo o `primary` de um trecho da página. O componente lê cada token com o padrão dele como fallback (`var(--enchase-focus-width, 2px)`), para o anel e a borda sobreviverem a um tema escrito antes do token; o teste `focusAndBorder` confere que o fallback é igual ao padrão de `baseTokens` e lista as únicas larguras fixas (glifos desenhados com borda e o spinner).
+- Variável que só aponta para outra (um alias) é resolvida no `:root`, e uma sobrescrita só num trecho da página não a alcança. Para um papel que deve seguir a cascata, o componente lê um override opcional com fallback (`var(--enchase-x, <padrão>)`) em vez de um alias emitido pelo tema.
 
 **Acessibilidade e testes**
 - Alvo mínimo de 24x24 px (WCAG 2.5.8); foco visível; nome acessível vem de `labels`, nunca de texto fixo.

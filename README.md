@@ -470,6 +470,20 @@ Toda raiz aceita `className` e `style`, e a classe de quem usa vence a da biblio
 }
 ```
 
+O anel de foco e a largura das bordas saem de variáveis do tema (experimentais até a versão 1.0), que você muda no `:root` ou em qualquer trecho da página. Os componentes só leem essas variáveis:
+
+| Variável | Padrão | O que controla |
+| --- | --- | --- |
+| `--enchase-focus-width` | `2px` | espessura do anel de foco |
+| `--enchase-focus-offset` | `2px` | distância do anel ao elemento |
+| `--enchase-focus-offset-inset` | `-2px` | distância do anel dentro de um contêiner (abas, acordeão, tabela) |
+| `--enchase-focus-offset-selector` | `3px` | distância do anel no checkbox, no radio e na chave |
+| `--enchase-focus-color` | a cor `primary` | cor do anel; sem valor, o anel segue o `primary` do trecho da página |
+| `--enchase-border-width` | `1px` | bordas e divisores |
+| `--enchase-border-width-strong` | `2px` | bordas do checkbox, do radio e da chave, e do campo em foco |
+
+O foco precisa continuar visível (contraste de pelo menos 3:1 com o fundo). O `validateTheme` confere o `primary`, mas não uma `--enchase-focus-color` sua.
+
 O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 
 - `enchase/styles.css`: o layout (tamanho, padding, raio) usa `:where()` e sempre perde para a sua classe. Cores, borda e hover só são vencidos se o seu CSS carregar depois.
