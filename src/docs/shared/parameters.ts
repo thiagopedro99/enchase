@@ -13,6 +13,18 @@ export const globalTypes: NonNullable<Preview['globalTypes']> = {
       dynamicTitle: true
     }
   },
+  style: {
+    description: 'Estilo visual',
+    toolbar: {
+      title: 'Estilo',
+      icon: 'paintbrush',
+      items: [
+        { value: 'enchase', title: 'Enchase' },
+        { value: 'shadcn', title: 'shadcn/ui' }
+      ],
+      dynamicTitle: true
+    }
+  },
   motion: {
     description: 'Modo de motion',
     toolbar: {
@@ -27,7 +39,7 @@ export const globalTypes: NonNullable<Preview['globalTypes']> = {
   }
 }
 
-export const initialGlobals = { theme: 'light', motion: 'auto' }
+export const initialGlobals = { theme: 'light', style: 'enchase', motion: 'auto' }
 
 export const parameters: NonNullable<Preview['parameters']> = {
   layout: 'centered',

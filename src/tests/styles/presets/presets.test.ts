@@ -105,9 +105,9 @@ describe('the shadcn style', () => {
 
   it('declares its hooks on the root and the ones that cite a color inside the mode blocks', () => {
     const css = themeCss(theme)
-    const rootRule = /:root \{[^}]*\}/.exec(css)?.[0] ?? ''
+    const rootRules = (css.match(/:root \{[^}]*\}/g) ?? []).join('\n')
 
-    for (const name of Object.keys(theme.hooks ?? {})) expect(rootRule).toContain(`${name}:`)
+    for (const name of Object.keys(theme.hooks ?? {})) expect(rootRules).toContain(`${name}:`)
 
     for (const mode of ['light', 'dark'] as const) for (const name of Object.keys(theme[mode].hooks ?? {})) expect(css).toContain(`${name}:`)
   })
