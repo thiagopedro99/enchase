@@ -42,6 +42,9 @@ const expectations = [
   ['the focus ring width in the theme variables', '--enchase-focus-width: 2px'],
   ['the offset of the focus ring inside a container in the theme variables', '--enchase-focus-offset-inset: -2px'],
   ['the strong border width in the theme variables', '--enchase-border-width-strong: 2px'],
+  ['the pressed state layer in the theme variables', '--enchase-state-pressed: 0.1'],
+  ['the disabled state layer in the theme variables', '--enchase-state-disabled-content: 0.38'],
+  ['the halo of the selection controls in the theme variables', '--enchase-halo-size-switch: 0.5rem'],
   ['the generated responsive rules', "[data-slot='layout'][data-layout='auto']"]
 ]
 

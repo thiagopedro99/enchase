@@ -102,6 +102,9 @@ export const theme = createTheme(shaped)
 export const buttonRadius: string = theme.base.borderRadius.button
 export const focusWidth: string = theme.base.focus.width
 export const strongBorder: string = theme.base.border.widthStrong
+export const pressed: string = theme.base.state.pressed
+export const disabledContent: string = theme.base.state.disabledContent
+export const haloSize: string = theme.base.halo.size
 export const problems = validateTheme(theme)
 `
 

@@ -4,7 +4,7 @@ import { devices } from 'playwright'
 
 import base from './vite.config.ts'
 
-import type { CDPSession, Page } from 'playwright'
+import type { CDPSession, FrameLocator, Page } from 'playwright'
 
 const browsers = ['chromium', 'firefox', 'webkit'] as const
 const requested = process.env.ENCHASE_BROWSER ?? 'chromium'
@@ -40,6 +40,14 @@ const browserOptions = (provider = playwright()) => ({
       const session = await protocolSessionOf(context.page)
 
       await session.send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-transparency', value }] })
+    },
+    pressMouse: async (context: { iframe: FrameLocator; page: Page }, selector: string) => {
+      await context.iframe.locator(selector).first().hover()
+      await context.page.mouse.down()
+    },
+    releaseMouse: async (context: { page: Page }) => {
+      await context.page.mouse.move(0, 0)
+      await context.page.mouse.up()
     }
   },
   instances: [{ browser }],
