@@ -470,7 +470,7 @@ Toda raiz aceita `className` e `style`, e a classe de quem usa vence a da biblio
 }
 ```
 
-O anel de foco, a largura das bordas, as camadas de estado e o halo dos controles de seleção saem de variáveis do tema (experimentais até a versão 1.0), que você muda no `:root` ou em qualquer trecho da página. Os componentes só leem essas variáveis:
+O anel de foco, a largura das bordas, as camadas de estado, o halo dos controles de seleção, a área de toque, a entrelinha e o espaçamento entre letras saem de variáveis do tema (experimentais até a versão 1.0), que você muda no `:root` ou em qualquer trecho da página. Os componentes só leem essas variáveis:
 
 | Variável | Padrão | O que controla |
 | --- | --- | --- |
@@ -490,34 +490,26 @@ O anel de foco, a largura das bordas, as camadas de estado e o halo dos controle
 | `--enchase-halo-size-switch` | `0.5rem` | halo da bolinha da chave |
 | `--enchase-hit-size` | `40px` | área de toque dos controles de formulário (linha do checkbox, do radio e da chave, botões do campo numérico e do campo de senha, links do menu da navbar, fechar do modal e do toast) |
 | `--enchase-hit-size-lg` | `44px` | área de toque dos botões que abrem, fecham ou recolhem uma navegação (menu, tema, recolher a barra lateral, sair) |
+| `--enchase-line-height-none`, `-tight`, `-snug`, `-normal`, `-relaxed` | `1`, `1.2`, `1.4`, `1.5`, `1.6` | entrelinha dos componentes: `none` nos selos e na paginação, `tight` nos botões e nas abas, `snug` no acordeão, `normal` nos avisos e nas áreas de texto, `relaxed` no corpo do diálogo |
+| `--enchase-letter-spacing-tight`, `-control` | `-0.01em`, `0.01em` | espaçamento entre letras: `tight` na marca e no logo da navbar, `control` nos botões |
 
 As camadas de estado são a fração (de 0 a 1) da cor do elemento que se mistura com o fundo: `--enchase-state-hover: 0.16` dobra o hover. Um halo de `0` desliga o halo. A área de toque nunca fica abaixo de 24px (WCAG 2.5.8), mesmo que a variável peça menos, e o espaço que o campo de senha e o campo numérico reservam para os botões de dentro acompanha a variável. O foco precisa continuar visível (contraste de pelo menos 3:1 com o fundo). O `validateTheme` confere o `primary`, mas não uma `--enchase-focus-color` sua.
 
-Cada componente também lê ganchos próprios, `--enchase-<data-slot>-<propriedade>`, opcionais e experimentais até a versão 1.0: o nome é o `data-slot` da parte mais a propriedade, então `data-slot="switch-thumb"` e `size` dão `--enchase-switch-thumb-size`. O tema não os declara: sem valor, o componente usa o padrão da tabela. Servem para mudar um componente só, e o que depende da medida acompanha (o traço do checkbox, o ponto do radio, o curso da bolinha da chave):
+Cada componente também lê ganchos próprios, `--enchase-<data-slot>-<propriedade>`, opcionais e experimentais até a versão 1.0. O nome é o `data-slot` da parte mais a propriedade (e o tamanho ou a variante, quando há mais de um): `data-slot="switch-thumb"` e `size` dão `--enchase-switch-thumb-size`. O tema não os declara. Sem valor, o componente usa o padrão, e um padrão que aponta para um token do tema (como `--enchase-radius-md`) continua seguindo uma sobrescrita desse token. A lista completa, com o padrão e a propriedade de cada um, está em [API.md](API.md#ganchos-de-css) e é gerada do CSS dos componentes, então não sai de sincronia.
 
-| Gancho | Padrão | O que controla |
-| --- | --- | --- |
-| `--enchase-checkbox-box-size` | `18px` | lado da caixa do checkbox |
-| `--enchase-checkbox-box-check-width` | `2px` | espessura do traço de marcação |
-| `--enchase-radio-group-control-size` | `1.25rem` | diâmetro do radio |
-| `--enchase-radio-group-control-dot-size` | metade do diâmetro | diâmetro do ponto do radio |
-| `--enchase-switch-track-width` | `3.25rem` | largura do trilho da chave |
-| `--enchase-switch-track-height` | `2rem` | altura do trilho da chave |
-| `--enchase-switch-thumb-size` | `1.5rem` | diâmetro da bolinha |
-| `--enchase-switch-thumb-inset` | `0.125rem` | folga entre a bolinha e a borda do trilho |
-| `--enchase-switch-thumb-scale-off` | `0.667` | escala da bolinha com a chave desligada; `1` deixa a bolinha do tamanho cheio |
-| `--enchase-button-padding-inline-sm`, `-md`, `-lg` | `1rem`, `1.5rem`, `2rem` | padding horizontal do botão em cada tamanho (seguem `--enchase-space-md`, `-lg` e `-xl`) |
-| `--enchase-button-padding-inline-ghost` | `1rem` | padding horizontal do botão `ghost`, de qualquer tamanho |
-| `--enchase-button-padding-block-sm`, `-md`, `-lg` | `0.25rem` | padding vertical do botão em cada tamanho |
-| `--enchase-button-font-size-sm`, `-md`, `-lg` | `0.875rem`, `0.875rem`, `1rem` | tamanho da fonte do botão em cada tamanho |
-| `--enchase-button-font-weight` | `600` | peso da fonte do botão |
-| `--enchase-button-gap` | `0.5rem` | espaço entre o ícone e o texto do botão |
-| `--enchase-input-min-width` | `200px` | largura mínima dos campos (texto, número, seleção e área de texto) |
-| `--enchase-input-padding-inline` | `1rem` | padding horizontal do texto dos campos; o rótulo acompanha (segue `--enchase-space-md`) |
-| `--enchase-input-font-size` | `1rem` | tamanho do texto dos campos; no toque nunca fica abaixo de 16px (segue `--enchase-font-size-base`) |
-| `--enchase-input-height` | `3.5rem` | altura dos campos de uma linha; o rótulo flutuante sobe metade dela |
-| `--enchase-textarea-min-height` | `3.5rem` | altura mínima da área de texto |
-| `--enchase-textarea-padding-block` | `1rem` | padding vertical da área de texto; o rótulo acompanha (segue `--enchase-space-md`) |
+```css
+:root {
+  --enchase-button-padding-inline-md: 1rem;
+  --enchase-button-font-weight: 500;
+  --enchase-checkbox-box-size: 16px;
+  --enchase-switch-track-width: 2rem;
+  --enchase-switch-thumb-size: 1rem;
+  --enchase-switch-thumb-scale-off: 1;
+  --enchase-input-padding-inline: 0.75rem;
+}
+```
+
+O que depende de uma medida acompanha sozinho: o traço do checkbox, o ponto do radio e o curso da bolinha da chave seguem o tamanho de cada um; o rótulo flutuante dos campos sobe metade de `--enchase-input-height` e segue o padding do texto; e o espaço que os campos de senha e numérico reservam para os botões de dentro segue `--enchase-hit-size`. Os quatro campos (texto, número, seleção e área de texto) dividem os ganchos `--enchase-input-*`, e o canto do campo e o do contorno dele saem do mesmo gancho. A tipografia dos rótulos flutuantes fica fixa, porque o entalhe do contorno depende dela.
 
 O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 
