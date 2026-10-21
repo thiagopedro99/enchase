@@ -107,8 +107,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  min-inline-size: 40px;
-  min-block-size: 40px;
+  min-inline-size: max(24px, var(--enchase-hit-size, 40px));
+  min-block-size: max(24px, var(--enchase-hit-size, 40px));
   margin: 0;
   padding: 0;
   border: 0;

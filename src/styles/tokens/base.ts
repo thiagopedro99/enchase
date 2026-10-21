@@ -80,6 +80,11 @@ export const baseTokens = {
     sizeSwitch: '0.5rem'
   },
 
+  hit: {
+    size: '40px',
+    sizeLg: '44px'
+  },
+
   motion: {
     duration,
     ease: { out: easeOut, inOut: easeInOut },

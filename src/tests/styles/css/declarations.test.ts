@@ -79,7 +79,7 @@ describe('fontVariables', () => {
 describe('layoutVariables', () => {
   const variables = layoutVariables(baseTokens)
 
-  it('creates one variable for every spacing, radius, transition, focus, border, halo, state and z-index token', () => {
+  it('creates one variable for every spacing, radius, transition, focus, border, halo, hit, state and z-index token', () => {
     const expected =
       Object.keys(baseTokens.spacing).length +
       Object.keys(baseTokens.borderRadius).length +
@@ -89,6 +89,7 @@ describe('layoutVariables', () => {
       Object.keys(baseTokens.focus).length +
       Object.keys(baseTokens.border).length +
       Object.keys(baseTokens.halo).length +
+      Object.keys(baseTokens.hit).length +
       Object.keys(baseTokens.state).length +
       Object.keys(baseTokens.zIndex).length
 
@@ -123,6 +124,11 @@ describe('layoutVariables', () => {
     expect(variables['--enchase-state-disabled-content']).toBe('0.38')
     expect(variables['--enchase-halo-size']).toBe('10px')
     expect(variables['--enchase-halo-size-switch']).toBe('0.5rem')
+  })
+
+  it('declares the target sizes the components keep above the 24px floor', () => {
+    expect(variables['--enchase-hit-size']).toBe('40px')
+    expect(variables['--enchase-hit-size-lg']).toBe('44px')
   })
 
   it('derives the transition shorthands from the motion tokens', () => {

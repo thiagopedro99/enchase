@@ -38,8 +38,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  min-inline-size: 44px;
-  min-block-size: 44px;
+  min-inline-size: max(24px, var(--enchase-hit-size-lg, 44px));
+  min-block-size: max(24px, var(--enchase-hit-size-lg, 44px));
   margin: 0;
   padding: 0;
   border: 0;

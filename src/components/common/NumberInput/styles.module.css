@@ -230,8 +230,8 @@
 }
 
 :where(.stepper) {
-  inline-size: 40px;
-  block-size: 40px;
+  inline-size: max(24px, var(--enchase-hit-size, 40px));
+  block-size: max(24px, var(--enchase-hit-size, 40px));
   min-inline-size: 24px;
   min-block-size: 24px;
   border-radius: var(--enchase-radius-button);

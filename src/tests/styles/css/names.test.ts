@@ -24,6 +24,8 @@ describe('variableName', () => {
     [['border', 'widthStrong'], '--enchase-border-width-strong'],
     [['halo', 'size'], '--enchase-halo-size'],
     [['halo', 'sizeSwitch'], '--enchase-halo-size-switch'],
+    [['hit', 'size'], '--enchase-hit-size'],
+    [['hit', 'sizeLg'], '--enchase-hit-size-lg'],
     [['state', 'pressed'], '--enchase-state-pressed'],
     [['state', 'rowHover'], '--enchase-state-row-hover'],
     [['state', 'disabledContainer'], '--enchase-state-disabled-container'],

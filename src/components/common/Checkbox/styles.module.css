@@ -13,7 +13,7 @@
 
 :where(.wrapper) {
   gap: var(--enchase-space-md);
-  min-block-size: 40px;
+  min-block-size: max(24px, var(--enchase-hit-size, 40px));
   min-inline-size: 24px;
 }
 
