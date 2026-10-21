@@ -149,7 +149,7 @@ export const Preview = (props: PreviewProps) => {
                 <th scope="row" style={{ textAlign: 'start', paddingInlineEnd: '1.5rem', fontWeight: 500 }}>
                   Ganchos de CSS definidos
                 </th>
-                <td>{Object.keys(theme.hooks ?? {}).length}</td>
+                <td>{Object.keys({ ...theme.hooks, ...theme.light.hooks }).length}</td>
               </tr>
             </tbody>
           </table>
