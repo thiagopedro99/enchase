@@ -43,7 +43,7 @@ describe('the geometry of the checkbox from the hooks', () => {
   })
 
   it('takes the size of the box from the hook and draws the check in proportion', () => {
-    renderInBrowser(scoped({ '--enchase-checkbox-size': '36px' }, <Checkbox label="Terms" defaultChecked />))
+    renderInBrowser(scoped({ '--enchase-checkbox-box-size': '36px' }, <Checkbox label="Terms" defaultChecked />))
 
     expect(dimensions(part('checkbox-box'))).toEqual({ width: '36px', height: '36px' })
     expect(dimensions(glyph(), '::after')).toEqual({ width: '10px', height: '20px' })
@@ -51,7 +51,7 @@ describe('the geometry of the checkbox from the hooks', () => {
   })
 
   it('takes the stroke of the check from its own hook, leaving the box alone', () => {
-    renderInBrowser(scoped({ '--enchase-checkbox-check-width': '3px' }, <Checkbox label="Terms" defaultChecked />))
+    renderInBrowser(scoped({ '--enchase-checkbox-box-check-width': '3px' }, <Checkbox label="Terms" defaultChecked />))
 
     const style = getComputedStyle(glyph(), '::after')
 
@@ -84,7 +84,7 @@ describe('the geometry of the radio from the hooks', () => {
   })
 
   it('takes the size of the dot from its own hook, leaving the control alone', () => {
-    renderInBrowser(scoped({ '--enchase-radio-group-dot-size': '8px' }, radio))
+    renderInBrowser(scoped({ '--enchase-radio-group-control-dot-size': '8px' }, radio))
 
     expect(dimensions(part('radio-group-control'))).toEqual({ width: '20px', height: '20px' })
     expect(dimensions(dot())).toEqual({ width: '8px', height: '8px' })

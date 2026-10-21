@@ -9,10 +9,10 @@ const root = path.resolve(__dirname, '../../components')
 const controls = ['common/Checkbox', 'common/RadioGroup', 'common/Switch']
 
 const hooks: Record<string, string> = {
-  '--enchase-checkbox-size': '18px',
-  '--enchase-checkbox-check-width': '2px',
+  '--enchase-checkbox-box-size': '18px',
+  '--enchase-checkbox-box-check-width': '2px',
   '--enchase-radio-group-control-size': '1.25rem',
-  '--enchase-radio-group-dot-size': 'calc(var(--enchase-radio-group-control-size, 1.25rem) / 2)',
+  '--enchase-radio-group-control-dot-size': 'calc(var(--enchase-radio-group-control-size, 1.25rem) / 2)',
   '--enchase-switch-track-width': '3.25rem',
   '--enchase-switch-track-height': '2rem',
   '--enchase-switch-thumb-size': '1.5rem',

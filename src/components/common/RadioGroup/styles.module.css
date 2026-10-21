@@ -87,7 +87,7 @@
 }
 
 :where(.control) {
-  --radio-dot-size: var(--enchase-radio-group-dot-size, calc(var(--enchase-radio-group-control-size, 1.25rem) / 2));
+  --radio-dot-size: var(--enchase-radio-group-control-dot-size, calc(var(--enchase-radio-group-control-size, 1.25rem) / 2));
   inline-size: var(--enchase-radio-group-control-size, 1.25rem);
   block-size: var(--enchase-radio-group-control-size, 1.25rem);
 }

@@ -493,14 +493,14 @@ O anel de foco, a largura das bordas, as camadas de estado e o halo dos controle
 
 As camadas de estado são a fração (de 0 a 1) da cor do elemento que se mistura com o fundo: `--enchase-state-hover: 0.16` dobra o hover. Um halo de `0` desliga o halo. A área de toque nunca fica abaixo de 24px (WCAG 2.5.8), mesmo que a variável peça menos, e o espaço que o campo de senha e o campo numérico reservam para os botões de dentro acompanha a variável. O foco precisa continuar visível (contraste de pelo menos 3:1 com o fundo). O `validateTheme` confere o `primary`, mas não uma `--enchase-focus-color` sua.
 
-Cada componente também lê ganchos próprios, `--enchase-<componente>-<propriedade>`, opcionais e experimentais até a versão 1.0. O tema não os declara: sem valor, o componente usa o padrão da tabela. Servem para mudar um componente só, e o que depende da medida acompanha (o traço do checkbox, o ponto do radio, o curso da bolinha da chave):
+Cada componente também lê ganchos próprios, `--enchase-<data-slot>-<propriedade>`, opcionais e experimentais até a versão 1.0: o nome é o `data-slot` da parte mais a propriedade, então `data-slot="switch-thumb"` e `size` dão `--enchase-switch-thumb-size`. O tema não os declara: sem valor, o componente usa o padrão da tabela. Servem para mudar um componente só, e o que depende da medida acompanha (o traço do checkbox, o ponto do radio, o curso da bolinha da chave):
 
 | Gancho | Padrão | O que controla |
 | --- | --- | --- |
-| `--enchase-checkbox-size` | `18px` | lado da caixa do checkbox |
-| `--enchase-checkbox-check-width` | `2px` | espessura do traço de marcação |
+| `--enchase-checkbox-box-size` | `18px` | lado da caixa do checkbox |
+| `--enchase-checkbox-box-check-width` | `2px` | espessura do traço de marcação |
 | `--enchase-radio-group-control-size` | `1.25rem` | diâmetro do radio |
-| `--enchase-radio-group-dot-size` | metade do diâmetro | diâmetro do ponto do radio |
+| `--enchase-radio-group-control-dot-size` | metade do diâmetro | diâmetro do ponto do radio |
 | `--enchase-switch-track-width` | `3.25rem` | largura do trilho da chave |
 | `--enchase-switch-track-height` | `2rem` | altura do trilho da chave |
 | `--enchase-switch-thumb-size` | `1.5rem` | diâmetro da bolinha |
