@@ -65,7 +65,8 @@ export const ColorModeProvider = ({ children, theme, mode: controlledMode, defau
   }, [themeSet])
 
   const value = useMemo(() => ({ mode, resolvedMode, setMode, toggleMode }), [mode, resolvedMode, setMode, toggleMode])
-  const defaults = useMemo(() => ({ ...defaultThemeDefaults, ...themeSet?.defaults }), [themeSet])
+  const labelPlacement = themeSet?.defaults?.labelPlacement ?? defaultThemeDefaults.labelPlacement
+  const defaults = useMemo(() => ({ ...defaultThemeDefaults, labelPlacement }), [labelPlacement])
 
   return (
     <ColorModeContext.Provider value={value}>
