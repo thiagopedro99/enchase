@@ -13,6 +13,10 @@ const defaults = layoutVariables(baseTokens)
 
 const token = (name: string) => `var(--enchase-${name}, ${defaults[`--enchase-${name}`]})`
 
+const fieldFiles = ['common/Input', 'common/NumberInput', 'common/Select', 'common/Textarea'].map((name) => `${name}/styles.module.css`)
+
+const forcedColorsFloor = `border-width: max(${token('border-width-strong')}, ${defaults['--enchase-border-width-strong']})`
+
 const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 const ring = new RegExp(`^${escape(token('focus-width'))} solid (?:var\\(--enchase-focus-color, var\\(--enchase-color-primary\\)\\)|currentColor)$`)
@@ -68,12 +72,20 @@ describe('the focus ring and the border width of the components', () => {
               declarationsOf(css, /^border(?:-(?:block|inline)-(?:start|end)|-(?:top|right|bottom|left))?(?:-width)?$/)
                 .filter(({ value }) => length.test(withoutVariables(value)))
                 .map(({ name: property, value }) => `${property}: ${value}`)
+                .filter((declaration) => declaration !== forcedColorsFloor)
             ] as const
         )
         .filter(([, list]) => list.length > 0)
     )
 
     expect(fixed).toEqual(glyphs)
+  })
+
+  it('keeps the focus border of every field at the strong width or more in forced colors, where the ring made with a shadow is gone', () => {
+    const floor = new RegExp(`@media \\(forced-colors: active\\) \\{[^{]*\\{\\s*${escape(forcedColorsFloor)};`)
+
+    expect(files.filter(([name, css]) => fieldFiles.includes(name) && !floor.test(css)).map(([name]) => name)).toEqual([])
+    expect(files.filter(([name, css]) => !fieldFiles.includes(name) && css.includes(forcedColorsFloor)).map(([name]) => name)).toEqual([])
   })
 
   it('draws the hairlines made with a shadow from the border width token', () => {

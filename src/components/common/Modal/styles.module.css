@@ -145,6 +145,7 @@
   overscroll-behavior: contain;
   flex: 1;
   color: var(--enchase-modal-body-color, var(--enchase-color-text-secondary));
+  font-size: var(--enchase-modal-body-font-size, inherit);
   line-height: var(--enchase-modal-body-line-height, var(--enchase-line-height-relaxed, 1.6));
 }
 

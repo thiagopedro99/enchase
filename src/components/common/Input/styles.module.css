@@ -192,6 +192,12 @@
   border-color: var(--enchase-input-outline-border-color-error-focus, var(--enchase-color-error));
 }
 
+@media (forced-colors: active) {
+  .input:focus ~ .outline {
+    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+  }
+}
+
 .input:disabled ~ .outline {
   border-color: var(--enchase-input-outline-border-color-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent));
   opacity: var(--enchase-input-opacity-disabled, 1);

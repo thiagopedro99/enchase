@@ -68,7 +68,7 @@
   position: absolute;
   inset-block-end: 0;
   inset-inline: 0;
-  border-block-end: var(--enchase-border-width-strong, 2px) solid var(--enchase-tabs-indicator-color, var(--enchase-color-primary));
+  border-block-end: var(--enchase-tabs-indicator-width, var(--enchase-border-width-strong, 2px)) solid var(--enchase-tabs-indicator-color, var(--enchase-color-primary));
 }
 
 .list[data-indicator] .tab[aria-selected='true']::before {
@@ -105,8 +105,8 @@
   inset-inline-start: 0;
   box-sizing: border-box;
   inline-size: 1px;
-  block-size: var(--enchase-border-width-strong, 2px);
-  border-block-end: var(--enchase-border-width-strong, 2px) solid var(--enchase-tabs-indicator-color, var(--enchase-color-primary));
+  block-size: var(--enchase-tabs-indicator-width, var(--enchase-border-width-strong, 2px));
+  border-block-end: var(--enchase-tabs-indicator-width, var(--enchase-border-width-strong, 2px)) solid var(--enchase-tabs-indicator-color, var(--enchase-color-primary));
   opacity: 0;
   pointer-events: none;
   transform-origin: left center;

@@ -108,6 +108,7 @@ const fields: HookValues = {
   '--enchase-input-gap': '0.5rem',
   '--enchase-input-outline-shadow': shadowXs,
   '--enchase-input-opacity-disabled': '0.5',
+  '--enchase-input-error-font-weight': 'var(--enchase-font-weight-regular)',
   '--enchase-textarea-min-height': '4rem',
   '--enchase-select-picker-border-width': 'var(--enchase-border-width)',
   '--enchase-select-picker-radius': 'var(--enchase-radius-md)',
@@ -149,6 +150,8 @@ const controls: HookValues = {
   '--enchase-radio-group-helper-font-size': 'var(--enchase-font-size-sm)',
   '--enchase-radio-group-error-font-size': 'var(--enchase-font-size-sm)',
   '--enchase-radio-group-opacity-disabled': '0.5',
+  '--enchase-radio-group-legend-font-weight': 'var(--enchase-font-weight-medium)',
+  '--enchase-radio-group-error-font-weight': 'var(--enchase-font-weight-regular)',
 
   '--enchase-switch-track-width': '2rem',
   '--enchase-switch-track-height': '1.15rem',
@@ -176,6 +179,7 @@ const containers: HookValues = {
 
   '--enchase-tabs-tab-min-height': 'var(--enchase-control-height-md)',
   '--enchase-tabs-tab-font-size': 'var(--enchase-font-size-sm)',
+  '--enchase-tabs-indicator-width': '2px',
 
   '--enchase-accordion-radius': '0px',
   '--enchase-accordion-border-color': 'transparent',
@@ -184,6 +188,7 @@ const containers: HookValues = {
   '--enchase-accordion-trigger-padding-inline': '0px',
   '--enchase-accordion-trigger-font-size': 'var(--enchase-font-size-sm)',
   '--enchase-accordion-panel-padding-inline': '0px',
+  '--enchase-accordion-panel-font-size': 'var(--enchase-font-size-sm)',
 
   '--enchase-table-radius': '0px',
   '--enchase-table-border-color': 'transparent',
@@ -196,6 +201,7 @@ const containers: HookValues = {
   '--enchase-modal-panel-radius': 'var(--enchase-radius-lg)',
   '--enchase-modal-panel-border-width': 'var(--enchase-border-width)',
   '--enchase-modal-panel-max-width-md': '32rem',
+  '--enchase-modal-body-font-size': 'var(--enchase-font-size-sm)',
   '--enchase-modal-title-font-size': 'var(--enchase-font-size-lg)',
   '--enchase-modal-title-font-weight': 'var(--enchase-font-weight-semibold)',
 
@@ -271,6 +277,7 @@ const colorHooks: HookValues = {
   '--enchase-radio-group-control-border-color-disabled': 'var(--enchase-color-border-strong)',
   '--enchase-radio-group-dot-border-color-disabled': 'var(--enchase-color-primary)',
   '--enchase-radio-group-label-color-disabled': 'var(--enchase-color-text-primary)',
+  '--enchase-radio-group-legend-color': 'var(--enchase-color-text-primary)',
   '--enchase-switch-track-background': 'var(--enchase-color-border-strong)',
   '--enchase-switch-thumb-background': 'var(--enchase-color-background)',
   '--enchase-switch-thumb-background-checked': 'var(--enchase-color-background)',
@@ -346,7 +353,8 @@ const colorHooks: HookValues = {
 export const shadcnStyle: StyleDefinition = {
   base: {
     control: { height: { sm: '2rem', md: '2.25rem', lg: '2.5rem' } },
-    focus: { width: '3px', offset: '0px', offsetInset: '-3px', offsetSelector: '0px' },
+    focus: { offsetSelector: '2px' },
+    hit: { size: '2rem' },
     border: { widthStrong: '1px' },
     halo: { size: '0px', sizeSwitch: '0px' }
   },

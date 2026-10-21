@@ -111,6 +111,7 @@
 :where(.panel) {
   padding-block-end: var(--enchase-accordion-panel-padding-block-end, var(--enchase-space-md));
   padding-inline: var(--enchase-accordion-panel-padding-inline, var(--enchase-space-md));
+  font-size: var(--enchase-accordion-panel-font-size, inherit);
 }
 
 @starting-style {

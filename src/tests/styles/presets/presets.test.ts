@@ -42,7 +42,8 @@ describe('the shadcn style', () => {
 
   it('sets the heights, the focus ring, the borders and the halo of the controls', () => {
     expect(theme.base.control.height).toEqual({ sm: '2rem', md: '2.25rem', lg: '2.5rem' })
-    expect(theme.base.focus).toMatchObject({ width: '3px', offset: '0px' })
+    expect(theme.base.focus).toEqual({ width: '2px', offset: '2px', offsetInset: '-2px', offsetSelector: '2px' })
+    expect(theme.base.hit).toEqual({ size: '2rem', sizeLg: '44px' })
     expect(theme.base.border).toEqual({ width: '1px', widthStrong: '1px' })
     expect(theme.base.halo).toEqual({ size: '0px', sizeSwitch: '0px' })
   })
