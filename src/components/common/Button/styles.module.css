@@ -8,7 +8,7 @@
   box-sizing: border-box;
   margin: 0;
   font-family: inherit;
-  font-weight: var(--enchase-font-weight-semibold);
+  font-weight: var(--enchase-button-font-weight, var(--enchase-font-weight-semibold));
   line-height: 1.2;
   letter-spacing: 0.01em;
   text-align: center;
@@ -29,7 +29,7 @@
 }
 
 :where(.button) {
-  gap: var(--enchase-space-sm);
+  gap: var(--enchase-button-gap, var(--enchase-space-sm));
   border-radius: var(--enchase-button-radius, var(--enchase-radius-button));
   min-block-size: 24px;
   min-inline-size: 24px;
@@ -47,23 +47,23 @@
 
 :where(.button[data-size='sm']) {
   min-block-size: var(--enchase-control-height-sm, 2rem);
-  padding-block: var(--enchase-space-xs);
-  padding-inline: var(--enchase-space-md);
-  font-size: var(--enchase-font-size-sm);
+  padding-block: var(--enchase-button-padding-block-sm, var(--enchase-space-xs));
+  padding-inline: var(--enchase-button-padding-inline-sm, var(--enchase-space-md));
+  font-size: var(--enchase-button-font-size-sm, var(--enchase-font-size-sm));
 }
 
 :where(.button[data-size='md']) {
   min-block-size: var(--enchase-control-height-md, 2.5rem);
-  padding-block: var(--enchase-space-xs);
-  padding-inline: var(--enchase-space-lg);
-  font-size: var(--enchase-font-size-sm);
+  padding-block: var(--enchase-button-padding-block-md, var(--enchase-space-xs));
+  padding-inline: var(--enchase-button-padding-inline-md, var(--enchase-space-lg));
+  font-size: var(--enchase-button-font-size-md, var(--enchase-font-size-sm));
 }
 
 :where(.button[data-size='lg']) {
   min-block-size: var(--enchase-control-height-lg, 3rem);
-  padding-block: var(--enchase-space-xs);
-  padding-inline: var(--enchase-space-xl);
-  font-size: var(--enchase-font-size-base);
+  padding-block: var(--enchase-button-padding-block-lg, var(--enchase-space-xs));
+  padding-inline: var(--enchase-button-padding-inline-lg, var(--enchase-space-xl));
+  font-size: var(--enchase-button-font-size-lg, var(--enchase-font-size-base));
 }
 
 :where(.button[data-full-width]) {
@@ -92,7 +92,7 @@
 }
 
 :where(.button[data-size][data-variant='ghost']) {
-  padding-inline: var(--enchase-space-md);
+  padding-inline: var(--enchase-button-padding-inline-ghost, var(--enchase-space-md));
 }
 
 .button:where(:disabled) {
