@@ -45,6 +45,8 @@ const expectations = [
   ['the pressed state layer in the theme variables', '--enchase-state-pressed: 0.1'],
   ['the disabled state layer in the theme variables', '--enchase-state-disabled-content: 0.38'],
   ['the halo of the selection controls in the theme variables', '--enchase-halo-size-switch: 0.5rem'],
+  ['the regular target size in the theme variables', '--enchase-hit-size: 40px'],
+  ['the large target size in the theme variables', '--enchase-hit-size-lg: 44px'],
   ['the generated responsive rules', "[data-slot='layout'][data-layout='auto']"]
 ]
 

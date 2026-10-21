@@ -105,6 +105,8 @@ export const strongBorder: string = theme.base.border.widthStrong
 export const pressed: string = theme.base.state.pressed
 export const disabledContent: string = theme.base.state.disabledContent
 export const haloSize: string = theme.base.halo.size
+export const hitSize: string = theme.base.hit.size
+export const largeHitSize: string = theme.base.hit.sizeLg
 export const problems = validateTheme(theme)
 `
 
