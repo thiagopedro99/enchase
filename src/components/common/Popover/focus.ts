@@ -4,8 +4,8 @@ const isVisible = (element: HTMLElement) => !element.closest('[hidden], [inert]'
 
 export const tabbablesIn = (root: ParentNode) => Array.from(root.querySelectorAll<HTMLElement>(focusableSelector)).filter(isVisible)
 
-export const focusFirst = (container: HTMLElement) => {
-  const target = tabbablesIn(container)[0] ?? container
+export const focusFirst = (container: HTMLElement, fallback: HTMLElement | null) => {
+  const target = tabbablesIn(container)[0] ?? fallback ?? container
   target.focus({ preventScroll: true })
 }
 

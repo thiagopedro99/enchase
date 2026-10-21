@@ -64,7 +64,7 @@ const meta = {
       control: 'text'
     },
     arrow: {
-      description: 'Mostra uma seta apontando para o gatilho.',
+      description: 'Mostra uma seta apontando para o gatilho. Quando a caixa tem borda (--enchase-popover-content-border-width), a seta leva a borda nos dois lados de fora.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultArrow) } }
     },
@@ -101,7 +101,7 @@ const meta = {
       control: 'text'
     },
     contentClassName: {
-      description: 'Classe do conteúdo (data-slot="popover-content"). Também dá para estilizar por data-state e data-placement.',
+      description: 'Classe do conteúdo (data-slot="popover-content"), a caixa que leva o fundo, a borda, a sombra e a seta. O que rola e leva o espaçamento é o corpo (data-slot="popover-body"). Também dá para estilizar por data-state e data-placement.',
       control: 'text'
     },
     children: {

@@ -430,13 +430,13 @@ Painel flutuante ligado a um gatilho. A posição se ajusta sozinha perto da bor
 | `padding` | `number` | `8` | Margem em px até a borda da janela. |
 | `role` | `'dialog' \| 'listbox' \| 'tree' \| 'grid'` | `'dialog'` | Papel do conteúdo, que também vira aria-haspopup no gatilho. O padrão é dialog; menu não é suportado porque exige navegação própria por setas. |
 | `label` | `string` | — | Nome acessível do conteúdo (aria-label). |
-| `arrow` | `boolean` | `false` | Mostra uma seta apontando para o gatilho. |
+| `arrow` | `boolean` | `false` | Mostra uma seta apontando para o gatilho. Quando a caixa tem borda (--enchase-popover-content-border-width), a seta leva a borda nos dois lados de fora. |
 | `closeOnEsc` | `boolean` | `true` | Esc fecha só a camada de cima e devolve o foco ao gatilho. |
 | `closeOnOutsideClick` | `boolean` | `true` | Um clique fora fecha o popover sem tirar o foco de onde o clique caiu. |
 | `animation` | `false \| { recipe, tuning }` | `pop` | false desliga a transição. { recipe: "fade" } troca o pop por um fade; { tuning: { duration, scale } } ajusta duração e escala. |
 | `className` | `string` | — | Classe do elemento que envolve o gatilho (data-slot="popover-trigger"). |
 | `style` | `CSSProperties` | — | Estilo do elemento que envolve o gatilho. |
-| `contentClassName` | `string` | — | Classe do conteúdo (data-slot="popover-content"). Também dá para estilizar por data-state e data-placement. |
+| `contentClassName` | `string` | — | Classe do conteúdo (data-slot="popover-content"), a caixa que leva o fundo, a borda, a sombra e a seta. O que rola e leva o espaçamento é o corpo (data-slot="popover-body"). Também dá para estilizar por data-state e data-placement. |
 | `contentStyle` | `CSSProperties` | — | Estilo do conteúdo. |
 
 ### RadioGroup
@@ -1266,6 +1266,8 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | --- | --- | --- |
 | `--enchase-popover-arrow-size` | `10px` | `inline-size`, `block-size`, `inset-block-end`, `inset-block-start`, `right`, `left` |
 | `--enchase-popover-content-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-popover-content-border-color` | `var(--enchase-color-border)` | `border` |
+| `--enchase-popover-content-border-width` | `0px` | `border`, `--arrow-border` |
 | `--enchase-popover-content-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-popover-content-padding-block` | `1rem` (`--enchase-space-md`) | `padding-block` |
 | `--enchase-popover-content-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |

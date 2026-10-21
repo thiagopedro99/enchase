@@ -38,7 +38,7 @@ export const computePosition = (reference: Element | VirtualElement, floating: H
     availableWidth: axis === 'x' ? clipWidth : Math.min(size.width - overflow[side], clipWidth),
     availableHeight: axis === 'y' ? clipHeight : Math.min(size.height - overflow[side], clipHeight),
     referenceHidden: isHidden(reference, rect),
-    arrow: arrowPosition(options.arrow, placement, rect, position, size)
+    arrow: arrowPosition(options.arrow, placement, rect, position, size, floating)
   }
   if (!options.apply) return result
 

@@ -13,6 +13,7 @@ import type { CSSProperties, ReactNode } from 'react'
 
 const content = () => document.body.querySelector<HTMLElement>('[data-slot="popover-content"]')
 
+const body = () => document.body.querySelector<HTMLElement>('[data-slot="popover-body"]')
 
 const added: HTMLStyleElement[] = []
 
@@ -137,7 +138,10 @@ describe('Popover placement in a real browser', () => {
     await expect.poll(content).toBeTruthy()
 
     await expect.poll(() => (content() as HTMLElement).getBoundingClientRect().bottom).toBeLessThan(400)
-    expect(getComputedStyle(content() as HTMLElement).overflowY).toBe('auto')
+
+    expect(getComputedStyle(body() as HTMLElement).overflowY).toBe('auto')
+    expect((body() as HTMLElement).scrollHeight).toBeGreaterThan((body() as HTMLElement).clientHeight)
+    expect(getComputedStyle(content() as HTMLElement).overflowY).toBe('visible')
   })
 
   it('shrinks to the available width', async () => {
@@ -233,6 +237,86 @@ describe('Popover focus and dismissal in a real browser', () => {
 
     await expect.poll(() => document.activeElement?.textContent).toBe('Dentro')
 
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}')
+
+    await expect.poll(() => document.activeElement?.textContent).toBe('Abrir')
+    expect(content()).toBeTruthy()
+  })
+
+  it('moves the focus to the body when there is nothing to tab to and lets the keys scroll it instead of the page', async () => {
+    await page.viewport(1280, 400)
+    renderInBrowser(
+      <>
+        {placed('top: 150px; left: 400px', (
+          <Popover content={<p style={{ width: 200 }}>{'texto '.repeat(600)}</p>}>
+            <button>Abrir</button>
+          </Popover>
+        ))}
+        <div style={{ height: 3000 }} />
+      </>
+    )
+    page.getByRole('button', { name: 'Abrir' }).element().focus()
+    await userEvent.keyboard('{Enter}')
+
+    await expect.poll(() => document.activeElement?.getAttribute('data-slot')).toBe('popover-body')
+
+    await userEvent.keyboard('{PageDown}')
+
+    await expect.poll(() => (body() as HTMLElement).scrollTop).toBeGreaterThan(0)
+    expect(window.scrollY).toBe(0)
+  })
+
+  it('lets the keys scroll the content after a click inside it instead of the page behind', async () => {
+    await page.viewport(1280, 400)
+    renderInBrowser(
+      <>
+        {placed('top: 150px; left: 400px', (
+          <Popover defaultOpen content={<p style={{ width: 200 }}>{'texto '.repeat(600)}</p>}>
+            <button>Abrir</button>
+          </Popover>
+        ))}
+        <div style={{ height: 3000 }} />
+      </>
+    )
+    await expect.poll(body).toBeTruthy()
+    await page.elementLocator(body() as HTMLElement).click({ position: { x: 8, y: 8 } })
+    await userEvent.keyboard('{PageDown}')
+
+    await expect.poll(() => (body() as HTMLElement).scrollTop).toBeGreaterThan(0)
+    expect(window.scrollY).toBe(0)
+  })
+
+  it('takes Tab from the body to the element after the trigger when there is nothing to tab to', async () => {
+    renderInBrowser(
+      <div>
+        {placed('top: 200px; left: 400px', (
+          <Popover content={<p>Só texto</p>}>
+            <button>Abrir</button>
+          </Popover>
+        ))}
+        {placed('top: 260px; left: 400px', <button>Depois</button>)}
+      </div>
+    )
+    page.getByRole('button', { name: 'Abrir' }).element().focus()
+    await userEvent.keyboard('{Enter}')
+    await expect.poll(() => document.activeElement?.getAttribute('data-slot')).toBe('popover-body')
+    await userEvent.keyboard('{Tab}')
+
+    await expect.poll(() => document.activeElement?.textContent).toBe('Depois')
+    await expect.poll(content).toBeNull()
+  })
+
+  it('takes Shift+Tab from the body back to the trigger and keeps the popover open when there is nothing to tab to', async () => {
+    renderInBrowser(
+      placed('top: 200px; left: 400px', (
+        <Popover content={<p>Só texto</p>}>
+          <button>Abrir</button>
+        </Popover>
+      ))
+    )
+    page.getByRole('button', { name: 'Abrir' }).element().focus()
+    await userEvent.keyboard('{Enter}')
+    await expect.poll(() => document.activeElement?.getAttribute('data-slot')).toBe('popover-body')
     await userEvent.keyboard('{Shift>}{Tab}{/Shift}')
 
     await expect.poll(() => document.activeElement?.textContent).toBe('Abrir')

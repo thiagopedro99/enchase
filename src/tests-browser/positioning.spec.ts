@@ -222,6 +222,23 @@ describe('positioner size and arrow', () => {
     expect(result.x + (result.arrow?.x ?? 0) + 5).toBeCloseTo(40, 0)
   })
 
+  it.each(['bottom', 'top', 'right', 'left'] as const)('keeps the arrow centered on the reference when the floating element has a border, placed %s', (placement) => {
+    const reference = make(document.body, 'position: fixed; left: 300px; top: 300px; width: 40px; height: 30px')
+    const floating = make(document.body, 'position: fixed; left: 0; top: 0; box-sizing: border-box; width: 160px; height: 120px; border: 5px solid')
+    const arrow = make(floating, 'position: absolute; width: 10px; height: 10px')
+    const result = computePosition(reference, floating, { placement, padding: 8, arrow: { element: arrow, padding: 4 } })
+
+    floating.style.left = `${result.x}px`
+    floating.style.top = `${result.y}px`
+    arrow.style.left = result.arrow?.x === undefined ? '' : `${result.arrow.x}px`
+    arrow.style.top = result.arrow?.y === undefined ? '' : `${result.arrow.y}px`
+
+    const box = arrow.getBoundingClientRect()
+    const vertical = placement === 'top' || placement === 'bottom'
+
+    expect(vertical ? box.left + box.width / 2 : box.top + box.height / 2).toBeCloseTo(vertical ? 320 : 315, 0)
+  })
+
   it('maps start and end to the physical sides with the direction of the floating element', () => {
     const rtl = make(document.body, 'direction: rtl')
     const reference = make(rtl, 'position: fixed; left: 600px; top: 300px; width: 40px; height: 30px')

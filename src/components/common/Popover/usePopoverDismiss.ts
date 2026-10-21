@@ -9,6 +9,7 @@ type PopoverDismissOptions = {
   open: boolean
   triggerRef: RefObject<HTMLElement | null>
   contentRef: RefObject<HTMLElement | null>
+  bodyRef: RefObject<HTMLElement | null>
   isTop: () => boolean
   wasTopAtPointerDown: () => boolean
   contains: PopoverTreeNode
@@ -17,7 +18,7 @@ type PopoverDismissOptions = {
   onClose: () => void
 }
 
-export const usePopoverDismiss = ({ open, triggerRef, contentRef, isTop, wasTopAtPointerDown, contains, closeOnEsc, closeOnOutsideClick, onClose }: PopoverDismissOptions) => {
+export const usePopoverDismiss = ({ open, triggerRef, contentRef, bodyRef, isTop, wasTopAtPointerDown, contains, closeOnEsc, closeOnOutsideClick, onClose }: PopoverDismissOptions) => {
   const latest = useRef({ isTop, wasTopAtPointerDown, contains, onClose })
   latest.current = { isTop, wasTopAtPointerDown, contains, onClose }
 
@@ -60,7 +61,7 @@ export const usePopoverDismiss = ({ open, triggerRef, contentRef, isTop, wasTopA
 
       const items = tabbablesIn(content)
       const edge = event.shiftKey ? items[0] ?? content : items[items.length - 1] ?? content
-      if (document.activeElement !== edge && document.activeElement !== content) return
+      if (document.activeElement !== edge && document.activeElement !== content && document.activeElement !== bodyRef.current) return
 
       event.preventDefault()
       focusTrigger(trigger)
@@ -73,5 +74,5 @@ export const usePopoverDismiss = ({ open, triggerRef, contentRef, isTop, wasTopA
     content.addEventListener('keydown', handleKeyDown)
 
     return () => content.removeEventListener('keydown', handleKeyDown)
-  }, [open, contentRef, triggerRef])
+  }, [open, contentRef, bodyRef, triggerRef])
 }
