@@ -47,6 +47,8 @@ const expectations = [
   ['the halo of the selection controls in the theme variables', '--enchase-halo-size-switch: 0.5rem'],
   ['the regular target size in the theme variables', '--enchase-hit-size: 40px'],
   ['the large target size in the theme variables', '--enchase-hit-size-lg: 44px'],
+  ['the normal line height in the theme variables', '--enchase-line-height-normal: 1.5'],
+  ['the control letter spacing in the theme variables', '--enchase-letter-spacing-control: 0.01em'],
   ['the generated responsive rules', "[data-slot='layout'][data-layout='auto']"]
 ]
 

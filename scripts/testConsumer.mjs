@@ -107,6 +107,8 @@ export const disabledContent: string = theme.base.state.disabledContent
 export const haloSize: string = theme.base.halo.size
 export const hitSize: string = theme.base.hit.size
 export const largeHitSize: string = theme.base.hit.sizeLg
+export const normalLineHeight: number = theme.base.fonts.lineHeights.normal
+export const controlSpacing: string = theme.base.fonts.letterSpacings.control
 export const problems = validateTheme(theme)
 `
 
