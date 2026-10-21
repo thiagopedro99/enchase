@@ -14,7 +14,7 @@ import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, GridProps
 import { ChevronDownIcon, CloseIcon } from 'enchase/icons'
 import type { IconProps } from 'enchase/icons'
 import { createTheme, validateTheme } from 'enchase/theme'
-import type { RadiusOverrides, ShapePreset, ThemeInput } from 'enchase/theme'
+import type { RadiusOverrides, ShapePreset, StyleName, ThemeInput } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
 import 'enchase/styles.css'
@@ -110,6 +110,10 @@ export const largeHitSize: string = theme.base.hit.sizeLg
 export const normalLineHeight: number = theme.base.fonts.lineHeights.normal
 export const controlSpacing: string = theme.base.fonts.letterSpacings.control
 export const problems = validateTheme(theme)
+export const chosen: StyleName = 'shadcn'
+export const styled = createTheme({ style: chosen })
+export const labelPlacement: 'floating' | 'stacked' | undefined = styled.defaults?.labelPlacement
+export const styledProblems = validateTheme(styled)
 `
 
 const consumerPackage = { name: 'enchase-consumer', private: true, type: 'module', version: '0.0.0' }

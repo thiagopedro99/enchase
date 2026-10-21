@@ -1,7 +1,7 @@
 import { defaultTheme } from '../tokens/index.ts'
 import { variableName } from './names.ts'
 
-import type { BaseTokens, ColorTokens, ModeTokens, ShadowTokens, ThemeSet } from '../tokens/types.ts'
+import type { BaseTokens, ColorTokens, HookValues, ModeTokens, ShadowTokens, ThemeSet } from '../tokens/types.ts'
 import type { VariableGroup } from './names.ts'
 
 type FontTokens = BaseTokens['fonts']
@@ -47,7 +47,7 @@ export const layoutVariables = (theme: LayoutTokens): Record<string, string> => 
   ...declare('z', theme.zIndex)
 })
 
-export const themeVariables = (theme: ThemeTokens): Record<string, string> => ({ ...colorVariables(theme.colors), ...shadowVariables(theme.shadows) })
+export const themeVariables = (theme: ThemeTokens): Record<string, string> => ({ ...colorVariables(theme.colors), ...shadowVariables(theme.shadows), ...theme.hooks })
 
 const variablesRule = (selector: string, variables: Record<string, string>) => {
   const declarations = Object.entries(variables).map(([name, value]) => `  ${name}: ${value};`)
@@ -59,7 +59,7 @@ export const cssVariablesRule = (selector: string, theme: ThemeTokens) => variab
 
 export const fontVariablesRule = (selector: string, fonts: FontTokens) => variablesRule(selector, fontVariables(fonts))
 
-export const layoutVariablesRule = (selector: string, theme: LayoutTokens) => variablesRule(selector, layoutVariables(theme))
+export const layoutVariablesRule = (selector: string, theme: LayoutTokens, hooks?: HookValues) => variablesRule(selector, { ...layoutVariables(theme), ...hooks })
 
 export type ThemeCssOptions = {
   layer?: string
@@ -71,10 +71,10 @@ const indent = (css: string) =>
     .map((line) => (line ? `  ${line}` : line))
     .join('\n')
 
-export const themeCss = ({ base, light, dark }: ThemeSet, { layer }: ThemeCssOptions = {}) => {
+export const themeCss = ({ base, light, dark, hooks }: ThemeSet, { layer }: ThemeCssOptions = {}) => {
   const rules = [
     fontVariablesRule(':root', base.fonts),
-    layoutVariablesRule(':root', base),
+    layoutVariablesRule(':root', base, hooks),
     cssVariablesRule(":root, [data-theme='light']", light),
     cssVariablesRule("[data-theme='dark']", dark),
     `@media (prefers-color-scheme: dark) {\n${indent(cssVariablesRule(':root:not([data-theme])', dark))}\n}`

@@ -16,4 +16,4 @@ export { spring, springPosition, springSettleTime, timedSpring } from './spring.
 
 export type { SpringInput, SpringPerceptual, SpringPhysics, SpringResult, SpringTiming } from './spring.ts'
 
-export type { BaseTokens, ColorRole, ColorTokens, ModeTokens, ShadowTokens, ThemeMode, ThemeSet } from './types.ts'
+export type { BaseTokens, ColorRole, ColorTokens, HookValues, LabelPlacement, ModeTokens, ShadowTokens, ThemeDefaults, ThemeMode, ThemeSet } from './types.ts'

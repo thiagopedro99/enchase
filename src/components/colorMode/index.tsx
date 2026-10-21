@@ -9,6 +9,7 @@ import { formatMotionIssues, validateMotion } from '@styles/theme/motion.ts'
 import { formatContrastIssues, validateTheme } from '@styles/theme/validateTheme.ts'
 import { ThemeVariables } from '@styles/react.tsx'
 import { ColorModeContext } from './context.ts'
+import { defaultThemeDefaults, ThemeDefaultsContext } from './themeDefaults.ts'
 
 import type { ColorMode, ColorModeProviderProps, ColorModeScriptProps, ResolvedColorMode } from './types.ts'
 
@@ -64,11 +65,14 @@ export const ColorModeProvider = ({ children, theme, mode: controlledMode, defau
   }, [themeSet])
 
   const value = useMemo(() => ({ mode, resolvedMode, setMode, toggleMode }), [mode, resolvedMode, setMode, toggleMode])
+  const defaults = useMemo(() => ({ ...defaultThemeDefaults, ...themeSet?.defaults }), [themeSet])
 
   return (
     <ColorModeContext.Provider value={value}>
-      <ThemeVariables css={css} />
-      {children}
+      <ThemeDefaultsContext.Provider value={defaults}>
+        <ThemeVariables css={css} />
+        {children}
+      </ThemeDefaultsContext.Provider>
     </ColorModeContext.Provider>
   )
 }
