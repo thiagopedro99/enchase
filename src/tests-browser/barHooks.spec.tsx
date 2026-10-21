@@ -13,45 +13,12 @@ import Navbar from '@components/navbar/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { unlessFirefox } from './browserSkips.ts'
 import { renderInBrowser } from './harness.tsx'
+import { at, becomes, expectHooks, hooked, onRoot, part, parts, style } from './hookProbes.ts'
 import { setContrast } from './media.ts'
 import { pressMouse, releaseMouse } from './pointer.ts'
 import { supportsTranslucency, surfaceOf } from './translucency.ts'
 
-type Probe = [hook: string, value: string, target: () => Element | null | undefined, property: string, expected?: string | RegExp]
-
-const parts = (name: string) => [...document.body.querySelectorAll<HTMLElement>(`[data-slot="${name}"]`)]
-
-const part = (name: string, index = 0) => parts(name)[index]
-
-const at = (name: string, index = 0) => () => part(name, index)
-
-const style = (name: string, index = 0) => getComputedStyle(part(name, index))
-
-const onRoot = (variables: Record<string, string>) => {
-  for (const [name, value] of Object.entries(variables)) document.documentElement.style.setProperty(name, value)
-}
-
-const setHooks = (probes: Probe[]) => onRoot(Object.fromEntries(probes.map(([hook, value]) => [hook, value])))
-
-const readings = (probes: Probe[]) =>
-  probes.map(([hook, value, target, property, expected]) => {
-    const element = target()
-    const actual = element ? getComputedStyle(element).getPropertyValue(property) : 'no element'
-    const wanted = expected ?? value
-
-    return [hook, (typeof wanted === 'string' ? actual === wanted : wanted.test(actual)) ? 'ok' : `${property} is ${actual}`]
-  })
-
-const expectHooks = (probes: Probe[]) => expect(readings(probes)).toEqual(probes.map(([hook]) => [hook, 'ok']))
-
-const hooked = (probes: Probe[], ui: Parameters<typeof renderInBrowser>[0]) => {
-  setHooks(probes)
-  renderInBrowser(ui)
-  expectHooks(probes)
-}
-
-const becomes = (target: () => Element | null | undefined, property: string, value: string) =>
-  expect.poll(() => (target() ? getComputedStyle(target() as Element).getPropertyValue(property) : 'no element'), { timeout: 4000 }).toBe(value)
+import type { Probe } from './hookProbes.ts'
 
 const translucentIt = supportsTranslucency ? it : it.skip
 
