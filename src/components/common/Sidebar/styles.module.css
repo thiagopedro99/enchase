@@ -244,13 +244,13 @@
 
 @media (hover: hover) and (pointer: fine) {
   .item:hover {
-    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
     color: var(--enchase-color-text-primary);
   }
 }
 
 .item:active {
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent);
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
   color: var(--enchase-color-text-primary);
   transform: scale(var(--enchase-sidebar-item-scale, 0.98));
 }
@@ -335,12 +335,12 @@
 
 @media (hover: hover) and (pointer: fine) {
   .collapseButton:hover {
-    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
     color: var(--enchase-color-text-primary);
   }
 }
 
 .collapseButton:active {
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent);
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
   color: var(--enchase-color-text-primary);
 }

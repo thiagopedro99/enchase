@@ -118,12 +118,12 @@
 }
 
 .hidden:disabled + .control {
-  border-color: color-mix(in srgb, var(--enchase-color-text-primary) 38%, transparent);
+  border-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
   cursor: not-allowed;
 }
 
 .hidden:disabled + .control .dot {
-  border-color: color-mix(in srgb, var(--enchase-color-text-primary) 38%, transparent);
+  border-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
 }
 
 .hidden:focus-visible + .control {
@@ -133,7 +133,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .option:hover .hidden:not(:disabled) + .control {
-    box-shadow: 0 0 0 10px color-mix(in srgb, var(--enchase-color-primary) 8%, transparent);
+    box-shadow: 0 0 0 var(--enchase-halo-size, 10px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }
 }
 

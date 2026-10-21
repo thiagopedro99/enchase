@@ -97,10 +97,10 @@
 
 @media (hover: hover) and (pointer: fine) {
   .close:hover {
-    background-color: color-mix(in srgb, currentColor 8%, transparent);
+    background-color: color-mix(in srgb, currentColor calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }
 }
 
 .close:active {
-  background-color: color-mix(in srgb, currentColor 12%, transparent);
+  background-color: color-mix(in srgb, currentColor calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
 }

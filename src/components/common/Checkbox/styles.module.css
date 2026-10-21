@@ -79,13 +79,13 @@
 }
 
 .hidden:disabled + .box {
-  border-color: color-mix(in srgb, var(--enchase-color-text-primary) 38%, transparent);
+  border-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
   cursor: not-allowed;
 }
 
 .hidden:disabled:checked + .box {
   border-color: transparent;
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 38%, transparent);
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
 }
 
 .hidden:focus-visible + .box {
@@ -102,7 +102,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .wrapper:hover .hidden:not(:disabled) + .box {
-    box-shadow: 0 0 0 10px color-mix(in srgb, var(--enchase-color-primary) 8%, transparent);
+    box-shadow: 0 0 0 var(--enchase-halo-size, 10px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }
 }
 

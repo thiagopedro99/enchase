@@ -80,17 +80,17 @@
 }
 
 .hidden:disabled + .track {
-  border-color: color-mix(in srgb, var(--enchase-color-text-primary) 38%, transparent);
+  border-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
   cursor: not-allowed;
 }
 
 .hidden:disabled + .track .thumb {
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 38%, transparent);
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
 }
 
 .hidden:disabled:checked + .track {
   border-color: transparent;
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) 38%, transparent);
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
 }
 
 .hidden:disabled:checked + .track .thumb {
@@ -104,20 +104,20 @@
 
 @media (hover: hover) and (pointer: fine) {
   .wrapper:hover .hidden:not(:disabled) + .track .thumb {
-    box-shadow: 0 0 0 0.5rem color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    box-shadow: 0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }
 
   .wrapper:hover .hidden:not(:disabled):checked + .track .thumb {
-    box-shadow: 0 0 0 0.5rem color-mix(in srgb, var(--enchase-color-primary) 8%, transparent);
+    box-shadow: 0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }
 }
 
 .wrapper:active .hidden:not(:disabled) + .track .thumb {
-  box-shadow: 0 0 0 0.5rem color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent);
+  box-shadow: 0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
 }
 
 .wrapper:active .hidden:not(:disabled):checked + .track .thumb {
-  box-shadow: 0 0 0 0.5rem color-mix(in srgb, var(--enchase-color-primary) 12%, transparent);
+  box-shadow: 0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {

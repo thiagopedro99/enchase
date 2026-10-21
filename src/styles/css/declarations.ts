@@ -8,7 +8,7 @@ type FontTokens = BaseTokens['fonts']
 
 type ThemeTokens = ModeTokens
 
-type LayoutTokens = Pick<BaseTokens, 'spacing' | 'borderRadius' | 'transitions' | 'motion' | 'control' | 'focus' | 'border' | 'state' | 'zIndex'>
+type LayoutTokens = Pick<BaseTokens, 'spacing' | 'borderRadius' | 'transitions' | 'motion' | 'control' | 'focus' | 'border' | 'halo' | 'state' | 'zIndex'>
 
 type ColorTree = { [key: string]: string | ColorTree }
 
@@ -39,6 +39,7 @@ export const layoutVariables = (theme: LayoutTokens): Record<string, string> => 
   ...declareTree('control', theme.control),
   ...declare('focus', theme.focus),
   ...declare('border', theme.border),
+  ...declare('halo', theme.halo),
   ...declare('state', theme.state),
   ...declare('z', theme.zIndex)
 })

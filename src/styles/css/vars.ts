@@ -28,6 +28,7 @@ export const vars = {
   control: build('control', base.control),
   focus: build('focus', base.focus),
   border: build('border', base.border),
+  halo: build('halo', base.halo),
   state: build('state', base.state),
   z: build('z', base.zIndex)
 }

@@ -135,7 +135,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .close:hover {
-    background-color: color-mix(in srgb, currentColor 8%, transparent);
+    background-color: color-mix(in srgb, currentColor calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }
 }
 

@@ -208,7 +208,7 @@
 }
 
 .textarea:disabled ~ .outline {
-  border-color: color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent);
+  border-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent);
 }
 
 .error {

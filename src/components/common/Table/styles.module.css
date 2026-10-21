@@ -91,7 +91,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .row:hover {
-    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 6%, transparent);
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-row-hover, 0.06) * 100%), transparent);
   }
 }
 

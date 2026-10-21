@@ -75,6 +75,11 @@ export const baseTokens = {
     widthStrong: '2px'
   },
 
+  halo: {
+    size: '10px',
+    sizeSwitch: '0.5rem'
+  },
+
   motion: {
     duration,
     ease: { out: easeOut, inOut: easeInOut },
@@ -98,7 +103,10 @@ export const baseTokens = {
   state: {
     hover: '0.08',
     focus: '0.1',
-    pressed: '0.1'
+    pressed: '0.1',
+    rowHover: '0.06',
+    disabledContainer: '0.12',
+    disabledContent: '0.38'
   },
 
   breakpoints: {

@@ -42,7 +42,9 @@ describe('vars', () => {
     expect(vars.focus.width).toBe('var(--enchase-focus-width)')
     expect(vars.focus.offsetSelector).toBe('var(--enchase-focus-offset-selector)')
     expect(vars.border.widthStrong).toBe('var(--enchase-border-width-strong)')
+    expect(vars.halo.sizeSwitch).toBe('var(--enchase-halo-size-switch)')
     expect(vars.state.hover).toBe('var(--enchase-state-hover)')
+    expect(vars.state.disabledContent).toBe('var(--enchase-state-disabled-content)')
     expect(vars.z.modal).toBe('var(--enchase-z-modal)')
   })
 

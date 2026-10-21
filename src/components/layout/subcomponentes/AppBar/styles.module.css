@@ -65,7 +65,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .menuButton:hover {
-    background-color: color-mix(in srgb, var(--enchase-color-text-primary) 8%, transparent);
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
     color: var(--enchase-color-text-primary);
   }
 }

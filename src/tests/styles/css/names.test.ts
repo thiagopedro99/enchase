@@ -22,7 +22,12 @@ describe('variableName', () => {
     [['focus', 'offsetSelector'], '--enchase-focus-offset-selector'],
     [['border', 'width'], '--enchase-border-width'],
     [['border', 'widthStrong'], '--enchase-border-width-strong'],
+    [['halo', 'size'], '--enchase-halo-size'],
+    [['halo', 'sizeSwitch'], '--enchase-halo-size-switch'],
     [['state', 'pressed'], '--enchase-state-pressed'],
+    [['state', 'rowHover'], '--enchase-state-row-hover'],
+    [['state', 'disabledContainer'], '--enchase-state-disabled-container'],
+    [['state', 'disabledContent'], '--enchase-state-disabled-content'],
     [['z', 'modal'], '--enchase-z-modal']
   ] as const)('names %j as %s', ([group, ...path], expected) => {
     expect(variableName(group, ...path)).toBe(expected)

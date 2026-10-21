@@ -79,7 +79,7 @@ describe('fontVariables', () => {
 describe('layoutVariables', () => {
   const variables = layoutVariables(baseTokens)
 
-  it('creates one variable for every spacing, radius, transition, focus, border, state and z-index token', () => {
+  it('creates one variable for every spacing, radius, transition, focus, border, halo, state and z-index token', () => {
     const expected =
       Object.keys(baseTokens.spacing).length +
       Object.keys(baseTokens.borderRadius).length +
@@ -88,6 +88,7 @@ describe('layoutVariables', () => {
       leafPaths(baseTokens.control).length +
       Object.keys(baseTokens.focus).length +
       Object.keys(baseTokens.border).length +
+      Object.keys(baseTokens.halo).length +
       Object.keys(baseTokens.state).length +
       Object.keys(baseTokens.zIndex).length
 
@@ -112,6 +113,16 @@ describe('layoutVariables', () => {
     expect(variables['--enchase-focus-offset-selector']).toBe('3px')
     expect(variables['--enchase-border-width']).toBe('1px')
     expect(variables['--enchase-border-width-strong']).toBe('2px')
+  })
+
+  it('declares the state layers and the halos the components read', () => {
+    expect(variables['--enchase-state-hover']).toBe('0.08')
+    expect(variables['--enchase-state-pressed']).toBe('0.1')
+    expect(variables['--enchase-state-row-hover']).toBe('0.06')
+    expect(variables['--enchase-state-disabled-container']).toBe('0.12')
+    expect(variables['--enchase-state-disabled-content']).toBe('0.38')
+    expect(variables['--enchase-halo-size']).toBe('10px')
+    expect(variables['--enchase-halo-size-switch']).toBe('0.5rem')
   })
 
   it('derives the transition shorthands from the motion tokens', () => {
