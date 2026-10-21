@@ -28,7 +28,9 @@ export const fontVariables = (fonts: FontTokens): Record<string, string> => ({
   [variableName('font', 'primary')]: fonts.primary,
   [variableName('font', 'mono')]: fonts.mono,
   ...declare('font-size', fonts.sizes),
-  ...declare('font-weight', fonts.weights)
+  ...declare('font-weight', fonts.weights),
+  ...declare('line-height', fonts.lineHeights),
+  ...declare('letter-spacing', fonts.letterSpacings)
 })
 
 export const layoutVariables = (theme: LayoutTokens): Record<string, string> => ({

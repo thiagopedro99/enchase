@@ -19,7 +19,9 @@ export const vars = {
     primary: cssVar('font', 'primary'),
     mono: cssVar('font', 'mono'),
     size: build('font-size', base.fonts.sizes),
-    weight: build('font-weight', base.fonts.weights)
+    weight: build('font-weight', base.fonts.weights),
+    lineHeight: build('line-height', base.fonts.lineHeights),
+    letterSpacing: build('letter-spacing', base.fonts.letterSpacings)
   },
   space: build('space', base.spacing),
   radius: build('radius', base.borderRadius),

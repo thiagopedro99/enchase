@@ -14,6 +14,8 @@ describe('variableName', () => {
     [['font', 'primary'], '--enchase-font-primary'],
     [['font-size', '2xl'], '--enchase-font-size-2xl'],
     [['font-weight', 'semibold'], '--enchase-font-weight-semibold'],
+    [['line-height', 'normal'], '--enchase-line-height-normal'],
+    [['letter-spacing', 'control'], '--enchase-letter-spacing-control'],
     [['space', 'md'], '--enchase-space-md'],
     [['radius', 'full'], '--enchase-radius-full'],
     [['transition', 'fast'], '--enchase-transition-fast'],

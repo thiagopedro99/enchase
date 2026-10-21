@@ -56,17 +56,32 @@ describe('font variable names', () => {
 describe('fontVariables', () => {
   const variables = fontVariables(baseTokens.fonts)
 
-  it('creates one variable for every family, size and weight', () => {
-    const expected = 2 + Object.keys(baseTokens.fonts.sizes).length + Object.keys(baseTokens.fonts.weights).length
+  it('creates one variable for every family, size, weight, line height and letter spacing', () => {
+    const expected =
+      2 +
+      Object.keys(baseTokens.fonts.sizes).length +
+      Object.keys(baseTokens.fonts.weights).length +
+      Object.keys(baseTokens.fonts.lineHeights).length +
+      Object.keys(baseTokens.fonts.letterSpacings).length
 
     expect(Object.keys(variables)).toHaveLength(expected)
   })
 
-  it('keeps the values, writing weights as text', () => {
+  it('keeps the values, writing weights and line heights as text', () => {
     expect(variables['--enchase-font-primary']).toBe(baseTokens.fonts.primary)
     expect(variables['--enchase-font-mono']).toBe(baseTokens.fonts.mono)
     expect(variables['--enchase-font-size-base']).toBe(baseTokens.fonts.sizes.base)
     expect(variables['--enchase-font-weight-bold']).toBe('700')
+  })
+
+  it('declares the line heights and the letter spacings the components read', () => {
+    expect(variables['--enchase-line-height-none']).toBe('1')
+    expect(variables['--enchase-line-height-tight']).toBe('1.2')
+    expect(variables['--enchase-line-height-snug']).toBe('1.4')
+    expect(variables['--enchase-line-height-normal']).toBe('1.5')
+    expect(variables['--enchase-line-height-relaxed']).toBe('1.6')
+    expect(variables['--enchase-letter-spacing-tight']).toBe('-0.01em')
+    expect(variables['--enchase-letter-spacing-control']).toBe('0.01em')
   })
 
   it('does not reuse a name of the color or shadow variables', () => {

@@ -33,6 +33,17 @@ export const baseTokens = {
       medium: 500,
       semibold: 600,
       bold: 700
+    },
+    lineHeights: {
+      none: 1,
+      tight: 1.2,
+      snug: 1.4,
+      normal: 1.5,
+      relaxed: 1.6
+    },
+    letterSpacings: {
+      tight: '-0.01em',
+      control: '0.01em'
     }
   },
 

@@ -36,6 +36,8 @@ describe('vars', () => {
     expect(vars.font.mono).toBe('var(--enchase-font-mono)')
     expect(vars.font.size['2xl']).toBe('var(--enchase-font-size-2xl)')
     expect(vars.font.weight.semibold).toBe('var(--enchase-font-weight-semibold)')
+    expect(vars.font.lineHeight.normal).toBe('var(--enchase-line-height-normal)')
+    expect(vars.font.letterSpacing.control).toBe('var(--enchase-letter-spacing-control)')
     expect(vars.space.lg).toBe('var(--enchase-space-lg)')
     expect(vars.radius.full).toBe('var(--enchase-radius-full)')
     expect(vars.transition.normal).toBe('var(--enchase-transition-normal)')
