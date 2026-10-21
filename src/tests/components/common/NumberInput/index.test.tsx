@@ -5,6 +5,7 @@ import { act, fireEvent, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
+import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPlacementContract.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { en } from '@locales/en.ts'
 
@@ -986,3 +987,5 @@ describe('NumberInput accessibility', () => {
     }
   })
 })
+
+describeLabelPlacementContract({ name: 'NumberInput', slot: 'number-input', control: 'input', placeholder: '0', render: (placement) => <NumberInput label="Name" placeholder="0" labelPlacement={placement} /> })

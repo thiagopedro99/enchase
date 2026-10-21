@@ -4,6 +4,7 @@ import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
+import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPlacementContract.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 
 describe('Input password toggle', () => {
@@ -176,3 +177,5 @@ describe('Input contract', () => {
     expect(screen.getByLabelText('Nome').getAttribute('aria-describedby')).toBe(`extra ${screen.getByText('Dica').id}`)
   })
 })
+
+describeLabelPlacementContract({ name: 'Input', slot: 'input', control: 'input', placeholder: 'Type', render: (placement) => <Input label="Name" placeholder="Type" labelPlacement={placement} /> })

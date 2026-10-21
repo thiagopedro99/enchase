@@ -5,6 +5,7 @@ import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
+import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPlacementContract.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 
 describe('Textarea', () => {
@@ -235,3 +236,5 @@ describe('Textarea contract', () => {
     expect(screen.getByLabelText('Nome')).toHaveAttribute('data-slot', 'textarea-field')
   })
 })
+
+describeLabelPlacementContract({ name: 'Textarea', slot: 'textarea', control: 'textarea', placeholder: 'Type', render: (placement) => <Textarea label="Name" placeholder="Type" labelPlacement={placement} /> })

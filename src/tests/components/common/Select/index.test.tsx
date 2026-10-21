@@ -4,6 +4,7 @@ import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
+import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPlacementContract.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 
 const options = [
@@ -67,3 +68,5 @@ describe('Select contract', () => {
     expect(field.getAttribute('aria-describedby')).toBe(screen.getByRole('alert').id)
   })
 })
+
+describeLabelPlacementContract({ name: 'Select', slot: 'select', control: 'select', render: (placement) => <Select label="Name" options={options} labelPlacement={placement} /> })

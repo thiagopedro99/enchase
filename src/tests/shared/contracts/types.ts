@@ -1,3 +1,4 @@
+import type { LabelPlacement } from '@styles/tokens/types.ts'
 import type { RenderWithProvidersOptions } from '@tests/types.ts'
 import type { ReactElement, ReactNode } from 'react'
 
@@ -20,4 +21,12 @@ export type ControlledDialogState = {
 export interface ControlledDialogProps {
   children: (state: ControlledDialogState) => ReactNode
   triggerLabel?: string
+}
+
+export type LabelPlacementContractAdapter = {
+  name: string
+  slot: string
+  control: string
+  placeholder?: string
+  render: (placement?: LabelPlacement) => ReactElement
 }

@@ -30,6 +30,12 @@ describe('createTheme with a brand color', () => {
     expect(failing).toEqual([])
   })
 
+  it('keeps every measured color pair above the contrast floor for any brand color over the shadcn style too', () => {
+    const failing = brands.filter((brand) => validateTheme(createTheme({ style: 'shadcn', brand })).length > 0)
+
+    expect(failing).toEqual([])
+  })
+
   it.each(['#4F46E5', '#0000FF', '#000000'])('keeps %s as the light primary because it already passes', (brand) => {
     expect(createTheme({ brand }).light.colors.primary).toBe(brand)
   })

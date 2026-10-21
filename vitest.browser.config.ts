@@ -57,6 +57,7 @@ const browserOptions = (provider = playwright()) => ({
 export default defineConfig({
   plugins: base.plugins,
   resolve: base.resolve,
+  optimizeDeps: { include: ['axe-core'] },
   test: {
     setupFiles: ['./src/tests-browser/setup.ts'],
     css: true,
