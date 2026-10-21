@@ -268,11 +268,12 @@ describe('the select picker and the tooltip from the hooks', () => {
 
   const field = () => document.querySelector('select') as HTMLSelectElement
 
-  it.runIf(baseSelect)('takes the width and the color of the border of the picker from their hooks', () => {
+  it.runIf(baseSelect)('takes the width, the color of the border and the corner of the picker from their hooks', () => {
     hooked(
       [
         ['--enchase-select-picker-border-width', '3px', field, 'border-top-width', undefined, '::picker(select)'],
-        ['--enchase-select-picker-border-color', 'rgb(1, 2, 3)', field, 'border-top-color', undefined, '::picker(select)']
+        ['--enchase-select-picker-border-color', 'rgb(1, 2, 3)', field, 'border-top-color', undefined, '::picker(select)'],
+        ['--enchase-select-picker-radius', '13px', field, 'border-top-left-radius', undefined, '::picker(select)']
       ],
       <Select label="Pick" options={options} />
     )

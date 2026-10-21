@@ -94,6 +94,19 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Layout collapsed with storage', element: <Layout storageKey="hydration-layout" defaultCollapsed pageTitle="Home"><p>Content</p></Layout> },
   { name: 'Providers only', element: <p>Content</p> },
   { name: 'ColorModeProvider alone', element: <ColorModeProvider><p>Content</p></ColorModeProvider>, bare: true },
+  {
+    name: 'ColorModeProvider with the shadcn style and its stacked labels',
+    element: (
+      <ColorModeProvider theme={{ style: 'shadcn' }}>
+        <Input label="Email" helperText="Never shared" />
+        <NumberInput label="Amount" defaultValue={3} />
+        <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} />
+        <Textarea label="Message" error="Too short" />
+        <Input label="Floating" labelPlacement="floating" />
+      </ColorModeProvider>
+    ),
+    bare: true
+  },
   { name: 'ColorModeProvider with script and layer', element: <ColorModeProvider cssLayer="enchase-theme"><ColorModeScript /><p>Content</p></ColorModeProvider>, bare: true }
 ]
 
