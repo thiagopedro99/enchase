@@ -1,3 +1,4 @@
+import type { LabelPlacement } from '@styles/tokens/types.ts'
 import type { CSSProperties, SelectHTMLAttributes } from 'react'
 
 export interface SelectOption {
@@ -8,6 +9,7 @@ export interface SelectOption {
 
 export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
+  labelPlacement?: LabelPlacement
   error?: string
   helperText?: string
   options: SelectOption[]

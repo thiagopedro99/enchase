@@ -3,6 +3,7 @@ import { forwardRef, useId, useState } from 'react'
 import { EyeOffIcon } from '../Icon/icons/EyeOffIcon.tsx'
 import { EyeIcon } from '../Icon/icons/EyeIcon.tsx'
 import { defaultFullWidth, defaultPasswordToggle } from './defaultData.ts'
+import { useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import styles from './styles.module.css'
@@ -10,7 +11,7 @@ import styles from './styles.module.css'
 import type { InputProps } from './types.ts'
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helperText, placeholder, type, passwordToggle = defaultPasswordToggle, fullWidth = defaultFullWidth, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
+  ({ label, labelPlacement, error, helperText, placeholder, type, passwordToggle = defaultPasswordToggle, fullWidth = defaultFullWidth, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
     const generatedId = useId()
     const { labels } = useUIConfig()
     const [passwordVisible, setPasswordVisible] = useState(false)
@@ -18,6 +19,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const errorId = `${inputId}-error`
     const helperId = `${inputId}-helper`
     const hasLabel = !!label
+    const themeDefaults = useThemeDefaults()
+    const stacked = (labelPlacement ?? themeDefaults.labelPlacement) === 'stacked'
+    const floating = hasLabel && !stacked
     const hasError = !!error
     const hasToggle = type === 'password' && passwordToggle
     const inputType = hasToggle && passwordVisible ? 'text' : type
@@ -27,6 +31,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         ...slot('input'),
         className: styles.wrapper,
         'data-full-width': fullWidth ? '' : undefined,
+        'data-label-placement': stacked ? 'stacked' : undefined,
         'data-invalid': hasError ? '' : undefined,
         'data-disabled': props.disabled ? '' : undefined
       },
@@ -36,26 +41,30 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       {
         ...slot('input', 'field'),
         className: styles.input,
-        'data-has-label': hasLabel ? '' : undefined,
+        'data-has-label': floating ? '' : undefined,
         'data-has-toggle': hasToggle ? '' : undefined
       },
       props
     )
 
+    const labelElement = hasLabel && (
+      <label htmlFor={inputId} className={styles.label} data-has-error={hasError ? '' : undefined} {...slot('input', 'label')}>
+        {label}
+      </label>
+    )
+
     return (
       <div {...wrapper}>
+        {stacked && labelElement}
+
         <div className={styles.field} {...slot('input', 'control')}>
-          <input {...field} ref={ref} id={inputId} type={inputType} placeholder={hasLabel ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
+          <input {...field} ref={ref} id={inputId} type={inputType} placeholder={floating ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
 
-          {hasLabel && (
-            <label htmlFor={inputId} className={styles.label} data-has-error={hasError ? '' : undefined} {...slot('input', 'label')}>
-              {label}
-            </label>
-          )}
+          {!stacked && labelElement}
 
-          <fieldset aria-hidden="true" className={styles.outline} data-has-label={hasLabel ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('input', 'outline')}>
+          <fieldset aria-hidden="true" className={styles.outline} data-has-label={floating ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('input', 'outline')}>
             <legend>
-              <span>{label ?? '​'}</span>
+              <span>{(floating ? label : undefined) ?? '​'}</span>
             </legend>
           </fieldset>
 

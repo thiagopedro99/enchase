@@ -1,3 +1,4 @@
+import type { LabelPlacement } from '@styles/tokens/types.ts'
 import type { CSSProperties, InputHTMLAttributes } from 'react'
 import type { NumberFormatOptions } from '@utils/numberFormat.ts'
 
@@ -13,6 +14,7 @@ export interface NumberInputProps extends Omit<InputHTMLAttributes<HTMLInputElem
   largeStep?: number
   formatOptions?: NumberInputFormat
   label?: string
+  labelPlacement?: LabelPlacement
   error?: string
   helperText?: string
   fullWidth?: boolean

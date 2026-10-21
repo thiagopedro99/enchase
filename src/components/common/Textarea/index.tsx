@@ -1,18 +1,22 @@
 import { forwardRef, useId } from 'react'
 
 import { defaultFullWidth, defaultResize, defaultRows } from './defaultData.ts'
+import { useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import styles from './styles.module.css'
 
 import type { TextareaProps } from './types.ts'
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, error, helperText, placeholder, fullWidth = defaultFullWidth, resize = defaultResize, rows = defaultRows, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
+  ({ label, labelPlacement, error, helperText, placeholder, fullWidth = defaultFullWidth, resize = defaultResize, rows = defaultRows, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
     const generatedId = useId()
     const textareaId = id ?? generatedId
     const errorId = `${textareaId}-error`
     const helperId = `${textareaId}-helper`
     const hasLabel = !!label
+    const themeDefaults = useThemeDefaults()
+    const stacked = (labelPlacement ?? themeDefaults.labelPlacement) === 'stacked'
+    const floating = hasLabel && !stacked
     const hasError = !!error
     const describedBy = [props['aria-describedby'], error ? errorId : helperText ? helperId : undefined].filter(Boolean).join(' ') || undefined
     const wrapper = mergeProps(
@@ -20,6 +24,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         ...slot('textarea'),
         className: styles.wrapper,
         'data-full-width': fullWidth ? '' : undefined,
+        'data-label-placement': stacked ? 'stacked' : undefined,
         'data-invalid': hasError ? '' : undefined,
         'data-disabled': props.disabled ? '' : undefined
       },
@@ -29,26 +34,30 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       {
         ...slot('textarea', 'field'),
         className: styles.textarea,
-        'data-has-label': hasLabel ? '' : undefined,
+        'data-has-label': floating ? '' : undefined,
         'data-resize': resize
       },
       props
     )
 
+    const labelElement = hasLabel && (
+      <label htmlFor={textareaId} className={styles.label} data-has-error={hasError ? '' : undefined} {...slot('textarea', 'label')}>
+        {label}
+      </label>
+    )
+
     return (
       <div {...wrapper}>
+        {stacked && labelElement}
+
         <div className={styles.field} {...slot('textarea', 'control')}>
-          <textarea {...field} ref={ref} id={textareaId} rows={rows} placeholder={hasLabel ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
+          <textarea {...field} ref={ref} id={textareaId} rows={rows} placeholder={floating ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
 
-          {hasLabel && (
-            <label htmlFor={textareaId} className={styles.label} data-has-error={hasError ? '' : undefined} {...slot('textarea', 'label')}>
-              {label}
-            </label>
-          )}
+          {!stacked && labelElement}
 
-          <fieldset aria-hidden="true" className={styles.outline} data-has-label={hasLabel ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('textarea', 'outline')}>
+          <fieldset aria-hidden="true" className={styles.outline} data-has-label={floating ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('textarea', 'outline')}>
             <legend>
-              <span>{label ?? '​'}</span>
+              <span>{(floating ? label : undefined) ?? '​'}</span>
             </legend>
           </fieldset>
         </div>
