@@ -6,6 +6,7 @@ import ts from 'typescript'
 import { createServer } from 'vite'
 
 import { hookNotes, renderApiDocs } from './apiDocs.mjs'
+import { cssHooksModel } from './cssHooks.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const posixRoot = root.replaceAll('\\', '/')
@@ -247,13 +248,17 @@ const buildModel = async () => {
     const docs = await loadStoryDocs(server)
     const exported = valueExports(main)
     const iconExports = valueExports(icons).filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(icons.checker, symbol))
+    const { fontVariables, layoutVariables } = await server.ssrLoadModule('/src/styles/css/declarations.ts')
+    const { baseTokens } = await server.ssrLoadModule('/src/styles/tokens/index.ts')
+    const tokens = { ...fontVariables(baseTokens.fonts), ...layoutVariables(baseTokens) }
     const [firstIcon] = iconExports
     const { props, element } = componentDoc(icons.checker, firstIcon.name, firstIcon.symbol, docs.get('Icon') ?? { argTypes: {} })
 
     return {
       components: exported.filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(checker, symbol)).map(({ name, symbol }) => componentDoc(checker, name, symbol, docs.get(name) ?? { argTypes: {} })),
       hooks: exported.filter(({ name }) => /^use[A-Z]/.test(name)).map(({ name, symbol }) => hookDoc(checker, name, symbol)),
-      icons: { props, element, items: iconExports.map(({ name, symbol }) => iconDoc(name, symbol)) }
+      icons: { props, element, items: iconExports.map(({ name, symbol }) => iconDoc(name, symbol)) },
+      cssHooks: cssHooksModel(join(root, 'src', 'components'), tokens)
     }
   } finally {
     await server.close()

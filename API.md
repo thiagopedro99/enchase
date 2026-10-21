@@ -757,3 +757,468 @@ Aceita também os demais atributos de `<svg>`, repassados ao elemento.
 | `MoonIcon` | `moon` | — |
 | `PlusIcon` | `plus` | — |
 | `SunIcon` | `sun` | — |
+
+## Ganchos de CSS
+
+Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma fonte, um canto ou um tempo sem escrever CSS por cima. O tema não as declara: sem valor, o componente usa o padrão da tabela, e um padrão que aponta para um token do tema continua seguindo uma sobrescrita desse token. O nome é `--enchase-<data-slot>-<propriedade>`, com o nome do `data-slot` da parte e, quando há mais de um tamanho ou variante, o sufixo dela (`--enchase-switch-thumb-size`, `--enchase-button-padding-inline-md`). Experimentais até a versão 1.0: um nome pode mudar numa versão menor.
+
+### Accordion
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-accordion-distance` | `6px` | `transform` |
+| `--enchase-accordion-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-accordion-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-accordion-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-accordion-trigger-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-accordion-trigger-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-accordion-trigger-line-height` | `1.4` (`--enchase-line-height-snug`) | `line-height` |
+
+### Alert
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-alert-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-alert-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-alert-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-alert-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-alert-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
+| `--enchase-alert-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-alert-title-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+
+### AppBar
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-app-bar-background` | `color-mix(in srgb, var(--enchase-color-surface) 80%, transparent)` | `background-color` |
+| `--enchase-app-bar-blur` | `12px` | `-webkit-backdrop-filter`, `backdrop-filter` |
+| `--enchase-app-bar-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-app-bar-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-layout-header-menu-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+
+### Badge
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-badge-font-size-md` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-badge-font-size-sm` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-badge-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-badge-line-height` | `1` (`--enchase-line-height-none`) | `line-height` |
+| `--enchase-badge-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+
+### Brand
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-brand-font-size` | `1.375rem` (`--enchase-font-size-xl`) | `font-size` |
+| `--enchase-brand-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-brand-letter-spacing` | `-0.01em` (`--enchase-letter-spacing-tight`) | `letter-spacing` |
+| `--enchase-brand-mark-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-brand-mark-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
+| `--enchase-brand-mark-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+
+### Breadcrumbs
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-breadcrumbs-current-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-breadcrumbs-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-breadcrumbs-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-breadcrumbs-ellipsis-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
+| `--enchase-breadcrumbs-ellipsis-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-breadcrumbs-item-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-breadcrumbs-link-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-breadcrumbs-link-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-breadcrumbs-text-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+
+### Button
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-button-distance` | `2px` (`--enchase-motion-distance-xs`) | `transform` |
+| `--enchase-button-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` (também em ThemeToggle) |
+| `--enchase-button-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-button-font-size-lg` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-button-font-size-md` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-button-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-button-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-button-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-button-letter-spacing` | `0.01em` (`--enchase-letter-spacing-control`) | `letter-spacing` |
+| `--enchase-button-line-height` | `1.2` (`--enchase-line-height-tight`) | `line-height` |
+| `--enchase-button-padding-block-lg` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-button-padding-block-md` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-button-padding-block-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-button-padding-inline-ghost` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-button-padding-inline-lg` | `2rem` (`--enchase-space-xl`) | `padding-inline` |
+| `--enchase-button-padding-inline-md` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
+| `--enchase-button-padding-inline-sm` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-button-scale` | `0.97` | `transform` (também em ThemeToggle) |
+
+### Card
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-card-distance` | `2px` (`--enchase-motion-distance-xs`) | `transform` |
+| `--enchase-card-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-card-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-card-radius` | `1.5rem` (`--enchase-radius-xl`) | `border-radius` |
+
+### Checkbox
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-checkbox-box-check-width` | `2px` | `border-width` |
+| `--enchase-checkbox-box-radius` | `2px` | `border-radius` |
+| `--enchase-checkbox-box-size` | `18px` | `inline-size`, `block-size`, `margin-block-start` |
+| `--enchase-checkbox-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-checkbox-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-checkbox-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-checkbox-scale` | `0.6` | `transform` |
+
+### Container
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-container-max` | `100%` | `max-inline-size` |
+| `--enchase-container-padding` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+
+### Flex
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-flex-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+
+### footer
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-footer-copyright-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-footer-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-footer-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-footer-link-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-footer-link-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+
+### Grid
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-grid-columns` | `repeat(1, 1fr)` | `grid-template-columns` |
+| `--enchase-grid-gap` | `1rem` (`--enchase-space-md`) | `gap`, `flex`, `flex-basis` |
+| `--enchase-grid-min-column` | `14rem` | `flex` |
+| `--enchase-grid-n` | `1` | `grid-template-columns`, `flex`, `flex-basis` |
+| `--enchase-grid-n-lg` | `1` | `--enchase-grid-n` |
+| `--enchase-grid-n-md` | `1` | `--enchase-grid-n` |
+| `--enchase-grid-n-sm` | `1` | `--enchase-grid-n` |
+| `--enchase-grid-n-xl` | `1` | `--enchase-grid-n` |
+| `--enchase-grid-n-xs` | `1` | `--enchase-grid-n` |
+| `--enchase-grid-n-xxl` | `1` | `--enchase-grid-n` |
+
+### Icon
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-icon-swap-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-icon-swap-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-icon-swap-rotate` | `0deg` | `transform` |
+
+### Input
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-input-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-input-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-input-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-input-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-height` | `3.5rem` | `block-size`, `transform` (também em NumberInput, Select) |
+| `--enchase-input-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-input-min-width` | `200px` | `min-inline-size` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline`, `inset-inline-start`, `max-inline-size` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-toggle-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+
+### layout
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-layout-skip-link-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-layout-skip-link-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+
+### Link
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-link-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-link-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-link-radius` | `0.5rem` (`--enchase-radius-sm`) | `border-radius` |
+| `--enchase-link-underline-offset` | `0.2em` | `text-underline-offset` |
+
+### Loading
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-loading-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition`, `animation` |
+| `--enchase-loading-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition`, `animation` |
+| `--enchase-loading-text-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-loading-text-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+
+### Modal
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-modal-body-line-height` | `1.6` (`--enchase-line-height-relaxed`) | `line-height` |
+| `--enchase-modal-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-modal-distance` | `0px` | `transform` |
+| `--enchase-modal-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition` |
+| `--enchase-modal-dx` | `0` | `transform` |
+| `--enchase-modal-dy` | `0` | `transform` |
+| `--enchase-modal-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-modal-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
+| `--enchase-modal-exit-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition-timing-function` |
+| `--enchase-modal-fade-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-modal-panel-radius` | `1.75rem` (`--enchase-radius-2xl`) | `border-radius` |
+| `--enchase-modal-scale` | `1` | `transform` |
+| `--enchase-modal-title-font-size` | `1.75rem` (`--enchase-font-size-2xl`) | `font-size` |
+| `--enchase-modal-title-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+
+### navbar
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-navbar-background` | `color-mix(in srgb, var(--enchase-color-surface-container) 80%, transparent)` | `background-color` |
+| `--enchase-navbar-blur` | `12px` | `-webkit-backdrop-filter`, `backdrop-filter` |
+| `--enchase-navbar-distance` | `0px` | `transform` |
+| `--enchase-navbar-drawer-radius-end-start` | `1.75rem` (`--enchase-radius-2xl`) | `border-end-start-radius` |
+| `--enchase-navbar-drawer-radius-start-start` | `1.75rem` (`--enchase-radius-2xl`) | `border-start-start-radius` |
+| `--enchase-navbar-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-navbar-dx` | `0` | `transform`, `translate` |
+| `--enchase-navbar-dy` | `0` | `transform` |
+| `--enchase-navbar-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-navbar-enter-delay` | `0ms` | `transition` |
+| `--enchase-navbar-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
+| `--enchase-navbar-index` | `0` | `--enchase-navbar-enter-delay` |
+| `--enchase-navbar-item-offset` | `12px` | `translate` |
+| `--enchase-navbar-logo-font-size` | `1.375rem` (`--enchase-font-size-xl`) | `font-size` |
+| `--enchase-navbar-logo-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-navbar-logo-letter-spacing` | `-0.01em` (`--enchase-letter-spacing-tight`) | `letter-spacing` |
+| `--enchase-navbar-menu-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-navbar-menu-link-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-navbar-menu-link-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-navbar-menu-link-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-navbar-stagger` | `30ms` | `--enchase-navbar-enter-delay` |
+
+### NumberInput
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-number-input-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-number-input-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-number-input-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-number-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-number-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-number-input-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-number-input-stepper-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+
+### Pagination
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-pagination-control-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-pagination-control-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-pagination-control-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-pagination-control-line-height` | `1` (`--enchase-line-height-none`) | `line-height` |
+| `--enchase-pagination-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-pagination-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-pagination-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-pagination-ellipsis-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-pagination-ellipsis-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+
+### Popover
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-popover-content-radius` | `1rem` (`--enchase-radius-lg`) | `border-radius` |
+| `--enchase-popover-duration` | `300ms` (`--enchase-motion-spring-snappy-duration`) | `transition-duration` |
+| `--enchase-popover-ease` | `linear(0, 0.016, 0.056, 0.114, 0.182, 0.257, 0.333, 0.408, 0.48, 0.549, 0.612, 0.669, 0.721, 0.767, 0.807, 0.842, 0.873, 0.898, 0.92, 0.939, 0.954, 0.966, 0.976, 0.984, 0.99, 0.995, 0.999, 1.002, 1.004, 1.005, 1.006, 1.006, 1.006, 1.006, 1.006, 1.006, 1.005, 1.005, 1.004, 1.004, 1.003, 1.003, 1.002, 1.002, 1.002, 1.001, 1.001, 1)` (`--enchase-motion-spring-snappy`) | `transition-timing-function` |
+| `--enchase-popover-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
+| `--enchase-popover-max-height` | `100vh` | `max-block-size` |
+| `--enchase-popover-max-width` | `100vw` | `max-inline-size` |
+| `--enchase-popover-scale` | `1` | `transform` |
+
+### RadioGroup
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-radio-group-control-dot-size` | `calc(var(--enchase-radio-group-control-size, 1.25rem) / 2)` | `--radio-dot-size` |
+| `--enchase-radio-group-control-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
+| `--enchase-radio-group-control-size` | `1.25rem` | `--radio-dot-size`, `inline-size`, `block-size` |
+| `--enchase-radio-group-dot-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
+| `--enchase-radio-group-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-radio-group-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-radio-group-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-radio-group-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-radio-group-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-radio-group-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-radio-group-legend-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-radio-group-legend-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-radio-group-scale` | `0.6` | `transform` |
+
+### Select
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-select-distance` | `2px` (`--enchase-motion-distance-xs`) | `transform` |
+| `--enchase-select-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-select-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-select-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-select-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-select-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-select-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-select-option-font-weight-checked` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-select-option-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-select-picker-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+
+### Sidebar
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-sidebar-collapse-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-distance` | `0px` | `transform` |
+| `--enchase-sidebar-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition` |
+| `--enchase-sidebar-dx` | `0` | `transform`, `translate` |
+| `--enchase-sidebar-dy` | `0` | `transform` |
+| `--enchase-sidebar-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-sidebar-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
+| `--enchase-sidebar-index` | `0` | `transition-delay` |
+| `--enchase-sidebar-indicator-duration` | `var(--enchase-sidebar-duration, var(--enchase-motion-duration-base))` | `transition` |
+| `--enchase-sidebar-indicator-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-item-badge-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-sidebar-item-badge-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-sidebar-item-badge-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-item-control-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-sidebar-item-control-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-sidebar-item-control-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-item-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-sidebar-item-icon-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-sidebar-item-icon-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
+| `--enchase-sidebar-item-offset` | `12px` | `translate` |
+| `--enchase-sidebar-item-scale` | `0.98` | `transform` |
+| `--enchase-sidebar-label-duration` | `calc(var(--enchase-sidebar-duration, var(--enchase-motion-duration-base)) * 0.4)` | `transition` |
+| `--enchase-sidebar-panel-radius-end-end` | `1.75rem` (`--enchase-radius-2xl`) | `border-end-end-radius` |
+| `--enchase-sidebar-panel-radius-start-end` | `1.75rem` (`--enchase-radius-2xl`) | `border-start-end-radius` |
+| `--enchase-sidebar-radius-end-end` | `1rem` (`--enchase-radius-lg`) | `border-end-end-radius` |
+| `--enchase-sidebar-radius-start-end` | `1rem` (`--enchase-radius-lg`) | `border-start-end-radius` |
+| `--enchase-sidebar-section-title-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-sidebar-section-title-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-sidebar-stagger` | `30ms` | `transition-delay` |
+| `--enchase-sidebar-width` | `280px` | `inline-size` |
+| `--enchase-sidebar-width-collapsed` | `80px` | `inline-size` |
+
+### SidebarUser
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-sidebar-user-avatar-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-sidebar-user-avatar-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
+| `--enchase-sidebar-user-avatar-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
+| `--enchase-sidebar-user-logout-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-user-name-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-sidebar-user-name-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+
+### Skeleton
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-skeleton-duration` | `1.5s` | `animation` |
+| `--enchase-skeleton-ease` | `cubic-bezier(0.4, 0, 0.2, 1)` (`--enchase-motion-ease-in-out`) | `animation` |
+| `--enchase-skeleton-radius-rectangular` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-skeleton-radius-text` | `0.5rem` (`--enchase-radius-sm`) | `border-radius` |
+
+### Switch
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-switch-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-switch-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-switch-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-switch-thumb-inset` | `0.125rem` | `--switch-travel`, `inset-inline-start` |
+| `--enchase-switch-thumb-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
+| `--enchase-switch-thumb-scale-off` | `0.667` | `transform` |
+| `--enchase-switch-thumb-size` | `1.5rem` | `--switch-travel`, `inline-size`, `block-size` |
+| `--enchase-switch-track-height` | `2rem` | `block-size` |
+| `--enchase-switch-track-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
+| `--enchase-switch-track-width` | `3.25rem` | `--switch-travel`, `inline-size` |
+
+### Table
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-table-caption-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-table-element-font-size-md` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-table-element-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-table-header-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-table-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-table-row-header-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+
+### Tabs
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-tabs-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-tabs-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-tabs-tab-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-tabs-tab-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-tabs-tab-line-height` | `1.2` (`--enchase-line-height-tight`) | `line-height` |
+
+### Textarea
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-textarea-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-textarea-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-textarea-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-textarea-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-textarea-field-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
+| `--enchase-textarea-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-textarea-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-textarea-min-height` | `3.5rem` | `min-block-size` |
+| `--enchase-textarea-padding-block` | `1rem` (`--enchase-space-md`) | `padding-block`, `transform` |
+
+### ThemeToggle
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-theme-toggle-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-theme-toggle-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-theme-toggle-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+
+### toast
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-toast-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-toast-distance` | `0px` | `transform` |
+| `--enchase-toast-duration` | `300ms` (`--enchase-motion-spring-snappy-duration`) | `transition` |
+| `--enchase-toast-dx` | `0` | `transform` |
+| `--enchase-toast-dy` | `0` | `transform` |
+| `--enchase-toast-ease` | `linear(0, 0.016, 0.056, 0.114, 0.182, 0.257, 0.333, 0.408, 0.48, 0.549, 0.612, 0.669, 0.721, 0.767, 0.807, 0.842, 0.873, 0.898, 0.92, 0.939, 0.954, 0.966, 0.976, 0.984, 0.99, 0.995, 0.999, 1.002, 1.004, 1.005, 1.006, 1.006, 1.006, 1.006, 1.006, 1.006, 1.005, 1.005, 1.004, 1.004, 1.003, 1.003, 1.002, 1.002, 1.002, 1.001, 1.001, 1)` (`--enchase-motion-spring-snappy`) | `transition` |
+| `--enchase-toast-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
+| `--enchase-toast-exit-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition-timing-function` |
+| `--enchase-toast-fade-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-toast-lifetime` | `3000ms` | `animation` |
+| `--enchase-toast-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-toast-title-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-toast-title-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-toast-title-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
+
+### Tooltip
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-tooltip-bubble-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-tooltip-bubble-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-tooltip-bubble-radius` | `0.25rem` (`--enchase-radius-xs`) | `border-radius` |
+| `--enchase-tooltip-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
+| `--enchase-tooltip-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition-timing-function` |
+| `--enchase-tooltip-scale` | `1` | `transform` |

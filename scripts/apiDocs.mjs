@@ -42,7 +42,31 @@ const hookSection = ({ name, signature, note, members }) => {
   return [`### ${name}`, '', '```ts', signature, '```', ...(note ? ['', note] : []), ...returned].join('\n')
 }
 
-export const renderApiDocs = ({ components, hooks, icons }) => {
+const cssHooksIntro =
+  'Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma fonte, um canto ou um tempo sem escrever CSS por cima. O tema não as declara: sem valor, o componente usa o padrão da tabela, e um padrão que aponta para um token do tema continua seguindo uma sobrescrita desse token. O nome é `--enchase-<data-slot>-<propriedade>`, com o nome do `data-slot` da parte e, quando há mais de um tamanho ou variante, o sufixo dela (`--enchase-switch-thumb-size`, `--enchase-button-padding-inline-md`). Experimentais até a versão 1.0: um nome pode mudar numa versão menor.'
+
+const cssHookDefault = ({ default: fallback, token }) => (token ? `${code(fallback)} (${code(token)})` : code(fallback))
+
+const cssHookProperties = ({ properties, components, owner }) => {
+  const others = components.filter((component) => component !== owner)
+
+  return `${properties.map(code).join(', ')}${others.length > 0 ? ` (também em ${others.join(', ')})` : ''}`
+}
+
+const cssHooksSection = (cssHooks) =>
+  [
+    '## Ganchos de CSS',
+    '',
+    cssHooksIntro,
+    '',
+    cssHooks
+      .map(({ component, hooks }) =>
+        [`### ${component}`, '', '| Gancho | Padrão | Propriedade |', '| --- | --- | --- |', ...hooks.map((hook) => `| ${code(hook.name)} | ${cssHookDefault(hook)} | ${cssHookProperties(hook)} |`)].join('\n')
+      )
+      .join('\n\n')
+  ].join('\n')
+
+export const renderApiDocs = ({ components, hooks, icons, cssHooks = [] }) => {
   const sortedComponents = [...components].sort(collator)
   const sortedHooks = [...hooks].sort(collator)
   const index = sortedComponents.map(({ name }) => `[${name}](#${name.toLowerCase()})`).join(' · ')
@@ -67,7 +91,8 @@ export const renderApiDocs = ({ components, hooks, icons }) => {
       '',
       sortedHooks.map(hookSection).join('\n\n'),
       '',
-      iconsSection(icons)
+      iconsSection(icons),
+      ...(cssHooks.length > 0 ? ['', cssHooksSection(cssHooks)] : [])
     ].join('\n') + '\n'
   )
 }

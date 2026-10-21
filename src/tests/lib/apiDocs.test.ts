@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { escapeCell, renderApiDocs } from '../../../scripts/apiDocs.mjs'
 
-import type { ComponentDoc, HookDoc, IconsDoc } from '../../../scripts/apiDocs.mjs'
+import type { ComponentDoc, CssHooksGroup, HookDoc, IconsDoc } from '../../../scripts/apiDocs.mjs'
 
 const button: ComponentDoc = {
   name: 'Button',
@@ -30,7 +30,17 @@ const icons: IconsDoc = {
   ]
 }
 
-const render = (components: ComponentDoc[] = [button], hooks: HookDoc[] = [hook], iconsDoc: IconsDoc = icons) => renderApiDocs({ components, hooks, icons: iconsDoc })
+const cssHooks: CssHooksGroup[] = [
+  {
+    component: 'Alert',
+    hooks: [
+      { name: '--enchase-alert-radius', owner: 'Alert', default: '0.75rem', token: '--enchase-radius-md', properties: ['border-radius'], components: ['Alert'] },
+      { name: '--enchase-alert-title-font-weight', owner: 'Alert', default: '18px', properties: ['font-weight', 'line-height'], components: ['Alert', 'Modal'] }
+    ]
+  }
+]
+
+const render = (components: ComponentDoc[] = [button], hooks: HookDoc[] = [hook], iconsDoc: IconsDoc = icons, groups: CssHooksGroup[] = []) => renderApiDocs({ components, hooks, icons: iconsDoc, cssHooks: groups })
 
 describe('escapeCell', () => {
   it('escapes the pipes so a union stays in one table cell', () => {
@@ -106,6 +116,23 @@ describe('renderApiDocs', () => {
     const markdown = render()
 
     expect(markdown.indexOf('## Hooks')).toBeLessThan(markdown.indexOf('## Ícones'))
+  })
+
+  it('lists the css hooks of each component with the default, the token it follows and the property it changes', () => {
+    const markdown = render([button], [hook], icons, cssHooks)
+
+    expect(markdown).toContain('## Ganchos de CSS')
+    expect(markdown).toContain('### Alert\n\n| Gancho | Padrão | Propriedade |\n| --- | --- | --- |')
+    expect(markdown).toContain('| `--enchase-alert-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |')
+    expect(markdown).toContain('| `--enchase-alert-title-font-weight` | `18px` | `font-weight`, `line-height` (também em Modal) |')
+  })
+
+  it('leaves the css hooks out when there are none, and puts them after the icons', () => {
+    expect(render()).not.toContain('Ganchos de CSS')
+
+    const markdown = render([button], [hook], icons, cssHooks)
+
+    expect(markdown.indexOf('## Ícones')).toBeLessThan(markdown.indexOf('## Ganchos de CSS'))
   })
 
   it('ends with a single newline and uses no carriage returns', () => {

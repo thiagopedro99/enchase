@@ -14,4 +14,8 @@ export const hookNotes: Record<string, string>
 
 export const escapeCell: (text: string) => string
 
-export const renderApiDocs: (model: { components: ComponentDoc[]; hooks: HookDoc[]; icons: IconsDoc }) => string
+export type CssHookDoc = { name: string; owner: string; default: string; token?: string; properties: string[]; components: string[] }
+
+export type CssHooksGroup = { component: string; hooks: CssHookDoc[] }
+
+export const renderApiDocs: (model: { components: ComponentDoc[]; hooks: HookDoc[]; icons: IconsDoc; cssHooks?: CssHooksGroup[] }) => string
