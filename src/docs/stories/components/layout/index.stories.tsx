@@ -75,7 +75,7 @@ const meta = {
     },
     translucent: {
       description:
-        'Deixa a barra do topo semitransparente, com desfoque do conteúdo que rola por baixo: a `AppBar` com a navegação sidebar, ou a `Navbar` com a navegação navbar. O fundo e o desfoque vêm de `--enchase-app-bar-background` e `--enchase-app-bar-blur` na AppBar (padrão: 80% da cor `surface` do tema e `12px`) e de `--enchase-navbar-background` e `--enchase-navbar-blur` na Navbar (80% da `surfaceContainer`). Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco.',
+        'Deixa a barra do topo semitransparente, com desfoque do conteúdo que rola por baixo: a `AppBar` com a navegação sidebar, ou a `Navbar` com a navegação navbar. O fundo e o desfoque vêm de `--enchase-app-bar-background` e `--enchase-app-bar-blur` na AppBar (padrão: a cor `--enchase-app-bar-background-solid`, que é a `surface` do tema, a `--enchase-app-bar-background-alpha`, 0,8, e `12px`) e de `--enchase-navbar-background` e `--enchase-navbar-blur` na Navbar (a `--enchase-navbar-background-solid`, que é a `surfaceContainer`, a `--enchase-navbar-background-alpha`). Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
