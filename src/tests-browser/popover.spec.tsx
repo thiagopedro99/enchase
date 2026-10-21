@@ -136,8 +136,27 @@ describe('Popover placement in a real browser', () => {
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.poll(content).toBeTruthy()
 
-    await expect.poll(() => (content() as HTMLElement).getBoundingClientRect().height).toBeLessThanOrEqual(400)
+    await expect.poll(() => (content() as HTMLElement).getBoundingClientRect().bottom).toBeLessThan(400)
     expect(getComputedStyle(content() as HTMLElement).overflowY).toBe('auto')
+  })
+
+  it('shrinks to the available width', async () => {
+    await page.viewport(600, 400)
+    renderInBrowser(
+      placed('top: 150px; left: 100px', (
+        <Popover content={<div style={{ width: 2000, height: 40 }}>Conteúdo largo</div>}>
+          <button>Abrir</button>
+        </Popover>
+      ))
+    )
+    await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
+    await expect.poll(content).toBeTruthy()
+
+    await expect.poll(() => (content() as HTMLElement).getBoundingClientRect().width).toBeLessThan(600)
+
+    const box = (content() as HTMLElement).getBoundingClientRect()
+
+    expect([box.left >= 0, box.right <= document.documentElement.clientWidth]).toEqual([true, true])
   })
 })
 

@@ -8,6 +8,8 @@ import Flex from '@components/common/Flex/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { renderInBrowser } from './harness.tsx'
 
+import type { CSSProperties } from 'react'
+
 const rectOf = (element: Element) => element.getBoundingClientRect()
 
 const layout = (props: Partial<Parameters<typeof Layout>[0]> = {}) => (
@@ -98,5 +100,16 @@ describe('layout primitives in a real browser', () => {
     expect(getComputedStyle(page.getByTestId('f').element()).gap).toBe('33px')
     expect(getComputedStyle(page.getByTestId('b').element()).minWidth).toBe('123px')
     style.remove()
+  })
+
+  it('lets a Flex follow the gap hook until it is given a gap', () => {
+    renderInBrowser(
+      <div style={{ '--enchase-flex-gap': '23px' } as CSSProperties}>
+        <Flex data-testid="a" />
+        <Flex data-testid="b" gap="7px" />
+      </div>
+    )
+
+    expect([getComputedStyle(page.getByTestId('a').element()).gap, getComputedStyle(page.getByTestId('b').element()).gap]).toEqual(['23px', '7px'])
   })
 })

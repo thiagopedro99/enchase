@@ -10,6 +10,8 @@ import { Table } from '@components/common/Table/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
 import { useToast } from '@components/toast/index.ts'
 import { renderInBrowser } from './harness.tsx'
+import { pressMouse, releaseMouse } from './pointer.ts'
+import { waitForSettled } from './settle.ts'
 
 import type { CSSProperties, ReactNode } from 'react'
 
@@ -25,7 +27,8 @@ const onRoot = (variables: Record<string, string>) => {
   for (const [name, value] of Object.entries(variables)) document.documentElement.style.setProperty(name, value)
 }
 
-afterEach(() => {
+afterEach(async () => {
+  await releaseMouse()
   document.documentElement.removeAttribute('style')
 })
 
@@ -163,6 +166,14 @@ describe('the card from the hooks', () => {
     expect(style('card', 2).borderTopColor).toBe('rgb(13, 14, 15)')
     expect(paddings('card')).toEqual(['9px', '9px', '9px', '9px'])
   })
+
+  it('takes the shadow of a hovered elevated card from its own hook', async () => {
+    renderInBrowser(scoped({ '--enchase-card-shadow-elevated-hover': '0 0 0 4px rgb(1, 2, 3)' }, <Card variant="elevated">Two</Card>))
+    await userEvent.hover(part('card'))
+    await waitForSettled(() => part('card'))
+
+    expect(colorOf(style('card').boxShadow)).toContain('rgb(1,2,3)')
+  })
 })
 
 describe('the table from the hooks', () => {
@@ -270,17 +281,48 @@ describe('the modal from the hooks', () => {
     expect([style('modal-title').color, style('modal-body').color, style('modal-close').color]).toEqual(['rgb(10, 11, 12)', 'rgb(13, 14, 15)', 'rgb(16, 17, 18)'])
   })
 
+  it('takes the vertical padding of the footer from its hook', () => {
+    onRoot({ '--enchase-modal-footer-padding-block': '17px' })
+    renderInBrowser(
+      <Modal isOpen onClose={() => undefined} title="Title" footer={<span>Footer</span>}>
+        Body
+      </Modal>
+    )
+
+    expect([style('modal-footer').paddingTop, style('modal-footer').paddingBottom]).toEqual(['17px', '17px'])
+  })
+
+  it('takes the color of the close button while hovered and while pressed from their hooks', async () => {
+    onRoot({ '--enchase-modal-close-color-hover': 'rgb(1, 2, 3)', '--enchase-modal-close-color-active': 'rgb(4, 5, 6)' })
+    renderInBrowser(
+      <Modal isOpen onClose={() => undefined} title="Title">
+        Body
+      </Modal>
+    )
+    await userEvent.hover(part('modal-close'))
+    await waitForSettled(() => part('modal-close'))
+
+    expect(style('modal-close').color).toBe('rgb(1, 2, 3)')
+
+    await pressMouse('[data-slot="modal-close"]')
+    await waitForSettled(() => part('modal-close'))
+
+    expect(style('modal-close').color).toBe('rgb(4, 5, 6)')
+  })
+
   it('takes the widest size of each modal size from its own hook', () => {
-    onRoot({ '--enchase-modal-panel-max-width-sm': '311px', '--enchase-modal-panel-max-width-lg': '713px' })
+    onRoot({ '--enchase-modal-panel-max-width-sm': '311px', '--enchase-modal-panel-max-width-lg': '713px', '--enchase-modal-panel-max-width-xl': '911px' })
     renderInBrowser(
       <>
-        <Modal isOpen onClose={() => undefined} title="Small" size="sm">
-          Body
-        </Modal>
+        {(['sm', 'lg', 'xl'] as const).map((size) => (
+          <Modal key={size} isOpen onClose={() => undefined} title={size} size={size}>
+            Body
+          </Modal>
+        ))}
       </>
     )
 
-    expect(style('modal-panel').maxWidth).toBe('311px')
+    expect(parts('modal-panel').map((panel) => getComputedStyle(panel).maxWidth)).toEqual(['311px', '713px', '911px'])
   })
 })
 
@@ -305,6 +347,15 @@ describe('the tabs from the hooks', () => {
     expect([style('tabs-tab', 0).color, style('tabs-tab', 1).color]).toEqual(['rgb(7, 8, 9)', 'rgb(4, 5, 6)'])
     expect([style('tabs-tab', 1).minHeight, style('tabs-tab', 1).paddingTop, style('tabs-tab', 1).paddingLeft]).toEqual(['51px', '9px', '11px'])
     expect(style('tabs-panel').paddingTop).toBe('13px')
+  })
+
+  it('takes the color of an unselected tab under the pointer from its hook', async () => {
+    renderInBrowser(scoped({ '--enchase-tabs-tab-color-hover': 'rgb(1, 2, 3)' }, <Tabs ariaLabel="Account" items={items} defaultValue="one" />))
+    await userEvent.hover(part('tabs-tab', 1))
+    await waitForSettled(() => part('tabs-tab', 1))
+
+    expect(style('tabs-tab', 1).color).toBe('rgb(1, 2, 3)')
+    expect(style('tabs-tab', 0).color).not.toBe('rgb(1, 2, 3)')
   })
 
   it('draws the underline of the selected tab and the sliding indicator with one color hook', () => {
@@ -370,6 +421,26 @@ describe('the toast from the hooks', () => {
 
     expect([style('toast').paddingTop, style('toast').minHeight, style('toast').marginBottom]).toEqual(['9px', '71px', '13px'])
     expect(colorOf(style('toast').boxShadow)).toContain('rgb(10,11,12)')
+  })
+
+  it('takes the inline padding, the height cap, the body and the icon from their hooks', async () => {
+    onRoot({
+      '--enchase-toast-padding-inline': '7px 17px',
+      '--enchase-toast-max-height': '97px',
+      '--enchase-toast-body-padding-block': '5px',
+      '--enchase-toast-icon-width': '27px',
+      '--enchase-toast-icon-margin-inline-end': '19px'
+    })
+    renderInBrowser(<Notifier />)
+    await userEvent.click(page.getByRole('button', { name: 'Notify' }))
+    await expect.poll(() => parts('toast').length).toBe(1)
+
+    const body = part('toast').firstElementChild as HTMLElement
+    const icon = body.firstElementChild as HTMLElement
+
+    expect([style('toast').paddingLeft, style('toast').paddingRight, style('toast').maxHeight]).toEqual(['7px', '17px', '97px'])
+    expect([getComputedStyle(body).paddingTop, getComputedStyle(body).paddingBottom]).toEqual(['5px', '5px'])
+    expect([getComputedStyle(icon).width, getComputedStyle(icon).marginRight]).toEqual(['27px', '19px'])
   })
 
   it('keeps the 0.4 opacity of the progress bar until its hook says otherwise', async () => {
