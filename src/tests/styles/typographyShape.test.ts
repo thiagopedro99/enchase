@@ -7,7 +7,6 @@ import { baseTokens } from '@styles/tokens/index.ts'
 import { hookUses } from './hooks.ts'
 
 const fixed: Record<string, string[]> = {
-  'common/Breadcrumbs/styles.module.css': ['line-height: 28px'],
   'common/Input/styles.module.css': ['font-size: var(--enchase-font-size-base)', 'font-weight: var(--enchase-font-weight-regular)', 'font-size: var(--enchase-font-size-xs)'],
   'common/NumberInput/styles.module.css': ['font-size: var(--enchase-font-size-base)', 'font-weight: var(--enchase-font-weight-regular)', 'font-size: var(--enchase-font-size-xs)'],
   'common/Select/styles.module.css': ['font-size: var(--enchase-font-size-base)', 'font-weight: var(--enchase-font-weight-regular)', 'font-size: var(--enchase-font-size-xs)'],

@@ -5,11 +5,6 @@ import { describe, expect, it } from 'vitest'
 import { layoutVariables } from '@styles/css/declarations.ts'
 import { baseTokens } from '@styles/tokens/index.ts'
 
-const translucent: Record<string, string[]> = {
-  'layout/subcomponentes/AppBar/styles.module.css': ['80%'],
-  'navbar/styles.module.css': ['80%']
-}
-
 const defaults = layoutVariables(baseTokens)
 
 const rolesOf = (selector: string) => {
@@ -52,7 +47,7 @@ describe('the state layers of the components', () => {
         .filter(([, list]) => list.length > 0)
     )
 
-    expect(literal).toEqual(translucent)
+    expect(literal).toEqual({})
   })
 
   it('gives every use of a state token the default of the token as fallback, so a component keeps its layers when the theme variables are not there', () => {

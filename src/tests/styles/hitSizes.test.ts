@@ -6,8 +6,7 @@ import { layoutVariables } from '@styles/css/declarations.ts'
 import { baseTokens } from '@styles/tokens/index.ts'
 
 const unconverted: Record<string, string[]> = {
-  'common/Loading/styles.module.css': ['inline-size: 40px', 'block-size: 40px'],
-  'layout/subcomponentes/SidebarUser/styles.module.css': ['inline-size: 40px', 'block-size: 40px']
+  'common/Loading/styles.module.css': ['inline-size: 40px', 'block-size: 40px']
 }
 
 const floor = 24
