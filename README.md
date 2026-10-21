@@ -491,7 +491,7 @@ O anel de foco, a largura das bordas, as camadas de estado e o halo dos controle
 | `--enchase-hit-size` | `40px` | área de toque dos controles de formulário (linha do checkbox, do radio e da chave, botões do campo numérico e do campo de senha, links do menu da navbar, fechar do modal e do toast) |
 | `--enchase-hit-size-lg` | `44px` | área de toque dos botões que abrem, fecham ou recolhem uma navegação (menu, tema, recolher a barra lateral, sair) |
 
-As camadas de estado são a fração (de 0 a 1) da cor do elemento que se mistura com o fundo: `--enchase-state-hover: 0.16` dobra o hover. Um halo de `0` desliga o halo. A área de toque nunca fica abaixo de 24px (WCAG 2.5.8), mesmo que a variável peça menos. O foco precisa continuar visível (contraste de pelo menos 3:1 com o fundo). O `validateTheme` confere o `primary`, mas não uma `--enchase-focus-color` sua.
+As camadas de estado são a fração (de 0 a 1) da cor do elemento que se mistura com o fundo: `--enchase-state-hover: 0.16` dobra o hover. Um halo de `0` desliga o halo. A área de toque nunca fica abaixo de 24px (WCAG 2.5.8), mesmo que a variável peça menos, e o espaço que o campo de senha e o campo numérico reservam para os botões de dentro acompanha a variável. O foco precisa continuar visível (contraste de pelo menos 3:1 com o fundo). O `validateTheme` confere o `primary`, mas não uma `--enchase-focus-color` sua.
 
 Cada componente também lê ganchos próprios, `--enchase-<componente>-<propriedade>`, opcionais e experimentais até a versão 1.0. O tema não os declara: sem valor, o componente usa o padrão da tabela. Servem para mudar um componente só, e o que depende da medida acompanha (o traço do checkbox, o ponto do radio, o curso da bolinha da chave):
 
@@ -512,6 +512,12 @@ Cada componente também lê ganchos próprios, `--enchase-<componente>-<propried
 | `--enchase-button-font-size-sm`, `-md`, `-lg` | `0.875rem`, `0.875rem`, `1rem` | tamanho da fonte do botão em cada tamanho |
 | `--enchase-button-font-weight` | `600` | peso da fonte do botão |
 | `--enchase-button-gap` | `0.5rem` | espaço entre o ícone e o texto do botão |
+| `--enchase-input-min-width` | `200px` | largura mínima dos campos (texto, número, seleção e área de texto) |
+| `--enchase-input-padding-inline` | `1rem` | padding horizontal do texto dos campos; o rótulo acompanha (segue `--enchase-space-md`) |
+| `--enchase-input-font-size` | `1rem` | tamanho do texto dos campos; no toque nunca fica abaixo de 16px (segue `--enchase-font-size-base`) |
+| `--enchase-input-height` | `3.5rem` | altura dos campos de uma linha; o rótulo flutuante sobe metade dela |
+| `--enchase-textarea-min-height` | `3.5rem` | altura mínima da área de texto |
+| `--enchase-textarea-padding-block` | `1rem` | padding vertical da área de texto; o rótulo acompanha (segue `--enchase-space-md`) |
 
 O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 
