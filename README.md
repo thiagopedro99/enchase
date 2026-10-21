@@ -488,8 +488,10 @@ O anel de foco, a largura das bordas, as camadas de estado e o halo dos controle
 | `--enchase-state-disabled-content` | `0.38` | borda e marca do checkbox, do radio e da chave desabilitados |
 | `--enchase-halo-size` | `10px` | halo do checkbox e do radio ao passar o mouse e ao pressionar |
 | `--enchase-halo-size-switch` | `0.5rem` | halo da bolinha da chave |
+| `--enchase-hit-size` | `40px` | área de toque dos controles de formulário (linha do checkbox, do radio e da chave, botões do campo numérico e do campo de senha, links do menu da navbar, fechar do modal e do toast) |
+| `--enchase-hit-size-lg` | `44px` | área de toque dos botões que abrem, fecham ou recolhem uma navegação (menu, tema, recolher a barra lateral, sair) |
 
-As camadas de estado são a fração (de 0 a 1) da cor do elemento que se mistura com o fundo: `--enchase-state-hover: 0.16` dobra o hover. Um halo de `0` desliga o halo. O foco precisa continuar visível (contraste de pelo menos 3:1 com o fundo). O `validateTheme` confere o `primary`, mas não uma `--enchase-focus-color` sua.
+As camadas de estado são a fração (de 0 a 1) da cor do elemento que se mistura com o fundo: `--enchase-state-hover: 0.16` dobra o hover. Um halo de `0` desliga o halo. A área de toque nunca fica abaixo de 24px (WCAG 2.5.8), mesmo que a variável peça menos. O foco precisa continuar visível (contraste de pelo menos 3:1 com o fundo). O `validateTheme` confere o `primary`, mas não uma `--enchase-focus-color` sua.
 
 O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 
