@@ -291,7 +291,7 @@ Casca de página: barra superior com a trilha de navegação e o menu lateral (p
 | `centered` | `boolean` | `false` | Centraliza o conteúdo na vertical. |
 | `navigation` | `'sidebar' \| 'navbar'` | `'sidebar'` | sidebar mostra a barra superior com o botão de menu e o menu lateral. navbar mostra a barra de navegação clássica no topo. |
 | `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | `'md'` | Breakpoint em que a sidebar deixa de ser um drawer e passa a ser permanente. Os valores vêm do UIProvider. |
-| `translucent` | `boolean` | `false` | Deixa a barra do topo semitransparente, com desfoque do conteúdo que rola por baixo: a `AppBar` com a navegação sidebar, ou a `Navbar` com a navegação navbar. O fundo e o desfoque vêm de `--enchase-app-bar-background` e `--enchase-app-bar-blur` na AppBar (padrão: 80% da cor `surface` do tema e `12px`) e de `--enchase-navbar-background` e `--enchase-navbar-blur` na Navbar (80% da `surfaceContainer`). Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco. |
+| `translucent` | `boolean` | `false` | Deixa a barra do topo semitransparente, com desfoque do conteúdo que rola por baixo: a `AppBar` com a navegação sidebar, ou a `Navbar` com a navegação navbar. O fundo e o desfoque vêm de `--enchase-app-bar-background` e `--enchase-app-bar-blur` na AppBar (padrão: a cor `--enchase-app-bar-background-solid`, que é a `surface` do tema, a `--enchase-app-bar-background-alpha`, 0,8, e `12px`) e de `--enchase-navbar-background` e `--enchase-navbar-blur` na Navbar (a `--enchase-navbar-background-solid`, que é a `surfaceContainer`, a `--enchase-navbar-background-alpha`). Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco. |
 | `brand` | `string` | — | Nome da marca. No topo da sidebar é um link para a raiz, com a inicial do nome no lugar da imagem; com navigation="navbar" vira o logo da Navbar. |
 | `brandLogo` | `string` | — | URL de uma imagem para a marca da sidebar, no lugar da inicial do nome. A imagem é decorativa, e o nome continua como texto. |
 | `footerProps` | `FooterProps` | — | companyName, notice, year e links do rodapé. |
@@ -368,7 +368,7 @@ Barra de navegação no topo, com a marca, os links, ações e o botão de tema.
 | `sections` | `SidebarSection[]` | — | Itens do menu, no mesmo formato da Sidebar: [{ id, items: [{ id, label, href }] }]. Só os itens com href aparecem, e os títulos das seções não são exibidos. |
 | `activeSectionId` | `string` | — | Id do item de âncora (href #id, ou /pagina#id na página atual) marcado como localização atual (aria-current="location"). Use useScrollSpy para obtê-lo. |
 | `actions` | `ReactNode` | — | Ações ao lado do menu, como um botão de chamada. Em telas largas ficam na barra, entre o menu e o botão de tema (data-slot="navbar-cta"). Em telas estreitas vão para o drawer, abaixo dos links (data-slot="navbar-drawer-cta"), e um clique em um link dentro delas fecha o drawer. O nó é renderizado em um lugar por vez. |
-| `translucent` | `boolean` | `false` | Deixa o fundo da barra semitransparente, com desfoque do que passa por trás. O fundo vem de `--enchase-navbar-background` (padrão: 80% da cor `surfaceContainer` do tema) e o desfoque de `--enchase-navbar-blur` (padrão `12px`), que você muda no `style` ou no CSS. Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco. Com o tema padrão, o texto da marca e do menu mantém 4,5:1 mesmo sobre preto ou branco puro (3:1 na cor de destaque da marca ao passar o mouse); confira o contraste se mudar a cor ou o tema. |
+| `translucent` | `boolean` | `false` | Deixa o fundo da barra semitransparente, com desfoque do que passa por trás. O fundo vem de `--enchase-navbar-background` (padrão: a cor `--enchase-navbar-background-solid`, que é a `surfaceContainer` do tema, a `--enchase-navbar-background-alpha`, 0,8) e o desfoque de `--enchase-navbar-blur` (padrão `12px`), que você muda no `style` ou no CSS. Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco. Com o tema padrão, o texto da marca e do menu mantém 4,5:1 mesmo sobre preto ou branco puro (3:1 na cor de destaque da marca ao passar o mouse); confira o contraste se mudar a cor ou o tema. |
 | `className` | `string` | — | Classe do cabeçalho (`data-slot="navbar"`). As partes seguem `data-slot="navbar-*"`; o drawer mobile é `navbar-drawer`, com `data-state`. |
 | `style` | `CSSProperties` | — | Estilo do cabeçalho. |
 
@@ -815,11 +815,20 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
-| `--enchase-app-bar-background` | `color-mix(in srgb, var(--enchase-color-surface) 80%, transparent)` | `background-color` |
+| `--enchase-app-bar-background` | `color-mix(in srgb, var(--enchase-app-bar-background-solid, var(--enchase-color-surface)) calc(var(--enchase-app-bar-background-alpha, 0.8) * 100%), transparent)` | `background-color` |
+| `--enchase-app-bar-background-alpha` | `0.8` | `background-color` |
+| `--enchase-app-bar-background-solid` | `var(--enchase-color-surface)` | `background-color` |
 | `--enchase-app-bar-blur` | `12px` | `-webkit-backdrop-filter`, `backdrop-filter` |
 | `--enchase-app-bar-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-app-bar-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-layout-header-actions-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-layout-header-border-color` | `var(--enchase-color-border)` | `border-block-end` |
+| `--enchase-layout-header-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-layout-header-height` | `64px` | `block-size` |
+| `--enchase-layout-header-menu-button-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-layout-header-menu-button-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-layout-header-menu-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-layout-header-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 
 ### Badge
 
@@ -852,26 +861,51 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-brand-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-brand-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-brand-font-size` | `1.375rem` (`--enchase-font-size-xl`) | `font-size` |
 | `--enchase-brand-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-brand-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-brand-image-height` | `32px` | `block-size` |
+| `--enchase-brand-image-width` | `32px` | `inline-size` |
 | `--enchase-brand-letter-spacing` | `-0.01em` (`--enchase-letter-spacing-tight`) | `letter-spacing` |
+| `--enchase-brand-mark-background` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-brand-mark-color` | `var(--enchase-color-on-primary)` | `color` |
 | `--enchase-brand-mark-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-brand-mark-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
+| `--enchase-brand-mark-height` | `32px` | `block-size` |
 | `--enchase-brand-mark-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-brand-mark-width` | `32px` | `inline-size` |
 
 ### Breadcrumbs
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-breadcrumbs-current-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-breadcrumbs-current-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-breadcrumbs-current-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
 | `--enchase-breadcrumbs-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-breadcrumbs-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-breadcrumbs-ellipsis-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-breadcrumbs-ellipsis-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
+| `--enchase-breadcrumbs-ellipsis-min-height` | `28px` | `min-block-size` |
+| `--enchase-breadcrumbs-ellipsis-min-width` | `32px` | `min-inline-size` |
 | `--enchase-breadcrumbs-ellipsis-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-breadcrumbs-item-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-breadcrumbs-item-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-breadcrumbs-item-min-width` | `3rem` | `min-inline-size` |
+| `--enchase-breadcrumbs-item-min-width-low` | `3rem` | `min-inline-size` |
+| `--enchase-breadcrumbs-link-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-breadcrumbs-link-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-breadcrumbs-link-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-breadcrumbs-link-min-height` | `28px` | `line-height`, `min-block-size` |
+| `--enchase-breadcrumbs-link-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
 | `--enchase-breadcrumbs-link-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-breadcrumbs-list-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-breadcrumbs-separator-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-breadcrumbs-text-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-breadcrumbs-text-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-breadcrumbs-text-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
 
 ### Button
 
@@ -942,11 +976,17 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-footer-background` | `var(--enchase-color-surface-container)` | `background-color` |
+| `--enchase-footer-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-footer-copyright-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-footer-copyright-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-footer-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-footer-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-footer-link-color` | `var(--enchase-color-primary)` | `color` |
+| `--enchase-footer-link-color-hover` | `var(--enchase-color-primary-hover)` | `color` |
 | `--enchase-footer-link-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-footer-link-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-footer-padding-block` | `2rem` (`--enchase-space-xl`) | `padding-block` |
 
 ### Grid
 
@@ -991,7 +1031,13 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-layout-main-padding-block` | `var(--enchase-space-xl) var(--enchase-space-2xl)` | `padding-block` |
+| `--enchase-layout-skip-link-background` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-layout-skip-link-color` | `var(--enchase-color-on-primary)` | `color` |
+| `--enchase-layout-skip-link-color-focus` | `var(--enchase-color-on-primary)` | `color` |
 | `--enchase-layout-skip-link-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-layout-skip-link-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
+| `--enchase-layout-skip-link-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-layout-skip-link-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
 
 ### Link
@@ -1011,6 +1057,13 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-loading-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition`, `animation` |
 | `--enchase-loading-text-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-loading-text-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+
+### MenuToggleIcon
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-menu-toggle-icon-height` | `24px` | `block-size` |
+| `--enchase-menu-toggle-icon-width` | `24px` | `inline-size` |
 
 ### Modal
 
@@ -1054,11 +1107,26 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
-| `--enchase-navbar-background` | `color-mix(in srgb, var(--enchase-color-surface-container) 80%, transparent)` | `background-color` |
+| `--enchase-navbar-actions-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-navbar-background` | `color-mix(in srgb, var(--enchase-navbar-background-solid, var(--enchase-color-surface-container)) calc(var(--enchase-navbar-background-alpha, 0.8) * 100%), transparent)` | `background-color` |
+| `--enchase-navbar-background-alpha` | `0.8` | `background-color` |
+| `--enchase-navbar-background-solid` | `var(--enchase-color-surface-container)` | `background-color` |
+| `--enchase-navbar-bar-height` | `64px` | `block-size` |
 | `--enchase-navbar-blur` | `12px` | `-webkit-backdrop-filter`, `backdrop-filter` |
+| `--enchase-navbar-border-color-translucent` | `var(--enchase-color-border)` | `box-shadow` |
+| `--enchase-navbar-cta-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-navbar-distance` | `0px` | `transform` |
+| `--enchase-navbar-drawer-background` | `var(--enchase-color-surface-container-low)` | `background-color` |
+| `--enchase-navbar-drawer-cta-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-navbar-drawer-cta-margin-block-start` | `1rem` (`--enchase-space-md`) | `margin-block-start` |
+| `--enchase-navbar-drawer-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-navbar-drawer-header-margin-block-end` | `1rem` (`--enchase-space-md`) | `margin-block-end` |
+| `--enchase-navbar-drawer-nav-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-navbar-drawer-padding` | `1.5rem` (`--enchase-space-lg`) | `padding`, `padding-block-start`, `padding-block-end` |
 | `--enchase-navbar-drawer-radius-end-start` | `1.75rem` (`--enchase-radius-2xl`) | `border-end-start-radius` |
 | `--enchase-navbar-drawer-radius-start-start` | `1.75rem` (`--enchase-radius-2xl`) | `border-start-start-radius` |
+| `--enchase-navbar-drawer-shadow` | `var(--enchase-shadow-lg)` | `box-shadow` |
+| `--enchase-navbar-drawer-width` | `300px` | `inline-size` |
 | `--enchase-navbar-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-navbar-dx` | `0` | `transform`, `translate` |
 | `--enchase-navbar-dy` | `0` | `transform` |
@@ -1067,13 +1135,26 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-navbar-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
 | `--enchase-navbar-index` | `0` | `--enchase-navbar-enter-delay` |
 | `--enchase-navbar-item-offset` | `12px` | `translate` |
+| `--enchase-navbar-logo-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-navbar-logo-color-hover` | `var(--enchase-color-primary)` | `color` |
 | `--enchase-navbar-logo-font-size` | `1.375rem` (`--enchase-font-size-xl`) | `font-size` |
 | `--enchase-navbar-logo-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 | `--enchase-navbar-logo-letter-spacing` | `-0.01em` (`--enchase-letter-spacing-tight`) | `letter-spacing` |
+| `--enchase-navbar-menu-button-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-navbar-menu-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-navbar-menu-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-navbar-menu-link-background-current` | `var(--enchase-color-primary-container)` | `background-color` |
+| `--enchase-navbar-menu-link-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-navbar-menu-link-color-active` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-navbar-menu-link-color-current` | `var(--enchase-color-on-primary-container)` | `color` |
+| `--enchase-navbar-menu-link-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-navbar-menu-link-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-navbar-menu-link-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-navbar-menu-link-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-navbar-menu-link-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-navbar-mobile-menu-link-min-height` | `52px` | `min-block-size` |
+| `--enchase-navbar-mobile-menu-link-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
+| `--enchase-navbar-overlay-background` | `var(--enchase-color-overlay)` | `background-color` |
 | `--enchase-navbar-stagger` | `30ms` | `--enchase-navbar-enter-delay` |
 
 ### NumberInput
@@ -1092,15 +1173,23 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-pagination-control-background-current` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-pagination-control-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-pagination-control-color-current` | `var(--enchase-color-on-primary)` | `color` |
+| `--enchase-pagination-control-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-pagination-control-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-pagination-control-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-pagination-control-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-pagination-control-line-height` | `1` (`--enchase-line-height-none`) | `line-height` |
+| `--enchase-pagination-control-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
+| `--enchase-pagination-control-padding-inline-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
 | `--enchase-pagination-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
 | `--enchase-pagination-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-pagination-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-pagination-ellipsis-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-pagination-ellipsis-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-pagination-ellipsis-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-pagination-list-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 
 ### Popover
 
@@ -1151,34 +1240,71 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-sidebar-background` | `var(--enchase-color-surface-container-low)` | `background-color` |
+| `--enchase-sidebar-collapse-button-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-sidebar-collapse-button-color-active` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-sidebar-collapse-button-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-sidebar-collapse-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-sidebar-distance` | `0px` | `transform` |
 | `--enchase-sidebar-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition` |
 | `--enchase-sidebar-dx` | `0` | `transform`, `translate` |
 | `--enchase-sidebar-dy` | `0` | `transform` |
 | `--enchase-sidebar-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-sidebar-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
+| `--enchase-sidebar-footer-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-sidebar-footer-padding` | `1rem` (`--enchase-space-md`) | `padding` |
+| `--enchase-sidebar-header-min-height` | `72px` | `min-block-size` |
+| `--enchase-sidebar-header-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
 | `--enchase-sidebar-index` | `0` | `transition-delay` |
+| `--enchase-sidebar-indicator-background` | `var(--enchase-sidebar-item-control-background-current, var(--enchase-color-primary-container))` | `background-color` |
 | `--enchase-sidebar-indicator-duration` | `var(--enchase-sidebar-duration, var(--enchase-motion-duration-base))` | `transition` |
 | `--enchase-sidebar-indicator-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-item-badge-background` | `var(--enchase-color-secondary-container)` | `background-color` |
+| `--enchase-sidebar-item-badge-color` | `var(--enchase-color-on-secondary-container)` | `color` |
 | `--enchase-sidebar-item-badge-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-sidebar-item-badge-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-sidebar-item-badge-padding-block` | `2px` | `padding-block` |
+| `--enchase-sidebar-item-badge-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
 | `--enchase-sidebar-item-badge-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-item-control-background-current` | `var(--enchase-color-primary-container)` | `background-color` |
+| `--enchase-sidebar-item-control-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-sidebar-item-control-color-active` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-sidebar-item-control-color-current` | `var(--enchase-color-on-primary-container)` | `color` |
+| `--enchase-sidebar-item-control-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-sidebar-item-control-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-sidebar-item-control-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-sidebar-item-control-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-sidebar-item-control-height` | `52px` | `block-size` |
+| `--enchase-sidebar-item-control-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-sidebar-item-control-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-sidebar-item-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-sidebar-item-icon-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-sidebar-item-icon-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
+| `--enchase-sidebar-item-icon-height` | `24px` | `block-size` |
+| `--enchase-sidebar-item-icon-width` | `24px` | `inline-size` |
+| `--enchase-sidebar-item-list-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-sidebar-item-offset` | `12px` | `translate` |
 | `--enchase-sidebar-item-scale` | `0.98` | `transform` |
 | `--enchase-sidebar-label-duration` | `calc(var(--enchase-sidebar-duration, var(--enchase-motion-duration-base)) * 0.4)` | `transition` |
+| `--enchase-sidebar-nav-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-sidebar-nav-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-sidebar-nav-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline`, `inset-inline` |
+| `--enchase-sidebar-overlay-background` | `var(--enchase-color-overlay)` | `background-color` |
 | `--enchase-sidebar-panel-radius-end-end` | `1.75rem` (`--enchase-radius-2xl`) | `border-end-end-radius` |
 | `--enchase-sidebar-panel-radius-start-end` | `1.75rem` (`--enchase-radius-2xl`) | `border-start-end-radius` |
+| `--enchase-sidebar-panel-shadow` | `var(--enchase-shadow-lg)` | `box-shadow` |
 | `--enchase-sidebar-radius-end-end` | `1rem` (`--enchase-radius-lg`) | `border-end-end-radius` |
 | `--enchase-sidebar-radius-start-end` | `1rem` (`--enchase-radius-lg`) | `border-start-end-radius` |
+| `--enchase-sidebar-section-divider-border-color` | `var(--enchase-color-border)` | `border-block-start` |
+| `--enchase-sidebar-section-divider-margin-block` | `0.25rem` (`--enchase-space-xs`) | `margin-block` |
+| `--enchase-sidebar-section-divider-margin-inline` | `1rem` (`--enchase-space-md`) | `margin-inline` |
+| `--enchase-sidebar-section-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-sidebar-section-title-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-sidebar-section-title-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-sidebar-section-title-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-sidebar-section-title-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
+| `--enchase-sidebar-section-title-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-sidebar-stagger` | `30ms` | `transition-delay` |
 | `--enchase-sidebar-width` | `280px` | `inline-size` |
 | `--enchase-sidebar-width-collapsed` | `80px` | `inline-size` |
@@ -1187,10 +1313,18 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-sidebar-user-avatar-background` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-sidebar-user-avatar-color` | `var(--enchase-color-on-primary)` | `color` |
 | `--enchase-sidebar-user-avatar-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-sidebar-user-avatar-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
+| `--enchase-sidebar-user-avatar-height` | `40px` | `block-size` |
 | `--enchase-sidebar-user-avatar-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
+| `--enchase-sidebar-user-avatar-width` | `40px` | `inline-size` |
+| `--enchase-sidebar-user-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-sidebar-user-info-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-sidebar-user-logout-color` | `var(--enchase-color-primary)` | `color` |
 | `--enchase-sidebar-user-logout-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-user-name-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-sidebar-user-name-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-sidebar-user-name-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 
