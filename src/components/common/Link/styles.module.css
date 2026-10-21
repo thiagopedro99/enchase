@@ -1,5 +1,5 @@
 :where(.link) {
-  color: var(--enchase-color-primary);
+  color: var(--enchase-link-color, var(--enchase-color-primary));
   text-decoration: underline;
   text-underline-offset: var(--enchase-link-underline-offset, 0.2em);
   border-radius: var(--enchase-link-radius, var(--enchase-radius-sm));
@@ -9,7 +9,7 @@
 }
 
 :where(.link):active {
-  color: var(--enchase-color-primary-hover);
+  color: var(--enchase-link-color-active, var(--enchase-color-primary-hover));
 }
 
 :where(.link):focus-visible {
@@ -19,6 +19,6 @@
 
 @media (hover: hover) and (pointer: fine) {
   :where(.link):hover {
-    color: var(--enchase-color-primary-hover);
+    color: var(--enchase-link-color-hover, var(--enchase-color-primary-hover));
   }
 }

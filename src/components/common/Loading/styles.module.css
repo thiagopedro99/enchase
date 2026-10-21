@@ -10,7 +10,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: var(--enchase-color-overlay);
+  background-color: var(--enchase-loading-backdrop-background, var(--enchase-color-overlay));
   z-index: var(--enchase-z-modal);
 }
 
@@ -24,7 +24,7 @@
 }
 
 :where(.container) {
-  gap: var(--enchase-space-md);
+  gap: var(--enchase-loading-container-gap, var(--enchase-space-md));
 }
 
 .container[data-overlay] {
@@ -48,7 +48,7 @@
   box-sizing: border-box;
   border-radius: 50%;
   border-style: solid;
-  border-color: var(--enchase-color-border);
+  border-color: var(--enchase-loading-spinner-border-color, var(--enchase-color-border));
   border-block-start-color: var(--spinner-color, var(--enchase-color-primary));
 }
 
@@ -57,38 +57,38 @@
 }
 
 .spinner[data-size='xs'] {
-  inline-size: 16px;
-  block-size: 16px;
-  border-width: 2px;
+  inline-size: var(--enchase-loading-spinner-width-xs, 16px);
+  block-size: var(--enchase-loading-spinner-height-xs, 16px);
+  border-width: var(--enchase-loading-spinner-border-width-xs, 2px);
 }
 
 .spinner[data-size='sm'] {
-  inline-size: 24px;
-  block-size: 24px;
-  border-width: 3px;
+  inline-size: var(--enchase-loading-spinner-width-sm, 24px);
+  block-size: var(--enchase-loading-spinner-height-sm, 24px);
+  border-width: var(--enchase-loading-spinner-border-width-sm, 3px);
 }
 
 .spinner[data-size='md'] {
-  inline-size: 40px;
-  block-size: 40px;
-  border-width: 4px;
+  inline-size: var(--enchase-loading-spinner-width-md, 40px);
+  block-size: var(--enchase-loading-spinner-height-md, 40px);
+  border-width: var(--enchase-loading-spinner-border-width-md, 4px);
 }
 
 .spinner[data-size='lg'] {
-  inline-size: 56px;
-  block-size: 56px;
-  border-width: 5px;
+  inline-size: var(--enchase-loading-spinner-width-lg, 56px);
+  block-size: var(--enchase-loading-spinner-height-lg, 56px);
+  border-width: var(--enchase-loading-spinner-border-width-lg, 5px);
 }
 
 .spinner[data-size='xl'] {
-  inline-size: 72px;
-  block-size: 72px;
-  border-width: 6px;
+  inline-size: var(--enchase-loading-spinner-width-xl, 72px);
+  block-size: var(--enchase-loading-spinner-height-xl, 72px);
+  border-width: var(--enchase-loading-spinner-border-width-xl, 6px);
 }
 
 .text {
   font-size: var(--enchase-loading-text-font-size, var(--enchase-font-size-base));
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-loading-text-color, var(--enchase-color-text-secondary));
   font-weight: var(--enchase-loading-text-font-weight, var(--enchase-font-weight-medium));
   margin: 0;
 }

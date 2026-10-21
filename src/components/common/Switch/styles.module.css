@@ -13,7 +13,7 @@
 }
 
 :where(.wrapper) {
-  gap: var(--enchase-space-md);
+  gap: var(--enchase-switch-gap, var(--enchase-space-md));
   min-block-size: max(24px, var(--enchase-hit-size, 40px));
   min-inline-size: 24px;
 }
@@ -33,8 +33,8 @@
   flex-shrink: 0;
   align-items: center;
   box-sizing: border-box;
-  border: var(--enchase-border-width-strong, 2px) solid var(--enchase-color-border-strong);
-  background-color: var(--enchase-color-surface-container-high);
+  border: var(--enchase-border-width-strong, 2px) solid var(--enchase-switch-track-border-color, var(--enchase-color-border-strong));
+  background-color: var(--enchase-switch-track-background, var(--enchase-color-surface-container-high));
   transition:
     background-color var(--enchase-switch-duration, var(--enchase-motion-duration-fast)) var(--enchase-switch-ease, var(--enchase-motion-ease-out)),
     border-color var(--enchase-switch-duration, var(--enchase-motion-duration-fast)) var(--enchase-switch-ease, var(--enchase-motion-ease-out));
@@ -57,7 +57,7 @@
   margin-block: auto;
   border: var(--enchase-border-width-strong, 2px) solid transparent;
   border-radius: var(--enchase-switch-thumb-radius, var(--enchase-radius-full));
-  background-color: var(--enchase-color-border-strong);
+  background-color: var(--enchase-switch-thumb-background, var(--enchase-color-border-strong));
   transform: translateX(0) scale(var(--enchase-switch-thumb-scale-off, 0.667));
   transition:
     transform var(--enchase-switch-duration, var(--enchase-motion-duration-fast)) var(--enchase-switch-ease, var(--enchase-motion-ease-out)),
@@ -66,12 +66,12 @@
 }
 
 .hidden:checked + .track {
-  border-color: var(--enchase-color-primary);
-  background-color: var(--enchase-color-primary);
+  border-color: var(--enchase-switch-track-border-color-checked, var(--enchase-color-primary));
+  background-color: var(--enchase-switch-track-background-checked, var(--enchase-color-primary));
 }
 
 .hidden:checked + .track .thumb {
-  background-color: var(--enchase-color-on-primary);
+  background-color: var(--enchase-switch-thumb-background-checked, var(--enchase-color-on-primary));
   transform: translateX(var(--switch-travel)) scale(1);
 }
 
@@ -94,7 +94,7 @@
 }
 
 .hidden:disabled:checked + .track .thumb {
-  background-color: var(--enchase-color-surface);
+  background-color: var(--enchase-switch-thumb-background-disabled-checked, var(--enchase-color-surface));
 }
 
 .hidden:focus-visible + .track {
@@ -130,10 +130,10 @@
   min-inline-size: 0;
   overflow-wrap: anywhere;
   font-size: var(--enchase-switch-label-font-size, var(--enchase-font-size-base));
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-switch-label-color, var(--enchase-color-text-primary));
 }
 
 .hidden:disabled ~ .label {
-  color: var(--enchase-color-text-disabled);
+  color: var(--enchase-switch-label-color-disabled, var(--enchase-color-text-disabled));
   cursor: not-allowed;
 }

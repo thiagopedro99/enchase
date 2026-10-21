@@ -19,7 +19,7 @@ export const globalStylesCss = `
     font-size: ${vars.font.size.base};
     color: ${vars.color.text.primary};
     background-color: ${vars.color.background};
-    line-height: 1.5;
+    line-height: var(--enchase-line-height-normal, 1.5);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
@@ -36,8 +36,8 @@ export const globalStylesCss = `
 
   h1, h2, h3, h4, h5, h6 {
     font-weight: ${vars.font.weight.medium};
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    line-height: var(--enchase-line-height-tight, 1.2);
+    letter-spacing: var(--enchase-letter-spacing-tight, -0.01em);
     margin-bottom: ${vars.space.md};
     text-wrap: balance;
   }

@@ -14,9 +14,9 @@ const Footer = ({ companyName = defaultCompanyName, notice = defaultNotice, year
   return (
     <footer {...mergeProps(own, props)}>
       <Container maxWidth="xl">
-        <Flex direction="row" justify="center" align="center" wrap gap="1.5rem">
+        <Flex direction="row" justify="center" align="center" wrap className={styles.row}>
           {links.length > 0 && (
-            <Flex gap="1.5rem" wrap>
+            <Flex wrap className={styles.links}>
               {links.map((link) => (
                 <Link key={link.href} href={link.href} className={styles.link} {...slot('footer', 'link')}>
                   {link.label}

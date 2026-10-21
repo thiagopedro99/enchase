@@ -162,7 +162,7 @@ export const ConfirmModal = ({
       className={className}
       style={style}
       footer={
-        <Flex justify="end" gap="0.5rem">
+        <Flex justify="end" className={styles.actions}>
           <Button variant="outline" onClick={onClose} data-autofocus>
             {cancelText ?? labels.cancel}
           </Button>

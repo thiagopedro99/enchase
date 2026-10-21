@@ -8,6 +8,14 @@
   color: var(--enchase-footer-color, var(--enchase-color-text-secondary));
 }
 
+.row {
+  gap: var(--enchase-footer-gap, 1.5rem);
+}
+
+.links {
+  gap: var(--enchase-footer-links-gap, 1.5rem);
+}
+
 .link {
   display: inline-flex;
   align-items: center;

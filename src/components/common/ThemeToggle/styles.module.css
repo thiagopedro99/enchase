@@ -10,7 +10,7 @@
   border: 0;
   border-radius: var(--enchase-theme-toggle-radius, var(--enchase-radius-button));
   background-color: transparent;
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-theme-toggle-color, var(--enchase-color-text-secondary));
   font-family: inherit;
   cursor: pointer;
   user-select: none;
@@ -37,7 +37,7 @@
 @media (hover: hover) and (pointer: fine) {
   .button:hover {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
-    color: var(--enchase-color-text-primary);
+    color: var(--enchase-theme-toggle-color-hover, var(--enchase-color-text-primary));
   }
 }
 
@@ -48,6 +48,6 @@
 }
 
 :where(.icon) {
-  inline-size: 22px;
-  block-size: 22px;
+  inline-size: var(--enchase-theme-toggle-icon-width, 22px);
+  block-size: var(--enchase-theme-toggle-icon-height, 22px);
 }

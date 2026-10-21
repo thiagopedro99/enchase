@@ -22,7 +22,7 @@ const geometry = /^(?:min-inline-size|max-inline-size|padding-block|padding-inli
 const fixed: Record<string, string[]> = {
   'Input/styles.module.css': ['max-inline-size: 0.01px'],
   'NumberInput/styles.module.css': ['max-inline-size: 0.01px'],
-  'Select/styles.module.css': ['padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md)) 2.75rem', 'padding-block: 0.75rem', 'max-inline-size: calc(100% - 4rem)', 'max-inline-size: 0.01px'],
+  'Select/styles.module.css': ['padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md)) 2.75rem', 'max-inline-size: calc(100% - 4rem)', 'max-inline-size: 0.01px'],
   'Textarea/styles.module.css': ['transform: translateY(-0.75rem) scale(0.75)', 'max-inline-size: 0.01px']
 }
 

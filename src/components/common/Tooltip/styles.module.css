@@ -11,8 +11,8 @@
   z-index: var(--enchase-z-tooltip);
   margin: 0;
   background: var(--enchase-color-inverse-surface);
-  color: var(--enchase-color-inverse-on-surface);
-  padding: var(--enchase-space-xs) var(--enchase-space-sm);
+  color: var(--enchase-tooltip-bubble-color, var(--enchase-color-inverse-on-surface));
+  padding: var(--enchase-tooltip-bubble-padding, var(--enchase-space-xs) var(--enchase-space-sm));
   border-radius: var(--enchase-tooltip-bubble-radius, var(--enchase-radius-xs));
   font-size: var(--enchase-tooltip-bubble-font-size, var(--enchase-font-size-xs));
   font-weight: var(--enchase-tooltip-bubble-font-weight, var(--enchase-font-weight-medium));

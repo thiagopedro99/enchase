@@ -147,6 +147,10 @@
   line-height: var(--enchase-modal-body-line-height, var(--enchase-line-height-relaxed, 1.6));
 }
 
+.actions {
+  gap: var(--enchase-modal-footer-gap, 0.5rem);
+}
+
 .footer {
   padding-block: var(--enchase-modal-footer-padding-block, 0 var(--enchase-space-lg));
   padding-inline: var(--enchase-modal-footer-padding-inline, var(--enchase-space-lg));

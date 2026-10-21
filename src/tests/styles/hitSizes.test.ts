@@ -5,10 +5,6 @@ import { describe, expect, it } from 'vitest'
 import { layoutVariables } from '@styles/css/declarations.ts'
 import { baseTokens } from '@styles/tokens/index.ts'
 
-const unconverted: Record<string, string[]> = {
-  'common/Loading/styles.module.css': ['inline-size: 40px', 'block-size: 40px']
-}
-
 const floor = 24
 
 const use = /(max\(24px, )?var\((--enchase-hit-size(?:-lg)?), ([^)]*)\)/g
@@ -39,7 +35,7 @@ describe('the target sizes of the components', () => {
         .filter(([, list]) => list.length > 0)
     )
 
-    expect(literal).toEqual(unconverted)
+    expect(literal).toEqual({})
   })
 
   it('keeps the 24px floor inside every use of a hit token, with the default of the token as fallback, also where the room of a button is worked out from it', () => {

@@ -17,7 +17,7 @@
 }
 
 :where(.skeleton) {
-  background-color: var(--enchase-color-surface-container-high);
+  background-color: var(--enchase-skeleton-background, var(--enchase-color-surface-container-high));
 }
 
 :where(.skeleton[data-variant='text']) {

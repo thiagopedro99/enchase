@@ -7,7 +7,7 @@
 }
 
 :where(.wrapper) {
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-input-gap, var(--enchase-space-xs));
   inline-size: auto;
   min-inline-size: 0;
   max-inline-size: 100%;
@@ -26,7 +26,7 @@
   box-sizing: border-box;
   margin: 0;
   font-family: inherit;
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-input-field-color, var(--enchase-color-text-primary));
   background-color: transparent;
   border: none;
 }
@@ -50,7 +50,7 @@
 }
 
 .input::placeholder {
-  color: var(--enchase-color-text-placeholder);
+  color: var(--enchase-input-field-color-placeholder, var(--enchase-color-text-placeholder));
   opacity: 1;
   transition: opacity var(--enchase-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-input-ease, var(--enchase-motion-ease-out));
 }
@@ -64,7 +64,7 @@
 }
 
 .input:disabled {
-  color: var(--enchase-color-text-disabled);
+  color: var(--enchase-input-field-color-disabled, var(--enchase-color-text-disabled));
   cursor: not-allowed;
 }
 
@@ -79,7 +79,7 @@
   white-space: nowrap;
   font-size: var(--enchase-font-size-base);
   font-weight: var(--enchase-font-weight-regular);
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-input-label-color, var(--enchase-color-text-secondary));
   transform: translateY(-50%);
   transform-origin: left top;
   pointer-events: none;
@@ -99,19 +99,19 @@
 }
 
 .label[data-has-error] {
-  color: var(--enchase-color-error);
+  color: var(--enchase-input-label-color-error, var(--enchase-color-error));
 }
 
 .input:focus ~ .label {
-  color: var(--enchase-color-primary);
+  color: var(--enchase-input-label-color-focus, var(--enchase-color-primary));
 }
 
 .input:focus ~ .label[data-has-error] {
-  color: var(--enchase-color-error);
+  color: var(--enchase-input-label-color-error-focus, var(--enchase-color-error));
 }
 
 .input:disabled ~ .label {
-  color: var(--enchase-color-text-disabled);
+  color: var(--enchase-input-label-color-disabled, var(--enchase-color-text-disabled));
 }
 
 .outline {
@@ -126,13 +126,13 @@
   font: inherit;
   text-align: start;
   pointer-events: none;
-  border: var(--enchase-border-width, 1px) solid var(--enchase-color-border-strong);
+  border: var(--enchase-border-width, 1px) solid var(--enchase-input-outline-border-color, var(--enchase-color-border-strong));
   border-radius: var(--enchase-input-field-radius, var(--enchase-radius-control));
   transition: border-color var(--enchase-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-input-ease, var(--enchase-motion-ease-out));
 }
 
 .outline[data-has-error] {
-  border-color: var(--enchase-color-error);
+  border-color: var(--enchase-input-outline-border-color-error, var(--enchase-color-error));
 }
 
 .outline legend {
@@ -171,21 +171,21 @@
 
 @media (hover: hover) and (pointer: fine) {
   .input:hover:not(:disabled):not(:focus) ~ .outline {
-    border-color: var(--enchase-color-text-primary);
+    border-color: var(--enchase-input-outline-border-color-hover, var(--enchase-color-text-primary));
   }
 
   .input:hover:not(:disabled):not(:focus) ~ .outline[data-has-error] {
-    border-color: var(--enchase-color-error);
+    border-color: var(--enchase-input-outline-border-color-error-hover, var(--enchase-color-error));
   }
 }
 
 .input:focus ~ .outline {
   border-width: var(--enchase-border-width-strong, 2px);
-  border-color: var(--enchase-color-primary);
+  border-color: var(--enchase-input-outline-border-color-focus, var(--enchase-color-primary));
 }
 
 .input:focus ~ .outline[data-has-error] {
-  border-color: var(--enchase-color-error);
+  border-color: var(--enchase-input-outline-border-color-error-focus, var(--enchase-color-error));
 }
 
 .input:disabled ~ .outline {
@@ -205,7 +205,7 @@
   font-family: inherit;
   background-color: transparent;
   border: none;
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-input-toggle-color, var(--enchase-color-text-secondary));
   cursor: pointer;
   transform: translateY(-50%);
   touch-action: manipulation;
@@ -231,24 +231,24 @@
 @media (hover: hover) and (pointer: fine) {
   .toggle:hover:not(:disabled) {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
-    color: var(--enchase-color-text-primary);
+    color: var(--enchase-input-toggle-color-hover, var(--enchase-color-text-primary));
   }
 }
 
 .toggle:disabled {
-  color: var(--enchase-color-text-disabled);
+  color: var(--enchase-input-toggle-color-disabled, var(--enchase-color-text-disabled));
   cursor: not-allowed;
 }
 
 .error {
   font-size: var(--enchase-input-error-font-size, var(--enchase-font-size-xs));
-  color: var(--enchase-color-error);
+  color: var(--enchase-input-error-color, var(--enchase-color-error));
   font-weight: var(--enchase-input-error-font-weight, var(--enchase-font-weight-medium));
 }
 
 .helper {
   font-size: var(--enchase-input-helper-font-size, var(--enchase-font-size-xs));
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-input-helper-color, var(--enchase-color-text-secondary));
 }
 
 @media (prefers-reduced-motion: reduce) {
