@@ -470,7 +470,7 @@ Toda raiz aceita `className` e `style`, e a classe de quem usa vence a da biblio
 }
 ```
 
-O anel de foco e a largura das bordas saem de variáveis do tema (experimentais até a versão 1.0), que você muda no `:root` ou em qualquer trecho da página. Os componentes só leem essas variáveis:
+O anel de foco, a largura das bordas, as camadas de estado e o halo dos controles de seleção saem de variáveis do tema (experimentais até a versão 1.0), que você muda no `:root` ou em qualquer trecho da página. Os componentes só leem essas variáveis:
 
 | Variável | Padrão | O que controla |
 | --- | --- | --- |
@@ -481,8 +481,15 @@ O anel de foco e a largura das bordas saem de variáveis do tema (experimentais 
 | `--enchase-focus-color` | a cor `primary` | cor do anel; sem valor, o anel segue o `primary` do trecho da página |
 | `--enchase-border-width` | `1px` | bordas e divisores |
 | `--enchase-border-width-strong` | `2px` | bordas do checkbox, do radio e da chave, e do campo em foco |
+| `--enchase-state-hover` | `0.08` | força da camada de hover de botões, abas, acordeão, paginação, itens de menu, opções e links |
+| `--enchase-state-pressed` | `0.1` | força da camada ao pressionar |
+| `--enchase-state-row-hover` | `0.06` | força do hover de uma linha da tabela |
+| `--enchase-state-disabled-container` | `0.12` | contorno de um campo e fundo de um botão desabilitados |
+| `--enchase-state-disabled-content` | `0.38` | borda e marca do checkbox, do radio e da chave desabilitados |
+| `--enchase-halo-size` | `10px` | halo do checkbox e do radio ao passar o mouse e ao pressionar |
+| `--enchase-halo-size-switch` | `0.5rem` | halo da bolinha da chave |
 
-O foco precisa continuar visível (contraste de pelo menos 3:1 com o fundo). O `validateTheme` confere o `primary`, mas não uma `--enchase-focus-color` sua.
+As camadas de estado são a fração (de 0 a 1) da cor do elemento que se mistura com o fundo: `--enchase-state-hover: 0.16` dobra o hover. Um halo de `0` desliga o halo. O foco precisa continuar visível (contraste de pelo menos 3:1 com o fundo). O `validateTheme` confere o `primary`, mas não uma `--enchase-focus-color` sua.
 
 O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 
