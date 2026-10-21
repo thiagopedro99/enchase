@@ -26,6 +26,12 @@ const meta = {
       description: 'Rótulo do campo, associado ao textarea para leitores de tela.',
       control: 'text'
     },
+    labelPlacement: {
+      description: 'Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn.',
+      control: 'inline-radio',
+      options: ['floating', 'stacked'],
+      table: { defaultValue: { summary: "'floating'" } }
+    },
     helperText: {
       description: 'Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro.',
       control: 'text'
@@ -90,4 +96,8 @@ export const FixedSize: Story = {
 
 export const Disabled: Story = {
   args: { disabled: true, defaultValue: 'Este texto não pode ser editado' }
+}
+
+export const LabelAbove: Story = {
+  args: { labelPlacement: 'stacked' }
 }

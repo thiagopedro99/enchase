@@ -121,7 +121,7 @@ Aplica o tema: injeta as variáveis `--enchase-*`, define `data-theme` e `color-
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `children` | `ReactNode` | *obrigatória* | A aplicação. |
-| `theme` | `ThemeInput` | — | Tema personalizado, como { brand, fonts, motion, shape, radius, light, dark }, o mesmo que createTheme aceita: a cor da marca gera a paleta, shape escolhe a forma dos cantos (pill, soft ou square) e radius ajusta um raio, e light e dark ajustam cores por modo. Todo valor é validado, e em desenvolvimento o provedor avisa no console sobre contraste e duração. Sem ele vale o tema padrão. |
+| `theme` | `ThemeInput` | — | Tema personalizado, como { style, brand, fonts, motion, shape, radius, light, dark }, o mesmo que createTheme aceita: style troca o visual do kit inteiro (enchase ou shadcn), a cor da marca gera a paleta, shape escolhe a forma dos cantos (pill, soft ou square) e radius ajusta um raio, e light e dark ajustam cores por modo. O que você passa vence o style. Todo valor é validado, e em desenvolvimento o provedor avisa no console sobre contraste e duração. Sem ele vale o tema padrão. |
 | `mode` | `'light' \| 'dark' \| 'system'` | — | Modo controlado: light, dark ou system. Com ele o provedor não guarda a escolha, e quem usa muda o valor em onModeChange. |
 | `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Modo usado enquanto não há escolha guardada nem a prop mode. system segue a preferência do sistema. |
 | `onModeChange` | `(mode: ColorMode) => void` | — | Chamado com o novo modo quando setMode ou toggleMode são usados, inclusive com mode controlado. |
@@ -267,6 +267,7 @@ Campo de texto com rótulo, mensagem de erro, texto de ajuda e botão para revel
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `label` | `string` | — | Rótulo do campo, associado ao input para leitores de tela. |
+| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn. |
 | `error` | `string` | — | Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta. |
 | `helperText` | `string` | — | Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro. |
 | `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
@@ -387,6 +388,7 @@ Campo para digitar um número, com rótulo, mensagem de erro, texto de ajuda e b
 | `largeStep` | `number` | — | Passo grande, de Shift com as setas e de Page Up e Page Down. Sem ele, vale dez vezes o `step`. |
 | `formatOptions` | `NumberInputFormat` | — | Formato do número, como no `Intl.NumberFormat`: `style` (`decimal`, `currency` ou `percent`), `currency` (código como `BRL`), `currencyDisplay`, `minimumFractionDigits`, `maximumFractionDigits` e `useGrouping`. O idioma vem do `UIProvider`. Sem `maximumFractionDigits`, valem as casas do estilo (3 no decimal, 2 na moeda, 0 no percentual) ou as que o `step` pedir. No percentual o valor é a fração: 0,15 aparece como 15%, e o `step` costuma ser 0,01. |
 | `label` | `string` | — | Rótulo do campo, associado ao input para leitores de tela. |
+| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn. |
 | `error` | `string` | — | Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta. |
 | `helperText` | `string` | — | Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro. |
 | `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
@@ -466,6 +468,7 @@ Seleção nativa estilizada, com rótulo, mensagem de erro, texto de ajuda e `pl
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `label` | `string` | — | Rótulo do campo, associado ao select para leitores de tela. |
+| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn. |
 | `error` | `string` | — | Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta. |
 | `helperText` | `string` | — | Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro. |
 | `options` | `SelectOption[]` | *obrigatória* | Lista de opções. Cada uma tem value, label e, se quiser, disabled. |
@@ -564,6 +567,7 @@ Campo de texto de várias linhas, com rótulo, mensagem de erro e texto de ajuda
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
 | `label` | `string` | — | Rótulo do campo, associado ao textarea para leitores de tela. |
+| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn. |
 | `error` | `string` | — | Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta. |
 | `helperText` | `string` | — | Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro. |
 | `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
@@ -773,6 +777,7 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-accordion-icon-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-accordion-icon-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-accordion-item-border-color` | `var(--enchase-color-border)` | `border-block-start` |
+| `--enchase-accordion-panel-font-size` | `inherit` | `font-size` |
 | `--enchase-accordion-panel-padding-block-end` | `1rem` (`--enchase-space-md`) | `padding-block-end` |
 | `--enchase-accordion-panel-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-accordion-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
@@ -794,6 +799,8 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-alert-background-info` | `var(--enchase-color-info-container)` | `background-color` |
 | `--enchase-alert-background-success` | `var(--enchase-color-success-container)` | `background-color` |
 | `--enchase-alert-background-warning` | `var(--enchase-color-warning-container)` | `background-color` |
+| `--enchase-alert-border-color` | `transparent` | `border` |
+| `--enchase-alert-border-width` | `0` | `border` |
 | `--enchase-alert-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-alert-color-error` | `var(--enchase-color-on-error-container)` | `color` |
 | `--enchase-alert-color-info` | `var(--enchase-color-on-info-container)` | `color` |
@@ -804,11 +811,19 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-alert-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-alert-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-alert-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-alert-icon-color-error` | `inherit` | `color` |
+| `--enchase-alert-icon-color-info` | `inherit` | `color` |
+| `--enchase-alert-icon-color-success` | `inherit` | `color` |
+| `--enchase-alert-icon-color-warning` | `inherit` | `color` |
 | `--enchase-alert-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
 | `--enchase-alert-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
 | `--enchase-alert-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-alert-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-alert-row-height` | `2rem` | `--alert-row-size` |
+| `--enchase-alert-title-color-error` | `inherit` | `color` |
+| `--enchase-alert-title-color-info` | `inherit` | `color` |
+| `--enchase-alert-title-color-success` | `inherit` | `color` |
+| `--enchase-alert-title-color-warning` | `inherit` | `color` |
 | `--enchase-alert-title-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 
 ### AppBar
@@ -911,16 +926,28 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-button-background-ghost-disabled` | `transparent` | `background-color` |
+| `--enchase-button-background-outline-disabled` | `transparent` | `background-color` |
 | `--enchase-button-background-primary` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-button-background-primary-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
 | `--enchase-button-background-secondary` | `var(--enchase-color-primary-container)` | `background-color` |
+| `--enchase-button-background-secondary-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
+| `--enchase-button-border-color-ghost-disabled` | `transparent` | `border-color` |
 | `--enchase-button-border-color-outline` | `var(--enchase-color-border-strong)` | `border-color` |
+| `--enchase-button-border-color-outline-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `border-color` |
+| `--enchase-button-border-color-primary-disabled` | `transparent` | `border-color` |
+| `--enchase-button-border-color-secondary-disabled` | `transparent` | `border-color` |
 | `--enchase-button-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-button-color-ghost` | `var(--enchase-color-primary)` | `color` |
+| `--enchase-button-color-ghost-disabled` | `var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))` | `color` |
 | `--enchase-button-color-outline` | `var(--enchase-color-primary)` | `color` |
+| `--enchase-button-color-outline-disabled` | `var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))` | `color` |
 | `--enchase-button-color-outline-hover` | `var(--enchase-color-primary)` | `color` |
 | `--enchase-button-color-primary` | `var(--enchase-color-on-primary)` | `color` |
+| `--enchase-button-color-primary-disabled` | `var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))` | `color` |
 | `--enchase-button-color-primary-hover` | `var(--enchase-color-on-primary)` | `color` |
 | `--enchase-button-color-secondary` | `var(--enchase-color-on-primary-container)` | `color` |
+| `--enchase-button-color-secondary-disabled` | `var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))` | `color` |
 | `--enchase-button-color-secondary-hover` | `var(--enchase-color-on-primary-container)` | `color` |
 | `--enchase-button-distance` | `2px` (`--enchase-motion-distance-xs`) | `transform` |
 | `--enchase-button-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` (também em ThemeToggle) |
@@ -932,6 +959,7 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-button-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-button-letter-spacing` | `0.01em` (`--enchase-letter-spacing-control`) | `letter-spacing` |
 | `--enchase-button-line-height` | `1.2` (`--enchase-line-height-tight`) | `line-height` |
+| `--enchase-button-opacity-disabled` | `1` | `opacity` |
 | `--enchase-button-padding-block-lg` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
 | `--enchase-button-padding-block-md` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
 | `--enchase-button-padding-block-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
@@ -941,7 +969,11 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-button-padding-inline-sm` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-button-scale` | `0.97` | `transform` (também em ThemeToggle) |
+| `--enchase-button-shadow-ghost` | `none` | `box-shadow` |
+| `--enchase-button-shadow-outline` | `none` | `box-shadow` |
+| `--enchase-button-shadow-primary` | `none` | `box-shadow` |
 | `--enchase-button-shadow-primary-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
+| `--enchase-button-shadow-secondary` | `none` | `box-shadow` |
 | `--enchase-button-shadow-secondary-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
 
 ### Card
@@ -951,22 +983,29 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-card-background-default` | `var(--enchase-color-surface-container)` | `background-color` |
 | `--enchase-card-background-elevated` | `var(--enchase-color-surface-container-low)` | `background-color` |
 | `--enchase-card-background-outlined` | `var(--enchase-color-surface)` | `background-color` |
+| `--enchase-card-border-color-default` | `transparent` | `border` |
 | `--enchase-card-border-color-outlined` | `var(--enchase-color-border)` | `border` |
+| `--enchase-card-border-width-default` | `0` | `border` |
 | `--enchase-card-distance` | `2px` (`--enchase-motion-distance-xs`) | `transform` |
 | `--enchase-card-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-card-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-card-padding` | `1.5rem` (`--enchase-space-lg`) | `padding` |
 | `--enchase-card-radius` | `1.5rem` (`--enchase-radius-xl`) | `border-radius` |
+| `--enchase-card-shadow-default` | `none` | `box-shadow` |
 | `--enchase-card-shadow-elevated` | `var(--enchase-shadow-sm)` | `box-shadow` |
 | `--enchase-card-shadow-elevated-hover` | `var(--enchase-shadow-md)` | `box-shadow` |
+| `--enchase-card-shadow-outlined` | `none` | `box-shadow` |
 
 ### Checkbox
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
 | `--enchase-checkbox-box-background-checked` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-checkbox-box-background-checked-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `background-color` |
 | `--enchase-checkbox-box-border-color` | `var(--enchase-color-border-strong)` | `border` |
 | `--enchase-checkbox-box-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
+| `--enchase-checkbox-box-border-color-checked-disabled` | `transparent` | `border-color` |
+| `--enchase-checkbox-box-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
 | `--enchase-checkbox-box-check-width` | `2px` | `border-width` |
 | `--enchase-checkbox-box-radius` | `2px` | `border-radius` |
 | `--enchase-checkbox-box-size` | `18px` | `inline-size`, `block-size`, `margin-block-start` |
@@ -977,6 +1016,7 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-checkbox-label-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-checkbox-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-checkbox-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-checkbox-opacity-disabled` | `1` | `opacity` |
 | `--enchase-checkbox-scale` | `0.6` | `transform` |
 
 ### Container
@@ -1056,13 +1096,23 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-input-label-color-error` | `var(--enchase-color-error)` | `color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-label-color-error-focus` | `var(--enchase-color-error)` | `color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-label-color-focus` | `var(--enchase-color-primary)` | `color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-stacked` | `var(--enchase-color-text-primary)` | `color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-stacked-disabled` | `var(--enchase-color-text-disabled)` | `color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-stacked-error` | `var(--enchase-color-error)` | `color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-label-font-size-stacked` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-label-font-weight-stacked` | `500` (`--enchase-font-weight-medium`) | `font-weight` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-label-line-height-stacked` | `1.4` (`--enchase-line-height-snug`) | `line-height` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-min-width` | `200px` | `min-inline-size` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-opacity-disabled` | `1` | `opacity` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-outline-border-color` | `var(--enchase-color-border-strong)` | `border` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `border-color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-outline-border-color-error` | `var(--enchase-color-error)` | `border-color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-outline-border-color-error-focus` | `var(--enchase-color-error)` | `border-color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-outline-border-color-error-hover` | `var(--enchase-color-error)` | `border-color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-outline-border-color-focus` | `var(--enchase-color-primary)` | `border-color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-outline-border-color-hover` | `var(--enchase-color-text-primary)` | `border-color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-outline-shadow` | `none` | `box-shadow` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-outline-shadow-focus` | `none` (`--enchase-input-outline-shadow`) | `box-shadow` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline`, `inset-inline-start`, `max-inline-size` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-toggle-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-input-toggle-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
@@ -1134,6 +1184,7 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
 | `--enchase-modal-body-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-modal-body-font-size` | `inherit` | `font-size` |
 | `--enchase-modal-body-line-height` | `1.6` (`--enchase-line-height-relaxed`) | `line-height` |
 | `--enchase-modal-body-padding-block` | `var(--enchase-space-md) var(--enchase-space-lg)` | `padding-block` |
 | `--enchase-modal-body-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
@@ -1157,6 +1208,8 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-modal-header-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
 | `--enchase-modal-overlay-background` | `var(--enchase-color-overlay)` | `background-color` |
 | `--enchase-modal-panel-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-modal-panel-border-color` | `transparent` | `border` |
+| `--enchase-modal-panel-border-width` | `0` | `border` |
 | `--enchase-modal-panel-max-width-lg` | `800px` | `max-inline-size` |
 | `--enchase-modal-panel-max-width-md` | `600px` | `max-inline-size` |
 | `--enchase-modal-panel-max-width-sm` | `400px` | `max-inline-size` |
@@ -1178,7 +1231,9 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-navbar-background-solid` | `var(--enchase-color-surface-container)` | `background-color` |
 | `--enchase-navbar-bar-height` | `64px` | `block-size` |
 | `--enchase-navbar-blur` | `12px` | `-webkit-backdrop-filter`, `backdrop-filter` |
+| `--enchase-navbar-border-color` | `transparent` | `border-block-end` |
 | `--enchase-navbar-border-color-translucent` | `var(--enchase-color-border)` | `box-shadow` |
+| `--enchase-navbar-border-width` | `0` | `border-block-end` |
 | `--enchase-navbar-cta-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-navbar-distance` | `0px` | `transform` |
 | `--enchase-navbar-drawer-background` | `var(--enchase-color-surface-container-low)` | `background-color` |
@@ -1243,6 +1298,7 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
 | `--enchase-pagination-control-background-current` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-pagination-control-border-color-current` | `transparent` | `border-color` |
 | `--enchase-pagination-control-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-pagination-control-color-current` | `var(--enchase-color-on-primary)` | `color` |
 | `--enchase-pagination-control-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
@@ -1266,6 +1322,8 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | --- | --- | --- |
 | `--enchase-popover-arrow-size` | `10px` | `inline-size`, `block-size`, `inset-block-end`, `inset-block-start`, `right`, `left` |
 | `--enchase-popover-content-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-popover-content-border-color` | `transparent` | `border` |
+| `--enchase-popover-content-border-width` | `0` | `border` |
 | `--enchase-popover-content-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-popover-content-padding-block` | `1rem` (`--enchase-space-md`) | `padding-block` |
 | `--enchase-popover-content-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
@@ -1284,11 +1342,13 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | --- | --- | --- |
 | `--enchase-radio-group-control-border-color` | `var(--enchase-color-border-strong)` | `border` |
 | `--enchase-radio-group-control-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
+| `--enchase-radio-group-control-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
 | `--enchase-radio-group-control-border-color-invalid` | `var(--enchase-color-error)` | `border-color` |
 | `--enchase-radio-group-control-dot-size` | `calc(var(--enchase-radio-group-control-size, 1.25rem) / 2)` | `--radio-dot-size` |
 | `--enchase-radio-group-control-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-radio-group-control-size` | `1.25rem` | `--radio-dot-size`, `inline-size`, `block-size` |
 | `--enchase-radio-group-dot-border-color` | `var(--enchase-color-primary)` | `border` |
+| `--enchase-radio-group-dot-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
 | `--enchase-radio-group-dot-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-radio-group-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-radio-group-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
@@ -1307,6 +1367,7 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-radio-group-legend-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-radio-group-legend-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-radio-group-legend-margin-block-end` | `0.5rem` (`--enchase-space-sm`) | `margin-block-end` |
+| `--enchase-radio-group-opacity-disabled` | `1` | `opacity` |
 | `--enchase-radio-group-option-gap` | `1rem` (`--enchase-space-md`) | `gap` |
 | `--enchase-radio-group-options-column-gap-horizontal` | `1.5rem` (`--enchase-space-lg`) | `column-gap` |
 | `--enchase-radio-group-options-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
@@ -1335,6 +1396,8 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-select-option-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-select-option-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
 | `--enchase-select-picker-background` | `var(--enchase-color-surface-container)` | `background-color` |
+| `--enchase-select-picker-border-color` | `transparent` | `border` |
+| `--enchase-select-picker-border-width` | `0` | `border` |
 | `--enchase-select-picker-margin-block` | `0.25rem` (`--enchase-space-xs`) | `margin-block` |
 | `--enchase-select-picker-padding` | `0.25rem` (`--enchase-space-xs`) | `padding` |
 | `--enchase-select-picker-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
@@ -1345,6 +1408,8 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
 | `--enchase-sidebar-background` | `var(--enchase-color-surface-container-low)` | `background-color` |
+| `--enchase-sidebar-border-color` | `transparent` | `border-inline-end` |
+| `--enchase-sidebar-border-width` | `0` | `border-inline-end` |
 | `--enchase-sidebar-collapse-button-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-sidebar-collapse-button-color-active` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-sidebar-collapse-button-color-hover` | `var(--enchase-color-text-primary)` | `color` |
@@ -1452,8 +1517,10 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-switch-label-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-switch-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-switch-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-switch-opacity-disabled` | `1` | `opacity` |
 | `--enchase-switch-thumb-background` | `var(--enchase-color-border-strong)` | `background-color` |
 | `--enchase-switch-thumb-background-checked` | `var(--enchase-color-on-primary)` | `background-color` |
+| `--enchase-switch-thumb-background-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `background-color` |
 | `--enchase-switch-thumb-background-disabled-checked` | `var(--enchase-color-surface)` | `background-color` |
 | `--enchase-switch-thumb-inset` | `0.125rem` | `--switch-travel`, `inset-inline-start` |
 | `--enchase-switch-thumb-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
@@ -1461,8 +1528,11 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-switch-thumb-size` | `1.5rem` | `--switch-travel`, `inline-size`, `block-size` |
 | `--enchase-switch-track-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-switch-track-background-checked` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-switch-track-background-checked-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `background-color` |
 | `--enchase-switch-track-border-color` | `var(--enchase-color-border-strong)` | `border` |
 | `--enchase-switch-track-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
+| `--enchase-switch-track-border-color-checked-disabled` | `transparent` | `border-color` |
+| `--enchase-switch-track-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
 | `--enchase-switch-track-height` | `2rem` | `block-size` |
 | `--enchase-switch-track-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-switch-track-width` | `3.25rem` | `--switch-travel`, `inline-size` |
@@ -1498,6 +1568,7 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-tabs-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-tabs-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-tabs-indicator-color` | `var(--enchase-color-primary)` | `border-block-end` |
+| `--enchase-tabs-indicator-width` | `2px` (`--enchase-border-width-strong`) | `border-block-end`, `block-size` |
 | `--enchase-tabs-list-border-color` | `var(--enchase-color-border)` | `box-shadow` |
 | `--enchase-tabs-panel-padding-block-start` | `1rem` (`--enchase-space-md`) | `padding-block-start` |
 | `--enchase-tabs-tab-color` | `var(--enchase-color-text-secondary)` | `color` |
@@ -1546,6 +1617,8 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-toast-background-success` | `var(--enchase-color-success-container)` | `background-color` |
 | `--enchase-toast-background-warning` | `var(--enchase-color-warning-container)` | `background-color` |
 | `--enchase-toast-body-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-toast-border-color` | `transparent` | `border` |
+| `--enchase-toast-border-width` | `0` | `border` |
 | `--enchase-toast-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-toast-color-error` | `var(--enchase-color-on-error-container)` | `color` |
 | `--enchase-toast-color-info` | `var(--enchase-color-on-info-container)` | `color` |

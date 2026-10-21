@@ -188,6 +188,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
 | `helperText` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
 | `fullWidth` | `Button`, `ButtonLink`, `Input`, `Textarea`, `NumberInput`, `Select` | Ocupa toda a largura disponível. |
+| `labelPlacement` | `Input`, `Textarea`, `NumberInput`, `Select` | Onde fica o rótulo: `floating` (dentro do campo, sobe ao focar) ou `stacked` (acima do controle). Sem a prop, vale o `style` do tema: `floating` no `enchase` e `stacked` no `shadcn`. |
 | `externalIcon` | `ButtonLink` | Com `target="_blank"`, mostra o ícone de link externo (padrão `true`). `false` tira só o ícone e mantém o texto "abre em nova aba" para leitores de tela; em um link só de ícone com `aria-label`, ponha o aviso no próprio rótulo. |
 | `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
 | `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup`, vão para o `<fieldset>`, que é a raiz. |
@@ -321,7 +322,7 @@ const theme = createTheme({ light: { colors: { primary: '#0B6BCB' } } })
 const issues = validateTheme(theme)
 ```
 
-- O visual padrão segue a linguagem do Material Design 3 (paleta tonal em índigo, cantos arredondados, camadas de estado). A forma dos cantos tem três presets (`shape`, veja abaixo); paleta, fonte e movimento são seções à parte do `createTheme`.
+- O visual padrão segue a linguagem do Material Design 3 (paleta tonal em índigo, cantos arredondados, camadas de estado). O `style` troca o visual inteiro de uma vez (veja "Estilo visual", abaixo), a forma dos cantos tem três presets (`shape`) e paleta, fonte e movimento são seções à parte do `createTheme`.
 - `useColorMode()` devolve `{ mode, resolvedMode, setMode, toggleMode }`. O modo (`light`, `dark` ou `system`, o padrão) fica no `localStorage`.
 
 ### Paleta a partir da cor da marca
@@ -365,6 +366,28 @@ O `createTheme` troca os raios com a seção `shape` (um preset) e com `radius` 
 - Sem `shape` e sem `radius`, nada muda: o `pill` é o visual de sempre, e `--enchase-radius-button` aponta para `--enchase-radius-full`, então quem já sobrescrevia `--enchase-radius-full` no `:root` continua vendo os botões acompanharem. Uma sobrescrita de `--enchase-radius-full` só em um trecho da página não chega mais aos botões desse trecho, porque o alias já foi resolvido no `:root`: ali, sobrescreva `--enchase-radius-button`.
 - O `Button` ainda lê `--enchase-button-radius` antes do tema, para mudar um botão só.
 - O `shape` muda só os raios: o contraste das cores e o movimento ficam como estão. A página Sistema/Forma do Storybook mostra os presets no kit inteiro.
+
+### Estilo visual
+
+`style` troca o visual do kit inteiro de uma vez: a paleta, os raios, as alturas, os pesos, as bordas, as sombras e o lugar do rótulo dos campos. O padrão, `enchase`, é o visual de sempre e não muda nada. O `shadcn` aproxima o kit do shadcn/ui: paleta neutra, bordas no lugar de sombras, botões e campos de 36px com texto de 14px, cantos de `0.5rem` e o rótulo acima do campo.
+
+```tsx
+<ColorModeProvider theme={{ style: 'shadcn' }}>
+  <App />
+</ColorModeProvider>
+
+<ColorModeProvider theme={{ style: 'shadcn', brand: '#0B6BCB', shape: 'soft' }}>
+  <App />
+</ColorModeProvider>
+```
+
+- O estilo é "inspirado em", não uma cópia: o contrato de acessibilidade da biblioteca vale mais que a fidelidade. Onde o original fica abaixo dele, o estilo ajusta. A borda dos campos e a trilha da chave desligada são `#808080` (3:1 contra o fundo; a do original tem 1,26:1). O anel de foco é sólido, de 2px, na cor `primary` e com 2px de folga (o original usa um anel translúcido, que não chega a 3:1). O texto secundário sobre as superfícies cinza e o vermelho de erro usado como texto têm 4,5:1. Em cores forçadas (o modo de alto contraste do Windows), a borda do campo em foco engrossa para 2px, porque a sombra do anel some. O desenho do checkbox e do radio é de 16px, mas a área de toque continua com 24px ou mais.
+- Além das cores e dos raios, o estilo muda: botões de 32, 36 e 40px, campos de 36px e texto de 14px nos controles, uma sombra pequena nos botões e nos campos, alertas neutros com o ícone e o título coloridos, badges tingidos (sólidos só o `primary` e o de erro), abas só com o sublinhado, acordeão sem contorno e com linhas entre os itens, diálogo, popover e notificação com borda, e o rótulo acima do controle.
+- A precedência, do mais fraco ao mais forte, é: o padrão da biblioteca, o `style` e o que você passa (`shape`, `radius`, `fonts`, `motion`, `brand`, `light` e `dark`). `shape: 'pill'` com o `shadcn` devolve os botões em pílula, e `radius: { button: '1rem' }` muda só o raio dos botões. Com `brand`, só o acento muda (o `primary` e o que deriva dele): os neutros continuam os do estilo, e o `validateTheme` confere o contraste do resultado como em qualquer tema.
+- Por baixo, um estilo é um conjunto de tokens e de ganchos de CSS (veja "Customização por CSS"). O `createTheme` os junta ao tema e o `ColorModeProvider` os escreve no `:root` e nos blocos de cada modo, então o CSS da sua aplicação vence o estilo: `:root { --enchase-button-font-size-md: 16px; }` muda só esse valor. O `ThemeSet` que o `createTheme` devolve ganha `hooks` e `defaults`, que são opcionais, então um `ThemeSet` montado à mão continua valendo. O tipo `StyleName` é exportado por `enchase/theme`, e um nome que não existe lança erro com os que existem.
+- A página Sistema/Estilos do Storybook mostra os estilos no kit inteiro, e a barra de ferramentas do Storybook troca o estilo de todas as stories.
+
+O lugar do rótulo dos campos é a prop `labelPlacement` do `Input`, do `Textarea`, do `NumberInput` e do `Select`: `floating` (o padrão do estilo `enchase`) deixa o rótulo dentro do campo, e ele sobe para o contorno ao focar ou preencher; `stacked` (o padrão do `shadcn`) põe o rótulo acima do controle, sem entalhe no contorno, com a ajuda e o erro abaixo. A prop vence o estilo, nos dois sentidos, e sem `ColorModeProvider` o rótulo é flutuante. A ordem no HTML é a visual (o `<label>` vem antes do controle), igual no servidor e no cliente.
 
 ## Idiomas e RTL
 
@@ -495,7 +518,7 @@ O anel de foco, a largura das bordas, as camadas de estado, o halo dos controles
 
 As camadas de estado são a fração (de 0 a 1) da cor do elemento que se mistura com o fundo: `--enchase-state-hover: 0.16` dobra o hover. Um halo de `0` desliga o halo. A área de toque nunca fica abaixo de 24px (WCAG 2.5.8), mesmo que a variável peça menos, e o espaço que o campo de senha e o campo numérico reservam para os botões de dentro acompanha a variável. O foco precisa continuar visível (contraste de pelo menos 3:1 com o fundo). O `validateTheme` confere o `primary`, mas não uma `--enchase-focus-color` sua.
 
-Cada componente também lê ganchos próprios, `--enchase-<data-slot>-<propriedade>`, opcionais e experimentais até a versão 1.0. O nome é o `data-slot` da parte mais a propriedade (e o tamanho ou a variante, quando há mais de um): `data-slot="switch-thumb"` e `size` dão `--enchase-switch-thumb-size`. O tema não os declara. Sem valor, o componente usa o padrão, e um padrão que aponta para um token do tema (como `--enchase-radius-md`) continua seguindo uma sobrescrita desse token. A lista completa, com o padrão e a propriedade de cada um, está em [API.md](API.md#ganchos-de-css) e é gerada do CSS dos componentes, então não sai de sincronia.
+Cada componente também lê ganchos próprios, `--enchase-<data-slot>-<propriedade>`, opcionais e experimentais até a versão 1.0. O nome é o `data-slot` da parte mais a propriedade (e o tamanho ou a variante, quando há mais de um): `data-slot="switch-thumb"` e `size` dão `--enchase-switch-thumb-size`. O tema não os declara, a não ser os que o `style` escolhido muda. Sem valor, o componente usa o padrão, e um padrão que aponta para um token do tema (como `--enchase-radius-md`) continua seguindo uma sobrescrita desse token. A lista completa, com o padrão e a propriedade de cada um, está em [API.md](API.md#ganchos-de-css) e é gerada do CSS dos componentes, então não sai de sincronia.
 
 ```css
 :root {

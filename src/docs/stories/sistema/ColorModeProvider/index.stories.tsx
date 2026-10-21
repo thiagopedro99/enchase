@@ -35,7 +35,7 @@ const meta = {
   argTypes: {
     children: { description: 'A aplicação.', control: false },
     theme: {
-      description: 'Tema personalizado, como { brand, fonts, motion, shape, radius, light, dark }, o mesmo que createTheme aceita: a cor da marca gera a paleta, shape escolhe a forma dos cantos (pill, soft ou square) e radius ajusta um raio, e light e dark ajustam cores por modo. Todo valor é validado, e em desenvolvimento o provedor avisa no console sobre contraste e duração. Sem ele vale o tema padrão.',
+      description: 'Tema personalizado, como { style, brand, fonts, motion, shape, radius, light, dark }, o mesmo que createTheme aceita: style troca o visual do kit inteiro (enchase ou shadcn), a cor da marca gera a paleta, shape escolhe a forma dos cantos (pill, soft ou square) e radius ajusta um raio, e light e dark ajustam cores por modo. O que você passa vence o style. Todo valor é validado, e em desenvolvimento o provedor avisa no console sobre contraste e duração. Sem ele vale o tema padrão.',
       control: 'object'
     },
     mode: {
@@ -86,4 +86,8 @@ export const Playground: Story = {}
 
 export const WithBrandColor: Story = {
   args: { theme: { brand: '#0b6bcb' } }
+}
+
+export const WithStyle: Story = {
+  args: { theme: { style: 'shadcn' } }
 }
