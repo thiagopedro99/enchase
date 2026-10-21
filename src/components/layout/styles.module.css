@@ -38,24 +38,24 @@
   inset-block-start: -100px;
   inset-inline-start: var(--enchase-space-md);
   z-index: var(--enchase-z-tooltip);
-  padding-block: var(--enchase-space-sm);
-  padding-inline: var(--enchase-space-md);
+  padding-block: var(--enchase-layout-skip-link-padding-block, var(--enchase-space-sm));
+  padding-inline: var(--enchase-layout-skip-link-padding-inline, var(--enchase-space-md));
   border-radius: var(--enchase-layout-skip-link-radius, var(--enchase-radius-md));
-  background-color: var(--enchase-color-primary);
-  color: var(--enchase-color-on-primary);
+  background-color: var(--enchase-layout-skip-link-background, var(--enchase-color-primary));
+  color: var(--enchase-layout-skip-link-color, var(--enchase-color-on-primary));
   font-weight: var(--enchase-layout-skip-link-font-weight, var(--enchase-font-weight-semibold));
   text-decoration: none;
 }
 
 .skipLink:focus {
   inset-block-start: var(--enchase-space-md);
-  color: var(--enchase-color-on-primary);
+  color: var(--enchase-layout-skip-link-color-focus, var(--enchase-color-on-primary));
 }
 
 :where(.main) {
   grid-area: main;
   min-inline-size: 0;
-  padding-block: var(--enchase-space-xl) var(--enchase-space-2xl);
+  padding-block: var(--enchase-layout-main-padding-block, var(--enchase-space-xl) var(--enchase-space-2xl));
   padding-inline: 0;
 }
 

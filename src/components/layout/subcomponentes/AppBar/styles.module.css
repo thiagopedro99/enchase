@@ -6,19 +6,19 @@
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: var(--enchase-space-sm);
+  gap: var(--enchase-layout-header-gap, var(--enchase-space-sm));
   min-inline-size: 0;
-  block-size: 64px;
+  block-size: var(--enchase-layout-header-height, 64px);
   margin: 0;
   padding-block: 0;
-  padding-inline: var(--enchase-space-md);
-  background-color: var(--enchase-color-surface);
-  border-block-end: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
+  padding-inline: var(--enchase-layout-header-padding-inline, var(--enchase-space-md));
+  background-color: var(--enchase-app-bar-background-solid, var(--enchase-color-surface));
+  border-block-end: var(--enchase-border-width, 1px) solid var(--enchase-layout-header-border-color, var(--enchase-color-border));
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) and (color: color-mix(in srgb, red 50%, transparent)) {
   :where(.bar[data-translucent]) {
-    background-color: var(--enchase-app-bar-background, color-mix(in srgb, var(--enchase-color-surface) 80%, transparent));
+    background-color: var(--enchase-app-bar-background, color-mix(in srgb, var(--enchase-app-bar-background-solid, var(--enchase-color-surface)) calc(var(--enchase-app-bar-background-alpha, 0.8) * 100%), transparent));
     -webkit-backdrop-filter: blur(var(--enchase-app-bar-blur, 12px));
     backdrop-filter: blur(var(--enchase-app-bar-blur, 12px));
   }
@@ -26,7 +26,7 @@
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
   :where(.bar[data-translucent]) {
-    background-color: var(--enchase-color-surface);
+    background-color: var(--enchase-app-bar-background-solid, var(--enchase-color-surface));
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
@@ -45,7 +45,7 @@
   border: 0;
   border-radius: var(--enchase-layout-header-menu-button-radius, var(--enchase-radius-button));
   background-color: transparent;
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-layout-header-menu-button-color, var(--enchase-color-text-secondary));
   font-family: inherit;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -66,7 +66,7 @@
 @media (hover: hover) and (pointer: fine) {
   .menuButton:hover {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
-    color: var(--enchase-color-text-primary);
+    color: var(--enchase-layout-header-menu-button-color-hover, var(--enchase-color-text-primary));
   }
 }
 
@@ -79,5 +79,5 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-layout-header-actions-gap, var(--enchase-space-xs));
 }

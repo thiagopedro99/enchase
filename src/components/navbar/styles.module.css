@@ -1,14 +1,14 @@
 :where(.header) {
   position: sticky;
   inset-block-start: 0;
-  background-color: var(--enchase-color-surface-container);
+  background-color: var(--enchase-navbar-background-solid, var(--enchase-color-surface-container));
   z-index: var(--enchase-z-sticky);
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) and (color: color-mix(in srgb, red 50%, transparent)) {
   :where(.header[data-translucent]) {
-    background-color: var(--enchase-navbar-background, color-mix(in srgb, var(--enchase-color-surface-container) 80%, transparent));
-    box-shadow: inset 0 calc(var(--enchase-border-width, 1px) * -1) 0 var(--enchase-color-border);
+    background-color: var(--enchase-navbar-background, color-mix(in srgb, var(--enchase-navbar-background-solid, var(--enchase-color-surface-container)) calc(var(--enchase-navbar-background-alpha, 0.8) * 100%), transparent));
+    box-shadow: inset 0 calc(var(--enchase-border-width, 1px) * -1) 0 var(--enchase-navbar-border-color-translucent, var(--enchase-color-border));
     -webkit-backdrop-filter: blur(var(--enchase-navbar-blur, 12px));
     backdrop-filter: blur(var(--enchase-navbar-blur, 12px));
   }
@@ -16,7 +16,7 @@
 
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
   :where(.header[data-translucent]) {
-    background-color: var(--enchase-color-surface-container);
+    background-color: var(--enchase-navbar-background-solid, var(--enchase-color-surface-container));
     box-shadow: none;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
@@ -27,13 +27,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  block-size: 64px;
+  block-size: var(--enchase-navbar-bar-height, 64px);
 }
 
 :where(.headerActions) {
   display: flex;
   align-items: center;
-  gap: var(--enchase-space-sm);
+  gap: var(--enchase-navbar-actions-gap, var(--enchase-space-sm));
 }
 
 :where(.headerActions > *) {
@@ -55,13 +55,13 @@
 }
 
 .logo {
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-navbar-logo-color, var(--enchase-color-text-primary));
   text-decoration: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .logo:hover {
-    color: var(--enchase-color-primary);
+    color: var(--enchase-navbar-logo-color-hover, var(--enchase-color-primary));
   }
 }
 
@@ -69,7 +69,7 @@
   display: none;
   flex-shrink: 1;
   min-inline-size: 0;
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-navbar-menu-gap, var(--enchase-space-xs));
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -81,7 +81,7 @@
 :where(.cta) {
   display: none;
   align-items: center;
-  gap: var(--enchase-space-sm);
+  gap: var(--enchase-navbar-cta-gap, var(--enchase-space-sm));
 }
 
 :where(.header[data-layout='wide'] .cta) {
@@ -93,14 +93,14 @@
   display: flex;
   align-items: center;
   padding-block: 0;
-  padding-inline: var(--enchase-space-md);
+  padding-inline: var(--enchase-navbar-menu-link-padding-inline, var(--enchase-space-md));
   font-weight: var(--enchase-navbar-menu-link-font-weight, var(--enchase-font-weight-semibold));
 }
 
 .menuLink,
 .mobileMenuLink {
   border-radius: var(--enchase-navbar-menu-link-radius, var(--enchase-radius-button));
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-navbar-menu-link-color, var(--enchase-color-text-secondary));
   text-decoration: none;
   transition:
     background-color var(--enchase-navbar-duration, var(--enchase-motion-duration-fast)) var(--enchase-navbar-ease, var(--enchase-motion-ease-out)),
@@ -116,8 +116,8 @@
 }
 
 :where(.mobileMenuLink) {
-  min-block-size: 52px;
-  padding-block: var(--enchase-space-sm);
+  min-block-size: var(--enchase-navbar-mobile-menu-link-min-height, 52px);
+  padding-block: var(--enchase-navbar-mobile-menu-link-padding-block, var(--enchase-space-sm));
   overflow-wrap: anywhere;
 }
 
@@ -125,20 +125,20 @@
   .menuLink:hover,
   .mobileMenuLink:hover {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
-    color: var(--enchase-color-text-primary);
+    color: var(--enchase-navbar-menu-link-color-hover, var(--enchase-color-text-primary));
   }
 }
 
 .menuLink:active,
 .mobileMenuLink:active {
   background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-navbar-menu-link-color-active, var(--enchase-color-text-primary));
 }
 
 .menuLink[aria-current],
 .mobileMenuLink[aria-current] {
-  background-color: var(--enchase-color-primary-container);
-  color: var(--enchase-color-on-primary-container);
+  background-color: var(--enchase-navbar-menu-link-background-current, var(--enchase-color-primary-container));
+  color: var(--enchase-navbar-menu-link-color-current, var(--enchase-color-on-primary-container));
 }
 
 :where(.mobileMenuButton, .closeButton) {
@@ -153,7 +153,7 @@
   border: 0;
   border-radius: var(--enchase-navbar-menu-button-radius, var(--enchase-radius-button));
   background-color: transparent;
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-navbar-menu-button-color, var(--enchase-color-text-secondary));
   font: inherit;
   cursor: pointer;
   appearance: none;
@@ -185,7 +185,7 @@
 :where(.overlay) {
   position: fixed;
   inset: 0;
-  background-color: var(--enchase-color-overlay);
+  background-color: var(--enchase-navbar-overlay-background, var(--enchase-color-overlay));
   z-index: var(--enchase-z-backdrop);
   opacity: 1;
   transition: opacity var(--enchase-navbar-duration, var(--enchase-motion-duration-base)) var(--enchase-navbar-ease, var(--enchase-motion-ease-out));
@@ -205,21 +205,21 @@
   inset-block-start: 0;
   inset-inline-end: 0;
   box-sizing: border-box;
-  inline-size: 300px;
+  inline-size: var(--enchase-navbar-drawer-width, 300px);
   max-inline-size: 90vw;
   block-size: 100vh;
   block-size: 100dvh;
-  background-color: var(--enchase-color-surface-container-low);
+  background-color: var(--enchase-navbar-drawer-background, var(--enchase-color-surface-container-low));
   border-start-start-radius: var(--enchase-navbar-drawer-radius-start-start, var(--enchase-radius-2xl));
   border-end-start-radius: var(--enchase-navbar-drawer-radius-end-start, var(--enchase-radius-2xl));
-  box-shadow: var(--enchase-shadow-lg);
+  box-shadow: var(--enchase-navbar-drawer-shadow, var(--enchase-shadow-lg));
   z-index: var(--enchase-z-modal);
-  padding: var(--enchase-space-lg);
-  padding-block-start: max(var(--enchase-space-lg), env(safe-area-inset-top, 0px));
-  padding-block-end: max(var(--enchase-space-lg), env(safe-area-inset-bottom, 0px));
+  padding: var(--enchase-navbar-drawer-padding, var(--enchase-space-lg));
+  padding-block-start: max(var(--enchase-navbar-drawer-padding, var(--enchase-space-lg)), env(safe-area-inset-top, 0px));
+  padding-block-end: max(var(--enchase-navbar-drawer-padding, var(--enchase-space-lg)), env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
-  gap: var(--enchase-space-sm);
+  gap: var(--enchase-navbar-drawer-gap, var(--enchase-space-sm));
   overflow-y: auto;
   overscroll-behavior: contain;
   transform: translate(0, 0);
@@ -268,18 +268,18 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-block-end: var(--enchase-space-md);
+  margin-block-end: var(--enchase-navbar-drawer-header-margin-block-end, var(--enchase-space-md));
 }
 
 :where(.mobileNav) {
   display: flex;
   flex-direction: column;
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-navbar-drawer-nav-gap, var(--enchase-space-xs));
 }
 
 :where(.drawerCta) {
   display: flex;
   flex-direction: column;
-  gap: var(--enchase-space-sm);
-  margin-block-start: var(--enchase-space-md);
+  gap: var(--enchase-navbar-drawer-cta-gap, var(--enchase-space-sm));
+  margin-block-start: var(--enchase-navbar-drawer-cta-margin-block-start, var(--enchase-space-md));
 }

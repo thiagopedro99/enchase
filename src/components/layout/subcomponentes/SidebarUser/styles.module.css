@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--enchase-space-sm);
+  gap: var(--enchase-sidebar-user-gap, var(--enchase-space-sm));
   flex: 1;
   min-inline-size: 0;
   margin: 0;
@@ -17,7 +17,7 @@
 :where(.info) {
   display: flex;
   align-items: center;
-  gap: var(--enchase-space-md);
+  gap: var(--enchase-sidebar-user-info-gap, var(--enchase-space-md));
   min-inline-size: 0;
 }
 
@@ -26,11 +26,11 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  inline-size: 40px;
-  block-size: 40px;
+  inline-size: var(--enchase-sidebar-user-avatar-width, 40px);
+  block-size: var(--enchase-sidebar-user-avatar-height, 40px);
   border-radius: var(--enchase-sidebar-user-avatar-radius, var(--enchase-radius-full));
-  background-color: var(--enchase-color-primary);
-  color: var(--enchase-color-on-primary);
+  background-color: var(--enchase-sidebar-user-avatar-background, var(--enchase-color-primary));
+  color: var(--enchase-sidebar-user-avatar-color, var(--enchase-color-on-primary));
   font-size: var(--enchase-sidebar-user-avatar-font-size, var(--enchase-font-size-base));
   font-weight: var(--enchase-sidebar-user-avatar-font-weight, var(--enchase-font-weight-bold));
 }
@@ -38,7 +38,7 @@
 :where(.name) {
   min-inline-size: 0;
   overflow: hidden;
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-sidebar-user-name-color, var(--enchase-color-text-primary));
   font-size: var(--enchase-sidebar-user-name-font-size, var(--enchase-font-size-sm));
   font-weight: var(--enchase-sidebar-user-name-font-weight, var(--enchase-font-weight-semibold));
   text-overflow: ellipsis;
@@ -58,7 +58,7 @@
   border: none;
   border-radius: var(--enchase-sidebar-user-logout-radius, var(--enchase-radius-button));
   background: none;
-  color: var(--enchase-color-primary);
+  color: var(--enchase-sidebar-user-logout-color, var(--enchase-color-primary));
   font: inherit;
   cursor: pointer;
   transition: background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);

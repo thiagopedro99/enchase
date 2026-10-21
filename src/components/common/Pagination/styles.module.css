@@ -18,7 +18,7 @@
 }
 
 :where(.list) {
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-pagination-list-gap, var(--enchase-space-xs));
 }
 
 .item {
@@ -37,7 +37,7 @@
   font-family: inherit;
   font-weight: var(--enchase-pagination-control-font-weight, var(--enchase-font-weight-medium));
   line-height: var(--enchase-pagination-control-line-height, var(--enchase-line-height-none, 1));
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-pagination-control-color, var(--enchase-color-text-primary));
   background-color: transparent;
   border: var(--enchase-border-width, 1px) solid transparent;
   cursor: pointer;
@@ -49,7 +49,7 @@
 :where(.control) {
   min-inline-size: var(--enchase-control-height-md, 2.5rem);
   min-block-size: var(--enchase-control-height-md, 2.5rem);
-  padding-inline: var(--enchase-space-sm);
+  padding-inline: var(--enchase-pagination-control-padding-inline, var(--enchase-space-sm));
   font-size: var(--enchase-pagination-control-font-size, var(--enchase-font-size-base));
   border-radius: var(--enchase-pagination-control-radius, var(--enchase-radius-control));
 }
@@ -57,7 +57,7 @@
 :where(.pagination[data-size='sm'] .control) {
   min-inline-size: var(--enchase-control-height-sm, 2rem);
   min-block-size: var(--enchase-control-height-sm, 2rem);
-  padding-inline: var(--enchase-space-xs);
+  padding-inline: var(--enchase-pagination-control-padding-inline-sm, var(--enchase-space-xs));
   font-size: var(--enchase-pagination-control-font-size-sm, var(--enchase-font-size-sm));
 }
 
@@ -73,13 +73,13 @@
 }
 
 .control[aria-current='page'] {
-  color: var(--enchase-color-on-primary);
-  background-color: var(--enchase-color-primary);
+  color: var(--enchase-pagination-control-color-current, var(--enchase-color-on-primary));
+  background-color: var(--enchase-pagination-control-background-current, var(--enchase-color-primary));
   border-width: var(--enchase-border-width-strong, 2px);
 }
 
 .control[aria-disabled='true'] {
-  color: var(--enchase-color-text-disabled);
+  color: var(--enchase-pagination-control-color-disabled, var(--enchase-color-text-disabled));
   cursor: not-allowed;
 }
 
@@ -102,7 +102,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-pagination-ellipsis-color, var(--enchase-color-text-secondary));
   user-select: none;
 }
 

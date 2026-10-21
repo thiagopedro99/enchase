@@ -2,10 +2,10 @@
   box-sizing: border-box;
   margin-block: auto 0;
   margin-inline: 0;
-  padding-block: var(--enchase-space-xl);
+  padding-block: var(--enchase-footer-padding-block, var(--enchase-space-xl));
   padding-inline: 0;
-  background-color: var(--enchase-color-surface-container);
-  color: var(--enchase-color-text-secondary);
+  background-color: var(--enchase-footer-background, var(--enchase-color-surface-container));
+  color: var(--enchase-footer-color, var(--enchase-color-text-secondary));
 }
 
 .link {
@@ -14,7 +14,7 @@
   min-block-size: 24px;
   overflow-wrap: anywhere;
   text-decoration: none;
-  color: var(--enchase-color-primary);
+  color: var(--enchase-footer-link-color, var(--enchase-color-primary));
   font-size: var(--enchase-footer-link-font-size, var(--enchase-font-size-sm));
   font-weight: var(--enchase-footer-link-font-weight, var(--enchase-font-weight-medium));
   transition: color var(--enchase-footer-duration, var(--enchase-motion-duration-fast)) var(--enchase-footer-ease, var(--enchase-motion-ease-out));
@@ -22,7 +22,7 @@
 
 @media (hover: hover) and (pointer: fine) {
   .link:hover {
-    color: var(--enchase-color-primary-hover);
+    color: var(--enchase-footer-link-color-hover, var(--enchase-color-primary-hover));
     text-decoration: underline;
   }
 }
@@ -34,6 +34,6 @@
   overflow-wrap: anywhere;
   text-align: center;
   font-size: var(--enchase-footer-copyright-font-size, var(--enchase-font-size-sm));
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-footer-copyright-color, var(--enchase-color-text-secondary));
 }
 

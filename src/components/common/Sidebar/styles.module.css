@@ -3,8 +3,8 @@
   flex-direction: column;
   box-sizing: border-box;
   margin: 0;
-  background-color: var(--enchase-color-surface-container-low);
-  color: var(--enchase-color-text-primary);
+  background-color: var(--enchase-sidebar-background, var(--enchase-color-surface-container-low));
+  color: var(--enchase-sidebar-color, var(--enchase-color-text-primary));
 }
 
 :where(.aside) {
@@ -44,7 +44,7 @@
 :where(.overlay) {
   position: fixed;
   inset: 0;
-  background-color: var(--enchase-color-overlay);
+  background-color: var(--enchase-sidebar-overlay-background, var(--enchase-color-overlay));
   z-index: var(--enchase-z-backdrop);
   opacity: 1;
   transition: opacity var(--enchase-sidebar-duration, var(--enchase-motion-duration-base)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
@@ -67,7 +67,7 @@
   z-index: var(--enchase-z-modal);
   border-start-end-radius: var(--enchase-sidebar-panel-radius-start-end, var(--enchase-radius-2xl));
   border-end-end-radius: var(--enchase-sidebar-panel-radius-end-end, var(--enchase-radius-2xl));
-  box-shadow: var(--enchase-shadow-lg);
+  box-shadow: var(--enchase-sidebar-panel-shadow, var(--enchase-shadow-lg));
   padding-block-start: env(safe-area-inset-top, 0px);
   padding-block-end: env(safe-area-inset-bottom, 0px);
   transform: translate(0, 0);
@@ -119,9 +119,9 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  min-block-size: 72px;
+  min-block-size: var(--enchase-sidebar-header-min-height, 72px);
   padding-block: 0;
-  padding-inline: var(--enchase-space-lg);
+  padding-inline: var(--enchase-sidebar-header-padding-inline, var(--enchase-space-lg));
   overflow: hidden;
 }
 
@@ -135,9 +135,9 @@
   min-block-size: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--enchase-space-md);
-  padding-block: var(--enchase-space-xs);
-  padding-inline: var(--enchase-space-md);
+  gap: var(--enchase-sidebar-nav-gap, var(--enchase-space-md));
+  padding-block: var(--enchase-sidebar-nav-padding-block, var(--enchase-space-xs));
+  padding-inline: var(--enchase-sidebar-nav-padding-inline, var(--enchase-space-md));
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -146,9 +146,9 @@
 :where(.indicator) {
   position: absolute;
   inset-block-start: 0;
-  inset-inline: var(--enchase-space-md);
+  inset-inline: var(--enchase-sidebar-nav-padding-inline, var(--enchase-space-md));
   border-radius: var(--enchase-sidebar-indicator-radius, var(--enchase-radius-button));
-  background-color: var(--enchase-color-primary-container);
+  background-color: var(--enchase-sidebar-indicator-background, var(--enchase-sidebar-item-control-background-current, var(--enchase-color-primary-container)));
   opacity: 0;
   pointer-events: none;
   translate: 0 0;
@@ -170,23 +170,23 @@
 :where(.section) {
   display: flex;
   flex-direction: column;
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-sidebar-section-gap, var(--enchase-space-xs));
 }
 
 :where(.sectionTitle) {
   margin: 0;
-  padding-block: var(--enchase-space-sm);
-  padding-inline: var(--enchase-space-md);
+  padding-block: var(--enchase-sidebar-section-title-padding-block, var(--enchase-space-sm));
+  padding-inline: var(--enchase-sidebar-section-title-padding-inline, var(--enchase-space-md));
   font-size: var(--enchase-sidebar-section-title-font-size, var(--enchase-font-size-sm));
   font-weight: var(--enchase-sidebar-section-title-font-weight, var(--enchase-font-weight-semibold));
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-sidebar-section-title-color, var(--enchase-color-text-secondary));
 }
 
 :where(.sectionDivider) {
-  margin-block: var(--enchase-space-xs);
-  margin-inline: var(--enchase-space-md);
+  margin-block: var(--enchase-sidebar-section-divider-margin-block, var(--enchase-space-xs));
+  margin-inline: var(--enchase-sidebar-section-divider-margin-inline, var(--enchase-space-md));
   border: 0;
-  border-block-start: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
+  border-block-start: var(--enchase-border-width, 1px) solid var(--enchase-sidebar-section-divider-border-color, var(--enchase-color-border));
 }
 
 :where(.itemList) {
@@ -195,7 +195,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-sidebar-item-list-gap, var(--enchase-space-xs));
 }
 
 :where(.listItem) {
@@ -208,13 +208,13 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  gap: var(--enchase-space-md);
+  gap: var(--enchase-sidebar-item-control-gap, var(--enchase-space-md));
   inline-size: 100%;
-  block-size: 52px;
+  block-size: var(--enchase-sidebar-item-control-height, 52px);
   min-block-size: 24px;
   margin: 0;
   padding-block: 0;
-  padding-inline: var(--enchase-space-md);
+  padding-inline: var(--enchase-sidebar-item-control-padding-inline, var(--enchase-space-md));
   border: 0;
   background-color: transparent;
   font-family: inherit;
@@ -229,7 +229,7 @@
 
 .item {
   border-radius: var(--enchase-sidebar-item-control-radius, var(--enchase-radius-button));
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-sidebar-item-control-color, var(--enchase-color-text-secondary));
   text-decoration: none;
   transition:
     background-color var(--enchase-sidebar-item-duration, var(--enchase-motion-duration-fast)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out)),
@@ -245,13 +245,13 @@
 @media (hover: hover) and (pointer: fine) {
   .item:hover {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
-    color: var(--enchase-color-text-primary);
+    color: var(--enchase-sidebar-item-control-color-hover, var(--enchase-color-text-primary));
   }
 }
 
 .item:active {
   background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-sidebar-item-control-color-active, var(--enchase-color-text-primary));
   transform: scale(var(--enchase-sidebar-item-scale, 0.98));
 }
 
@@ -263,8 +263,8 @@
 
 .item[aria-current='page'],
 .item[aria-current='location'] {
-  background-color: var(--enchase-color-primary-container);
-  color: var(--enchase-color-on-primary-container);
+  background-color: var(--enchase-sidebar-item-control-background-current, var(--enchase-color-primary-container));
+  color: var(--enchase-sidebar-item-control-color-current, var(--enchase-color-on-primary-container));
 }
 
 :where(.itemIcon) {
@@ -272,8 +272,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  inline-size: 24px;
-  block-size: 24px;
+  inline-size: var(--enchase-sidebar-item-icon-width, 24px);
+  block-size: var(--enchase-sidebar-item-icon-height, 24px);
   font-size: var(--enchase-sidebar-item-icon-font-size, var(--enchase-font-size-base));
   font-weight: var(--enchase-sidebar-item-icon-font-weight, var(--enchase-font-weight-bold));
 }
@@ -287,11 +287,11 @@
 }
 
 :where(.itemBadge) {
-  padding-block: 2px;
-  padding-inline: var(--enchase-space-sm);
+  padding-block: var(--enchase-sidebar-item-badge-padding-block, 2px);
+  padding-inline: var(--enchase-sidebar-item-badge-padding-inline, var(--enchase-space-sm));
   border-radius: var(--enchase-sidebar-item-badge-radius, var(--enchase-radius-button));
-  background-color: var(--enchase-color-secondary-container);
-  color: var(--enchase-color-on-secondary-container);
+  background-color: var(--enchase-sidebar-item-badge-background, var(--enchase-color-secondary-container));
+  color: var(--enchase-sidebar-item-badge-color, var(--enchase-color-on-secondary-container));
   font-size: var(--enchase-sidebar-item-badge-font-size, var(--enchase-font-size-xs));
   font-weight: var(--enchase-sidebar-item-badge-font-weight, var(--enchase-font-weight-semibold));
 }
@@ -301,8 +301,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: var(--enchase-space-sm);
-  padding: var(--enchase-space-md);
+  gap: var(--enchase-sidebar-footer-gap, var(--enchase-space-sm));
+  padding: var(--enchase-sidebar-footer-padding, var(--enchase-space-md));
 }
 
 :where(.footerSlot[data-collapsed]) {
@@ -322,7 +322,7 @@
   border: 0;
   border-radius: var(--enchase-sidebar-collapse-button-radius, var(--enchase-radius-button));
   background-color: transparent;
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-sidebar-collapse-button-color, var(--enchase-color-text-secondary));
   font: inherit;
   cursor: pointer;
   appearance: none;
@@ -336,11 +336,11 @@
 @media (hover: hover) and (pointer: fine) {
   .collapseButton:hover {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
-    color: var(--enchase-color-text-primary);
+    color: var(--enchase-sidebar-collapse-button-color-hover, var(--enchase-color-text-primary));
   }
 }
 
 .collapseButton:active {
   background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-sidebar-collapse-button-color-active, var(--enchase-color-text-primary));
 }

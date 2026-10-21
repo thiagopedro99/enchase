@@ -1,8 +1,8 @@
 :where(.link) {
   display: flex;
   align-items: center;
-  gap: var(--enchase-space-md);
-  color: var(--enchase-color-text-primary);
+  gap: var(--enchase-brand-gap, var(--enchase-space-md));
+  color: var(--enchase-brand-color, var(--enchase-color-text-primary));
   font-size: var(--enchase-brand-font-size, var(--enchase-font-size-xl));
   font-weight: var(--enchase-brand-font-weight, var(--enchase-font-weight-semibold));
   letter-spacing: var(--enchase-brand-letter-spacing, var(--enchase-letter-spacing-tight, -0.01em));
@@ -12,14 +12,14 @@
 
 @media (hover: hover) and (pointer: fine) {
   .link:hover {
-    color: var(--enchase-color-text-primary);
+    color: var(--enchase-brand-color-hover, var(--enchase-color-text-primary));
   }
 }
 
 :where(.image) {
   flex-shrink: 0;
-  inline-size: 32px;
-  block-size: 32px;
+  inline-size: var(--enchase-brand-image-width, 32px);
+  block-size: var(--enchase-brand-image-height, 32px);
 }
 
 :where(.mark) {
@@ -27,11 +27,11 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  inline-size: 32px;
-  block-size: 32px;
+  inline-size: var(--enchase-brand-mark-width, 32px);
+  block-size: var(--enchase-brand-mark-height, 32px);
   border-radius: var(--enchase-brand-mark-radius, var(--enchase-radius-md));
-  background-color: var(--enchase-color-primary);
-  color: var(--enchase-color-on-primary);
+  background-color: var(--enchase-brand-mark-background, var(--enchase-color-primary));
+  color: var(--enchase-brand-mark-color, var(--enchase-color-on-primary));
   font-size: var(--enchase-brand-mark-font-size, var(--enchase-font-size-base));
   font-weight: var(--enchase-brand-mark-font-weight, var(--enchase-font-weight-bold));
 }

@@ -7,7 +7,7 @@ import { baseTokens, defaultTheme } from '@styles/tokens/index.ts'
 import { isToken } from '../../../scripts/cssHooks.mjs'
 import { hookUses, withoutHooks, withoutVariables } from './hooks.ts'
 
-const scope = ['common/Accordion', 'common/Alert', 'common/Badge', 'common/Card', 'common/Modal', 'common/Table', 'common/Tabs', 'toast']
+const scope = ['common/Accordion', 'common/Alert', 'common/Badge', 'common/Breadcrumbs', 'common/Card', 'common/Modal', 'common/Pagination', 'common/Sidebar', 'common/Table', 'common/Tabs', 'footer', 'layout', 'navbar', 'toast']
 
 const fixed: Record<string, string[]> = {
   'common/Alert/styles.module.css': ['padding-block: calc((var(--alert-row-size) - 1.5em) / 2)'],
@@ -16,7 +16,7 @@ const fixed: Record<string, string[]> = {
   'toast/styles.module.css': ['inline-size: min(360px, 100vw - 2em)', 'max-block-size: calc(100dvh - 2em)']
 }
 
-const notSlots = ['toast-body', 'toast-icon']
+const notSlots = ['app-bar', 'navbar-menu-link', 'navbar-mobile-menu-link', 'pagination-control', 'sidebar-item-list', 'toast-body', 'toast-icon']
 
 const typography = /(?:font-size|font-weight|line-height|letter-spacing|underline-offset|radius)/
 
@@ -52,6 +52,8 @@ const length = /\d(?:\.\d+)?(?:px|rem|em)\b/
 
 const floors = /max\(24px, /g
 
+const environment = /env\([^)]*\)/g
+
 const floor = (name: string, value: string) => name.startsWith('min-') && value === '24px'
 
 describe('the space, the size, the colors and the shadows of the containers', () => {
@@ -71,7 +73,7 @@ describe('the space, the size, the colors and the shadows of the containers', ()
             .filter(({ property: prop, value }) => (spacing.test(prop) || sizing.test(prop) || colors.test(prop)) && !value.includes('color-mix(') && !floor(prop, value))
             .filter(({ property: prop, value }) => {
               const bareToken = /var\(--enchase-(?:color|shadow|space)-[a-z0-9-]+\)/.test(withoutHooks(value))
-              const literal = (spacing.test(prop) || sizing.test(prop)) && length.test(withoutVariables(value).replace(floors, ''))
+              const literal = (spacing.test(prop) || sizing.test(prop)) && length.test(withoutVariables(value).replace(floors, '').replace(environment, ''))
 
               return bareToken || literal
             })

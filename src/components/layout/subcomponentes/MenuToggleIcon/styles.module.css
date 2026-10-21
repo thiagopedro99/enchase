@@ -1,6 +1,6 @@
 :where(.slot) {
-  inline-size: 24px;
-  block-size: 24px;
+  inline-size: var(--enchase-menu-toggle-icon-width, 24px);
+  block-size: var(--enchase-menu-toggle-icon-height, 24px);
   --enchase-icon-swap-rotate: -30deg;
 }
 

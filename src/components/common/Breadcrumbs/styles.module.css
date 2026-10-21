@@ -7,7 +7,7 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-breadcrumbs-list-gap, var(--enchase-space-xs));
   min-inline-size: 0;
   margin: 0;
   padding: 0;
@@ -17,7 +17,7 @@
 :where(.item) {
   display: flex;
   align-items: center;
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-breadcrumbs-item-gap, var(--enchase-space-xs));
   min-inline-size: 0;
   margin: 0;
   padding: 0;
@@ -26,12 +26,12 @@
 
 :where(.item) {
   flex-shrink: 1;
-  min-inline-size: 3rem;
+  min-inline-size: var(--enchase-breadcrumbs-item-min-width, 3rem);
 }
 
 :where(.item[data-priority='low']) {
   flex-shrink: 4;
-  min-inline-size: 3rem;
+  min-inline-size: var(--enchase-breadcrumbs-item-min-width-low, 3rem);
   overflow: hidden;
 }
 
@@ -39,7 +39,7 @@
   display: block;
   min-inline-size: 0;
   overflow: hidden;
-  line-height: 28px;
+  line-height: var(--enchase-breadcrumbs-link-min-height, 28px);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -47,17 +47,17 @@
 :where(.separator) {
   display: flex;
   flex-shrink: 0;
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-breadcrumbs-separator-color, var(--enchase-color-text-secondary));
 }
 
 .crumb {
   display: inline-flex;
   align-items: center;
-  min-block-size: 28px;
+  min-block-size: var(--enchase-breadcrumbs-link-min-height, 28px);
   padding-block: 0;
-  padding-inline: var(--enchase-space-sm);
+  padding-inline: var(--enchase-breadcrumbs-link-padding-inline, var(--enchase-space-sm));
   border-radius: var(--enchase-breadcrumbs-link-radius, var(--enchase-radius-button));
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-breadcrumbs-link-color, var(--enchase-color-text-secondary));
   font-weight: var(--enchase-breadcrumbs-link-font-weight, var(--enchase-font-weight-medium));
   text-decoration: none;
   transition:
@@ -68,24 +68,24 @@
 @media (hover: hover) and (pointer: fine) {
   .crumb:hover {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
-    color: var(--enchase-color-text-primary);
+    color: var(--enchase-breadcrumbs-link-color-hover, var(--enchase-color-text-primary));
     text-decoration: underline;
   }
 }
 
 :where(.crumbText) {
   padding-block: 0;
-  padding-inline: var(--enchase-space-sm);
-  color: var(--enchase-color-text-secondary);
+  padding-inline: var(--enchase-breadcrumbs-text-padding-inline, var(--enchase-space-sm));
+  color: var(--enchase-breadcrumbs-text-color, var(--enchase-color-text-secondary));
   font-weight: var(--enchase-breadcrumbs-text-font-weight, var(--enchase-font-weight-medium));
 }
 
 :where(.current) {
   min-inline-size: 0;
   padding-block: 0;
-  padding-inline: var(--enchase-space-sm);
+  padding-inline: var(--enchase-breadcrumbs-current-padding-inline, var(--enchase-space-sm));
   overflow: hidden;
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-breadcrumbs-current-color, var(--enchase-color-text-primary));
   font-weight: var(--enchase-breadcrumbs-current-font-weight, var(--enchase-font-weight-semibold));
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -96,14 +96,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-inline-size: 32px;
-  min-block-size: 28px;
+  min-inline-size: var(--enchase-breadcrumbs-ellipsis-min-width, 32px);
+  min-block-size: var(--enchase-breadcrumbs-ellipsis-min-height, 28px);
   margin: 0;
   padding: 0;
   border: 0;
   background-color: transparent;
   border-radius: var(--enchase-breadcrumbs-ellipsis-radius, var(--enchase-radius-button));
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-breadcrumbs-ellipsis-color, var(--enchase-color-text-secondary));
   font-family: inherit;
   font-weight: var(--enchase-breadcrumbs-ellipsis-font-weight, var(--enchase-font-weight-bold));
   cursor: pointer;
