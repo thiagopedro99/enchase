@@ -4,7 +4,7 @@
   padding: 0;
   overflow-x: auto;
   border: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
-  border-radius: var(--enchase-radius-md);
+  border-radius: var(--enchase-table-radius, var(--enchase-radius-md));
 }
 
 :where(.container) {
@@ -27,15 +27,15 @@
 }
 
 :where(.container[data-size='md']) .table {
-  font-size: var(--enchase-font-size-base);
+  font-size: var(--enchase-table-element-font-size-md, var(--enchase-font-size-base));
 }
 
 :where(.container[data-size='sm']) .table {
-  font-size: var(--enchase-font-size-sm);
+  font-size: var(--enchase-table-element-font-size-sm, var(--enchase-font-size-sm));
 }
 
 .caption {
-  font-weight: var(--enchase-font-weight-semibold);
+  font-weight: var(--enchase-table-caption-font-weight, var(--enchase-font-weight-semibold));
   text-align: start;
   caption-side: top;
 }
@@ -64,13 +64,13 @@
 }
 
 .header {
-  font-weight: var(--enchase-font-weight-semibold);
+  font-weight: var(--enchase-table-header-font-weight, var(--enchase-font-weight-semibold));
   color: var(--enchase-color-text-secondary);
   background-color: var(--enchase-color-surface-container-low);
 }
 
 .rowHeader {
-  font-weight: var(--enchase-font-weight-medium);
+  font-weight: var(--enchase-table-row-header-font-weight, var(--enchase-font-weight-medium));
 }
 
 :where(.header[data-align='center'], .cell[data-align='center'], .rowHeader[data-align='center']) {

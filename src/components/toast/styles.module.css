@@ -36,7 +36,7 @@
   margin-block-end: var(--enchase-space-sm);
   padding-block: var(--enchase-space-xs);
   padding-inline: var(--enchase-space-md) var(--enchase-space-sm);
-  border-radius: var(--enchase-radius-md);
+  border-radius: var(--enchase-toast-radius, var(--enchase-radius-md));
   box-shadow: var(--enchase-shadow-md);
   justify-content: space-between;
   align-items: center;
@@ -102,12 +102,12 @@
 
 .message {
   flex: 1;
-  font-size: var(--enchase-font-size-sm);
-  font-weight: var(--enchase-font-weight-medium);
+  font-size: var(--enchase-toast-title-font-size, var(--enchase-font-size-sm));
+  font-weight: var(--enchase-toast-title-font-weight, var(--enchase-font-weight-medium));
   min-inline-size: 0;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
-  line-height: 1.5;
+  line-height: var(--enchase-toast-title-line-height, var(--enchase-line-height-normal, 1.5));
   color: inherit;
 }
 
@@ -127,7 +127,7 @@
   cursor: pointer;
   align-self: center;
   z-index: 1;
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-toast-close-radius, var(--enchase-radius-button));
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: background-color var(--enchase-toast-duration, var(--enchase-motion-duration-fast)) var(--enchase-toast-ease, var(--enchase-motion-ease-out));

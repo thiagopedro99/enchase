@@ -23,7 +23,7 @@
 :where(.skeleton[data-variant='text']) {
   inline-size: var(--skeleton-width, 100%);
   block-size: var(--skeleton-height, 1em);
-  border-radius: var(--enchase-radius-sm);
+  border-radius: var(--enchase-skeleton-radius-text, var(--enchase-radius-sm));
 }
 
 :where(.skeleton[data-variant='circular']) {
@@ -35,7 +35,7 @@
 :where(.skeleton[data-variant='rectangular']) {
   inline-size: var(--skeleton-width, 100%);
   block-size: var(--skeleton-height, 200px);
-  border-radius: var(--enchase-radius-md);
+  border-radius: var(--enchase-skeleton-radius-rectangular, var(--enchase-radius-md));
 }
 
 .skeleton[data-motion='on']::after {

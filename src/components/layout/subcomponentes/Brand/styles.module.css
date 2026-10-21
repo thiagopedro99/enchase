@@ -3,9 +3,9 @@
   align-items: center;
   gap: var(--enchase-space-md);
   color: var(--enchase-color-text-primary);
-  font-size: var(--enchase-font-size-xl);
-  font-weight: var(--enchase-font-weight-semibold);
-  letter-spacing: -0.01em;
+  font-size: var(--enchase-brand-font-size, var(--enchase-font-size-xl));
+  font-weight: var(--enchase-brand-font-weight, var(--enchase-font-weight-semibold));
+  letter-spacing: var(--enchase-brand-letter-spacing, var(--enchase-letter-spacing-tight, -0.01em));
   text-decoration: none;
   white-space: nowrap;
 }
@@ -29,9 +29,9 @@
   flex-shrink: 0;
   inline-size: 32px;
   block-size: 32px;
-  border-radius: var(--enchase-radius-md);
+  border-radius: var(--enchase-brand-mark-radius, var(--enchase-radius-md));
   background-color: var(--enchase-color-primary);
   color: var(--enchase-color-on-primary);
-  font-size: var(--enchase-font-size-base);
-  font-weight: var(--enchase-font-weight-bold);
+  font-size: var(--enchase-brand-mark-font-size, var(--enchase-font-size-base));
+  font-weight: var(--enchase-brand-mark-font-weight, var(--enchase-font-weight-bold));
 }

@@ -25,7 +25,7 @@
   max-block-size: 90vh;
   max-block-size: 90dvh;
   background-color: var(--enchase-color-surface-container-high);
-  border-radius: var(--enchase-radius-2xl);
+  border-radius: var(--enchase-modal-panel-radius, var(--enchase-radius-2xl));
   box-shadow: var(--enchase-shadow-lg);
   z-index: var(--enchase-z-modal);
   display: flex;
@@ -94,8 +94,8 @@
 }
 
 .title {
-  font-size: var(--enchase-font-size-2xl);
-  font-weight: var(--enchase-font-weight-medium);
+  font-size: var(--enchase-modal-title-font-size, var(--enchase-font-size-2xl));
+  font-weight: var(--enchase-modal-title-font-weight, var(--enchase-font-weight-medium));
   color: var(--enchase-color-text-primary);
   margin: 0;
   min-inline-size: 0;
@@ -116,7 +116,7 @@
   font: inherit;
   appearance: none;
   color: var(--enchase-color-text-secondary);
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-modal-close-radius, var(--enchase-radius-button));
   transition:
     background-color var(--enchase-modal-duration, var(--enchase-motion-duration-fast)) var(--enchase-modal-ease, var(--enchase-motion-ease-out)),
     color var(--enchase-modal-duration, var(--enchase-motion-duration-fast)) var(--enchase-modal-ease, var(--enchase-motion-ease-out));
@@ -144,7 +144,7 @@
   overscroll-behavior: contain;
   flex: 1;
   color: var(--enchase-color-text-secondary);
-  line-height: 1.6;
+  line-height: var(--enchase-modal-body-line-height, var(--enchase-line-height-relaxed, 1.6));
 }
 
 .footer {

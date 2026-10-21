@@ -1,8 +1,8 @@
 :where(.link) {
   color: var(--enchase-color-primary);
   text-decoration: underline;
-  text-underline-offset: 0.2em;
-  border-radius: var(--enchase-radius-sm);
+  text-underline-offset: var(--enchase-link-underline-offset, 0.2em);
+  border-radius: var(--enchase-link-radius, var(--enchase-radius-sm));
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   transition: color var(--enchase-link-duration, var(--enchase-motion-duration-fast)) var(--enchase-link-ease, var(--enchase-motion-ease-out));

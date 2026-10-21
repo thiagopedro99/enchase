@@ -5,26 +5,26 @@
   box-sizing: border-box;
   margin: 0;
   font-family: inherit;
-  font-weight: var(--enchase-font-weight-medium);
-  line-height: 1;
+  font-weight: var(--enchase-badge-font-weight, var(--enchase-font-weight-medium));
+  line-height: var(--enchase-badge-line-height, var(--enchase-line-height-none, 1));
   white-space: nowrap;
 }
 
 :where(.badge) {
   gap: var(--enchase-space-xs);
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-badge-radius, var(--enchase-radius-button));
 }
 
 :where(.badge[data-size='sm']) {
   min-block-size: 1.25rem;
   padding-inline: var(--enchase-space-sm);
-  font-size: var(--enchase-font-size-xs);
+  font-size: var(--enchase-badge-font-size-sm, var(--enchase-font-size-xs));
 }
 
 :where(.badge[data-size='md']) {
   min-block-size: 1.5rem;
   padding-inline: 0.625rem;
-  font-size: var(--enchase-font-size-sm);
+  font-size: var(--enchase-badge-font-size-md, var(--enchase-font-size-sm));
 }
 
 :where(.badge[data-variant='neutral']) {

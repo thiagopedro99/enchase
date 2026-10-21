@@ -27,7 +27,7 @@
 :where(.content) {
   padding-block: var(--enchase-space-md);
   padding-inline: var(--enchase-space-md);
-  border-radius: var(--enchase-radius-lg);
+  border-radius: var(--enchase-popover-content-radius, var(--enchase-radius-lg));
 }
 
 .content:focus {

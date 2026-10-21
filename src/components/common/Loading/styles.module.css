@@ -87,9 +87,9 @@
 }
 
 .text {
-  font-size: var(--enchase-font-size-base);
+  font-size: var(--enchase-loading-text-font-size, var(--enchase-font-size-base));
   color: var(--enchase-color-text-secondary);
-  font-weight: var(--enchase-font-weight-medium);
+  font-weight: var(--enchase-loading-text-font-weight, var(--enchase-font-weight-medium));
   margin: 0;
 }
 

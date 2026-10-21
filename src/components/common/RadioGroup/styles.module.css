@@ -15,8 +15,8 @@
   max-inline-size: 100%;
   padding: 0;
   overflow-wrap: anywhere;
-  font-size: var(--enchase-font-size-base);
-  font-weight: var(--enchase-font-weight-medium);
+  font-size: var(--enchase-radio-group-legend-font-size, var(--enchase-font-size-base));
+  font-weight: var(--enchase-radio-group-legend-font-weight, var(--enchase-font-weight-medium));
   color: var(--enchase-color-text-secondary);
 }
 
@@ -79,7 +79,7 @@
   justify-content: center;
   box-sizing: border-box;
   border: var(--enchase-border-width-strong, 2px) solid var(--enchase-color-border-strong);
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radio-group-control-radius, var(--enchase-radius-full));
   background-color: transparent;
   transition:
     border-color var(--enchase-radio-group-duration, var(--enchase-motion-duration-fast)) var(--enchase-radio-group-ease, var(--enchase-motion-ease-out)),
@@ -97,7 +97,7 @@
   inline-size: var(--radio-dot-size);
   block-size: var(--radio-dot-size);
   border: calc(var(--radio-dot-size) / 2) solid var(--enchase-color-primary);
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-radio-group-dot-radius, var(--enchase-radius-full));
   opacity: 0;
   transform: scale(var(--enchase-radio-group-scale, 0.6));
   transition:
@@ -148,7 +148,7 @@
 .label {
   min-inline-size: 0;
   overflow-wrap: anywhere;
-  font-size: var(--enchase-font-size-base);
+  font-size: var(--enchase-radio-group-label-font-size, var(--enchase-font-size-base));
   color: var(--enchase-color-text-primary);
 }
 
@@ -161,8 +161,8 @@
   display: block;
   margin-block-start: var(--enchase-space-xs);
   overflow-wrap: anywhere;
-  font-size: var(--enchase-font-size-xs);
-  font-weight: var(--enchase-font-weight-medium);
+  font-size: var(--enchase-radio-group-error-font-size, var(--enchase-font-size-xs));
+  font-weight: var(--enchase-radio-group-error-font-weight, var(--enchase-font-weight-medium));
   color: var(--enchase-color-error);
 }
 
@@ -170,6 +170,6 @@
   display: block;
   margin-block-start: var(--enchase-space-xs);
   overflow-wrap: anywhere;
-  font-size: var(--enchase-font-size-xs);
+  font-size: var(--enchase-radio-group-helper-font-size, var(--enchase-font-size-xs));
   color: var(--enchase-color-text-secondary);
 }

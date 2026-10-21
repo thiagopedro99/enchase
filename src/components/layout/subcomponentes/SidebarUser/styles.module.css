@@ -28,19 +28,19 @@
   flex-shrink: 0;
   inline-size: 40px;
   block-size: 40px;
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-sidebar-user-avatar-radius, var(--enchase-radius-full));
   background-color: var(--enchase-color-primary);
   color: var(--enchase-color-on-primary);
-  font-size: var(--enchase-font-size-base);
-  font-weight: var(--enchase-font-weight-bold);
+  font-size: var(--enchase-sidebar-user-avatar-font-size, var(--enchase-font-size-base));
+  font-weight: var(--enchase-sidebar-user-avatar-font-weight, var(--enchase-font-weight-bold));
 }
 
 :where(.name) {
   min-inline-size: 0;
   overflow: hidden;
   color: var(--enchase-color-text-primary);
-  font-size: var(--enchase-font-size-sm);
-  font-weight: var(--enchase-font-weight-semibold);
+  font-size: var(--enchase-sidebar-user-name-font-size, var(--enchase-font-size-sm));
+  font-weight: var(--enchase-sidebar-user-name-font-weight, var(--enchase-font-weight-semibold));
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -56,7 +56,7 @@
   margin: 0;
   padding: 0;
   border: none;
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-sidebar-user-logout-radius, var(--enchase-radius-button));
   background: none;
   color: var(--enchase-color-primary);
   font: inherit;

@@ -51,7 +51,7 @@ describe('the geometry of the checkbox, the radio and the switch', () => {
 
   it('has no geometry hook that the list above does not know', () => {
     const known = new Set(Object.keys(hooks))
-    const names = [...new Set(uses.map(({ name }) => name))].filter((name) => /^--enchase-(?:checkbox|radio-group|switch)-(?:[a-z-]+-)?(?:size|width|height|inset|scale-off)$/.test(name))
+    const names = [...new Set(uses.map(({ name }) => name))].filter((name) => /^--enchase-(?:checkbox|radio-group|switch)-(?:[a-z-]+-)?(?:(?<!font-)size|width|height|inset|scale-off)$/.test(name))
 
     expect(names.filter((name) => !known.has(name))).toEqual([])
   })

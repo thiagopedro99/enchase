@@ -26,7 +26,7 @@
   box-sizing: border-box;
   margin: 0;
   font-family: inherit;
-  line-height: 1.5;
+  line-height: var(--enchase-textarea-field-line-height, var(--enchase-line-height-normal, 1.5));
   color: var(--enchase-color-text-primary);
   background-color: transparent;
   border: none;
@@ -39,7 +39,7 @@
   padding-block: var(--enchase-textarea-padding-block, var(--enchase-space-md));
   padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md));
   font-size: var(--enchase-input-font-size, var(--enchase-font-size-base));
-  border-radius: var(--enchase-radius-control);
+  border-radius: var(--enchase-textarea-field-radius, var(--enchase-radius-control));
 }
 
 .textarea[data-has-label] {
@@ -146,7 +146,7 @@
   text-align: start;
   pointer-events: none;
   border: var(--enchase-border-width, 1px) solid var(--enchase-color-border-strong);
-  border-radius: var(--enchase-radius-control);
+  border-radius: var(--enchase-textarea-field-radius, var(--enchase-radius-control));
   transition: border-color var(--enchase-textarea-duration, var(--enchase-motion-duration-fast)) var(--enchase-textarea-ease, var(--enchase-motion-ease-out));
 }
 
@@ -212,13 +212,13 @@
 }
 
 .error {
-  font-size: var(--enchase-font-size-xs);
+  font-size: var(--enchase-textarea-error-font-size, var(--enchase-font-size-xs));
   color: var(--enchase-color-error);
-  font-weight: var(--enchase-font-weight-medium);
+  font-weight: var(--enchase-textarea-error-font-weight, var(--enchase-font-weight-medium));
 }
 
 .helper {
-  font-size: var(--enchase-font-size-xs);
+  font-size: var(--enchase-textarea-helper-font-size, var(--enchase-font-size-xs));
   color: var(--enchase-color-text-secondary);
 }
 

@@ -15,8 +15,8 @@
   overflow-wrap: anywhere;
   text-decoration: none;
   color: var(--enchase-color-primary);
-  font-size: var(--enchase-font-size-sm);
-  font-weight: var(--enchase-font-weight-medium);
+  font-size: var(--enchase-footer-link-font-size, var(--enchase-font-size-sm));
+  font-weight: var(--enchase-footer-link-font-weight, var(--enchase-font-weight-medium));
   transition: color var(--enchase-footer-duration, var(--enchase-motion-duration-fast)) var(--enchase-footer-ease, var(--enchase-motion-ease-out));
 }
 
@@ -33,7 +33,7 @@
   max-inline-size: 100%;
   overflow-wrap: anywhere;
   text-align: center;
-  font-size: var(--enchase-font-size-sm);
+  font-size: var(--enchase-footer-copyright-font-size, var(--enchase-font-size-sm));
   color: var(--enchase-color-text-secondary);
 }
 

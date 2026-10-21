@@ -9,8 +9,8 @@
   margin: 0;
   font-family: inherit;
   font-weight: var(--enchase-button-font-weight, var(--enchase-font-weight-semibold));
-  line-height: 1.2;
-  letter-spacing: 0.01em;
+  line-height: var(--enchase-button-line-height, var(--enchase-line-height-tight, 1.2));
+  letter-spacing: var(--enchase-button-letter-spacing, var(--enchase-letter-spacing-control, 0.01em));
   text-align: center;
   text-decoration: none;
   max-inline-size: 100%;

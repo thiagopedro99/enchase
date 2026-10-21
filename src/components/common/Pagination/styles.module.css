@@ -35,8 +35,8 @@
   box-sizing: border-box;
   margin: 0;
   font-family: inherit;
-  font-weight: var(--enchase-font-weight-medium);
-  line-height: 1;
+  font-weight: var(--enchase-pagination-control-font-weight, var(--enchase-font-weight-medium));
+  line-height: var(--enchase-pagination-control-line-height, var(--enchase-line-height-none, 1));
   color: var(--enchase-color-text-primary);
   background-color: transparent;
   border: var(--enchase-border-width, 1px) solid transparent;
@@ -50,15 +50,15 @@
   min-inline-size: var(--enchase-control-height-md, 2.5rem);
   min-block-size: var(--enchase-control-height-md, 2.5rem);
   padding-inline: var(--enchase-space-sm);
-  font-size: var(--enchase-font-size-base);
-  border-radius: var(--enchase-radius-control);
+  font-size: var(--enchase-pagination-control-font-size, var(--enchase-font-size-base));
+  border-radius: var(--enchase-pagination-control-radius, var(--enchase-radius-control));
 }
 
 :where(.pagination[data-size='sm'] .control) {
   min-inline-size: var(--enchase-control-height-sm, 2rem);
   min-block-size: var(--enchase-control-height-sm, 2rem);
   padding-inline: var(--enchase-space-xs);
-  font-size: var(--enchase-font-size-sm);
+  font-size: var(--enchase-pagination-control-font-size-sm, var(--enchase-font-size-sm));
 }
 
 .control::after {
@@ -109,11 +109,11 @@
 :where(.ellipsis) {
   min-inline-size: var(--enchase-control-height-md, 2.5rem);
   min-block-size: var(--enchase-control-height-md, 2.5rem);
-  font-size: var(--enchase-font-size-base);
+  font-size: var(--enchase-pagination-ellipsis-font-size, var(--enchase-font-size-base));
 }
 
 :where(.pagination[data-size='sm'] .ellipsis) {
   min-inline-size: var(--enchase-control-height-sm, 2rem);
   min-block-size: var(--enchase-control-height-sm, 2rem);
-  font-size: var(--enchase-font-size-sm);
+  font-size: var(--enchase-pagination-ellipsis-font-size-sm, var(--enchase-font-size-sm));
 }

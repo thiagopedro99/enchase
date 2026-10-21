@@ -17,8 +17,8 @@
   overflow-x: clip;
   contain: layout style;
   z-index: var(--enchase-z-sticky);
-  border-start-end-radius: var(--enchase-radius-lg);
-  border-end-end-radius: var(--enchase-radius-lg);
+  border-start-end-radius: var(--enchase-sidebar-radius-start-end, var(--enchase-radius-lg));
+  border-end-end-radius: var(--enchase-sidebar-radius-end-end, var(--enchase-radius-lg));
   transition: inline-size var(--enchase-sidebar-duration, var(--enchase-motion-duration-base)) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
 }
 
@@ -65,8 +65,8 @@
   inset-inline-start: 0;
   max-inline-size: 90vw;
   z-index: var(--enchase-z-modal);
-  border-start-end-radius: var(--enchase-radius-2xl);
-  border-end-end-radius: var(--enchase-radius-2xl);
+  border-start-end-radius: var(--enchase-sidebar-panel-radius-start-end, var(--enchase-radius-2xl));
+  border-end-end-radius: var(--enchase-sidebar-panel-radius-end-end, var(--enchase-radius-2xl));
   box-shadow: var(--enchase-shadow-lg);
   padding-block-start: env(safe-area-inset-top, 0px);
   padding-block-end: env(safe-area-inset-bottom, 0px);
@@ -147,7 +147,7 @@
   position: absolute;
   inset-block-start: 0;
   inset-inline: var(--enchase-space-md);
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-sidebar-indicator-radius, var(--enchase-radius-button));
   background-color: var(--enchase-color-primary-container);
   opacity: 0;
   pointer-events: none;
@@ -177,8 +177,8 @@
   margin: 0;
   padding-block: var(--enchase-space-sm);
   padding-inline: var(--enchase-space-md);
-  font-size: var(--enchase-font-size-sm);
-  font-weight: var(--enchase-font-weight-semibold);
+  font-size: var(--enchase-sidebar-section-title-font-size, var(--enchase-font-size-sm));
+  font-weight: var(--enchase-sidebar-section-title-font-weight, var(--enchase-font-weight-semibold));
   color: var(--enchase-color-text-secondary);
 }
 
@@ -218,8 +218,8 @@
   border: 0;
   background-color: transparent;
   font-family: inherit;
-  font-size: var(--enchase-font-size-sm);
-  font-weight: var(--enchase-font-weight-semibold);
+  font-size: var(--enchase-sidebar-item-control-font-size, var(--enchase-font-size-sm));
+  font-weight: var(--enchase-sidebar-item-control-font-weight, var(--enchase-font-weight-semibold));
   text-align: start;
   cursor: pointer;
   appearance: none;
@@ -228,7 +228,7 @@
 }
 
 .item {
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-sidebar-item-control-radius, var(--enchase-radius-button));
   color: var(--enchase-color-text-secondary);
   text-decoration: none;
   transition:
@@ -274,8 +274,8 @@
   flex-shrink: 0;
   inline-size: 24px;
   block-size: 24px;
-  font-size: var(--enchase-font-size-base);
-  font-weight: var(--enchase-font-weight-bold);
+  font-size: var(--enchase-sidebar-item-icon-font-size, var(--enchase-font-size-base));
+  font-weight: var(--enchase-sidebar-item-icon-font-weight, var(--enchase-font-weight-bold));
 }
 
 :where(.itemText) {
@@ -289,11 +289,11 @@
 :where(.itemBadge) {
   padding-block: 2px;
   padding-inline: var(--enchase-space-sm);
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-sidebar-item-badge-radius, var(--enchase-radius-button));
   background-color: var(--enchase-color-secondary-container);
   color: var(--enchase-color-on-secondary-container);
-  font-size: var(--enchase-font-size-xs);
-  font-weight: var(--enchase-font-weight-semibold);
+  font-size: var(--enchase-sidebar-item-badge-font-size, var(--enchase-font-size-xs));
+  font-weight: var(--enchase-sidebar-item-badge-font-weight, var(--enchase-font-weight-semibold));
 }
 
 :where(.footerSlot) {
@@ -320,7 +320,7 @@
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-sidebar-collapse-button-radius, var(--enchase-radius-button));
   background-color: transparent;
   color: var(--enchase-color-text-secondary);
   font: inherit;

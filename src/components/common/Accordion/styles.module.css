@@ -5,7 +5,7 @@
   padding: 0;
   overflow: hidden;
   border: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
-  border-radius: var(--enchase-radius-md);
+  border-radius: var(--enchase-accordion-radius, var(--enchase-radius-md));
 }
 
 :where(.accordion) {
@@ -30,8 +30,8 @@
   inline-size: 100%;
   margin: 0;
   font-family: inherit;
-  font-weight: var(--enchase-font-weight-medium);
-  line-height: 1.4;
+  font-weight: var(--enchase-accordion-trigger-font-weight, var(--enchase-font-weight-medium));
+  line-height: var(--enchase-accordion-trigger-line-height, var(--enchase-line-height-snug, 1.4));
   color: var(--enchase-color-text-primary);
   text-align: start;
   background-color: transparent;
@@ -47,7 +47,7 @@
   min-block-size: 3rem;
   padding-block: var(--enchase-space-sm);
   padding-inline: var(--enchase-space-md);
-  font-size: var(--enchase-font-size-base);
+  font-size: var(--enchase-accordion-trigger-font-size, var(--enchase-font-size-base));
 }
 
 .trigger::after {

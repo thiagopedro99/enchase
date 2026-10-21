@@ -9,7 +9,7 @@
 }
 
 :where(.card) {
-  border-radius: var(--enchase-radius-xl);
+  border-radius: var(--enchase-card-radius, var(--enchase-radius-xl));
   padding: var(--enchase-space-lg);
 }
 

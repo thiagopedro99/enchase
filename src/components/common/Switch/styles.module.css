@@ -44,7 +44,7 @@
   --switch-travel: calc(var(--enchase-switch-track-width, 3.25rem) - var(--enchase-border-width-strong, 2px) * 2 - var(--enchase-switch-thumb-size, 1.5rem) - var(--enchase-switch-thumb-inset, 0.125rem) * 2);
   inline-size: var(--enchase-switch-track-width, 3.25rem);
   block-size: var(--enchase-switch-track-height, 2rem);
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-switch-track-radius, var(--enchase-radius-full));
 }
 
 .thumb {
@@ -56,7 +56,7 @@
   block-size: var(--enchase-switch-thumb-size, 1.5rem);
   margin-block: auto;
   border: var(--enchase-border-width-strong, 2px) solid transparent;
-  border-radius: var(--enchase-radius-full);
+  border-radius: var(--enchase-switch-thumb-radius, var(--enchase-radius-full));
   background-color: var(--enchase-color-border-strong);
   transform: translateX(0) scale(var(--enchase-switch-thumb-scale-off, 0.667));
   transition:
@@ -129,7 +129,7 @@
 .label {
   min-inline-size: 0;
   overflow-wrap: anywhere;
-  font-size: var(--enchase-font-size-base);
+  font-size: var(--enchase-switch-label-font-size, var(--enchase-font-size-base));
   color: var(--enchase-color-text-primary);
 }
 

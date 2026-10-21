@@ -45,9 +45,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: var(--enchase-font-size-xl);
-  font-weight: var(--enchase-font-weight-semibold);
-  letter-spacing: -0.01em;
+  font-size: var(--enchase-navbar-logo-font-size, var(--enchase-font-size-xl));
+  font-weight: var(--enchase-navbar-logo-font-weight, var(--enchase-font-weight-semibold));
+  letter-spacing: var(--enchase-navbar-logo-letter-spacing, var(--enchase-letter-spacing-tight, -0.01em));
 }
 
 :where(.logo) :where(img, svg) {
@@ -94,12 +94,12 @@
   align-items: center;
   padding-block: 0;
   padding-inline: var(--enchase-space-md);
-  font-weight: var(--enchase-font-weight-semibold);
+  font-weight: var(--enchase-navbar-menu-link-font-weight, var(--enchase-font-weight-semibold));
 }
 
 .menuLink,
 .mobileMenuLink {
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-navbar-menu-link-radius, var(--enchase-radius-button));
   color: var(--enchase-color-text-secondary);
   text-decoration: none;
   transition:
@@ -112,7 +112,7 @@
 :where(.menuLink) {
   block-size: max(24px, var(--enchase-hit-size, 40px));
   min-block-size: 24px;
-  font-size: var(--enchase-font-size-sm);
+  font-size: var(--enchase-navbar-menu-link-font-size, var(--enchase-font-size-sm));
 }
 
 :where(.mobileMenuLink) {
@@ -151,7 +151,7 @@
   margin: 0;
   padding: 0;
   border: 0;
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-navbar-menu-button-radius, var(--enchase-radius-button));
   background-color: transparent;
   color: var(--enchase-color-text-secondary);
   font: inherit;
@@ -210,8 +210,8 @@
   block-size: 100vh;
   block-size: 100dvh;
   background-color: var(--enchase-color-surface-container-low);
-  border-start-start-radius: var(--enchase-radius-2xl);
-  border-end-start-radius: var(--enchase-radius-2xl);
+  border-start-start-radius: var(--enchase-navbar-drawer-radius-start-start, var(--enchase-radius-2xl));
+  border-end-start-radius: var(--enchase-navbar-drawer-radius-end-start, var(--enchase-radius-2xl));
   box-shadow: var(--enchase-shadow-lg);
   z-index: var(--enchase-z-modal);
   padding: var(--enchase-space-lg);

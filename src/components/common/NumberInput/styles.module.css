@@ -39,7 +39,7 @@
   padding-block: 0;
   padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md));
   font-size: var(--enchase-input-font-size, var(--enchase-font-size-base));
-  border-radius: var(--enchase-radius-control);
+  border-radius: var(--enchase-number-input-field-radius, var(--enchase-radius-control));
 }
 
 :where(.input[data-has-steppers]) {
@@ -131,7 +131,7 @@
   text-align: start;
   pointer-events: none;
   border: var(--enchase-border-width, 1px) solid var(--enchase-color-border-strong);
-  border-radius: var(--enchase-radius-control);
+  border-radius: var(--enchase-number-input-field-radius, var(--enchase-radius-control));
   transition: border-color var(--enchase-number-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-number-input-ease, var(--enchase-motion-ease-out));
 }
 
@@ -234,7 +234,7 @@
   block-size: max(24px, var(--enchase-hit-size, 40px));
   min-inline-size: 24px;
   min-block-size: 24px;
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-number-input-stepper-radius, var(--enchase-radius-button));
 }
 
 .stepper:focus-visible {
@@ -259,13 +259,13 @@
 }
 
 .error {
-  font-size: var(--enchase-font-size-xs);
+  font-size: var(--enchase-number-input-error-font-size, var(--enchase-font-size-xs));
   color: var(--enchase-color-error);
-  font-weight: var(--enchase-font-weight-medium);
+  font-weight: var(--enchase-number-input-error-font-weight, var(--enchase-font-weight-medium));
 }
 
 .helper {
-  font-size: var(--enchase-font-size-xs);
+  font-size: var(--enchase-number-input-helper-font-size, var(--enchase-font-size-xs));
   color: var(--enchase-color-text-secondary);
 }
 

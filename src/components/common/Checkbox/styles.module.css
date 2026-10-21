@@ -65,7 +65,7 @@
 :where(.box) {
   inline-size: var(--enchase-checkbox-box-size, 18px);
   block-size: var(--enchase-checkbox-box-size, 18px);
-  border-radius: 2px;
+  border-radius: var(--enchase-checkbox-box-radius, 2px);
 }
 
 .hidden:checked + .box {
@@ -107,7 +107,7 @@
 }
 
 .label {
-  font-size: var(--enchase-font-size-base);
+  font-size: var(--enchase-checkbox-label-font-size, var(--enchase-font-size-base));
   color: var(--enchase-color-text-primary);
 }
 

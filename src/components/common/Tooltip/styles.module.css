@@ -13,9 +13,9 @@
   background: var(--enchase-color-inverse-surface);
   color: var(--enchase-color-inverse-on-surface);
   padding: var(--enchase-space-xs) var(--enchase-space-sm);
-  border-radius: var(--enchase-radius-xs);
-  font-size: var(--enchase-font-size-xs);
-  font-weight: var(--enchase-font-weight-medium);
+  border-radius: var(--enchase-tooltip-bubble-radius, var(--enchase-radius-xs));
+  font-size: var(--enchase-tooltip-bubble-font-size, var(--enchase-font-size-xs));
+  font-weight: var(--enchase-tooltip-bubble-font-weight, var(--enchase-font-weight-medium));
   inline-size: max-content;
   max-inline-size: min(20rem, 100vw - 1rem);
   overflow-wrap: anywhere;

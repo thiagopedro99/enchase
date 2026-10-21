@@ -44,7 +44,7 @@
   padding-block: 0;
   padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md)) 2.75rem;
   font-size: var(--enchase-input-font-size, var(--enchase-font-size-base));
-  border-radius: var(--enchase-radius-control);
+  border-radius: var(--enchase-select-field-radius, var(--enchase-radius-control));
 }
 
 .select option {
@@ -86,7 +86,7 @@
     padding: var(--enchase-space-xs);
     background-color: var(--enchase-color-surface-container);
     border: none;
-    border-radius: var(--enchase-radius-md);
+    border-radius: var(--enchase-select-picker-radius, var(--enchase-radius-md));
     box-shadow: var(--enchase-shadow-md);
     opacity: 0;
     transform: translateY(calc(-1 * var(--enchase-select-distance, var(--enchase-motion-distance-xs))));
@@ -117,7 +117,7 @@
     padding-inline: var(--enchase-space-md);
     min-block-size: 24px;
     background-color: transparent;
-    border-radius: var(--enchase-radius-control);
+    border-radius: var(--enchase-select-option-radius, var(--enchase-radius-control));
     cursor: pointer;
     transition: background-color var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out));
   }
@@ -142,7 +142,7 @@
   .select option:checked {
     background-color: var(--enchase-color-secondary-container);
     color: var(--enchase-color-on-secondary-container);
-    font-weight: var(--enchase-font-weight-medium);
+    font-weight: var(--enchase-select-option-font-weight-checked, var(--enchase-font-weight-medium));
   }
 
   .select option:disabled {
@@ -216,7 +216,7 @@
   text-align: start;
   pointer-events: none;
   border: var(--enchase-border-width, 1px) solid var(--enchase-color-border-strong);
-  border-radius: var(--enchase-radius-control);
+  border-radius: var(--enchase-select-field-radius, var(--enchase-radius-control));
   transition: border-color var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out));
 }
 
@@ -308,13 +308,13 @@
 }
 
 .error {
-  font-size: var(--enchase-font-size-xs);
+  font-size: var(--enchase-select-error-font-size, var(--enchase-font-size-xs));
   color: var(--enchase-color-error);
-  font-weight: var(--enchase-font-weight-medium);
+  font-weight: var(--enchase-select-error-font-weight, var(--enchase-font-weight-medium));
 }
 
 .helper {
-  font-size: var(--enchase-font-size-xs);
+  font-size: var(--enchase-select-helper-font-size, var(--enchase-font-size-xs));
   color: var(--enchase-color-text-secondary);
 }
 

@@ -28,8 +28,8 @@
   box-sizing: border-box;
   margin: 0;
   font-family: inherit;
-  font-weight: var(--enchase-font-weight-medium);
-  line-height: 1.2;
+  font-weight: var(--enchase-tabs-tab-font-weight, var(--enchase-font-weight-medium));
+  line-height: var(--enchase-tabs-tab-line-height, var(--enchase-line-height-tight, 1.2));
   color: var(--enchase-color-text-secondary);
   white-space: nowrap;
   background-color: transparent;
@@ -46,7 +46,7 @@
   min-inline-size: 24px;
   padding-block: var(--enchase-space-sm);
   padding-inline: var(--enchase-space-md);
-  font-size: var(--enchase-font-size-base);
+  font-size: var(--enchase-tabs-tab-font-size, var(--enchase-font-size-base));
 }
 
 .tab::after {

@@ -11,9 +11,9 @@
   gap: var(--enchase-space-sm);
   padding-block: var(--enchase-space-sm);
   padding-inline: var(--enchase-space-md);
-  border-radius: var(--enchase-radius-md);
-  font-size: var(--enchase-font-size-sm);
-  line-height: 1.5;
+  border-radius: var(--enchase-alert-radius, var(--enchase-radius-md));
+  font-size: var(--enchase-alert-font-size, var(--enchase-font-size-sm));
+  line-height: var(--enchase-alert-line-height, var(--enchase-line-height-normal, 1.5));
 }
 
 :where(.alert[data-variant='info']) {
@@ -58,7 +58,7 @@
 
 .title {
   margin: 0;
-  font-weight: var(--enchase-font-weight-semibold);
+  font-weight: var(--enchase-alert-title-font-weight, var(--enchase-font-weight-semibold));
   overflow-wrap: anywhere;
 }
 
@@ -87,7 +87,7 @@
 :where(.close) {
   inline-size: var(--alert-row-size);
   block-size: var(--alert-row-size);
-  border-radius: var(--enchase-radius-button);
+  border-radius: var(--enchase-alert-close-radius, var(--enchase-radius-button));
 }
 
 .close:focus-visible {
