@@ -766,24 +766,49 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-accordion-border-color` | `var(--enchase-color-border)` | `border` |
 | `--enchase-accordion-distance` | `6px` | `transform` |
 | `--enchase-accordion-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-accordion-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-accordion-icon-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-accordion-icon-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-accordion-item-border-color` | `var(--enchase-color-border)` | `border-block-start` |
+| `--enchase-accordion-panel-padding-block-end` | `1rem` (`--enchase-space-md`) | `padding-block-end` |
+| `--enchase-accordion-panel-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-accordion-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-accordion-trigger-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-accordion-trigger-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-accordion-trigger-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-accordion-trigger-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-accordion-trigger-gap` | `1rem` (`--enchase-space-md`) | `gap` |
 | `--enchase-accordion-trigger-line-height` | `1.4` (`--enchase-line-height-snug`) | `line-height` |
+| `--enchase-accordion-trigger-min-height` | `3rem` | `min-block-size` |
+| `--enchase-accordion-trigger-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
+| `--enchase-accordion-trigger-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 
 ### Alert
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-alert-background-error` | `var(--enchase-color-error-container)` | `background-color` |
+| `--enchase-alert-background-info` | `var(--enchase-color-info-container)` | `background-color` |
+| `--enchase-alert-background-success` | `var(--enchase-color-success-container)` | `background-color` |
+| `--enchase-alert-background-warning` | `var(--enchase-color-warning-container)` | `background-color` |
 | `--enchase-alert-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-alert-color-error` | `var(--enchase-color-on-error-container)` | `color` |
+| `--enchase-alert-color-info` | `var(--enchase-color-on-info-container)` | `color` |
+| `--enchase-alert-color-success` | `var(--enchase-color-on-success-container)` | `color` |
+| `--enchase-alert-color-warning` | `var(--enchase-color-on-warning-container)` | `color` |
+| `--enchase-alert-content-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-alert-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-alert-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-alert-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-alert-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-alert-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
+| `--enchase-alert-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
+| `--enchase-alert-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-alert-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-alert-row-height` | `2rem` | `--alert-row-size` |
 | `--enchase-alert-title-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 
 ### AppBar
@@ -800,10 +825,27 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-badge-background-error` | `var(--enchase-color-error-container)` | `background-color` |
+| `--enchase-badge-background-info` | `var(--enchase-color-info-container)` | `background-color` |
+| `--enchase-badge-background-neutral` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-badge-background-primary` | `var(--enchase-color-primary-container)` | `background-color` |
+| `--enchase-badge-background-success` | `var(--enchase-color-success-container)` | `background-color` |
+| `--enchase-badge-background-warning` | `var(--enchase-color-warning-container)` | `background-color` |
+| `--enchase-badge-color-error` | `var(--enchase-color-on-error-container)` | `color` |
+| `--enchase-badge-color-info` | `var(--enchase-color-on-info-container)` | `color` |
+| `--enchase-badge-color-neutral` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-badge-color-primary` | `var(--enchase-color-on-primary-container)` | `color` |
+| `--enchase-badge-color-success` | `var(--enchase-color-on-success-container)` | `color` |
+| `--enchase-badge-color-warning` | `var(--enchase-color-on-warning-container)` | `color` |
 | `--enchase-badge-font-size-md` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-badge-font-size-sm` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-badge-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-badge-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-badge-line-height` | `1` (`--enchase-line-height-none`) | `line-height` |
+| `--enchase-badge-min-height-md` | `1.5rem` | `min-block-size` |
+| `--enchase-badge-min-height-sm` | `1.25rem` | `min-block-size` |
+| `--enchase-badge-padding-inline-md` | `0.625rem` | `padding-inline` |
+| `--enchase-badge-padding-inline-sm` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
 | `--enchase-badge-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 
 ### Brand
@@ -859,10 +901,17 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-card-background-default` | `var(--enchase-color-surface-container)` | `background-color` |
+| `--enchase-card-background-elevated` | `var(--enchase-color-surface-container-low)` | `background-color` |
+| `--enchase-card-background-outlined` | `var(--enchase-color-surface)` | `background-color` |
+| `--enchase-card-border-color-outlined` | `var(--enchase-color-border)` | `border` |
 | `--enchase-card-distance` | `2px` (`--enchase-motion-distance-xs`) | `transform` |
 | `--enchase-card-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-card-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-card-padding` | `1.5rem` (`--enchase-space-lg`) | `padding` |
 | `--enchase-card-radius` | `1.5rem` (`--enchase-radius-xl`) | `border-radius` |
+| `--enchase-card-shadow-elevated` | `var(--enchase-shadow-sm)` | `box-shadow` |
+| `--enchase-card-shadow-elevated-hover` | `var(--enchase-shadow-md)` | `box-shadow` |
 
 ### Checkbox
 
@@ -967,7 +1016,13 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-modal-body-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-modal-body-line-height` | `1.6` (`--enchase-line-height-relaxed`) | `line-height` |
+| `--enchase-modal-body-padding-block` | `var(--enchase-space-md) var(--enchase-space-lg)` | `padding-block` |
+| `--enchase-modal-body-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
+| `--enchase-modal-close-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-modal-close-color-active` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-modal-close-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-modal-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-modal-distance` | `0px` | `transform` |
 | `--enchase-modal-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition` |
@@ -977,8 +1032,21 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-modal-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
 | `--enchase-modal-exit-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition-timing-function` |
 | `--enchase-modal-fade-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-modal-footer-padding-block` | `0 var(--enchase-space-lg)` | `padding-block` |
+| `--enchase-modal-footer-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
+| `--enchase-modal-header-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-modal-header-padding-block` | `var(--enchase-space-lg) 0` | `padding-block` |
+| `--enchase-modal-header-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
+| `--enchase-modal-overlay-background` | `var(--enchase-color-overlay)` | `background-color` |
+| `--enchase-modal-panel-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-modal-panel-max-width-lg` | `800px` | `max-inline-size` |
+| `--enchase-modal-panel-max-width-md` | `600px` | `max-inline-size` |
+| `--enchase-modal-panel-max-width-sm` | `400px` | `max-inline-size` |
+| `--enchase-modal-panel-max-width-xl` | `1000px` | `max-inline-size` |
 | `--enchase-modal-panel-radius` | `1.75rem` (`--enchase-radius-2xl`) | `border-radius` |
+| `--enchase-modal-panel-shadow` | `var(--enchase-shadow-lg)` | `box-shadow` |
 | `--enchase-modal-scale` | `1` | `transform` |
+| `--enchase-modal-title-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-modal-title-font-size` | `1.75rem` (`--enchase-font-size-2xl`) | `font-size` |
 | `--enchase-modal-title-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 
@@ -1154,11 +1222,24 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-table-border-color` | `var(--enchase-color-border)` | `border` |
 | `--enchase-table-caption-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-table-caption-padding` | `1rem` (`--enchase-space-md`) | `padding` |
+| `--enchase-table-cell-border-color` | `var(--enchase-color-border)` | `border-block-end` |
+| `--enchase-table-cell-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
+| `--enchase-table-cell-padding-block-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-table-cell-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-table-cell-padding-inline-sm` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
+| `--enchase-table-element-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-table-element-font-size-md` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-table-element-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-table-empty-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-table-empty-padding` | `1.5rem` (`--enchase-space-lg`) | `padding` |
+| `--enchase-table-header-background` | `var(--enchase-color-surface-container-low)` | `background-color` |
+| `--enchase-table-header-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-table-header-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 | `--enchase-table-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-table-row-background-striped` | `var(--enchase-color-surface-container-low)` | `background-color` |
 | `--enchase-table-row-header-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 
 ### Tabs
@@ -1167,9 +1248,19 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | --- | --- | --- |
 | `--enchase-tabs-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-tabs-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-tabs-indicator-color` | `var(--enchase-color-primary)` | `border-block-end` |
+| `--enchase-tabs-list-border-color` | `var(--enchase-color-border)` | `box-shadow` |
+| `--enchase-tabs-panel-padding-block-start` | `1rem` (`--enchase-space-md`) | `padding-block-start` |
+| `--enchase-tabs-tab-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-tabs-tab-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-tabs-tab-color-hover` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-tabs-tab-color-selected` | `var(--enchase-color-primary)` | `color` |
 | `--enchase-tabs-tab-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-tabs-tab-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-tabs-tab-line-height` | `1.2` (`--enchase-line-height-tight`) | `line-height` |
+| `--enchase-tabs-tab-min-height` | `2.75rem` | `min-block-size` |
+| `--enchase-tabs-tab-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
+| `--enchase-tabs-tab-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 
 ### Textarea
 
@@ -1197,7 +1288,16 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-toast-background-error` | `var(--enchase-color-error-container)` | `background-color` |
+| `--enchase-toast-background-info` | `var(--enchase-color-info-container)` | `background-color` |
+| `--enchase-toast-background-success` | `var(--enchase-color-success-container)` | `background-color` |
+| `--enchase-toast-background-warning` | `var(--enchase-color-warning-container)` | `background-color` |
+| `--enchase-toast-body-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
 | `--enchase-toast-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-toast-color-error` | `var(--enchase-color-on-error-container)` | `color` |
+| `--enchase-toast-color-info` | `var(--enchase-color-on-info-container)` | `color` |
+| `--enchase-toast-color-success` | `var(--enchase-color-on-success-container)` | `color` |
+| `--enchase-toast-color-warning` | `var(--enchase-color-on-warning-container)` | `color` |
 | `--enchase-toast-distance` | `0px` | `transform` |
 | `--enchase-toast-duration` | `300ms` (`--enchase-motion-spring-snappy-duration`) | `transition` |
 | `--enchase-toast-dx` | `0` | `transform` |
@@ -1206,8 +1306,18 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-toast-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
 | `--enchase-toast-exit-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition-timing-function` |
 | `--enchase-toast-fade-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-toast-icon-margin-inline-end` | `1rem` (`--enchase-space-md`) | `margin-inline-end` |
+| `--enchase-toast-icon-width` | `20px` | `inline-size` |
 | `--enchase-toast-lifetime` | `3000ms` | `animation` |
+| `--enchase-toast-margin-block-end` | `0.5rem` (`--enchase-space-sm`) | `margin-block-end` |
+| `--enchase-toast-max-height` | `800px` | `max-block-size` |
+| `--enchase-toast-min-height` | `56px` | `min-block-size` |
+| `--enchase-toast-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-toast-padding-inline` | `var(--enchase-space-md) var(--enchase-space-sm)` | `padding-inline` |
+| `--enchase-toast-progress-height` | `3px` | `block-size` |
+| `--enchase-toast-progress-opacity` | `0.4` | `opacity` |
 | `--enchase-toast-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-toast-shadow` | `var(--enchase-shadow-md)` | `box-shadow` |
 | `--enchase-toast-title-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-toast-title-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-toast-title-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
