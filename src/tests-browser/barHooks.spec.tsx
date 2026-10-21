@@ -254,6 +254,17 @@ describe('the sidebar from the hooks', () => {
     expect(getComputedStyle(collapse).color).toBe('rgb(10, 11, 12)')
   })
 
+  it('takes the margins and the color of the divider between the sections of a collapsed sidebar from their hooks', () => {
+    hooked(
+      [
+        ['--enchase-sidebar-section-divider-margin-block', '9px', at('sidebar-section-divider'), 'margin-top'],
+        ['--enchase-sidebar-section-divider-margin-inline', '11px', at('sidebar-section-divider'), 'margin-left'],
+        ['--enchase-sidebar-section-divider-border-color', 'rgb(1, 2, 3)', at('sidebar-section-divider'), 'border-top-color']
+      ],
+      <Sidebar variant="permanent" collapsed currentHref="/" sections={sections} />
+    )
+  })
+
   it('takes the overlay, the panel and the shadow of the drawer from their hooks', () => {
     hooked(
       [
