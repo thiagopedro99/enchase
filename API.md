@@ -911,6 +911,17 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-button-background-primary` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-button-background-secondary` | `var(--enchase-color-primary-container)` | `background-color` |
+| `--enchase-button-border-color-outline` | `var(--enchase-color-border-strong)` | `border-color` |
+| `--enchase-button-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-button-color-ghost` | `var(--enchase-color-primary)` | `color` |
+| `--enchase-button-color-outline` | `var(--enchase-color-primary)` | `color` |
+| `--enchase-button-color-outline-hover` | `var(--enchase-color-primary)` | `color` |
+| `--enchase-button-color-primary` | `var(--enchase-color-on-primary)` | `color` |
+| `--enchase-button-color-primary-hover` | `var(--enchase-color-on-primary)` | `color` |
+| `--enchase-button-color-secondary` | `var(--enchase-color-on-primary-container)` | `color` |
+| `--enchase-button-color-secondary-hover` | `var(--enchase-color-on-primary-container)` | `color` |
 | `--enchase-button-distance` | `2px` (`--enchase-motion-distance-xs`) | `transform` |
 | `--enchase-button-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` (também em ThemeToggle) |
 | `--enchase-button-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
@@ -930,6 +941,8 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-button-padding-inline-sm` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-button-scale` | `0.97` | `transform` (também em ThemeToggle) |
+| `--enchase-button-shadow-primary-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
+| `--enchase-button-shadow-secondary-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
 
 ### Card
 
@@ -951,11 +964,18 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-checkbox-box-background-checked` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-checkbox-box-border-color` | `var(--enchase-color-border-strong)` | `border` |
+| `--enchase-checkbox-box-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-checkbox-box-check-width` | `2px` | `border-width` |
 | `--enchase-checkbox-box-radius` | `2px` | `border-radius` |
 | `--enchase-checkbox-box-size` | `18px` | `inline-size`, `block-size`, `margin-block-start` |
 | `--enchase-checkbox-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-checkbox-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-checkbox-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-checkbox-icon-color` | `var(--enchase-color-on-primary)` | `color` |
+| `--enchase-checkbox-label-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-checkbox-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-checkbox-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-checkbox-scale` | `0.6` | `transform` |
 
@@ -982,10 +1002,12 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-footer-copyright-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-footer-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-footer-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-footer-gap` | `1.5rem` | `gap` |
 | `--enchase-footer-link-color` | `var(--enchase-color-primary)` | `color` |
 | `--enchase-footer-link-color-hover` | `var(--enchase-color-primary-hover)` | `color` |
 | `--enchase-footer-link-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-footer-link-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-footer-links-gap` | `1.5rem` | `gap` |
 | `--enchase-footer-padding-block` | `2rem` (`--enchase-space-xl`) | `padding-block` |
 
 ### Grid
@@ -1017,14 +1039,34 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | --- | --- | --- |
 | `--enchase-input-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-input-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-input-error-color` | `var(--enchase-color-error)` | `color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-input-field-color` | `var(--enchase-color-text-primary)` | `color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-field-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-field-color-placeholder` | `var(--enchase-color-text-placeholder)` | `color` (também em NumberInput, Textarea) |
 | `--enchase-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
 | `--enchase-input-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-height` | `3.5rem` | `block-size`, `transform` (também em NumberInput, Select) |
+| `--enchase-input-helper-color` | `var(--enchase-color-text-secondary)` | `color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-input-label-color` | `var(--enchase-color-text-secondary)` | `color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-error` | `var(--enchase-color-error)` | `color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-error-focus` | `var(--enchase-color-error)` | `color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-focus` | `var(--enchase-color-primary)` | `color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-min-width` | `200px` | `min-inline-size` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color` | `var(--enchase-color-border-strong)` | `border` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-error` | `var(--enchase-color-error)` | `border-color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-error-focus` | `var(--enchase-color-error)` | `border-color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-error-hover` | `var(--enchase-color-error)` | `border-color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-focus` | `var(--enchase-color-primary)` | `border-color` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-hover` | `var(--enchase-color-text-primary)` | `border-color` (também em NumberInput, Select, Textarea) |
 | `--enchase-input-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline`, `inset-inline-start`, `max-inline-size` (também em NumberInput, Select, Textarea) |
+| `--enchase-input-toggle-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-input-toggle-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-input-toggle-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-input-toggle-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 
 ### layout
@@ -1044,6 +1086,9 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-link-color` | `var(--enchase-color-primary)` | `color` |
+| `--enchase-link-color-active` | `var(--enchase-color-primary-hover)` | `color` |
+| `--enchase-link-color-hover` | `var(--enchase-color-primary-hover)` | `color` |
 | `--enchase-link-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-link-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-link-radius` | `0.5rem` (`--enchase-radius-sm`) | `border-radius` |
@@ -1053,8 +1098,27 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-loading-backdrop-background` | `var(--enchase-color-overlay)` | `background-color` |
+| `--enchase-loading-container-gap` | `1rem` (`--enchase-space-md`) | `gap` |
 | `--enchase-loading-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition`, `animation` |
 | `--enchase-loading-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition`, `animation` |
+| `--enchase-loading-spinner-border-color` | `var(--enchase-color-border)` | `border-color` |
+| `--enchase-loading-spinner-border-width-lg` | `5px` | `border-width` |
+| `--enchase-loading-spinner-border-width-md` | `4px` | `border-width` |
+| `--enchase-loading-spinner-border-width-sm` | `3px` | `border-width` |
+| `--enchase-loading-spinner-border-width-xl` | `6px` | `border-width` |
+| `--enchase-loading-spinner-border-width-xs` | `2px` | `border-width` |
+| `--enchase-loading-spinner-height-lg` | `56px` | `block-size` |
+| `--enchase-loading-spinner-height-md` | `40px` | `block-size` |
+| `--enchase-loading-spinner-height-sm` | `24px` | `block-size` |
+| `--enchase-loading-spinner-height-xl` | `72px` | `block-size` |
+| `--enchase-loading-spinner-height-xs` | `16px` | `block-size` |
+| `--enchase-loading-spinner-width-lg` | `56px` | `inline-size` |
+| `--enchase-loading-spinner-width-md` | `40px` | `inline-size` |
+| `--enchase-loading-spinner-width-sm` | `24px` | `inline-size` |
+| `--enchase-loading-spinner-width-xl` | `72px` | `inline-size` |
+| `--enchase-loading-spinner-width-xs` | `16px` | `inline-size` |
+| `--enchase-loading-text-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-loading-text-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-loading-text-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 
@@ -1085,6 +1149,7 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-modal-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
 | `--enchase-modal-exit-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition-timing-function` |
 | `--enchase-modal-fade-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-modal-footer-gap` | `0.5rem` | `gap` |
 | `--enchase-modal-footer-padding-block` | `0 var(--enchase-space-lg)` | `padding-block` |
 | `--enchase-modal-footer-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
 | `--enchase-modal-header-gap` | `1rem` (`--enchase-space-md`) | `gap` |
@@ -1167,7 +1232,11 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-number-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-number-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
 | `--enchase-number-input-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-number-input-stepper-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-number-input-stepper-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-number-input-stepper-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-number-input-stepper-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-number-input-steppers-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 
 ### Pagination
 
@@ -1195,7 +1264,13 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-popover-arrow-size` | `10px` | `inline-size`, `block-size`, `inset-block-end`, `inset-block-start`, `right`, `left` |
+| `--enchase-popover-content-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-popover-content-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-popover-content-padding-block` | `1rem` (`--enchase-space-md`) | `padding-block` |
+| `--enchase-popover-content-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-popover-content-radius` | `1rem` (`--enchase-radius-lg`) | `border-radius` |
+| `--enchase-popover-content-shadow` | `var(--enchase-shadow-md)` | `box-shadow` |
 | `--enchase-popover-duration` | `300ms` (`--enchase-motion-spring-snappy-duration`) | `transition-duration` |
 | `--enchase-popover-ease` | `linear(0, 0.016, 0.056, 0.114, 0.182, 0.257, 0.333, 0.408, 0.48, 0.549, 0.612, 0.669, 0.721, 0.767, 0.807, 0.842, 0.873, 0.898, 0.92, 0.939, 0.954, 0.966, 0.976, 0.984, 0.99, 0.995, 0.999, 1.002, 1.004, 1.005, 1.006, 1.006, 1.006, 1.006, 1.006, 1.006, 1.005, 1.005, 1.004, 1.004, 1.003, 1.003, 1.002, 1.002, 1.002, 1.001, 1.001, 1)` (`--enchase-motion-spring-snappy`) | `transition-timing-function` |
 | `--enchase-popover-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
@@ -1207,18 +1282,34 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-radio-group-control-border-color` | `var(--enchase-color-border-strong)` | `border` |
+| `--enchase-radio-group-control-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
+| `--enchase-radio-group-control-border-color-invalid` | `var(--enchase-color-error)` | `border-color` |
 | `--enchase-radio-group-control-dot-size` | `calc(var(--enchase-radio-group-control-size, 1.25rem) / 2)` | `--radio-dot-size` |
 | `--enchase-radio-group-control-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-radio-group-control-size` | `1.25rem` | `--radio-dot-size`, `inline-size`, `block-size` |
+| `--enchase-radio-group-dot-border-color` | `var(--enchase-color-primary)` | `border` |
 | `--enchase-radio-group-dot-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-radio-group-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-radio-group-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-radio-group-error-color` | `var(--enchase-color-error)` | `color` |
 | `--enchase-radio-group-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-radio-group-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-radio-group-error-margin-block-start` | `0.25rem` (`--enchase-space-xs`) | `margin-block-start` |
+| `--enchase-radio-group-helper-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-radio-group-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-radio-group-helper-margin-block-start` | `0.25rem` (`--enchase-space-xs`) | `margin-block-start` |
+| `--enchase-radio-group-label-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-radio-group-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-radio-group-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-radio-group-legend-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-radio-group-legend-color-invalid` | `var(--enchase-color-error)` | `color` |
 | `--enchase-radio-group-legend-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-radio-group-legend-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-radio-group-legend-margin-block-end` | `0.5rem` (`--enchase-space-sm`) | `margin-block-end` |
+| `--enchase-radio-group-option-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-radio-group-options-column-gap-horizontal` | `1.5rem` (`--enchase-space-lg`) | `column-gap` |
+| `--enchase-radio-group-options-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-radio-group-scale` | `0.6` | `transform` |
 
 ### Select
@@ -1232,9 +1323,22 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-select-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-select-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
 | `--enchase-select-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-select-icon-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-select-option-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-select-option-background-checked` | `var(--enchase-color-secondary-container)` | `background-color` |
+| `--enchase-select-option-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-select-option-color-checked` | `var(--enchase-color-on-secondary-container)` | `color` |
+| `--enchase-select-option-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-select-option-font-weight-checked` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-select-option-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-select-option-padding-block` | `0.75rem` | `padding-block` |
+| `--enchase-select-option-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-select-option-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-select-picker-background` | `var(--enchase-color-surface-container)` | `background-color` |
+| `--enchase-select-picker-margin-block` | `0.25rem` (`--enchase-space-xs`) | `margin-block` |
+| `--enchase-select-picker-padding` | `0.25rem` (`--enchase-space-xs`) | `padding` |
 | `--enchase-select-picker-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-select-picker-shadow` | `var(--enchase-shadow-md)` | `box-shadow` |
 
 ### Sidebar
 
@@ -1332,6 +1436,7 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-skeleton-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-skeleton-duration` | `1.5s` | `animation` |
 | `--enchase-skeleton-ease` | `cubic-bezier(0.4, 0, 0.2, 1)` (`--enchase-motion-ease-in-out`) | `animation` |
 | `--enchase-skeleton-radius-rectangular` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
@@ -1343,11 +1448,21 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | --- | --- | --- |
 | `--enchase-switch-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-switch-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-switch-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-switch-label-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-switch-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-switch-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-switch-thumb-background` | `var(--enchase-color-border-strong)` | `background-color` |
+| `--enchase-switch-thumb-background-checked` | `var(--enchase-color-on-primary)` | `background-color` |
+| `--enchase-switch-thumb-background-disabled-checked` | `var(--enchase-color-surface)` | `background-color` |
 | `--enchase-switch-thumb-inset` | `0.125rem` | `--switch-travel`, `inset-inline-start` |
 | `--enchase-switch-thumb-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-switch-thumb-scale-off` | `0.667` | `transform` |
 | `--enchase-switch-thumb-size` | `1.5rem` | `--switch-travel`, `inline-size`, `block-size` |
+| `--enchase-switch-track-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-switch-track-background-checked` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-switch-track-border-color` | `var(--enchase-color-border-strong)` | `border` |
+| `--enchase-switch-track-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-switch-track-height` | `2rem` | `block-size` |
 | `--enchase-switch-track-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-switch-track-width` | `3.25rem` | `--switch-travel`, `inline-size` |
@@ -1414,8 +1529,12 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-theme-toggle-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-theme-toggle-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-theme-toggle-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-theme-toggle-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-theme-toggle-icon-height` | `22px` | `block-size` |
+| `--enchase-theme-toggle-icon-width` | `22px` | `inline-size` |
 | `--enchase-theme-toggle-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 
 ### toast
@@ -1460,8 +1579,10 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 
 | Gancho | Padrão | Propriedade |
 | --- | --- | --- |
+| `--enchase-tooltip-bubble-color` | `var(--enchase-color-inverse-on-surface)` | `color` |
 | `--enchase-tooltip-bubble-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-tooltip-bubble-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-tooltip-bubble-padding` | `var(--enchase-space-xs) var(--enchase-space-sm)` | `padding` |
 | `--enchase-tooltip-bubble-radius` | `0.25rem` (`--enchase-radius-xs`) | `border-radius` |
 | `--enchase-tooltip-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
 | `--enchase-tooltip-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition-timing-function` |
