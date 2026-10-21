@@ -40,12 +40,12 @@
 
 .icon::after {
   content: '';
-  inline-size: 5px;
-  block-size: 10px;
+  inline-size: calc(var(--enchase-checkbox-size, 18px) * 5 / 18);
+  block-size: calc(var(--enchase-checkbox-size, 18px) * 10 / 18);
   border: solid currentColor;
-  border-width: 0 2px 2px 0;
+  border-width: 0 var(--enchase-checkbox-check-width, 2px) var(--enchase-checkbox-check-width, 2px) 0;
   transform: rotate(45deg);
-  margin-block-start: -2px;
+  margin-block-start: calc(var(--enchase-checkbox-size, 18px) * -2 / 18);
 }
 
 .box {
@@ -63,8 +63,8 @@
 }
 
 :where(.box) {
-  inline-size: 18px;
-  block-size: 18px;
+  inline-size: var(--enchase-checkbox-size, 18px);
+  block-size: var(--enchase-checkbox-size, 18px);
   border-radius: 2px;
 }
 

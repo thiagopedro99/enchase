@@ -41,24 +41,24 @@
 }
 
 :where(.track) {
-  --switch-travel: 1.25rem;
-  inline-size: 3.25rem;
-  block-size: 2rem;
+  --switch-travel: calc(var(--enchase-switch-track-width, 3.25rem) - var(--enchase-border-width-strong, 2px) * 2 - var(--enchase-switch-thumb-size, 1.5rem) - var(--enchase-switch-thumb-inset, 0.125rem) * 2);
+  inline-size: var(--enchase-switch-track-width, 3.25rem);
+  block-size: var(--enchase-switch-track-height, 2rem);
   border-radius: var(--enchase-radius-full);
 }
 
 .thumb {
   position: absolute;
   inset-block: 0;
-  inset-inline-start: 0.125rem;
+  inset-inline-start: var(--enchase-switch-thumb-inset, 0.125rem);
   box-sizing: border-box;
-  inline-size: 1.5rem;
-  block-size: 1.5rem;
+  inline-size: var(--enchase-switch-thumb-size, 1.5rem);
+  block-size: var(--enchase-switch-thumb-size, 1.5rem);
   margin-block: auto;
   border: var(--enchase-border-width-strong, 2px) solid transparent;
   border-radius: var(--enchase-radius-full);
   background-color: var(--enchase-color-border-strong);
-  transform: translateX(0) scale(0.667);
+  transform: translateX(0) scale(var(--enchase-switch-thumb-scale-off, 0.667));
   transition:
     transform var(--enchase-switch-duration, var(--enchase-motion-duration-fast)) var(--enchase-switch-ease, var(--enchase-motion-ease-out)),
     background-color var(--enchase-switch-duration, var(--enchase-motion-duration-fast)) var(--enchase-switch-ease, var(--enchase-motion-ease-out)),
