@@ -8,10 +8,6 @@
   transition: color var(--enchase-link-duration, var(--enchase-motion-duration-fast)) var(--enchase-link-ease, var(--enchase-motion-ease-out));
 }
 
-:where(.link):active {
-  color: var(--enchase-link-color-active, var(--enchase-color-primary-hover));
-}
-
 :where(.link):focus-visible {
   outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
   outline-offset: var(--enchase-focus-offset, 2px);
@@ -21,4 +17,8 @@
   :where(.link):hover {
     color: var(--enchase-link-color-hover, var(--enchase-color-primary-hover));
   }
+}
+
+:where(.link):active {
+  color: var(--enchase-link-color-active, var(--enchase-color-primary-hover));
 }
