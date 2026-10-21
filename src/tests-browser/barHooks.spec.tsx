@@ -15,7 +15,6 @@ import { unlessFirefox } from './browserSkips.ts'
 import { renderInBrowser } from './harness.tsx'
 import { setContrast } from './media.ts'
 import { pressMouse, releaseMouse } from './pointer.ts'
-import { waitForSettled } from './settle.ts'
 import { supportsTranslucency, surfaceOf } from './translucency.ts'
 
 type Probe = [hook: string, value: string, target: () => Element | null | undefined, property: string, expected?: string | RegExp]
@@ -50,6 +49,9 @@ const hooked = (probes: Probe[], ui: Parameters<typeof renderInBrowser>[0]) => {
   renderInBrowser(ui)
   expectHooks(probes)
 }
+
+const becomes = (target: () => Element | null | undefined, property: string, value: string) =>
+  expect.poll(() => (target() ? getComputedStyle(target() as Element).getPropertyValue(property) : 'no element'), { timeout: 4000 }).toBe(value)
 
 const translucentIt = supportsTranslucency ? it : it.skip
 
@@ -113,9 +115,7 @@ describe('the breadcrumbs from the hooks', () => {
     onRoot({ '--enchase-breadcrumbs-link-color-hover': 'rgb(1, 2, 3)' })
     renderInBrowser(<Breadcrumbs items={trail} />)
     await userEvent.hover(part('breadcrumbs-link', 1))
-    await waitForSettled(() => part('breadcrumbs-link', 1))
-
-    expect(style('breadcrumbs-link', 1).color).toBe('rgb(1, 2, 3)')
+    await becomes(() => part('breadcrumbs-link', 1), 'color', 'rgb(1, 2, 3)')
   })
 })
 
@@ -220,38 +220,31 @@ describe('the sidebar from the hooks', () => {
     expect(getComputedStyle(sidebarLink(0)() as Element).backgroundColor).toBe('rgb(13, 14, 15)')
   })
 
-  it('takes the color of an item and of the collapse button while hovered and while pressed from their hooks', async () => {
-    onRoot({
-      '--enchase-sidebar-item-control-color-hover': 'rgb(1, 2, 3)',
-      '--enchase-sidebar-item-control-color-active': 'rgb(4, 5, 6)',
-      '--enchase-sidebar-collapse-button-color-hover': 'rgb(7, 8, 9)',
-      '--enchase-sidebar-collapse-button-color-active': 'rgb(10, 11, 12)'
-    })
+  it('takes the color of an item while hovered and while pressed from their hooks', async () => {
+    onRoot({ '--enchase-sidebar-item-control-color-hover': 'rgb(1, 2, 3)', '--enchase-sidebar-item-control-color-active': 'rgb(4, 5, 6)' })
     renderInBrowser(sidebar)
 
     const link = sidebarLink(1)() as HTMLElement
-    const collapse = part('sidebar-collapse-button')
 
+    link.draggable = false
     await userEvent.hover(link)
-    await waitForSettled(() => link)
-
-    expect(getComputedStyle(link).color).toBe('rgb(1, 2, 3)')
+    await becomes(() => link, 'color', 'rgb(1, 2, 3)')
 
     await pressMouse('[data-slot="sidebar-nav"] li:nth-of-type(2) a')
-    await waitForSettled(() => link)
+    await becomes(() => link, 'color', 'rgb(4, 5, 6)')
+  })
 
-    expect(getComputedStyle(link).color).toBe('rgb(4, 5, 6)')
+  it('takes the color of the collapse button while hovered and while pressed from their hooks', async () => {
+    onRoot({ '--enchase-sidebar-collapse-button-color-hover': 'rgb(7, 8, 9)', '--enchase-sidebar-collapse-button-color-active': 'rgb(10, 11, 12)' })
+    renderInBrowser(sidebar)
 
-    await releaseMouse()
+    const collapse = part('sidebar-collapse-button')
+
     await userEvent.hover(collapse)
-    await waitForSettled(() => collapse)
-
-    expect(getComputedStyle(collapse).color).toBe('rgb(7, 8, 9)')
+    await becomes(() => collapse, 'color', 'rgb(7, 8, 9)')
 
     await pressMouse('[data-slot="sidebar-collapse-button"]')
-    await waitForSettled(() => collapse)
-
-    expect(getComputedStyle(collapse).color).toBe('rgb(10, 11, 12)')
+    await becomes(() => collapse, 'color', 'rgb(10, 11, 12)')
   })
 
   it('takes the margins and the color of the divider between the sections of a collapsed sidebar from their hooks', () => {
@@ -319,21 +312,16 @@ describe('the navbar from the hooks', () => {
     })
     renderInBrowser(navbar)
     await userEvent.hover(part('navbar-logo'))
-    await waitForSettled(() => part('navbar-logo'))
-
-    expect(style('navbar-logo').color).toBe('rgb(1, 2, 3)')
+    await becomes(() => part('navbar-logo'), 'color', 'rgb(1, 2, 3)')
 
     const link = menuLink(1)() as HTMLElement
 
+    link.draggable = false
     await userEvent.hover(link)
-    await waitForSettled(() => link)
-
-    expect(getComputedStyle(link).color).toBe('rgb(4, 5, 6)')
+    await becomes(() => link, 'color', 'rgb(4, 5, 6)')
 
     await pressMouse('[data-slot="navbar-menu"] a:nth-of-type(2)')
-    await waitForSettled(() => link)
-
-    expect(getComputedStyle(link).color).toBe('rgb(7, 8, 9)')
+    await becomes(() => link, 'color', 'rgb(7, 8, 9)')
   })
 
   translucentIt('derives the translucent fill from the solid color and the alpha, and lets the translucent hook win', () => {
@@ -452,9 +440,7 @@ describe('the layout and its top bar from the hooks', () => {
     expect(style('layout-skip-link').color).toBe('rgb(1, 2, 3)')
 
     await userEvent.hover(part('layout-header-menu-button'))
-    await waitForSettled(() => part('layout-header-menu-button'))
-
-    expect(style('layout-header-menu-button').color).toBe('rgb(4, 5, 6)')
+    await becomes(() => part('layout-header-menu-button'), 'color', 'rgb(4, 5, 6)')
   })
 
   translucentIt('derives the translucent fill of the top bar from its solid color and its alpha', () => {
@@ -486,9 +472,7 @@ describe('the footer from the hooks', () => {
     onRoot({ '--enchase-footer-link-color-hover': 'rgb(1, 2, 3)' })
     renderInBrowser(<Footer links={links} />)
     await userEvent.hover(part('footer-link'))
-    await waitForSettled(() => part('footer-link'))
-
-    expect(style('footer-link').color).toBe('rgb(1, 2, 3)')
+    await becomes(() => part('footer-link'), 'color', 'rgb(1, 2, 3)')
   })
 })
 
@@ -521,9 +505,7 @@ describe('the brand, the user of the sidebar and the menu icon from the hooks', 
     onRoot({ '--enchase-brand-color-hover': 'rgb(1, 2, 3)' })
     renderInBrowser(<Brand name="Enchase" />)
     await userEvent.hover(part('brand'))
-    await waitForSettled(() => part('brand'))
-
-    expect(style('brand').color).toBe('rgb(1, 2, 3)')
+    await becomes(() => part('brand'), 'color', 'rgb(1, 2, 3)')
   })
 
   it('takes the gaps, the avatar and the colors of the user from their hooks', () => {
