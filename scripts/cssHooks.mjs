@@ -3,7 +3,7 @@ import { basename, dirname, join } from 'node:path'
 
 const groups = ['color', 'shadow', 'font', 'font-size', 'font-weight', 'line-height', 'letter-spacing', 'space', 'radius', 'transition', 'motion', 'control', 'focus', 'border', 'halo', 'hit', 'state', 'z']
 
-const isToken = (name) => groups.some((group) => name.startsWith(`--enchase-${group}-`))
+export const isToken = (name) => groups.some((group) => name.startsWith(`--enchase-${group}-`))
 
 const cssFiles = (dir) =>
   readdirSync(dir).flatMap((name) => {

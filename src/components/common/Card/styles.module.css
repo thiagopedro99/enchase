@@ -10,26 +10,26 @@
 
 :where(.card) {
   border-radius: var(--enchase-card-radius, var(--enchase-radius-xl));
-  padding: var(--enchase-space-lg);
+  padding: var(--enchase-card-padding, var(--enchase-space-lg));
 }
 
 :where(.card[data-variant='default']) {
-  background-color: var(--enchase-color-surface-container);
+  background-color: var(--enchase-card-background-default, var(--enchase-color-surface-container));
 }
 
 :where(.card[data-variant='elevated']) {
-  background-color: var(--enchase-color-surface-container-low);
-  box-shadow: var(--enchase-shadow-sm);
+  background-color: var(--enchase-card-background-elevated, var(--enchase-color-surface-container-low));
+  box-shadow: var(--enchase-card-shadow-elevated, var(--enchase-shadow-sm));
 }
 
 :where(.card[data-variant='outlined']) {
-  background-color: var(--enchase-color-surface);
-  border: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
+  background-color: var(--enchase-card-background-outlined, var(--enchase-color-surface));
+  border: var(--enchase-border-width, 1px) solid var(--enchase-card-border-color-outlined, var(--enchase-color-border));
 }
 
 @media (hover: hover) and (pointer: fine) {
   :where(.card[data-variant='elevated']:hover) {
-    box-shadow: var(--enchase-shadow-md);
+    box-shadow: var(--enchase-card-shadow-elevated-hover, var(--enchase-shadow-md));
   }
 
   :where(.card[data-variant='elevated'][data-motion='lift']:hover) {

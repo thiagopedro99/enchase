@@ -30,14 +30,14 @@
 }
 
 :where(.item) {
-  min-block-size: 56px;
-  max-block-size: 800px;
+  min-block-size: var(--enchase-toast-min-height, 56px);
+  max-block-size: var(--enchase-toast-max-height, 800px);
   margin: 0;
-  margin-block-end: var(--enchase-space-sm);
-  padding-block: var(--enchase-space-xs);
-  padding-inline: var(--enchase-space-md) var(--enchase-space-sm);
+  margin-block-end: var(--enchase-toast-margin-block-end, var(--enchase-space-sm));
+  padding-block: var(--enchase-toast-padding-block, var(--enchase-space-xs));
+  padding-inline: var(--enchase-toast-padding-inline, var(--enchase-space-md) var(--enchase-space-sm));
   border-radius: var(--enchase-toast-radius, var(--enchase-radius-md));
-  box-shadow: var(--enchase-shadow-md);
+  box-shadow: var(--enchase-toast-shadow, var(--enchase-shadow-md));
   justify-content: space-between;
   align-items: center;
   font-family: var(--enchase-font-primary);
@@ -57,38 +57,38 @@
 }
 
 .item:where([data-type='success']) {
-  background-color: var(--enchase-color-success-container);
-  color: var(--enchase-color-on-success-container);
+  background-color: var(--enchase-toast-background-success, var(--enchase-color-success-container));
+  color: var(--enchase-toast-color-success, var(--enchase-color-on-success-container));
 }
 
 .item:where([data-type='error']) {
-  background-color: var(--enchase-color-error-container);
-  color: var(--enchase-color-on-error-container);
+  background-color: var(--enchase-toast-background-error, var(--enchase-color-error-container));
+  color: var(--enchase-toast-color-error, var(--enchase-color-on-error-container));
 }
 
 .item:where([data-type='warning']) {
-  background-color: var(--enchase-color-warning-container);
-  color: var(--enchase-color-on-warning-container);
+  background-color: var(--enchase-toast-background-warning, var(--enchase-color-warning-container));
+  color: var(--enchase-toast-color-warning, var(--enchase-color-on-warning-container));
 }
 
 .item:where([data-type='info']) {
-  background-color: var(--enchase-color-info-container);
-  color: var(--enchase-color-on-info-container);
+  background-color: var(--enchase-toast-background-info, var(--enchase-color-info-container));
+  color: var(--enchase-toast-color-info, var(--enchase-color-on-info-container));
 }
 
 .body {
   margin-block: auto;
   margin-inline: 0;
   flex: 1 1 auto;
-  padding-block: var(--enchase-space-xs);
+  padding-block: var(--enchase-toast-body-padding-block, var(--enchase-space-xs));
   padding-inline: 0;
   display: flex;
   align-items: center;
 }
 
 .icon {
-  margin-inline-end: var(--enchase-space-md);
-  inline-size: 20px;
+  margin-inline-end: var(--enchase-toast-icon-margin-inline-end, var(--enchase-space-md));
+  inline-size: var(--enchase-toast-icon-width, 20px);
   flex-shrink: 0;
   display: flex;
   color: inherit;
@@ -149,10 +149,10 @@
   inset-block-end: 0;
   inset-inline-start: 0;
   inline-size: 100%;
-  block-size: 3px;
+  block-size: var(--enchase-toast-progress-height, 3px);
   z-index: 1;
   background-color: currentColor;
-  opacity: 0.4;
+  opacity: var(--enchase-toast-progress-opacity, 0.4);
   transform-origin: left;
   animation: drain var(--enchase-toast-lifetime, 3000ms) linear forwards;
 }

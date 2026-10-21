@@ -11,48 +11,48 @@
 }
 
 :where(.badge) {
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-badge-gap, var(--enchase-space-xs));
   border-radius: var(--enchase-badge-radius, var(--enchase-radius-button));
 }
 
 :where(.badge[data-size='sm']) {
-  min-block-size: 1.25rem;
-  padding-inline: var(--enchase-space-sm);
+  min-block-size: var(--enchase-badge-min-height-sm, 1.25rem);
+  padding-inline: var(--enchase-badge-padding-inline-sm, var(--enchase-space-sm));
   font-size: var(--enchase-badge-font-size-sm, var(--enchase-font-size-xs));
 }
 
 :where(.badge[data-size='md']) {
-  min-block-size: 1.5rem;
-  padding-inline: 0.625rem;
+  min-block-size: var(--enchase-badge-min-height-md, 1.5rem);
+  padding-inline: var(--enchase-badge-padding-inline-md, 0.625rem);
   font-size: var(--enchase-badge-font-size-md, var(--enchase-font-size-sm));
 }
 
 :where(.badge[data-variant='neutral']) {
-  background-color: var(--enchase-color-surface-container-high);
-  color: var(--enchase-color-text-primary);
+  background-color: var(--enchase-badge-background-neutral, var(--enchase-color-surface-container-high));
+  color: var(--enchase-badge-color-neutral, var(--enchase-color-text-primary));
 }
 
 :where(.badge[data-variant='primary']) {
-  background-color: var(--enchase-color-primary-container);
-  color: var(--enchase-color-on-primary-container);
+  background-color: var(--enchase-badge-background-primary, var(--enchase-color-primary-container));
+  color: var(--enchase-badge-color-primary, var(--enchase-color-on-primary-container));
 }
 
 :where(.badge[data-variant='success']) {
-  background-color: var(--enchase-color-success-container);
-  color: var(--enchase-color-on-success-container);
+  background-color: var(--enchase-badge-background-success, var(--enchase-color-success-container));
+  color: var(--enchase-badge-color-success, var(--enchase-color-on-success-container));
 }
 
 :where(.badge[data-variant='warning']) {
-  background-color: var(--enchase-color-warning-container);
-  color: var(--enchase-color-on-warning-container);
+  background-color: var(--enchase-badge-background-warning, var(--enchase-color-warning-container));
+  color: var(--enchase-badge-color-warning, var(--enchase-color-on-warning-container));
 }
 
 :where(.badge[data-variant='error']) {
-  background-color: var(--enchase-color-error-container);
-  color: var(--enchase-color-on-error-container);
+  background-color: var(--enchase-badge-background-error, var(--enchase-color-error-container));
+  color: var(--enchase-badge-color-error, var(--enchase-color-on-error-container));
 }
 
 :where(.badge[data-variant='info']) {
-  background-color: var(--enchase-color-info-container);
-  color: var(--enchase-color-on-info-container);
+  background-color: var(--enchase-badge-background-info, var(--enchase-color-info-container));
+  color: var(--enchase-badge-color-info, var(--enchase-color-on-info-container));
 }

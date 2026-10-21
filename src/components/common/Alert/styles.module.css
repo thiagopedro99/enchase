@@ -1,5 +1,5 @@
 .alert {
-  --alert-row-size: 2rem;
+  --alert-row-size: var(--enchase-alert-row-height, 2rem);
   display: flex;
   align-items: flex-start;
   box-sizing: border-box;
@@ -8,32 +8,32 @@
 }
 
 :where(.alert) {
-  gap: var(--enchase-space-sm);
-  padding-block: var(--enchase-space-sm);
-  padding-inline: var(--enchase-space-md);
+  gap: var(--enchase-alert-gap, var(--enchase-space-sm));
+  padding-block: var(--enchase-alert-padding-block, var(--enchase-space-sm));
+  padding-inline: var(--enchase-alert-padding-inline, var(--enchase-space-md));
   border-radius: var(--enchase-alert-radius, var(--enchase-radius-md));
   font-size: var(--enchase-alert-font-size, var(--enchase-font-size-sm));
   line-height: var(--enchase-alert-line-height, var(--enchase-line-height-normal, 1.5));
 }
 
 :where(.alert[data-variant='info']) {
-  background-color: var(--enchase-color-info-container);
-  color: var(--enchase-color-on-info-container);
+  background-color: var(--enchase-alert-background-info, var(--enchase-color-info-container));
+  color: var(--enchase-alert-color-info, var(--enchase-color-on-info-container));
 }
 
 :where(.alert[data-variant='success']) {
-  background-color: var(--enchase-color-success-container);
-  color: var(--enchase-color-on-success-container);
+  background-color: var(--enchase-alert-background-success, var(--enchase-color-success-container));
+  color: var(--enchase-alert-color-success, var(--enchase-color-on-success-container));
 }
 
 :where(.alert[data-variant='warning']) {
-  background-color: var(--enchase-color-warning-container);
-  color: var(--enchase-color-on-warning-container);
+  background-color: var(--enchase-alert-background-warning, var(--enchase-color-warning-container));
+  color: var(--enchase-alert-color-warning, var(--enchase-color-on-warning-container));
 }
 
 :where(.alert[data-variant='error']) {
-  background-color: var(--enchase-color-error-container);
-  color: var(--enchase-color-on-error-container);
+  background-color: var(--enchase-alert-background-error, var(--enchase-color-error-container));
+  color: var(--enchase-alert-color-error, var(--enchase-color-on-error-container));
 }
 
 .icon {
@@ -52,7 +52,7 @@
 }
 
 :where(.content) {
-  gap: var(--enchase-space-xs);
+  gap: var(--enchase-alert-content-gap, var(--enchase-space-xs));
   padding-block: calc((var(--alert-row-size) - 1.5em) / 2);
 }
 

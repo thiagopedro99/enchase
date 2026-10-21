@@ -1,7 +1,7 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background-color: var(--enchase-color-overlay);
+  background-color: var(--enchase-modal-overlay-background, var(--enchase-color-overlay));
   z-index: var(--enchase-z-backdrop);
   opacity: 1;
   transition: opacity var(--enchase-modal-duration, var(--enchase-motion-duration-base)) var(--enchase-modal-ease, var(--enchase-motion-ease-out));
@@ -24,9 +24,9 @@
   block-size: fit-content;
   max-block-size: 90vh;
   max-block-size: 90dvh;
-  background-color: var(--enchase-color-surface-container-high);
+  background-color: var(--enchase-modal-panel-background, var(--enchase-color-surface-container-high));
   border-radius: var(--enchase-modal-panel-radius, var(--enchase-radius-2xl));
-  box-shadow: var(--enchase-shadow-lg);
+  box-shadow: var(--enchase-modal-panel-shadow, var(--enchase-shadow-lg));
   z-index: var(--enchase-z-modal);
   display: flex;
   flex-direction: column;
@@ -55,19 +55,19 @@
 }
 
 .container:where([data-size='sm']) {
-  max-inline-size: 400px;
+  max-inline-size: var(--enchase-modal-panel-max-width-sm, 400px);
 }
 
 .container:where([data-size='md']) {
-  max-inline-size: 600px;
+  max-inline-size: var(--enchase-modal-panel-max-width-md, 600px);
 }
 
 .container:where([data-size='lg']) {
-  max-inline-size: 800px;
+  max-inline-size: var(--enchase-modal-panel-max-width-lg, 800px);
 }
 
 .container:where([data-size='xl']) {
-  max-inline-size: 1000px;
+  max-inline-size: var(--enchase-modal-panel-max-width-xl, 1000px);
 }
 
 .container:where([data-size='full']) {
@@ -88,15 +88,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--enchase-space-md);
-  padding-block: var(--enchase-space-lg) 0;
-  padding-inline: var(--enchase-space-lg);
+  gap: var(--enchase-modal-header-gap, var(--enchase-space-md));
+  padding-block: var(--enchase-modal-header-padding-block, var(--enchase-space-lg) 0);
+  padding-inline: var(--enchase-modal-header-padding-inline, var(--enchase-space-lg));
 }
 
 .title {
   font-size: var(--enchase-modal-title-font-size, var(--enchase-font-size-2xl));
   font-weight: var(--enchase-modal-title-font-weight, var(--enchase-font-weight-medium));
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-modal-title-color, var(--enchase-color-text-primary));
   margin: 0;
   min-inline-size: 0;
   overflow-wrap: anywhere;
@@ -115,7 +115,7 @@
   background: transparent;
   font: inherit;
   appearance: none;
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-modal-close-color, var(--enchase-color-text-secondary));
   border-radius: var(--enchase-modal-close-radius, var(--enchase-radius-button));
   transition:
     background-color var(--enchase-modal-duration, var(--enchase-motion-duration-fast)) var(--enchase-modal-ease, var(--enchase-motion-ease-out)),
@@ -128,26 +128,26 @@
 @media (hover: hover) and (pointer: fine) {
   .close:hover {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
-    color: var(--enchase-color-text-primary);
+    color: var(--enchase-modal-close-color-hover, var(--enchase-color-text-primary));
   }
 }
 
 .close:active {
   background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-modal-close-color-active, var(--enchase-color-text-primary));
 }
 
 .body {
-  padding-block: var(--enchase-space-md) var(--enchase-space-lg);
-  padding-inline: var(--enchase-space-lg);
+  padding-block: var(--enchase-modal-body-padding-block, var(--enchase-space-md) var(--enchase-space-lg));
+  padding-inline: var(--enchase-modal-body-padding-inline, var(--enchase-space-lg));
   overflow-y: auto;
   overscroll-behavior: contain;
   flex: 1;
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-modal-body-color, var(--enchase-color-text-secondary));
   line-height: var(--enchase-modal-body-line-height, var(--enchase-line-height-relaxed, 1.6));
 }
 
 .footer {
-  padding-block: 0 var(--enchase-space-lg);
-  padding-inline: var(--enchase-space-lg);
+  padding-block: var(--enchase-modal-footer-padding-block, 0 var(--enchase-space-lg));
+  padding-inline: var(--enchase-modal-footer-padding-inline, var(--enchase-space-lg));
 }

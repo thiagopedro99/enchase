@@ -2,6 +2,8 @@ import type { CssHooksGroup } from './apiDocs.mjs'
 
 export type CssHook = { name: string; fallback: string; properties: string[]; components: string[] }
 
+export const isToken: (name: string) => boolean
+
 export const collectCssHooks: (componentsRoot: string) => CssHook[]
 
 export const ownerOf: (hook: { name: string; components: string[] }) => string

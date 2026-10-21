@@ -4,7 +4,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
-  border: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
+  border: var(--enchase-border-width, 1px) solid var(--enchase-accordion-border-color, var(--enchase-color-border));
   border-radius: var(--enchase-accordion-radius, var(--enchase-radius-md));
 }
 
@@ -13,7 +13,7 @@
 }
 
 .item + .item {
-  border-block-start: var(--enchase-border-width, 1px) solid var(--enchase-color-border);
+  border-block-start: var(--enchase-border-width, 1px) solid var(--enchase-accordion-item-border-color, var(--enchase-color-border));
 }
 
 .heading {
@@ -32,7 +32,7 @@
   font-family: inherit;
   font-weight: var(--enchase-accordion-trigger-font-weight, var(--enchase-font-weight-medium));
   line-height: var(--enchase-accordion-trigger-line-height, var(--enchase-line-height-snug, 1.4));
-  color: var(--enchase-color-text-primary);
+  color: var(--enchase-accordion-trigger-color, var(--enchase-color-text-primary));
   text-align: start;
   background-color: transparent;
   border: 0;
@@ -43,10 +43,10 @@
 }
 
 :where(.trigger) {
-  gap: var(--enchase-space-md);
-  min-block-size: 3rem;
-  padding-block: var(--enchase-space-sm);
-  padding-inline: var(--enchase-space-md);
+  gap: var(--enchase-accordion-trigger-gap, var(--enchase-space-md));
+  min-block-size: var(--enchase-accordion-trigger-min-height, 3rem);
+  padding-block: var(--enchase-accordion-trigger-padding-block, var(--enchase-space-sm));
+  padding-inline: var(--enchase-accordion-trigger-padding-inline, var(--enchase-space-md));
   font-size: var(--enchase-accordion-trigger-font-size, var(--enchase-font-size-base));
 }
 
@@ -61,7 +61,7 @@
 }
 
 .trigger:disabled {
-  color: var(--enchase-color-text-disabled);
+  color: var(--enchase-accordion-trigger-color-disabled, var(--enchase-color-text-disabled));
   cursor: not-allowed;
 }
 
@@ -88,7 +88,7 @@
 .icon {
   display: flex;
   flex-shrink: 0;
-  color: var(--enchase-color-text-secondary);
+  color: var(--enchase-accordion-icon-color, var(--enchase-color-text-secondary));
   transition: transform var(--enchase-accordion-duration, var(--enchase-motion-duration-fast)) var(--enchase-accordion-ease, var(--enchase-motion-ease-out));
 }
 
@@ -97,7 +97,7 @@
 }
 
 .trigger:disabled .icon {
-  color: var(--enchase-color-text-disabled);
+  color: var(--enchase-accordion-icon-color-disabled, var(--enchase-color-text-disabled));
 }
 
 .panel {
@@ -109,8 +109,8 @@
 }
 
 :where(.panel) {
-  padding-block-end: var(--enchase-space-md);
-  padding-inline: var(--enchase-space-md);
+  padding-block-end: var(--enchase-accordion-panel-padding-block-end, var(--enchase-space-md));
+  padding-inline: var(--enchase-accordion-panel-padding-inline, var(--enchase-space-md));
 }
 
 @starting-style {
