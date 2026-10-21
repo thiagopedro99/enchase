@@ -16,6 +16,7 @@
   overscroll-behavior: contain;
   background-color: var(--enchase-popover-content-background, var(--enchase-color-surface-container-high));
   color: var(--enchase-popover-content-color, var(--enchase-color-text-primary));
+  border: var(--enchase-popover-content-border-width, 0) solid var(--enchase-popover-content-border-color, transparent);
   box-shadow: var(--enchase-popover-content-shadow, var(--enchase-shadow-md));
   opacity: 1;
   transform: none;

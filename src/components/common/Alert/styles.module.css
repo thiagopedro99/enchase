@@ -11,6 +11,7 @@
   gap: var(--enchase-alert-gap, var(--enchase-space-sm));
   padding-block: var(--enchase-alert-padding-block, var(--enchase-space-sm));
   padding-inline: var(--enchase-alert-padding-inline, var(--enchase-space-md));
+  border: var(--enchase-alert-border-width, 0) solid var(--enchase-alert-border-color, transparent);
   border-radius: var(--enchase-alert-radius, var(--enchase-radius-md));
   font-size: var(--enchase-alert-font-size, var(--enchase-font-size-sm));
   line-height: var(--enchase-alert-line-height, var(--enchase-line-height-normal, 1.5));
@@ -42,6 +43,38 @@
   align-items: center;
   block-size: var(--alert-row-size);
   color: inherit;
+}
+
+:where(.alert[data-variant='info']) .icon {
+  color: var(--enchase-alert-icon-color-info, inherit);
+}
+
+:where(.alert[data-variant='success']) .icon {
+  color: var(--enchase-alert-icon-color-success, inherit);
+}
+
+:where(.alert[data-variant='warning']) .icon {
+  color: var(--enchase-alert-icon-color-warning, inherit);
+}
+
+:where(.alert[data-variant='error']) .icon {
+  color: var(--enchase-alert-icon-color-error, inherit);
+}
+
+:where(.alert[data-variant='info']) .title {
+  color: var(--enchase-alert-title-color-info, inherit);
+}
+
+:where(.alert[data-variant='success']) .title {
+  color: var(--enchase-alert-title-color-success, inherit);
+}
+
+:where(.alert[data-variant='warning']) .title {
+  color: var(--enchase-alert-title-color-warning, inherit);
+}
+
+:where(.alert[data-variant='error']) .title {
+  color: var(--enchase-alert-title-color-error, inherit);
 }
 
 .content {

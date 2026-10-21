@@ -75,6 +75,7 @@
 .control[aria-current='page'] {
   color: var(--enchase-pagination-control-color-current, var(--enchase-color-on-primary));
   background-color: var(--enchase-pagination-control-background-current, var(--enchase-color-primary));
+  border-color: var(--enchase-pagination-control-border-color-current, transparent);
   border-width: var(--enchase-border-width-strong, 2px);
 }
 

@@ -73,22 +73,26 @@
 .button:where([data-variant='primary']) {
   background-color: var(--enchase-button-background-primary, var(--enchase-color-primary));
   color: var(--enchase-button-color-primary, var(--enchase-color-on-primary));
+  box-shadow: var(--enchase-button-shadow-primary, none);
 }
 
 .button:where([data-variant='secondary']) {
   background-color: var(--enchase-button-background-secondary, var(--enchase-color-primary-container));
   color: var(--enchase-button-color-secondary, var(--enchase-color-on-primary-container));
+  box-shadow: var(--enchase-button-shadow-secondary, none);
 }
 
 .button:where([data-variant='outline']) {
   background-color: transparent;
   border-color: var(--enchase-button-border-color-outline, var(--enchase-color-border-strong));
   color: var(--enchase-button-color-outline, var(--enchase-color-primary));
+  box-shadow: var(--enchase-button-shadow-outline, none);
 }
 
 .button:where([data-variant='ghost']) {
   background-color: transparent;
   color: var(--enchase-button-color-ghost, var(--enchase-color-primary));
+  box-shadow: var(--enchase-button-shadow-ghost, none);
 }
 
 :where(.button[data-size][data-variant='ghost']) {
@@ -97,6 +101,7 @@
 
 .button:where(:disabled) {
   cursor: not-allowed;
+  opacity: var(--enchase-button-opacity-disabled, 1);
   box-shadow: none;
   color: var(--enchase-button-color-disabled, var(--enchase-color-text-disabled));
   background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent);
@@ -108,7 +113,27 @@
 }
 
 .button:where([data-variant='outline']:disabled) {
-  border-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent);
+  color: var(--enchase-button-color-outline-disabled, var(--enchase-button-color-disabled, var(--enchase-color-text-disabled)));
+  background-color: var(--enchase-button-background-outline-disabled, transparent);
+  border-color: var(--enchase-button-border-color-outline-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent));
+}
+
+.button:where([data-variant='primary']:disabled) {
+  color: var(--enchase-button-color-primary-disabled, var(--enchase-button-color-disabled, var(--enchase-color-text-disabled)));
+  background-color: var(--enchase-button-background-primary-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent));
+  border-color: var(--enchase-button-border-color-primary-disabled, transparent);
+}
+
+.button:where([data-variant='secondary']:disabled) {
+  color: var(--enchase-button-color-secondary-disabled, var(--enchase-button-color-disabled, var(--enchase-color-text-disabled)));
+  background-color: var(--enchase-button-background-secondary-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent));
+  border-color: var(--enchase-button-border-color-secondary-disabled, transparent);
+}
+
+.button:where([data-variant='ghost']:disabled) {
+  color: var(--enchase-button-color-ghost-disabled, var(--enchase-button-color-disabled, var(--enchase-color-text-disabled)));
+  background-color: var(--enchase-button-background-ghost-disabled, transparent);
+  border-color: var(--enchase-button-border-color-ghost-disabled, transparent);
 }
 
 .button:focus-visible {

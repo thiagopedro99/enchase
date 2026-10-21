@@ -25,6 +25,7 @@
   max-block-size: 90vh;
   max-block-size: 90dvh;
   background-color: var(--enchase-modal-panel-background, var(--enchase-color-surface-container-high));
+  border: var(--enchase-modal-panel-border-width, 0) solid var(--enchase-modal-panel-border-color, transparent);
   border-radius: var(--enchase-modal-panel-radius, var(--enchase-radius-2xl));
   box-shadow: var(--enchase-modal-panel-shadow, var(--enchase-shadow-lg));
   z-index: var(--enchase-z-modal);

@@ -5,6 +5,7 @@
   margin: 0;
   background-color: var(--enchase-sidebar-background, var(--enchase-color-surface-container-low));
   color: var(--enchase-sidebar-color, var(--enchase-color-text-primary));
+  border-inline-end: var(--enchase-sidebar-border-width, 0) solid var(--enchase-sidebar-border-color, transparent);
 }
 
 :where(.aside) {

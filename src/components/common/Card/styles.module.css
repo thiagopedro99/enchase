@@ -15,6 +15,8 @@
 
 :where(.card[data-variant='default']) {
   background-color: var(--enchase-card-background-default, var(--enchase-color-surface-container));
+  border: var(--enchase-card-border-width-default, 0) solid var(--enchase-card-border-color-default, transparent);
+  box-shadow: var(--enchase-card-shadow-default, none);
 }
 
 :where(.card[data-variant='elevated']) {
@@ -25,6 +27,7 @@
 :where(.card[data-variant='outlined']) {
   background-color: var(--enchase-card-background-outlined, var(--enchase-color-surface));
   border: var(--enchase-border-width, 1px) solid var(--enchase-card-border-color-outlined, var(--enchase-color-border));
+  box-shadow: var(--enchase-card-shadow-outlined, none);
 }
 
 @media (hover: hover) and (pointer: fine) {

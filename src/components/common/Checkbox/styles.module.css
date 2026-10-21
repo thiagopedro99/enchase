@@ -79,13 +79,14 @@
 }
 
 .hidden:disabled + .box {
-  border-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
+  border-color: var(--enchase-checkbox-box-border-color-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent));
   cursor: not-allowed;
+  opacity: var(--enchase-checkbox-opacity-disabled, 1);
 }
 
 .hidden:disabled:checked + .box {
-  border-color: transparent;
-  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
+  border-color: var(--enchase-checkbox-box-border-color-checked-disabled, transparent);
+  background-color: var(--enchase-checkbox-box-background-checked-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent));
 }
 
 .hidden:focus-visible + .box {
@@ -114,4 +115,5 @@
 .hidden:disabled ~ .label {
   color: var(--enchase-checkbox-label-color-disabled, var(--enchase-color-text-disabled));
   cursor: not-allowed;
+  opacity: var(--enchase-checkbox-opacity-disabled, 1);
 }

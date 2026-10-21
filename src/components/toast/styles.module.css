@@ -36,6 +36,7 @@
   margin-block-end: var(--enchase-toast-margin-block-end, var(--enchase-space-sm));
   padding-block: var(--enchase-toast-padding-block, var(--enchase-space-xs));
   padding-inline: var(--enchase-toast-padding-inline, var(--enchase-space-md) var(--enchase-space-sm));
+  border: var(--enchase-toast-border-width, 0) solid var(--enchase-toast-border-color, transparent);
   border-radius: var(--enchase-toast-radius, var(--enchase-radius-md));
   box-shadow: var(--enchase-toast-shadow, var(--enchase-shadow-md));
   justify-content: space-between;

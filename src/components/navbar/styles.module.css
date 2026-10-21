@@ -2,6 +2,7 @@
   position: sticky;
   inset-block-start: 0;
   background-color: var(--enchase-navbar-background-solid, var(--enchase-color-surface-container));
+  border-block-end: var(--enchase-navbar-border-width, 0) solid var(--enchase-navbar-border-color, transparent);
   z-index: var(--enchase-z-sticky);
 }
 

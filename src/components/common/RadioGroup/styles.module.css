@@ -119,12 +119,13 @@
 }
 
 .hidden:disabled + .control {
-  border-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
+  border-color: var(--enchase-radio-group-control-border-color-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent));
   cursor: not-allowed;
+  opacity: var(--enchase-radio-group-opacity-disabled, 1);
 }
 
 .hidden:disabled + .control .dot {
-  border-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent);
+  border-color: var(--enchase-radio-group-dot-border-color-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent));
 }
 
 .hidden:focus-visible + .control {
@@ -155,6 +156,7 @@
 .hidden:disabled ~ .label {
   color: var(--enchase-radio-group-label-color-disabled, var(--enchase-color-text-disabled));
   cursor: not-allowed;
+  opacity: var(--enchase-radio-group-opacity-disabled, 1);
 }
 
 .error {
