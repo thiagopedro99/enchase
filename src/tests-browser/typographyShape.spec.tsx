@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it } from 'vitest'
+import { page, userEvent } from 'vitest/browser'
 
 import { Alert } from '@components/common/Alert/index.tsx'
 import { Badge } from '@components/common/Badge/index.tsx'
@@ -8,8 +9,16 @@ import { Card } from '@components/common/Card/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Link } from '@components/common/Link/index.tsx'
+import { Popover } from '@components/common/Popover/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
+import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
+import { Tooltip } from '@components/common/Tooltip/index.tsx'
+import { resetTooltipGroup } from '@components/common/Tooltip/defaultData.ts'
+import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
+import Navbar from '@components/navbar/index.tsx'
+import { useToast } from '@components/toast/index.ts'
+import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { renderInBrowser } from './harness.tsx'
 
 import type { CSSProperties, ReactNode } from 'react'
@@ -133,5 +142,103 @@ describe('the text of the components from the hooks', () => {
     renderInBrowser(scoped({ '--enchase-link-underline-offset': '5px' }, <Link href="/docs">Docs</Link>))
 
     expect(style('link').textUnderlineOffset).toBe('5px')
+  })
+})
+
+const onRoot = (variables: Record<string, string>) => {
+  for (const [name, value] of Object.entries(variables)) document.documentElement.style.setProperty(name, value)
+}
+
+afterEach(async () => {
+  document.documentElement.removeAttribute('style')
+  resetTooltipGroup()
+  await page.viewport(1280, 800)
+})
+
+const Notifier = () => {
+  const toast = useToast()
+
+  return (
+    <button type="button" onClick={() => toast.success('Saved', 0)}>
+      Notify
+    </button>
+  )
+}
+
+describe('the parts that only show up on demand, from the hooks', () => {
+  it('takes the text and the corners of the user of the sidebar from their hooks', () => {
+    onRoot({
+      '--enchase-sidebar-user-avatar-radius': '3px',
+      '--enchase-sidebar-user-avatar-font-size': '13px',
+      '--enchase-sidebar-user-avatar-font-weight': '800',
+      '--enchase-sidebar-user-name-font-size': '15px',
+      '--enchase-sidebar-user-name-font-weight': '700',
+      '--enchase-sidebar-user-logout-radius': '4px'
+    })
+    renderInBrowser(<SidebarUser name="Pedro Lima" collapsed={false} onLogout={() => undefined} />)
+
+    expect([style('sidebar-user-avatar').borderTopLeftRadius, style('sidebar-user-avatar').fontSize, style('sidebar-user-avatar').fontWeight]).toEqual(['3px', '13px', '800'])
+    expect([style('sidebar-user-name').fontSize, style('sidebar-user-name').fontWeight]).toEqual(['15px', '700'])
+    expect(style('sidebar-user-logout').borderTopLeftRadius).toBe('4px')
+  })
+
+  it('takes the corners of an open popover from its hook', () => {
+    onRoot({ '--enchase-popover-content-radius': '5px' })
+    renderInBrowser(
+      <Popover defaultOpen content={<p>Content</p>}>
+        Open
+      </Popover>
+    )
+
+    expect(style('popover-content').borderTopLeftRadius).toBe('5px')
+  })
+
+  it('takes the corners and the text of a tooltip from its hooks', async () => {
+    onRoot({ '--enchase-tooltip-bubble-radius': '3px', '--enchase-tooltip-bubble-font-size': '11px', '--enchase-tooltip-bubble-font-weight': '800' })
+    renderInBrowser(
+      <Tooltip text="Hint">
+        <button type="button">Target</button>
+      </Tooltip>
+    )
+    await userEvent.hover(page.getByRole('button', { name: 'Target' }))
+    await expect.poll(() => document.body.querySelector('[data-slot="tooltip-bubble"]')).not.toBeNull()
+
+    expect([style('tooltip-bubble').borderTopLeftRadius, style('tooltip-bubble').fontSize, style('tooltip-bubble').fontWeight]).toEqual(['3px', '11px', '800'])
+  })
+
+  it('takes the corners of the drawer of the navbar from its hooks', async () => {
+    await page.viewport(500, 800)
+    onRoot({ '--enchase-navbar-drawer-radius-start-start': '3px', '--enchase-navbar-drawer-radius-end-start': '5px' })
+    renderInBrowser(<Navbar sections={demoSections} />)
+    await page.getByRole('button', { name: 'Abrir menu' }).click()
+    await expect.element(page.getByRole('dialog')).toBeVisible()
+
+    expect([style('navbar-drawer').borderTopLeftRadius, style('navbar-drawer').borderBottomLeftRadius]).toEqual(['3px', '5px'])
+  })
+
+  it('takes the corners of the panel of the sidebar from its hooks', async () => {
+    await page.viewport(600, 800)
+    onRoot({ '--enchase-sidebar-panel-radius-start-end': '3px', '--enchase-sidebar-panel-radius-end-end': '5px' })
+    renderInBrowser(<Sidebar variant="modal" open onClose={() => undefined} sections={demoSections} />)
+    await expect.element(page.getByRole('dialog')).toBeVisible()
+
+    expect([style('sidebar-panel').borderTopRightRadius, style('sidebar-panel').borderBottomRightRadius]).toEqual(['3px', '5px'])
+  })
+
+  it('takes the corners and the text of a toast from its hooks', async () => {
+    onRoot({
+      '--enchase-toast-radius': '3px',
+      '--enchase-toast-close-radius': '4px',
+      '--enchase-toast-title-font-size': '15px',
+      '--enchase-toast-title-font-weight': '800',
+      '--enchase-toast-title-line-height': '2'
+    })
+    renderInBrowser(<Notifier />)
+    await userEvent.click(page.getByRole('button', { name: 'Notify' }))
+    await expect.poll(() => document.body.querySelector('[data-slot="toast"]')).not.toBeNull()
+
+    expect(style('toast').borderTopLeftRadius).toBe('3px')
+    expect(style('toast-close').borderTopLeftRadius).toBe('4px')
+    expect([style('toast-title').fontSize, style('toast-title').fontWeight, ratio('toast-title')]).toEqual(['15px', '800', 2])
   })
 })
