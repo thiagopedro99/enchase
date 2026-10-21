@@ -39,11 +39,11 @@
 
 :where(.select) {
   inline-size: 100%;
-  min-inline-size: 200px;
+  min-inline-size: var(--enchase-input-min-width, 200px);
   block-size: var(--enchase-input-height, 3.5rem);
   padding-block: 0;
-  padding-inline: var(--enchase-space-md) 2.75rem;
-  font-size: var(--enchase-font-size-base);
+  padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md)) 2.75rem;
+  font-size: var(--enchase-input-font-size, var(--enchase-font-size-base));
   border-radius: var(--enchase-radius-control);
 }
 
@@ -157,7 +157,7 @@
 
 .label {
   position: absolute;
-  inset-inline-start: var(--enchase-space-md);
+  inset-inline-start: var(--enchase-input-padding-inline, var(--enchase-space-md));
   inset-block-start: 50%;
   max-inline-size: calc(100% - 4rem);
   margin: 0;
@@ -182,7 +182,7 @@
 .select:focus ~ .label,
 .select:open ~ .label,
 .select:has(option:checked:not([data-placeholder])) ~ .label {
-  transform: translateY(calc(-50% - 28px)) scale(0.75);
+  transform: translateY(calc(-50% - var(--enchase-input-height, 3.5rem) / 2)) scale(0.75);
 }
 
 .label[data-has-error] {
@@ -340,6 +340,6 @@
 
 @media (pointer: coarse) {
   :where(.select) {
-    font-size: max(16px, var(--enchase-font-size-base));
+    font-size: max(16px, var(--enchase-input-font-size, var(--enchase-font-size-base)));
   }
 }

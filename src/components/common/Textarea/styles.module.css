@@ -34,11 +34,11 @@
 
 :where(.textarea) {
   inline-size: 100%;
-  min-inline-size: 200px;
+  min-inline-size: var(--enchase-input-min-width, 200px);
   min-block-size: var(--enchase-textarea-min-height, 3.5rem);
-  padding-block: var(--enchase-space-md);
-  padding-inline: var(--enchase-space-md);
-  font-size: var(--enchase-font-size-base);
+  padding-block: var(--enchase-textarea-padding-block, var(--enchase-space-md));
+  padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md));
+  font-size: var(--enchase-input-font-size, var(--enchase-font-size-base));
   border-radius: var(--enchase-radius-control);
 }
 
@@ -88,9 +88,9 @@
 
 .label {
   position: absolute;
-  inset-inline-start: var(--enchase-space-md);
+  inset-inline-start: var(--enchase-input-padding-inline, var(--enchase-space-md));
   inset-block-start: 0;
-  max-inline-size: calc(100% - 2rem);
+  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -99,7 +99,7 @@
   font-weight: var(--enchase-font-weight-regular);
   line-height: 1.5;
   color: var(--enchase-color-text-secondary);
-  transform: translateY(var(--enchase-space-md));
+  transform: translateY(var(--enchase-textarea-padding-block, var(--enchase-space-md)));
   transform-origin: left center;
   pointer-events: none;
   transition:
@@ -230,6 +230,6 @@
 
 @media (pointer: coarse) {
   :where(.textarea) {
-    font-size: max(16px, var(--enchase-font-size-base));
+    font-size: max(16px, var(--enchase-input-font-size, var(--enchase-font-size-base)));
   }
 }

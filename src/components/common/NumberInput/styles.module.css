@@ -34,16 +34,16 @@
 
 :where(.input) {
   inline-size: 100%;
-  min-inline-size: 200px;
+  min-inline-size: var(--enchase-input-min-width, 200px);
   block-size: var(--enchase-input-height, 3.5rem);
   padding-block: 0;
-  padding-inline: var(--enchase-space-md);
-  font-size: var(--enchase-font-size-base);
+  padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md));
+  font-size: var(--enchase-input-font-size, var(--enchase-font-size-base));
   border-radius: var(--enchase-radius-control);
 }
 
 :where(.input[data-has-steppers]) {
-  padding-inline-end: calc(80px + var(--enchase-space-xs) + var(--enchase-space-sm) * 2);
+  padding-inline-end: calc(max(24px, var(--enchase-hit-size, 40px)) * 2 + var(--enchase-space-xs) + var(--enchase-space-sm) * 2);
 }
 
 .input:focus {
@@ -71,9 +71,9 @@
 
 .label {
   position: absolute;
-  inset-inline-start: var(--enchase-space-md);
+  inset-inline-start: var(--enchase-input-padding-inline, var(--enchase-space-md));
   inset-block-start: 50%;
-  max-inline-size: calc(100% - 2rem);
+  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -94,12 +94,12 @@
 }
 
 .input[data-has-steppers] ~ .label {
-  max-inline-size: calc(100% - 7rem);
+  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2 - max(24px, var(--enchase-hit-size, 40px)) * 2);
 }
 
 .input:focus ~ .label,
 .input:not(:placeholder-shown) ~ .label {
-  transform: translateY(calc(-50% - 28px)) scale(0.75);
+  transform: translateY(calc(-50% - var(--enchase-input-height, 3.5rem) / 2)) scale(0.75);
 }
 
 .label[data-has-error] {
@@ -277,6 +277,6 @@
 
 @media (pointer: coarse) {
   :where(.input) {
-    font-size: max(16px, var(--enchase-font-size-base));
+    font-size: max(16px, var(--enchase-input-font-size, var(--enchase-font-size-base)));
   }
 }

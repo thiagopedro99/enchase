@@ -33,16 +33,16 @@
 
 :where(.input) {
   inline-size: 100%;
-  min-inline-size: 200px;
+  min-inline-size: var(--enchase-input-min-width, 200px);
   block-size: var(--enchase-input-height, 3.5rem);
   padding-block: 0;
-  padding-inline: var(--enchase-space-md);
-  font-size: var(--enchase-font-size-base);
+  padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md));
+  font-size: var(--enchase-input-font-size, var(--enchase-font-size-base));
   border-radius: var(--enchase-radius-control);
 }
 
 :where(.input[data-has-toggle]) {
-  padding-inline-end: 3.5rem;
+  padding-inline-end: calc(var(--enchase-space-sm) * 2 + max(24px, var(--enchase-hit-size, 40px)));
 }
 
 .input:focus {
@@ -70,9 +70,9 @@
 
 .label {
   position: absolute;
-  inset-inline-start: var(--enchase-space-md);
+  inset-inline-start: var(--enchase-input-padding-inline, var(--enchase-space-md));
   inset-block-start: 50%;
-  max-inline-size: calc(100% - 2rem);
+  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2);
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -95,7 +95,7 @@
 .input:focus ~ .label,
 .input:not(:placeholder-shown) ~ .label,
 .input:-webkit-autofill ~ .label {
-  transform: translateY(calc(-50% - 28px)) scale(0.75);
+  transform: translateY(calc(-50% - var(--enchase-input-height, 3.5rem) / 2)) scale(0.75);
 }
 
 .label[data-has-error] {
@@ -259,6 +259,6 @@
 
 @media (pointer: coarse) {
   :where(.input) {
-    font-size: max(16px, var(--enchase-font-size-base));
+    font-size: max(16px, var(--enchase-input-font-size, var(--enchase-font-size-base)));
   }
 }
