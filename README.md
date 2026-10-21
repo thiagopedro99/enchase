@@ -511,6 +511,8 @@ Cada componente também lê ganchos próprios, `--enchase-<data-slot>-<proprieda
 
 O que depende de uma medida acompanha sozinho: o traço do checkbox, o ponto do radio e o curso da bolinha da chave seguem o tamanho de cada um; o rótulo flutuante dos campos sobe metade de `--enchase-input-height` e segue o padding do texto; e o espaço que os campos de senha e numérico reservam para os botões de dentro segue `--enchase-hit-size`. Os quatro campos (texto, número, seleção e área de texto) dividem os ganchos `--enchase-input-*`, e o canto do campo e o do contorno dele saem do mesmo gancho. A tipografia dos rótulos flutuantes fica fixa, porque o entalhe do contorno depende dela.
 
+Os ganchos de cor (`--enchase-alert-background-info`, `--enchase-badge-color-success`, `--enchase-table-header-background`) caem no papel de cor do tema, então seguem o modo claro e o escuro sozinhos. Para um valor que muda por modo, declare o gancho dentro do seletor do modo, junto das cores (`:root, [data-theme='light'] { ... }` e `[data-theme='dark'] { ... }`): um gancho declarado só no `:root` e escrito como `var(--enchase-color-surface)` seria resolvido com as cores do claro e ficaria assim também no escuro.
+
 O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 
 - `enchase/styles.css`: o layout (tamanho, padding, raio) usa `:where()` e sempre perde para a sua classe. Cores, borda e hover só são vencidos se o seu CSS carregar depois.
