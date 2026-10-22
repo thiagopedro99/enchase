@@ -8,7 +8,7 @@ Siga o [`skill.md`](./skill.md): formatação, imports, componentização com `/
 
 ## Estrutura pública
 
-`src/` é interno; `lib/` é o contrato público (`enchase`, `enchase/theme`, `enchase/locales`, `enchase/icons`, arquivos finos que reexportam). `demo/` e as stories (`src/docs`) importam só da entrada pública, e `src/components` nunca importa de `lib/` (regras de ESLint). Exportar pouco: remover um export depois é uma quebra de versão.
+`src/` é interno; `lib/` é o contrato público (`enchase`, `enchase/theme`, `enchase/styles`, `enchase/locales`, `enchase/icons`, arquivos finos que reexportam). `demo/` e as stories (`src/docs`) importam só da entrada pública, e `src/components` nunca importa de `lib/` (regras de ESLint). Exportar pouco: remover um export depois é uma quebra de versão.
 
 ## Regras essenciais de código
 

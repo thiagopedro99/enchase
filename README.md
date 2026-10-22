@@ -88,7 +88,8 @@ A fonte padrão é Figtree: carregue-a no app (por exemplo com `@fontsource-vari
 | Entrada | Conteúdo |
 | --- | --- |
 | `enchase` | Componentes, provedores, hooks e tipos. Marcada como `'use client'`. |
-| `enchase/theme` | `createTheme`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring` e os tokens. Sem React. |
+| `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring` e os tokens. Sem React. |
+| `enchase/styles` | Os estilos visuais prontos, um por exportação: `shadcn` e `enchase`. Só dados, sem React, e só entram no bundle de quem os importa. |
 | `enchase/locales` | `en` e `ptBR` (`{ locale, dir, messages }`). Só dados. |
 | `enchase/icons` | Os 19 ícones que os componentes usam por dentro, um componente por ícone. Funciona em Server Components. |
 | `enchase/styles.css` | CSS dos componentes. |
@@ -369,25 +370,70 @@ O `createTheme` troca os raios com a seção `shape` (um preset) e com `radius` 
 
 ### Estilo visual
 
-`style` troca o visual do kit inteiro de uma vez: a paleta, os raios, as alturas, os pesos, as bordas, as sombras e o lugar do rótulo dos campos. O padrão, `enchase`, é o visual de sempre e não muda nada. O `shadcn` aproxima o kit do shadcn/ui: paleta neutra, bordas no lugar de sombras, botões e campos de 36px com texto de 14px, cantos de `0.5rem` e o rótulo acima do campo.
+`style` troca o visual do kit inteiro de uma vez: a paleta, os raios, as alturas, os pesos, as bordas, as sombras e o lugar do rótulo dos campos. Sem `style`, o visual é o de sempre (o estilo `enchase`, que não muda nada). O `shadcn` aproxima o kit do shadcn/ui: paleta neutra, bordas no lugar de sombras, botões e campos de 36px com texto de 14px, cantos de `0.5rem` e o rótulo acima do campo.
 
 ```tsx
-<ColorModeProvider theme={{ style: 'shadcn' }}>
+import { shadcn } from 'enchase/styles'
+
+<ColorModeProvider theme={{ style: shadcn }}>
   <App />
 </ColorModeProvider>
 
-<ColorModeProvider theme={{ style: 'shadcn', brand: '#0B6BCB', shape: 'soft' }}>
+<ColorModeProvider theme={{ style: shadcn, brand: '#0B6BCB', shape: 'soft' }}>
   <App />
 </ColorModeProvider>
 ```
 
+- Os estilos moram em `enchase/styles`, uma exportação por estilo (`shadcn` e `enchase`), e só entram no bundle de quem os importa: sem `style`, o `ColorModeProvider` e o `createTheme` não carregam nenhum dado de estilo, e quem importa o `shadcn` paga por ele (cerca de 2,5 kB em gzip) e por nenhum outro. Um estilo é só dado, então vale em Server Components: importe-o no layout de servidor e passe-o à prop `theme` do `ColorModeProvider`.
+- O `style` é um objeto, não um nome: `style: 'shadcn'` lança erro dizendo para importar o estilo de `enchase/styles`.
 - O estilo é "inspirado em", não uma cópia: o contrato de acessibilidade da biblioteca vale mais que a fidelidade. Onde o original fica abaixo dele, o estilo ajusta. A borda dos campos e a trilha da chave desligada são `#808080` (3:1 contra o fundo; a do original tem 1,26:1). O anel de foco é sólido, de 2px, na cor `primary` e com 2px de folga (o original usa um anel translúcido, que não chega a 3:1). O texto secundário sobre as superfícies cinza e o vermelho de erro usado como texto têm 4,5:1. Em cores forçadas (o modo de alto contraste do Windows), a borda do campo em foco engrossa para 2px, porque a sombra do anel some. O desenho do checkbox e do radio é de 16px, mas a área de toque continua com 24px ou mais.
 - Além das cores e dos raios, o estilo muda: botões de 32, 36 e 40px, campos de 36px e texto de 14px nos controles, uma sombra pequena nos botões e nos campos, alertas neutros com o ícone e o título coloridos, badges tingidos (sólidos só o `primary` e o de erro), abas só com o sublinhado, acordeão sem contorno e com linhas entre os itens, diálogo, popover e notificação com borda, e o rótulo acima do controle.
 - A precedência, do mais fraco ao mais forte, é: o padrão da biblioteca, o `style` e o que você passa (`shape`, `radius`, `fonts`, `motion`, `brand`, `light` e `dark`). `shape: 'pill'` com o `shadcn` devolve os botões em pílula, e `radius: { button: '1rem' }` muda só o raio dos botões. Com `brand`, só o acento muda (o `primary` e o que deriva dele): os neutros continuam os do estilo, e o `validateTheme` confere o contraste do resultado como em qualquer tema.
-- Por baixo, um estilo é um conjunto de tokens e de ganchos de CSS (veja "Customização por CSS"). O `createTheme` os junta ao tema e o `ColorModeProvider` os escreve no `:root` e nos blocos de cada modo, então o CSS da sua aplicação vence o estilo: `:root { --enchase-button-font-size-md: 16px; }` muda só esse valor. O `ThemeSet` que o `createTheme` devolve ganha `hooks` e `defaults`, que são opcionais, então um `ThemeSet` montado à mão continua valendo. O tipo `StyleName` é exportado por `enchase/theme`, e um nome que não existe lança erro com os que existem.
+- Por baixo, um estilo é um conjunto de tokens e de ganchos de CSS (veja "Customização por CSS"). O `createTheme` os junta ao tema e o `ColorModeProvider` os escreve no `:root` e nos blocos de cada modo, então o CSS da sua aplicação vence o estilo: `:root { --enchase-button-font-size-md: 16px; }` muda só esse valor. O `ThemeSet` que o `createTheme` devolve ganha `hooks` e `defaults`, que são opcionais, então um `ThemeSet` montado à mão continua valendo.
 - A página Sistema/Estilos do Storybook mostra os estilos no kit inteiro, e a barra de ferramentas do Storybook troca o estilo de todas as stories.
 
 O lugar do rótulo dos campos é a prop `labelPlacement` do `Input`, do `Textarea`, do `NumberInput` e do `Select`: `floating` (o padrão do estilo `enchase`) deixa o rótulo dentro do campo, e ele sobe para o contorno ao focar ou preencher; `stacked` (o padrão do `shadcn`) põe o rótulo acima do controle, sem entalhe no contorno, com a ajuda e o erro abaixo. A prop vence o estilo, nos dois sentidos, e sem `ColorModeProvider` o rótulo é flutuante. A ordem no HTML é a visual (o `<label>` vem antes do controle), igual no servidor e no cliente.
+
+### Criar um estilo
+
+Um estilo é um objeto de dados. O `defineStyle`, de `enchase/theme`, confere o objeto, diz qual parte está errada e o devolve congelado. O estilo só diz o que muda em relação ao padrão; o resto fica como está.
+
+```tsx
+import { defineStyle } from 'enchase/theme'
+
+export const compact = defineStyle({
+  base: { control: { height: { sm: '1.75rem', md: '2rem', lg: '2.25rem' } }, hit: { size: '1.5rem' } },
+  fonts: { weights: { medium: 500 } },
+  radius: { button: '0.375rem', control: '0.375rem' },
+  hooks: { '--enchase-button-font-size-md': 'var(--enchase-font-size-sm)' },
+  colorHooks: { '--enchase-button-border-color-outline': 'var(--enchase-color-border)' },
+  light: { colors: { background: '#FAFAFA' }, shadows: { sm: '0 1px 2px rgb(0 0 0 / 0.08)' } },
+  dark: { colors: { background: '#0A0A0A' } },
+  brand: ['primary', 'onPrimary'],
+  defaults: { labelPlacement: 'stacked' }
+})
+
+<ColorModeProvider theme={{ style: compact }}>
+  <App />
+</ColorModeProvider>
+```
+
+| Seção | O que vai nela |
+| --- | --- |
+| `base` | Os tokens `control`, `focus`, `border`, `halo`, `hit` e `state` que mudam, no mesmo formato do tema padrão. |
+| `fonts` | `sizes`, `weights`, `lineHeights` e `letterSpacings`. As famílias (`primary` e `mono`) são de quem usa o estilo, pela seção `fonts` do `createTheme`. |
+| `radius` | Os raios (`xs` a `full`, menos `none`), como na seção `radius` do `createTheme`. |
+| `hooks` | Ganchos de CSS (`--enchase-<data-slot>-<propriedade>`) cujo valor não cita uma cor nem uma sombra do tema. Vão para o `:root`. |
+| `colorHooks` | Ganchos cujo valor cita uma cor ou uma sombra do tema (`var(--enchase-color-…)`, `var(--enchase-shadow-…)`). Vão para o bloco de cada modo, onde essas variáveis existem. |
+| `light` e `dark` | O que vale só em um modo: `colors` (qualquer papel de cor), `shadows` (menos `none`) e `hooks`. |
+| `brand` | Quais papéis da paleta vêm da cor da marca quando quem usa passa `brand`. Sem a lista, a marca tinge a paleta inteira. |
+| `defaults` | Hoje só `labelPlacement`. |
+
+- O `defineStyle` lança erro, com o caminho da parte que falhou, para uma seção ou um token que não existe, para um valor de CSS inseguro (com `;`, `{`, `}`, `<`, `>`, `\`, um comentário, `url()`, `@import`, parêntese ou aspas sem fechar, ou com mais de 400 caracteres), para um nome de gancho fora do formato `--enchase-<palavras-em-minúsculas-com-hífen>`, para um "gancho" que na verdade é um token do tema (`--enchase-space-md`) e para um gancho da raiz que cita uma cor ou uma sombra do tema (esse vai em `colorHooks`).
+- O `createTheme` confere de novo todo estilo que não saiu do `defineStyle`, porque um estilo pode chegar de um JSON ou atravessar a fronteira de um Server Component sem a marca de que já foi conferido. O que saiu do `defineStyle` é congelado e não é conferido outra vez.
+- O contraste das cores depende da paleta final e não é conferido pelo `defineStyle`: rode `validateTheme(createTheme({ style: compact }))`, também com `brand`, no teste do seu estilo.
+- O estilo é a base: o que quem usa passa ao `createTheme` (`shape`, `radius`, `fonts`, `motion`, `brand`, `light` e `dark`) vence o estilo, e o CSS da aplicação vence os dois.
+- Para partir de um estilo pronto, espalhe-o: `defineStyle({ ...shadcn, defaults: { labelPlacement: 'floating' } })`.
 
 ## Idiomas e RTL
 
