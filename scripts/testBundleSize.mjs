@@ -17,8 +17,20 @@ const budgets = [
   { label: 'Icon', source: "export { Icon } from 'enchase'\n", maxBytes: 4096 },
   { label: 'CloseIcon', source: "export { CloseIcon } from 'enchase/icons'\n", maxBytes: 4096 },
   { label: 'AllIcons', source: "export * from 'enchase/icons'\n", maxBytes: 8192 },
-  { label: 'Button', source: "export { Button } from 'enchase'\n", maxBytes: 12288 }
+  { label: 'Button', source: "export { Button } from 'enchase'\n", maxBytes: 12288 },
+  { label: 'ColorModeProvider', source: "export { ColorModeProvider } from 'enchase'\n", maxBytes: 40960, styles: 'absent' },
+  { label: 'createTheme', source: "export { createTheme } from 'enchase/theme'\n", maxBytes: 32768, styles: 'absent' },
+  { label: 'enchase style', source: "export { enchase } from 'enchase/styles'\n", maxBytes: 16384, styles: 'absent' },
+  { label: 'shadcn style', source: "export { shadcn } from 'enchase/styles'\n", maxBytes: 34816, styles: 'present' },
+  { label: 'ColorModeProvider with shadcn', source: "export { ColorModeProvider } from 'enchase'\nexport { shadcn } from 'enchase/styles'\n", maxBytes: 57344, styles: 'present' }
 ]
+
+const hookNames = `import * as styles from 'enchase/styles'
+
+const records = (style) => [style.hooks, style.colorHooks, style.light?.hooks, style.dark?.hooks]
+
+console.log(JSON.stringify([...new Set(Object.values(styles).flatMap((style) => records(style).flatMap((record) => Object.keys(record ?? {}))))]))
+`
 
 const bundle = async (project, entry) => {
   const result = await build({
@@ -50,10 +62,15 @@ try {
 
   run(npm, ['install', '--no-audit', '--no-fund', tarball, 'react@19', 'react-dom@19'], consumer)
 
+  writeFileSync(join(consumer, 'hooks.mjs'), hookNames)
+
+  const styleHooks = JSON.parse(execFileSync(process.execPath, ['hooks.mjs'], { cwd: consumer }).toString())
   const failures = []
 
-  for (const { label, source, maxBytes } of budgets) {
-    const entry = join(consumer, `${label}.js`)
+  if (styleHooks.length < 50) failures.push(`the styles of enchase/styles name only ${styleHooks.length} hooks, too few to tell whether they leak into the core`)
+
+  for (const { label, source, maxBytes, styles } of budgets) {
+    const entry = join(consumer, `${label.replaceAll(' ', '-')}.js`)
 
     writeFileSync(entry, source)
 
@@ -64,6 +81,11 @@ try {
 
     if (bytes < 200) failures.push(`${label} bundled to ${bytes} bytes, so the import did not resolve`)
     else if (bytes > maxBytes) failures.push(`${label} is ${bytes} bytes, over the ${maxBytes} byte budget`)
+
+    const carried = styleHooks.filter((name) => code.includes(name))
+
+    if (styles === 'absent' && carried.length > 0) failures.push(`${label} carries ${carried.length} hooks of the styles, so the style data leaks into code that did not ask for it`)
+    if (styles === 'present' && carried.length < styleHooks.length * 0.9) failures.push(`${label} carries ${carried.length} of the ${styleHooks.length} hooks of the styles, so the check for a leak cannot be trusted`)
   }
 
   if (failures.length > 0) throw new Error(`a single import pulls in too much code:\n${failures.map((line) => `  - ${line}`).join('\n')}`)
