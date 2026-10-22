@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import * as main from 'enchase'
 import * as icons from 'enchase/icons'
 import * as locales from 'enchase/locales'
+import * as styles from 'enchase/styles'
 import * as theme from 'enchase/theme'
 
 describe('public entries', () => {
@@ -21,6 +22,24 @@ describe('public entries', () => {
   it('exports the theme tools from enchase/theme', () => {
     expect(theme).toHaveProperty('createTheme')
     expect(theme).toHaveProperty('validateTheme')
+    expect(theme).toHaveProperty('defineStyle')
+  })
+
+  it('keeps the checks behind defineStyle out of enchase/theme', () => {
+    for (const name of ['assertStyle', 'assertSafeCssValue', 'isSafeCssValue', 'mergeTokens', 'isValidLineHeight', 'isValidLetterSpacing', 'brandRoles', 'variableGroups']) {
+      expect(theme, name).not.toHaveProperty(name)
+    }
+  })
+
+  it('exports the styles from enchase/styles and nothing else', () => {
+    expect(Object.keys(styles).sort()).toEqual(['enchase', 'shadcn'])
+  })
+
+  it('keeps the data of the styles out of every other entry', () => {
+    for (const entry of [main, theme, icons, locales]) {
+      expect(entry).not.toHaveProperty('shadcn')
+      expect(entry).not.toHaveProperty('enchase')
+    }
   })
 
   it('keeps the brand palette internals out of enchase/theme', () => {

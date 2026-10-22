@@ -13,8 +13,9 @@ const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Grid, Layou
 import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
 import { ChevronDownIcon, CloseIcon } from 'enchase/icons'
 import type { IconProps } from 'enchase/icons'
-import { createTheme, validateTheme } from 'enchase/theme'
-import type { RadiusOverrides, ShapePreset, StyleName, ThemeInput } from 'enchase/theme'
+import { enchase as enchaseStyle, shadcn } from 'enchase/styles'
+import { createTheme, defineStyle, validateTheme } from 'enchase/theme'
+import type { RadiusOverrides, ShapePreset, ThemeInput, ThemeStyle, ThemeStyleMode } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
 import 'enchase/styles.css'
@@ -110,10 +111,16 @@ export const largeHitSize: string = theme.base.hit.sizeLg
 export const normalLineHeight: number = theme.base.fonts.lineHeights.normal
 export const controlSpacing: string = theme.base.fonts.letterSpacings.control
 export const problems = validateTheme(theme)
-export const chosen: StyleName = 'shadcn'
+export const chosen: ThemeStyle = shadcn
 export const styled = createTheme({ style: chosen })
 export const labelPlacement: 'floating' | 'stacked' | undefined = styled.defaults?.labelPlacement
 export const styledProblems = validateTheme(styled)
+export const unstyled = createTheme({ style: enchaseStyle })
+const night: ThemeStyleMode = { colors: { background: '#101010' }, hooks: { '--enchase-badge-background-neutral': '#202020' } }
+export const own: ThemeStyle = defineStyle({ base: { control: { height: { md: '2rem' } } }, radius: { button: '0.25rem' }, hooks: { '--enchase-button-font-weight': '500' }, colorHooks: { '--enchase-card-background-default': 'var(--enchase-color-surface)' }, brand: ['primary', 'onPrimary'], dark: night, defaults: { labelPlacement: 'stacked' } })
+export const owned = createTheme({ style: own, brand: '#0f766e', shape: 'soft' })
+export const ownedHeight: string = owned.base.control.height.md
+export const mixed: ThemeInput = { style: shadcn, brand: '#0f766e' }
 `
 
 const consumerPackage = { name: 'enchase-consumer', private: true, type: 'module', version: '0.0.0' }

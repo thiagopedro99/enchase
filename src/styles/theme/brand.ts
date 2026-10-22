@@ -4,36 +4,14 @@ import { oklchToHex, rgbToHex, rgbToOklch } from './oklch.ts'
 import { parseColor } from './rgb.ts'
 
 import type { ColorTokens } from '../tokens/types.ts'
+import type { BrandColorRole } from './brandRoles.ts'
 import type { Oklch } from './oklch.ts'
 
 type Seed = Oklch & { hex: string }
 
 type NeutralTones = typeof lightNeutralTones
 
-type GeneratedToken =
-  | 'primary'
-  | 'onPrimary'
-  | 'primaryHover'
-  | 'primaryContainer'
-  | 'onPrimaryContainer'
-  | 'secondary'
-  | 'onSecondary'
-  | 'secondaryContainer'
-  | 'onSecondaryContainer'
-  | 'background'
-  | 'surface'
-  | 'surfaceContainerLow'
-  | 'surfaceContainer'
-  | 'surfaceContainerHigh'
-  | 'border'
-  | 'borderStrong'
-  | 'borderLight'
-  | 'inverseSurface'
-  | 'inverseOnSurface'
-  | 'inversePrimary'
-  | 'codeBackground'
-
-export type BrandColors = Pick<ColorTokens, GeneratedToken> & { text: Pick<ColorTokens['text'], 'primary' | 'secondary' | 'placeholder' | 'inverse'> }
+export type BrandColors = Pick<ColorTokens, BrandColorRole> & { text: Pick<ColorTokens['text'], 'primary' | 'secondary' | 'placeholder' | 'inverse'> }
 
 const textTarget = 4.6
 

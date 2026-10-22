@@ -1,5 +1,7 @@
 import { HomeIcon } from '@tests/shared/fixtures/exampleIcons.tsx'
 
+import { shadcn } from '@styles/presets/shadcn.ts'
+
 import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.tsx'
 import { ChevronLeftIcon } from '@components/common/Icon/icons/ChevronLeftIcon.tsx'
@@ -97,7 +99,7 @@ export const hydrationCases: HydrationCase[] = [
   {
     name: 'ColorModeProvider with the shadcn style and its stacked labels',
     element: (
-      <ColorModeProvider theme={{ style: 'shadcn' }}>
+      <ColorModeProvider theme={{ style: shadcn }}>
         <Input label="Email" helperText="Never shared" />
         <NumberInput label="Amount" defaultValue={3} />
         <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} />

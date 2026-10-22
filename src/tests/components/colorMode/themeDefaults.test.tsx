@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
+import { enchase } from '@styles/presets/enchase.ts'
+import { shadcn } from '@styles/presets/shadcn.ts'
 
 const Probe = () => <p data-testid="placement">{useThemeDefaults().labelPlacement}</p>
 
@@ -32,7 +34,7 @@ describe('the defaults that the theme gives to the components', () => {
     expect(screen.getByTestId('placement')).toHaveTextContent('floating')
     unmount()
     render(
-      <ColorModeProvider storage={null} theme={{ style: 'enchase' }}>
+      <ColorModeProvider storage={null} theme={{ style: enchase }}>
         <Probe />
       </ColorModeProvider>
     )
@@ -42,7 +44,7 @@ describe('the defaults that the theme gives to the components', () => {
 
   it('takes the stacked label from the shadcn style', () => {
     render(
-      <ColorModeProvider storage={null} theme={{ style: 'shadcn' }}>
+      <ColorModeProvider storage={null} theme={{ style: shadcn }}>
         <Probe />
       </ColorModeProvider>
     )
@@ -52,7 +54,7 @@ describe('the defaults that the theme gives to the components', () => {
 
   it('gives the same default on the server as in the browser', () => {
     const html = renderToString(
-      <ColorModeProvider storage={null} theme={{ style: 'shadcn' }}>
+      <ColorModeProvider storage={null} theme={{ style: shadcn }}>
         <Probe />
       </ColorModeProvider>
     )
@@ -62,7 +64,7 @@ describe('the defaults that the theme gives to the components', () => {
 
   it('writes the css of the style: the tokens of its palette in the mode blocks', () => {
     const { container } = render(
-      <ColorModeProvider storage={null} theme={{ style: 'shadcn' }}>
+      <ColorModeProvider storage={null} theme={{ style: shadcn }}>
         <Probe />
       </ColorModeProvider>
     )
@@ -75,14 +77,14 @@ describe('the defaults that the theme gives to the components', () => {
   it('keeps the same defaults object while the placement does not change, even when the theme is a new object on every render', () => {
     seen.length = 0
     const app = (
-      <ColorModeProvider storage={null} theme={{ style: 'shadcn' }}>
+      <ColorModeProvider storage={null} theme={{ style: shadcn }}>
         <Recorder />
       </ColorModeProvider>
     )
     const { rerender } = render(app)
 
     rerender(
-      <ColorModeProvider storage={null} theme={{ style: 'shadcn' }}>
+      <ColorModeProvider storage={null} theme={{ style: shadcn }}>
         <Recorder />
       </ColorModeProvider>
     )
@@ -94,13 +96,13 @@ describe('the defaults that the theme gives to the components', () => {
   it('gives a new defaults object when the style changes the placement', () => {
     seen.length = 0
     const { rerender } = render(
-      <ColorModeProvider storage={null} theme={{ style: 'enchase' }}>
+      <ColorModeProvider storage={null} theme={{ style: enchase }}>
         <Recorder />
       </ColorModeProvider>
     )
 
     rerender(
-      <ColorModeProvider storage={null} theme={{ style: 'shadcn' }}>
+      <ColorModeProvider storage={null} theme={{ style: shadcn }}>
         <Recorder />
       </ColorModeProvider>
     )

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { createTheme, formatContrastIssues, formatMotionIssues, spring, validateMotion, validateTheme } from 'enchase/theme'
+import { enchase, shadcn } from 'enchase/styles'
+import { createTheme, defineStyle, formatContrastIssues, formatMotionIssues, spring, validateMotion, validateTheme } from 'enchase/theme'
 
 describe('the public theme entry protects the contrast contract', () => {
   it('throws on an unknown token, an unknown section and a value that is not an object', () => {
@@ -64,5 +65,27 @@ describe('the public theme entry protects the contrast contract', () => {
 
   it('exposes the spring generator without React', () => {
     expect(spring({ duration: 0.4, bounce: 0.2 }).easing.startsWith('linear(')).toBe(true)
+  })
+})
+
+describe('the public styles entry feeds createTheme', () => {
+  it('makes a theme from a style, and the enchase style is the default theme', () => {
+    expect(createTheme({ style: enchase })).toEqual(createTheme())
+    expect(createTheme({ style: shadcn }).defaults).toEqual({ labelPlacement: 'stacked' })
+    expect(createTheme({ style: shadcn }).base.control.height.md).toBe('2.25rem')
+  })
+
+  it('keeps the contrast contract with a style, with and without a brand color', () => {
+    expect(validateTheme(createTheme({ style: shadcn }))).toEqual([])
+    expect(validateTheme(createTheme({ style: shadcn, brand: '#0B6BCB' }))).toEqual([])
+  })
+
+  it('takes a style defined by the caller with defineStyle, and keeps checking its parts', () => {
+    const compact = defineStyle({ base: { control: { height: { md: '2rem' } } }, hooks: { '--enchase-button-font-weight': '500' } })
+
+    expect(createTheme({ style: compact }).base.control.height.md).toBe('2rem')
+    expect(createTheme({ style: compact }).hooks).toEqual({ '--enchase-button-font-weight': '500' })
+    expect(() => defineStyle({ hooks: { '--enchase-button-font-weight': '500; color: red' } })).toThrow(/Invalid CSS value/)
+    expect(() => createTheme({ style: 'shadcn' } as never)).toThrow(/enchase\/styles/)
   })
 })

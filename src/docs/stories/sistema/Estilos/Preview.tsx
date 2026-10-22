@@ -2,10 +2,12 @@ import { Accordion, Alert, Badge, Breadcrumbs, Button, Card, Checkbox, ColorMode
 import { createTheme } from 'enchase/theme'
 import { ptBR } from 'enchase/locales'
 
+import { storyStyles } from '../../../shared/styles.ts'
+
 import type { ThemeInput } from 'enchase/theme'
 import type { PreviewProps } from './types.ts'
 
-const inputOf = ({ style, brand, shape }: PreviewProps): ThemeInput => ({ style, ...(brand === '' ? {} : { brand }), ...(shape === '' ? {} : { shape }) })
+const inputOf = ({ style, brand, shape }: PreviewProps): ThemeInput => ({ style: storyStyles[style], ...(brand === '' ? {} : { brand }), ...(shape === '' ? {} : { shape }) })
 
 const readTheme = (input: ThemeInput) => {
   try {

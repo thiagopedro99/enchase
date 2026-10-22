@@ -5,9 +5,13 @@ import { page } from 'vitest/browser'
 import { Button } from '@components/common/Button/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
+import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
+import { Textarea } from '@components/common/Textarea/index.tsx'
 import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
+import { builtInStyleEntries } from '@tests/shared/fixtures/styles.ts'
 import { renderInBrowser } from './harness.tsx'
+import { part } from './hookProbes.ts'
 import { frames } from './settle.ts'
 import { disableTouch, enableTouch, touchCapable } from './touchInput.ts'
 
@@ -70,6 +74,32 @@ describe('touch pointer in a real browser', () => {
       const ungated = rules.filter((rule) => rule instanceof CSSStyleRule && rule.selectorText.includes(':hover') && rule.selectorText.includes('logout'))
 
       expect(ungated).toHaveLength(0)
+    } finally {
+      await disableTouch()
+    }
+  })
+})
+
+describe.each(builtInStyleEntries)('touch pointer with the %s style in a real browser', (_, themeStyle) => {
+  touchCapable('touchEmulation')('raises the text of the fields to 16px on a coarse pointer', async () => {
+    await enableTouch()
+
+    try {
+      renderInBrowser(
+        <>
+          <Input label="Name" />
+          <NumberInput label="Amount" />
+          <Select label="Country" options={[{ value: 'br', label: 'Brasil' }]} />
+          <Textarea label="Notes" />
+        </>,
+        'never',
+        'light',
+        { style: themeStyle }
+      )
+
+      const fields = ['input-field', 'number-input-field', 'select-field', 'textarea-field'].map((name) => part(name))
+
+      await expect.poll(() => fields.map((field) => getComputedStyle(field).fontSize)).toEqual(['16px', '16px', '16px', '16px'])
     } finally {
       await disableTouch()
     }

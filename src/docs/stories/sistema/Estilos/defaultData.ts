@@ -1,9 +1,11 @@
-import type { StyleName } from 'enchase/theme'
+import { storyStyleNames } from '../../../shared/styles.ts'
+
+import type { StoryStyleName } from '../../../shared/styles.ts'
 import type { PlacementChoice, ShapeChoice } from './types.ts'
 
-export const defaultStyle: StyleName = 'enchase'
+export const defaultStyle: StoryStyleName = 'enchase'
 
-export const styles: StyleName[] = ['enchase', 'shadcn']
+export const styles = storyStyleNames
 
 export const shapes: ShapeChoice[] = ['', 'pill', 'soft', 'square']
 

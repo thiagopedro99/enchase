@@ -38,9 +38,13 @@ export type ColorTokens = RoleColors<ColorRole> & {
 
 export type ShadowTokens = Record<'none' | 'sm' | 'md' | 'lg' | 'xl', string>
 
-export type HookValues = Record<string, string>
+export type HookName = `--enchase-${string}`
 
-export type LabelPlacement = 'floating' | 'stacked'
+export type HookValues = Record<HookName, string>
+
+export const labelPlacements = ['floating', 'stacked'] as const
+
+export type LabelPlacement = (typeof labelPlacements)[number]
 
 export type ThemeDefaults = { labelPlacement: LabelPlacement }
 

@@ -1,7 +1,9 @@
-import type { HookValues } from '../tokens/types.ts'
-import type { StyleDefinition, StyleModeDefinition } from './types.ts'
+import { defineStyle } from '../theme/style.ts'
 
-const light: StyleModeDefinition = {
+import type { ThemeStyleMode } from '../theme/style.ts'
+import type { HookValues } from '../tokens/types.ts'
+
+const light: ThemeStyleMode = {
   colors: {
     primary: '#171717',
     onPrimary: '#FAFAFA',
@@ -49,7 +51,7 @@ const light: StyleModeDefinition = {
   }
 }
 
-const dark: StyleModeDefinition = {
+const dark: ThemeStyleMode = {
   colors: {
     primary: '#E5E5E5',
     onPrimary: '#171717',
@@ -350,7 +352,7 @@ const colorHooks: HookValues = {
   '--enchase-skeleton-background': 'var(--enchase-color-surface-container)'
 }
 
-export const shadcnStyle: StyleDefinition = {
+export const shadcn = defineStyle({
   base: {
     control: { height: { sm: '2rem', md: '2.25rem', lg: '2.5rem' } },
     focus: { offsetSelector: '2px' },
@@ -358,11 +360,11 @@ export const shadcnStyle: StyleDefinition = {
     border: { widthStrong: '1px' },
     halo: { size: '0px', sizeSwitch: '0px' }
   },
-  radius: { none: '0', xs: '0.25rem', sm: '0.375rem', md: '0.5rem', lg: '0.625rem', xl: '0.875rem', '2xl': '1rem', control: '0.5rem', button: '0.5rem', full: '9999px' },
+  radius: { xs: '0.25rem', sm: '0.375rem', md: '0.5rem', lg: '0.625rem', xl: '0.875rem', '2xl': '1rem', control: '0.5rem', button: '0.5rem', full: '9999px' },
   hooks: { ...fields, ...controls, ...containers, ...navigation },
   colorHooks,
   brand: ['primary', 'onPrimary', 'primaryHover', 'inversePrimary'],
   light,
   dark,
   defaults: { labelPlacement: 'stacked' }
-}
+})

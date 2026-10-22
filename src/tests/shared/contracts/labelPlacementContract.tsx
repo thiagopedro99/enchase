@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
+import { shadcn } from '@styles/presets/shadcn.ts'
 
 import type { LabelPlacementContractAdapter } from './types.ts'
 
@@ -49,7 +50,7 @@ export const describeLabelPlacementContract = ({ name, slot, control, placeholde
 
     it('takes the stacked label from the shadcn style and lets the prop win', () => {
       const { unmount } = render(
-        <ColorModeProvider storage={null} theme={{ style: 'shadcn' }}>
+        <ColorModeProvider storage={null} theme={{ style: shadcn }}>
           {ui()}
         </ColorModeProvider>
       )
@@ -57,7 +58,7 @@ export const describeLabelPlacementContract = ({ name, slot, control, placeholde
       expect(wrapper()).toHaveAttribute('data-label-placement', 'stacked')
       unmount()
       render(
-        <ColorModeProvider storage={null} theme={{ style: 'shadcn' }}>
+        <ColorModeProvider storage={null} theme={{ style: shadcn }}>
           {ui('floating')}
         </ColorModeProvider>
       )

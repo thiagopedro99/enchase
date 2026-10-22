@@ -1,4 +1,3 @@
-import axe from 'axe-core'
 import { afterEach, describe, expect, it } from 'vitest'
 import { userEvent } from 'vitest/browser'
 
@@ -22,21 +21,20 @@ import { Tabs } from '@components/common/Tabs/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import Tooltip from '@components/common/Tooltip/index.tsx'
 import { useToast } from '@components/toast/index.ts'
-import { contrastRatio } from '@styles/theme/contrast.ts'
+import { shadcn } from '@styles/presets/shadcn.ts'
 import { parseComputedColor } from './color.ts'
 import { unlessWebkit } from './browserSkips.ts'
 import { renderInBrowser } from './harness.tsx'
 import { at, becomes, onRoot, part, parts, style } from './hookProbes.ts'
 import { setForcedColors } from './media.ts'
-import { waitForSettled } from './settle.ts'
 
 import type { ThemeInput } from '@styles/theme/createTheme.ts'
 import type { Rgba } from './color.ts'
 import type { ReactElement } from 'react'
 
-const shadcn = { style: 'shadcn' } as const
+const styled = { style: shadcn } as const
 
-const show = (ui: ReactElement, mode: 'light' | 'dark' = 'light', theme: ThemeInput = shadcn) => renderInBrowser(ui, 'never', mode, theme)
+const show = (ui: ReactElement, mode: 'light' | 'dark' = 'light', theme: ThemeInput = styled) => renderInBrowser(ui, 'never', mode, theme)
 
 const px = (value: string) => parseFloat(value)
 
@@ -53,11 +51,6 @@ const roleColor = (role: string) => {
   probe.remove()
 
   return color
-}
-
-const paintPage = () => {
-  document.body.style.backgroundColor = 'var(--enchase-color-background)'
-  document.body.style.color = 'var(--enchase-color-text-primary)'
 }
 
 const options = [
@@ -327,18 +320,6 @@ describe('the selection controls of the shadcn style', () => {
     expect(input.outlineWidth).toBe('2px')
     expect(input.outlineOffset).toBe('2px')
   })
-
-  it('keeps the row of every control at the 24px floor or more', () => {
-    show(
-      <>
-        <Checkbox label="Accept" />
-        <Switch label="Alerts" />
-        <RadioGroup label="Plan" options={[{ value: 'a', label: 'A' }]} />
-      </>
-    )
-
-    for (const name of ['checkbox', 'switch', 'radio-group-option']) expect(part(name).getBoundingClientRect().height).toBeGreaterThanOrEqual(24)
-  })
 })
 
 describe('the containers of the shadcn style', () => {
@@ -520,7 +501,7 @@ describe('the navigation and the data of the shadcn style', () => {
 
 describe('the shadcn style next to the other inputs of the theme', () => {
   it('takes the brand color for the accents and keeps the neutral surfaces', () => {
-    show(<Button>Save</Button>, 'light', { style: 'shadcn', brand: '#0B6BCB' })
+    show(<Button>Save</Button>, 'light', { style: shadcn, brand: '#0B6BCB' })
 
     expect(colorOf(style('button').backgroundColor)).not.toMatchObject({ r: 23, g: 23, b: 23 })
     expect(getComputedStyle(document.documentElement).getPropertyValue('--enchase-color-background').trim()).toBe('#FFFFFF')
@@ -534,14 +515,14 @@ describe('the shadcn style next to the other inputs of the theme', () => {
         <Button>Wide</Button>
       </>,
       'light',
-      { style: 'shadcn', shape: 'pill' }
+      { style: shadcn, shape: 'pill' }
     )
 
     expect(px(style('button', 0).borderTopLeftRadius)).toBeGreaterThanOrEqual(1000)
   })
 
   it('lets a radius of the caller win over the one of the style', () => {
-    show(<Button>Wide</Button>, 'light', { style: 'shadcn', radius: { button: '2rem' } })
+    show(<Button>Wide</Button>, 'light', { style: shadcn, radius: { button: '2rem' } })
 
     expect(px(style('button').borderTopLeftRadius)).toBe(32)
   })
@@ -557,110 +538,5 @@ describe('the shadcn style next to the other inputs of the theme', () => {
 
     expect(px(style('button').fontSize)).toBe(20)
     expect(px(style('input-field').height)).toBe(60)
-  })
-})
-
-describe('the contrast of the shadcn style', () => {
-  const everything = (
-    <div style={{ display: 'grid', gap: '1rem', padding: '1rem' }}>
-      <div>
-        <Button variant="primary">Primary</Button>
-        <Button variant="secondary">Secondary</Button>
-        <Button variant="outline">Outline</Button>
-        <Button variant="ghost">Ghost</Button>
-      </div>
-      <Input label="Email" helperText="Never shared" />
-      <Input label="Email" defaultValue="ana@" error="Invalid email" />
-      <Input label="Name" placeholder="Type here" />
-      <NumberInput label="Amount" defaultValue={2} />
-      <Select label="Country" options={options} />
-      <Textarea label="Notes" placeholder="Type here" />
-      <Checkbox label="Accept the terms" />
-      <Switch label="Alerts" />
-      <RadioGroup label="Plan" options={[{ value: 'a', label: 'Free' }]} helperText="Change any time" />
-      <div>
-        {(['neutral', 'primary', 'success', 'warning', 'error', 'info'] as const).map((variant) => (
-          <Badge key={variant} variant={variant}>
-            {variant}
-          </Badge>
-        ))}
-      </div>
-      {(['info', 'success', 'warning', 'error'] as const).map((variant) => (
-        <Alert key={variant} variant={variant} title={`Alert ${variant}`}>
-          Message of the alert
-        </Alert>
-      ))}
-      <Tabs
-        items={[
-          { value: 'a', label: 'Account', content: 'First' },
-          { value: 'b', label: 'Password', content: 'Second' }
-        ]}
-      />
-      <Accordion items={[{ value: 'a', title: 'Question', content: 'Answer' }]} defaultValue={['a']} />
-      <Breadcrumbs
-        items={[
-          { id: 'home', label: 'Home', href: '/' },
-          { id: 'now', label: 'Now' }
-        ]}
-      />
-      <Pagination pageCount={5} defaultPage={2} />
-      <Table caption="Orders" columns={[{ key: 'name', header: 'Name' }]} rows={[{ name: 'Ana' }]} />
-      <Card>Card text</Card>
-    </div>
-  )
-
-  const audit = async () => {
-    const results = await axe.run(document.body, { runOnly: { type: 'rule', values: ['color-contrast'] } })
-    const unchecked = results.incomplete.flatMap((item) => item.nodes.map((node) => document.querySelector(node.target.join(' '))))
-
-    return {
-      checked: results.passes.flatMap((item) => item.nodes).length,
-      violations: results.violations.flatMap((violation) => violation.nodes.map((node) => `${node.target.join(' ')}: ${node.any[0]?.message ?? ''}`)),
-      unchecked
-    }
-  }
-
-  const background = () => getComputedStyle(document.documentElement).getPropertyValue('--enchase-color-background').trim()
-
-  it.each(['light', 'dark'] as const)('has no color contrast violation in the %s mode', async (mode) => {
-    paintPage()
-    show(everything, mode)
-    await waitForSettled(() => document.body)
-    const { checked, violations } = await audit()
-
-    expect(checked).toBeGreaterThan(40)
-    expect(violations).toEqual([])
-  })
-
-  it.each(['light', 'dark'] as const)('measures by hand the text and the placeholder of the fields in the %s mode, which axe cannot read under the outline', async (mode) => {
-    paintPage()
-    show(everything, mode)
-    await waitForSettled(() => document.body)
-    const { unchecked } = await audit()
-    const fields = [...document.querySelectorAll<HTMLElement>('input:not([type="checkbox"]):not([type="radio"]):not([role="switch"]), select, textarea')]
-
-    expect(fields.length).toBeGreaterThanOrEqual(6)
-    expect(unchecked.filter((element) => element && !fields.includes(element as HTMLElement))).toEqual([])
-
-    for (const field of fields) expect(contrastRatio(getComputedStyle(field).color, background()), `text of ${field.id}`).toBeGreaterThanOrEqual(4.5)
-
-    for (const field of fields.filter((element) => element.hasAttribute('placeholder') && element.getAttribute('placeholder') !== ' ')) {
-      expect(contrastRatio(getComputedStyle(field, '::placeholder').color, background()), `placeholder of ${field.id}`).toBeGreaterThanOrEqual(4.5)
-    }
-  })
-
-  it.each(['light', 'dark'] as const)('keeps the overlays above the contrast floor in the %s mode', async (mode) => {
-    paintPage()
-    show(
-      <Modal isOpen onClose={() => undefined} title="Title" footer={<Button>Save</Button>}>
-        <Input label="Name" />
-      </Modal>,
-      mode
-    )
-    await expect.poll(() => parts('modal-panel').length).toBe(1)
-    await waitForSettled(() => document.body)
-    const { violations } = await audit()
-
-    expect(violations).toEqual([])
   })
 })

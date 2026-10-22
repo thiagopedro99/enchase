@@ -1,3 +1,5 @@
+import { storyStyleNames, storyStyleTitles } from './styles.ts'
+
 import type { Preview } from '@storybook/react-vite'
 
 export const globalTypes: NonNullable<Preview['globalTypes']> = {
@@ -18,10 +20,7 @@ export const globalTypes: NonNullable<Preview['globalTypes']> = {
     toolbar: {
       title: 'Estilo',
       icon: 'paintbrush',
-      items: [
-        { value: 'enchase', title: 'Enchase' },
-        { value: 'shadcn', title: 'shadcn/ui' }
-      ],
+      items: storyStyleNames.map((value) => ({ value, title: storyStyleTitles[value] })),
       dynamicTitle: true
     }
   },

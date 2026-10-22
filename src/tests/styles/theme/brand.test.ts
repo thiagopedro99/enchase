@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
+import { shadcn } from '@styles/presets/shadcn.ts'
 import { baseTokens, darkTheme, lightTheme } from '@styles/tokens/index.ts'
 import { oklchToHex, rgbToOklch } from '@styles/theme/oklch.ts'
 import { validateTheme } from '@styles/theme/validateTheme.ts'
@@ -31,7 +32,7 @@ describe('createTheme with a brand color', () => {
   })
 
   it('keeps every measured color pair above the contrast floor for any brand color over the shadcn style too', () => {
-    const failing = brands.filter((brand) => validateTheme(createTheme({ style: 'shadcn', brand })).length > 0)
+    const failing = brands.filter((brand) => validateTheme(createTheme({ style: shadcn, brand })).length > 0)
 
     expect(failing).toEqual([])
   })

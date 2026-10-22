@@ -1,3 +1,3 @@
-import type { StyleDefinition } from './types.ts'
+import { defineStyle } from '../theme/style.ts'
 
-export const enchaseStyle: StyleDefinition = {}
+export const enchase = defineStyle({})

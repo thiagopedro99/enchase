@@ -17,4 +17,6 @@ The script packs the library, copies this folder to a temporary directory (nothi
 - the stylesheets `enchase/styles.layer.css` and `enchase/theme.css`, fetched from the built page and checked for the layer order and the theme variables;
 - the layout rendered in the wide default (`data-layout="auto"`) with the generated responsive rules.
 
+The app has two root layouts, one for each route group. `/` is the plain one, with `shape: 'soft'` and no style, and it must not carry any style hook or label placement. `/styled` has its own layout, which imports `shadcn` from `enchase/styles` in a Server Component and hands it to the `ColorModeProvider`: the script checks that the theme variables, the hooks and the stacked label placement of the style come through the server render.
+
 It does not publish anything and removes the temporary directory and the server process at the end.

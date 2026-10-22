@@ -1,6 +1,8 @@
+import type { VariableGroup } from '../tokens/groups.ts'
+
 const prefix = '--enchase'
 
-export type VariableGroup = 'color' | 'shadow' | 'font' | 'font-size' | 'font-weight' | 'line-height' | 'letter-spacing' | 'space' | 'radius' | 'transition' | 'motion' | 'control' | 'focus' | 'border' | 'halo' | 'hit' | 'state' | 'z'
+export type { VariableGroup }
 
 const toKebabCase = (key: string) => key.replace(/([A-Z])/g, '-$1').toLowerCase()
 

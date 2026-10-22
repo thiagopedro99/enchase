@@ -52,6 +52,24 @@ const expectations = [
   ['the generated responsive rules', "[data-slot='layout'][data-layout='auto']"]
 ]
 
+const forbidden = [
+  ['the label placement of a style on the page without one', 'data-label-placement'],
+  ['a hook of a style on the page without one', '--enchase-input-height:']
+]
+
+const styledExpectations = [
+  ['the page of the layout that takes a style', 'Styled server page'],
+  ['the label above the field, which comes from the defaults of the style', 'data-label-placement="stacked"'],
+  ['the control height of the style in the theme variables', '--enchase-control-height-md: 2.25rem'],
+  ['the target size of the style in the theme variables', '--enchase-hit-size: 2rem'],
+  ['the strong border width of the style in the theme variables', '--enchase-border-width-strong: 1px'],
+  ['the corners of the style in the theme variables', '--enchase-radius-button: 0.5rem'],
+  ['the neutral surface of the style in the theme variables', '--enchase-color-surface-container: #F5F5F5'],
+  ['a hook of the style on the root', '--enchase-button-font-weight: var(--enchase-font-weight-medium)'],
+  ['a hook of the style that cites a color, inside the mode blocks', '--enchase-button-border-color-outline: var(--enchase-color-border)'],
+  ['the theme variables inside the css layer', '@layer enchase-theme']
+]
+
 const cssExpectations = [
   ['the layer order from the layered stylesheet', '@layer enchase-theme, enchase-base, enchase'],
   ['the components inside the enchase layer', '@layer enchase'],
@@ -94,11 +112,18 @@ try {
   const css = (await Promise.all(stylesheets.map(async (href) => (await fetch(new URL(href, `http://127.0.0.1:${port}/`))).text()))).join('\n')
 
   for (const [label, needle] of cssExpectations) if (!css.includes(needle)) missing.push([label])
+  for (const [label, needle] of forbidden) if (html.includes(needle)) missing.push([`no ${label}`])
+
+  const styled = await fetch(`http://127.0.0.1:${port}/styled`)
+  const styledHtml = await styled.text()
+
+  for (const [label, needle] of styledExpectations) if (!styledHtml.includes(needle)) missing.push([label])
 
   if (response.status !== 200) throw new Error(`unexpected status ${response.status}`)
+  if (styled.status !== 200) throw new Error(`unexpected status ${styled.status} on /styled`)
   if (missing.length > 0) throw new Error(`the server html is missing:\n${missing.map(([label]) => `  - ${label}`).join('\n')}`)
 
-  console.log(`next consumer rendered ${expectations.length + cssExpectations.length} server checks on port ${port}`)
+  console.log(`next consumer rendered ${expectations.length + cssExpectations.length + forbidden.length + styledExpectations.length} server checks on port ${port}`)
 } finally {
   if (server && server.exitCode === null) {
     const exited = new Promise((resolveExit) => server.once('exit', resolveExit))
