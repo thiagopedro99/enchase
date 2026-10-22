@@ -24,9 +24,9 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 
 **Não garantido:**
 - Conformidade total com WCAG: a lib verifica o que os tokens e os testes cobrem, e não substitui auditoria nem teste com leitores de tela (nada foi testado com NVDA, JAWS ou VoiceOver).
-- Firefox e WebKit rodam a mesma suíte de navegador do Chromium, um arquivo por vez. No Linux ficam pulados 13 testes no Firefox e 16 no WebKit, porque dependem de chamadas só do Chromium (emulação de toque, mouse cru, métricas de layout e transparência reduzida) ou de uma emulação que o navegador não tem (cores forçadas no WebKit, contraste aumentado no Firefox); a lista central com o motivo está em `src/tests-browser/browserSkips.ts`, e os testes que dependem de um recurso que o navegador não tem são pulados só onde ele falta. Os testes de toque rodam no WebKit com o perfil de um iPhone (toque nativo), o mais perto do Safari que dá para automatizar. Os três navegadores passam no CI em Linux (Ubuntu 24.04) e bloqueiam o workflow. A devolução do foco ao gatilho e a armadilha de Tab funcionam também no Safari, onde clicar num botão não o focaliza: a biblioteca guarda o gatilho a partir do último ponteiro ou tecla. Revisão manual em Safari de verdade e com leitores de tela continua necessária.
+- Firefox e WebKit rodam a mesma suíte de navegador do Chromium, um arquivo por vez. No Linux ficam pulados 19 testes no Firefox e 19 no WebKit, porque dependem de chamadas só do Chromium (emulação de toque, mouse cru, métricas de layout e transparência reduzida) ou de uma emulação que o navegador não tem (cores forçadas no WebKit, contraste aumentado no Firefox); a lista central com o motivo está em `src/tests-browser/browserSkips.ts`, e os testes que dependem de um recurso que o navegador não tem são pulados só onde ele falta. Os testes de toque rodam no WebKit com o perfil de um iPhone (toque nativo), o mais perto do Safari que dá para automatizar. Os três navegadores passam no CI em Linux (Ubuntu 24.04) e bloqueiam o workflow. A devolução do foco ao gatilho e a armadilha de Tab funcionam também no Safari, onde clicar num botão não o focaliza: a biblioteca guarda o gatilho a partir do último ponteiro ou tecla. Revisão manual em Safari de verdade e com leitores de tela continua necessária.
 - Contraste de temas personalizados em `hsl()`, `oklch()` ou `oklab()`: esses formatos não são medidos, e o aviso diz quantos pares ficaram sem checar.
-- Gestos com velocidade (arrastar para dispensar, inércia) e presets de design além da forma dos cantos (densidade, tipografia): ainda não existem.
+- Gestos com velocidade (arrastar para dispensar, inércia), os estilos Material 3 e Ant Design e uma opção de densidade à parte dos estilos: ainda não existem.
 
 ## Instalação
 
@@ -617,7 +617,7 @@ npm run build:lib && npm run pack:check && npm run test:consumer
 
 ## Estado do projeto
 
-Versão `0.x`, em desenvolvimento ativo. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band) e presets de design além da forma dos cantos (densidade, tipografia).
+Versão `0.x`, em desenvolvimento ativo. Há dois estilos visuais, `enchase` e `shadcn`. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band), os estilos Material 3 e Ant Design, e uma opção de densidade à parte dos estilos.
 
 ## Contribuindo
 
