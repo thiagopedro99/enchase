@@ -55,10 +55,15 @@
       "import": "./dist-lib/icons.js",
       "default": "./dist-lib/icons.js"
     },
-    "./styles": {
-      "types": "./dist-lib/types/lib/styles.d.ts",
-      "import": "./dist-lib/styles.js",
-      "default": "./dist-lib/styles.js"
+    "./styles/enchase": {
+      "types": "./dist-lib/types/lib/styles/enchase.d.ts",
+      "import": "./dist-lib/styles/enchase.js",
+      "default": "./dist-lib/styles/enchase.js"
+    },
+    "./styles/shadcn": {
+      "types": "./dist-lib/types/lib/styles/shadcn.d.ts",
+      "import": "./dist-lib/styles/shadcn.js",
+      "default": "./dist-lib/styles/shadcn.js"
     },
     "./styles.css": "./dist-lib/styles.css",
     "./styles.layer.css": "./dist-lib/styles.layer.css",

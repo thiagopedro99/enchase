@@ -107,7 +107,7 @@ const resolveStyle = (style: unknown): ThemeStyle => {
   if (style === undefined || style === null) return noStyle
 
   if (typeof style === 'string') {
-    throw new Error(`Unknown style ${JSON.stringify(style)}: a style is an object, not a name. Import it, as in import { shadcn } from 'enchase/styles', and pass it to createTheme({ style: shadcn })`)
+    throw new Error(`Unknown style ${JSON.stringify(style)}: a style is an object, not a name. Import it, as in import { shadcn } from 'enchase/styles/shadcn', and pass it to createTheme({ style: shadcn })`)
   }
 
   return assertStyle(style)

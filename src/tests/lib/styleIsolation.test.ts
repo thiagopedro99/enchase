@@ -23,18 +23,22 @@ const reachesPresets = (specifier: string) => /(?:^|\/)presets(?:\/|$)/.test(spe
 
 const presetFiles = sourcesIn('src/styles/presets').map((file) => path.posix.basename(file, '.ts'))
 
-const mayImportPresets = (file: string) => file.startsWith('src/styles/presets/') || file === 'lib/styles.ts' || file.startsWith('src/tests/') || file.startsWith('src/tests-browser/')
+const styleEntries = sourcesIn('lib/styles')
 
-describe('the styles are an entry of their own', () => {
-  it('is imported only by the styles entry and by the tests', () => {
+const packageExports = JSON.parse(read('package.json')).exports as Record<string, unknown>
+
+const mayImportPresets = (file: string) => file.startsWith('src/styles/presets/') || file.startsWith('lib/styles/') || file.startsWith('src/tests/') || file.startsWith('src/tests-browser/')
+
+describe('each style is an entry of its own', () => {
+  it('is imported only by the entry of the style and by the tests', () => {
     const importers = [...sourcesIn('src'), ...sourcesIn('lib'), ...sourcesIn('demo')].filter((file) => specifiersOf(file).some(reachesPresets))
 
     expect(importers.filter((file) => !mayImportPresets(file))).toEqual([])
-    expect(importers).toContain('lib/styles.ts')
+    expect(importers).toEqual(expect.arrayContaining(styleEntries))
   })
 
   it('keeps every other public entry free of the styles', () => {
-    for (const entry of sourcesIn('lib').filter((file) => file !== 'lib/styles.ts')) {
+    for (const entry of sourcesIn('lib').filter((file) => !file.startsWith('lib/styles/'))) {
       expect(specifiersOf(entry).filter(reachesPresets), entry).toEqual([])
     }
   })
@@ -45,12 +49,25 @@ describe('the styles are an entry of their own', () => {
     }
   })
 
-  it('exports one style for each file of the styles folder, under the name of the file, and no more', () => {
-    const exported = [...read('lib/styles.ts').matchAll(/^export \{ (\w+) \} from '\.\.\/src\/styles\/presets\/(\w+)\.ts'$/gm)]
+  it('has one file in lib/styles for each style, named after it, that exports that style and nothing else', () => {
+    expect(styleEntries.map((file) => path.posix.basename(file, '.ts')).sort()).toEqual([...presetFiles].sort())
 
-    expect(exported.map((match) => match[1])).toEqual(exported.map((match) => match[2]))
-    expect(exported.map((match) => match[1]).sort()).toEqual([...presetFiles].sort())
-    expect(read('lib/styles.ts').trim().split('\n')).toHaveLength(presetFiles.length)
+    for (const name of presetFiles) expect(read(`lib/styles/${name}.ts`).trim()).toBe(`export { ${name} } from '../../src/styles/presets/${name}.ts'`)
+  })
+
+  it('exports each style from the package as styles/<name>, built to the same name, and nothing else under styles', () => {
+    expect(Object.keys(packageExports).filter((key) => key.startsWith('./styles/')).sort()).toEqual(presetFiles.map((name) => `./styles/${name}`).sort())
+
+    for (const name of presetFiles) {
+      expect(packageExports[`./styles/${name}`]).toEqual({ types: `./dist-lib/types/lib/styles/${name}.d.ts`, import: `./dist-lib/styles/${name}.js`, default: `./dist-lib/styles/${name}.js` })
+    }
+  })
+
+  it('does not export enchase/styles alone, so forgetting the .css of enchase/styles.css fails instead of importing code that does nothing', () => {
+    expect(packageExports).not.toHaveProperty('./styles')
+    expect(packageExports).not.toHaveProperty('./styles/*')
+    expect(packageExports).toHaveProperty('./styles.css')
+    expect(packageExports).toHaveProperty('./styles.layer.css')
   })
 
   it('runs the contract tests on every style that is exported', () => {

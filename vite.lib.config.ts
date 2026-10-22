@@ -37,7 +37,8 @@ export default defineConfig({
         theme: resolve(root, 'lib/theme.ts'),
         locales: resolve(root, 'lib/locales.ts'),
         icons: resolve(root, 'lib/icons.ts'),
-        styles: resolve(root, 'lib/styles.ts')
+        'styles/enchase': resolve(root, 'lib/styles/enchase.ts'),
+        'styles/shadcn': resolve(root, 'lib/styles/shadcn.ts')
       },
       formats: ['es'],
       cssFileName: 'styles'

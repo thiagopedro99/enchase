@@ -70,7 +70,7 @@ describe('createTheme with a style', () => {
 
   it('asks for the style itself when it is given a name, and says where to import it from', () => {
     expect(() => createTheme({ style: 'shadcn' } as unknown as ThemeInput)).toThrow('Unknown style "shadcn"')
-    expect(() => createTheme({ style: 'shadcn' } as unknown as ThemeInput)).toThrow("import { shadcn } from 'enchase/styles'")
+    expect(() => createTheme({ style: 'shadcn' } as unknown as ThemeInput)).toThrow("import { shadcn } from 'enchase/styles/shadcn'")
   })
 
   it('rejects what is not an object, and a section that does not exist', () => {

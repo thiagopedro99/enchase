@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -44,30 +44,47 @@ const reach = (entry) => {
   return { files: [...files].map((file) => relative(root, file).split(sep).join('/')), packages: [...packages] }
 }
 
-const stylesKey = './styles'
+const stylePrefix = './styles/'
 const jsEntries = Object.entries(exports).filter(([, value]) => typeof value === 'object' && typeof value.import === 'string' && value.import.endsWith('.js'))
 const leaks = []
 
 for (const [key, value] of jsEntries) {
   const { files, packages } = reach(join(root, value.import))
 
-  if (key !== stylesKey) {
+  if (!key.startsWith(stylePrefix)) {
     const styles = files.filter((file) => file.startsWith('dist-lib/styles/presets/'))
 
     if (styles.length > 0) leaks.push(`${key} reaches the style definitions (${styles.join(', ')}), so every user of it would pay for them`)
-  } else {
-    const outside = files.filter((file) => file !== value.import.replace(/^\.\//, '') && !file.startsWith('dist-lib/styles/'))
 
-    if (outside.length > 0) leaks.push(`${key} reaches code that is not part of the styles (${outside.join(', ')})`)
-    if (packages.length > 0) leaks.push(`${key} imports packages (${packages.join(', ')}), and a style is only data`)
+    continue
   }
+
+  const own = `dist-lib/styles/presets/${key.slice(stylePrefix.length)}.js`
+  const others = files.filter((file) => file.startsWith('dist-lib/styles/presets/') && file !== own)
+  const outside = files.filter((file) => file !== value.import.replace(/^\.\//, '') && !file.startsWith('dist-lib/styles/'))
+
+  if (!files.includes(own)) leaks.push(`${key} does not reach its own style (${own})`)
+  if (others.length > 0) leaks.push(`${key} reaches the definition of another style (${others.join(', ')}), so every user of it would pay for both`)
+  if (outside.length > 0) leaks.push(`${key} reaches code that is not part of the styles (${outside.join(', ')})`)
+  if (packages.length > 0) leaks.push(`${key} imports packages (${packages.join(', ')}), and a style is only data`)
 }
 
-if (!jsEntries.some(([key]) => key === stylesKey)) leaks.push(`the package does not export ${stylesKey}`)
+const presetsDir = join(root, 'dist-lib', 'styles', 'presets')
+const builtStyles = existsSync(presetsDir) ? readdirSync(presetsDir).filter((file) => file.endsWith('.js')).map((file) => file.slice(0, -'.js'.length)) : []
+
+for (const name of builtStyles) {
+  if (!(`${stylePrefix}${name}` in exports)) leaks.push(`the style ${name} is built but the package does not export ${stylePrefix}${name}`)
+}
+
+if (builtStyles.length === 0) leaks.push('the package builds no style')
+
+for (const key of ['./styles', './styles/*']) {
+  if (key in exports) leaks.push(`the package exports ${key}: leave it out, so that forgetting the .css of ./styles.css fails instead of resolving to code that does nothing`)
+}
 
 if (leaks.length > 0) {
   console.error(`the entries of the package are not isolated:\n${leaks.map((leak) => `  - ${leak}`).join('\n')}`)
   process.exit(1)
 }
 
-console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", and only ${stylesKey} reaches the style definitions (${jsEntries.length} entries walked)`)
+console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", and each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches (${jsEntries.length} entries walked)`)

@@ -24,7 +24,7 @@
       "enchase/theme": ["./lib/theme.ts"],
       "enchase/locales": ["./lib/locales.ts"],
       "enchase/icons": ["./lib/icons.ts"],
-      "enchase/styles": ["./lib/styles.ts"],
+      "enchase/styles/*": ["./lib/styles/*"],
       "@components/*": ["./src/components/*"],
       "@assets/*": ["./src/assets/*"],
       "@styles/*": ["./src/styles/*"],

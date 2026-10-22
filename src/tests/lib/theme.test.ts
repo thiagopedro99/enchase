@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
-import { enchase, shadcn } from 'enchase/styles'
+import { enchase } from 'enchase/styles/enchase'
+import { shadcn } from 'enchase/styles/shadcn'
 import { createTheme, defineStyle, formatContrastIssues, formatMotionIssues, spring, validateMotion, validateTheme } from 'enchase/theme'
 
 describe('the public theme entry protects the contrast contract', () => {

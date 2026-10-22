@@ -1,6 +1,6 @@
 import { ColorModeProvider, GlobalStyles, ToastProvider, UIProvider } from 'enchase'
 import { ptBR } from 'enchase/locales'
-import { enchase } from 'enchase/styles'
+import { enchase } from 'enchase/styles/enchase'
 
 import { storyStyles } from '../styles.ts'
 

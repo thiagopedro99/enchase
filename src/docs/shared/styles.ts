@@ -1,4 +1,5 @@
-import { enchase, shadcn } from 'enchase/styles'
+import { enchase } from 'enchase/styles/enchase'
+import { shadcn } from 'enchase/styles/shadcn'
 
 export const storyStyles = { enchase, shadcn }
 

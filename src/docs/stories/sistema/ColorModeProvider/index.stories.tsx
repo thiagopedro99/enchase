@@ -1,5 +1,5 @@
 import { Button, Card, ColorModeProvider, ThemeToggle, useColorMode } from 'enchase'
-import { shadcn } from 'enchase/styles'
+import { shadcn } from 'enchase/styles/shadcn'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComponentProps } from 'react'
@@ -36,7 +36,7 @@ const meta = {
   argTypes: {
     children: { description: 'A aplicação.', control: false },
     theme: {
-      description: 'Tema personalizado, como { style, brand, fonts, motion, shape, radius, light, dark }, o mesmo que createTheme aceita: style troca o visual do kit inteiro (um estilo importado de enchase/styles, como shadcn), a cor da marca gera a paleta, shape escolhe a forma dos cantos (pill, soft ou square) e radius ajusta um raio, e light e dark ajustam cores por modo. O que você passa vence o style. Todo valor é validado, e em desenvolvimento o provedor avisa no console sobre contraste e duração. Sem ele vale o tema padrão.',
+      description: 'Tema personalizado, como { style, brand, fonts, motion, shape, radius, light, dark }, o mesmo que createTheme aceita: style troca o visual do kit inteiro (um estilo importado de `enchase/styles/<nome>`, como o shadcn), a cor da marca gera a paleta, shape escolhe a forma dos cantos (pill, soft ou square) e radius ajusta um raio, e light e dark ajustam cores por modo. O que você passa vence o style. Todo valor é validado, e em desenvolvimento o provedor avisa no console sobre contraste e duração. Sem ele vale o tema padrão.',
       control: 'object'
     },
     mode: {

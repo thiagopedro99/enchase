@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest'
 import * as main from 'enchase'
 import * as icons from 'enchase/icons'
 import * as locales from 'enchase/locales'
-import * as styles from 'enchase/styles'
+import * as enchaseStyle from 'enchase/styles/enchase'
+import * as shadcnStyle from 'enchase/styles/shadcn'
 import * as theme from 'enchase/theme'
 
 describe('public entries', () => {
@@ -31,8 +32,9 @@ describe('public entries', () => {
     }
   })
 
-  it('exports the styles from enchase/styles and nothing else', () => {
-    expect(Object.keys(styles).sort()).toEqual(['enchase', 'shadcn'])
+  it('exports each style from an entry of its own, with that style and nothing else', () => {
+    expect(Object.keys(enchaseStyle)).toEqual(['enchase'])
+    expect(Object.keys(shadcnStyle)).toEqual(['shadcn'])
   })
 
   it('keeps the data of the styles out of every other entry', () => {

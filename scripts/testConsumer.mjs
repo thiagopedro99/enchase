@@ -13,7 +13,8 @@ const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Grid, Layou
 import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
 import { ChevronDownIcon, CloseIcon } from 'enchase/icons'
 import type { IconProps } from 'enchase/icons'
-import { enchase as enchaseStyle, shadcn } from 'enchase/styles'
+import { enchase as enchaseStyle } from 'enchase/styles/enchase'
+import { shadcn } from 'enchase/styles/shadcn'
 import { createTheme, defineStyle, validateTheme } from 'enchase/theme'
 import type { RadiusOverrides, ShapePreset, ThemeInput, ThemeStyle, ThemeStyleMode } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
@@ -154,8 +155,23 @@ try {
   run(npm, ['install', '--no-audit', '--no-fund', tarball, 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', 'typescript@5.8'], consumer)
   run(process.execPath, [join(consumer, 'node_modules', 'typescript', 'bin', 'tsc'), '-p', 'tsconfig.json'], consumer)
 
+  const resolves = (specifier) => {
+    try {
+      execFileSync(process.execPath, ['--input-type=module', '-e', `import.meta.resolve(${JSON.stringify(specifier)})`], { cwd: consumer, stdio: 'pipe' })
+
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/styles': false, 'enchase/styles/theme/style': false }
+  const wrong = Object.entries(expected).filter(([specifier, should]) => resolves(specifier) !== should)
+
+  if (wrong.length > 0) throw new Error(`the installed package resolves the wrong entries:\n${wrong.map(([specifier, should]) => `  - ${specifier} should ${should ? 'resolve' : 'fail, so forgetting the .css of enchase/styles.css is an error and not an import that does nothing'}`).join('\n')}`)
+
   const installed = JSON.parse(readFileSync(join(consumer, 'node_modules', 'enchase', 'package.json'), 'utf8'))
-  console.log(`consumer compiled against enchase@${installed.version} with skipLibCheck: false`)
+  console.log(`consumer compiled against enchase@${installed.version} with skipLibCheck: false, and enchase/styles alone does not resolve`)
 } finally {
   rmSync(workdir, { recursive: true, force: true })
 }

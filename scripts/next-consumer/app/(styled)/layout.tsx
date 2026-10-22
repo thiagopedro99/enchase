@@ -1,5 +1,5 @@
 import { ColorModeProvider, ColorModeScript, GlobalStyles, UIProvider } from 'enchase'
-import { shadcn } from 'enchase/styles'
+import { shadcn } from 'enchase/styles/shadcn'
 import 'enchase/styles.layer.css'
 import 'enchase/theme.css'
 
