@@ -89,7 +89,7 @@ A fonte padrão é Figtree: carregue-a no app (por exemplo com `@fontsource-vari
 | --- | --- |
 | `enchase` | Componentes, provedores, hooks e tipos. Marcada como `'use client'`. |
 | `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring` e os tokens. Sem React. |
-| `enchase/styles` | Os estilos visuais prontos, um por exportação: `shadcn` e `enchase`. Só dados, sem React, e só entram no bundle de quem os importa. |
+| `enchase/styles/<nome>` | Um estilo visual por entrada: `enchase/styles/shadcn` e `enchase/styles/enchase`. Só dados, sem React, e só entra no bundle de quem a importa. |
 | `enchase/locales` | `en` e `ptBR` (`{ locale, dir, messages }`). Só dados. |
 | `enchase/icons` | Os 19 ícones que os componentes usam por dentro, um componente por ícone. Funciona em Server Components. |
 | `enchase/styles.css` | CSS dos componentes. |
@@ -373,7 +373,7 @@ O `createTheme` troca os raios com a seção `shape` (um preset) e com `radius` 
 `style` troca o visual do kit inteiro de uma vez: a paleta, os raios, as alturas, os pesos, as bordas, as sombras e o lugar do rótulo dos campos. Sem `style`, o visual é o de sempre (o estilo `enchase`, que não muda nada). O `shadcn` aproxima o kit do shadcn/ui: paleta neutra, bordas no lugar de sombras, botões e campos de 36px com texto de 14px, cantos de `0.5rem` e o rótulo acima do campo.
 
 ```tsx
-import { shadcn } from 'enchase/styles'
+import { shadcn } from 'enchase/styles/shadcn'
 
 <ColorModeProvider theme={{ style: shadcn }}>
   <App />
@@ -384,8 +384,8 @@ import { shadcn } from 'enchase/styles'
 </ColorModeProvider>
 ```
 
-- Os estilos moram em `enchase/styles`, uma exportação por estilo (`shadcn` e `enchase`), e só entram no bundle de quem os importa: sem `style`, o `ColorModeProvider` e o `createTheme` não carregam nenhum dado de estilo, e quem importa o `shadcn` paga por ele (cerca de 2,5 kB em gzip) e por nenhum outro. Um estilo é só dado, então vale em Server Components: importe-o no layout de servidor e passe-o à prop `theme` do `ColorModeProvider`.
-- O `style` é um objeto, não um nome: `style: 'shadcn'` lança erro dizendo para importar o estilo de `enchase/styles`.
+- Cada estilo tem a própria entrada, `enchase/styles/<nome>` (`enchase/styles/shadcn` e `enchase/styles/enchase`), e só entra no bundle de quem a importa: sem `style`, o `ColorModeProvider` e o `createTheme` não carregam nenhum dado de estilo, e quem importa o `shadcn` paga por ele (cerca de 2,5 kB em gzip) e por nenhum outro, nem mesmo em um bundler que não remove código morto. Também dá para carregar um estilo sob demanda, com `import('enchase/styles/shadcn')`. Não existe `enchase/styles` sozinho, de propósito: o CSS é `enchase/styles.css`, e esquecer o `.css` dá erro em vez de um import que não faz nada. Um estilo é só dado, então vale em Server Components: importe-o no layout de servidor e passe-o à prop `theme` do `ColorModeProvider`.
+- O `style` é um objeto, não um nome: `style: 'shadcn'` lança erro dizendo para importar o estilo de `enchase/styles/shadcn`.
 - O estilo é "inspirado em", não uma cópia: o contrato de acessibilidade da biblioteca vale mais que a fidelidade. Onde o original fica abaixo dele, o estilo ajusta. A borda dos campos e a trilha da chave desligada são `#808080` (3:1 contra o fundo; a do original tem 1,26:1). O anel de foco é sólido, de 2px, na cor `primary` e com 2px de folga (o original usa um anel translúcido, que não chega a 3:1). O texto secundário sobre as superfícies cinza e o vermelho de erro usado como texto têm 4,5:1. Em cores forçadas (o modo de alto contraste do Windows), a borda do campo em foco engrossa para 2px, porque a sombra do anel some. O desenho do checkbox e do radio é de 16px, mas a área de toque continua com 24px ou mais.
 - Além das cores e dos raios, o estilo muda: botões de 32, 36 e 40px, campos de 36px e texto de 14px nos controles, uma sombra pequena nos botões e nos campos, alertas neutros com o ícone e o título coloridos, badges tingidos (sólidos só o `primary` e o de erro), abas só com o sublinhado, acordeão sem contorno e com linhas entre os itens, diálogo, popover e notificação com borda, e o rótulo acima do controle.
 - A precedência, do mais fraco ao mais forte, é: o padrão da biblioteca, o `style` e o que você passa (`shape`, `radius`, `fonts`, `motion`, `brand`, `light` e `dark`). `shape: 'pill'` com o `shadcn` devolve os botões em pílula, e `radius: { button: '1rem' }` muda só o raio dos botões. Com `brand`, só o acento muda (o `primary` e o que deriva dele): os neutros continuam os do estilo, e o `validateTheme` confere o contraste do resultado como em qualquer tema.
