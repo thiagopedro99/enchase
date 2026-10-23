@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 
 import { Container } from '@components/common/Container/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
+import { structureTags } from '@utils/structureTag.ts'
 import { axe } from '@tests/axe.ts'
 
 describe('Container', () => {
@@ -72,6 +73,60 @@ describe('Container', () => {
 
   it('has no axe violations', async () => {
     const { container } = render(<Container>Conteúdo</Container>)
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Container as', () => {
+  it('renders a div unless told otherwise', () => {
+    render(<Container data-testid="c" />)
+
+    expect(screen.getByTestId('c').tagName).toBe('DIV')
+  })
+
+  it.each(structureTags)('renders a %s when asked, still marked with its slot', (tag) => {
+    render(<Container as={tag} data-testid="c" />)
+    const root = screen.getByTestId('c')
+
+    expect(root.tagName.toLowerCase()).toBe(tag)
+    expect(root).toHaveAttribute('data-slot', 'container')
+  })
+
+  it('gives a list the role of a list, so it stays one in Safari once the markers are gone, and no other tag gets a role', () => {
+    render(
+      <>
+        <Container as="ul" data-testid="ul" />
+        <Container as="ol" data-testid="ol" />
+        <Container as="main" data-testid="main" />
+        <Container data-testid="div" />
+      </>
+    )
+
+    expect(screen.getByTestId('ul')).toHaveAttribute('role', 'list')
+    expect(screen.getByTestId('ol')).toHaveAttribute('role', 'list')
+    expect(screen.getByTestId('main')).not.toHaveAttribute('role')
+    expect(screen.getByTestId('div')).not.toHaveAttribute('role')
+  })
+
+  it('lets the role of the caller win over the one of the list', () => {
+    render(<Container as="ul" role="presentation" data-testid="c" />)
+
+    expect(screen.getByTestId('c')).toHaveAttribute('role', 'presentation')
+  })
+
+  it('keeps the width, the padding and the attributes of the caller on the tag it renders', () => {
+    render(<Container as="section" maxWidth="md" padding="2rem" center={false} aria-label="Intro" data-testid="c" />)
+    const root = screen.getByTestId('c')
+
+    expect(root).toHaveAttribute('data-max-width', 'md')
+    expect(root).toHaveAttribute('data-center', 'false')
+    expect(root.style.getPropertyValue('--enchase-container-padding')).toBe('2rem')
+    expect(screen.getByRole('region', { name: 'Intro' })).toBe(root)
+  })
+
+  it('has no axe violations as the main landmark', async () => {
+    const { container } = render(<Container as="main">Conteúdo</Container>)
 
     expect(await axe(container)).toHaveNoViolations()
   })

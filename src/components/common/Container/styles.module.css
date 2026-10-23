@@ -6,6 +6,7 @@
   margin-inline: auto;
   padding-block: 0;
   padding-inline: var(--enchase-container-padding, var(--enchase-space-md));
+  list-style: none;
 }
 
 :where(.container[data-padding='none']) {

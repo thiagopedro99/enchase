@@ -6,6 +6,7 @@
   gap: var(--enchase-flex-gap, var(--enchase-space-md));
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 :where(.flex[data-wrap]) {

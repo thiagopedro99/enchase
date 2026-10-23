@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { Grid } from '@components/common/Grid/index.tsx'
+import { structureTags } from '@utils/structureTag.ts'
 import { axe } from '@tests/axe.ts'
 
 describe('Grid', () => {
@@ -121,6 +122,68 @@ describe('Grid', () => {
       </>
     )
 
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Grid as', () => {
+  it('renders a div unless told otherwise', () => {
+    render(<Grid data-testid="g" />)
+
+    expect(screen.getByTestId('g').tagName).toBe('DIV')
+  })
+
+  it.each(structureTags)('renders a %s when asked, still marked with its slot', (tag) => {
+    render(<Grid as={tag} data-testid="g" />)
+    const root = screen.getByTestId('g')
+
+    expect(root.tagName.toLowerCase()).toBe(tag)
+    expect(root).toHaveAttribute('data-slot', 'grid')
+  })
+
+  it('gives a list the role of a list, so it stays one in Safari once the markers are gone, and no other tag gets a role', () => {
+    render(
+      <>
+        <Grid as="ul" data-testid="ul" />
+        <Grid as="ol" data-testid="ol" />
+        <Grid as="section" data-testid="section" />
+        <Grid data-testid="div" />
+      </>
+    )
+
+    expect(screen.getByTestId('ul')).toHaveAttribute('role', 'list')
+    expect(screen.getByTestId('ol')).toHaveAttribute('role', 'list')
+    expect(screen.getByTestId('section')).not.toHaveAttribute('role')
+    expect(screen.getByTestId('div')).not.toHaveAttribute('role')
+  })
+
+  it('lets the role of the caller win over the one of the list', () => {
+    render(<Grid as="ul" role="presentation" data-testid="g" />)
+
+    expect(screen.getByTestId('g')).toHaveAttribute('role', 'presentation')
+  })
+
+  it('keeps the columns, the gap and the attributes of the caller on the tag it renders', () => {
+    render(<Grid as="ul" columns={3} gap="1rem" aria-label="Projects" className="mine" data-testid="g" />)
+    const root = screen.getByTestId('g')
+
+    expect(root.style.getPropertyValue('--enchase-grid-gap')).toBe('1rem')
+    expect(root.style.getPropertyValue('--enchase-grid-columns')).toContain('repeat(auto-fit')
+    expect(root).toHaveAccessibleName('Projects')
+    expect(root.className.split(' ').at(-1)).toBe('mine')
+  })
+
+  it('reads as a list of items and has no axe violations', async () => {
+    const { container } = render(
+      <Grid as="ul" columns={2} centerLastRow>
+        <li>Um</li>
+        <li>Dois</li>
+        <li>Três</li>
+      </Grid>
+    )
+
+    expect(screen.getByRole('list')).toBeInTheDocument()
+    expect(screen.getAllByRole('listitem')).toHaveLength(3)
     expect(await axe(container)).toHaveNoViolations()
   })
 })

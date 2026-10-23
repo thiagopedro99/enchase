@@ -1,4 +1,5 @@
-import { Grid } from 'enchase'
+import { Card, Grid } from 'enchase'
+import { asArgType } from '@docs/shared/argTypes.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -22,11 +23,12 @@ const meta = {
     docs: {
       description: {
         component:
-          'Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query. Com `columns` em objeto, o número de colunas muda nos breakpoints do `UIProvider`, em CSS puro e sem quadro errado antes da hidratação. Com `centerLastRow`, a última linha incompleta fica centralizada.'
+          'Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query. Com `columns` em objeto, o número de colunas muda nos breakpoints do `UIProvider`, em CSS puro e sem quadro errado antes da hidratação. Com `centerLastRow`, a última linha incompleta fica centralizada. Com `as`, a raiz vira outra tag de estrutura, como `ul` para uma lista de cartões.'
       }
     }
   },
   argTypes: {
+    as: asArgType,
     columns: {
       description:
         'Um número, que é o máximo de colunas em telas largas: quando elas não cabem, o grid reduz sozinho, sem media query. Ou um objeto com o número de colunas a partir de cada breakpoint (`{ xs: 1, md: 2, lg: 4 }`): é mobile first, um breakpoint sem valor repete o menor que veio antes, e os valores dos breakpoints são os do `UIProvider`. Números vão para inteiros de pelo menos 1.',
@@ -79,4 +81,18 @@ export const CenteredLastRow: Story = {
 export const CenteredAndResponsive: Story = {
   args: { columns: { xs: 2, lg: 4 }, centerLastRow: true, children: ['Um', 'Dois', 'Três', 'Quatro', 'Cinco', 'Seis', 'Sete'].map(cell) },
   parameters: { docs: { description: { story: 'As duas coisas juntas: a última linha de cada breakpoint fica centralizada (três células em quatro colunas, uma em duas).' } } }
+}
+
+export const AsList: Story = {
+  args: {
+    as: 'ul',
+    columns: 3,
+    'aria-label': 'Projetos',
+    children: ['Um', 'Dois', 'Três', 'Quatro', 'Cinco', 'Seis'].map((label) => (
+      <Card key={label} as="li">
+        {label}
+      </Card>
+    ))
+  },
+  parameters: { docs: { description: { story: 'Com `as="ul"` o grid é uma lista: perde marcadores, margem e recuo e ganha `role="list"`, e cada `Card as="li"` é um item que estica até a altura da linha.' } } }
 }

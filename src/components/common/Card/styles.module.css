@@ -1,6 +1,7 @@
 .card {
   box-sizing: border-box;
   margin: 0;
+  list-style: none;
   transition:
     transform var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-card-ease, var(--enchase-motion-ease-out)),
     box-shadow var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-card-ease, var(--enchase-motion-ease-out)),

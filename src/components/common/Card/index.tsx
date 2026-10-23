@@ -1,24 +1,16 @@
-import { defaultVariant } from './defaultData.ts'
+import { defaultTag, roleOf } from '@utils/structureTag.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
-import { useUIConfig } from '@hooks/useUIConfig.ts'
-import { resolveCardMotion } from './motion.ts'
+import { defaultVariant } from './defaultData.ts'
+import { useCardSurface } from './surface.ts'
 import styles from './styles.module.css'
 
-import type { CSSProperties } from 'react'
 import type { CardProps } from './types.ts'
 
-export const Card = ({ children, animation, variant = defaultVariant, padding, ...props }: CardProps) => {
-  const { motion: settings } = useUIConfig()
-  const { motion, style } = variant === 'elevated' ? resolveCardMotion(settings, animation) : { motion: 'off' as const, style: undefined }
-  const own = {
-    ...slot('card'),
-    className: styles.card,
-    style: { ...style, ...(padding ? { padding } : undefined) } as CSSProperties,
-    'data-variant': variant,
-    'data-motion': motion
-  }
+export const Card = ({ as: Tag = defaultTag, children, animation, variant = defaultVariant, padding, ...props }: CardProps) => {
+  const surface = useCardSurface({ variant, padding, animation })
+  const own = { ...slot('card'), ...surface, className: styles.card, role: roleOf(Tag) }
 
-  return <div {...mergeProps(own, props)}>{children}</div>
+  return <Tag {...mergeProps(own, props)}>{children}</Tag>
 }
 
 export default Card

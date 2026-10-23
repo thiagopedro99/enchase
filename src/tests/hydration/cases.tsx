@@ -31,6 +31,7 @@ import { ToastProvider } from '@components/toast/index.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
+import { Flex } from '@components/common/Flex/index.tsx'
 import { Grid } from '@components/common/Grid/index.tsx'
 import Layout from '@components/layout/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
@@ -70,6 +71,8 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'RadioGroup', element: <RadioGroup label="Plan" defaultValue="pro" helperText="Billed monthly" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }]} /> },
   { name: 'Card', element: <Card variant="elevated">Content</Card> },
   { name: 'Grid', element: <Grid columns={{ xs: 1, md: 3 }} centerLastRow><p>One</p><p>Two</p><p>Three</p><p>Four</p></Grid> },
+  { name: 'Grid as a list of cards', element: <Grid as="ul" columns={2} aria-label="Projects"><Card as="li">One</Card><Card as="li" variant="elevated">Two</Card></Grid> },
+  { name: 'Flex as a list of badges', element: <Flex as="ul" wrap aria-label="Stack"><li><Badge>One</Badge></li><li><Badge variant="success">Two</Badge></li></Flex> },
   { name: 'Badge', element: <Badge variant="success">New</Badge> },
   { name: 'Alert', element: <Alert variant="warning" title="Heads up" onClose={noop}>The deadline is today.</Alert> },
   { name: 'Tooltip', element: <Tooltip text="Help"><Button>Hover</Button></Tooltip> },

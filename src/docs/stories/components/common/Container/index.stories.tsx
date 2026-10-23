@@ -1,4 +1,5 @@
 import { Container } from 'enchase'
+import { asArgType } from '@docs/shared/argTypes.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -11,7 +12,7 @@ const meta = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Limita a largura do conteúdo pelos breakpoints do `UIProvider`, com espaçamento lateral e centralização opcionais.'
+        component: 'Limita a largura do conteúdo pelos breakpoints do `UIProvider`, com espaçamento lateral e centralização opcionais. Com `as`, a raiz vira a tag de estrutura certa, como `main` ou `section`.'
       }
     }
   },
@@ -22,6 +23,7 @@ const meta = {
     children: <div style={box}>Conteúdo limitado pela largura máxima</div>
   },
   argTypes: {
+    as: asArgType,
     maxWidth: {
       description: 'Largura máxima, tirada dos breakpoints do UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px por padrão). full não limita. 2xl continua aceito como alias de xxl.',
       control: 'inline-radio',
@@ -59,4 +61,8 @@ export const FullWidth: Story = {
 
 export const StartAligned: Story = {
   args: { maxWidth: 'md', center: false }
+}
+
+export const AsMain: Story = {
+  args: { as: 'main', maxWidth: 'md' }
 }

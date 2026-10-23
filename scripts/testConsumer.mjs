@@ -9,8 +9,8 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
 
-const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Grid, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
-import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
+const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Card, Container, Flex, Grid, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
+import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, CardProps, ContainerProps, FlexProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
 import { ChevronDownIcon, CloseIcon } from 'enchase/icons'
 import type { IconProps } from 'enchase/icons'
 import { enchase as enchaseStyle } from 'enchase/styles/enchase'
@@ -19,6 +19,7 @@ import { createTheme, defineStyle, validateTheme } from 'enchase/theme'
 import type { RadiusOverrides, ShapePreset, ThemeInput, ThemeStyle, ThemeStyleMode } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
+import type { MouseEvent } from 'react'
 import 'enchase/styles.css'
 import 'enchase/styles.layer.css'
 import 'enchase/theme.css'
@@ -31,6 +32,10 @@ const docsLink: ButtonLinkProps = { href: '/docs', native: true, externalIcon: f
 const navbarProps: NavbarProps = { logo: 'Acme', sections, translucent: true, actions: <Button>Start</Button> }
 const gridProps: GridProps = { columns: { xs: 1, md: 2, xxl: 4 }, gap: '1rem', centerLastRow: true }
 const fixedGridProps: GridProps = { columns: 3, minColumnWidth: '12rem' }
+const listGridProps: GridProps = { as: 'ul', columns: 2, 'aria-label': 'Projects' }
+const listCardProps: CardProps = { as: 'li', variant: 'elevated', padding: '1rem' }
+const badgeListProps: FlexProps = { as: 'ul', wrap: true, gap: '0.5rem', 'aria-label': 'Stack' }
+const mainProps: ContainerProps = { as: 'main', maxWidth: 'md' }
 const alertProps: AlertProps = { variant: 'warning', title: 'Heads up', onClose: () => undefined }
 const badgeProps: BadgeProps = { variant: 'success', size: 'sm' }
 const areaProps: TextareaProps = { label: 'Message', rows: 4, resize: 'none' }
@@ -70,6 +75,16 @@ export const App = () => (
           <p>Three</p>
         </Grid>
         <Grid {...fixedGridProps} />
+        <Grid {...listGridProps}>
+          <Card {...listCardProps}>One</Card>
+        </Grid>
+        <Flex {...badgeListProps}>
+          <li>
+            <Badge>React</Badge>
+          </li>
+        </Flex>
+        <Container {...mainProps}>Main</Container>
+        <Card onClick={(event: MouseEvent<HTMLDivElement>) => void event}>Handler typed for a div</Card>
         <ButtonLink {...docsLink}>Docs</ButtonLink>
         <Alert {...alertProps}>Saved</Alert>
         <Badge {...badgeProps}>New</Badge>
