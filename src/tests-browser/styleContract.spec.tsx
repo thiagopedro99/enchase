@@ -8,6 +8,8 @@ import { Badge } from '@components/common/Badge/index.tsx'
 import Breadcrumbs from '@components/common/Breadcrumbs/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
+import { CardButton } from '@components/common/CardButton/index.tsx'
+import { CardLink } from '@components/common/CardLink/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
@@ -91,6 +93,11 @@ const everything = (
     <Pagination pageCount={5} defaultPage={2} />
     <Table caption="Orders" columns={[{ key: 'name', header: 'Name' }]} rows={[{ name: 'Ana' }]} />
     <Card>Card text</Card>
+    <CardButton>Button tile text</CardButton>
+    <CardLink href="/tile" variant="outlined">
+      Link tile text
+    </CardLink>
+    <CardButton variant="elevated">Elevated tile text</CardButton>
   </div>
 )
 

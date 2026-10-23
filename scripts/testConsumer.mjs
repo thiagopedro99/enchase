@@ -9,8 +9,8 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
 
-const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Card, Container, Flex, Grid, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
-import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, CardProps, ContainerProps, FlexProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
+const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Card, CardButton, CardLink, Container, Flex, Grid, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
+import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, CardButtonProps, CardLinkProps, CardProps, ContainerProps, FlexProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
 import { ChevronDownIcon, CloseIcon } from 'enchase/icons'
 import type { IconProps } from 'enchase/icons'
 import { enchase as enchaseStyle } from 'enchase/styles/enchase'
@@ -34,6 +34,8 @@ const gridProps: GridProps = { columns: { xs: 1, md: 2, xxl: 4 }, gap: '1rem', c
 const fixedGridProps: GridProps = { columns: 3, minColumnWidth: '12rem' }
 const listGridProps: GridProps = { as: 'ul', columns: 2, 'aria-label': 'Projects' }
 const listCardProps: CardProps = { as: 'li', variant: 'elevated', padding: '1rem' }
+const tileProps: CardLinkProps = { href: '/projects', variant: 'outlined', padding: '1rem', target: '_blank', native: true }
+const buttonTileProps: CardButtonProps = { variant: 'elevated', disabled: false, animation: false, onClick: () => undefined }
 const badgeListProps: FlexProps = { as: 'ul', wrap: true, gap: '0.5rem', 'aria-label': 'Stack' }
 const mainProps: ContainerProps = { as: 'main', maxWidth: 'md' }
 const alertProps: AlertProps = { variant: 'warning', title: 'Heads up', onClose: () => undefined }
@@ -77,6 +79,12 @@ export const App = () => (
         <Grid {...fixedGridProps} />
         <Grid {...listGridProps}>
           <Card {...listCardProps}>One</Card>
+          <li>
+            <CardLink {...tileProps}>Project</CardLink>
+          </li>
+          <li>
+            <CardButton {...buttonTileProps}>Skill</CardButton>
+          </li>
         </Grid>
         <Flex {...badgeListProps}>
           <li>

@@ -299,6 +299,7 @@ const colorHooks: HookValues = {
   '--enchase-card-border-width-default': 'var(--enchase-border-width)',
   '--enchase-card-border-color-default': 'var(--enchase-color-border)',
   '--enchase-card-shadow-default': 'var(--enchase-shadow-sm)',
+  '--enchase-card-opacity-disabled': '0.5',
 
   '--enchase-alert-background-info': 'var(--enchase-color-surface)',
   '--enchase-alert-background-success': 'var(--enchase-color-surface)',

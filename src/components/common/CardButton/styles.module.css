@@ -1,0 +1,60 @@
+.tile {
+  position: relative;
+  isolation: isolate;
+  font: inherit;
+  color: inherit;
+  text-decoration: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+:where(.tile) {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 24px;
+  min-inline-size: 24px;
+  letter-spacing: inherit;
+  text-align: start;
+  white-space: normal;
+  cursor: pointer;
+}
+
+:where(.tile[data-variant='elevated']) {
+  border: 0 solid transparent;
+}
+
+.tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-card-ease, var(--enchase-motion-ease-out));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover:not(:disabled)::after {
+    opacity: var(--enchase-state-hover);
+  }
+}
+
+.tile:focus-visible {
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset, 2px);
+}
+
+.tile:focus-visible::after,
+.tile:active:not(:disabled)::after {
+  opacity: var(--enchase-state-pressed);
+}
+
+.tile:disabled {
+  cursor: not-allowed;
+  opacity: var(--enchase-card-opacity-disabled, var(--enchase-state-disabled-content, 0.38));
+  box-shadow: none;
+  transform: none;
+}

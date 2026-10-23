@@ -30,6 +30,8 @@ import { Alert } from '@components/common/Alert/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
+import { CardButton } from '@components/common/CardButton/index.tsx'
+import { CardLink } from '@components/common/CardLink/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { Flex } from '@components/common/Flex/index.tsx'
 import { Grid } from '@components/common/Grid/index.tsx'
@@ -71,6 +73,11 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'RadioGroup', element: <RadioGroup label="Plan" defaultValue="pro" helperText="Billed monthly" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }]} /> },
   { name: 'Card', element: <Card variant="elevated">Content</Card> },
   { name: 'Grid', element: <Grid columns={{ xs: 1, md: 3 }} centerLastRow><p>One</p><p>Two</p><p>Three</p><p>Four</p></Grid> },
+  { name: 'CardButton', element: <CardButton variant="elevated"><span>Open</span></CardButton> },
+  { name: 'CardButton disabled', element: <CardButton disabled variant="outlined">Soon</CardButton> },
+  { name: 'CardLink', element: <CardLink href="/projects" variant="outlined">Projects</CardLink> },
+  { name: 'CardLink new tab', element: <CardLink href="https://example.com" target="_blank">Site</CardLink> },
+  { name: 'Grid as a list of tiles', element: <Grid as="ul" columns={2} aria-label="Projects"><li><CardLink href="/a">One</CardLink></li><li><CardButton>Two</CardButton></li></Grid> },
   { name: 'Grid as a list of cards', element: <Grid as="ul" columns={2} aria-label="Projects"><Card as="li">One</Card><Card as="li" variant="elevated">Two</Card></Grid> },
   { name: 'Flex as a list of badges', element: <Flex as="ul" wrap aria-label="Stack"><li><Badge>One</Badge></li><li><Badge variant="success">Two</Badge></li></Flex> },
   { name: 'Badge', element: <Badge variant="success">New</Badge> },

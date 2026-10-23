@@ -4,6 +4,8 @@ import { page } from 'vitest/browser'
 
 import { Button } from '@components/common/Button/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
+import { CardButton } from '@components/common/CardButton/index.tsx'
+import { CardLink } from '@components/common/CardLink/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
@@ -43,6 +45,37 @@ describe('touch pointer in a real browser', () => {
       await frames(4)
 
       expect(getComputedStyle(card.element()).transform).toBe('none')
+    } finally {
+      await disableTouch()
+    }
+  })
+
+  touchCapable('touchEmulation')('does not lift or tint a clickable tile on a touch device', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(
+        <>
+          <CardButton variant="elevated" data-testid="button">
+            Ação
+          </CardButton>
+          <CardLink variant="elevated" href="/x" data-testid="link">
+            Destino
+          </CardLink>
+        </>,
+        'auto'
+      )
+
+      expect(matchMedia('(hover: none)').matches).toBe(true)
+
+      for (const id of ['button', 'link']) {
+        const tile = page.getByTestId(id).element()
+
+        await page.getByTestId(id).hover()
+        await frames(4)
+
+        expect(getComputedStyle(tile).transform, id).toBe('none')
+        expect(getComputedStyle(tile, '::after').opacity, id).toBe('0')
+      }
     } finally {
       await disableTouch()
     }

@@ -1,6 +1,8 @@
 export { Button } from './Button/index.tsx'
 export { ButtonLink } from './ButtonLink/index.tsx'
 export { Card } from './Card/index.tsx'
+export { CardButton } from './CardButton/index.tsx'
+export { CardLink } from './CardLink/index.tsx'
 export { Badge } from './Badge/index.tsx'
 export { Alert } from './Alert/index.tsx'
 export { Container } from './Container/index.tsx'
