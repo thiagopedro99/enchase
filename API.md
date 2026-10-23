@@ -6,7 +6,7 @@ Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.o
 
 ## Componentes
 
-[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -14,7 +14,7 @@ Lista de itens que abrem e fecham para mostrar um conteúdo por vez, ou vários 
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `items` | `AccordionItem[]` | *obrigatória* | Itens do acordeão, na ordem da tela. Cada item tem `value` (único), `title` (texto do botão), `content` (conteúdo do painel) e, se quiser, `disabled`. Os painéis fechados ficam no documento, então o estado do conteúdo se mantém. |
+| `items` | `AccordionItem[]` | *obrigatória* | Itens do acordeão, na ordem da tela. Cada item tem `value` (único), `title` (o conteúdo do botão: texto ou nós, como um logo, um `span` e um `Badge`), `content` (conteúdo do painel) e, se quiser, `disabled`. O `title` fica dentro de um `<button>`, então só cabem elementos de texto, sem outro botão, link ou campo, e tudo o que está nele entra no nome do botão e do painel. Os painéis fechados ficam no documento, então o estado do conteúdo se mantém. |
 | `multiple` | `boolean` | `false` | Deixa vários itens abertos ao mesmo tempo. Sem ela, abrir um item fecha o que estava aberto, e o item aberto ainda pode ser fechado de novo. |
 | `value` | `string[]` | — | Valores dos itens abertos quando o componente é controlado, em uma lista. Exige também onValueChange. Veja a story Controlled. |
 | `defaultValue` | `string[]` | — | Valores dos itens abertos no início, em uma lista, para uso sem controle externo. Sem multiple, vale só o primeiro. |
@@ -91,15 +91,42 @@ Aceita também os demais atributos de `<a>`, repassados ao elemento.
 
 ### Card
 
-Superfície para agrupar conteúdo, nas variantes `default`, `elevated` e `outlined`. Só a `elevated` sobe ao passar o ponteiro.
+Superfície para agrupar conteúdo, nas variantes `default`, `elevated` e `outlined`. Só a `elevated` sobe ao passar o ponteiro. Com `as`, a raiz vira outra tag de estrutura, como `li` de uma lista de cartões. Para um cartão inteiro clicável, use `CardLink` ou `CardButton`.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
+| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | Tag HTML que a raiz renderiza, só entre as de estrutura que o tipo lista. Com `ul` ou `ol`, a raiz perde marcadores, margem e recuo e ganha `role="list"`, que mantém a semântica de lista no Safari (o `role` de quem usa vence). Links e botões não entram aqui: use `ButtonLink`, `CardLink` ou `CardButton`. |
 | `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Aparência do cartão. Só o elevated sobe ao passar o ponteiro. |
 | `padding` | `string` | — | Espaçamento interno (qualquer valor CSS). Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence. |
 | `animation` | `false \| { recipe, tuning }` | `lift` | false desliga o movimento. { tuning: { duration, distance } } ajusta o lift (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido. |
 
-Aceita também os demais atributos de `<div>`, repassados ao elemento.
+Aceita também os demais atributos HTML do elemento raiz.
+
+### CardButton
+
+Cartão inteiro clicável que faz uma ação: um `<button type="button">` de verdade, com a superfície do `Card` (`variant`, `padding` e `animation`, e os mesmos ganchos `--enchase-card-*`), anel de foco, camadas de hover e de pressionado, e `disabled`. O `type` padrão é `button`, então ele não envia um formulário sozinho. O conteúdo de um `<button>` só pode ter elementos de texto (`span`, `strong`, `Badge`, imagens), sem outro botão, link ou campo dentro, e tudo o que está dentro entra no nome acessível. Para navegar, use `CardLink`. Dentro de uma lista, ponha o botão num `li`: ele ocupa a altura do item.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `animation` | `false \| { recipe, tuning }` | `lift` | false desliga o movimento. { tuning: { duration, distance } } ajusta o lift da variante `elevated` (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido. |
+| `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Aparência da superfície, a mesma do `Card`. Só a `elevated` sobe ao passar o ponteiro. |
+| `padding` | `string` | — | Espaçamento interno (qualquer valor CSS), como no `Card`. Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence. |
+
+Aceita também os demais atributos de `<button>`, repassados ao elemento.
+
+### CardLink
+
+Cartão inteiro clicável que leva a outra página: um `<a href>` de verdade, com a superfície do `Card` (`variant`, `padding` e `animation`, e os mesmos ganchos `--enchase-card-*`), anel de foco e camadas de hover e de pressionado. Passa pelo `navigate` do `UIProvider` nas rotas do app, como o `Link` (veja `native`, `target` e `download`). Com `target="_blank"`, o `rel` vira `noopener noreferrer` e o texto "abre em nova aba" entra no nome acessível, sem ícone: o desenho do cartão é seu. Tudo o que está dentro do cartão entra no nome do link, então prefira um título curto e um apoio curto. O conteúdo de um `<a>` aceita títulos e parágrafos, mas não outro link ou botão. Para uma ação, use `CardButton`.
+
+| Prop | Tipo | Padrão | Descrição |
+| --- | --- | --- | --- |
+| `href` | `string` | *obrigatória* | Destino do link, com as mesmas regras do `Link`: uma rota do app vai para o `navigate` do `UIProvider`; âncoras, o hash da página atual e URLs externas ficam com o navegador. |
+| `native` | `boolean` | `false` | Deixa o clique com o navegador mesmo em uma rota do app. |
+| `animation` | `false \| { recipe, tuning }` | `lift` | false desliga o movimento. { tuning: { duration, distance } } ajusta o lift da variante `elevated` (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido. |
+| `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Aparência da superfície, a mesma do `Card`. Só a `elevated` sobe ao passar o ponteiro. |
+| `padding` | `string` | — | Espaçamento interno (qualquer valor CSS), como no `Card`. Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence. |
+
+Aceita também os demais atributos de `<a>`, repassados ao elemento.
 
 ### Checkbox
 
@@ -159,29 +186,31 @@ Modal de confirmação pronto: um alertdialog com a pergunta e os botões de can
 
 ### Container
 
-Limita a largura do conteúdo pelos breakpoints do `UIProvider`, com espaçamento lateral e centralização opcionais.
+Limita a largura do conteúdo pelos breakpoints do `UIProvider`, com espaçamento lateral e centralização opcionais. Com `as`, a raiz vira a tag de estrutura certa, como `main` ou `section`.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
+| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | Tag HTML que a raiz renderiza, só entre as de estrutura que o tipo lista. Com `ul` ou `ol`, a raiz perde marcadores, margem e recuo e ganha `role="list"`, que mantém a semântica de lista no Safari (o `role` de quem usa vence). Links e botões não entram aqui: use `ButtonLink`, `CardLink` ou `CardButton`. |
 | `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Largura máxima, tirada dos breakpoints do UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px por padrão). full não limita. 2xl continua aceito como alias de xxl. |
 | `padding` | `boolean \| string` | `true` | true usa o espaçamento padrão nas laterais, false remove, e um texto CSS define o valor (variável --enchase-container-padding). |
 | `center` | `boolean` | `true` | Centraliza o container. Com false ele fica no início, e em RTL no lado direito. |
 
-Aceita também os demais atributos de `<div>`, repassados ao elemento.
+Aceita também os demais atributos HTML do elemento raiz.
 
 ### Flex
 
-Contêiner flexbox configurado por props: direção, alinhamento, distribuição, espaço entre os filhos e quebra de linha. Em RTL, `row` começa pelo lado direito.
+Contêiner flexbox configurado por props: direção, alinhamento, distribuição, espaço entre os filhos e quebra de linha. Em RTL, `row` começa pelo lado direito. Com `as="ul"`, vira uma lista de verdade, como uma fileira de etiquetas.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
+| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | Tag HTML que a raiz renderiza, só entre as de estrutura que o tipo lista. Com `ul` ou `ol`, a raiz perde marcadores, margem e recuo e ganha `role="list"`, que mantém a semântica de lista no Safari (o `role` de quem usa vence). Links e botões não entram aqui: use `ButtonLink`, `CardLink` ou `CardButton`. |
 | `direction` | `'row' \| 'column' \| 'row-reverse' \| 'column-reverse'` | `'row'` | Eixo principal. Em RTL, row começa pelo lado direito. |
 | `align` | `'start' \| 'center' \| 'end' \| 'stretch' \| 'baseline'` | `'stretch'` | Alinhamento no eixo cruzado. |
 | `justify` | `'start' \| 'center' \| 'end' \| 'between' \| 'around' \| 'evenly'` | `'start'` | Distribuição no eixo principal. |
 | `gap` | `string` | — | Espaço entre os filhos, passado por variável CSS. O padrão vem do token de espaçamento. |
 | `wrap` | `boolean` | `false` | Permite quebrar linha. |
 
-Aceita também os demais atributos de `<div>`, repassados ao elemento.
+Aceita também os demais atributos HTML do elemento raiz.
 
 ### Footer
 
@@ -204,16 +233,17 @@ Sem props próprias.
 
 ### Grid
 
-Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query. Com `columns` em objeto, o número de colunas muda nos breakpoints do `UIProvider`, em CSS puro e sem quadro errado antes da hidratação. Com `centerLastRow`, a última linha incompleta fica centralizada.
+Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query. Com `columns` em objeto, o número de colunas muda nos breakpoints do `UIProvider`, em CSS puro e sem quadro errado antes da hidratação. Com `centerLastRow`, a última linha incompleta fica centralizada. Com `as`, a raiz vira outra tag de estrutura, como `ul` para uma lista de cartões.
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
+| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | Tag HTML que a raiz renderiza, só entre as de estrutura que o tipo lista. Com `ul` ou `ol`, a raiz perde marcadores, margem e recuo e ganha `role="list"`, que mantém a semântica de lista no Safari (o `role` de quem usa vence). Links e botões não entram aqui: use `ButtonLink`, `CardLink` ou `CardButton`. |
 | `columns` | `number \| { xs?: number, sm?: number, md?: number, lg?: number, xl?: number, xxl?: number }` | `1` | Um número, que é o máximo de colunas em telas largas: quando elas não cabem, o grid reduz sozinho, sem media query. Ou um objeto com o número de colunas a partir de cada breakpoint (`{ xs: 1, md: 2, lg: 4 }`): é mobile first, um breakpoint sem valor repete o menor que veio antes, e os valores dos breakpoints são os do `UIProvider`. Números vão para inteiros de pelo menos 1. |
 | `gap` | `string` | — | Espaço entre as células, por variável CSS. O padrão vem do token de espaçamento. |
 | `minColumnWidth` | `string` | — | Largura mínima de cada coluna (qualquer valor CSS). Quando definida, vale no lugar de columns e o grid usa auto-fit. |
 | `centerLastRow` | `boolean` | `false` | Centraliza a última linha quando ela fica incompleta, como os dois últimos cards de cinco em três colunas. O grid passa a ser uma linha flexível que quebra: cada célula tem a largura de uma coluna e as linhas cheias continuam alinhadas nas colunas. Vale com `columns` (número ou objeto) e é ignorado com `minColumnWidth`, porque o número de colunas então depende da largura. |
 
-Aceita também os demais atributos de `<div>`, repassados ao elemento.
+Aceita também os demais atributos HTML do elemento raiz.
 
 ### Icon
 
@@ -550,7 +580,7 @@ Abas para dividir um conteúdo em painéis e mostrar um por vez. Seguem o padrã
 
 | Prop | Tipo | Padrão | Descrição |
 | --- | --- | --- | --- |
-| `items` | `TabsItem[]` | *obrigatória* | Abas da lista, na ordem da tela. Cada item tem `value` (único), `label` (texto da aba), `content` (conteúdo do painel) e, se quiser, `disabled`. Todos os painéis ficam no documento e só o da aba escolhida aparece, então o estado dos outros se mantém. |
+| `items` | `TabsItem[]` | *obrigatória* | Abas da lista, na ordem da tela. Cada item tem `value` (único), `label` (o conteúdo da aba: texto ou nós, como um `span` e um `Badge`), `content` (conteúdo do painel) e, se quiser, `disabled`. O `label` fica dentro de um `<button>`, então só cabem elementos de texto, sem outro botão, link ou campo, e tudo o que está nele entra no nome da aba e do painel. Todos os painéis ficam no documento e só o da aba escolhida aparece, então o estado dos outros se mantém. |
 | `value` | `string` | — | Valor da aba escolhida quando o componente é controlado. Exige também onValueChange. Veja a story Controlled. |
 | `defaultValue` | `string` | — | Valor da aba escolhida no início, para uso sem controle externo. Sem ele, vale a primeira aba que não está desativada. |
 | `onValueChange` | `(value: string) => void` | — | Chamada com o valor da aba que o usuário acabou de escolher, por clique ou pelo teclado. |
@@ -987,14 +1017,20 @@ Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma font
 | `--enchase-card-border-color-outlined` | `var(--enchase-color-border)` | `border` |
 | `--enchase-card-border-width-default` | `0` | `border` |
 | `--enchase-card-distance` | `2px` (`--enchase-motion-distance-xs`) | `transform` |
-| `--enchase-card-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
-| `--enchase-card-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-card-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` (também em CardButton) |
+| `--enchase-card-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` (também em CardButton) |
 | `--enchase-card-padding` | `1.5rem` (`--enchase-space-lg`) | `padding` |
 | `--enchase-card-radius` | `1.5rem` (`--enchase-radius-xl`) | `border-radius` |
 | `--enchase-card-shadow-default` | `none` | `box-shadow` |
 | `--enchase-card-shadow-elevated` | `var(--enchase-shadow-sm)` | `box-shadow` |
 | `--enchase-card-shadow-elevated-hover` | `var(--enchase-shadow-md)` | `box-shadow` |
 | `--enchase-card-shadow-outlined` | `none` | `box-shadow` |
+
+### CardButton
+
+| Gancho | Padrão | Propriedade |
+| --- | --- | --- |
+| `--enchase-card-opacity-disabled` | `0.38` (`--enchase-state-disabled-content`) | `opacity` |
 
 ### Checkbox
 

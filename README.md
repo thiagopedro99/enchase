@@ -121,9 +121,11 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Table` | `<Table caption="Pedidos" columns={[{ key: 'id', header: 'Pedido' }, { key: 'total', header: 'Total', align: 'end' }]} rows={pedidos} />` |
 | `Tabs` | `<Tabs ariaLabel="Conta" items={[{ value: 'perfil', label: 'Perfil', content: <p>Seus dados</p> }, { value: 'plano', label: 'Plano', content: <p>Sua assinatura</p> }]} />` |
 | `Card` | `<Card variant="elevated">Conteúdo</Card>` |
+| `CardButton` | `<CardButton onClick={escolher}><span>React</span></CardButton>` |
+| `CardLink` | `<CardLink href="/projetos/enchase"><h3>Enchase</h3><p>Biblioteca de componentes</p></CardLink>` |
 | `Badge` | `<Badge variant="success">Pago</Badge>` |
 | `Alert` | `<Alert variant="warning" title="Atenção" onClose={fechar}>O prazo termina hoje.</Alert>` |
-| `Container`, `Flex`, `Grid` | `<Grid minColumnWidth="14rem" gap="1rem">...</Grid>` |
+| `Container`, `Flex`, `Grid` | `<Grid as="ul" minColumnWidth="14rem" gap="1rem">...</Grid>` |
 | `Modal` | `<Modal isOpen={open} onClose={close} title="Editar">...</Modal>` |
 | `ConfirmModal` | `<ConfirmModal isOpen={open} onClose={close} onConfirm={apagar} message="Apagar item?" />` |
 | `Tooltip` | `<Tooltip text="Ajuda"><button>?</button></Tooltip>` |
@@ -183,7 +185,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 
 | Prop | Onde | O que faz |
 | --- | --- | --- |
-| `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
+| `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card`, `CardButton` e `CardLink` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
 | `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` e `Table` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
 | `label` | `Input`, `Textarea`, `NumberInput`, `Select`, `Checkbox`, `Switch`, `RadioGroup` | Rótulo visível, ligado ao controle. No `RadioGroup`, é o título do grupo. |
 | `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
@@ -191,6 +193,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `fullWidth` | `Button`, `ButtonLink`, `Input`, `Textarea`, `NumberInput`, `Select` | Ocupa toda a largura disponível. |
 | `labelPlacement` | `Input`, `Textarea`, `NumberInput`, `Select` | Onde fica o rótulo: `floating` (dentro do campo, sobe ao focar) ou `stacked` (acima do controle). Sem a prop, vale o `style` do tema: `floating` no `enchase` e `stacked` no `shadcn`. |
 | `externalIcon` | `ButtonLink` | Com `target="_blank"`, mostra o ícone de link externo (padrão `true`). `false` tira só o ícone e mantém o texto "abre em nova aba" para leitores de tela; em um link só de ícone com `aria-label`, ponha o aviso no próprio rótulo. |
+| `as` | `Container`, `Flex`, `Grid`, `Card` | Tag HTML da raiz, só entre as de estrutura: `div` (padrão), `section`, `article`, `aside`, `nav`, `header`, `footer`, `main`, `ul`, `ol` e `li`. Com `ul` e `ol` a raiz leva `role="list"`. Veja [Listas e cartões clicáveis](#listas-e-cartões-clicáveis). |
 | `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
 | `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup`, vão para o `<fieldset>`, que é a raiz. |
 | `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
@@ -201,6 +204,59 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `open`, `defaultOpen` e `onOpenChange` | `Popover` e o drawer do `Layout` | Controlados ou não. A `Sidebar` modal usa `open` e `onClose`. |
 
 Componentes que estendem um elemento HTML (`Button`, `Input`, `Card`, `Footer`, `Layout` e outros) repassam os demais atributos para ele, como `id`, `aria-*`, `data-*` e handlers.
+
+### Listas e cartões clicáveis
+
+`Container`, `Flex`, `Grid` e `Card` aceitam `as` com uma tag de estrutura: `div` (padrão), `section`, `article`, `aside`, `nav`, `header`, `footer`, `main`, `ul`, `ol` ou `li`. Com `ul` ou `ol`, a raiz perde marcadores, margem e recuo e ganha `role="list"`, que mantém a semântica de lista no Safari com o VoiceOver quando o marcador some (o `role` que você passar vence). Link e botão não entram em `as`: para isso há `CardLink` e `CardButton`.
+
+```tsx
+import { Badge, CardLink, Flex, Grid } from 'enchase'
+
+<Grid as="ul" columns={{ xs: 1, md: 3 }} aria-label="Projetos">
+  {projects.map((project) => (
+    <li key={project.href}>
+      <CardLink href={project.href} variant="outlined">
+        <h3>{project.title}</h3>
+        <p>{project.summary}</p>
+      </CardLink>
+    </li>
+  ))}
+</Grid>
+
+<Flex as="ul" wrap gap="0.5rem" aria-label="Tecnologias">
+  {stack.map((name) => (
+    <li key={name}>
+      <Badge>{name}</Badge>
+    </li>
+  ))}
+</Flex>
+```
+
+Uma lista de etiquetas não precisa de componente próprio: é um `Flex as="ul"` com `wrap` e um `Badge` em cada `li`. Um `Card as="li"` direto num `Grid as="ul"` estica até a altura da linha sem `block-size: 100%`, e um `CardLink` ou `CardButton` dentro do `li` já ocupa a altura do item.
+
+`CardLink` e `CardButton` são o cartão inteiro clicável, com o elemento certo: um `<a href>`, que segue as mesmas regras de `href` do `Link` (rota do app pelo `navigate` do `UIProvider`, e `native`, `target` e `download` deixam o clique com o navegador), e um `<button type="button">`, que não envia um formulário sozinho. Os dois têm a superfície do `Card` (`variant`, `padding` e `animation`, e os mesmos ganchos `--enchase-card-*`, então um estilo que redesenha o `Card` redesenha os dois), o anel de foco, as camadas de hover e de pressionado dos tokens `--enchase-state-*` e, no botão, `disabled`, que usa `--enchase-card-opacity-disabled` (padrão: o token `--enchase-state-disabled-content`). Com `target="_blank"`, o `CardLink` põe `rel="noopener noreferrer"` e o texto "abre em nova aba" no nome acessível, sem ícone: o desenho do cartão é seu.
+
+Duas regras do HTML valem para o que fica dentro: tudo entra no nome acessível (prefira um título curto e um apoio curto) e não pode haver outro link, botão ou campo. Um `<button>` só aceita elementos de texto (`span`, `strong`, `Badge`, imagens), enquanto um `<a>` aceita também títulos e parágrafos.
+
+O `title` de um item do `Accordion` e o `label` de uma aba do `Tabs` também aceitam nós, não só texto, como um logo e um selo ao lado do nome. A mesma regra vale: eles ficam dentro de um `<button>`, então só cabem elementos de texto, e o texto de tudo o que está dentro é o nome do botão e do painel (um logo decorativo leva `alt=""` ou `aria-hidden`).
+
+```tsx
+<Accordion
+  items={[
+    {
+      value: 'acme',
+      title: (
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+          <img src="/acme.svg" alt="" width={24} height={24} />
+          <span>Acme Ltda</span>
+          <Badge variant="success">Atual</Badge>
+        </span>
+      ),
+      content: <p>Desde 2023.</p>
+    }
+  ]}
+/>
+```
 
 ### Layout e navegação
 
@@ -517,7 +573,7 @@ Quatro níveis de configuração, do mais amplo ao mais específico:
 | `tooltip` | `-duration`, `-scale`, `-ease` |
 | `popover` | `-duration` (padrão: `--enchase-motion-spring-snappy-duration`), `-exit-duration`, `-scale`, `-ease`, `-max-width`, `-max-height` |
 | `button`, `theme-toggle` | `-duration`, `-scale`, `-distance`, `-ease` |
-| `card` | `-duration`, `-distance`, `-ease` |
+| `card` (e `CardButton`, `CardLink`) | `-duration`, `-distance`, `-ease` |
 | `loading` | `-duration`, `-ease` |
 | `skeleton` | `-duration`, `-ease` |
 | `checkbox`, `radio-group` | `-duration`, `-scale`, `-ease` |
