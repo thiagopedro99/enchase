@@ -3,6 +3,7 @@ import { page, userEvent } from 'vitest/browser'
 
 import { contrastRatio } from '@styles/theme/contrast.ts'
 import { Accordion } from '@components/common/Accordion/index.tsx'
+import { Badge } from '@components/common/Badge/index.tsx'
 import { renderInBrowser } from './harness.tsx'
 import { setForcedColors, setReducedMotion } from './media.ts'
 import { unlessWebkit } from './browserSkips.ts'
@@ -200,6 +201,53 @@ describe('Accordion in a real browser', () => {
 
     expect(part('accordion-title').getBoundingClientRect().left).toBeGreaterThan(icon(0).getBoundingClientRect().left)
     expect(getComputedStyle(trigger(0)).textAlign).toBe('start')
+  })
+
+  it('lays out a title made of nodes at the start, grows the button for it and keeps the arrow at the end', () => {
+    const company = (
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <span style={{ display: 'inline-block', inlineSize: 40, blockSize: 40 }} />
+        <span>Acme Ltda</span>
+        <Badge variant="success">Atual</Badge>
+      </span>
+    )
+
+    renderInBrowser(
+      <div style={{ inlineSize: 320 }}>
+        <Accordion items={[{ value: 'a', title: company, content: <p>Desde 2023.</p> }]} />
+      </div>
+    )
+    const box = trigger(0).getBoundingClientRect()
+    const style = getComputedStyle(trigger(0))
+    const title = part('accordion-title').getBoundingClientRect()
+    const arrow = icon(0).getBoundingClientRect()
+    const container = part('accordion').parentElement as HTMLElement
+
+    expect(title.left - box.left).toBeCloseTo(parseFloat(style.paddingInlineStart), 0)
+    expect(box.right - arrow.right).toBeCloseTo(parseFloat(style.paddingInlineEnd), 0)
+    expect(box.height).toBeGreaterThanOrEqual(40 + parseFloat(style.paddingBlockStart) + parseFloat(style.paddingBlockEnd))
+    expect(title.right).toBeLessThanOrEqual(arrow.left)
+    expect(container.scrollWidth).toBeLessThanOrEqual(container.clientWidth)
+    expect(part('accordion-title').querySelector('[data-slot="badge"]')).not.toBeNull()
+  })
+
+  it('wraps the nodes of a title inside a narrow container instead of overflowing it', () => {
+    const wide = (
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+        <span>Empresa com um nome bem comprido</span>
+        <Badge variant="success">Atual</Badge>
+      </span>
+    )
+
+    renderInBrowser(
+      <div style={{ inlineSize: 200 }}>
+        <Accordion items={[{ value: 'a', title: wide, content: <p>Texto.</p> }]} />
+      </div>
+    )
+    const container = part('accordion').parentElement as HTMLElement
+
+    expect(container.scrollWidth).toBeLessThanOrEqual(container.clientWidth)
+    expect(part('accordion-title').getBoundingClientRect().right).toBeLessThanOrEqual(icon(0).getBoundingClientRect().left)
   })
 
   it('breaks an unbreakable title inside a narrow container', () => {

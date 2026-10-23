@@ -5,6 +5,7 @@ import { screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
+import { Badge } from '@components/common/Badge/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
 
 const items = [
@@ -378,5 +379,47 @@ describe('Tabs contract', () => {
     const { container } = renderWithProviders(<Tabs items={items} animation={{ tuning: { duration: 0.5 } }} />)
 
     expect((container.querySelector('[data-slot="tabs"]') as HTMLElement).style.getPropertyValue('--enchase-tabs-duration')).toBe('500ms')
+  })
+})
+
+describe('Tabs with a label made of nodes', () => {
+  const nodes = [
+    {
+      value: 'profile',
+      label: (
+        <>
+          <span>Perfil</span> <Badge variant="primary">Novo</Badge>
+        </>
+      ),
+      content: <p>Dados do perfil</p>
+    },
+    { value: 'billing', label: 'Cobrança', content: <p>Dados de cobrança</p> }
+  ]
+
+  it('renders the nodes inside the tab and names the tab from them', () => {
+    renderWithProviders(<Tabs items={nodes} />)
+
+    const tab = screen.getByRole('tab', { name: 'Perfil Novo' })
+
+    expect(tab.querySelector('[data-slot="badge"]')).toHaveTextContent('Novo')
+    expect(screen.getAllByRole('tab')).toHaveLength(2)
+    expect(tab).toHaveAttribute('aria-selected', 'true')
+  })
+
+  it('names the panel from the nodes of its tab and still switches by click', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Tabs items={nodes} />)
+
+    expect(screen.getByRole('tabpanel', { name: 'Perfil Novo' })).toHaveTextContent('Dados do perfil')
+
+    await user.click(screen.getByRole('tab', { name: 'Cobrança' }))
+
+    expect(screen.getByRole('tabpanel', { name: 'Cobrança' })).toHaveTextContent('Dados de cobrança')
+  })
+
+  it('has no axe violations with nodes in the label', async () => {
+    const { container } = renderWithProviders(<Tabs ariaLabel="Conta" items={nodes} />)
+
+    expect(await axe(container)).toHaveNoViolations()
   })
 })

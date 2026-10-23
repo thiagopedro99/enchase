@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
 import { contrastRatio } from '@styles/theme/contrast.ts'
+import { Badge } from '@components/common/Badge/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
 import { renderInBrowser } from './harness.tsx'
 import { setForcedColors, setReducedMotion } from './media.ts'
@@ -99,6 +100,34 @@ describe('Tabs in a real browser', () => {
     renderInBrowser(<Tabs items={items} />)
 
     expect(tab(0).getBoundingClientRect().left).toBeGreaterThan(tab(1).getBoundingClientRect().left)
+  })
+
+  it('keeps the indicator under a tab whose label is made of nodes and sizes the tab by them', async () => {
+    const nodes = [
+      { value: 'plain', label: 'Perfil', content: <p>Dados do perfil</p> },
+      {
+        value: 'rich',
+        label: (
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+            <span>Notificações</span>
+            <Badge variant="primary">12</Badge>
+          </span>
+        ),
+        content: <p>Notificações</p>
+      }
+    ]
+
+    renderInBrowser(<Tabs ariaLabel="Conta" items={nodes} defaultValue="rich" />)
+    const label = tab(1).querySelector('[data-slot="badge"]') as HTMLElement
+
+    expect(isUnder(part('tabs-indicator'), tab(1))).toBe(true)
+    expect(tab(1).getBoundingClientRect().width).toBeGreaterThan(tab(0).getBoundingClientRect().width)
+    expect(label.getBoundingClientRect().right).toBeLessThanOrEqual(tab(1).getBoundingClientRect().right)
+    expect(getComputedStyle(tab(1)).whiteSpace).toBe('nowrap')
+
+    await userEvent.click(tab(0))
+
+    await expect.poll(() => isUnder(part('tabs-indicator'), tab(0))).toBe(true)
   })
 
   it('keeps the indicator under the selected tab when the tabs change size', async () => {

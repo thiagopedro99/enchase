@@ -3,7 +3,7 @@ import type { MotionOverride } from '@motion/types.ts'
 
 export interface TabsItem {
   value: string
-  label: string
+  label: ReactNode
   content: ReactNode
   disabled?: boolean
 }

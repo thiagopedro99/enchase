@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Input, Tabs } from 'enchase'
+import { Badge, Button, Input, Tabs } from 'enchase'
 import { defaultActivation, manySections, sections } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -43,7 +43,7 @@ const meta = {
   argTypes: {
     items: {
       description:
-        'Abas da lista, na ordem da tela. Cada item tem `value` (único), `label` (texto da aba), `content` (conteúdo do painel) e, se quiser, `disabled`. Todos os painéis ficam no documento e só o da aba escolhida aparece, então o estado dos outros se mantém.',
+        'Abas da lista, na ordem da tela. Cada item tem `value` (único), `label` (o conteúdo da aba: texto ou nós, como um `span` e um `Badge`), `content` (conteúdo do painel) e, se quiser, `disabled`. O `label` fica dentro de um `<button>`, então só cabem elementos de texto, sem outro botão, link ou campo, e tudo o que está nele entra no nome da aba e do painel. Todos os painéis ficam no documento e só o da aba escolhida aparece, então o estado dos outros se mantém.',
       control: false
     },
     value: {
@@ -117,6 +117,40 @@ export const KeepsState: Story = {
         items={[
           { value: 'form', label: 'Formulário', content: <Input label="Nome" /> },
           { value: 'help', label: 'Ajuda', content: <p style={{ margin: 0 }}>Escreva algo no formulário, troque de aba e volte: o texto continua lá.</p> }
+        ]}
+      />
+    </div>
+  )
+}
+
+export const WithNodesInLabel: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'O `label` aceita nós, não só texto: aqui a aba de notificações leva um `Badge` com a contagem. O indicador acompanha a largura da aba inteira, e o nome da aba é o texto de tudo o que está nela ("Notificações 12").'
+      }
+    }
+  },
+  render: () => (
+    <div style={{ inlineSize: 'min(32rem, 100%)' }}>
+      <Tabs
+        ariaLabel="Caixa de entrada"
+        defaultValue="notifications"
+        items={[
+          { value: 'messages', label: 'Mensagens', content: <p style={{ margin: 0 }}>Nenhuma mensagem nova.</p> },
+          {
+            value: 'notifications',
+            label: (
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span>Notificações</span>
+                <Badge variant="primary" size="sm">
+                  12
+                </Badge>
+              </span>
+            ),
+            content: <p style={{ margin: 0 }}>Doze notificações para ler.</p>
+          }
         ]}
       />
     </div>

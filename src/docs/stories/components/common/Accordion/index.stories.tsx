@@ -1,10 +1,33 @@
 import { useState } from 'react'
-import { Accordion, Button } from 'enchase'
+import { Accordion, Badge, Button } from 'enchase'
 import { defaultHeadingLevel, defaultMultiple, faq } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const items = faq.map(({ value, title, text }) => ({ value, title, content: <p style={{ margin: 0 }}>{text}</p> }))
+
+const company = (name: string, current = false) => (
+  <span style={{ display: 'inline-flex', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+    <span
+      aria-hidden="true"
+      style={{ display: 'inline-grid', placeItems: 'center', inlineSize: '2rem', blockSize: '2rem', fontWeight: 600, borderRadius: 'var(--enchase-radius-md)', color: 'var(--enchase-color-on-primary-container)', background: 'var(--enchase-color-primary-container)' }}
+    >
+      {name[0]}
+    </span>
+    <span>{name}</span>
+    {current && (
+      <Badge variant="success" size="sm">
+        Atual
+      </Badge>
+    )}
+  </span>
+)
+
+const experience = [
+  { value: 'acme', title: company('Acme Ltda', true), content: <p style={{ margin: 0 }}>Desde 2023, na equipe de plataforma.</p> },
+  { value: 'globex', title: company('Globex S.A.'), content: <p style={{ margin: 0 }}>De 2019 a 2022, no time de produto.</p> },
+  { value: 'initech', title: company('Initech'), content: <p style={{ margin: 0 }}>De 2016 a 2019, como desenvolvedor.</p> }
+]
 
 const ControlledDemo = () => {
   const [open, setOpen] = useState<string[]>(['returns'])
@@ -51,7 +74,7 @@ const meta = {
   argTypes: {
     items: {
       description:
-        'Itens do acordeão, na ordem da tela. Cada item tem `value` (único), `title` (texto do botão), `content` (conteúdo do painel) e, se quiser, `disabled`. Os painéis fechados ficam no documento, então o estado do conteúdo se mantém.',
+        'Itens do acordeão, na ordem da tela. Cada item tem `value` (único), `title` (o conteúdo do botão: texto ou nós, como um logo, um `span` e um `Badge`), `content` (conteúdo do painel) e, se quiser, `disabled`. O `title` fica dentro de um `<button>`, então só cabem elementos de texto, sem outro botão, link ou campo, e tudo o que está nele entra no nome do botão e do painel. Os painéis fechados ficam no documento, então o estado do conteúdo se mantém.',
       control: false
     },
     multiple: {
@@ -106,4 +129,15 @@ export const DisabledItem: Story = {
 export const Controlled: Story = {
   parameters: { controls: { disable: true } },
   render: () => <ControlledDemo />
+}
+
+export const WithNodesInTitle: Story = {
+  args: { items: experience, defaultValue: ['acme'] },
+  parameters: {
+    docs: {
+      description: {
+        story: 'O `title` aceita nós, não só texto: aqui o logo da empresa, o nome e um `Badge` ficam no botão, em vez de irem para o corpo do painel. Use elementos de texto (`span`, `Badge`, imagens): o título está dentro de um `<button>`. O nome do botão e do painel é o texto de tudo o que está nele, então o logo decorativo leva `aria-hidden` e as imagens, `alt=""`.'
+      }
+    }
+  }
 }

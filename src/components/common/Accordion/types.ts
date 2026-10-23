@@ -3,7 +3,7 @@ import type { MotionOverride } from '@motion/types.ts'
 
 export interface AccordionItem {
   value: string
-  title: string
+  title: ReactNode
   content: ReactNode
   disabled?: boolean
 }

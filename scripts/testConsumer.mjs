@@ -43,8 +43,8 @@ const badgeProps: BadgeProps = { variant: 'success', size: 'sm' }
 const areaProps: TextareaProps = { label: 'Message', rows: 4, resize: 'none' }
 const switchProps: SwitchProps = { label: 'Notifications', defaultChecked: true }
 const radioProps: RadioGroupProps = { label: 'Plan', options: [{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro', disabled: true }], defaultValue: 'free', orientation: 'horizontal', onValueChange: () => undefined }
-const tabsProps: TabsProps = { ariaLabel: 'Sections', items: [{ value: 'a', label: 'One', content: 'First' }, { value: 'b', label: 'Two', content: 'Second' }], activation: 'manual', onValueChange: () => undefined }
-const accordionProps: AccordionProps = { items: [{ value: 'a', title: 'One', content: 'First' }], multiple: true, defaultValue: ['a'], headingLevel: 2, onValueChange: () => undefined }
+const tabsProps: TabsProps = { ariaLabel: 'Sections', items: [{ value: 'a', label: <span>One <Badge>3</Badge></span>, content: 'First' }, { value: 'b', label: 'Two', content: 'Second' }], activation: 'manual', onValueChange: () => undefined }
+const accordionProps: AccordionProps = { items: [{ value: 'a', title: <span>One <Badge>Now</Badge></span>, content: 'First' }, { value: 'b', title: 'Two', content: 'Second' }], multiple: true, defaultValue: ['a'], headingLevel: 2, onValueChange: () => undefined }
 const iconProps: IconProps = { size: 20, title: 'Close', className: 'mine' }
 const priceFormat: NumberInputFormat = { style: 'currency', currency: 'BRL', maximumFractionDigits: 2 }
 const numberProps: NumberInputProps = { label: 'Price', min: 0, max: 100, step: 0.5, largeStep: 5, defaultValue: 10, formatOptions: priceFormat, name: 'price', onValueChange: (value: number | null) => void value }

@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
 import { Accordion } from '@components/common/Accordion/index.tsx'
+import { Badge } from '@components/common/Badge/index.tsx'
 
 const items = [
   { value: 'shipping', title: 'Envio', content: <p>Enviamos em até dois dias.</p> },
@@ -345,5 +346,47 @@ describe('Accordion contract', () => {
 
     expect(style.getPropertyValue('--enchase-accordion-duration')).toBe('500ms')
     expect(style.getPropertyValue('--enchase-accordion-distance')).toBe('10px')
+  })
+})
+
+describe('Accordion with a title made of nodes', () => {
+  const company = [
+    {
+      value: 'acme',
+      title: (
+        <>
+          <img src="/acme.svg" alt="" />
+          <span>Acme Ltda</span> <Badge variant="success">Atual</Badge>
+        </>
+      ),
+      content: <p>Desde 2023.</p>
+    },
+    { value: 'old', title: 'Antiga S.A.', content: <p>Até 2022.</p> }
+  ]
+
+  it('renders the nodes inside the title of the trigger and names the button from them', () => {
+    const { container } = renderWithProviders(<Accordion items={company} />)
+    const title = container.querySelector('[data-slot="accordion-title"]') as HTMLElement
+
+    expect(title.querySelector('img')).toBeInTheDocument()
+    expect(title.querySelector('[data-slot="badge"]')).toHaveTextContent('Atual')
+    expect(trigger('Acme Ltda Atual')).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.getAllByRole('button')).toHaveLength(2)
+  })
+
+  it('names the panel from the nodes of its title and mixes with titles that are text', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Accordion items={company} />)
+
+    await user.click(trigger('Acme Ltda Atual'))
+
+    expect(screen.getByRole('region', { name: 'Acme Ltda Atual' })).toHaveTextContent('Desde 2023.')
+    expect(trigger('Antiga S.A.')).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('has no axe violations with nodes in the title', async () => {
+    const { container } = renderWithProviders(<Accordion items={company} defaultValue={['acme']} />)
+
+    expect(await axe(container)).toHaveNoViolations()
   })
 })
