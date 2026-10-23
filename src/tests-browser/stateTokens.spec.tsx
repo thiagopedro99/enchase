@@ -2,16 +2,21 @@ import { render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { userEvent } from 'vitest/browser'
 
+import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Alert } from '@components/common/Alert/index.tsx'
+import { Button } from '@components/common/Button/index.tsx'
+import { CardButton } from '@components/common/CardButton/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
+import { Pagination } from '@components/common/Pagination/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
-import { pressMouse, releaseMouse } from './pointer.ts'
+import { Tabs } from '@components/common/Tabs/index.tsx'
+import { letGoOfTheMouse, pressMouse } from './pointer.ts'
 import { renderInBrowser } from './harness.tsx'
 import { waitForSettled } from './settle.ts'
 
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, ReactElement, ReactNode } from 'react'
 
 const columns = [{ key: 'name', header: 'Name' }]
 
@@ -31,8 +36,25 @@ const shadowOf = (value: string) => ({ alpha: alphaOf(value), spread: Number([..
 
 const alertWithClose = <Alert onClose={() => undefined}>Saved</Alert>
 
+const pick = (selector: string) => document.body.querySelector(selector) as HTMLElement
+
+const layerOf = (element: HTMLElement) => Number(getComputedStyle(element, '::after').opacity)
+
+const tabItems = [
+  { value: 'a', label: 'First', content: 'One' },
+  { value: 'b', label: 'Second', content: 'Two' }
+]
+
+const layers: [name: string, ui: ReactElement, selector: string][] = [
+  ['Button', <Button variant="outline">Save</Button>, '[data-slot="button"]'],
+  ['CardButton', <CardButton>Open</CardButton>, '[data-slot="card-button"]'],
+  ['Pagination', <Pagination pageCount={5} defaultPage={1} />, '[data-slot="pagination-page"]:not([aria-current])'],
+  ['Tabs', <Tabs ariaLabel="Sections" items={tabItems} />, '[data-slot="tabs-tab"]:not([aria-selected="true"])'],
+  ['Accordion', <Accordion items={[{ value: 'a', title: 'Question', content: 'Answer' }]} />, '[data-slot="accordion-trigger"]']
+]
+
 afterEach(async () => {
-  await releaseMouse()
+  await letGoOfTheMouse()
 })
 
 describe('the hover layer from the tokens', () => {
@@ -170,5 +192,44 @@ describe('the halo of the selection controls from the tokens', () => {
     await userEvent.hover(part('switch'))
     await waitForSettled(() => part('switch'))
     expect(shadowOf(getComputedStyle(part('switch-thumb')).boxShadow).spread).toBe(0)
+  })
+})
+
+describe.each(layers)('the layers over a %s that the mouse presses', (_, ui, selector) => {
+  const tokens = { '--enchase-state-hover': '0.5', '--enchase-state-pressed': '0.2' }
+
+  it('lays the hover layer while the pointer rests on it and the pressed layer, not the hover one, while the mouse button is down', async () => {
+    renderInBrowser(scoped(tokens, ui))
+    const target = pick(selector)
+
+    await userEvent.hover(target)
+    await waitForSettled(() => target)
+
+    expect(layerOf(target)).toBeCloseTo(0.5, 3)
+
+    await pressMouse(selector)
+    await waitForSettled(() => target)
+
+    expect(layerOf(target)).toBeCloseTo(0.2, 3)
+  })
+})
+
+describe.each(layers.filter(([name]) => name === 'Button' || name === 'CardButton'))('the layers over a %s that the keyboard focuses', (_, ui, selector) => {
+  const tokens = { '--enchase-state-hover': '0.5', '--enchase-state-pressed': '0.2' }
+
+  it('keeps the layer of the focus when the pointer also rests on it, instead of the hover one', async () => {
+    renderInBrowser(scoped(tokens, ui))
+    const target = pick(selector)
+
+    await userEvent.tab()
+    await waitForSettled(() => target)
+
+    expect(target).toBe(document.activeElement)
+    expect(layerOf(target)).toBeCloseTo(0.2, 3)
+
+    await userEvent.hover(target)
+    await waitForSettled(() => target)
+
+    expect(layerOf(target)).toBeCloseTo(0.2, 3)
   })
 })

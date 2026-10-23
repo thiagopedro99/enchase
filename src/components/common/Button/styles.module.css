@@ -141,11 +141,6 @@
   outline-offset: var(--enchase-focus-offset, 2px);
 }
 
-.button:focus-visible::after,
-.button:active:not(:disabled)::after {
-  opacity: var(--enchase-state-pressed);
-}
-
 .button[data-motion='press']:active:not(:disabled) {
   transform: scale(var(--enchase-button-scale, 0.97));
 }
@@ -175,6 +170,11 @@
       transform: translateY(calc(var(--enchase-button-distance, var(--enchase-motion-distance-xs)) * -1));
     }
   }
+}
+
+.button:focus-visible:not(:disabled)::after,
+.button:active:not(:disabled)::after {
+  opacity: var(--enchase-state-pressed);
 }
 
 @media (prefers-reduced-motion: reduce) {

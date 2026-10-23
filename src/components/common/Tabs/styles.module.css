@@ -85,10 +85,6 @@
   outline-offset: var(--enchase-focus-offset-inset, -2px);
 }
 
-.tab:active:not(:disabled)::after {
-  opacity: var(--enchase-state-pressed);
-}
-
 @media (hover: hover) and (pointer: fine) {
   .tab:hover:not(:disabled)::after {
     opacity: var(--enchase-state-hover);
@@ -97,6 +93,10 @@
   .tab:hover:not(:disabled, [aria-selected='true']) {
     color: var(--enchase-tabs-tab-color-hover, var(--enchase-color-text-primary));
   }
+}
+
+.tab:active:not(:disabled)::after {
+  opacity: var(--enchase-state-pressed);
 }
 
 .indicator {

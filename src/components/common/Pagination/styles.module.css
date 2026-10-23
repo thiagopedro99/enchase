@@ -89,14 +89,14 @@
   outline-offset: var(--enchase-focus-offset, 2px);
 }
 
-.control:active:not([aria-disabled='true'])::after {
-  opacity: var(--enchase-state-pressed);
-}
-
 @media (hover: hover) and (pointer: fine) {
   .control:hover:not([aria-disabled='true'])::after {
     opacity: var(--enchase-state-hover);
   }
+}
+
+.control:active:not([aria-disabled='true'])::after {
+  opacity: var(--enchase-state-pressed);
 }
 
 .ellipsis {

@@ -47,7 +47,7 @@
   outline-offset: var(--enchase-focus-offset, 2px);
 }
 
-.tile:focus-visible::after,
+.tile:focus-visible:not(:disabled)::after,
 .tile:active:not(:disabled)::after {
   opacity: var(--enchase-state-pressed);
 }

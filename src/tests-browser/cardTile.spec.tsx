@@ -7,7 +7,7 @@ import { Card } from '@components/common/Card/index.tsx'
 import { Grid } from '@components/common/Grid/index.tsx'
 import { builtInStyleEntries } from '@tests/shared/fixtures/styles.ts'
 import { at, becomes, hooked } from './hookProbes.ts'
-import { pressMouse, releaseMouse } from './pointer.ts'
+import { letGoOfTheMouse, pressMouse } from './pointer.ts'
 import { setReducedMotion } from './media.ts'
 import { renderInBrowser } from './harness.tsx'
 import { frames } from './settle.ts'
@@ -45,11 +45,6 @@ const addStyle = (css: string, where: 'start' | 'end' = 'end') => {
   if (where === 'start') document.head.prepend(style)
   else document.head.append(style)
   added.push(style)
-}
-
-const letGoOfTheMouse = async () => {
-  await releaseMouse()
-  await releaseMouse()
 }
 
 afterEach(async () => {
