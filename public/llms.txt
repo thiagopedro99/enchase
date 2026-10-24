@@ -6,7 +6,8 @@ Instalação: `npm install enchase`. Entradas do pacote: `enchase` (componentes,
 
 ## Documentação
 
-- [README](https://raw.githubusercontent.com/thiagopedro99/enchase/main/README.md): instalação, início rápido (Next.js e Vite), navegação sem roteador e como cada `href` é tratado, tema e paleta pela cor da marca, movimento e renderização no servidor
+- [README](https://raw.githubusercontent.com/thiagopedro99/enchase/main/README.md): introdução curta, em inglês: instalação, navegadores suportados, início rápido (Next.js e Vite), tema pela cor da marca e o que os testes garantem
+- [README.pt-BR](https://raw.githubusercontent.com/thiagopedro99/enchase/main/README.pt-BR.md): o guia completo, em português: navegação sem roteador e como cada `href` é tratado, tema e paleta pela cor da marca, movimento, customização por CSS e renderização no servidor
 - [API](https://raw.githubusercontent.com/thiagopedro99/enchase/main/API.md): props, tipos, valores padrão e hooks de todos os componentes
 - [Storybook](https://enchase.othiagosilva.com.br/docs/): demonstrações interativas de cada componente
 

@@ -77,7 +77,7 @@ export const renderApiDocs = ({ components, hooks, icons, cssHooks = [] }) => {
       '',
       'Referência das props, dos hooks e dos ícones exportados por `enchase` e `enchase/icons`, gerada por `npm run docs:api` a partir dos tipos do pacote e das stories do Storybook. Não edite este arquivo à mão: mude o tipo ou o `argTypes` da story e gere de novo.',
       '',
-      'Exemplos de uso estão no [README](README.md) e no [Storybook](https://enchase.othiagosilva.com.br/docs/).',
+      'Exemplos de uso estão no [README](README.md), no [guia completo](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md), em português, e no [Storybook](https://enchase.othiagosilva.com.br/docs/).',
       '',
       '## Componentes',
       '',
