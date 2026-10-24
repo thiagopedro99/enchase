@@ -18,6 +18,35 @@ const Trap = () => {
   )
 }
 
+const refuseFocus = (element: HTMLElement | null) => {
+  if (element) element.focus = () => undefined
+}
+
+const TrapWithAwkwardControls = () => {
+  const ref = useRef<HTMLDivElement>(null)
+  useFocusTrap(ref, true)
+
+  return (
+    <div ref={ref} role="dialog" aria-label="Caixa" tabIndex={-1}>
+      <input type="hidden" name="token" value="x" />
+      <button>Primeiro</button>
+      <button ref={refuseFocus}>Preso</button>
+      <button>Terceiro</button>
+    </div>
+  )
+}
+
+const TrapWithNothingToFocus = () => {
+  const ref = useRef<HTMLDivElement>(null)
+  useFocusTrap(ref, true)
+
+  return (
+    <div ref={ref} role="dialog" aria-label="Caixa" tabIndex={-1}>
+      <button ref={refuseFocus}>Preso</button>
+    </div>
+  )
+}
+
 const Page = () => {
   const [open, setOpen] = useState(false)
 
@@ -133,5 +162,34 @@ describe('useFocusTrap', () => {
     expect(control('Primeiro')).toHaveFocus()
     fireEvent.keyDown(control('Primeiro'), { key: 'Tab', shiftKey: true })
     expect(control('Terceiro')).toHaveFocus()
+  })
+
+  it('starts on the first control that can take focus when a hidden input comes before it', () => {
+    render(<TrapWithAwkwardControls />)
+
+    expect(control('Primeiro')).toHaveFocus()
+  })
+
+  it('steps over a control that refuses the focus instead of staying where it was', () => {
+    render(<TrapWithAwkwardControls />)
+
+    fireEvent.keyDown(control('Primeiro'), { key: 'Tab' })
+    expect(control('Terceiro')).toHaveFocus()
+    fireEvent.keyDown(control('Terceiro'), { key: 'Tab' })
+    expect(control('Primeiro')).toHaveFocus()
+    fireEvent.keyDown(control('Primeiro'), { key: 'Tab', shiftKey: true })
+    expect(control('Terceiro')).toHaveFocus()
+    fireEvent.keyDown(control('Terceiro'), { key: 'Tab', shiftKey: true })
+    expect(control('Primeiro')).toHaveFocus()
+  })
+
+  it('keeps the focus on the dialog itself when no control inside can take it', () => {
+    render(<TrapWithNothingToFocus />)
+
+    expect(screen.getByRole('dialog')).toHaveFocus()
+
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Tab' })
+
+    expect(screen.getByRole('dialog')).toHaveFocus()
   })
 })

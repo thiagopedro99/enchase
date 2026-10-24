@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 
-import { focusNextAfter, focusTrigger, tabbablesIn } from './focus.ts'
+import { focusNextAfter, focusTrigger } from './focus.ts'
+import { tabbablesIn } from '@utils/tabbable.ts'
 
 import type { PopoverTreeNode } from './types.ts'
 import type { RefObject } from 'react'

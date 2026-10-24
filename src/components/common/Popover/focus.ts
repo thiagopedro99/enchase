@@ -1,8 +1,4 @@
-import { focusableSelector } from '@hooks/useFocusTrap.ts'
-
-const isVisible = (element: HTMLElement) => !element.closest('[hidden], [inert]') && getComputedStyle(element).visibility !== 'hidden'
-
-export const tabbablesIn = (root: ParentNode) => Array.from(root.querySelectorAll<HTMLElement>(focusableSelector)).filter(isVisible)
+import { tabbablesIn } from '@utils/tabbable.ts'
 
 export const focusFirst = (container: HTMLElement) => {
   const target = tabbablesIn(container)[0] ?? container

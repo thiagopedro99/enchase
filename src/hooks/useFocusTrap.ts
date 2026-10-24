@@ -1,22 +1,9 @@
 import { useEffect } from 'react'
 
+import { focusInOrder, tabbablesIn } from '@utils/tabbable.ts'
 import { lastInteractionTarget } from './interactionTarget.ts'
 
 import type { RefObject } from 'react'
-
-export const focusableSelector ='a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
-
-const isRadio = (element: HTMLElement): element is HTMLInputElement => element instanceof HTMLInputElement && element.type === 'radio'
-
-const tabbableIn = (container: HTMLElement) => {
-  const candidates = Array.from(container.querySelectorAll<HTMLElement>(focusableSelector)).filter((element) => !element.closest('[hidden], [inert]'))
-
-  return candidates.filter((element) => {
-    if (!isRadio(element) || !element.name || element.checked) return true
-
-    return !candidates.some((other) => isRadio(other) && other.name === element.name && other.checked)
-  })
-}
 
 const triggerToRestore = () => {
   const active = document.activeElement
@@ -33,22 +20,24 @@ export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, active
 
     const trigger = triggerToRestore()
 
-    const initialTarget = container.querySelector<HTMLElement>('[data-autofocus]') ?? tabbableIn(container)[0] ?? container
-    initialTarget.focus({ preventScroll: true })
+    const initialTarget = container.querySelector<HTMLElement>('[data-autofocus]')
+
+    if (initialTarget) initialTarget.focus({ preventScroll: true })
+    else if (!focusInOrder(tabbablesIn(container), 0, 1)) container.focus({ preventScroll: true })
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Tab' || event.defaultPrevented) return
 
-      const focusable = tabbableIn(container)
+      const focusable = tabbablesIn(container)
       if (focusable.length === 0) return event.preventDefault()
 
       const current = document.activeElement
       const index = current instanceof HTMLElement ? focusable.indexOf(current) : -1
       const step = event.shiftKey ? -1 : 1
-      const next = index === -1 ? (event.shiftKey ? focusable[focusable.length - 1] : focusable[0]) : focusable[(index + step + focusable.length) % focusable.length]
+      const start = index === -1 ? (event.shiftKey ? focusable.length - 1 : 0) : (index + step + focusable.length) % focusable.length
 
       event.preventDefault()
-      next.focus({ preventScroll: true })
+      if (!focusInOrder(focusable, start, step)) container.focus({ preventScroll: true })
     }
 
     container.addEventListener('keydown', handleKeyDown)
