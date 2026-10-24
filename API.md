@@ -728,18 +728,18 @@ Devolve o `id` da seção que está na faixa de leitura, de `topOffset` px (padr
 useToast(): ToastContextType
 ```
 
-Abre notificações pelos métodos `success`, `error`, `warning` e `info`, por exemplo `success("Salvo", 3000)`. `duration` está em milissegundos e 0 mantém a notificação aberta. Lança um erro fora do `ToastProvider`.
+Abre notificações pelos métodos `success`, `error`, `warning` e `info`, por exemplo `success("Salvo", 3000)`, e cada um devolve o id da notificação, que `removeToast(id)` aceita para fechá-la. `duration` está em milissegundos e 0 mantém a notificação aberta até alguém fechá-la. Lança um erro fora do `ToastProvider`.
 
 Retorno:
 
 | Membro | Tipo |
 | --- | --- |
-| `addToast` | `(message: string, type: ToastType, duration?: number, options?: ToastOptions) => void` |
+| `addToast` | `(message: string, type: ToastType, duration?: number, options?: ToastOptions) => string` |
 | `removeToast` | `(id: string) => void` |
-| `success` | `(message: string, duration?: number, options?: ToastOptions) => void` |
-| `error` | `(message: string, duration?: number, options?: ToastOptions) => void` |
-| `warning` | `(message: string, duration?: number, options?: ToastOptions) => void` |
-| `info` | `(message: string, duration?: number, options?: ToastOptions) => void` |
+| `success` | `(message: string, duration?: number, options?: ToastOptions) => string` |
+| `error` | `(message: string, duration?: number, options?: ToastOptions) => string` |
+| `warning` | `(message: string, duration?: number, options?: ToastOptions) => string` |
+| `info` | `(message: string, duration?: number, options?: ToastOptions) => string` |
 
 ### useUIConfig
 

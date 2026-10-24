@@ -24,6 +24,8 @@ export const ToastProvider = ({ children, animation, className, style }: ToastPr
     const toast: Toast = { id, message, type, duration, ...options }
 
     setEntries((previous) => [...previous, { toast, closing: false }])
+
+    return id
   }, [])
 
   const removeToast = useCallback((id: string) => {

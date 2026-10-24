@@ -1,4 +1,5 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
+import { useState } from 'react'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
@@ -22,6 +23,42 @@ const Probe = ({ duration }: { duration?: number }) => {
 const toastCount = () => screen.queryAllByRole('button', { name: 'Fechar notificação' }).length
 
 const expectCount = (expected: number) => waitFor(() => expect(toastCount()).toBe(expected))
+
+const issued: string[] = []
+
+const Remote = () => {
+  const toast = useToast()
+  const [id, setId] = useState('')
+
+  return (
+    <>
+      <button
+        onClick={() => {
+          const given = toast.info('Saving', 0)
+          issued.push(given)
+          setId(given)
+        }}
+      >
+        open
+      </button>
+      <button onClick={() => toast.removeToast(id)}>remove</button>
+    </>
+  )
+}
+
+const Every = () => {
+  const toast = useToast()
+
+  return (
+    <button
+      onClick={() => {
+        issued.push(toast.addToast('a', 'info', 0), toast.success('b', 0), toast.error('c', 0), toast.warning('d', 0), toast.info('e', 0))
+      }}
+    >
+      all
+    </button>
+  )
+}
 
 const renders = { current: 0 }
 
@@ -49,6 +86,34 @@ describe('useToast consumers', () => {
 })
 
 describe('Toast', () => {
+  it('gives back the id of the toast, which removeToast takes to close it', async () => {
+    const user = userEvent.setup()
+    issued.length = 0
+    renderWithProviders(<Remote />)
+
+    await user.click(screen.getByRole('button', { name: 'open' }))
+    await expectCount(1)
+
+    expect(typeof issued[0]).toBe('string')
+    expect(issued[0]).not.toBe('')
+
+    await user.click(screen.getByRole('button', { name: 'remove' }))
+
+    await expectCount(0)
+  })
+
+  it('gives a different id for each toast, whichever method opened it', async () => {
+    const user = userEvent.setup()
+    issued.length = 0
+    renderWithProviders(<Every />)
+
+    await user.click(screen.getByRole('button', { name: 'all' }))
+
+    expect(issued).toHaveLength(5)
+    expect(new Set(issued).size).toBe(5)
+    expect(issued.every((id) => typeof id === 'string' && id !== '')).toBe(true)
+  })
+
   it('renders into a persistent labelled live region', () => {
     renderWithProviders(<Probe />)
 

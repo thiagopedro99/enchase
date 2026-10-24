@@ -16,12 +16,12 @@ export interface Toast extends ToastOptions {
 }
 
 export interface ToastContextType {
-  addToast: (message: string, type: ToastType, duration?: number, options?: ToastOptions) => void
+  addToast: (message: string, type: ToastType, duration?: number, options?: ToastOptions) => string
   removeToast: (id: string) => void
-  success: (message: string, duration?: number, options?: ToastOptions) => void
-  error: (message: string, duration?: number, options?: ToastOptions) => void
-  warning: (message: string, duration?: number, options?: ToastOptions) => void
-  info: (message: string, duration?: number, options?: ToastOptions) => void
+  success: (message: string, duration?: number, options?: ToastOptions) => string
+  error: (message: string, duration?: number, options?: ToastOptions) => string
+  warning: (message: string, duration?: number, options?: ToastOptions) => string
+  info: (message: string, duration?: number, options?: ToastOptions) => string
 }
 
 export interface ToastProviderProps {
