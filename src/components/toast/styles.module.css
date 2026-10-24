@@ -12,7 +12,7 @@
   pointer-events: none;
 }
 
-.container:dir(rtl) {
+[dir='rtl'] .container {
   inset-inline-end: max(1em, env(safe-area-inset-left, 0px));
 }
 
@@ -158,7 +158,7 @@
   animation: drain var(--enchase-toast-lifetime, 3000ms) linear forwards;
 }
 
-.progress:dir(rtl) {
+[dir='rtl'] .progress {
   transform-origin: right;
 }
 

@@ -2,6 +2,8 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { consumerCss } from './consumerCss.mjs'
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const { exports } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 
@@ -82,9 +84,29 @@ for (const key of ['./styles', './styles/*']) {
   if (key in exports) leaks.push(`the package exports ${key}: leave it out, so that forgetting the .css of ./styles.css fails instead of resolving to code that does nothing`)
 }
 
+const rightToLeft = /\[dir=["']?rtl["']?\]/g
+
+const sources = readdirSync(join(root, 'src'), { recursive: true }).filter((name) => name.endsWith('.module.css'))
+const wanted = sources.map((name) => (readFileSync(join(root, 'src', name), 'utf8').match(rightToLeft) ?? []).length).reduce((sum, count) => sum + count, 0)
+
+for (const file of ['dist-lib/styles.css', 'dist-lib/styles.layer.css']) {
+  const stylesheets = [
+    [file, readFileSync(join(root, file), 'utf8')],
+    [`${file} after the default build of Vite`, await consumerCss(join(root, file))]
+  ]
+
+  for (const [where, css] of stylesheets) {
+    const found = (css.match(rightToLeft) ?? []).length
+
+    if (found !== wanted) leaks.push(`${where} has ${found} [dir=rtl] selectors and the sources have ${wanted}: a right to left rule did not survive`)
+    if (css.includes(':dir(')) leaks.push(`${where} has :dir() selectors: an app that builds for a browser without :dir() gets them rewritten as :lang() lists, which follow the language of the page and not its direction, so a right to left rule must read the dir attribute`)
+    if (css.includes(':lang(')) leaks.push(`${where} has :lang() selectors, which the sources do not: a right to left rule was rewritten as a list of languages, and a document with dir="rtl" and lang="en" is not mirrored`)
+  }
+}
+
 if (leaks.length > 0) {
-  console.error(`the entries of the package are not isolated:\n${leaks.map((leak) => `  - ${leak}`).join('\n')}`)
+  console.error(`the package is not as it should be:\n${leaks.map((leak) => `  - ${leak}`).join('\n')}`)
   process.exit(1)
 }
 
-console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", and each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches (${jsEntries.length} entries walked)`)
+console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches (${jsEntries.length} entries walked), and the css mirrors right to left from the dir attribute, as published and after the default build of Vite`)

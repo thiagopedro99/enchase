@@ -90,7 +90,7 @@
     color var(--enchase-number-input-duration, var(--enchase-motion-duration-fast)) var(--enchase-number-input-ease, var(--enchase-motion-ease-out));
 }
 
-.label:dir(rtl) {
+[dir='rtl'] .label {
   transform-origin: right top;
 }
 

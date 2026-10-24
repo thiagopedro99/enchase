@@ -4,6 +4,6 @@
   vertical-align: middle;
 }
 
-:where(.icon[data-directional]:dir(rtl)) {
+:where([dir='rtl'] .icon[data-directional]) {
   transform: scaleX(-1);
 }

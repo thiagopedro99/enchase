@@ -81,6 +81,21 @@ describe('Skeleton in a real browser', () => {
     expect(getComputedStyle(element, '::after').display).toBe('none')
   })
 
+  it('drops the sweep under reduced motion in right-to-left too, where the sweep has a rule of its own', async () => {
+    renderInBrowser(
+      <div dir="rtl">
+        <Skeleton data-testid="skeleton" />
+      </div>,
+      'auto'
+    )
+    const sweep = () => getComputedStyle(page.getByTestId('skeleton').element(), '::after')
+
+    await setReducedMotion('reduce')
+
+    expect(sweep().display).toBe('none')
+    expect(sweep().animationName).toBe('none')
+  })
+
   it('keeps the reduced motion pulse looping instead of freezing it', async () => {
     renderInBrowser(<Skeleton data-testid="skeleton" />, 'auto')
     const element = page.getByTestId('skeleton').element()

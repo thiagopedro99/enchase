@@ -42,7 +42,7 @@
   animation: sweep var(--enchase-skeleton-duration, 1.5s) var(--enchase-skeleton-ease, var(--enchase-motion-ease-in-out)) infinite;
 }
 
-.skeleton[data-motion='on']:dir(rtl)::after {
+[dir='rtl'] .skeleton[data-motion='on']::after {
   animation-name: sweepReverse;
 }
 
@@ -83,7 +83,7 @@
   }
 
   .skeleton[data-motion='on']::after,
-  .skeleton[data-motion='on']:dir(rtl)::after {
+  [dir='rtl'] .skeleton[data-motion='on']::after {
     animation: none;
     display: none;
   }

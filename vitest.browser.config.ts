@@ -1,10 +1,27 @@
+import { resolve } from 'node:path'
 import { defineConfig } from 'vitest/config'
 import { playwright } from '@vitest/browser-playwright'
 import { devices } from 'playwright'
 
+import { consumerCss } from './scripts/consumerCss.mjs'
 import base from './vite.config.ts'
 
+import type { Plugin } from 'vite'
 import type { CDPSession, FrameLocator, Page } from 'playwright'
+
+const consumerStylesId = 'virtual:enchase-consumer-css'
+
+const consumerStyles = (): Plugin => ({
+  name: 'enchase-consumer-css',
+  resolveId: (source) => (source === consumerStylesId ? `\0${consumerStylesId}` : undefined),
+  load: async (id) => {
+    if (id !== `\0${consumerStylesId}`) return undefined
+
+    const [plain, layered] = await Promise.all([consumerCss(resolve('dist-lib/styles.css')), consumerCss(resolve('dist-lib/styles.layer.css'))])
+
+    return `export const plain = ${JSON.stringify(plain)}\nexport const layered = ${JSON.stringify(layered)}`
+  }
+})
 
 const browsers = ['chromium', 'firefox', 'webkit'] as const
 const requested = process.env.ENCHASE_BROWSER ?? 'chromium'
@@ -58,7 +75,7 @@ const browserOptions = (provider = playwright()) => ({
 })
 
 export default defineConfig({
-  plugins: base.plugins,
+  plugins: [...(base.plugins ?? []), consumerStyles()],
   resolve: base.resolve,
   optimizeDeps: { include: ['axe-core'] },
   test: {

@@ -108,7 +108,7 @@
     color var(--enchase-textarea-duration, var(--enchase-motion-duration-fast)) var(--enchase-textarea-ease, var(--enchase-motion-ease-out));
 }
 
-.label:dir(rtl) {
+[dir='rtl'] .label {
   transform-origin: right center;
 }
 

@@ -2,8 +2,21 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
+import { readFileSync } from 'fs'
 
 const root = dirname(fileURLToPath(import.meta.url))
+
+const browsers: Record<string, string> = { chrome: 'chrome', edge: 'edge', firefox: 'firefox', safari: 'safari', ios_saf: 'ios' }
+
+const toCssTarget = (entry: string) => {
+  const [, name, version] = /^(\w+) >= ([\d.]+)$/.exec(entry) ?? []
+
+  if (!browsers[name]) throw new Error(`the browserslist entry "${entry}" is not name >= version for ${Object.keys(browsers).join(', ')}`)
+
+  return `${browsers[name]}${version}`
+}
+
+const cssTarget = (JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')).browserslist as string[]).map(toCssTarget)
 
 const clientEntryName = 'index'
 
@@ -29,6 +42,7 @@ export default defineConfig({
     sourcemap: false,
     minify: false,
     cssCodeSplit: false,
+    cssTarget,
     cssMinify: 'lightningcss',
     copyPublicDir: false,
     lib: {

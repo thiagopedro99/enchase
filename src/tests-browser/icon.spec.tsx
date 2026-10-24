@@ -47,15 +47,24 @@ describe('Icon in a real browser', () => {
     }
   })
 
-  it('does not mirror a directional icon outside a right-to-left tree', () => {
+  it('mirrors a directional icon inside a right-to-left island of a left-to-right page', () => {
     const { container } = renderInBrowser(
-      <div dir="ltr">
+      <div dir="rtl">
         <ChevronRightIcon />
       </div>
     )
-    document.documentElement.setAttribute('dir', 'rtl')
+    document.documentElement.setAttribute('dir', 'ltr')
+
+    expect(transformOf(container.querySelector('svg') as Element)).toBe('matrix(-1, 0, 0, 1, 0, 0)')
+  })
+
+  it('leaves a directional icon alone in a left-to-right page, whatever the language of the page', () => {
+    document.documentElement.setAttribute('lang', 'ar')
+    const { container } = renderInBrowser(<ChevronRightIcon />)
 
     expect(transformOf(container.querySelector('svg') as Element)).toBe('none')
+
+    document.documentElement.removeAttribute('lang')
   })
 
   it('lets the class of the user win over the icon own style', () => {

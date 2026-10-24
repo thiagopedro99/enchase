@@ -176,7 +176,7 @@
     color var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out));
 }
 
-.label:dir(rtl) {
+[dir='rtl'] .label {
   transform-origin: right top;
 }
 

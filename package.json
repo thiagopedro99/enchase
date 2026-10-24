@@ -8,6 +8,13 @@
   "sideEffects": [
     "**/*.css"
   ],
+  "browserslist": [
+    "chrome >= 120",
+    "edge >= 120",
+    "firefox >= 129",
+    "safari >= 17.5",
+    "ios_saf >= 17.5"
+  ],
   "keywords": [
     "react",
     "components",

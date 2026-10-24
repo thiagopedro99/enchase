@@ -75,7 +75,7 @@
   transform: translateX(var(--switch-travel)) scale(1);
 }
 
-.hidden:checked + .track .thumb:dir(rtl) {
+[dir='rtl'] .hidden:checked + .track .thumb {
   transform: translateX(calc(var(--switch-travel) * -1)) scale(1);
 }
 

@@ -4,6 +4,6 @@
   --enchase-icon-swap-rotate: -30deg;
 }
 
-:where(.slot:dir(rtl)) {
+:where([dir='rtl'] .slot) {
   --enchase-icon-swap-rotate: 30deg;
 }
