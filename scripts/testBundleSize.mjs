@@ -41,11 +41,14 @@ for (const name of names) {
 console.log(JSON.stringify(hooks))
 `
 
-const bundle = async (project, entry) => {
+const devOnlyMessages = ['below the minimum contrast', 'should stay at']
+
+const bundle = async (project, entry, define = {}) => {
   const result = await build({
     root: project,
     configFile: false,
     logLevel: 'silent',
+    define,
     build: {
       write: false,
       minify: true,
@@ -107,6 +110,18 @@ try {
       if (styles.includes(name) && carried.length < hooks.length * 0.9) failures.push(`${label} carries ${carried.length} of the ${hooks.length} hooks of the ${name} style, so the check for a leak cannot be trusted`)
     }
   }
+
+  const providerEntry = join(consumer, 'ColorModeProvider.js')
+  const development = await bundle(consumer, providerEntry)
+  const production = await bundle(consumer, providerEntry, { 'process.env.NODE_ENV': '"production"' })
+
+  console.log(`ColorModeProvider with NODE_ENV production: ${Buffer.byteLength(production)} bytes minified, against ${Buffer.byteLength(development)} bytes with the environment left to the bundler`)
+
+  if (!devOnlyMessages.every((message) => development.includes(message))) failures.push('the warnings of the theme are not in the development bundle of the ColorModeProvider, so the production check below cannot be trusted')
+
+  const leaked = devOnlyMessages.filter((message) => production.includes(message))
+
+  if (leaked.length > 0) failures.push(`the production bundle of the ColorModeProvider still carries the warnings of the theme (${leaked.map((message) => `"${message}"`).join(', ')}): the check of process.env.NODE_ENV no longer lets the bundler drop them`)
 
   if (failures.length > 0) throw new Error(`a single import pulls in too much code:\n${failures.map((line) => `  - ${line}`).join('\n')}`)
 } finally {

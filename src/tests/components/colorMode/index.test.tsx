@@ -290,6 +290,19 @@ describe('ColorModeProvider contrast warning', () => {
     warn.mockRestore()
   })
 
+  it('keeps rendering when the environment cannot be read, as in native ESM without a bundler', () => {
+    mockScheme('light')
+    const warn = warnSpy()
+    vi.stubGlobal('process', undefined)
+
+    expect(() => renderProbe({ theme: { light: { colors: { onPrimary: '#EEEEEE', primary: '#DDDDDD' } } } })).not.toThrow()
+
+    vi.unstubAllGlobals()
+    expect(warn).not.toHaveBeenCalled()
+
+    warn.mockRestore()
+  })
+
   it('warns only once for the same problem when the parent renders again with an equal theme', () => {
     mockScheme('light')
     const warn = warnSpy()

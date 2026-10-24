@@ -54,14 +54,20 @@ export const ColorModeProvider = ({ children, theme, mode: controlledMode, defau
   }, [themeSet, cssLayer])
 
   useEffect(() => {
-    if (themeSet === undefined || process.env.NODE_ENV === 'production') return
+    if (themeSet === undefined) return
 
-    const parts = [formatContrastIssues(validateTheme(themeSet)), formatMotionIssues(validateMotion(themeSet.base))].filter((part): part is string => part !== null)
-    const message = parts.length === 0 ? null : parts.join('\n')
+    try {
+      if (process.env.NODE_ENV === 'production') return
 
-    if (message && message !== lastWarning.current) console.warn(message)
+      const parts = [formatContrastIssues(validateTheme(themeSet)), formatMotionIssues(validateMotion(themeSet.base))].filter((part): part is string => part !== null)
+      const message = parts.length === 0 ? null : parts.join('\n')
 
-    lastWarning.current = message
+      if (message && message !== lastWarning.current) console.warn(message)
+
+      lastWarning.current = message
+    } catch {
+      lastWarning.current = null
+    }
   }, [themeSet])
 
   const value = useMemo(() => ({ mode, resolvedMode, setMode, toggleMode }), [mode, resolvedMode, setMode, toggleMode])
