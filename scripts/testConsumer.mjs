@@ -8,6 +8,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
+const readmeSnippets = [...readFileSync(join(root, 'README.md'), 'utf8').matchAll(/```tsx\n([\s\S]*?)```/g)].map((match) => match[1])
 
 const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Card, CardButton, CardLink, ColorModeProvider, Container, Flex, Grid, Input, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Select, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
 import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, CardButtonProps, CardLinkProps, CardProps, ContainerProps, FlexProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
@@ -177,10 +178,11 @@ const consumerConfig = {
     strict: true,
     exactOptionalPropertyTypes: true,
     skipLibCheck: false,
+    allowImportingTsExtensions: true,
     noEmit: true,
     types: []
   },
-  include: ['index.tsx', 'css.d.ts']
+  include: ['index.tsx', 'css.d.ts', 'readme/*.tsx']
 }
 
 try {
@@ -193,6 +195,12 @@ try {
   writeFileSync(join(consumer, 'tsconfig.json'), JSON.stringify(consumerConfig, null, 2))
   writeFileSync(join(consumer, 'css.d.ts'), "declare module '*.css'\n")
   writeFileSync(join(consumer, 'index.tsx'), entry)
+
+  if (readmeSnippets.length === 0) throw new Error('README.md has no tsx block to compile')
+
+  mkdirSync(join(consumer, 'readme'))
+  writeFileSync(join(consumer, 'readme', 'App.tsx'), 'export default function App() {\n  return null\n}\n')
+  readmeSnippets.forEach((code, index) => writeFileSync(join(consumer, 'readme', `snippet${index}.tsx`), code))
 
   run(npm, ['install', '--no-audit', '--no-fund', tarball, 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', 'typescript@5.8'], consumer)
   run(process.execPath, [join(consumer, 'node_modules', 'typescript', 'bin', 'tsc'), '-p', 'tsconfig.json'], consumer)
@@ -213,7 +221,7 @@ try {
   if (wrong.length > 0) throw new Error(`the installed package resolves the wrong entries:\n${wrong.map(([specifier, should]) => `  - ${specifier} should ${should ? 'resolve' : 'fail, so forgetting the .css of enchase/styles.css is an error and not an import that does nothing'}`).join('\n')}`)
 
   const installed = JSON.parse(readFileSync(join(consumer, 'node_modules', 'enchase', 'package.json'), 'utf8'))
-  console.log(`consumer compiled against enchase@${installed.version} with skipLibCheck: false and exactOptionalPropertyTypes, and enchase/styles alone does not resolve`)
+  console.log(`consumer and the ${readmeSnippets.length} tsx blocks of the README compiled against enchase@${installed.version} with skipLibCheck: false and exactOptionalPropertyTypes, and enchase/styles alone does not resolve`)
 } finally {
   rmSync(workdir, { recursive: true, force: true })
 }
