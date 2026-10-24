@@ -416,4 +416,20 @@ describe('ColorModeScript', () => {
   it('carries the nonce', () => {
     expect(renderToString(<ColorModeScript nonce="abc" />)).toContain('nonce="abc"')
   })
+
+  it('cannot be closed early by a storage key that carries a closing script tag', () => {
+    const html = renderToString(<ColorModeScript storageKey="</script><img src=x onerror=alert(1)>" />)
+    const source = html.replace(/^<script[^>]*>/, '').replace(/<\/script>$/, '')
+
+    expect(source).not.toContain('<')
+    expect(html.match(/<\/script>/g)).toHaveLength(1)
+  })
+
+  it('still reads the stored mode from a storage key that has a less-than sign in it', () => {
+    window.localStorage.setItem('a<b', 'dark')
+
+    run(renderToString(<ColorModeScript storageKey="a<b" />))
+
+    expect(document.documentElement.dataset.theme).toBe('dark')
+  })
 })

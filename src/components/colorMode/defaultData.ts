@@ -28,8 +28,10 @@ export const readStoredMode = (storage: ColorModeStorage | null, key: string): C
   }
 }
 
+const scriptLiteral = (value: string) => JSON.stringify(value).replace(/</g, '\\u003c')
+
 export const colorModeScript = (storageKey: string = defaultStorageKey, defaultMode: ColorMode = defaultColorMode) =>
-  `(function(){try{var m=localStorage.getItem(${JSON.stringify(storageKey)});if(m!=='light'&&m!=='dark'&&m!=='system')m=${JSON.stringify(defaultMode)};if(m==='system')m=matchMedia(${JSON.stringify(systemDarkQuery)}).matches?'dark':'light';var d=document.documentElement;d.dataset.theme=m;d.style.colorScheme=m}catch(e){}})()`
+  `(function(){try{var m=localStorage.getItem(${scriptLiteral(storageKey)});if(m!=='light'&&m!=='dark'&&m!=='system')m=${scriptLiteral(defaultMode)};if(m==='system')m=matchMedia(${scriptLiteral(systemDarkQuery)}).matches?'dark':'light';var d=document.documentElement;d.dataset.theme=m;d.style.colorScheme=m}catch(e){}})()`
 
 const listeners = new Map<string, Set<() => void>>()
 
