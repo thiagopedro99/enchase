@@ -32,11 +32,11 @@ export type UILabels = {
   showPassword: string
   opensInNewTab: string
   hidePassword: string
-  pagination?: string
-  previousPage?: string
-  nextPage?: string
-  increaseValue?: string
-  decreaseValue?: string
+  pagination?: string | undefined
+  previousPage?: string | undefined
+  nextPage?: string | undefined
+  increaseValue?: string | undefined
+  decreaseValue?: string | undefined
 }
 
 export type UIConfig = {
@@ -49,10 +49,10 @@ export type UIConfig = {
 
 export type UIProviderProps = {
   children: ReactNode
-  motion?: Partial<MotionSettings>
-  locale?: Locale
-  labels?: Partial<UILabels>
-  breakpoints?: Partial<Breakpoints>
-  navigate?: (href: string) => void
-  currentHref?: string
+  motion?: Partial<MotionSettings> | undefined
+  locale?: Locale | undefined
+  labels?: Partial<UILabels> | undefined
+  breakpoints?: Partial<Breakpoints> | undefined
+  navigate?: ((href: string) => void) | undefined
+  currentHref?: string | undefined
 }

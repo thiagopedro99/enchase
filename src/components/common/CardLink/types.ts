@@ -3,5 +3,5 @@ import type { AnchorHTMLAttributes } from 'react'
 
 export interface CardLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement>, Pick<CardProps, 'variant' | 'padding' | 'animation'> {
   href: string
-  native?: boolean
+  native?: boolean | undefined
 }

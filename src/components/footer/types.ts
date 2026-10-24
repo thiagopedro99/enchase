@@ -6,8 +6,8 @@ export interface FooterLink {
 }
 
 export interface FooterProps extends HTMLAttributes<HTMLElement> {
-  companyName?: string
-  notice?: string
-  year?: number
-  links?: FooterLink[]
+  companyName?: string | undefined
+  notice?: string | undefined
+  year?: number | undefined
+  links?: FooterLink[] | undefined
 }

@@ -16,21 +16,21 @@ import type { BaseTokens, ColorTokens, HookValues, ShadowTokens, ThemeDefaults }
 type Partial2<Tokens> = { [Key in keyof Tokens]?: Tokens[Key] extends string | number ? Tokens[Key] : Partial2<Tokens[Key]> }
 
 export type ThemeStyleMode = {
-  colors?: Partial2<ColorTokens>
-  shadows?: Partial<Omit<ShadowTokens, 'none'>>
-  hooks?: HookValues
+  colors?: Partial2<ColorTokens> | undefined
+  shadows?: Partial<Omit<ShadowTokens, 'none'>> | undefined
+  hooks?: HookValues | undefined
 }
 
 export type ThemeStyle = {
-  base?: Partial2<Pick<BaseTokens, 'control' | 'focus' | 'border' | 'halo' | 'hit' | 'state'>>
-  fonts?: Partial2<Pick<BaseTokens['fonts'], 'sizes' | 'weights' | 'lineHeights' | 'letterSpacings'>>
-  radius?: RadiusOverrides
-  hooks?: HookValues
-  colorHooks?: HookValues
-  brand?: ReadonlyArray<BrandRole>
-  light?: ThemeStyleMode
-  dark?: ThemeStyleMode
-  defaults?: Partial<ThemeDefaults>
+  base?: Partial2<Pick<BaseTokens, 'control' | 'focus' | 'border' | 'halo' | 'hit' | 'state'>> | undefined
+  fonts?: Partial2<Pick<BaseTokens['fonts'], 'sizes' | 'weights' | 'lineHeights' | 'letterSpacings'>> | undefined
+  radius?: RadiusOverrides | undefined
+  hooks?: HookValues | undefined
+  colorHooks?: HookValues | undefined
+  brand?: ReadonlyArray<BrandRole> | undefined
+  light?: ThemeStyleMode | undefined
+  dark?: ThemeStyleMode | undefined
+  defaults?: Partial<ThemeDefaults> | undefined
 }
 
 const styleSections = ['base', 'fonts', 'radius', 'hooks', 'colorHooks', 'brand', ...themeModes, 'defaults']

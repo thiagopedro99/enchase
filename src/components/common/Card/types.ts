@@ -5,8 +5,8 @@ import type { HTMLAttributes } from 'react'
 export type CardVariant = 'default' | 'elevated' | 'outlined'
 
 export interface CardProps extends HTMLAttributes<HTMLElement> {
-  as?: StructureTag
-  variant?: CardVariant
-  padding?: string
-  animation?: MotionOverride
+  as?: StructureTag | undefined
+  variant?: CardVariant | undefined
+  padding?: string | undefined
+  animation?: MotionOverride | undefined
 }

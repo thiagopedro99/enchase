@@ -3,6 +3,6 @@ import type { AnchorHTMLAttributes } from 'react'
 
 export interface ButtonLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement>, Pick<ButtonProps, 'variant' | 'size' | 'fullWidth' | 'animation'> {
   href: string
-  native?: boolean
-  externalIcon?: boolean
+  native?: boolean | undefined
+  externalIcon?: boolean | undefined
 }

@@ -9,7 +9,7 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
 
-const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Card, CardButton, CardLink, Container, Flex, Grid, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
+const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Card, CardButton, CardLink, ColorModeProvider, Container, Flex, Grid, Input, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Select, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
 import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, CardButtonProps, CardLinkProps, CardProps, ContainerProps, FlexProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
 import { ChevronDownIcon, CloseIcon } from 'enchase/icons'
 import type { IconProps } from 'enchase/icons'
@@ -64,6 +64,24 @@ const Toaster = () => {
 
   return <Button onClick={() => toast.success('Saved')}>{en.messages.confirm}</Button>
 }
+
+declare const maybeMessage: string | undefined
+declare const maybeCount: number | undefined
+declare const maybeTheme: ThemeInput | undefined
+declare const maybeHandler: (() => void) | undefined
+
+export const OptionalValues = () => (
+  <ColorModeProvider theme={maybeTheme}>
+    <Input label="Email" error={maybeMessage} helperText={maybeMessage} />
+    <Select label="Plan" options={[{ value: 'free', label: 'Free' }]} error={maybeMessage} />
+    <NumberInput label="Quantity" min={maybeCount} max={maybeCount} />
+    <Button variant={maybeMessage === undefined ? 'primary' : undefined} size={undefined} onClick={maybeHandler}>Save</Button>
+    <Alert title={maybeMessage} onClose={maybeHandler}>Saved</Alert>
+    <Pagination pageCount={20} page={maybeCount} />
+    <Card padding={maybeMessage} variant={undefined}>Card</Card>
+    <Grid columns={maybeCount} gap={maybeMessage}>x</Grid>
+  </ColorModeProvider>
+)
 
 export const App = () => (
   <UIProvider locale={locale} labels={labels}>
@@ -157,6 +175,7 @@ const consumerConfig = {
     moduleResolution: 'bundler',
     jsx: 'react-jsx',
     strict: true,
+    exactOptionalPropertyTypes: true,
     skipLibCheck: false,
     noEmit: true,
     types: []
@@ -194,7 +213,7 @@ try {
   if (wrong.length > 0) throw new Error(`the installed package resolves the wrong entries:\n${wrong.map(([specifier, should]) => `  - ${specifier} should ${should ? 'resolve' : 'fail, so forgetting the .css of enchase/styles.css is an error and not an import that does nothing'}`).join('\n')}`)
 
   const installed = JSON.parse(readFileSync(join(consumer, 'node_modules', 'enchase', 'package.json'), 'utf8'))
-  console.log(`consumer compiled against enchase@${installed.version} with skipLibCheck: false, and enchase/styles alone does not resolve`)
+  console.log(`consumer compiled against enchase@${installed.version} with skipLibCheck: false and exactOptionalPropertyTypes, and enchase/styles alone does not resolve`)
 } finally {
   rmSync(workdir, { recursive: true, force: true })
 }

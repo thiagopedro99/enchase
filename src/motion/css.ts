@@ -7,13 +7,13 @@ export type CssMotionInput = {
   name: RecipeName
   settings: MotionSettings
   component: string
-  override?: MotionOverride
-  from?: SlideFrom
-  rtl?: boolean
-  base?: ComponentBase
+  override?: MotionOverride | undefined
+  from?: SlideFrom | undefined
+  rtl?: boolean | undefined
+  base?: ComponentBase | undefined
 }
 
-export type ComponentBase = Partial<BaseTuning> & { spring?: SpringName }
+export type ComponentBase = Partial<BaseTuning> & { spring?: SpringName | undefined }
 
 export const exitRatio = 0.7
 

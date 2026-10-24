@@ -7,12 +7,12 @@ export interface IconSwapProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'ch
 }
 
 export type IconProps = Omit<SVGProps<SVGSVGElement>, 'name'> & {
-  size?: number
-  title?: string
+  size?: number | undefined
+  title?: string | undefined
 }
 
 export type BaseIconProps = IconProps & {
-  name?: string
-  directional?: boolean
+  name?: string | undefined
+  directional?: boolean | undefined
   children: ReactNode
 }

@@ -8,7 +8,7 @@ const defaultInterval = 60
 
 export const useRepeatPress = (action: () => void, enabled = true, delay = defaultDelay, interval = defaultInterval) => {
   const actionRef = useRef(action)
-  const timers = useRef<{ wait?: ReturnType<typeof setTimeout>; repeat?: ReturnType<typeof setInterval> }>({})
+  const timers = useRef<{ wait?: ReturnType<typeof setTimeout> | undefined; repeat?: ReturnType<typeof setInterval> | undefined }>({})
 
   actionRef.current = action
 

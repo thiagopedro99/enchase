@@ -13,7 +13,7 @@ const rootMarginOf = (rect: DOMRect) => {
 export const observeMove = (element: Element, onMove: () => void) => {
   if (typeof IntersectionObserver === 'undefined') return () => undefined
 
-  const state: { observer?: IntersectionObserver; timer: number; active: boolean } = { timer: 0, active: true }
+  const state: { observer?: IntersectionObserver | undefined; timer: number; active: boolean } = { timer: 0, active: true }
 
   const refresh = (skip = false, threshold = 1): void => {
     clearTimeout(state.timer)

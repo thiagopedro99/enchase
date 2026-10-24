@@ -1,12 +1,12 @@
 export type SpringPhysics = {
   stiffness: number
   damping: number
-  mass?: number
+  mass?: number | undefined
 }
 
 export type SpringPerceptual = {
   duration: number
-  bounce?: number
+  bounce?: number | undefined
 }
 
 export type SpringInput = SpringPhysics | SpringPerceptual
@@ -76,7 +76,7 @@ const round = (value: number) => Math.round(value * 1000) / 1000
 
 export type SpringTiming = {
   duration: number
-  bounce?: number
+  bounce?: number | undefined
 }
 
 export const timedSpring = ({ duration, bounce = 0 }: SpringTiming): SpringResult => {

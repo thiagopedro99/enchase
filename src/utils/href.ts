@@ -1,6 +1,6 @@
 type ClickLike = Pick<MouseEvent, 'button' | 'metaKey' | 'ctrlKey' | 'shiftKey' | 'altKey' | 'defaultPrevented'>
 
-type LinkAttributes = { target?: string; download?: unknown; native?: boolean }
+type LinkAttributes = { target?: string | undefined; download?: unknown | undefined; native?: boolean | undefined }
 
 const pathOf = (href: string) => {
   const path = href.split(/[?#]/)[0].replace(/\/+$/, '')

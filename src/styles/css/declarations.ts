@@ -62,7 +62,7 @@ export const fontVariablesRule = (selector: string, fonts: FontTokens) => variab
 export const layoutVariablesRule = (selector: string, theme: LayoutTokens, hooks?: HookValues) => variablesRule(selector, { ...layoutVariables(theme), ...hooks })
 
 export type ThemeCssOptions = {
-  layer?: string
+  layer?: string | undefined
 }
 
 const indent = (css: string) =>

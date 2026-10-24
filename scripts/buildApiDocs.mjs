@@ -77,7 +77,13 @@ const typeOf = (checker, property) => {
 
   if (!node) return checker.typeToString(checker.getTypeOfSymbolAtLocation(property, property.declarations[0]), undefined, typeFlags)
 
-  return (expandedUnion(checker, node) ?? node.getText()).replace(/\s+/g, ' ')
+  const members = (ts.isUnionTypeNode(node) ? node.types : [node]).filter((member) => member.kind !== ts.SyntaxKind.UndefinedKeyword)
+  const shown = (member) => (members.length === 1 && ts.isParenthesizedTypeNode(member) ? member.type : member)
+
+  return members
+    .map((member) => expandedUnion(checker, shown(member)) ?? shown(member).getText())
+    .join(' | ')
+    .replace(/\s+/g, ' ')
 }
 
 const elementOf = (checker, propsType) => {

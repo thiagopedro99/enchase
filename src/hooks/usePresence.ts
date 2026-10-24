@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 export type PresenceState = 'entering' | 'open' | 'exiting' | 'closed'
 
 export type PresenceOptions = {
-  exitMs?: number
+  exitMs?: number | undefined
 }
 
 const defaultExitMs = 300

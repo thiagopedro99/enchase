@@ -4,15 +4,15 @@ import type { CSSProperties, ReactNode } from 'react'
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
 
 export interface ToastOptions {
-  className?: string
-  style?: CSSProperties
+  className?: string | undefined
+  style?: CSSProperties | undefined
 }
 
 export interface Toast extends ToastOptions {
   id: string
   message: string
   type: ToastType
-  duration?: number
+  duration?: number | undefined
 }
 
 export interface ToastContextType {
@@ -26,9 +26,9 @@ export interface ToastContextType {
 
 export interface ToastProviderProps {
   children: ReactNode
-  animation?: MotionOverride
-  className?: string
-  style?: CSSProperties
+  animation?: MotionOverride | undefined
+  className?: string | undefined
+  style?: CSSProperties | undefined
 }
 
 export interface ToastEntry {
@@ -41,5 +41,5 @@ export interface ToastItemProps {
   open: boolean
   onRemove: (id: string) => void
   onDispose: (id: string) => void
-  animation?: MotionOverride
+  animation?: MotionOverride | undefined
 }

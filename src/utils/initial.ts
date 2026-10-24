@@ -1,7 +1,7 @@
 type Segmenter = new (locale: undefined, options: { granularity: 'grapheme' }) => { segment: (text: string) => Iterable<{ segment: string }> }
 
 const firstGrapheme = (text: string) => {
-  const Segmenter = (Intl as unknown as { Segmenter?: Segmenter }).Segmenter
+  const Segmenter = (Intl as unknown as { Segmenter?: Segmenter | undefined }).Segmenter
 
   if (Segmenter) {
     const [first] = new Segmenter(undefined, { granularity: 'grapheme' }).segment(text)

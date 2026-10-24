@@ -9,9 +9,9 @@ export type SlideFrom = 'top' | 'bottom' | 'left' | 'right'
 export type SpringName = 'gentle' | 'snappy' | 'bouncy'
 
 export type RecipeTuning = {
-  duration?: number
-  distance?: number
-  scale?: number
+  duration?: number | undefined
+  distance?: number | undefined
+  scale?: number | undefined
 }
 
 export type MotionSettings = {
@@ -23,9 +23,9 @@ export type MotionSettings = {
 export type MotionOverride =
   | false
   | {
-      recipe?: RecipeName
-      from?: SlideFrom
-      tuning?: RecipeTuning
+      recipe?: RecipeName | undefined
+      from?: SlideFrom | undefined
+      tuning?: RecipeTuning | undefined
     }
 
 export type BaseTuning = Required<RecipeTuning>

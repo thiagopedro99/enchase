@@ -6,10 +6,10 @@ export type FlexAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline'
 export type FlexJustify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly'
 
 export interface FlexProps extends HTMLAttributes<HTMLElement> {
-  as?: StructureTag
-  direction?: FlexDirection
-  align?: FlexAlign
-  justify?: FlexJustify
-  gap?: string
-  wrap?: boolean
+  as?: StructureTag | undefined
+  direction?: FlexDirection | undefined
+  align?: FlexAlign | undefined
+  justify?: FlexJustify | undefined
+  gap?: string | undefined
+  wrap?: boolean | undefined
 }

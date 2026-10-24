@@ -17,16 +17,16 @@ import type { RadiusOverrides, RadiusTokens, ShapePreset } from './shape.ts'
 
 type DeepPartial<T> = { [K in keyof T]?: T[K] extends string ? string : DeepPartial<T[K]> }
 
-export type ThemeOverrides = { colors?: DeepPartial<ColorTokens> }
+export type ThemeOverrides = { colors?: DeepPartial<ColorTokens> | undefined }
 
 export type FontOverrides = {
-  primary?: string
-  mono?: string
-  sizes?: Partial<BaseTokens['fonts']['sizes']>
-  weights?: Partial<BaseTokens['fonts']['weights']>
+  primary?: string | undefined
+  mono?: string | undefined
+  sizes?: Partial<BaseTokens['fonts']['sizes']> | undefined
+  weights?: Partial<BaseTokens['fonts']['weights']> | undefined
 }
 
-export type ThemeInput = { style?: ThemeStyle; brand?: string; fonts?: FontOverrides; motion?: MotionOverrides; shape?: ShapePreset; radius?: RadiusOverrides; light?: ThemeOverrides; dark?: ThemeOverrides }
+export type ThemeInput = { style?: ThemeStyle | undefined; brand?: string | undefined; fonts?: FontOverrides | undefined; motion?: MotionOverrides | undefined; shape?: ShapePreset | undefined; radius?: RadiusOverrides | undefined; light?: ThemeOverrides | undefined; dark?: ThemeOverrides | undefined }
 
 const inputSections = [...themeModes, 'style', 'brand', 'fonts', 'motion', 'shape', 'radius']
 

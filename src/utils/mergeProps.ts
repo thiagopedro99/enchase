@@ -3,8 +3,8 @@ import { classNames } from './classNames.ts'
 import type { CSSProperties, SyntheticEvent } from 'react'
 
 type Props = Record<string, unknown> & {
-  className?: string
-  style?: CSSProperties
+  className?: string | undefined
+  style?: CSSProperties | undefined
 }
 
 type Handler = (event: SyntheticEvent) => void

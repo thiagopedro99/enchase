@@ -105,7 +105,7 @@ export const Tooltip = ({
     return autoUpdate(reference, bubble, update)
   }, [presence.mounted, presence.ref, position, dir])
 
-  const trigger = describe && isValidElement(children) ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, { 'aria-describedby': id }) : children
+  const trigger = describe && isValidElement(children) ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string | undefined }>, { 'aria-describedby': id }) : children
 
   const wrapperProps = mergeProps(
     { ref: wrapperRef, className: styles.wrapper, onMouseEnter: show, onMouseLeave: hide, onFocus: show, onBlur: hide, ...slot('tooltip', 'trigger') },

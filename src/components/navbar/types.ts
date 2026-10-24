@@ -4,31 +4,31 @@ import type { PresenceState } from '@hooks/usePresence.ts'
 import type { SidebarItem, SidebarSection } from '../common/Sidebar/types.ts'
 
 export interface NavbarProps {
-  logo?: ReactNode
-  logoHref?: string
-  breakpoint?: BreakpointName
-  sections?: SidebarSection[]
-  activeSectionId?: string
-  actions?: ReactNode
-  translucent?: boolean
-  className?: string
-  style?: CSSProperties
+  logo?: ReactNode | undefined
+  logoHref?: string | undefined
+  breakpoint?: BreakpointName | undefined
+  sections?: SidebarSection[] | undefined
+  activeSectionId?: string | undefined
+  actions?: ReactNode | undefined
+  translucent?: boolean | undefined
+  className?: string | undefined
+  style?: CSSProperties | undefined
 }
 
 export interface NavbarLinksProps {
   items: SidebarItem[]
-  activeSectionId?: string
+  activeSectionId?: string | undefined
   linkClassName: string
-  onSelect?: () => void
-  staggered?: boolean
+  onSelect?: (() => void) | undefined
+  staggered?: boolean | undefined
 }
 
 export interface MobileDrawerProps {
   id: string
   layout: 'wide' | 'compact'
   items: SidebarItem[]
-  activeSectionId?: string
-  actions?: ReactNode
+  activeSectionId?: string | undefined
+  actions?: ReactNode | undefined
   open: boolean
   state: PresenceState
   drawerRef: RefObject<HTMLDivElement | null>

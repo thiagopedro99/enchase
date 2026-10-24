@@ -4,23 +4,23 @@ import type { HTMLAttributes } from 'react'
 export type LoadingSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
 export interface LoadingProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
-  size?: LoadingSize
-  overlay?: boolean
-  text?: string
-  color?: string
-  animation?: MotionOverride
+  size?: LoadingSize | undefined
+  overlay?: boolean | undefined
+  text?: string | undefined
+  color?: string | undefined
+  animation?: MotionOverride | undefined
 }
 
 export interface InlineLoadingProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
-  size?: 'xs' | 'sm' | 'md'
-  color?: string
-  label?: string
-  animation?: MotionOverride
+  size?: 'xs' | 'sm' | 'md' | undefined
+  color?: string | undefined
+  label?: string | undefined
+  animation?: MotionOverride | undefined
 }
 
 export type SpinnerProps = {
   part: string
   size: LoadingSize
-  color?: string
-  animation?: MotionOverride
+  color?: string | undefined
+  animation?: MotionOverride | undefined
 }

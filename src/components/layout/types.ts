@@ -9,36 +9,36 @@ export type LayoutNavigation = 'sidebar' | 'navbar'
 
 export interface LayoutProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   children: ReactNode
-  pageTitle?: string
-  maxWidth?: ContainerMaxWidth
-  padding?: boolean | string
-  hideNavbar?: boolean
-  hideFooter?: boolean
-  centered?: boolean
-  navigation?: LayoutNavigation
-  breakpoint?: BreakpointName
-  translucent?: boolean
-  brand?: string
-  brandLogo?: string
-  footerProps?: FooterProps
-  sidebarFooter?: SidebarSlot
-  navigationSections?: SidebarSection[]
-  pageSections?: SidebarSection[]
-  activePageSectionId?: string
-  breadcrumbs?: BreadcrumbItem[]
-  collapsed?: boolean
-  defaultCollapsed?: boolean
-  onCollapsedChange?: (collapsed: boolean) => void
-  storageKey?: string
-  open?: boolean
-  defaultOpen?: boolean
-  onOpenChange?: (open: boolean) => void
+  pageTitle?: string | undefined
+  maxWidth?: ContainerMaxWidth | undefined
+  padding?: boolean | string | undefined
+  hideNavbar?: boolean | undefined
+  hideFooter?: boolean | undefined
+  centered?: boolean | undefined
+  navigation?: LayoutNavigation | undefined
+  breakpoint?: BreakpointName | undefined
+  translucent?: boolean | undefined
+  brand?: string | undefined
+  brandLogo?: string | undefined
+  footerProps?: FooterProps | undefined
+  sidebarFooter?: SidebarSlot | undefined
+  navigationSections?: SidebarSection[] | undefined
+  pageSections?: SidebarSection[] | undefined
+  activePageSectionId?: string | undefined
+  breadcrumbs?: BreadcrumbItem[] | undefined
+  collapsed?: boolean | undefined
+  defaultCollapsed?: boolean | undefined
+  onCollapsedChange?: ((collapsed: boolean) => void) | undefined
+  storageKey?: string | undefined
+  open?: boolean | undefined
+  defaultOpen?: boolean | undefined
+  onOpenChange?: ((open: boolean) => void) | undefined
 }
 
 export type DeriveBreadcrumbsInput = {
   sections: SidebarSection[]
   pageSections: SidebarSection[]
-  currentHref?: string
-  pageTitle?: string
-  activePageSectionId?: string
+  currentHref?: string | undefined
+  pageTitle?: string | undefined
+  activePageSectionId?: string | undefined
 }

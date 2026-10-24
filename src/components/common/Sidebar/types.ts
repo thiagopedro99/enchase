@@ -4,16 +4,16 @@ import type { CSSProperties, ReactNode } from 'react'
 export type SidebarItem = {
   id: string
   label: string
-  icon?: ReactNode
-  href?: string
-  native?: boolean
-  badge?: string
-  onClick?: () => void
+  icon?: ReactNode | undefined
+  href?: string | undefined
+  native?: boolean | undefined
+  badge?: string | undefined
+  onClick?: (() => void) | undefined
 }
 
 export type SidebarSection = {
   id: string
-  title?: string
+  title?: string | undefined
   items: SidebarItem[]
 }
 
@@ -23,39 +23,39 @@ export type SidebarSlot = ReactNode | ((state: { collapsed: boolean }) => ReactN
 
 export interface SidebarProps {
   sections: SidebarSection[]
-  activeSectionId?: string
-  currentHref?: string
-  header?: SidebarSlot
-  footer?: SidebarSlot
-  variant?: SidebarVariant
-  collapsed?: boolean
-  onToggleCollapsed?: () => void
-  open?: boolean
-  onClose?: () => void
-  ariaLabel?: string
-  id?: string
-  animation?: MotionOverride
-  className?: string
-  style?: CSSProperties
+  activeSectionId?: string | undefined
+  currentHref?: string | undefined
+  header?: SidebarSlot | undefined
+  footer?: SidebarSlot | undefined
+  variant?: SidebarVariant | undefined
+  collapsed?: boolean | undefined
+  onToggleCollapsed?: (() => void) | undefined
+  open?: boolean | undefined
+  onClose?: (() => void) | undefined
+  ariaLabel?: string | undefined
+  id?: string | undefined
+  animation?: MotionOverride | undefined
+  className?: string | undefined
+  style?: CSSProperties | undefined
 }
 
 export interface SidebarContentProps {
   sections: SidebarSection[]
-  activeSectionId?: string
-  currentHref?: string
-  header?: SidebarSlot
-  footer?: SidebarSlot
+  activeSectionId?: string | undefined
+  currentHref?: string | undefined
+  header?: SidebarSlot | undefined
+  footer?: SidebarSlot | undefined
   collapsed: boolean
-  compact?: boolean
-  onToggleCollapsed?: () => void
-  onSelect?: () => void
+  compact?: boolean | undefined
+  onToggleCollapsed?: (() => void) | undefined
+  onSelect?: (() => void) | undefined
   ariaLabel: string
 }
 
 export interface SidebarItemViewProps {
   item: SidebarItem
-  current?: 'page' | 'location'
+  current?: 'page' | 'location' | undefined
   collapsed: boolean
   index: number
-  onSelect?: () => void
+  onSelect?: (() => void) | undefined
 }

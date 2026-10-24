@@ -4,13 +4,13 @@ import type { CSSProperties, TextareaHTMLAttributes } from 'react'
 export type TextareaResize = 'none' | 'vertical' | 'horizontal' | 'both'
 
 export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  label?: string
-  labelPlacement?: LabelPlacement
-  error?: string
-  helperText?: string
-  fullWidth?: boolean
-  resize?: TextareaResize
-  rows?: number
-  wrapperClassName?: string
-  wrapperStyle?: CSSProperties
+  label?: string | undefined
+  labelPlacement?: LabelPlacement | undefined
+  error?: string | undefined
+  helperText?: string | undefined
+  fullWidth?: boolean | undefined
+  resize?: TextareaResize | undefined
+  rows?: number | undefined
+  wrapperClassName?: string | undefined
+  wrapperStyle?: CSSProperties | undefined
 }

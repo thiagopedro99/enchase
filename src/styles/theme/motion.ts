@@ -4,13 +4,13 @@ import type { BaseTokens } from '../tokens/types.ts'
 
 export type SpringName = 'gentle' | 'snappy' | 'bouncy'
 
-export type SpringOverride = string | { duration: string; bounce?: number }
+export type SpringOverride = string | { duration: string; bounce?: number | undefined }
 
 export type MotionOverrides = {
-  duration?: Partial<BaseTokens['motion']['duration']>
-  easing?: Partial<BaseTokens['motion']['ease']>
-  distance?: Partial<BaseTokens['motion']['distance']>
-  spring?: Partial<Record<SpringName, SpringOverride>>
+  duration?: Partial<BaseTokens['motion']['duration']> | undefined
+  easing?: Partial<BaseTokens['motion']['ease']> | undefined
+  distance?: Partial<BaseTokens['motion']['distance']> | undefined
+  spring?: Partial<Record<SpringName, SpringOverride>> | undefined
 }
 
 export type MotionIssue = { label: string; value: string; milliseconds: number; maximum: number }

@@ -9,7 +9,7 @@ import type { RefObject } from 'react'
 type ModalBehaviorOptions = {
   rootRef: RefObject<HTMLElement | null>
   dialogRef: RefObject<HTMLElement | null>
-  onEscape?: () => void
+  onEscape?: (() => void) | undefined
 }
 
 export const useModalBehavior = ({ rootRef, dialogRef, onEscape }: ModalBehaviorOptions) => {

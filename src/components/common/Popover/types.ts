@@ -7,22 +7,22 @@ export type PopoverRole = 'dialog' | 'listbox' | 'tree' | 'grid'
 export interface PopoverProps {
   children: ReactNode
   content: ReactNode
-  open?: boolean
-  defaultOpen?: boolean
-  onOpenChange?: (open: boolean) => void
-  placement?: PlacementInput
-  offset?: number
-  padding?: number
-  role?: PopoverRole
-  label?: string
-  arrow?: boolean
-  closeOnEsc?: boolean
-  closeOnOutsideClick?: boolean
-  animation?: MotionOverride
-  className?: string
-  style?: CSSProperties
-  contentClassName?: string
-  contentStyle?: CSSProperties
+  open?: boolean | undefined
+  defaultOpen?: boolean | undefined
+  onOpenChange?: ((open: boolean) => void) | undefined
+  placement?: PlacementInput | undefined
+  offset?: number | undefined
+  padding?: number | undefined
+  role?: PopoverRole | undefined
+  label?: string | undefined
+  arrow?: boolean | undefined
+  closeOnEsc?: boolean | undefined
+  closeOnOutsideClick?: boolean | undefined
+  animation?: MotionOverride | undefined
+  className?: string | undefined
+  style?: CSSProperties | undefined
+  contentClassName?: string | undefined
+  contentStyle?: CSSProperties | undefined
 }
 
 export type PopoverTreeNode = (node: Node) => boolean

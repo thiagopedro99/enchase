@@ -5,15 +5,15 @@ export interface TabsItem {
   value: string
   label: ReactNode
   content: ReactNode
-  disabled?: boolean
+  disabled?: boolean | undefined
 }
 
 export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue' | 'children'> {
   items: TabsItem[]
-  value?: string
-  defaultValue?: string
-  onValueChange?: (value: string) => void
-  activation?: 'automatic' | 'manual'
-  ariaLabel?: string
-  animation?: MotionOverride
+  value?: string | undefined
+  defaultValue?: string | undefined
+  onValueChange?: ((value: string) => void) | undefined
+  activation?: 'automatic' | 'manual' | undefined
+  ariaLabel?: string | undefined
+  animation?: MotionOverride | undefined
 }

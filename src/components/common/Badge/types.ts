@@ -5,6 +5,6 @@ export type BadgeVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'erro
 export type BadgeSize = 'sm' | 'md'
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  variant?: BadgeVariant
-  size?: BadgeSize
+  variant?: BadgeVariant | undefined
+  size?: BadgeSize | undefined
 }

@@ -8,15 +8,15 @@ export type TooltipPosition = TooltipPlacement | 'start' | 'end'
 export interface TooltipProps {
   text: string
   children: ReactNode
-  position?: TooltipPosition
-  describe?: boolean
-  animation?: MotionOverride
-  openDelay?: number
-  closeDelay?: number
-  className?: string
-  style?: CSSProperties
-  bubbleClassName?: string
-  bubbleStyle?: CSSProperties
+  position?: TooltipPosition | undefined
+  describe?: boolean | undefined
+  animation?: MotionOverride | undefined
+  openDelay?: number | undefined
+  closeDelay?: number | undefined
+  className?: string | undefined
+  style?: CSSProperties | undefined
+  bubbleClassName?: string | undefined
+  bubbleStyle?: CSSProperties | undefined
 }
 
 export type TooltipAnimation = {

@@ -21,17 +21,17 @@ export type ColorModeContextValue = {
 
 export type ColorModeProviderProps = {
   children: ReactNode
-  theme?: ThemeInput
-  mode?: ColorMode
-  defaultMode?: ColorMode
-  onModeChange?: (mode: ColorMode) => void
-  storage?: ColorModeStorage | null
-  storageKey?: string
-  cssLayer?: string
+  theme?: ThemeInput | undefined
+  mode?: ColorMode | undefined
+  defaultMode?: ColorMode | undefined
+  onModeChange?: ((mode: ColorMode) => void) | undefined
+  storage?: ColorModeStorage | null | undefined
+  storageKey?: string | undefined
+  cssLayer?: string | undefined
 }
 
 export type ColorModeScriptProps = {
-  storageKey?: string
-  defaultMode?: ColorMode
-  nonce?: string
+  storageKey?: string | undefined
+  defaultMode?: ColorMode | undefined
+  nonce?: string | undefined
 }

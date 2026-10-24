@@ -19,7 +19,7 @@ export type Overflow = Record<Side, number>
 
 export type VirtualElement = {
   getBoundingClientRect: () => DOMRect
-  contextElement?: Element
+  contextElement?: Element | undefined
 }
 
 export type AvailableSize = {
@@ -29,20 +29,20 @@ export type AvailableSize = {
 
 export type ArrowOptions = {
   element: HTMLElement
-  padding?: number
+  padding?: number | undefined
 }
 
 export type PositionOptions = {
-  placement?: PlacementInput
-  offset?: number
-  padding?: number
-  arrow?: ArrowOptions
-  apply?: (size: AvailableSize) => void
+  placement?: PlacementInput | undefined
+  offset?: number | undefined
+  padding?: number | undefined
+  arrow?: ArrowOptions | undefined
+  apply?: ((size: AvailableSize) => void) | undefined
 }
 
 export type ArrowPosition = {
-  x?: number
-  y?: number
+  x?: number | undefined
+  y?: number | undefined
 }
 
 export type PositionResult = AvailableSize & {
@@ -50,5 +50,5 @@ export type PositionResult = AvailableSize & {
   y: number
   placement: Placement
   referenceHidden: boolean
-  arrow?: ArrowPosition
+  arrow?: ArrowPosition | undefined
 }

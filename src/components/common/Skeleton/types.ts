@@ -4,8 +4,8 @@ import type { HTMLAttributes } from 'react'
 export type SkeletonVariant = 'text' | 'circular' | 'rectangular'
 
 export interface SkeletonProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
-  variant?: SkeletonVariant
-  width?: string
-  height?: string
-  animation?: MotionOverride
+  variant?: SkeletonVariant | undefined
+  width?: string | undefined
+  height?: string | undefined
+  animation?: MotionOverride | undefined
 }

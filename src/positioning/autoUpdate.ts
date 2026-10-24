@@ -3,8 +3,8 @@ import { observeMove } from './observeMove.ts'
 import type { VirtualElement } from './types.ts'
 
 export type AutoUpdateOptions = {
-  everyFrame?: boolean
-  observeMovement?: boolean
+  everyFrame?: boolean | undefined
+  observeMovement?: boolean | undefined
 }
 
 const keyOf = (rect: DOMRect) => `${rect.x},${rect.y},${rect.width},${rect.height}`

@@ -3,12 +3,12 @@ import type { HTMLAttributes } from 'react'
 
 export interface PaginationProps extends Omit<HTMLAttributes<HTMLElement>, 'onChange' | 'children'> {
   pageCount: number
-  page?: number
-  defaultPage?: number
-  onPageChange?: (page: number) => void
-  siblingCount?: number
-  boundaryCount?: number
-  size?: 'sm' | 'md'
-  ariaLabel?: string
-  animation?: MotionOverride
+  page?: number | undefined
+  defaultPage?: number | undefined
+  onPageChange?: ((page: number) => void) | undefined
+  siblingCount?: number | undefined
+  boundaryCount?: number | undefined
+  size?: 'sm' | 'md' | undefined
+  ariaLabel?: string | undefined
+  animation?: MotionOverride | undefined
 }

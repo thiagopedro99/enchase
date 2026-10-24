@@ -2,16 +2,16 @@ import type { SidebarSection, SidebarSlot, SidebarVariant } from '@components/co
 import type { CSSProperties } from 'react'
 
 export type AppSidebarProps = {
-  brand?: string
-  brandLogo?: string
+  brand?: string | undefined
+  brandLogo?: string | undefined
   sections: SidebarSection[]
   variant: SidebarVariant
-  activeSectionId?: string
-  navId?: string
-  footer?: SidebarSlot
+  activeSectionId?: string | undefined
+  navId?: string | undefined
+  footer?: SidebarSlot | undefined
   collapsed: boolean
   open: boolean
   onClose: () => void
-  className?: string
-  style?: CSSProperties
+  className?: string | undefined
+  style?: CSSProperties | undefined
 }

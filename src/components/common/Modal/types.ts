@@ -8,18 +8,18 @@ export type ModalRole = 'dialog' | 'alertdialog'
 export interface ModalProps {
   isOpen: boolean
   onClose: () => void
-  title?: string
-  ariaLabel?: string
-  role?: ModalRole
+  title?: string | undefined
+  ariaLabel?: string | undefined
+  role?: ModalRole | undefined
   children: ReactNode
-  footer?: ReactNode
-  showCloseButton?: boolean
-  closeOnOverlayClick?: boolean
-  closeOnEsc?: boolean
-  size?: ModalSize
-  animation?: MotionOverride
-  className?: string
-  style?: CSSProperties
+  footer?: ReactNode | undefined
+  showCloseButton?: boolean | undefined
+  closeOnOverlayClick?: boolean | undefined
+  closeOnEsc?: boolean | undefined
+  size?: ModalSize | undefined
+  animation?: MotionOverride | undefined
+  className?: string | undefined
+  style?: CSSProperties | undefined
 }
 
 export type ModalDialogProps = Required<Pick<ModalProps, 'role' | 'showCloseButton' | 'closeOnOverlayClick' | 'closeOnEsc' | 'size'>> &
@@ -29,12 +29,12 @@ export interface ConfirmModalProps {
   isOpen: boolean
   onClose: () => void
   onConfirm: () => void
-  title?: string
+  title?: string | undefined
   message: string
-  confirmText?: string
-  cancelText?: string
-  confirmVariant?: 'primary' | 'secondary' | 'outline' | 'ghost'
-  animation?: MotionOverride
-  className?: string
-  style?: CSSProperties
+  confirmText?: string | undefined
+  cancelText?: string | undefined
+  confirmVariant?: 'primary' | 'secondary' | 'outline' | 'ghost' | undefined
+  animation?: MotionOverride | undefined
+  className?: string | undefined
+  style?: CSSProperties | undefined
 }

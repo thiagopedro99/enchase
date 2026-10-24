@@ -9,16 +9,16 @@ import type { ChangeEvent, FormEvent, KeyboardEvent } from 'react'
 import type { NumberFormatOptions } from '@utils/numberFormat.ts'
 
 export type NumberFieldOptions = {
-  value?: number | null
+  value?: number | null | undefined
   defaultValue: number | null
-  onValueChange?: (value: number | null) => void
-  min?: number
-  max?: number
+  onValueChange?: ((value: number | null) => void) | undefined
+  min?: number | undefined
+  max?: number | undefined
   step: number
-  largeStep?: number
-  formatOptions?: NumberFormatOptions
-  disabled?: boolean
-  readOnly?: boolean
+  largeStep?: number | undefined
+  formatOptions?: NumberFormatOptions | undefined
+  disabled?: boolean | undefined
+  readOnly?: boolean | undefined
 }
 
 const positive = (value: number | undefined, fallback: number) => (value !== undefined && Number.isFinite(value) && value > 0 ? value : fallback)
@@ -101,7 +101,7 @@ export const useNumberField = ({ value, defaultValue, onValueChange, min, max, s
   }
 
   const onBeforeInput = (event: FormEvent<HTMLInputElement>) => {
-    const data = (event as FormEvent<HTMLInputElement> & { data?: string | null }).data
+    const data = (event as FormEvent<HTMLInputElement> & { data?: string | null | undefined }).data
     const input = event.currentTarget
 
     if (!data || !input) return

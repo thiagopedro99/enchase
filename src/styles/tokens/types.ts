@@ -51,7 +51,7 @@ export type ThemeDefaults = { labelPlacement: LabelPlacement }
 export type ModeTokens = {
   colors: ColorTokens
   shadows: ShadowTokens
-  hooks?: HookValues
+  hooks?: HookValues | undefined
 }
 
 export type BaseTokens = typeof baseTokens
@@ -60,6 +60,6 @@ export type ThemeSet = {
   base: BaseTokens
   light: ModeTokens
   dark: ModeTokens
-  hooks?: HookValues
-  defaults?: Partial<ThemeDefaults>
+  hooks?: HookValues | undefined
+  defaults?: Partial<ThemeDefaults> | undefined
 }
