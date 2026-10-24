@@ -353,3 +353,42 @@ describe('Tooltip motion in a real browser', () => {
     await expect.poll(bubble, { timeout: 2000 }).toBeNull()
   })
 })
+
+describe('Tooltip dismissal in a real browser', () => {
+  it('closes with Escape when only the pointer opened it, and stays closed while the pointer remains over the trigger', async () => {
+    renderInBrowser(
+      <div style={{ margin: '120px auto', width: 120 }}>
+        <Tooltip text="Dica">
+          <button>Alvo</button>
+        </Tooltip>
+      </div>
+    )
+    await userEvent.hover(page.getByRole('button', { name: 'Alvo' }))
+    await expect.poll(bubble).toBeTruthy()
+    expect(document.activeElement).toBe(document.body)
+
+    await userEvent.keyboard('{Escape}')
+
+    await expect.poll(bubble).toBeNull()
+    await new Promise((resolve) => setTimeout(resolve, 400))
+
+    expect(bubble()).toBeNull()
+  })
+
+  it('closes with Escape when the keyboard focus opened it', async () => {
+    renderInBrowser(
+      <div style={{ margin: '120px auto', width: 120 }}>
+        <Tooltip text="Dica">
+          <button>Alvo</button>
+        </Tooltip>
+      </div>
+    )
+    await userEvent.tab()
+    await expect.poll(bubble).toBeTruthy()
+
+    await userEvent.keyboard('{Escape}')
+
+    await expect.poll(bubble).toBeNull()
+    expect(document.activeElement).toBe(page.getByRole('button', { name: 'Alvo' }).element())
+  })
+})

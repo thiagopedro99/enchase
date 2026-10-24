@@ -88,6 +88,47 @@ describe('Tooltip', () => {
     expect(screen.getByRole('button', { name: 'Save' })).toHaveFocus()
   })
 
+  it('dismisses with Escape when the pointer opened it and nothing has focus', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Tooltip text="Save changes">
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await user.hover(screen.getByRole('button', { name: 'Save' }))
+    await screen.findByText('Save changes', { selector: '[aria-hidden="true"]' })
+    expect(screen.getByRole('button', { name: 'Save' })).not.toHaveFocus()
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => expect(visibleBubble()).not.toBeInTheDocument())
+  })
+
+  it('does not listen for Escape on the document while it is closed or after it unmounts', async () => {
+    const user = userEvent.setup()
+    const add = vi.spyOn(document, 'addEventListener')
+    const remove = vi.spyOn(document, 'removeEventListener')
+    const keydowns = (spy: typeof add) => spy.mock.calls.filter(([type]) => type === 'keydown').length
+    const { unmount } = renderWithProviders(
+      <Tooltip text="Save changes">
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    expect(keydowns(add)).toBe(0)
+
+    await user.hover(screen.getByRole('button', { name: 'Save' }))
+    await screen.findByText('Save changes', { selector: '[aria-hidden="true"]' })
+    expect(keydowns(add)).toBe(1)
+
+    unmount()
+
+    expect(keydowns(remove)).toBe(1)
+    add.mockRestore()
+    remove.mockRestore()
+  })
+
   it('does not add a duplicated description when describe is false', () => {
     renderWithProviders(
       <Tooltip text="Save changes" describe={false}>

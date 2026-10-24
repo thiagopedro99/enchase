@@ -10,7 +10,7 @@ import { useIsClient } from '@hooks/useIsClient.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import styles from './styles.module.css'
 
-import type { CSSProperties, KeyboardEvent, ReactElement } from 'react'
+import type { CSSProperties, ReactElement } from 'react'
 import type { TooltipProps } from './types.ts'
 
 export const Tooltip = ({
@@ -58,14 +58,22 @@ export const Tooltip = ({
     closeTimer.current = setTimeout(() => setOpen(false), closeDelay)
   }
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key !== 'Escape') return
-
-    clearTimers()
-    if (open) setOpen(false)
-  }
-
   useEffect(() => clearTimers, [])
+
+  useEffect(() => {
+    if (!open) return
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return
+
+      clearTimers()
+      setOpen(false)
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [open])
 
   useEffect(() => {
     if (!open) return
@@ -100,7 +108,7 @@ export const Tooltip = ({
   const trigger = describe && isValidElement(children) ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, { 'aria-describedby': id }) : children
 
   const wrapperProps = mergeProps(
-    { ref: wrapperRef, className: styles.wrapper, onMouseEnter: show, onMouseLeave: hide, onFocus: show, onBlur: hide, onKeyDown: handleKeyDown, ...slot('tooltip', 'trigger') },
+    { ref: wrapperRef, className: styles.wrapper, onMouseEnter: show, onMouseLeave: hide, onFocus: show, onBlur: hide, ...slot('tooltip', 'trigger') },
     { className, style }
   )
 
