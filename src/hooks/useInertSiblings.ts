@@ -2,6 +2,10 @@ import { useEffect } from 'react'
 
 import type { RefObject } from 'react'
 
+export const inertExemptSlot = 'toast-host'
+
+export const inertExemptSelector = `[data-slot="${inertExemptSlot}"]`
+
 export const useInertSiblings = (rootRef: RefObject<HTMLElement | null>, active = true) => {
   useEffect(() => {
     const root = rootRef.current
@@ -13,7 +17,7 @@ export const useInertSiblings = (rootRef: RefObject<HTMLElement | null>, active 
     while (node.parentElement && node !== document.body) {
       const current = node
       Array.from(node.parentElement.children)
-        .filter((sibling) => sibling !== current && sibling.tagName !== 'SCRIPT' && !sibling.hasAttribute('inert'))
+        .filter((sibling) => sibling !== current && sibling.tagName !== 'SCRIPT' && !sibling.matches(inertExemptSelector) && !sibling.hasAttribute('inert'))
         .forEach((sibling) => {
           sibling.setAttribute('inert', '')
           inerted.push(sibling)

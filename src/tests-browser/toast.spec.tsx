@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
@@ -5,6 +6,7 @@ import { render } from '@testing-library/react'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
+import { Modal } from '@components/common/Modal/index.tsx'
 import { ToastProvider, useToast } from '@components/toast/index.ts'
 import { GlobalStyles } from '@styles/react.tsx'
 import { ptBR } from '@locales/ptBR.ts'
@@ -194,5 +196,53 @@ describe('Toast in a real browser', () => {
 
     expect(rect.width).toBeGreaterThanOrEqual(24)
     expect(rect.height).toBeGreaterThanOrEqual(24)
+  })
+})
+
+const ModalThatToasts = () => {
+  const toast = useToast()
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Abrir</button>
+      <Modal isOpen={open} onClose={() => setOpen(false)} title="Título">
+        <button onClick={() => toast.error('Falha ao salvar', 60000)}>Disparar</button>
+      </Modal>
+    </>
+  )
+}
+
+const viewport = () => document.querySelector<HTMLElement>('[data-slot="toast-viewport"]')
+
+const openModalAndToast = async () => {
+  renderInBrowser(<ModalThatToasts />)
+  await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
+  await expect.element(page.getByRole('dialog')).toBeVisible()
+  await userEvent.click(page.getByRole('button', { name: 'Disparar' }))
+  await expect.poll(() => items().length).toBe(1)
+}
+
+describe('a toast fired while a modal is open, in a real browser', () => {
+  it('stays out of the inert part of the page', async () => {
+    await openModalAndToast()
+
+    expect(document.querySelectorAll('[inert]').length).toBeGreaterThan(0)
+    expect(viewport()?.closest('[inert]')).toBeNull()
+    expect(viewport()?.closest('[data-slot="toast-host"]')?.parentElement).toBe(document.body)
+  })
+
+  it('can be closed with the pointer', async () => {
+    await openModalAndToast()
+
+    await userEvent.click(page.getByRole('button', { name: 'Fechar notificação' }))
+
+    await expect.poll(() => items().length).toBe(0)
+  })
+
+  it('does not take the focus away from the dialog when it appears', async () => {
+    await openModalAndToast()
+
+    expect(page.getByRole('dialog').element().contains(document.activeElement)).toBe(true)
   })
 })

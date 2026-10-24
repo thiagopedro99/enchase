@@ -1,6 +1,6 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { useState } from 'react'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { StrictMode, useLayoutEffect, useState } from 'react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
@@ -18,6 +18,16 @@ const Probe = ({ duration }: { duration?: number }) => {
       <button onClick={() => toast.error('Failed', duration)}>error</button>
     </>
   )
+}
+
+const FiresWhileMounting = () => {
+  const toast = useToast()
+
+  useLayoutEffect(() => {
+    toast.info('Hello', 0)
+  }, [toast])
+
+  return null
 }
 
 const toastCount = () => screen.queryAllByRole('button', { name: 'Fechar notificação' }).length
@@ -86,6 +96,79 @@ describe('useToast consumers', () => {
 })
 
 describe('Toast', () => {
+  it('renders its live region in the body, outside the tree of the app', () => {
+    const { container } = renderWithProviders(<Probe />)
+    const region = screen.getByRole('region', { name: 'Notificações' })
+
+    expect(container.contains(region)).toBe(false)
+    expect(region.closest('body')).toBe(document.body)
+    expect(document.body.contains(region)).toBe(true)
+  })
+
+  it('unmounts without error when something emptied the body in the meantime', () => {
+    const { unmount } = renderWithProviders(<Probe />)
+
+    document.body.innerHTML = ''
+
+    expect(() => unmount()).not.toThrow()
+  })
+
+  it('keeps one host in the body under StrictMode, and none once it unmounts', () => {
+    const { unmount } = render(
+      <StrictMode>
+        <UIProvider locale={ptBR}>
+          <ToastProvider>
+            <Probe />
+          </ToastProvider>
+        </UIProvider>
+      </StrictMode>
+    )
+
+    expect(document.querySelectorAll('[data-slot="toast-host"]')).toHaveLength(1)
+    expect(document.querySelectorAll('[data-slot="toast-viewport"]')).toHaveLength(1)
+
+    unmount()
+
+    expect(document.querySelectorAll('[data-slot="toast-host"]')).toHaveLength(0)
+  })
+
+  it('does not pile up hosts when the provider is mounted again with another key', () => {
+    const tree = (key: string) => (
+      <UIProvider locale={ptBR}>
+        <ToastProvider key={key}>
+          <Probe />
+        </ToastProvider>
+      </UIProvider>
+    )
+    const { rerender, unmount } = render(tree('first'))
+
+    rerender(tree('second'))
+    rerender(tree('third'))
+
+    expect(document.querySelectorAll('[data-slot="toast-host"]')).toHaveLength(1)
+    expect(document.querySelectorAll('[data-slot="toast-viewport"]')).toHaveLength(1)
+
+    unmount()
+
+    expect(document.querySelectorAll('[data-slot="toast-host"]')).toHaveLength(0)
+  })
+
+  it('shows a toast that a child fires while it mounts, before the host is attached to the body', () => {
+    renderWithProviders(<FiresWhileMounting />)
+
+    expect(within(screen.getByRole('region', { name: 'Notificações' })).getByText('Hello')).toBeInTheDocument()
+  })
+
+  it('leaves nothing of its own in the body once it unmounts', () => {
+    const { unmount } = renderWithProviders(<Probe />)
+
+    unmount()
+
+    expect(screen.queryByRole('region', { name: 'Notificações' })).toBeNull()
+    expect(document.body.querySelector('[data-slot="toast-host"]')).toBeNull()
+    expect(document.body.querySelector('[data-slot="toast-viewport"]')).toBeNull()
+  })
+
   it('gives back the id of the toast, which removeToast takes to close it', async () => {
     const user = userEvent.setup()
     issued.length = 0
