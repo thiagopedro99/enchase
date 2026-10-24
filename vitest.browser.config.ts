@@ -48,6 +48,9 @@ const browserOptions = (provider = playwright()) => ({
     releaseMouse: async (context: { page: Page }) => {
       await context.page.mouse.move(0, 0)
       await context.page.mouse.up()
+    },
+    parkMouse: async (context: { page: Page }) => {
+      await context.page.mouse.move(-1, -1)
     }
   },
   instances: [{ browser }],
