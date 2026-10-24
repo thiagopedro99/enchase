@@ -3,8 +3,12 @@ name: Browser tests
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, dev]
   workflow_call:
+
+concurrency:
+  group: browser-tests-${{ github.ref_name == 'main' && github.run_id || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   browser:

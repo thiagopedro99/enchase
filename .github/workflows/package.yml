@@ -2,9 +2,13 @@ name: package
 
 on:
   push:
-    branches: [main]
+    branches: [main, dev]
   pull_request:
   workflow_call:
+
+concurrency:
+  group: package-${{ github.ref_name == 'main' && github.run_id || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   package:
