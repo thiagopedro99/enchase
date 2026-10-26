@@ -8,8 +8,8 @@ const button: ComponentDoc = {
   name: 'Button',
   element: 'button',
   props: [
-    { name: 'variant', type: "'primary' | 'secondary'", required: false, default: 'primary', description: 'Estilo visual.' },
-    { name: 'label', type: 'string', required: true, description: 'Texto do botão.' },
+    { name: 'variant', type: "'primary' | 'secondary'", required: false, default: 'primary', description: 'Visual style.' },
+    { name: 'label', type: 'string', required: true, description: 'Button text.' },
     { name: 'size', type: "'sm' | 'md'", required: false }
   ]
 }
@@ -17,13 +17,13 @@ const button: ComponentDoc = {
 const hook: HookDoc = {
   name: 'useThing',
   signature: 'useThing(id: string): { value: string }',
-  note: 'Devolve o valor.',
+  note: 'Returns the value.',
   members: [{ name: 'value', type: 'string | number' }]
 }
 
 const icons: IconsDoc = {
   element: 'svg',
-  props: [{ name: 'size', type: 'number', required: false, default: '24', description: 'Lado do ícone.' }],
+  props: [{ name: 'size', type: 'number', required: false, default: '24', description: 'Side of the icon.' }],
   items: [
     { name: 'PlusIcon', dataIcon: 'plus', directional: false },
     { name: 'ChevronLeftIcon', dataIcon: 'chevron-left', directional: true }
@@ -56,8 +56,8 @@ describe('renderApiDocs', () => {
   it('writes one table row per prop with the type, the default and the description', () => {
     const markdown = render()
 
-    expect(markdown).toContain("| `variant` | `'primary' \\| 'secondary'` | `primary` | Estilo visual. |")
-    expect(markdown).toContain('| `label` | `string` | *obrigatória* | Texto do botão. |')
+    expect(markdown).toContain("| `variant` | `'primary' \\| 'secondary'` | `primary` | Visual style. |")
+    expect(markdown).toContain('| `label` | `string` | *required* | Button text. |')
   })
 
   it('shows a dash for an optional prop without a default and leaves the description empty without one', () => {
@@ -67,31 +67,31 @@ describe('renderApiDocs', () => {
   it('names the element whose attributes the component accepts and the ref target', () => {
     const markdown = render([button, { name: 'Input', element: 'input', refElement: 'input', props: [] }, { name: 'Shell', element: 'root', props: [] }])
 
-    expect(markdown).toContain('Aceita também os demais atributos de `<button>`, repassados ao elemento.')
-    expect(markdown).toContain('Aceita também os demais atributos de `<input>`, repassados ao elemento. Encaminha o `ref` para `<input>`.')
-    expect(markdown).toContain('Aceita também os demais atributos HTML do elemento raiz.')
+    expect(markdown).toContain('Also accepts the other attributes of `<button>`, passed on to the element.')
+    expect(markdown).toContain('Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.')
+    expect(markdown).toContain('Also accepts the other HTML attributes of the root element.')
   })
 
   it('does not print a made up tag when the element of the ref is unknown', () => {
     const markdown = render([{ name: 'Field', element: 'root', refElement: 'root', props: [] }])
 
-    expect(markdown).toContain('Encaminha o `ref` para o elemento raiz.')
+    expect(markdown).toContain('Forwards the `ref` to the root element.')
     expect(markdown).not.toContain('<root>')
   })
 
   it('says so when a component has no props of its own', () => {
-    expect(render([{ name: 'Plain', props: [] }])).toContain('### Plain\n\nSem props próprias.')
+    expect(render([{ name: 'Plain', props: [] }])).toContain('### Plain\n\nNo props of its own.')
   })
 
   it('lists the hooks with the signature, the note and the members of the result', () => {
     const markdown = render()
 
-    expect(markdown).toContain('### useThing\n\n```ts\nuseThing(id: string): { value: string }\n```\n\nDevolve o valor.')
-    expect(markdown).toContain("| Membro | Tipo |\n| --- | --- |\n| `value` | `string \\| number` |")
+    expect(markdown).toContain('### useThing\n\n```ts\nuseThing(id: string): { value: string }\n```\n\nReturns the value.')
+    expect(markdown).toContain("| Member | Type |\n| --- | --- |\n| `value` | `string \\| number` |")
   })
 
   it('omits the result table of a hook that returns no object', () => {
-    expect(render([button], [{ name: 'useFlag', signature: 'useFlag(): boolean', members: [] }])).not.toContain('Retorno:')
+    expect(render([button], [{ name: 'useFlag', signature: 'useFlag(): boolean', members: [] }])).not.toContain('Returns:')
   })
 
   it('sorts components and hooks by name so the output does not depend on the export order', () => {
@@ -105,34 +105,34 @@ describe('renderApiDocs', () => {
   it('lists the icons with the props they share, the data-icon and whether they mirror in right-to-left text', () => {
     const markdown = render()
 
-    expect(markdown).toContain('## Ícones')
-    expect(markdown).toContain('Exportados por `enchase/icons`')
-    expect(markdown).toContain('| `size` | `number` | `24` | Lado do ícone. |')
-    expect(markdown).toContain('Aceita também os demais atributos de `<svg>`, repassados ao elemento.')
-    expect(markdown).toContain('| Ícone | `data-icon` | Espelha em RTL |\n| --- | --- | --- |\n| `ChevronLeftIcon` | `chevron-left` | sim |\n| `PlusIcon` | `plus` | — |')
+    expect(markdown).toContain('## Icons')
+    expect(markdown).toContain('Exported by `enchase/icons`')
+    expect(markdown).toContain('| `size` | `number` | `24` | Side of the icon. |')
+    expect(markdown).toContain('Also accepts the other attributes of `<svg>`, passed on to the element.')
+    expect(markdown).toContain('| Icon | `data-icon` | Mirrors in RTL |\n| --- | --- | --- |\n| `ChevronLeftIcon` | `chevron-left` | yes |\n| `PlusIcon` | `plus` | — |')
   })
 
   it('puts the icons after the hooks', () => {
     const markdown = render()
 
-    expect(markdown.indexOf('## Hooks')).toBeLessThan(markdown.indexOf('## Ícones'))
+    expect(markdown.indexOf('## Hooks')).toBeLessThan(markdown.indexOf('## Icons'))
   })
 
   it('lists the css hooks of each component with the default, the token it follows and the property it changes', () => {
     const markdown = render([button], [hook], icons, cssHooks)
 
-    expect(markdown).toContain('## Ganchos de CSS')
-    expect(markdown).toContain('### Alert\n\n| Gancho | Padrão | Propriedade |\n| --- | --- | --- |')
+    expect(markdown).toContain('## CSS hooks')
+    expect(markdown).toContain('### Alert\n\n| Hook | Default | Property |\n| --- | --- | --- |')
     expect(markdown).toContain('| `--enchase-alert-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |')
-    expect(markdown).toContain('| `--enchase-alert-title-font-weight` | `18px` | `font-weight`, `line-height` (também em Modal) |')
+    expect(markdown).toContain('| `--enchase-alert-title-font-weight` | `18px` | `font-weight`, `line-height` (also in Modal) |')
   })
 
   it('leaves the css hooks out when there are none, and puts them after the icons', () => {
-    expect(render()).not.toContain('Ganchos de CSS')
+    expect(render()).not.toContain('CSS hooks')
 
     const markdown = render([button], [hook], icons, cssHooks)
 
-    expect(markdown.indexOf('## Ícones')).toBeLessThan(markdown.indexOf('## Ganchos de CSS'))
+    expect(markdown.indexOf('## Icons')).toBeLessThan(markdown.indexOf('## CSS hooks'))
   })
 
   it('ends with a single newline and uses no carriage returns', () => {

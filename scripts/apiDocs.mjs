@@ -1,9 +1,9 @@
 export const hookNotes = {
-  useBreakpoint: 'Faixa de tela atual, de `xs` a `xxl`, segundo os breakpoints do `UIProvider`. `up(nome)` vale quando a tela tem pelo menos `nome` e `down(nome)` quando é menor que `nome`. No servidor e na hidratação vale o argumento `server` (padrão `xs`); depois de montar, vale a largura real.',
-  useColorMode: 'Modo de cor escolhido (`light`, `dark` ou `system`), o modo resolvido (`light` ou `dark`) e as funções para trocá-lo. Lança um erro fora do `ColorModeProvider`.',
-  useScrollSpy: 'Devolve o `id` da seção que está na faixa de leitura, de `topOffset` px (padrão 96) do topo até 45% da altura da tela, ou `undefined` enquanto nenhuma chegou. Acompanha as seções que montam depois, remontam ou saem da página, e só o conteúdo do array de `ids` conta, não a identidade dele.',
-  useToast: 'Abre notificações pelos métodos `success`, `error`, `warning` e `info`, por exemplo `success("Salvo", 3000)`, e cada um devolve o id da notificação, que `removeToast(id)` aceita para fechá-la. `duration` está em milissegundos e 0 mantém a notificação aberta até alguém fechá-la. Lança um erro fora do `ToastProvider`.',
-  useUIConfig: 'Configuração do `UIProvider` mais próximo: motion, rótulos, direção do texto, código do idioma (`locale`, como `pt-BR`) e breakpoints. Sem provedor, devolve os valores padrão.'
+  useBreakpoint: 'Current screen range, from `xs` to `xxl`, according to the breakpoints of the `UIProvider`. `up(name)` holds when the screen is at least `name` wide and `down(name)` when it is narrower than `name`. On the server and during hydration the `server` argument applies (default `xs`); after mounting, the real width applies.',
+  useColorMode: 'The chosen color mode (`light`, `dark` or `system`), the resolved mode (`light` or `dark`) and the functions to change it. Throws an error outside the `ColorModeProvider`.',
+  useScrollSpy: 'Returns the `id` of the section that is in the reading band, from `topOffset` px (default 96) below the top to 45% of the screen height, or `undefined` while none has arrived. It follows sections that mount later, remount or leave the page, and only the contents of the `ids` array count, not its identity.',
+  useToast: 'Opens notifications through the `success`, `error`, `warning` and `info` methods, for example `success("Saved", 3000)`, and each one returns the id of the notification, which `removeToast(id)` accepts to close it. `duration` is in milliseconds and 0 keeps the notification open until someone closes it. Throws an error outside the `ToastProvider`.',
+  useUIConfig: 'Configuration of the nearest `UIProvider`: motion, labels, text direction, language code (`locale`, such as `pt-BR`) and breakpoints. Without a provider, it returns the default values.'
 }
 
 const collator = (first, second) => (first.name < second.name ? -1 : first.name > second.name ? 1 : 0)
@@ -12,56 +12,56 @@ export const escapeCell = (text) => text.replace(/\s*\r?\n\s*/g, ' ').replace(/\
 
 const code = (text) => `\`${escapeCell(text)}\``
 
-const defaultCell = ({ required, default: fallback }) => (required ? '*obrigatória*' : fallback ? code(fallback) : '—')
+const defaultCell = ({ required, default: fallback }) => (required ? '*required*' : fallback ? code(fallback) : '—')
 
 const propRow = (prop) => `| ${code(prop.name)} | ${code(prop.type)} | ${defaultCell(prop)} | ${escapeCell(prop.description ?? '')} |`
 
-const attributeNote = (element) => (element === 'root' ? 'Aceita também os demais atributos HTML do elemento raiz.' : `Aceita também os demais atributos de ${code(`<${element}>`)}, repassados ao elemento.`)
+const attributeNote = (element) => (element === 'root' ? 'Also accepts the other HTML attributes of the root element.' : `Also accepts the other attributes of ${code(`<${element}>`)}, passed on to the element.`)
 
-const refNote = (element) => (element === 'root' ? 'Encaminha o `ref` para o elemento raiz.' : `Encaminha o \`ref\` para ${code(`<${element}>`)}.`)
+const refNote = (element) => (element === 'root' ? 'Forwards the `ref` to the root element.' : `Forwards the \`ref\` to ${code(`<${element}>`)}.`)
 
 const componentSection = ({ name, description, props, element, refElement }) => {
   const notes = [element && attributeNote(element), refElement && refNote(refElement)].filter(Boolean)
-  const table = props.length > 0 ? ['| Prop | Tipo | Padrão | Descrição |', '| --- | --- | --- | --- |', ...props.map(propRow)] : ['Sem props próprias.']
+  const table = props.length > 0 ? ['| Prop | Type | Default | Description |', '| --- | --- | --- | --- |', ...props.map(propRow)] : ['No props of its own.']
 
   return [`### ${name}`, '', ...(description ? [description, ''] : []), ...table, ...(notes.length > 0 ? ['', notes.join(' ')] : [])].join('\n')
 }
 
-const iconsIntro = 'Exportados por `enchase/icons`, um componente por ícone, e só os que algum componente usa por dentro. Funcionam em Server Components. Todos têm as mesmas props. Sem `title` o ícone é decorativo (`aria-hidden`); com `title` vira uma imagem com nome acessível. O atributo `data-icon` leva o nome em kebab case, para estilizar de fora ou nos testes, e os que apontam para um lado espelham em RTL sozinhos. Mudar o desenho de um ícone não é uma quebra; renomear ou remover é.'
+const iconsIntro = 'Exported by `enchase/icons`, one component per icon, and only the ones that some component uses inside. They work in Server Components. They all have the same props. Without `title` the icon is decorative (`aria-hidden`); with `title` it becomes an image with an accessible name. The `data-icon` attribute carries the name in kebab case, to style from outside or in tests, and the ones that point to a side mirror in RTL on their own. Changing the drawing of an icon is not a breaking change; renaming or removing one is.'
 
 const iconsSection = ({ props, element, items }) => {
-  const table = ['| Prop | Tipo | Padrão | Descrição |', '| --- | --- | --- | --- |', ...props.map(propRow)]
-  const rows = [...items].sort(collator).map(({ name, dataIcon, directional }) => `| ${code(name)} | ${code(dataIcon)} | ${directional ? 'sim' : '—'} |`)
+  const table = ['| Prop | Type | Default | Description |', '| --- | --- | --- | --- |', ...props.map(propRow)]
+  const rows = [...items].sort(collator).map(({ name, dataIcon, directional }) => `| ${code(name)} | ${code(dataIcon)} | ${directional ? 'yes' : '—'} |`)
 
-  return ['## Ícones', '', iconsIntro, '', ...table, '', attributeNote(element), '', '| Ícone | `data-icon` | Espelha em RTL |', '| --- | --- | --- |', ...rows].join('\n')
+  return ['## Icons', '', iconsIntro, '', ...table, '', attributeNote(element), '', '| Icon | `data-icon` | Mirrors in RTL |', '| --- | --- | --- |', ...rows].join('\n')
 }
 
 const hookSection = ({ name, signature, note, members }) => {
-  const returned = members.length > 0 ? ['', 'Retorno:', '', '| Membro | Tipo |', '| --- | --- |', ...members.map((member) => `| ${code(member.name)} | ${code(member.type)} |`)] : []
+  const returned = members.length > 0 ? ['', 'Returns:', '', '| Member | Type |', '| --- | --- |', ...members.map((member) => `| ${code(member.name)} | ${code(member.type)} |`)] : []
 
   return [`### ${name}`, '', '```ts', signature, '```', ...(note ? ['', note] : []), ...returned].join('\n')
 }
 
 const cssHooksIntro =
-  'Variáveis CSS opcionais que cada componente lê para mudar uma medida, uma fonte, um canto ou um tempo sem escrever CSS por cima. O tema não as declara: sem valor, o componente usa o padrão da tabela, e um padrão que aponta para um token do tema continua seguindo uma sobrescrita desse token. O nome é `--enchase-<data-slot>-<propriedade>`, com o nome do `data-slot` da parte e, quando há mais de um tamanho ou variante, o sufixo dela (`--enchase-switch-thumb-size`, `--enchase-button-padding-inline-md`). Experimentais até a versão 1.0: um nome pode mudar numa versão menor.'
+  'Optional CSS variables that each component reads to change a measure, a font, a corner or a timing without writing CSS on top. The theme does not declare them: without a value, the component uses the default in the table, and a default that points to a theme token keeps following an override of that token. The name is `--enchase-<data-slot>-<property>`, with the name of the `data-slot` of the part and, when there is more than one size or variant, its suffix (`--enchase-switch-thumb-size`, `--enchase-button-padding-inline-md`). Experimental until version 1.0: a name can change in a minor version.'
 
 const cssHookDefault = ({ default: fallback, token }) => (token ? `${code(fallback)} (${code(token)})` : code(fallback))
 
 const cssHookProperties = ({ properties, components, owner }) => {
   const others = components.filter((component) => component !== owner)
 
-  return `${properties.map(code).join(', ')}${others.length > 0 ? ` (também em ${others.join(', ')})` : ''}`
+  return `${properties.map(code).join(', ')}${others.length > 0 ? ` (also in ${others.join(', ')})` : ''}`
 }
 
 const cssHooksSection = (cssHooks) =>
   [
-    '## Ganchos de CSS',
+    '## CSS hooks',
     '',
     cssHooksIntro,
     '',
     cssHooks
       .map(({ component, hooks }) =>
-        [`### ${component}`, '', '| Gancho | Padrão | Propriedade |', '| --- | --- | --- |', ...hooks.map((hook) => `| ${code(hook.name)} | ${cssHookDefault(hook)} | ${cssHookProperties(hook)} |`)].join('\n')
+        [`### ${component}`, '', '| Hook | Default | Property |', '| --- | --- | --- |', ...hooks.map((hook) => `| ${code(hook.name)} | ${cssHookDefault(hook)} | ${cssHookProperties(hook)} |`)].join('\n')
       )
       .join('\n\n')
   ].join('\n')
@@ -75,11 +75,11 @@ export const renderApiDocs = ({ components, hooks, icons, cssHooks = [] }) => {
     [
       '# API',
       '',
-      'Referência das props, dos hooks e dos ícones exportados por `enchase` e `enchase/icons`, gerada por `npm run docs:api` a partir dos tipos do pacote e das stories do Storybook. Não edite este arquivo à mão: mude o tipo ou o `argTypes` da story e gere de novo.',
+      'Reference of the props, the hooks and the icons exported by `enchase` and `enchase/icons`, generated by `npm run docs:api` from the types of the package and the stories of the Storybook. Do not edit this file by hand: change the type or the `argTypes` of the story and generate it again.',
       '',
-      'Exemplos de uso estão no [README](README.md), no [guia completo](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md), em português, e no [Storybook](https://enchase.othiagosilva.com.br/docs/).',
+      'Usage examples are in the [README](README.md), in the [full guide](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md), in Portuguese, and in the [Storybook](https://enchase.othiagosilva.com.br/docs/).',
       '',
-      '## Componentes',
+      '## Components',
       '',
       index,
       '',
