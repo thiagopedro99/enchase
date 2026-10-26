@@ -7,7 +7,7 @@ type ClickReportProps = { children: ReactNode }
 
 type ClickProbeProps = ClickReportProps & { currentHref?: string }
 
-const idleMessage = 'Clique em um link para ver quem trata o clique.'
+const idleMessage = 'Click a link to see who handles the click.'
 
 export const ClickReport = ({ children }: ClickReportProps) => {
   const [message, setMessage] = useState(idleMessage)
@@ -16,7 +16,7 @@ export const ClickReport = ({ children }: ClickReportProps) => {
     const anchor = (event.target as Element).closest('a')
     if (!anchor) return
 
-    setMessage(`${anchor.getAttribute('href')}: ${event.defaultPrevented ? 'navigate do UIProvider' : 'navegador'}`)
+    setMessage(`${anchor.getAttribute('href')}: ${event.defaultPrevented ? 'navigate of the UIProvider' : 'the browser'}`)
     event.preventDefault()
   }
 

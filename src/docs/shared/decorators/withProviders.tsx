@@ -1,5 +1,4 @@
 import { ColorModeProvider, GlobalStyles, ToastProvider, UIProvider } from 'enchase'
-import { ptBR } from 'enchase/locales'
 import { enchase } from 'enchase/styles/enchase'
 
 import { storyStyles } from '../styles.ts'
@@ -16,7 +15,7 @@ export const withProviders: Decorator = (Story, context) => {
   return (
     <ColorModeProvider mode={theme} theme={themes[String(context.globals.style)]}>
       <GlobalStyles />
-      <UIProvider locale={ptBR} motion={{ mode: motion }}>
+      <UIProvider motion={{ mode: motion }}>
         <ToastProvider>
           <Story />
         </ToastProvider>

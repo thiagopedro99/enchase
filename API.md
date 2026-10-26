@@ -108,7 +108,7 @@ Superfície para agrupar conteúdo, nas variantes `default`, `elevated` e `outli
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | Tag HTML que a raiz renderiza, só entre as de estrutura que o tipo lista. Com `ul` ou `ol`, a raiz perde marcadores, margem e recuo e ganha `role="list"`, que mantém a semântica de lista no Safari (o `role` de quem usa vence). Links e botões não entram aqui: use `ButtonLink`, `CardLink` ou `CardButton`. |
+| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
 | `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Aparência do cartão. Só o elevated sobe ao passar o ponteiro. |
 | `padding` | `string` | — | Espaçamento interno (qualquer valor CSS). Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence. |
 | `animation` | `false \| { recipe, tuning }` | `lift` | false desliga o movimento. { tuning: { duration, distance } } ajusta o lift (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido. |
@@ -171,13 +171,13 @@ Aplica o tema: injeta as variáveis `--enchase-*`, define `data-theme` e `color-
 
 ### ColorModeScript
 
-Script inline que aplica `data-theme` e `color-scheme` no `<html>` antes da primeira pintura, para a página renderizada no servidor não mostrar o tema errado por um instante. Renderize-o no começo do `<body>` ou no `<head>`, com `suppressHydrationWarning` no `<html>`.
+Inline script that applies `data-theme` and `color-scheme` on the `<html>` before the first paint, so a page rendered on the server does not show the wrong theme for a moment. Render it at the start of the `<body>` or in the `<head>`, with `suppressHydrationWarning` on the `<html>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `storageKey` | `string` | `'enchase-color-mode'` | Chave lida no `localStorage`. Use a mesma do `ColorModeProvider`. |
-| `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Modo usado quando não há escolha guardada. `system` segue a preferência do sistema. |
-| `nonce` | `string` | — | `nonce` da Content-Security-Policy, para o script inline ser aceito. |
+| `storageKey` | `string` | `'enchase-color-mode'` | Key read from `localStorage`. Use the same one as the `ColorModeProvider`. |
+| `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Mode used when there is no saved choice. `system` follows the preference of the system. |
+| `nonce` | `string` | — | `nonce` of the Content-Security-Policy, so the inline script is accepted. |
 
 ### ConfirmModal
 
@@ -203,7 +203,7 @@ Limita a largura do conteúdo pelos breakpoints do `UIProvider`, com espaçament
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | Tag HTML que a raiz renderiza, só entre as de estrutura que o tipo lista. Com `ul` ou `ol`, a raiz perde marcadores, margem e recuo e ganha `role="list"`, que mantém a semântica de lista no Safari (o `role` de quem usa vence). Links e botões não entram aqui: use `ButtonLink`, `CardLink` ou `CardButton`. |
+| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
 | `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Largura máxima, tirada dos breakpoints do UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px por padrão). full não limita. 2xl continua aceito como alias de xxl. |
 | `padding` | `boolean \| string` | `true` | true usa o espaçamento padrão nas laterais, false remove, e um texto CSS define o valor (variável --enchase-container-padding). |
 | `center` | `boolean` | `true` | Centraliza o container. Com false ele fica no início, e em RTL no lado direito. |
@@ -227,7 +227,7 @@ Contêiner flexbox configurado por props: direção, alinhamento, distribuição
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | Tag HTML que a raiz renderiza, só entre as de estrutura que o tipo lista. Com `ul` ou `ol`, a raiz perde marcadores, margem e recuo e ganha `role="list"`, que mantém a semântica de lista no Safari (o `role` de quem usa vence). Links e botões não entram aqui: use `ButtonLink`, `CardLink` ou `CardButton`. |
+| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
 | `direction` | `'row' \| 'column' \| 'row-reverse' \| 'column-reverse'` | `'row'` | Eixo principal. Em RTL, row começa pelo lado direito. |
 | `align` | `'start' \| 'center' \| 'end' \| 'stretch' \| 'baseline'` | `'stretch'` | Alinhamento no eixo cruzado. |
 | `justify` | `'start' \| 'center' \| 'end' \| 'between' \| 'around' \| 'evenly'` | `'start'` | Distribuição no eixo principal. |
@@ -251,7 +251,7 @@ Also accepts the other HTML attributes of the root element.
 
 ### GlobalStyles
 
-Reset e base tipográfica da biblioteca em um `<style>`: `box-sizing`, margens zeradas, fonte, cor e fundo do `body` a partir do tema, tamanho dos títulos e imagens responsivas. O CSS fica na camada `enchase-base`. Renderize uma vez, na raiz do app.
+Reset and typographic base of the library in a `<style>`: `box-sizing`, zeroed margins, font, color and background of the `body` from the theme, size of the headings and responsive images. The CSS lives in the `enchase-base` layer. Render it once, at the root of the app.
 
 No props of its own.
 
@@ -261,7 +261,7 @@ Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query. 
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | Tag HTML que a raiz renderiza, só entre as de estrutura que o tipo lista. Com `ul` ou `ol`, a raiz perde marcadores, margem e recuo e ganha `role="list"`, que mantém a semântica de lista no Safari (o `role` de quem usa vence). Links e botões não entram aqui: use `ButtonLink`, `CardLink` ou `CardButton`. |
+| `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
 | `columns` | `number \| { xs?: number, sm?: number, md?: number, lg?: number, xl?: number, xxl?: number }` | `1` | Um número, que é o máximo de colunas em telas largas: quando elas não cabem, o grid reduz sozinho, sem media query. Ou um objeto com o número de colunas a partir de cada breakpoint (`{ xs: 1, md: 2, lg: 4 }`): é mobile first, um breakpoint sem valor repete o menor que veio antes, e os valores dos breakpoints são os do `UIProvider`. Números vão para inteiros de pelo menos 1. |
 | `gap` | `string` | — | Espaço entre as células, por variável CSS. O padrão vem do token de espaçamento. |
 | `minColumnWidth` | `string` | — | Largura mínima de cada coluna (qualquer valor CSS). Quando definida, vale no lugar de columns e o grid usa auto-fit. |
@@ -670,11 +670,11 @@ Also accepts the other attributes of `<button>`, passed on to the element.
 
 ### ThemeVariables
 
-Um `<style>` com as variáveis CSS `--enchase-*` do tema. O `ColorModeProvider` já faz isso; use `ThemeVariables` só para renderizar um CSS de tema seu, como o resultado de `themeCss`, de `enchase/theme`.
+A `<style>` with the `--enchase-*` CSS variables of the theme. The `ColorModeProvider` already does this; use `ThemeVariables` only to render a theme CSS of your own, such as the result of `themeCss`, from `enchase/theme`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `css` | `string` | *required* | O CSS das variáveis do tema, usado como conteúdo do `<style>`. |
+| `css` | `string` | *required* | The CSS of the theme variables, used as the content of the `<style>`. |
 
 ### ToastProvider
 

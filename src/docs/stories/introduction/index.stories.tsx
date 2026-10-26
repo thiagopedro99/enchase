@@ -13,4 +13,4 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const Faixa: Story = {}
+export const Strip: Story = {}

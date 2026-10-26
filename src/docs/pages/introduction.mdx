@@ -1,0 +1,92 @@
+import { Meta, Story } from '@storybook/addon-docs/blocks'
+import * as StripStories from '../stories/introduction/index.stories.tsx'
+
+<Meta title="Introduction" />
+
+# Enchase
+
+Accessible React components, by contract: a theme with validated contrast, CSS first, motion of its own, SSR and RTL, and no runtime dependency besides React.
+
+Version `0.x`: the API can still change between minor versions.
+
+## Try it right here
+
+These are the real components, with the theme and the settings of the project. Use the keyboard, switch to the dark theme in the top bar and see what happens.
+
+<Story of={StripStories.Strip} />
+
+## What is verified and what is not
+
+**Verified by automated tests:**
+
+- Every component passes axe, and the flows of focus, `inert`, scroll lock, stacked Esc and focus restoration run in real Chromium, Firefox and WebKit.
+- The color pairs of the default palette, in light and dark, reach 4.5:1 for text and 3:1 for field borders and the focus ring. `createTheme` throws on an invalid color value, and `validateTheme` lists the pairs below the minimum.
+- Interactive targets are at least 24 x 24 px, and the components respect `prefers-reduced-motion`: the displacement goes away and the fade stays.
+- Server rendering and hydration without errors, including a Next 15 app that imports the components in a Server Component.
+- The `className` of whoever uses the library wins over the one of the library.
+
+**Not guaranteed:**
+
+- Full WCAG conformance. The library verifies what the tokens and the tests cover, and it does not replace an audit or testing with screen readers. Nothing was tested with NVDA, JAWS or VoiceOver, and a manual review in real Safari is missing.
+- Contrast of custom themes in `hsl()`, `oklch()` or `oklab()`: those formats are not measured, and the warning says how many pairs went unchecked.
+- Gestures with velocity, such as dragging to dismiss: they do not exist yet.
+
+## Start in a minute
+
+```bash
+npm install enchase
+```
+
+`react` and `react-dom` (version 19) are peer dependencies. The package is ESM and ships its types.
+
+**Vite**
+
+```tsx
+import { createRoot } from 'react-dom/client'
+import { ColorModeProvider, GlobalStyles, ToastProvider, UIProvider } from 'enchase'
+import 'enchase/styles.css'
+
+createRoot(document.getElementById('root')!).render(
+  <ColorModeProvider>
+    <GlobalStyles />
+    <UIProvider>
+      <ToastProvider>
+        <App />
+      </ToastProvider>
+    </UIProvider>
+  </ColorModeProvider>
+)
+```
+
+**Next.js (App Router)**
+
+```tsx
+import { ColorModeProvider, ColorModeScript, GlobalStyles, UIProvider } from 'enchase'
+import 'enchase/styles.css'
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ColorModeScript />
+      </head>
+      <body>
+        <ColorModeProvider>
+          <GlobalStyles />
+          <UIProvider>{children}</UIProvider>
+        </ColorModeProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+The default font is Figtree: load it in the app, for example with `@fontsource-variable/figtree`, or change the family through the theme. The accessibility texts are in English by default: pass `locale={ptBR}`, from `enchase/locales`, to the `UIProvider` for Portuguese. The entries of the package, the theme, the languages and server rendering are covered in the [README](https://github.com/thiagopedro99/enchase/blob/main/README.md) and, in full and in Portuguese, in the [README.pt-BR](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md).
+
+## What you find here
+
+The components are in the side menu, under **Components**. Each one has the table of props with the default values, controls to change the props live, ready-to-copy code and the accessibility check in the **Accessibility** tab.
+
+Under **System**, the [motion guide](?path=/docs/system-motion-guide--docs) explains the four levels of motion settings, and the **Motion** page lets you see the springs and the exits in slow motion.
+
+Use the **Theme** and **Motion** switches in the top bar to see the components in the dark theme and without motion.

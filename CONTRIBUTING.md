@@ -1,76 +1,77 @@
-# Contribuindo
+# Contributing
 
-Contribuições são bem-vindas. Antes de abrir um pull request, leia o [`skill.md`](./skill.md), que descreve as convenções de código e o contrato de componente. A consistência com o padrão existente vem antes de qualquer abstração nova.
+Contributions are welcome. Before you open a pull request, read [`skill.md`](./skill.md), which describes the code conventions and the component contract (it is written in Portuguese). Consistency with the existing pattern comes before any new abstraction.
 
-## Como rodar
+## Running it
 
 ```bash
 npm ci
-npm run dev               # demo em http://localhost:5173
-npm run storybook         # documentação em http://localhost:6006
+npm run dev               # demo at http://localhost:5173
+npm run storybook         # documentation at http://localhost:6006
 ```
 
-## Antes de abrir o PR
+## Before you open a pull request
 
-Tudo isto precisa passar:
+All of this has to pass:
 
 ```bash
-npm run build             # tsc -b e build do app
+npm run build             # tsc -b and the app build
 npm run lint
-npm run docs:api:check     # API.md em dia com os tipos e as stories
-npm test                  # jsdom: comportamento, axe, hidratação e SSR
-npm run test:browser      # Chromium real (Playwright)
+npm run docs:api:check    # API.md up to date with the types and the stories
+npm test                  # jsdom: behavior, axe, hydration and SSR
+npm run test:browser      # real Chromium (Playwright)
 npm run test:browser:firefox
 npm run test:browser:webkit
 npm run build:lib
 npm run pack:check
 npm run test:consumer
 npm run test:next
-npm run test:size         # o que um import único custa no bundle de quem usa
+npm run test:size         # what an import costs in the bundle of whoever uses it
 ```
 
-Mudança em foco, `inert`, layout ou animação também deve ser conferida no navegador: o jsdom não simula esses recursos. Use `npm run test:browser:repeat [N]` para detectar testes instáveis.
+A change to focus, `inert`, layout or animation also has to be checked in a browser: jsdom does not simulate those. Use `npm run test:browser:repeat [N]` to find flaky tests.
 
-## Convenções
+## Conventions
 
-- **Sem comentários no código**, nem `//`, `/* */`, `{/* */}`, nem cabeçalho de arquivo.
-- **Commits** no padrão [Conventional Commits](https://www.conventionalcommits.org/), em inglês, com uma linha curta, no imperativo e sem ponto final (`feat: add the Popover`, `fix: close the confirm modal on Esc`). Prefixos: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`.
-- **API pública pequena:** só o que está em `lib/` é público (`enchase`, `enchase/theme`, `enchase/styles/<nome>`, `enchase/locales`, `enchase/icons`). `src/` é interno, e `demo/` e as stories importam só da entrada pública. Exportar pouco: remover um export depois é uma quebra de versão.
-- **Testes:** todo componente tem um teste espelho em `src/tests/components`. Comportamento novo ganha teste, e o que o jsdom não cobre ganha teste de navegador em `src/tests-browser`.
-- **Testes de toque:** depois de ligar a emulação de toque do Chromium (`Emulation.setTouchEmulationEnabled`), a página não volta mais a `hover: hover`, e qualquer teste de ponteiro fino que rodar depois falha. Por isso os testes que ligam toque ficam todos em `src/tests-browser/touch.spec.tsx`, que roda num projeto do Vitest com página própria (`vitest.browser.config.ts`). No Chromium o toque é ligado por `enableTouch` e `disableTouch` (`src/tests-browser/touchInput.ts`); no WebKit o mesmo projeto usa o perfil de um iPhone, com toque nativo. Não ligue a emulação em outro arquivo.
-- **WebKit sem GPU:** a primeira composição de um painel fixo com transformação e opacidade pode passar de 1 s em Linux sem cache de shaders. Em testes que esperam essa primeira abertura, use `expect.poll(..., { timeout: 5000 })`.
-- **Navegadores na CI:** o `browser-tests.yml` roda cada navegador na imagem oficial do Playwright (`mcr.microsoft.com/playwright`), que já traz os três navegadores e as bibliotecas do sistema, em vez de instalá-los a cada execução. A versão da imagem precisa ser a do `playwright` no `package-lock.json`, e o `browserImage.test.ts` falha se divergirem: ao atualizar o Playwright, troque a tag da imagem no mesmo commit.
-- **Pacote e tree-shaking:** `npm run build:lib` gera um arquivo por módulo em `dist-lib` (`preserveModules` em `vite.lib.config.ts`), com `'use client'` só no `index.js`. Não chame funções no nível do módulo em arquivos que os componentes importam (constantes calculadas, registros globais): o bundler de quem usa não consegue descartar esse módulo. O `npm run test:size` empacota só o `Icon` e só o `Button` como um consumidor (a partir do tarball) e falha se passarem do limite em `scripts/testBundleSize.mjs` (hoje cerca de 1,4 KB e 7,2 KB minificados, com limites de 4 KB e 12 KB). Se um limite estourar por um motivo legítimo, suba o limite no mesmo commit.
-- **API.md:** é gerado por `npm run docs:api` a partir dos tipos de `lib/` e das `argTypes` das stories, então não se edita à mão. Toda prop de um componente público precisa de `description` no `argTypes` da story (ou em `src/docs/shared/apiNotes.ts`, para o que não tem story, como `GlobalStyles`), e todo componente, de `parameters.docs.description.component`. O comando falha se faltar uma descrição, se o padrão escrito na story divergir do valor no código, ou se uma descrição tiver tag HTML ou asterisco fora de crase (viram HTML e ênfase no Markdown). Mudou uma prop ou uma story: rode o comando e envie o `API.md` no mesmo commit; o CI e o `prepublishOnly` rodam `npm run docs:api:check`.
-- **Acessibilidade e movimento:** siga a seção "Contrato de componente" do `skill.md` (`className`, `data-slot`, propriedades lógicas, tokens de movimento, hover só em ponteiro fino, `prefers-reduced-motion`).
+- **No comments in the code**: no `//`, no `/* */`, no `{/* */}`, no file header.
+- **Commits** follow [Conventional Commits](https://www.conventionalcommits.org/), in English, in one short line, in the imperative and without a trailing period (`feat: add the Popover`, `fix: close the confirm modal on Esc`). Prefixes: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`.
+- **Small public API:** only what is in `lib/` is public (`enchase`, `enchase/theme`, `enchase/styles/<name>`, `enchase/locales`, `enchase/icons`). `src/` is internal, and `demo/` and the stories import only from the public entry. Export little: removing an export later is a breaking change.
+- **Tests:** every component has a mirror test in `src/tests/components`. New behavior gets a test, and what jsdom does not cover gets a browser test in `src/tests-browser`.
+- **Touch tests:** once the touch emulation of Chromium is on (`Emulation.setTouchEmulationEnabled`), the page never goes back to `hover: hover`, and any fine-pointer test that runs afterwards fails. That is why the tests that turn touch on all live in `src/tests-browser/touch.spec.tsx`, which runs in a Vitest project with a page of its own (`vitest.browser.config.ts`). In Chromium touch is turned on by `enableTouch` and `disableTouch` (`src/tests-browser/touchInput.ts`); in WebKit the same project uses the profile of an iPhone, with native touch. Do not turn the emulation on in another file.
+- **WebKit without a GPU:** the first composition of a fixed panel with a transform and an opacity can take more than 1 s on Linux without a shader cache. In tests that wait for that first opening, use `expect.poll(..., { timeout: 5000 })`.
+- **Browsers in the CI:** `browser-tests.yml` runs each browser in the official Playwright image (`mcr.microsoft.com/playwright`), which already has the three browsers and the system libraries, instead of installing them on every run. The version of the image has to be the one of `playwright` in `package-lock.json`, and `browserImage.test.ts` fails when they differ: when you update Playwright, change the tag of the image in the same commit.
+- **Package and tree-shaking:** `npm run build:lib` writes one file per module in `dist-lib` (`preserveModules` in `vite.lib.config.ts`), with `'use client'` only in `index.js`. Do not call functions at the module level in files that the components import (computed constants, global registries): the bundler of whoever uses the library cannot drop that module. `npm run test:size` bundles a few imports (`Icon`, `Button`, `createTheme`, the styles) as a consumer would, from the tarball, and fails when one goes over its budget in `scripts/testBundleSize.mjs`. If a budget is exceeded for a legitimate reason, raise it in the same commit.
+- **API.md:** it is generated by `npm run docs:api` from the types of `lib/` and the `argTypes` of the stories, so it is not edited by hand. Every prop of a public component needs a `description` in the `argTypes` of its story (or in `src/docs/shared/apiNotes.ts`, for what has no story, such as `GlobalStyles`), and every component needs `parameters.docs.description.component`. The command fails when a description is missing, when the default written in the story differs from the value in the code, or when a description has an HTML tag or an asterisk outside backticks (they become HTML and emphasis in Markdown). If you changed a prop or a story, run the command and send `API.md` in the same commit; the CI and `prepublishOnly` run `npm run docs:api:check`.
+- **Language of the docs:** the text of the documentation (stories, `argTypes`, the `mdx` pages, the generator of `API.md`, `README.md`, this file and `llms.txt`) is written in English, with the terms of `scripts/docsGlossary.json`. `src/tests/lib/docsLanguage.test.ts` fails when it finds Portuguese in them. `README.pt-BR.md`, `skill.md` and `CLAUDE.md` stay in Portuguese.
+- **Accessibility and motion:** follow the `Contrato de componente` section of `skill.md` (`className`, `data-slot`, logical properties, motion tokens, hover only on a fine pointer, `prefers-reduced-motion`).
 
 ## Branches
 
-O trabalho entra na `dev`. A `main` não recebe commit direto: ela só avança por fast-forward a partir da `dev`, e o push nela é o que publica na npm (veja "Publicação"). Por isso a `dev` precisa sempre conter a `main`, e o commit de release sai na `dev`.
+Work goes into `dev`. `main` takes no direct commits: it only moves forward by fast-forward from `dev`, and the push to it is what publishes to npm (see "Publishing"). That is why `dev` must always contain `main`, and the release commit is made on `dev`.
 
-Enquanto uma versão está sendo preparada na `dev`, a `main` fica parada no último commit publicado e só avança no commit de release. Se aparecer um bug urgente nesse período, o hotfix sai da `main`: crie uma branch a partir dela, faça a correção e o `chore(release)` da versão de correção e envie o resultado para a `main` em fast-forward (`git push origin <branch>:main`). Depois traga o hotfix de volta com `git merge main` na `dev`, nunca com rebase: a `dev` não é reescrita, continua contendo a `main`, e o próximo release segue em fast-forward.
+While a version is being prepared on `dev`, `main` stays on the last published commit and only moves with the release commit. If an urgent bug shows up in that period, the hotfix comes from `main`: create a branch from it, make the fix and the `chore(release)` commit of the fix version, and push the result to `main` by fast-forward (`git push origin <branch>:main`). Then bring the hotfix back with `git merge main` on `dev`, never with a rebase: `dev` is not rewritten, it keeps containing `main`, and the next release goes forward by fast-forward.
 
-A CI (`package.yml` e `browser-tests.yml`) roda em todo push na `dev` e na `main` e em todo pull request. Um push novo cancela a execução anterior da mesma branch ou do mesmo pull request, para não enfileirar duas matrizes de navegadores. Na `main` nenhuma execução é cancelada, porque a publicação espera pela CI do commit.
+The CI (`package.yml` and `browser-tests.yml`) runs on every push to `dev` and `main` and on every pull request. A new push cancels the previous run of the same branch or pull request, so two matrices of browsers are not queued. On `main` no run is canceled, because the publication waits for the CI of the commit.
 
-## Publicação
+## Publishing
 
-A versão do `package.json` só muda no commit de release, e é o push desse commit na `main` que dispara a publicação. Nada sobe a versão sozinho.
+The version in `package.json` only changes in the release commit, and it is the push of that commit to `main` that starts the publication. Nothing bumps the version by itself.
 
-1. `npm run changelog` mostra o que entraria no próximo CHANGELOG, a partir dos commits desde a última tag. Só entram `feat`, `fix`, `perf`, `refactor` e mudanças que quebram (`changelog.config.json`), e os autores ficam de fora de propósito: o `changelogen` envia o e-mail dos autores a um serviço externo quando eles são listados.
-2. `npm run release -- 0.2.0` confere que a versão é maior que a atual, escreve a seção no `CHANGELOG.md`, atualiza a versão no `package.json` e no `package-lock.json` e cria o commit `chore(release): v0.2.0` na `dev`. Leia o commit com `git show`, ajuste o texto do CHANGELOG se quiser (`git commit --amend`) e só então envie a `dev` (`git push origin dev`).
-3. `git push origin dev:main`, em fast-forward. A `main` não recebe commit direto, e este push é o que publica na npm. O `.github/workflows/release.yml` roda em todo push na `main` e decide pelo registro do npm (`scripts/release.mjs`):
-   - versão ainda não publicada: roda `package.yml` e `browser-tests.yml` nesse mesmo commit e, só se passarem, publica por trusted publishing, com proveniência, e cria a tag `v0.2.0` e a GitHub Release com a seção do CHANGELOG;
-   - versão já publicada e sem tag: só cria a tag e a Release;
-   - versão já publicada e com tag: não faz nada.
+1. `npm run changelog` shows what would go into the next CHANGELOG, from the commits since the last tag. Only `feat`, `fix`, `perf`, `refactor` and breaking changes go in (`changelog.config.json`), and the authors are left out on purpose: `changelogen` sends the emails of the authors to an external service when they are listed.
+2. `npm run release -- 0.2.0` checks that the version is greater than the current one, writes the section in `CHANGELOG.md`, updates the version in `package.json` and `package-lock.json` and creates the commit `chore(release): v0.2.0` on `dev`. Read the commit with `git show`, adjust the text of the CHANGELOG if you want (`git commit --amend`) and only then push `dev` (`git push origin dev`).
+3. `git push origin dev:main`, by fast-forward. `main` takes no direct commits, and this push is what publishes to npm. `.github/workflows/release.yml` runs on every push to `main` and decides by the npm registry (`scripts/release.mjs`):
+   - version not published yet: it runs `package.yml` and `browser-tests.yml` on that same commit and, only if they pass, publishes with trusted publishing, with provenance, and creates the tag `v0.2.0` and the GitHub Release with the section of the CHANGELOG;
+   - version already published and without a tag: it only creates the tag and the Release;
+   - version already published and with a tag: it does nothing.
 
-O workflow fica vermelho se a versão não for maior que a maior já publicada, ou se a tag existir sem a versão estar no npm. A versão `0.0.0` nunca publica. Versões com sufixo (`0.2.0-rc.1`) saem com a tag `next` do npm, e as demais com `latest`. Se uma publicação falhar, por exemplo porque o CI do commit ficou vermelho, corrija na `dev` e envie o novo commit para a `main`: como a decisão é pelo registro, o push seguinte tenta de novo sem precisar mexer na versão.
+The workflow turns red if the version is not greater than the greatest one already published, or if the tag exists without the version being on npm. The version `0.0.0` never publishes. Versions with a suffix (`0.2.0-rc.1`) go out with the `next` tag of npm, and the others with `latest`. If a publication fails, for example because the CI of the commit turned red, fix it on `dev` and push the new commit to `main`: since the decision comes from the registry, the next push tries again without touching the version.
 
-A primeira versão (`0.1.0`) foi publicada à mão com `npm publish`, porque o trusted publisher só pode ser configurado no npmjs.com depois que o pacote existe. Isso exige 2FA ativo na conta do npm (sem ele o registro responde 403), e depois de publicar o registro leva alguns minutos para mostrar a versão, que aparece como "Validating". Essa versão saiu de uma build no Windows, sem a diretiva `'use client'`, e foi corrigida na `0.1.1`: a saída da build muda entre sistemas (quebras de linha, hashes das classes do CSS Modules), então daí em diante só o CI publica. O `prepublishOnly` confere o `API.md`, constrói a biblioteca e confere os arquivos exportados, a diretiva `'use client'` no `index.js` e o tamanho antes de publicar.
+The first version (`0.1.0`) was published by hand with `npm publish`, because the trusted publisher can only be set up on npmjs.com after the package exists. That needs 2FA on the npm account (without it the registry answers 403), and after publishing the registry takes a few minutes to show the version, which appears as "Validating". That version came from a build on Windows, without the `'use client'` directive, and was fixed in `0.1.1`: the output of the build changes between systems (line endings, hashes of the CSS Modules classes), so from then on only the CI publishes. `prepublishOnly` checks `API.md`, builds the library and checks the exported files, the `'use client'` directive in `index.js` and the size before publishing.
 
-O trusted publisher fica em npmjs.com > `enchase` > Settings > Trusted Publisher > GitHub Actions, com usuário `thiagopedro99`, repositório `enchase`, workflow `release.yml` e ambiente vazio. Ele aparece como "Pending validation" até a primeira publicação feita por ele (a `0.1.1`). Uma versão publicada com defeito não pode ser trocada nem reaproveitada: publique uma versão nova e marque a ruim com `npm deprecate enchase@X.Y.Z "mensagem"`.
+The trusted publisher lives at npmjs.com > `enchase` > Settings > Trusted Publisher > GitHub Actions, with user `thiagopedro99`, repository `enchase`, workflow `release.yml` and an empty environment. It shows as "Pending validation" until the first publication made by it (`0.1.1`). A published version with a defect cannot be replaced or reused: publish a new version and mark the bad one with `npm deprecate enchase@X.Y.Z "message"`.
 
 ## Pull requests
 
-1. Faça um fork e crie uma branch (`git checkout -b feat/nova-coisa`).
-2. Faça commits pequenos e descritivos.
-3. Abra o pull request descrevendo o que mudou e por quê. Ele pode ser contra a `dev`, que é onde o trabalho se integra, mas isso é uma opção e não uma regra.
+1. Fork the repository and create a branch (`git checkout -b feat/new-thing`).
+2. Make small, descriptive commits.
+3. Open the pull request describing what changed and why. It can target `dev`, which is where the work comes together, but that is an option and not a rule.

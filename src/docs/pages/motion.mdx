@@ -1,0 +1,80 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+import { variableRows } from '../stories/system/Motion/defaultData.ts'
+
+<Meta title="System/Motion guide" />
+
+# Motion
+
+The motion of Enchase is plain CSS: transitions, `@starting-style`, `@keyframes` only for loops and `linear()` for the spring. The `usePresence` hook keeps the element mounted until the exit ends. There is no animation library, only React. See everything working, with live controls, in **System/Motion**.
+
+## Four levels of settings
+
+**1. Global, in the `UIProvider`.**
+
+```tsx
+<UIProvider motion={{ mode: 'auto', preset: 'subtle', recipes: { slide: { duration: 0.2, distance: 24 } } }}>
+```
+
+`mode` turns the motion on or off, `preset` (`off`, `subtle`, `standard`, `expressive`) scales the duration and the distance of everything and `recipes` tunes a recipe (`fade`, `pop`, `slide`, `press`, `lift`, `spin`, `shimmer`).
+
+**2. Per component, in the `animation` prop.**
+
+```tsx
+<Modal animation={{ recipe: 'fade' }} />
+<Button animation={false} />
+```
+
+`false` turns the motion off only in that component. An object changes the recipe or tunes the duration, the distance and the scale.
+
+**3. Per theme, in the tokens.**
+
+```tsx
+createTheme({ motion: { duration: { base: '200ms' }, spring: { gentle: { duration: '260ms' }, snappy: { duration: '240ms', bounce: 0.2 } } } })
+```
+
+The tokens are `--enchase-motion-duration-fast|base|slow`, `--enchase-motion-ease-out|in-out`, `--enchase-motion-distance-xs|sm|md` and `--enchase-motion-spring-gentle|snappy|bouncy`, each spring with its own duration in `--enchase-motion-spring-gentle|snappy|bouncy-duration`: the curve plays in full in that duration. `createTheme` validates the values: durations above 300 ms in an interface produce a warning (`bouncy` goes up to 400 ms).
+
+**4. Per CSS, without JavaScript.** Each component exposes `data-slot` and `data-state` (`entering`, `open`, `exiting`) and reads variables of its own, which you override in your CSS:
+
+```css
+[data-slot='modal-panel'] { --enchase-modal-duration: 240ms; }
+```
+
+## Variables per component
+
+All of them use the `--enchase-` prefix (for example, `--enchase-modal-duration`). `-dx` and `-dy` are the direction of the entrance (-1, 0 or 1) and `-distance` is how far it travels; in RTL the `-dx` flips.
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Variables</th>
+    </tr>
+  </thead>
+  <tbody>
+    {variableRows.map((row) => (
+      <tr key={row.component}>
+        <td>
+          <code>{row.component}</code>
+        </td>
+        <td>
+          <code>{row.variables}</code>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Principles
+
+- **Frequency decides the intensity.** An action done dozens of times a day (a button, a tab switch, the keyboard) stays short and springless. Occasional actions (modal, toast, drawer) can have more life.
+- **Under 300 ms** for the interface. More than that needs a reason.
+- **The right origin.** A tooltip and a popover grow from the trigger; a modal stays in the center. Nothing is born from `scale(0)`: it starts at 0.95 to 0.97 with a fade.
+- **Only `transform` and `opacity`.** The exceptions are the width of the `Sidebar` when it collapses, chosen because its measured cost is low, and the ring of the `Progress`, which animates `stroke-dasharray` and only repaints a small SVG.
+- **Exit faster than entrance.** A response of the system does not make the user wait.
+- **Interruptible.** Reversing halfway starts from the current state, without starting over.
+- **Gentle reduced motion.** With `prefers-reduced-motion: reduce`, the displacement and the scale go away and the fade stays. Loops become an opacity pulse. `mode: 'never'` turns everything off.
+
+## What does not exist yet
+
+Gestures and velocity: drag to dismiss, inertia, rubber-band and a spring that inherits the velocity of the finger. This comes in when a component asks for it (a draggable toast or drawer), with an alternative by click and keyboard.

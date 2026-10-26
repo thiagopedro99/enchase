@@ -18,32 +18,32 @@ export const LiveStrip = () => {
       </div>
 
       <div className={styles.row} data-align="flex-start">
-        <Input label="Email" helperText="Nunca compartilhamos seu email" />
-        <Input label="Senha" type="password" />
-        <Select label="País" placeholder="Selecione..." options={countryOptions} defaultValue="" />
-        <Checkbox label="Aceito os termos" />
+        <Input label="Email" helperText="We never share your email" />
+        <Input label="Password" type="password" />
+        <Select label="Country" placeholder="Select..." options={countryOptions} defaultValue="" />
+        <Checkbox label="I accept the terms" />
       </div>
 
       <div className={styles.row}>
         <Button variant="secondary" onClick={() => setModalOpen(true)} aria-haspopup="dialog">
-          Abrir modal
+          Open modal
         </Button>
       </div>
 
       <Modal
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        title="Editar perfil"
+        title="Edit profile"
         footer={
           <>
             <Button variant="ghost" onClick={() => setModalOpen(false)}>
-              Cancelar
+              Cancel
             </Button>
-            <Button onClick={() => setModalOpen(false)}>Salvar</Button>
+            <Button onClick={() => setModalOpen(false)}>Save</Button>
           </>
         }
       >
-        <Input label="Nome" fullWidth />
+        <Input label="Name" fullWidth />
       </Modal>
     </div>
   )
