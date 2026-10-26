@@ -20,7 +20,7 @@ const ConfirmDemo = ({ label, ...args }: ConfirmDemoProps) => {
 }
 
 const meta = {
-  title: 'Componentes/ConfirmModal',
+  title: 'Components/ConfirmModal',
   component: ConfirmModal,
   args: {
     isOpen: false,

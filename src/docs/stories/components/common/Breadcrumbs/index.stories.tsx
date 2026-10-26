@@ -3,7 +3,7 @@ import { Breadcrumbs } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Breadcrumbs',
+  title: 'Components/Breadcrumbs',
   component: Breadcrumbs,
   args: {
     items: [

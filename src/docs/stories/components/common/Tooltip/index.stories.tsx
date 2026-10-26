@@ -3,7 +3,7 @@ import { Button, Tooltip } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Tooltip',
+  title: 'Components/Tooltip',
   component: Tooltip,
   args: {
     text: 'Salvar alterações',

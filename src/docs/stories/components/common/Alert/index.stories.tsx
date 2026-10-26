@@ -20,7 +20,7 @@ const DismissibleDemo = (args: ComponentProps<typeof Alert>) => {
 }
 
 const meta = {
-  title: 'Componentes/Alert',
+  title: 'Components/Alert',
   component: Alert,
   parameters: {
     layout: 'padded',

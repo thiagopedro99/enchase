@@ -41,7 +41,7 @@ const FormDemo = () => {
 }
 
 const meta = {
-  title: 'Componentes/NumberInput',
+  title: 'Components/NumberInput',
   component: NumberInput,
   args: {
     label: 'Quantidade',

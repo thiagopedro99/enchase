@@ -15,7 +15,7 @@ const panel = (
 )
 
 const meta = {
-  title: 'Componentes/Popover',
+  title: 'Components/Popover',
   component: Popover,
   args: {
     placement: defaultPlacement,

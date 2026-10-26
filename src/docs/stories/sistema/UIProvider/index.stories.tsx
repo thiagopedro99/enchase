@@ -52,7 +52,7 @@ const Links = () => (
 )
 
 const meta = {
-  title: 'Sistema/UIProvider',
+  title: 'System/UIProvider',
   component: UIProvider,
   args: { children: undefined, currentHref: '/docs' },
   argTypes: {

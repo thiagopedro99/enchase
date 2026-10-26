@@ -110,7 +110,7 @@ O pacote traz um arquivo por módulo e declara `sideEffects` só para CSS, entã
 
 ## Componentes
 
-Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosilva.com.br/docs/) (ou `npm run storybook`, em `Componentes/<Nome>`).
+Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosilva.com.br/docs/) (ou `npm run storybook`, em `Components/<Name>`).
 
 | Componente | Exemplo mínimo |
 | --- | --- |
@@ -428,7 +428,7 @@ Passe só a cor da marca e o `createTheme` gera as paletas clara e escura:
 - No tema claro, o `primary` é a sua cor quando ela passa nos contrastes que o tema exige (texto e link sobre as superfícies, texto sobre o próprio `primary`). Se for clara demais para ser lida como texto, como um amarelo, o `primary` é a mesma cor, com o mesmo matiz, escurecida o mínimo necessário. No tema escuro, o `primary` é a versão clara da cor.
 - O resto do primário (`onPrimary`, os contêineres, `primaryHover`, `inversePrimary`), o secundário e os neutros (superfícies, texto e bordas) saem do matiz da marca, com as mesmas luminosidades do tema padrão. Erro, sucesso, aviso, info, sombras, fontes e movimento não mudam.
 - O que você passar em `light.colors` e `dark.colors` vence o gerado, token a token: `createTheme({ brand: '#0F766E', dark: { colors: { primary: '#7FE0D6' } } })`.
-- Para qualquer cor de marca o `validateTheme` não aponta nenhum par abaixo do contraste mínimo. O teste da biblioteca percorre centenas de cores, de todos os matizes, do muito claro ao muito escuro e do cinza ao vibrante, e exige zero pares reprovados. A página Sistema/Marca do Storybook deixa você experimentar a sua cor.
+- Para qualquer cor de marca o `validateTheme` não aponta nenhum par abaixo do contraste mínimo. O teste da biblioteca percorre centenas de cores, de todos os matizes, do muito claro ao muito escuro e do cinza ao vibrante, e exige zero pares reprovados. A página System/Brand do Storybook deixa você experimentar a sua cor.
 
 ### Forma dos cantos
 
@@ -454,7 +454,7 @@ O `createTheme` troca os raios com a seção `shape` (um preset) e com `radius` 
 - Um valor é `0` ou um número com `rem`, `em`, `px` ou `%`. Valor inválido, token desconhecido ou preset que não existe lançam erro dizendo qual falhou.
 - Sem `shape` e sem `radius`, nada muda: o `pill` é o visual de sempre, e `--enchase-radius-button` aponta para `--enchase-radius-full`, então quem já sobrescrevia `--enchase-radius-full` no `:root` continua vendo os botões acompanharem. Uma sobrescrita de `--enchase-radius-full` só em um trecho da página não chega mais aos botões desse trecho, porque o alias já foi resolvido no `:root`: ali, sobrescreva `--enchase-radius-button`.
 - O `Button` ainda lê `--enchase-button-radius` antes do tema, para mudar um botão só.
-- O `shape` muda só os raios: o contraste das cores e o movimento ficam como estão. A página Sistema/Forma do Storybook mostra os presets no kit inteiro.
+- O `shape` muda só os raios: o contraste das cores e o movimento ficam como estão. A página System/Shape do Storybook mostra os presets no kit inteiro.
 
 ### Estilo visual
 
@@ -478,7 +478,7 @@ import { shadcn } from 'enchase/styles/shadcn'
 - Além das cores e dos raios, o estilo muda: botões de 32, 36 e 40px, campos de 36px e texto de 14px nos controles, uma sombra pequena nos botões e nos campos, alertas neutros com o ícone e o título coloridos, badges tingidos (sólidos só o `primary` e o de erro), abas só com o sublinhado, acordeão sem contorno e com linhas entre os itens, diálogo, popover e notificação com borda, e o rótulo acima do controle.
 - A precedência, do mais fraco ao mais forte, é: o padrão da biblioteca, o `style` e o que você passa (`shape`, `radius`, `fonts`, `motion`, `brand`, `light` e `dark`). `shape: 'pill'` com o `shadcn` devolve os botões em pílula, e `radius: { button: '1rem' }` muda só o raio dos botões. Com `brand`, só o acento muda (o `primary` e o que deriva dele): os neutros continuam os do estilo, e o `validateTheme` confere o contraste do resultado como em qualquer tema.
 - Por baixo, um estilo é um conjunto de tokens e de ganchos de CSS (veja "Customização por CSS"). O `createTheme` os junta ao tema e o `ColorModeProvider` os escreve no `:root` e nos blocos de cada modo, então o CSS da sua aplicação vence o estilo: `:root { --enchase-button-font-size-md: 16px; }` muda só esse valor. O `ThemeSet` que o `createTheme` devolve ganha `hooks` e `defaults`, que são opcionais, então um `ThemeSet` montado à mão continua valendo.
-- A página Sistema/Estilos do Storybook mostra os estilos no kit inteiro, e a barra de ferramentas do Storybook troca o estilo de todas as stories.
+- A página System/Styles do Storybook mostra os estilos no kit inteiro, e a barra de ferramentas do Storybook troca o estilo de todas as stories.
 
 O lugar do rótulo dos campos é a prop `labelPlacement` do `Input`, do `Textarea`, do `NumberInput` e do `Select`: `floating` (o padrão do estilo `enchase`) deixa o rótulo dentro do campo, e ele sobe para o contorno ao focar ou preencher; `stacked` (o padrão do `shadcn`) põe o rótulo acima do controle, sem entalhe no contorno, com a ajuda e o erro abaixo. A prop vence o estilo, nos dois sentidos, e sem `ColorModeProvider` o rótulo é flutuante. A ordem no HTML é a visual (o `<label>` vem antes do controle), igual no servidor e no cliente.
 

@@ -3,7 +3,7 @@ import { Footer } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Footer',
+  title: 'Components/Footer',
   component: Footer,
   parameters: {
     layout: 'fullscreen',

@@ -24,7 +24,7 @@ const ControlledDemo = () => {
 }
 
 const meta = {
-  title: 'Componentes/Tabs',
+  title: 'Components/Tabs',
   component: Tabs,
   args: {
     ariaLabel: 'Seções da conta',

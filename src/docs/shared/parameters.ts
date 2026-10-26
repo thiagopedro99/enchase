@@ -4,34 +4,34 @@ import type { Preview } from '@storybook/react-vite'
 
 export const globalTypes: NonNullable<Preview['globalTypes']> = {
   theme: {
-    description: 'Tema',
+    description: 'Theme',
     toolbar: {
-      title: 'Tema',
+      title: 'Theme',
       icon: 'circlehollow',
       items: [
-        { value: 'light', title: 'Claro' },
-        { value: 'dark', title: 'Escuro' }
+        { value: 'light', title: 'Light' },
+        { value: 'dark', title: 'Dark' }
       ],
       dynamicTitle: true
     }
   },
   style: {
-    description: 'Estilo visual',
+    description: 'Visual style',
     toolbar: {
-      title: 'Estilo',
+      title: 'Style',
       icon: 'paintbrush',
       items: storyStyleNames.map((value) => ({ value, title: storyStyleTitles[value] })),
       dynamicTitle: true
     }
   },
   motion: {
-    description: 'Modo de motion',
+    description: 'Motion mode',
     toolbar: {
       title: 'Motion',
       icon: 'play',
       items: [
-        { value: 'auto', title: 'Automático' },
-        { value: 'never', title: 'Sem movimento' }
+        { value: 'auto', title: 'Automatic' },
+        { value: 'never', title: 'No motion' }
       ],
       dynamicTitle: true
     }
@@ -44,6 +44,6 @@ export const parameters: NonNullable<Preview['parameters']> = {
   layout: 'centered',
   controls: { expanded: true },
   options: {
-    storySort: { order: ['Introdução', 'Fundamentos', 'Sistema', 'Componentes'] }
+    storySort: { order: ['Introduction', 'Foundations', 'System', 'Components'] }
   }
 }

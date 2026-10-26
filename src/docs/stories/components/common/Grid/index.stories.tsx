@@ -12,7 +12,7 @@ const cell = (label: string) => (
 const cells = ['Um', 'Dois', 'Três', 'Quatro', 'Cinco', 'Seis'].map(cell)
 
 const meta = {
-  title: 'Componentes/Grid',
+  title: 'Components/Grid',
   component: Grid,
   args: {
     columns: 3,

@@ -4,7 +4,7 @@ import { asArgType } from '@docs/shared/argTypes.ts'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Card',
+  title: 'Components/Card',
   component: Card,
   args: {
     variant: 'default',

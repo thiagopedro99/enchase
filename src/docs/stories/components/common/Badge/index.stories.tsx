@@ -4,7 +4,7 @@ import { defaultSize, defaultVariant, variantLabels, variants } from './defaultD
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Badge',
+  title: 'Components/Badge',
   component: Badge,
   args: {
     children: 'Novo',

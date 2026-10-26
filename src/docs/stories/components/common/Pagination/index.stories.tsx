@@ -16,7 +16,7 @@ const ControlledDemo = () => {
 }
 
 const meta = {
-  title: 'Componentes/Pagination',
+  title: 'Components/Pagination',
   component: Pagination,
   args: {
     pageCount: 20,

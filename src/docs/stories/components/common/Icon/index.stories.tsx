@@ -27,7 +27,7 @@ const iconsRecipe = [
 ].join('\n')
 
 const meta = {
-  title: 'Componentes/Icon',
+  title: 'Components/Icon',
   component: Icon,
   args: {
     children: <path d="M12 5v14M5 12h14" />

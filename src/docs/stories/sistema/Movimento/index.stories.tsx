@@ -25,7 +25,7 @@ const CopyInstructions = () => {
 }
 
 const meta = {
-  title: 'Sistema/Movimento',
+  title: 'System/Motion',
   tags: ['!autodocs'],
   parameters: { layout: 'padded' },
   args: defaultArgs,

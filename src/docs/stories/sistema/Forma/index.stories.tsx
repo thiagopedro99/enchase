@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ShapeStoryArgs } from './types.ts'
 
 const meta = {
-  title: 'Sistema/Forma',
+  title: 'System/Shape',
   tags: ['!autodocs'],
   parameters: { layout: 'padded' },
   args: { shape: defaultShape, buttonRadius: '', controlRadius: '', cardRadius: '' },

@@ -48,7 +48,7 @@ const ControlledDemo = () => {
 }
 
 const meta = {
-  title: 'Componentes/Accordion',
+  title: 'Components/Accordion',
   component: Accordion,
   args: {
     items,

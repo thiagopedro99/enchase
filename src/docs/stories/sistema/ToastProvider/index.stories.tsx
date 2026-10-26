@@ -9,7 +9,7 @@ const Launcher = () => {
 }
 
 const meta = {
-  title: 'Sistema/ToastProvider',
+  title: 'System/ToastProvider',
   component: ToastProvider,
   args: { children: undefined },
   argTypes: {

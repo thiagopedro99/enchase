@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ButtonStoryArgs } from './types.ts'
 
 const meta = {
-  title: 'Componentes/Button',
+  title: 'Components/Button',
   component: Button,
   args: {
     children: 'Enviar',

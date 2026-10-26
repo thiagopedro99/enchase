@@ -29,7 +29,7 @@ const sections: SidebarSection[] = [
 ]
 
 const meta = {
-  title: 'Componentes/Sidebar',
+  title: 'Components/Sidebar',
   component: Sidebar,
   parameters: {
     layout: 'fullscreen',

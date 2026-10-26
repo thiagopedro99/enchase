@@ -39,7 +39,7 @@ const SelectableSkills = () => {
 }
 
 const meta = {
-  title: 'Componentes/CardButton',
+  title: 'Components/CardButton',
   component: CardButton,
   args: {
     variant: 'default',

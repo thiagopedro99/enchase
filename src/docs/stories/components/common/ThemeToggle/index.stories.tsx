@@ -3,7 +3,7 @@ import { ThemeToggle } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/ThemeToggle',
+  title: 'Components/ThemeToggle',
   component: ThemeToggle,
   parameters: {
     docs: {

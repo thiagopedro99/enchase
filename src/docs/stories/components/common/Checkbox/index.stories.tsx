@@ -3,7 +3,7 @@ import { Checkbox } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Checkbox',
+  title: 'Components/Checkbox',
   component: Checkbox,
   args: {
     label: 'Aceito os termos',

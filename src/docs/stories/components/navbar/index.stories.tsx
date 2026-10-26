@@ -43,7 +43,7 @@ const BehindTheBar = (props: NavbarProps) => {
 }
 
 const meta = {
-  title: 'Componentes/Navbar',
+  title: 'Components/Navbar',
   component: Navbar,
   parameters: {
     layout: 'fullscreen',

@@ -6,7 +6,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 const box = { background: 'var(--enchase-color-surface-container)', padding: '1rem', borderRadius: 'var(--enchase-radius-md)' }
 
 const meta = {
-  title: 'Componentes/Container',
+  title: 'Components/Container',
   component: Container,
   parameters: {
     layout: 'fullscreen',

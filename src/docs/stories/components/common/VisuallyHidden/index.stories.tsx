@@ -3,7 +3,7 @@ import { Button, VisuallyHidden } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/VisuallyHidden',
+  title: 'Components/VisuallyHidden',
   component: VisuallyHidden,
   args: { children: 'Texto só para leitores de tela' },
   argTypes: {

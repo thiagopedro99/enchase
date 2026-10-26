@@ -4,7 +4,7 @@ import { defaultFullWidth, defaultPasswordToggle } from './defaultData.ts'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Input',
+  title: 'Components/Input',
   component: Input,
   args: {
     label: 'Email',

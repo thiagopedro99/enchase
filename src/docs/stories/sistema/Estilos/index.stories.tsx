@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { StyleStoryArgs } from './types.ts'
 
 const meta = {
-  title: 'Sistema/Estilos',
+  title: 'System/Styles',
   tags: ['!autodocs'],
   parameters: {
     layout: 'padded',

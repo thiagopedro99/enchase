@@ -3,7 +3,7 @@ import { InlineLoading, Loading } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Loading',
+  title: 'Components/Loading',
   component: Loading,
   args: {
     size: 'md',

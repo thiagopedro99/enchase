@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { BrandStoryArgs } from './types.ts'
 
 const meta = {
-  title: 'Sistema/Marca',
+  title: 'System/Brand',
   tags: ['!autodocs'],
   parameters: { layout: 'padded' },
   args: { brand: defaultBrand },

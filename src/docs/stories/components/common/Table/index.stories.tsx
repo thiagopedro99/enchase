@@ -42,7 +42,7 @@ const PaginatedDemo = () => {
 }
 
 const meta = {
-  title: 'Componentes/Table',
+  title: 'Components/Table',
   component: Table<Order>,
   args: {
     caption: 'Pedidos recentes',

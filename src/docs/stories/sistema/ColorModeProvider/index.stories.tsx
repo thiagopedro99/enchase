@@ -30,7 +30,7 @@ const Stage = ({ theme, mode, defaultMode, onModeChange, storageKey, cssLayer }:
 }
 
 const meta = {
-  title: 'Sistema/ColorModeProvider',
+  title: 'System/ColorModeProvider',
   component: ColorModeProvider,
   args: { children: undefined },
   argTypes: {

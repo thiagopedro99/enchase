@@ -6,7 +6,7 @@ import { hrefCases } from './defaultData.ts'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Link',
+  title: 'Components/Link',
   component: Link,
   args: {
     href: '/sobre',

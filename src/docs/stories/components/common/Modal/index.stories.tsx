@@ -18,7 +18,7 @@ const ModalDemo = ({ label, ...args }: ModalDemoProps) => {
 }
 
 const meta = {
-  title: 'Componentes/Modal',
+  title: 'Components/Modal',
   component: Modal,
   args: {
     isOpen: false,

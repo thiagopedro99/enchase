@@ -16,7 +16,7 @@ const ControlledDemo = () => {
 }
 
 const meta = {
-  title: 'Componentes/RadioGroup',
+  title: 'Components/RadioGroup',
   component: RadioGroup,
   args: {
     label: 'Plano',

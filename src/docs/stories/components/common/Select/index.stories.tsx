@@ -4,7 +4,7 @@ import { countryOptions, defaultFullWidth } from './defaultData.ts'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Select',
+  title: 'Components/Select',
   component: Select,
   args: {
     label: 'País',

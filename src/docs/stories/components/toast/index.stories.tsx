@@ -16,7 +16,7 @@ const Launcher = ({ type, duration, message }: ToastStoryArgs) => {
 }
 
 const meta = {
-  title: 'Componentes/Toast',
+  title: 'Components/Toast',
   component: Launcher,
   args: {
     type: 'success',

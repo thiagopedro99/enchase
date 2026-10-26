@@ -18,7 +18,7 @@ const content = (title: string, text: string) => (
 )
 
 const meta = {
-  title: 'Componentes/CardLink',
+  title: 'Components/CardLink',
   component: CardLink,
   args: {
     href: '/projects/enchase',

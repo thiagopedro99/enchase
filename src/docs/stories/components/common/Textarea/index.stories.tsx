@@ -4,7 +4,7 @@ import { defaultFullWidth, defaultResize, defaultRows } from './defaultData.ts'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Textarea',
+  title: 'Components/Textarea',
   component: Textarea,
   args: {
     label: 'Mensagem',

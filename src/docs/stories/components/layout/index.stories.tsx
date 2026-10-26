@@ -42,7 +42,7 @@ const ScrolledContent = () => {
 }
 
 const meta = {
-  title: 'Componentes/Layout',
+  title: 'Components/Layout',
   component: Layout,
   parameters: {
     layout: 'fullscreen',

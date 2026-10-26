@@ -3,7 +3,7 @@ import { Skeleton } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const meta = {
-  title: 'Componentes/Skeleton',
+  title: 'Components/Skeleton',
   component: Skeleton,
   args: {
     variant: 'text'

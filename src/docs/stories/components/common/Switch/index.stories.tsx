@@ -16,7 +16,7 @@ const ControlledDemo = () => {
 }
 
 const meta = {
-  title: 'Componentes/Switch',
+  title: 'Components/Switch',
   component: Switch,
   args: {
     label: 'Receber notificações',
