@@ -1,3 +1,4 @@
+import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { MotionOverride } from '@motion/types.ts'
 import type { CSSProperties, ReactNode } from 'react'
 
@@ -17,13 +18,14 @@ export interface ModalProps {
   closeOnOverlayClick?: boolean | undefined
   closeOnEsc?: boolean | undefined
   size?: ModalSize | undefined
+  container?: PortalContainer | undefined
   animation?: MotionOverride | undefined
   className?: string | undefined
   style?: CSSProperties | undefined
 }
 
 export type ModalDialogProps = Required<Pick<ModalProps, 'role' | 'showCloseButton' | 'closeOnOverlayClick' | 'closeOnEsc' | 'size'>> &
-  Omit<ModalProps, 'isOpen' | 'role' | 'showCloseButton' | 'closeOnOverlayClick' | 'closeOnEsc' | 'size'>
+  Omit<ModalProps, 'isOpen' | 'role' | 'showCloseButton' | 'closeOnOverlayClick' | 'closeOnEsc' | 'size' | 'container'>
 
 export interface ConfirmModalProps {
   isOpen: boolean
@@ -34,6 +36,7 @@ export interface ConfirmModalProps {
   confirmText?: string | undefined
   cancelText?: string | undefined
   confirmVariant?: 'primary' | 'secondary' | 'outline' | 'ghost' | undefined
+  container?: PortalContainer | undefined
   animation?: MotionOverride | undefined
   className?: string | undefined
   style?: CSSProperties | undefined

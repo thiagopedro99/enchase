@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useIsClient } from '@hooks/useIsClient.ts'
 import { useInertSiblings } from '@hooks/useInertSiblings.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
+import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useScrollLock } from '@hooks/useScrollLock.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -22,7 +23,7 @@ const Spinner = ({ part, size, color, animation }: SpinnerProps) => {
   return <span {...slot(part, 'spinner')} className={styles.spinner} data-size={size} data-motion={motion} style={merged} aria-hidden="true" />
 }
 
-const OverlayLoading = ({ size, text, color, animation, ...props }: Required<Pick<LoadingProps, 'size'>> & Omit<LoadingProps, 'size' | 'overlay'>) => {
+const OverlayLoading = ({ size, text, color, animation, ...props }: Required<Pick<LoadingProps, 'size'>> & Omit<LoadingProps, 'size' | 'overlay' | 'container'>) => {
   const rootRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
   const [shown, setShown] = useState(false)
@@ -45,14 +46,14 @@ const OverlayLoading = ({ size, text, color, animation, ...props }: Required<Pic
   )
 }
 
-export const Loading = ({ size = 'md', overlay = false, text, color, animation, ...props }: LoadingProps) => {
+export const Loading = ({ size = 'md', overlay = false, container, text, color, animation, ...props }: LoadingProps) => {
   const { labels } = useUIConfig()
   const isClient = useIsClient()
 
   if (overlay) {
     if (!isClient) return null
 
-    return createPortal(<OverlayLoading size={size} text={text} color={color} animation={animation} {...props} />, document.body)
+    return createPortal(<OverlayLoading size={size} text={text} color={color} animation={animation} {...props} />, resolvePortalContainer(container))
   }
 
   const own = { ...slot('loading'), className: styles.container, role: 'status', 'aria-live': 'polite' as const }

@@ -9,6 +9,7 @@ import { usePopoverPosition } from './usePopoverPosition.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { focusFirst } from './focus.ts'
+import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { tabbablesIn } from '@utils/tabbable.ts'
 import { useIsClient } from '@hooks/useIsClient.ts'
@@ -33,6 +34,7 @@ export const Popover = ({
   arrow = defaultArrow,
   closeOnEsc = defaultCloseOnEsc,
   closeOnOutsideClick = defaultCloseOnOutsideClick,
+  container,
   animation,
   className,
   style,
@@ -107,7 +109,7 @@ export const Popover = ({
               </div>
             </PopoverTreeContext.Provider>
           ) : null,
-          document.body
+          resolvePortalContainer(container)
         )}
     </>
   )

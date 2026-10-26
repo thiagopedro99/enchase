@@ -1,5 +1,6 @@
 import type { LabelPlacement } from '@styles/tokens/types.ts'
 import type { RenderWithProvidersOptions } from '@tests/types.ts'
+import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { ReactElement, ReactNode } from 'react'
 
 export type DialogContractAdapter = {
@@ -29,4 +30,12 @@ export type LabelPlacementContractAdapter = {
   control: string
   placeholder?: string
   render: (placement?: LabelPlacement) => ReactElement
+}
+
+export type PortalContainerContractAdapter = {
+  name: string
+  slot: string
+  render: (container: PortalContainer | undefined) => ReactElement
+  reveal?: () => Promise<void>
+  plain?: boolean
 }

@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 
 import { bubbleOffset, closeDelay as defaultCloseDelay, defaultPosition, joinsGroup, openDelay as defaultOpenDelay, resolveAnimation, tooltipGroup, viewportPadding } from './defaultData.ts'
 import { autoUpdate, computePosition, resolvePlacement } from '../../../positioning/index.ts'
+import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { classNames } from '@utils/classNames.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -18,6 +19,7 @@ export const Tooltip = ({
   children,
   position = defaultPosition,
   describe = true,
+  container,
   animation,
   openDelay = defaultOpenDelay,
   closeDelay = defaultCloseDelay,
@@ -138,7 +140,7 @@ export const Tooltip = ({
           {text}
         </span>
       )}
-      {isClient && createPortal(presence.mounted ? <span {...bubbleProps}>{text}</span> : null, document.body)}
+      {isClient && createPortal(presence.mounted ? <span {...bubbleProps}>{text}</span> : null, resolvePortalContainer(container))}
     </div>
   )
 }

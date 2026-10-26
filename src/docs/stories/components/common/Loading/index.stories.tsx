@@ -1,4 +1,5 @@
 import { InlineLoading, Loading } from 'enchase'
+import { containerArgType } from '@docs/shared/argTypes.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -36,6 +37,7 @@ const meta = {
       description: 'Color of the spinning arc (any CSS color).',
       control: 'color'
     },
+    container: containerArgType,
     animation: {
       description: 'false stops the spinning. { tuning: { duration } } sets the seconds of one full turn. With reduced motion the spin becomes an opacity pulse.',
       control: 'object',

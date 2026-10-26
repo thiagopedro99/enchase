@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -10,6 +11,16 @@ import { Popover } from '@components/common/Popover/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 
 const content = <button>Dentro</button>
+
+describePortalContainerContract({
+  name: 'Popover',
+  slot: 'popover-content',
+  render: (container) => (
+    <Popover open content={content} container={container}>
+      <button>Open</button>
+    </Popover>
+  )
+})
 
 describe('Popover', () => {
   it('keeps the content out of the page until it opens and links it to the trigger', async () => {

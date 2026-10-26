@@ -684,6 +684,24 @@ O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 - `enchase/styles.layer.css`: o mesmo conteúdo em `@layer enchase`, com a ordem `@layer enchase-theme, enchase-base, enchase;`. Qualquer CSS seu sem camada vence em qualquer ordem. Combine com `<ColorModeProvider cssLayer="enchase-theme">`.
 - `enchase/theme.css`: as variáveis do tema padrão como arquivo, para tê-las na primeira resposta do servidor sem esperar JavaScript. Um tema personalizado continua indo em `ColorModeProvider theme`.
 
+### Overlays dentro de um trecho da página
+
+`Modal`, `ConfirmModal`, `Popover`, `Tooltip` e o `Loading` com `overlay` renderizam num portal no `<body>`. As variáveis do tema chegam até eles, porque são declaradas em `:root` e em `[data-theme]`, mas uma variável que você muda num elemento do app (uma ilha com `data-theme="dark"`, um `div` com ganchos `--enchase-*` próprios) não chega, porque a herança segue a árvore do DOM e o portal está no `body`. A prop `container`, um elemento ou uma função que o devolve, monta o overlay dentro desse elemento, que passa a herdar as variáveis dele:
+
+```tsx
+const [island, setIsland] = useState<HTMLElement | null>(null)
+
+return (
+  <section data-theme="dark" ref={setIsland}>
+    <Modal isOpen={open} onClose={close} title="Settings" container={island}>
+      ...
+    </Modal>
+  </section>
+)
+```
+
+Com `container` nulo, ou com a função devolvendo `null`, o overlay cai no `body`; a função roda só no cliente, nunca no servidor. Os overlays são `position: fixed` com as coordenadas da janela, então um ancestral do contêiner com `transform`, `filter` ou `contain` vira o bloco de contenção e desloca o overlay: escolha um contêiner sem essas propriedades. O mesmo vale para o que o `data-theme` não resolve: um gancho declarado no `:root` como `var(--enchase-color-surface)` continua com as cores do documento, porque o alias é resolvido onde é declarado (veja acima).
+
 ## Renderização no servidor
 
 Os componentes renderizam no servidor sem erro de hidratação.

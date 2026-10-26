@@ -1,4 +1,5 @@
 import { Button, Tooltip } from 'enchase'
+import { containerArgType } from '@docs/shared/argTypes.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -46,6 +47,7 @@ const meta = {
       control: 'number',
       table: { defaultValue: { summary: '120' } }
     },
+    container: containerArgType,
     animation: {
       description: 'false turns off the transition. The default recipe is "pop", a fade with a light scale; { recipe: "fade" } only fades; { tuning: { duration } } changes the duration in seconds.',
       control: 'object',

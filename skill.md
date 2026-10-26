@@ -101,6 +101,7 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 - `header` e `footer` do `Sidebar` aceitam um nó ou uma função `({ collapsed }) => nó`, para o conteúdo se adaptar ao modo recolhido (marca compacta, avatar sem nome).
 - A ordem do DOM do `Layout` é skip link, `AppBar`, sidebar, `main`, rodapé (posicionados por CSS grid), para o botão de menu vir antes da sidebar no foco.
 - Tooltip renderiza a bolha em portal com posição fixa, por isso funciona dentro de containers com scroll; item de menu recolhido usa `Tooltip` com `describe={false}`.
+- `Modal`, `ConfirmModal`, `Popover`, `Tooltip` e o `Loading` com `overlay` fazem portal para o `document.body` e aceitam `container` (elemento ou função que o devolve): quem resolve é `resolvePortalContainer` (`src/utils/portalContainer.ts`), só no cliente, e vazio ou `null` cai no `body`. Overlay novo com portal usa o mesmo util e a mesma prop, e entra no `describePortalContainerContract`. Os overlays são `position: fixed` com coordenadas da janela: um ancestral do contêiner com `transform`, `filter` ou `contain` vira o bloco de contenção e desloca o overlay, ressalva documentada e não bug.
 - Dentro de um componente, estilo de layout com CSS explícito no `.module.css` (`display: flex`); `Flex`, `Grid` e `Container` servem para compor páginas.
 
 ## Contrato de componente (especificação para a passada por componente)

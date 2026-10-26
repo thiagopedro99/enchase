@@ -1,3 +1,4 @@
+import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -11,6 +12,19 @@ import { ptBR } from '@locales/ptBR.ts'
 const visibleBubble = () => screen.queryByText('Save changes', { selector: '[aria-hidden="true"]' })
 
 beforeEach(resetTooltipGroup)
+
+describePortalContainerContract({
+  name: 'Tooltip',
+  slot: 'tooltip-bubble',
+  render: (container) => (
+    <Tooltip text="Hint" openDelay={0} container={container}>
+      <button>Trigger</button>
+    </Tooltip>
+  ),
+  reveal: async () => {
+    await userEvent.hover(screen.getByRole('button', { name: 'Trigger' }))
+  }
+})
 
 describe('Tooltip', () => {
   it('describes the trigger through a hidden tooltip element', () => {

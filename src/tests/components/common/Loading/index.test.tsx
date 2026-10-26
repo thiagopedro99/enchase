@@ -1,9 +1,16 @@
+import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { screen, waitFor } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
 import { InlineLoading, Loading } from '@components/common/Loading/index.tsx'
+
+describePortalContainerContract({
+  name: 'Loading overlay',
+  slot: 'loading',
+  render: (container) => <Loading overlay text="Saving" container={container} />
+})
 
 describe('Loading', () => {
   it('announces a status with a default accessible label and hides the spinner graphic', () => {

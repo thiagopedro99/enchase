@@ -193,6 +193,7 @@ A ready-made confirmation modal: an alertdialog with the question and the cancel
 | `confirmText` | `string` | — | Text of the confirm button. Without it, it uses labels.confirm from the UIProvider. |
 | `cancelText` | `string` | — | Text of the cancel button, which receives the initial focus. Without it, it uses labels.cancel from the UIProvider. |
 | `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Style of the confirm button, the same as in the Button. |
+| `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it (called on the client, never on the server). Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay. |
 | `animation` | `MotionOverride` | — | false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale, as in the Modal. |
 | `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
 | `style` | `CSSProperties` | — | Style of the panel, merged with the library style (yours wins). |
@@ -384,6 +385,7 @@ A ring-shaped loading indicator, with optional text. With `overlay`, it covers t
 | --- | --- | --- | --- |
 | `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Diameter of the ring. |
 | `overlay` | `boolean` | `false` | Covers the page, makes the rest inert and locks scrolling while it is mounted. |
+| `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it (called on the client, never on the server). Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay. |
 | `text` | `string` | — | Visible text. Without it, a screen reader announces labels.loading. |
 | `color` | `string` | — | Color of the spinning arc (any CSS color). |
 | `animation` | `false \| { recipe, tuning }` | `spin` | false stops the spinning. { tuning: { duration } } sets the seconds of one full turn. With reduced motion the spin becomes an opacity pulse. |
@@ -407,6 +409,7 @@ A modal dialog rendered in a portal: the focus stays trapped in the panel, the p
 | `closeOnOverlayClick` | `boolean` | `true` | Closes when the backdrop is clicked. |
 | `closeOnEsc` | `boolean` | `true` | Closes with Esc. With stacked modals, only the top one closes. |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Maximum width of the panel. |
+| `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it (called on the client, never on the server). Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay. |
 | `animation` | `MotionOverride` | — | false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale. |
 | `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
 | `style` | `CSSProperties` | — | Style of the panel, merged with the library style (yours wins). |
@@ -489,6 +492,7 @@ A floating panel attached to a trigger. Its position adjusts itself near the edg
 | `arrow` | `boolean` | `false` | Shows an arrow that points to the trigger. |
 | `closeOnEsc` | `boolean` | `true` | Esc closes only the top layer and returns the focus to the trigger. |
 | `closeOnOutsideClick` | `boolean` | `true` | A click outside closes the popover without taking the focus away from where the click landed. |
+| `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it (called on the client, never on the server). Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay. |
 | `animation` | `false \| { recipe, tuning }` | `pop` | false turns off the transition. { recipe: "fade" } swaps the pop for a fade; { tuning: { duration, scale } } adjusts the duration and the scale. |
 | `className` | `string` | — | Class of the element that wraps the trigger (data-slot="popover-trigger"). |
 | `style` | `CSSProperties` | — | Style of the element that wraps the trigger. |
@@ -697,6 +701,7 @@ A text tooltip for a trigger, opened by pointer and by focus. It gives the trigg
 | `children` | `ReactNode` | *required* | The trigger. It sits inside a div (data-slot="tooltip-trigger") and, with describe on, receives aria-describedby. |
 | `position` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Side of the trigger where the tooltip appears. start and end follow the direction of the UIProvider (left and right in ltr, the reverse in rtl). Near the edge of the screen the tooltip flips to the other side and shifts to fit. |
 | `describe` | `boolean` | `true` | Turns on the accessible description of the trigger. Turn it off when the trigger already has the same text as its name, like an icon-only button. |
+| `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it (called on the client, never on the server). Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay. |
 | `animation` | `false \| { recipe, tuning }` | `pop` | false turns off the transition. The default recipe is "pop", a fade with a light scale; { recipe: "fade" } only fades; { tuning: { duration } } changes the duration in seconds. |
 | `openDelay` | `number` | `100` | Milliseconds between entering the trigger and showing the tooltip. 0 shows it at once. With another tooltip open, or one closed less than 300 ms ago, the next one opens without waiting and without animation. |
 | `closeDelay` | `number` | `120` | Milliseconds between leaving the trigger and hiding the tooltip. Moving the pointer onto the tooltip itself keeps it open. |

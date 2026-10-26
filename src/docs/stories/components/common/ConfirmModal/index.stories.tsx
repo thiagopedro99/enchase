@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button, ConfirmModal } from 'enchase'
+import { containerArgType } from '@docs/shared/argTypes.ts'
 
 import type { ComponentProps } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -64,6 +65,7 @@ const meta = {
       options: ['primary', 'secondary', 'outline', 'ghost'],
       table: { defaultValue: { summary: 'primary' } }
     },
+    container: containerArgType,
     animation: {
       description: 'false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale, as in the Modal.',
       control: false

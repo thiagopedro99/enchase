@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button, Modal } from 'enchase'
+import { containerArgType } from '@docs/shared/argTypes.ts'
 
 import type { ComponentProps } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -65,6 +66,7 @@ const meta = {
     closeOnEsc: { description: 'Closes with Esc. With stacked modals, only the top one closes.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
     className: { description: 'Class of the panel. It wins over the library class without !important.', control: false },
     style: { description: 'Style of the panel, merged with the library style (yours wins).', control: false },
+    container: containerArgType,
     animation: { description: 'false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale.', control: false },
     children: { description: 'Content of the modal body.', control: 'text' },
     footer: { description: 'Fixed content below the body, such as the action buttons.', control: false }

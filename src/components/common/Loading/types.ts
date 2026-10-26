@@ -1,3 +1,4 @@
+import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { MotionOverride } from '@motion/types.ts'
 import type { HTMLAttributes } from 'react'
 
@@ -6,6 +7,7 @@ export type LoadingSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 export interface LoadingProps extends Omit<HTMLAttributes<HTMLDivElement>, 'children'> {
   size?: LoadingSize | undefined
   overlay?: boolean | undefined
+  container?: PortalContainer | undefined
   text?: string | undefined
   color?: string | undefined
   animation?: MotionOverride | undefined

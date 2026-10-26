@@ -8,6 +8,7 @@ import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { usePresence } from '@hooks/usePresence.ts'
+import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { Button } from '../Button/index.tsx'
@@ -105,6 +106,7 @@ export const Modal = ({
   closeOnOverlayClick = true,
   closeOnEsc = true,
   size = 'md',
+  container,
   ...props
 }: ModalProps) => {
   const motionStyle = useMotionStyle('pop', 'modal', props.animation, undefined, modalBase)
@@ -128,7 +130,7 @@ export const Modal = ({
         {...props}
       />
     ) : null,
-    document.body
+    resolvePortalContainer(container)
   )
 }
 
@@ -141,6 +143,7 @@ export const ConfirmModal = ({
   confirmText,
   cancelText,
   confirmVariant = 'primary',
+  container,
   animation,
   className,
   style
@@ -158,6 +161,7 @@ export const ConfirmModal = ({
       onClose={onClose}
       title={title ?? labels.confirmAction}
       role="alertdialog"
+      container={container}
       animation={animation}
       className={className}
       style={style}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button, Modal, Popover } from 'enchase'
+import { containerArgType } from '@docs/shared/argTypes.ts'
 
 import { defaultArrow, defaultCloseOnEsc, defaultCloseOnOutsideClick, defaultOffset, defaultPadding, defaultPlacement, defaultRole, placements } from './defaultData.ts'
 
@@ -91,6 +92,7 @@ const meta = {
       description: 'Called with the new state when the user opens or closes it: click on the trigger, Esc or a click outside. Combine it with open to control it from outside.',
       control: false
     },
+    container: containerArgType,
     animation: {
       description: 'false turns off the transition. { recipe: "fade" } swaps the pop for a fade; { tuning: { duration, scale } } adjusts the duration and the scale.',
       control: 'object',

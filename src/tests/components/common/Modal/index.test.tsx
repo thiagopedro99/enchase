@@ -1,3 +1,4 @@
+import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
 import { describeDialogContract } from '@tests/shared/contracts/dialogContract.tsx'
 import { ControlledDialog } from '@tests/shared/contracts/dialogHarness.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
@@ -37,6 +38,22 @@ const confirmAdapter: DialogContractAdapter = {
 
 describeDialogContract(modalAdapter)
 describeDialogContract(confirmAdapter)
+
+describePortalContainerContract({
+  name: 'Modal',
+  slot: 'modal',
+  render: (container) => (
+    <Modal isOpen onClose={vi.fn()} title="Inside" container={container}>
+      <p>content</p>
+    </Modal>
+  )
+})
+
+describePortalContainerContract({
+  name: 'ConfirmModal',
+  slot: 'modal',
+  render: (container) => <ConfirmModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" container={container} />
+})
 
 describe('Modal', () => {
   it('gives each modal a unique title id', async () => {

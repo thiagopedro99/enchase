@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import type { PlacementInput } from '../../../positioning/index.ts'
+import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { MotionOverride } from '@motion/types.ts'
 
 export type PopoverRole = 'dialog' | 'listbox' | 'tree' | 'grid'
@@ -18,6 +19,7 @@ export interface PopoverProps {
   arrow?: boolean | undefined
   closeOnEsc?: boolean | undefined
   closeOnOutsideClick?: boolean | undefined
+  container?: PortalContainer | undefined
   animation?: MotionOverride | undefined
   className?: string | undefined
   style?: CSSProperties | undefined
