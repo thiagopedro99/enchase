@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 
 import { enchase } from 'enchase/styles/enchase'
 import { shadcn } from 'enchase/styles/shadcn'
-import { createTheme, defineStyle, formatContrastIssues, formatMotionIssues, spring, validateMotion, validateTheme } from 'enchase/theme'
+import { createTheme, defineStyle, spring, validateMotion, validateTheme } from 'enchase/theme'
+import { formatContrastIssues } from '@styles/theme/validateTheme.ts'
+import { formatMotionIssues } from '@styles/theme/motion.ts'
 
 describe('the public theme entry protects the contrast contract', () => {
   it('throws on an unknown token, an unknown section and a value that is not an object', () => {

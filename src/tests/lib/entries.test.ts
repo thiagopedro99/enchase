@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest'
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
+import ts from 'typescript'
 
 import * as main from 'enchase'
 import * as icons from 'enchase/icons'
@@ -6,6 +9,12 @@ import * as locales from 'enchase/locales'
 import * as enchaseStyle from 'enchase/styles/enchase'
 import * as shadcnStyle from 'enchase/styles/shadcn'
 import * as theme from 'enchase/theme'
+
+const typeExportsOf = (file: string) => {
+  const source = ts.createSourceFile(file, readFileSync(path.resolve(__dirname, '../../..', file), 'utf8'), ts.ScriptTarget.Latest, true)
+
+  return source.statements.filter(ts.isExportDeclaration).flatMap((statement) => (statement.isTypeOnly && statement.exportClause && ts.isNamedExports(statement.exportClause) ? statement.exportClause.elements.map((element) => element.name.text) : []))
+}
 
 describe('public entries', () => {
   it('exports the components, providers and hooks from enchase', () => {
@@ -20,16 +29,9 @@ describe('public entries', () => {
     expect(main).not.toHaveProperty('createTheme')
   })
 
-  it('exports the theme tools from enchase/theme', () => {
-    expect(theme).toHaveProperty('createTheme')
-    expect(theme).toHaveProperty('validateTheme')
-    expect(theme).toHaveProperty('defineStyle')
-  })
-
-  it('keeps the checks behind defineStyle out of enchase/theme', () => {
-    for (const name of ['assertStyle', 'assertSafeCssValue', 'isSafeCssValue', 'mergeTokens', 'isValidLineHeight', 'isValidLetterSpacing', 'brandRoles', 'variableGroups']) {
-      expect(theme, name).not.toHaveProperty(name)
-    }
+  it('exports exactly the theme tools from enchase/theme, with the checks and the internals kept out', () => {
+    expect(Object.keys(theme).sort()).toEqual(['baseTokens', 'breakpoints', 'colorRoles', 'contrastRatio', 'createTheme', 'darkTheme', 'defaultTheme', 'defaultThemeCss', 'defineStyle', 'lightTheme', 'spring', 'themeCss', 'themeModes', 'timedSpring', 'validateMotion', 'validateTheme'])
+    expect(typeExportsOf('lib/theme.ts').sort()).toEqual(['BaseTokens', 'ColorRole', 'ColorTokens', 'ContrastCheck', 'ContrastIssue', 'FontOverrides', 'HookValues', 'LabelPlacement', 'ModeTokens', 'MotionIssue', 'MotionOverrides', 'RadiusOverrides', 'RadiusTokens', 'ShadowTokens', 'ShapePreset', 'SpringInput', 'SpringName', 'SpringOverride', 'SpringPerceptual', 'SpringPhysics', 'SpringResult', 'SpringTiming', 'ThemeCssOptions', 'ThemeDefaults', 'ThemeInput', 'ThemeMode', 'ThemeOverrides', 'ThemeSet', 'ThemeStyle', 'ThemeStyleMode', 'VariableGroup'])
   })
 
   it('exports each style from an entry of its own, with that style and nothing else', () => {
@@ -42,13 +44,6 @@ describe('public entries', () => {
       expect(entry).not.toHaveProperty('shadcn')
       expect(entry).not.toHaveProperty('enchase')
     }
-  })
-
-  it('keeps the brand palette internals out of enchase/theme', () => {
-    expect(theme).not.toHaveProperty('brandPalette')
-    expect(theme).not.toHaveProperty('oklchToHex')
-    expect(theme).not.toHaveProperty('rgbToOklch')
-    expect(theme).not.toHaveProperty('parseColor')
   })
 
   it('exports the icons of the components from enchase/icons and nothing else', () => {

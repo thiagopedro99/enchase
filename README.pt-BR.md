@@ -96,7 +96,7 @@ O `GlobalStyles` é opcional. Ele acrescenta uma folha pequena, em `@layer encha
 | Entrada | Conteúdo |
 | --- | --- |
 | `enchase` | Componentes, provedores, hooks e tipos. Marcada como `'use client'`. |
-| `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring` e os tokens. Sem React. |
+| `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring`, `timedSpring`, `themeCss` e os tokens (veja "O que `enchase/theme` exporta"), com os tipos. Sem React. |
 | `enchase/styles/<nome>` | Um estilo visual por entrada: `enchase/styles/shadcn` e `enchase/styles/enchase`. Só dados, sem React, e só entra no bundle de quem a importa. |
 | `enchase/locales` | `en` e `ptBR` (`{ locale, dir, messages }`). Só dados. |
 | `enchase/icons` | Os 19 ícones que os componentes usam por dentro, um componente por ícone. Funciona em Server Components. |
@@ -393,6 +393,26 @@ const issues = validateTheme(theme)
 
 - O visual padrão segue a linguagem do Material Design 3 (paleta tonal em índigo, cantos arredondados, camadas de estado). O `style` troca o visual inteiro de uma vez (veja "Estilo visual", abaixo), a forma dos cantos tem três presets (`shape`) e paleta, fonte e movimento são seções à parte do `createTheme`.
 - `useColorMode()` devolve `{ mode, resolvedMode, setMode, toggleMode }`. O modo (`light`, `dark` ou `system`, o padrão) fica no `localStorage`.
+
+### O que `enchase/theme` exporta
+
+| Nome | O que é |
+| --- | --- |
+| `createTheme(input)` | Valida a entrada (`style`, `brand`, `fonts`, `motion`, `shape`, `radius`, `light` e `dark`) e devolve o conjunto `{ base, light, dark, hooks }`. |
+| `defineStyle(style)` | Confere um estilo visual e o devolve congelado. |
+| `validateTheme(theme)` | Lista os pares de cor abaixo do contraste mínimo. |
+| `validateMotion(base)` | Lista as durações de movimento acima do recomendado. |
+| `contrastRatio(foreground, background)` | A razão de contraste do WCAG entre duas cores. |
+| `spring(input)`, `timedSpring({ duration, bounce })` | A curva `linear()` de uma mola e a duração em milissegundos, por física (`stiffness`, `damping`) ou por duração e `bounce`. |
+| `themeCss(theme, { layer })` | O CSS das variáveis de um tema, para o `ThemeVariables`. Com `layer`, dentro dessa camada. |
+| `defaultThemeCss` | O CSS do tema padrão, o mesmo de `enchase/theme.css`. |
+| `defaultTheme` | O conjunto do tema padrão: `{ base: baseTokens, light: lightTheme, dark: darkTheme }`. |
+| `baseTokens` | Os tokens que não mudam com o modo: fontes, espaçamento, cantos, foco, borda, estado, movimento, breakpoints e `zIndex`. |
+| `lightTheme`, `darkTheme` | As cores e as sombras de cada modo. |
+| `breakpoints` | Os breakpoints em pixels, de `xs` a `xxl`. |
+| `colorRoles`, `themeModes` | Os papéis de cor (`primary`, `secondary`, `error`, `success`, `warning`, `info`) e os modos (`light`, `dark`). |
+
+Os tipos dessas funções também saem de `enchase/theme` (`ThemeInput`, `ThemeSet`, `ThemeStyle` e outros). O que não está aqui é interno e pode mudar sem aviso.
 
 ### Paleta a partir da cor da marca
 
