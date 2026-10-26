@@ -1,3 +1,4 @@
+import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { MotionOverride } from '@motion/types.ts'
 import type { CSSProperties, ReactNode } from 'react'
 
@@ -26,6 +27,7 @@ export interface ToastContextType {
 
 export interface ToastProviderProps {
   children: ReactNode
+  container?: PortalContainer | undefined
   animation?: MotionOverride | undefined
   className?: string | undefined
   style?: CSSProperties | undefined

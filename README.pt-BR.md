@@ -686,7 +686,7 @@ O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 
 ### Overlays dentro de um trecho da página
 
-`Modal`, `ConfirmModal`, `Popover`, `Tooltip` e o `Loading` com `overlay` renderizam num portal no `<body>`. As variáveis do tema chegam até eles, porque são declaradas em `:root` e em `[data-theme]`, mas uma variável que você muda num elemento do app (uma ilha com `data-theme="dark"`, um `div` com ganchos `--enchase-*` próprios) não chega, porque a herança segue a árvore do DOM e o portal está no `body`. A prop `container`, um elemento ou uma função que o devolve, monta o overlay dentro desse elemento, que passa a herdar as variáveis dele:
+`Modal`, `ConfirmModal`, `Popover`, `Tooltip`, o `Loading` com `overlay` e a região de notificações do `ToastProvider` renderizam num portal no `<body>`. As variáveis do tema chegam até eles, porque são declaradas em `:root` e em `[data-theme]`, mas uma variável que você muda num elemento do app (uma ilha com `data-theme="dark"`, um `div` com ganchos `--enchase-*` próprios) não chega, porque a herança segue a árvore do DOM e o portal está no `body`. A prop `container`, um elemento ou uma função que o devolve, monta o overlay dentro desse elemento, que passa a herdar as variáveis dele (a região de notificações dentro da página continua alcançável quando um modal deixa o resto da página inerte):
 
 ```tsx
 const [island, setIsland] = useState<HTMLElement | null>(null)
@@ -700,7 +700,7 @@ return (
 )
 ```
 
-Com `container` nulo, ou com a função devolvendo `null`, o overlay cai no `body`; a função roda só no cliente, nunca no servidor. Os overlays são `position: fixed` com as coordenadas da janela, então um ancestral do contêiner com `transform`, `filter` ou `contain` vira o bloco de contenção e desloca o overlay: escolha um contêiner sem essas propriedades. O mesmo vale para o que o `data-theme` não resolve: um gancho declarado no `:root` como `var(--enchase-color-surface)` continua com as cores do documento, porque o alias é resolvido onde é declarado (veja acima).
+Com `container` nulo, ou com a função devolvendo `null`, o overlay cai no `body`; a função roda só no cliente, nunca no servidor. Os overlays são `position: fixed` com as coordenadas da janela, então um ancestral do contêiner com `transform`, `filter` ou `contain` vira o bloco de contenção e desloca o overlay, e um que cria contexto de empilhamento (`z-index`, `opacity`, `isolation`) prende o `z-index` do overlay dentro dele: escolha um contêiner sem essas propriedades. O mesmo vale para o que o `data-theme` não resolve: um gancho declarado no `:root` como `var(--enchase-color-surface)` continua com as cores do documento, porque o alias é resolvido onde é declarado (veja acima).
 
 ## Renderização no servidor
 

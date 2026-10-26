@@ -71,6 +71,62 @@ describe('useInertSiblings', () => {
     unmount()
   })
 
+  it('keeps a toast host that sits inside the page reachable, and makes inert what is around it', () => {
+    const wrapper = addToBody('<main id="app"><p id="content">content</p><div data-slot="toast-host"><div role="region" id="viewport"></div></div><aside id="side">side</aside></main>')
+    const app = wrapper.querySelector('#app') as HTMLElement
+    const toastHost = wrapper.querySelector('[data-slot="toast-host"]') as HTMLElement
+    const { unmount } = mountDialog()
+
+    expect(wrapper).not.toHaveAttribute('inert')
+    expect(app).not.toHaveAttribute('inert')
+    expect(toastHost).not.toHaveAttribute('inert')
+    expect(wrapper.querySelector('#viewport')?.closest('[inert]')).toBeNull()
+    expect(wrapper.querySelector('#content')).toHaveAttribute('inert')
+    expect(wrapper.querySelector('#side')).toHaveAttribute('inert')
+
+    unmount()
+
+    expect(document.querySelectorAll('[inert]')).toHaveLength(0)
+  })
+
+  it('keeps every toast host of the page reachable', () => {
+    const first = addToBody('<section><p id="first-content">first</p><div data-slot="toast-host" id="first-host"></div></section>')
+    const second = addToBody('<section><p id="second-content">second</p><div data-slot="toast-host" id="second-host"></div></section>')
+    const { unmount } = mountDialog()
+
+    expect(first.querySelector('#first-host')).not.toHaveAttribute('inert')
+    expect(second.querySelector('#second-host')).not.toHaveAttribute('inert')
+    expect(first.querySelector('#first-content')).toHaveAttribute('inert')
+    expect(second.querySelector('#second-content')).toHaveAttribute('inert')
+
+    unmount()
+  })
+
+  it('leaves a toast host inside the dialog alone', () => {
+    const Holder = () => {
+      const ref = useRef<HTMLDivElement>(null)
+      useInertSiblings(ref)
+
+      return (
+        <div ref={ref}>
+          <p id="inside">inside</p>
+          <div data-slot="toast-host" id="inner-host">
+            <span id="inner-child">child</span>
+          </div>
+        </div>
+      )
+    }
+    const outside = addToBody('<p id="outside">outside</p>')
+    const { container, unmount } = render(<Holder />, { container: addToBody('').appendChild(document.createElement('div')) })
+
+    expect(outside.querySelector('#outside')?.closest('[inert]')).not.toBeNull()
+    expect(container.querySelector('#inside')).not.toHaveAttribute('inert')
+    expect(container.querySelector('#inner-host')).not.toHaveAttribute('inert')
+    expect(container.querySelector('#inner-child')).not.toHaveAttribute('inert')
+
+    unmount()
+  })
+
   it('keeps inert what was already inert when it cleans up', () => {
     const settled = addToBody('<aside inert>já inerte</aside>').firstElementChild as HTMLElement
     const { unmount } = mountDialog()

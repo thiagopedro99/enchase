@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 
 import { defaultToastDuration, reducedMotionQuery } from './defaultData.ts'
 import { inertExemptSlot } from '@hooks/useInertSiblings.ts'
+import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { useIsClient } from '@hooks/useIsClient.ts'
@@ -14,7 +15,7 @@ import styles from './styles.module.css'
 
 import type { Toast, ToastEntry, ToastOptions, ToastType, ToastProviderProps } from './types.ts'
 
-export const ToastProvider = ({ children, animation, className, style }: ToastProviderProps) => {
+export const ToastProvider = ({ children, container, animation, className, style }: ToastProviderProps) => {
   const [entries, setEntries] = useState<ToastEntry[]>([])
   const viewportRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
@@ -31,13 +32,15 @@ export const ToastProvider = ({ children, animation, className, style }: ToastPr
     return element
   }, [isClient])
 
-  useLayoutEffect(() => {
-    if (!host) return
+  const target = isClient ? resolvePortalContainer(container) : null
 
-    document.body.append(host)
+  useLayoutEffect(() => {
+    if (!host || !target) return
+
+    target.append(host)
 
     return () => host.remove()
-  }, [host])
+  }, [host, target])
 
   useFlip(viewportRef, !reduced)
 

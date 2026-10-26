@@ -1,3 +1,4 @@
+import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { StrictMode, useLayoutEffect, useState } from 'react'
 import { act, render, screen, waitFor, within } from '@testing-library/react'
@@ -8,6 +9,17 @@ import { axe } from '@tests/axe.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
 import { ToastProvider, useToast } from '@components/toast/index.ts'
 import { ptBR } from '@locales/ptBR.ts'
+
+describePortalContainerContract({
+  name: 'ToastProvider',
+  slot: 'toast-host',
+  plain: true,
+  render: (container) => (
+    <ToastProvider container={container}>
+      <p>app</p>
+    </ToastProvider>
+  )
+})
 
 const Probe = ({ duration }: { duration?: number }) => {
   const toast = useToast()

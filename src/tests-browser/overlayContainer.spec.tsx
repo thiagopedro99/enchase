@@ -6,6 +6,7 @@ import { Loading } from '@components/common/Loading/index.tsx'
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
+import { ToastProvider, useToast } from '@components/toast/index.ts'
 import { renderInBrowser } from './harness.tsx'
 
 import type { CSSProperties, ReactNode } from 'react'
@@ -165,7 +166,7 @@ describe('A modal rendered in a container', () => {
     await userEvent.keyboard('{Escape}')
     await expect.poll(() => document.querySelector('[data-slot="modal"]')).toBeNull()
 
-    expect(document.querySelectorAll('[inert]')).toHaveLength(0)
+    await expect.poll(() => document.querySelectorAll('[inert]').length).toBe(0)
   })
 
   it('stays centered in the viewport inside a container that clips and scrolls', async () => {
@@ -178,5 +179,79 @@ describe('A modal rendered in a container', () => {
 
     expect(Math.abs(box.left + box.width / 2 - (view.left + view.width / 2))).toBeLessThan(2)
     expect(Math.abs(box.top + box.height / 2 - (view.top + view.height / 2))).toBeLessThan(2)
+  })
+})
+
+const ModalThatFires = () => {
+  const [open, setOpen] = useState(false)
+  const toast = useToast()
+
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Open</button>
+      <Modal isOpen={open} onClose={() => setOpen(false)} title="Over the toast">
+        <button onClick={() => toast.info('Saved', 0)}>Fire</button>
+      </Modal>
+    </>
+  )
+}
+
+const NestedToasts = () => {
+  const [app, setApp] = useState<HTMLElement | null>(null)
+
+  return (
+    <main ref={setApp}>
+      <button>Beside</button>
+      <ToastProvider container={app ?? undefined}>
+        <ModalThatFires />
+      </ToastProvider>
+    </main>
+  )
+}
+
+describe('A toast host in a container inside the page', () => {
+  const app = () => document.querySelector('main') as HTMLElement
+
+  const openAndFire = async () => {
+    renderInBrowser(<NestedToasts />)
+    await expect.poll(() => app().querySelector('[data-slot="toast-host"]')).not.toBeNull()
+    await userEvent.click(page.getByRole('button', { name: 'Open' }))
+    await expect.element(page.getByRole('dialog')).toBeVisible()
+    await userEvent.click(page.getByRole('button', { name: 'Fire' }))
+    await expect.poll(() => app().querySelectorAll('[data-slot="toast"]').length).toBe(1)
+  }
+
+  it('renders the notification region inside the container', async () => {
+    renderInBrowser(<NestedToasts />)
+    await expect.poll(() => app().querySelector('[data-slot="toast-host"]')).not.toBeNull()
+
+    expect(app().querySelector('[data-slot="toast-host"]')?.parentElement).toBe(app())
+  })
+
+  it('stays reachable when a modal makes the rest of the page inert', async () => {
+    await openAndFire()
+    const viewport = app().querySelector('[data-slot="toast-viewport"]') as HTMLElement
+
+    expect(app().closest('[inert]')).toBeNull()
+    expect(viewport.closest('[inert]')).toBeNull()
+    expect(buttonNamed('Beside').closest('[inert]')).not.toBeNull()
+    expect(slotOf('modal-panel').closest('[inert]')).toBeNull()
+  })
+
+  it('can be closed with the pointer while the modal is open', async () => {
+    await openAndFire()
+
+    await userEvent.click(page.getByRole('button', { name: 'Fechar notificação' }))
+
+    await expect.poll(() => app().querySelectorAll('[data-slot="toast"]').length).toBe(0)
+  })
+
+  it('gives the page back when the modal closes', async () => {
+    await openAndFire()
+
+    await userEvent.keyboard('{Escape}')
+    await expect.poll(() => document.querySelector('[data-slot="modal"]')).toBeNull()
+
+    await expect.poll(() => document.querySelectorAll('[inert]').length).toBe(0)
   })
 })

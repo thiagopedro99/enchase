@@ -1,4 +1,5 @@
 import { Button, ToastProvider, useToast } from 'enchase'
+import { containerArgType } from '@docs/shared/argTypes.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -14,6 +15,7 @@ const meta = {
   args: { children: undefined },
   argTypes: {
     children: { description: 'The app. The components inside it use `useToast` to open notifications.', control: false },
+    container: containerArgType,
     animation: {
       description: 'Entry and exit motion of the notifications, which slide in from the right with a short spring. `false` turns it off; `{ recipe, from, tuning }` adjusts the recipe, the side and the duration.',
       control: 'object',
