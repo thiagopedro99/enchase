@@ -25,6 +25,7 @@ import { Select } from '@components/common/Select/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
+import { Divider } from '@components/common/Divider/index.tsx'
 import { Badge } from '@components/common/Badge/index.tsx'
 import { Alert } from '@components/common/Alert/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
@@ -81,6 +82,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Grid as a list of cards', element: <Grid as="ul" columns={2} aria-label="Projects"><Card as="li">One</Card><Card as="li" variant="elevated">Two</Card></Grid> },
   { name: 'Flex as a list of badges', element: <Flex as="ul" wrap aria-label="Stack"><li><Badge>One</Badge></li><li><Badge variant="success">Two</Badge></li></Flex> },
   { name: 'Badge', element: <Badge variant="success">New</Badge> },
+  { name: 'Divider', element: <Flex><span>One</span><Divider orientation="vertical" /><span>Two</span><Divider decorative /></Flex> },
   { name: 'Alert', element: <Alert variant="warning" title="Heads up" onClose={noop}>The deadline is today.</Alert> },
   { name: 'Tooltip', element: <Tooltip text="Help"><Button>Hover</Button></Tooltip> },
   { name: 'ThemeToggle', element: <ThemeToggle /> },

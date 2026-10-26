@@ -140,6 +140,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Popover` | `<Popover label="Detalhes" content={<p>Conteúdo</p>}><button>Abrir</button></Popover>` |
 | `Loading`, `InlineLoading` | `<Loading overlay text="Carregando" />` |
 | `Skeleton` | `<Skeleton variant="text" width="12rem" />` |
+| `Divider` | `<Divider />`, ou `<Divider orientation="vertical" />` entre botões de uma linha `Flex` |
 | `Breadcrumbs` | `<Breadcrumbs items={[{ id: 'home', label: 'Início', href: '/' }, { id: 'page', label: 'Atual' }]} />` |
 | `Sidebar` | `<Sidebar sections={sections} collapsed={collapsed} onToggleCollapsed={toggle} />` |
 | `Navbar` | `<Navbar logo="Meu app" sections={sections} />` |

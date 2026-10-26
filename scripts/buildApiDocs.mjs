@@ -19,6 +19,7 @@ const elementTags = {
   HTMLButtonElement: 'button',
   HTMLDivElement: 'div',
   HTMLFieldSetElement: 'fieldset',
+  HTMLHRElement: 'hr',
   HTMLInputElement: 'input',
   HTMLSelectElement: 'select',
   HTMLSpanElement: 'span',

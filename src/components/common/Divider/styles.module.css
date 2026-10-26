@@ -1,0 +1,23 @@
+.divider {
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+:where(.divider) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+:where(.divider[data-orientation='horizontal']) {
+  inline-size: 100%;
+  border-block-start: var(--enchase-border-width, 1px) solid var(--enchase-divider-border-color, var(--enchase-color-border));
+}
+
+:where(.divider[data-orientation='vertical']) {
+  align-self: stretch;
+  inline-size: 0;
+  min-block-size: var(--enchase-divider-min-height, 1rem);
+  border-inline-start: var(--enchase-border-width, 1px) solid var(--enchase-divider-border-color, var(--enchase-color-border));
+}

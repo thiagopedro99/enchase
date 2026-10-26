@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -196,6 +196,17 @@ Limita a largura do conteúdo pelos breakpoints do `UIProvider`, com espaçament
 | `center` | `boolean` | `true` | Centraliza o container. Com false ele fica no início, e em RTL no lado direito. |
 
 Also accepts the other HTML attributes of the root element.
+
+### Divider
+
+A thin line that separates sections of content or groups of controls. It is an `<hr>`, so assistive technology announces it as a separator, and `decorative` turns that off for a line that only adds to the look. A vertical divider stretches to the height of a flex row. It accepts the attributes of the `<hr>`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Direction of the line. A vertical divider is announced with `aria-orientation="vertical"` and stretches to the height of its parent when the parent is a flex container. |
+| `decorative` | `boolean` | `false` | Hides the divider from assistive technology (`role="none"`). Use it when the line only adds to the look and the content already reads in order. |
+
+Also accepts the other attributes of `<hr>`, passed on to the element.
 
 ### Flex
 
@@ -1061,6 +1072,13 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-container-max` | `100%` | `max-inline-size` |
 | `--enchase-container-padding` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+
+### Divider
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-divider-border-color` | `var(--enchase-color-border)` | `border-block-start`, `border-inline-start` |
+| `--enchase-divider-min-height` | `1rem` | `min-block-size` |
 
 ### Flex
 
