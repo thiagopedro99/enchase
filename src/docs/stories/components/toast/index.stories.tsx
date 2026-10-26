@@ -7,12 +7,15 @@ type ToastStoryArgs = {
   type: ToastType
   duration: number
   message: string
+  actionLabel?: string
+  dismissible?: boolean
 }
 
-const Launcher = ({ type, duration, message }: ToastStoryArgs) => {
+const Launcher = ({ type, duration, message, actionLabel, dismissible }: ToastStoryArgs) => {
   const toast = useToast()
+  const action = actionLabel ? { label: actionLabel, onClick: () => toast.info('Undone', 2000) } : undefined
 
-  return <Button onClick={() => toast[type](message, duration)}>Show notification</Button>
+  return <Button onClick={() => toast[type](message, duration, { action, dismissible })}>Show notification</Button>
 }
 
 const meta = {
@@ -37,6 +40,15 @@ const meta = {
     message: {
       description: 'Content of the notification: text or nodes, such as a link. The text of the content is what screen readers announce.',
       control: 'text'
+    },
+    actionLabel: {
+      description: 'Label of the action button, passed as `options.action.label` (it can be nodes). The button calls `options.action.onClick` and then closes the notification. The announcement reads the message only, so keep the message complete without the action.',
+      control: 'text'
+    },
+    dismissible: {
+      description: 'Passed as `options.dismissible`. With false the notification has no close button and does not close on a click or on Esc: it only closes after its duration or with `removeToast`.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'true' } }
     }
   }
 } satisfies Meta<typeof Launcher>
@@ -49,6 +61,14 @@ export const Playground: Story = {}
 
 export const ErrorToast: Story = {
   args: { type: 'error', message: 'Could not save' }
+}
+
+export const WithAction: Story = {
+  args: { message: 'Message deleted', duration: 8000, actionLabel: 'Undo' }
+}
+
+export const NotDismissible: Story = {
+  args: { type: 'info', message: 'Syncing your files', duration: 4000, dismissible: false }
 }
 
 export const Sticky: Story = {

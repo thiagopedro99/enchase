@@ -410,7 +410,7 @@ describe('Toast', () => {
     renderWithToasts(<Probe duration={1000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
-    const toastItem = (await screen.findByText('Saved')).closest('div[class]') as HTMLElement
+    const toastItem = (await screen.findByText('Saved', { selector: '[data-slot="toast-title"]' })).closest('div[class]') as HTMLElement
     await user.hover(toastItem)
 
     await act(async () => {
@@ -467,7 +467,7 @@ describe('Toast', () => {
     renderWithToasts(<Probe duration={0} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
-    const item = (await screen.findByText('Saved')).closest('[data-slot="toast"]') as HTMLElement
+    const item = (await screen.findByText('Saved', { selector: '[data-slot="toast-title"]' })).closest('[data-slot="toast"]') as HTMLElement
 
     expect(screen.getByRole('region', { name: 'Notificações' })).toHaveAttribute('data-slot', 'toast-viewport')
     expect(item).toHaveAttribute('data-type', 'success')
@@ -481,13 +481,13 @@ describe('Toast', () => {
     const { unmount } = renderWithToasts(<Probe duration={5000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
-    await screen.findByText('Saved')
+    await screen.findByText('Saved', { selector: '[data-slot="toast-title"]' })
     expect(document.querySelector('[data-slot="toast-progress"]')).toBeInTheDocument()
 
     unmount()
     renderWithToasts(<Probe duration={0} />)
     await user.click(screen.getByRole('button', { name: 'success' }))
-    await screen.findByText('Saved')
+    await screen.findByText('Saved', { selector: '[data-slot="toast-title"]' })
     expect(document.querySelector('[data-slot="toast-progress"]')).not.toBeInTheDocument()
   })
 
@@ -507,7 +507,7 @@ describe('Toast', () => {
     )
 
     await user.click(screen.getByRole('button', { name: 'open' }))
-    const item = (await screen.findByText('Custom')).closest('[data-slot="toast"]') as HTMLElement
+    const item = (await screen.findByText('Custom', { selector: '[data-slot="toast-title"]' })).closest('[data-slot="toast"]') as HTMLElement
     const region = screen.getByRole('region', { name: 'Notificações' })
 
     expect(item.className.split(' ').at(-1)).toBe('mine')
@@ -522,7 +522,7 @@ describe('Toast', () => {
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await user.click(await screen.findByRole('button', { name: 'Fechar notificação' }))
-    const item = screen.getByText('Saved').closest('[data-slot="toast"]') as HTMLElement
+    const item = screen.getByText('Saved', { selector: '[data-slot="toast-title"]' }).closest('[data-slot="toast"]') as HTMLElement
 
     expect(item).toHaveAttribute('data-state', 'exiting')
     expect(item).toHaveAttribute('inert')
@@ -544,7 +544,7 @@ describe('Toast', () => {
     renderWithToasts(<Probe duration={5000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
-    const item = (await screen.findByText('Saved')).closest('[data-slot="toast"]') as HTMLElement
+    const item = (await screen.findByText('Saved', { selector: '[data-slot="toast-title"]' })).closest('[data-slot="toast"]') as HTMLElement
     await user.hover(item)
 
     expect(item).toHaveAttribute('data-paused')
@@ -560,8 +560,185 @@ describe('Toast', () => {
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await user.click(screen.getByRole('button', { name: 'error' }))
-    await screen.findByText('Saved')
+    await screen.findByText('Saved', { selector: '[data-slot="toast-title"]' })
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+const ActionProbe = ({ onUndo, duration = 0 }: { onUndo: () => void; duration?: number }) => {
+  const toast = useToast()
+
+  return <button onClick={() => toast.success('Message deleted', duration, { action: { label: 'Undo', onClick: onUndo } })}>delete</button>
+}
+
+const Pinned = ({ dismissible, duration = 0, action }: { dismissible?: boolean; duration?: number; action?: () => void }) => {
+  const toast = useToast()
+  const [id, setId] = useState('')
+
+  return (
+    <>
+      <button onClick={() => setId(toast.info('Syncing', duration, { dismissible, action: action ? { label: 'Retry', onClick: action } : undefined }))}>sync</button>
+      <button onClick={() => toast.removeToast(id)}>remove</button>
+    </>
+  )
+}
+
+const itemOf = (text: string) => screen.getByText(text, { selector: '[data-slot="toast-title"]' }).closest('[data-slot="toast"]') as HTMLElement
+
+describe('Toast action', () => {
+  it('renders a button named after the label, between the message and the close button', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<ActionProbe onUndo={vi.fn()} />)
+
+    await user.click(screen.getByRole('button', { name: 'delete' }))
+    const buttons = within(itemOf('Message deleted')).getAllByRole('button')
+
+    expect(buttons).toHaveLength(2)
+    expect(buttons[0]).toHaveAccessibleName('Undo')
+    expect(buttons[0]).toHaveAttribute('data-slot', 'toast-action')
+    expect(buttons[0]).toHaveAttribute('type', 'button')
+    expect(buttons[1]).toHaveAccessibleName('Fechar notificação')
+  })
+
+  it('calls onClick once and closes the toast', async () => {
+    const user = userEvent.setup()
+    const onUndo = vi.fn()
+    renderWithToasts(<ActionProbe onUndo={onUndo} />)
+
+    await user.click(screen.getByRole('button', { name: 'delete' }))
+    await user.click(await screen.findByRole('button', { name: 'Undo' }))
+
+    expect(onUndo).toHaveBeenCalledTimes(1)
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Undo' })).not.toBeInTheDocument())
+  })
+
+  it('is reached by the keyboard before the close button, and Enter presses it', async () => {
+    const user = userEvent.setup()
+    const onUndo = vi.fn()
+    renderWithToasts(<ActionProbe onUndo={onUndo} />)
+
+    await user.click(screen.getByRole('button', { name: 'delete' }))
+    await user.tab()
+
+    expect(screen.getByRole('button', { name: 'Undo' })).toHaveFocus()
+
+    await user.tab()
+
+    expect(screen.getByRole('button', { name: 'Fechar notificação' })).toHaveFocus()
+
+    await user.tab({ shift: true })
+    await user.keyboard('{Enter}')
+
+    expect(onUndo).toHaveBeenCalledTimes(1)
+  })
+
+  it('is pressed with Space', async () => {
+    const user = userEvent.setup()
+    const onUndo = vi.fn()
+    renderWithToasts(<ActionProbe onUndo={onUndo} />)
+
+    await user.click(screen.getByRole('button', { name: 'delete' }))
+    await user.tab()
+    await user.keyboard(' ')
+
+    expect(onUndo).toHaveBeenCalledTimes(1)
+  })
+
+  it('takes nodes as the label', async () => {
+    const user = userEvent.setup()
+
+    const Nodes = () => {
+      const toast = useToast()
+
+      return (
+        <button onClick={() => toast.info('Moved', 0, { action: { label: <strong>Go there</strong>, onClick: vi.fn() } })}>move</button>
+      )
+    }
+
+    renderWithToasts(<Nodes />)
+    await user.click(screen.getByRole('button', { name: 'move' }))
+
+    expect(await screen.findByRole('button', { name: 'Go there' })).toBeInTheDocument()
+  })
+
+  it('has no axe violations with an action', async () => {
+    const user = userEvent.setup()
+    const { container } = renderWithToasts(<ActionProbe onUndo={vi.fn()} />)
+
+    await user.click(screen.getByRole('button', { name: 'delete' }))
+    await screen.findByRole('button', { name: 'Undo' })
+
+    expect(await axe(container)).toHaveNoViolations()
+    expect(await axe(host())).toHaveNoViolations()
+  })
+})
+
+describe('Toast dismissible', () => {
+  it('has no close button and is marked when it is not dismissible', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Pinned dismissible={false} />)
+
+    await user.click(screen.getByRole('button', { name: 'sync' }))
+    const item = itemOf('Syncing')
+
+    expect(within(item).queryByRole('button')).not.toBeInTheDocument()
+    expect(item).toHaveAttribute('data-dismissible', 'false')
+  })
+
+  it('is dismissible by default and does not carry the mark', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Pinned />)
+
+    await user.click(screen.getByRole('button', { name: 'sync' }))
+
+    expect(itemOf('Syncing')).not.toHaveAttribute('data-dismissible')
+    expect(within(itemOf('Syncing')).getByRole('button', { name: 'Fechar notificação' })).toBeInTheDocument()
+  })
+
+  it('stays when it is clicked and when Escape is pressed while it has the focus', async () => {
+    const user = userEvent.setup()
+    const retry = vi.fn()
+    renderWithToasts(<Pinned dismissible={false} action={retry} />)
+
+    await user.click(screen.getByRole('button', { name: 'sync' }))
+    await user.click(itemOf('Syncing'))
+    within(itemOf('Syncing')).getByRole('button', { name: 'Retry' }).focus()
+    await user.keyboard('{Escape}')
+
+    expect(itemOf('Syncing')).toBeInTheDocument()
+    expect(retry).not.toHaveBeenCalled()
+  })
+
+  it('still closes by itself after its duration', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Pinned dismissible={false} duration={80} />)
+
+    await user.click(screen.getByRole('button', { name: 'sync' }))
+    await screen.findByText('Syncing', { selector: '[data-slot="toast-title"]' })
+
+    await waitFor(() => expect(screen.queryByText('Syncing', { selector: '[data-slot="toast-title"]' })).not.toBeInTheDocument())
+  })
+
+  it('still closes with removeToast', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Pinned dismissible={false} />)
+
+    await user.click(screen.getByRole('button', { name: 'sync' }))
+    await user.click(screen.getByRole('button', { name: 'remove' }))
+
+    await waitFor(() => expect(screen.queryByText('Syncing', { selector: '[data-slot="toast-title"]' })).not.toBeInTheDocument())
+  })
+
+  it('keeps its action, which closes the toast', async () => {
+    const user = userEvent.setup()
+    const retry = vi.fn()
+    renderWithToasts(<Pinned dismissible={false} action={retry} />)
+
+    await user.click(screen.getByRole('button', { name: 'sync' }))
+    await user.click(await screen.findByRole('button', { name: 'Retry' }))
+
+    expect(retry).toHaveBeenCalledTimes(1)
+    await waitFor(() => expect(screen.queryByText('Syncing', { selector: '[data-slot="toast-title"]' })).not.toBeInTheDocument())
   })
 })

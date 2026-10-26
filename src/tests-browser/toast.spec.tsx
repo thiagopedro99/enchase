@@ -283,3 +283,93 @@ describe('the announcers of the notification region in a real browser', () => {
     expect(document.querySelector('[data-slot="toast-viewport"]')?.hasAttribute('aria-live')).toBe(false)
   })
 })
+
+const WithAction = ({ onUndo }: { onUndo: () => void }) => {
+  const toast = useToast()
+
+  return (
+    <div style={{ margin: 40, display: 'flex', gap: 8 }}>
+      <button onClick={() => toast.success('Deleted', 60000, { action: { label: 'Undo', onClick: onUndo } })}>delete</button>
+      <button onClick={() => toast.info('Syncing', 60000, { dismissible: false })}>sync</button>
+    </div>
+  )
+}
+
+const part = (name: string) => document.querySelector<HTMLElement>(`[data-slot="toast-${name}"]`) as HTMLElement
+
+describe('the action of a toast in a real browser', () => {
+  const settle = async () => {
+    await expect.poll(() => items().filter((item) => item.dataset.state === 'open').length).toBe(1)
+    await expect.poll(() => items().every((item) => isSettled(item))).toBe(true)
+  }
+
+  it('lays the message, the action and the close button out side by side without overlap', async () => {
+    renderInBrowser(<WithAction onUndo={vi.fn()} />, 'auto')
+    await userEvent.click(page.getByRole('button', { name: 'delete' }))
+    await settle()
+    const [message, action, close] = ['title', 'action', 'close'].map((name) => part(name).getBoundingClientRect())
+
+    expect(message.right).toBeLessThanOrEqual(action.left + 1)
+    expect(action.right).toBeLessThanOrEqual(close.left + 1)
+    expect(action.height).toBeGreaterThanOrEqual(24)
+    expect(action.width).toBeGreaterThanOrEqual(24)
+  })
+
+  it('mirrors the order in a right-to-left page', async () => {
+    renderWithDir(<WithAction onUndo={vi.fn()} />, 'rtl')
+    await userEvent.click(page.getByRole('button', { name: 'delete' }))
+    await settle()
+    const [message, action, close] = ['title', 'action', 'close'].map((name) => part(name).getBoundingClientRect())
+
+    expect(action.right).toBeLessThanOrEqual(message.left + 1)
+    expect(close.right).toBeLessThanOrEqual(action.left + 1)
+  })
+
+  it('shows a focus ring when the keyboard reaches it, and Enter presses it', async () => {
+    const onUndo = vi.fn()
+    renderInBrowser(<WithAction onUndo={onUndo} />, 'auto')
+    await userEvent.click(page.getByRole('button', { name: 'delete' }))
+    await settle()
+    page.getByRole('button', { name: 'sync' }).element().focus()
+
+    await userEvent.tab()
+
+    expect(document.activeElement).toBe(part('action'))
+    expect(getComputedStyle(part('action')).outlineStyle).toBe('solid')
+    expect(parseFloat(getComputedStyle(part('action')).outlineWidth)).toBeGreaterThan(0)
+
+    await userEvent.keyboard('{Enter}')
+
+    expect(onUndo).toHaveBeenCalledTimes(1)
+    await expect.poll(() => items().length).toBe(0)
+  })
+
+  it('is pressed with the pointer and closes the toast', async () => {
+    const onUndo = vi.fn()
+    renderInBrowser(<WithAction onUndo={onUndo} />, 'auto')
+    await userEvent.click(page.getByRole('button', { name: 'delete' }))
+    await settle()
+
+    await userEvent.click(page.getByRole('button', { name: 'Undo' }))
+
+    expect(onUndo).toHaveBeenCalledTimes(1)
+    await expect.poll(() => items().length).toBe(0)
+  })
+})
+
+describe('a toast that is not dismissible in a real browser', () => {
+  it('has no close button, a plain cursor, and stays when it is clicked', async () => {
+    renderInBrowser(<WithAction onUndo={vi.fn()} />, 'auto')
+    await userEvent.click(page.getByRole('button', { name: 'sync' }))
+    await expect.poll(() => items().filter((item) => item.dataset.state === 'open').length).toBe(1)
+    const item = items()[0]
+
+    expect(item.querySelector('[data-slot="toast-close"]')).toBeNull()
+    expect(getComputedStyle(item).cursor).toBe('default')
+
+    await userEvent.click(item)
+    await soak(300)
+
+    expect(items()).toHaveLength(1)
+  })
+})

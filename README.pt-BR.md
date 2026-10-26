@@ -195,7 +195,7 @@ const id = info('Enviando...', 0)
 removeToast(id)
 ```
 
-A mensagem pode ser texto ou nós (`success(<>Salvo em <strong>Drive</strong></>)`). A região de notificações é só um `role="region"` nomeado, sem `aria-live`: dois anunciadores ocultos, criados junto do `ToastProvider` e antes da primeira notificação, leem o texto de cada uma em voz alta, com `role="status"` para `success`, `info` e `warning` e `role="alert"` para `error`. Como os anunciadores ficam na página desde a montagem, uma busca como `getByRole('alert')` nos seus testes encontra também o anunciador vazio: restrinja a busca com `within` ou procure pelo texto.
+A mensagem pode ser texto ou nós (`success(<>Salvo em <strong>Drive</strong></>)`). O terceiro argumento aceita `className`, `style`, `action` (`{ label, onClick }`: um botão que chama `onClick` e fecha a notificação) e `dismissible: false` (sem botão de fechar e sem fechar por clique ou Esc: só fecha ao fim da duração ou com `removeToast`). A região de notificações é só um `role="region"` nomeado, sem `aria-live`: dois anunciadores ocultos, criados junto do `ToastProvider` e antes da primeira notificação, leem o texto de cada uma em voz alta, com `role="status"` para `success`, `info` e `warning` e `role="alert"` para `error`. Como os anunciadores ficam na página desde a montagem, uma busca como `getByRole('alert')` nos seus testes encontra também o anunciador vazio: restrinja a busca com `within` ou procure pelo texto.
 
 ### Props comuns
 

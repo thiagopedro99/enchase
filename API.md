@@ -1772,6 +1772,11 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 
 | Hook | Default | Property |
 | --- | --- | --- |
+| `--enchase-toast-action-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-toast-action-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-toast-action-margin-inline-end` | `0.25rem` (`--enchase-space-xs`) | `margin-inline-end` |
+| `--enchase-toast-action-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
+| `--enchase-toast-action-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-toast-background-error` | `var(--enchase-color-error-container)` | `background-color` |
 | `--enchase-toast-background-info` | `var(--enchase-color-info-container)` | `background-color` |
 | `--enchase-toast-background-success` | `var(--enchase-color-success-container)` | `background-color` |

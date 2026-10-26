@@ -26,6 +26,7 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, anim
   const motionStyle = useMotionStyle('slide', 'toast', animation, 'right', toastBase)
   const duration = toast.duration ?? defaultToastDuration
   const sticky = duration === 0
+  const dismissible = toast.dismissible !== false
   const [shown, setShown] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [focused, setFocused] = useState(false)
@@ -69,7 +70,7 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, anim
   if (!mounted) return null
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'Escape') handleClose()
+    if (event.key === 'Escape' && dismissible) handleClose()
   }
 
   const rootProps = mergeProps(
@@ -81,13 +82,14 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, anim
       'data-state': state,
       'data-paused': paused ? '' : undefined,
       'data-flip-id': toast.id,
+      'data-dismissible': dismissible ? undefined : 'false',
       inert: state === 'exiting' ? true : undefined,
       onMouseEnter: () => setHovered(true),
       onMouseLeave: () => setHovered(false),
       onFocus: () => setFocused(true),
       onBlur: () => setFocused(false),
       onKeyDown: handleKeyDown,
-      onClick: handleClose
+      onClick: dismissible ? handleClose : undefined
     },
     { className: toast.className, style: toast.style }
   )
@@ -105,18 +107,35 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, anim
         </div>
       </div>
 
-      <button
-        {...slot('toast', 'close')}
-        type="button"
-        className={styles.close}
-        aria-label={labels.closeToast}
-        onClick={(event) => {
-          event.stopPropagation()
-          handleClose()
-        }}
-      >
-        <CloseIcon size={14} />
-      </button>
+      {toast.action && (
+        <button
+          {...slot('toast', 'action')}
+          type="button"
+          className={styles.action}
+          onClick={(event) => {
+            event.stopPropagation()
+            toast.action?.onClick()
+            handleClose()
+          }}
+        >
+          {toast.action.label}
+        </button>
+      )}
+
+      {dismissible && (
+        <button
+          {...slot('toast', 'close')}
+          type="button"
+          className={styles.close}
+          aria-label={labels.closeToast}
+          onClick={(event) => {
+            event.stopPropagation()
+            handleClose()
+          }}
+        >
+          <CloseIcon size={14} />
+        </button>
+      )}
 
       {!sticky && <div {...slot('toast', 'progress')} className={styles.progress} aria-hidden="true" />}
     </div>

@@ -4,9 +4,16 @@ import type { CSSProperties, ReactNode } from 'react'
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
 
+export interface ToastAction {
+  label: ReactNode
+  onClick: () => void
+}
+
 export interface ToastOptions {
   className?: string | undefined
   style?: CSSProperties | undefined
+  action?: ToastAction | undefined
+  dismissible?: boolean | undefined
 }
 
 export interface Toast extends ToastOptions {

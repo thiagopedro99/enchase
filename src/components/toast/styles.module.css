@@ -134,15 +134,50 @@
   transition: background-color var(--enchase-toast-duration, var(--enchase-motion-duration-fast)) var(--enchase-toast-ease, var(--enchase-motion-ease-out));
 }
 
+.action {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-inline-size: max(24px, var(--enchase-hit-size, 40px));
+  min-block-size: max(24px, var(--enchase-hit-size, 40px));
+  margin: 0;
+  margin-inline-end: var(--enchase-toast-action-margin-inline-end, var(--enchase-space-xs));
+  padding-block: 0;
+  padding-inline: var(--enchase-toast-action-padding-inline, var(--enchase-space-sm));
+  font: inherit;
+  font-size: var(--enchase-toast-action-font-size, var(--enchase-font-size-sm));
+  font-weight: var(--enchase-toast-action-font-weight, var(--enchase-font-weight-semibold));
+  color: inherit;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  align-self: center;
+  z-index: 1;
+  border-radius: var(--enchase-toast-action-radius, var(--enchase-radius-button));
+  text-decoration: underline;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color var(--enchase-toast-duration, var(--enchase-motion-duration-fast)) var(--enchase-toast-ease, var(--enchase-motion-ease-out));
+}
+
 @media (hover: hover) and (pointer: fine) {
-  .close:hover {
+  .close:hover,
+  .action:hover {
     background-color: color-mix(in srgb, currentColor calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }
 }
 
-.close:focus-visible {
+.close:focus-visible,
+.action:focus-visible {
   outline: var(--enchase-focus-width, 2px) solid currentColor;
   outline-offset: 0;
+}
+
+.item:where([data-dismissible='false']) {
+  cursor: default;
 }
 
 .progress {

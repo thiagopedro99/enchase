@@ -112,7 +112,7 @@ export const SaveButton = () => {
 }
 ```
 
-Each toast method (`success`, `error`, `warning`, `info` and `addToast`) returns the id of the notification, which `removeToast` takes to close it. The message can be text or nodes. The notification region is a named `role="region"` and not a live region: two hidden announcers, created with the `ToastProvider` and before the first notification, read each toast aloud, with `role="status"` for success, info and warning and `role="alert"` for error. In your own tests, a query such as `getByRole('alert')` also finds the empty announcer: scope it with `within` or look for the text.
+Each toast method (`success`, `error`, `warning`, `info` and `addToast`) returns the id of the notification, which `removeToast` takes to close it. The message can be text or nodes. A third argument takes `className` and `style`, an `action` (`{ label, onClick }`, a button that runs `onClick` and closes the notification) and `dismissible: false` (no close button, no close on click or Esc: it only closes after its duration or with `removeToast`). The notification region is a named `role="region"` and not a live region: two hidden announcers, created with the `ToastProvider` and before the first notification, read each toast aloud, with `role="status"` for success, info and warning and `role="alert"` for error. In your own tests, a query such as `getByRole('alert')` also finds the empty announcer: scope it with `within` or look for the text.
 
 ## Components
 
