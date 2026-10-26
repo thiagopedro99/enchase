@@ -86,6 +86,19 @@ describe('fields in a real browser', () => {
     expect(Math.abs(rtl.after - rtl.before)).toBeLessThan(2)
   })
 
+  it.each(['date', 'time', 'datetime-local'] as const)('floats the label of an empty %s field, which always shows its own format, and leaves a text field alone', async (type) => {
+    renderInBrowser(
+      <>
+        <Input label="Texto" id="plain-field" />
+        <Input label="Data" type={type} id="typed-field" />
+      </>
+    )
+    const scaleOf = (id: string) => new DOMMatrix(getComputedStyle(document.getElementById(id)?.parentElement?.querySelector('[data-slot="input-label"]') as HTMLElement).transform).a
+
+    await expect.poll(() => scaleOf('typed-field')).toBeCloseTo(0.75, 2)
+    expect(scaleOf('plain-field')).toBeCloseTo(1, 2)
+  })
+
   it('moves the select icon and the password toggle to the end side in RTL', () => {
     renderInBrowser(
       <div dir="rtl" style={{ inlineSize: 320 }}>
