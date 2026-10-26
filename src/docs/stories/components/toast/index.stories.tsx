@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, useToast } from 'enchase'
+import { Button, Flex, Modal, useToast } from 'enchase'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ToastType } from 'enchase'
@@ -47,6 +47,23 @@ const UpdateDemo = () => {
         Fail
       </Button>
     </div>
+  )
+}
+
+const ModalDemo = () => {
+  const toast = useToast()
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open the dialog</Button>
+      <Modal isOpen={open} onClose={() => setOpen(false)} title="Edit profile">
+        <Flex direction="column" align="start" gap="1rem">
+          <p>The page behind this dialog is inert. The notifications stay in view and keep working.</p>
+          <Button onClick={() => toast.success('Profile saved', 6000)}>Save</Button>
+        </Flex>
+      </Modal>
+    </>
   )
 }
 
@@ -115,6 +132,11 @@ export const PromiseError: Story = {
 export const Update: Story = {
   render: () => <UpdateDemo />,
   parameters: { docs: { description: { story: '`toast.update(id, patch)` changes a notification in place: `message`, `type`, `duration` (the countdown restarts), `action`, `dismissible`, `className` and `style`. The new text is announced again; changing only the duration or the action is not.' } } }
+}
+
+export const FromAModal: Story = {
+  render: () => <ModalDemo />,
+  parameters: { docs: { description: { story: 'A notification fired from inside a `Modal` renders in its own region, outside the page content that the dialog makes inert, so it stays visible and its close button stays reachable with the pointer and the keyboard.' } } }
 }
 
 export const Sticky: Story = {
