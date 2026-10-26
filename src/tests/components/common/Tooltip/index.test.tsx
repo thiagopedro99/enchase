@@ -134,7 +134,7 @@ describe('Tooltip', () => {
 
     await user.hover(screen.getByRole('button', { name: 'Save' }))
     await screen.findByText('Save changes', { selector: '[aria-hidden="true"]' })
-    expect(keydowns(add)).toBe(1)
+    await waitFor(() => expect(keydowns(add)).toBe(1))
 
     unmount()
 
