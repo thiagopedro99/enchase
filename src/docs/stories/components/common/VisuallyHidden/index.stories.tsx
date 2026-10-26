@@ -5,15 +5,15 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 const meta = {
   title: 'Components/VisuallyHidden',
   component: VisuallyHidden,
-  args: { children: 'Texto só para leitores de tela' },
+  args: { children: 'Text for screen readers only' },
   argTypes: {
-    className: { description: 'Classe do elemento (data-slot="visually-hidden").', control: 'text' },
+    className: { description: 'Class of the element (data-slot="visually-hidden").', control: 'text' },
     style: { control: false }
   },
   parameters: {
     docs: {
       description: {
-        component: 'Esconde o texto da tela mas o mantém na árvore de acessibilidade. Serve para dar nome a controles que só têm ícone.'
+        component: 'Hides the text from the screen but keeps it in the accessibility tree. Use it to name controls that only have an icon.'
       }
     }
   }
@@ -29,7 +29,7 @@ export const NamedIconButton: Story = {
   render: () => (
     <Button variant="outline">
       <span aria-hidden="true">+</span>
-      <VisuallyHidden>Adicionar item</VisuallyHidden>
+      <VisuallyHidden>Add item</VisuallyHidden>
     </Button>
   )
 }

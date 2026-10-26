@@ -181,21 +181,21 @@ Inline script that applies `data-theme` and `color-scheme` on the `<html>` befor
 
 ### ConfirmModal
 
-Modal de confirmação pronto: um alertdialog com a pergunta e os botões de cancelar e confirmar. Use o Modal quando precisar de conteúdo próprio.
+A ready-made confirmation modal: an alertdialog with the question and the cancel and confirm buttons. Use the Modal when you need content of your own.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `isOpen` | `boolean` | *required* | Abre e fecha a confirmação. Como o Modal, ela é sempre controlada: quem usa guarda o estado e o muda em onClose. |
-| `onClose` | `() => void` | *required* | Chamado ao cancelar, ao fechar por Esc, pelo botão de fechar ou pelo fundo, e logo depois de onConfirm. |
-| `onConfirm` | `() => void` | *required* | Chamado ao clicar no botão de confirmar. O modal chama onClose em seguida, então não é preciso fechar aqui. |
-| `title` | `string` | — | Título da confirmação. Sem ele, usa o texto labels.confirmAction do UIProvider. |
-| `message` | `string` | *required* | Texto da pergunta, no corpo do modal. O diálogo é um alertdialog e o corpo vira a descrição acessível. |
-| `confirmText` | `string` | — | Texto do botão de confirmar. Sem ele, usa labels.confirm do UIProvider. |
-| `cancelText` | `string` | — | Texto do botão de cancelar, que recebe o foco inicial. Sem ele, usa labels.cancel do UIProvider. |
-| `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Estilo do botão de confirmar, o mesmo do Button. |
-| `animation` | `MotionOverride` | — | false desliga o movimento; { recipe, tuning } ajusta a duração, a distância e a escala, como no Modal. |
-| `className` | `string` | — | Classe do painel. Vence a da biblioteca sem !important. |
-| `style` | `CSSProperties` | — | Estilo do painel, mesclado com o da biblioteca (o seu vence). |
+| `isOpen` | `boolean` | *required* | Opens and closes the confirmation. Like the Modal, it is always controlled: you keep the state and change it in onClose. |
+| `onClose` | `() => void` | *required* | Called on cancel, when closed by Esc, the close button or the backdrop, and right after onConfirm. |
+| `onConfirm` | `() => void` | *required* | Called when the confirm button is clicked. The modal calls onClose right after, so there is no need to close it here. |
+| `title` | `string` | — | Title of the confirmation. Without it, it uses the labels.confirmAction text of the UIProvider. |
+| `message` | `string` | *required* | Text of the question, in the body of the modal. The dialog is an alertdialog and the body becomes the accessible description. |
+| `confirmText` | `string` | — | Text of the confirm button. Without it, it uses labels.confirm from the UIProvider. |
+| `cancelText` | `string` | — | Text of the cancel button, which receives the initial focus. Without it, it uses labels.cancel from the UIProvider. |
+| `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Style of the confirm button, the same as in the Button. |
+| `animation` | `MotionOverride` | — | false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale, as in the Modal. |
+| `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
+| `style` | `CSSProperties` | — | Style of the panel, merged with the library style (yours wins). |
 
 ### Container
 
@@ -271,9 +271,9 @@ Also accepts the other HTML attributes of the root element.
 
 ### Icon
 
-Contêiner SVG de 24x24, com traço de 2 px e a cor do texto (`currentColor`). Use-o para desenhar os seus ícones a partir de caminhos SVG.
+A 24x24 SVG container, with a 2 px stroke and the color of the text (`currentColor`). Use it to draw your own icons from SVG paths.
 
-Os ícones que os componentes usam por dentro (menu, fechar, setas, mais, menos, olho, sol e lua, entre outros) saem prontos de `enchase/icons`, um componente por ícone, na story Gallery. Não é uma biblioteca de ícones: só tem o que algum componente usa. Para os demais, use uma biblioteca de ícones direto, sem o `Icon`. Qualquer nó React serve onde há conteúdo ou uma prop `icon`:
+The icons that the components use inside (menu, close, arrows, plus, minus, eye, sun and moon, among others) come ready-made from `enchase/icons`, one component per icon, in the Gallery story. It is not an icon library: it only has what some component uses. For the rest, use an icon library directly, without the `Icon`. Any React node works where there is content or an `icon` prop:
 
 ```tsx
 import { Rocket } from 'lucide-react'
@@ -282,35 +282,35 @@ import { CheckIcon } from 'enchase/icons'
 
 <Button variant="primary">
   <CheckIcon size={18} />
-  Confirmar
+  Confirm
 </Button>
 
 <Button variant="outline">
   <Rocket size={18} aria-hidden="true" />
-  Começar
+  Get started
 </Button>
 ```
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *required* | Formas SVG (path, circle, rect, line) desenhadas em um viewBox de 24x24. |
-| `size` | `number` | `24` | Lado do ícone em pixels. |
-| `title` | `string` | — | Nome acessível. Sem ele o ícone é decorativo (aria-hidden="true"); com ele vira role="img" e ganha um elemento title dentro do SVG. |
-| `name` | `string` | — | Identificador opcional. Vira o atributo data-icon, útil para estilizar de fora ou nos testes. |
-| `directional` | `boolean` | `false` | Espelha o ícone em RTL. Use em setas e chevrons. |
+| `children` | `ReactNode` | *required* | SVG shapes (path, circle, rect, line) drawn in a 24x24 viewBox. |
+| `size` | `number` | `24` | Side length of the icon in pixels. |
+| `title` | `string` | — | Accessible name. Without it, the icon is decorative (aria-hidden="true"); with it, it becomes role="img" and gets a title element inside the SVG. |
+| `name` | `string` | — | Optional identifier. It becomes the data-icon attribute, useful for styling from outside or in tests. |
+| `directional` | `boolean` | `false` | Mirrors the icon in RTL. Use it on arrows and chevrons. |
 
 Also accepts the other attributes of `<svg>`, passed on to the element.
 
 ### InlineLoading
 
-Indicador de carregamento em linha: um span com role="status" e o anel. Para cobrir um bloco ou a página inteira, use o Loading.
+An inline loading indicator: a span with role="status" and the ring. To cover a block or the whole page, use the Loading.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | `'xs' \| 'sm' \| 'md'` | `'sm'` | Diâmetro do anel, para usar ao lado de um texto ou dentro de um botão. |
-| `color` | `string` | — | Cor do trecho que gira (qualquer cor CSS). |
-| `label` | `string` | — | Texto só para leitores de tela. Sem ele, anuncia labels.loading do UIProvider. |
-| `animation` | `false \| { recipe, tuning }` | `spin` | false para de girar. { tuning: { duration } } muda a volta completa em segundos. Com movimento reduzido o giro vira um pulso de opacidade. |
+| `size` | `'xs' \| 'sm' \| 'md'` | `'sm'` | Diameter of the ring, for use next to text or inside a button. |
+| `color` | `string` | — | Color of the spinning arc (any CSS color). |
+| `label` | `string` | — | Text for screen readers only. Without it, it announces labels.loading from the UIProvider. |
+| `animation` | `false \| { recipe, tuning }` | `spin` | false stops the spinning. { tuning: { duration } } sets the seconds of one full turn. With reduced motion the spin becomes an opacity pulse. |
 
 Also accepts the other attributes of `<span>`, passed on to the element.
 
@@ -378,38 +378,38 @@ Also accepts the other attributes of `<a>`, passed on to the element.
 
 ### Loading
 
-Indicador de carregamento em anel, com texto opcional. Com `overlay`, cobre a página, deixa o resto inerte e trava a rolagem.
+A ring-shaped loading indicator, with optional text. With `overlay`, it covers the page, makes the rest inert and locks scrolling.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Diâmetro do anel. |
-| `overlay` | `boolean` | `false` | Cobre a página, deixa o resto inerte e trava a rolagem enquanto estiver montado. |
-| `text` | `string` | — | Texto visível. Sem ele o leitor de tela anuncia labels.loading. |
-| `color` | `string` | — | Cor do trecho que gira (qualquer cor CSS). |
-| `animation` | `false \| { recipe, tuning }` | `spin` | false para de girar. { tuning: { duration } } muda a volta completa em segundos. Com movimento reduzido o giro vira um pulso de opacidade. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'` | `'md'` | Diameter of the ring. |
+| `overlay` | `boolean` | `false` | Covers the page, makes the rest inert and locks scrolling while it is mounted. |
+| `text` | `string` | — | Visible text. Without it, a screen reader announces labels.loading. |
+| `color` | `string` | — | Color of the spinning arc (any CSS color). |
+| `animation` | `false \| { recipe, tuning }` | `spin` | false stops the spinning. { tuning: { duration } } sets the seconds of one full turn. With reduced motion the spin becomes an opacity pulse. |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
 
 ### Modal
 
-Diálogo modal renderizado em um portal: o foco fica preso no painel, a página atrás fica inerte, e Esc ou o clique no fundo fecham. Entra e sai com animação. É sempre controlado por `isOpen` e `onClose`.
+A modal dialog rendered in a portal: the focus stays trapped in the panel, the page behind it is inert, and Esc or a click on the backdrop closes it. It enters and exits with animation. It is always controlled by `isOpen` and `onClose`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `isOpen` | `boolean` | *required* | Abre e fecha o modal. Ele é sempre controlado: quem usa guarda o estado e o muda em onClose. Renderiza em um portal no body, só depois de montar, e continua montado até a animação de saída terminar. |
-| `onClose` | `() => void` | *required* | Chamado quando o usuário pede para fechar: botão de fechar, clique no fundo ou Esc, conforme showCloseButton, closeOnOverlayClick e closeOnEsc. O modal não se fecha sozinho. |
-| `title` | `string` | — | Título do diálogo (h2), que dá o nome acessível. Sem ele, use ariaLabel. |
-| `ariaLabel` | `string` | — | Nome acessível do diálogo quando não há title. |
-| `role` | `'dialog' \| 'alertdialog'` | `'dialog'` | dialog é o padrão. alertdialog é para confirmações que exigem uma resposta: o corpo passa a ser a descrição acessível (aria-describedby). |
-| `children` | `ReactNode` | *required* | Conteúdo do corpo do modal. |
-| `footer` | `ReactNode` | — | Conteúdo fixo abaixo do corpo, como os botões de ação. |
-| `showCloseButton` | `boolean` | `true` | Mostra o botão de fechar no cabeçalho. |
-| `closeOnOverlayClick` | `boolean` | `true` | Fecha ao clicar no fundo. |
-| `closeOnEsc` | `boolean` | `true` | Fecha com Esc. Com modais empilhados, só o de cima fecha. |
-| `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Largura máxima do painel. |
-| `animation` | `MotionOverride` | — | false desliga o movimento; { recipe, tuning } ajusta a duração, a distância e a escala. |
-| `className` | `string` | — | Classe do painel. Vence a da biblioteca sem !important. |
-| `style` | `CSSProperties` | — | Estilo do painel, mesclado com o da biblioteca (o seu vence). |
+| `isOpen` | `boolean` | *required* | Opens and closes the modal. It is always controlled: you keep the state and change it in onClose. It renders in a portal on the body, only after mounting, and stays mounted until the exit animation ends. |
+| `onClose` | `() => void` | *required* | Called when the user asks to close: close button, click on the backdrop or Esc, depending on showCloseButton, closeOnOverlayClick and closeOnEsc. The modal does not close itself. |
+| `title` | `string` | — | Title of the dialog (h2), which gives the accessible name. Without it, use ariaLabel. |
+| `ariaLabel` | `string` | — | Accessible name of the dialog when there is no title. |
+| `role` | `'dialog' \| 'alertdialog'` | `'dialog'` | dialog is the default. alertdialog is for confirmations that require a response: the body becomes the accessible description (aria-describedby). |
+| `children` | `ReactNode` | *required* | Content of the modal body. |
+| `footer` | `ReactNode` | — | Fixed content below the body, such as the action buttons. |
+| `showCloseButton` | `boolean` | `true` | Shows the close button in the header. |
+| `closeOnOverlayClick` | `boolean` | `true` | Closes when the backdrop is clicked. |
+| `closeOnEsc` | `boolean` | `true` | Closes with Esc. With stacked modals, only the top one closes. |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Maximum width of the panel. |
+| `animation` | `MotionOverride` | — | false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale. |
+| `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
+| `style` | `CSSProperties` | — | Style of the panel, merged with the library style (yours wins). |
 
 ### Navbar
 
@@ -472,28 +472,28 @@ Also accepts the other HTML attributes of the root element. Forwards the `ref` t
 
 ### Popover
 
-Painel flutuante ligado a um gatilho. A posição se ajusta sozinha perto da borda (inverte o lado, desliza e encolhe), o foco é gerenciado, e Esc ou um clique fora fecham.
+A floating panel attached to a trigger. Its position adjusts itself near the edge (it flips to the other side, slides and shrinks), the focus is managed, and Esc or a click outside closes it.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *required* | O gatilho: um clique nele abre e fecha o popover. Fica dentro de um span (data-slot="popover-trigger") e, sendo um elemento React, recebe aria-expanded, aria-controls e aria-haspopup. |
-| `content` | `ReactNode` | *required* | Conteúdo do popover. Renderiza em um portal no body, só enquanto o popover está aberto e durante a saída. |
-| `open` | `boolean` | — | Estado controlado. Sem ele, o componente guarda o próprio estado (defaultOpen e onOpenChange). |
-| `defaultOpen` | `boolean` | `false` | Estado inicial quando o popover não é controlado. |
-| `onOpenChange` | `(open: boolean) => void` | — | Chamado com o novo estado quando o usuário abre ou fecha: clique no gatilho, Esc ou clique fora. Combine com open para controlar de fora. |
-| `placement` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-start' \| 'bottom-end' \| 'left-start' \| 'left-end' \| 'start-start' \| 'start-end' \| 'end-start' \| 'end-end'` | `'bottom'` | Lado e alinhamento em relação ao gatilho. start e end seguem a direção do UIProvider. Perto da borda o popover inverte o lado, desliza para caber e encolhe até o espaço disponível. |
-| `offset` | `number` | `8` | Distância em px entre o gatilho e o popover. |
-| `padding` | `number` | `8` | Margem em px até a borda da janela. |
-| `role` | `'dialog' \| 'listbox' \| 'tree' \| 'grid'` | `'dialog'` | Papel do conteúdo, que também vira aria-haspopup no gatilho. O padrão é dialog; menu não é suportado porque exige navegação própria por setas. |
-| `label` | `string` | — | Nome acessível do conteúdo (aria-label). |
-| `arrow` | `boolean` | `false` | Mostra uma seta apontando para o gatilho. |
-| `closeOnEsc` | `boolean` | `true` | Esc fecha só a camada de cima e devolve o foco ao gatilho. |
-| `closeOnOutsideClick` | `boolean` | `true` | Um clique fora fecha o popover sem tirar o foco de onde o clique caiu. |
-| `animation` | `false \| { recipe, tuning }` | `pop` | false desliga a transição. { recipe: "fade" } troca o pop por um fade; { tuning: { duration, scale } } ajusta duração e escala. |
-| `className` | `string` | — | Classe do elemento que envolve o gatilho (data-slot="popover-trigger"). |
-| `style` | `CSSProperties` | — | Estilo do elemento que envolve o gatilho. |
-| `contentClassName` | `string` | — | Classe do conteúdo (data-slot="popover-content"). Também dá para estilizar por data-state e data-placement. |
-| `contentStyle` | `CSSProperties` | — | Estilo do conteúdo. |
+| `children` | `ReactNode` | *required* | The trigger: a click on it opens and closes the popover. It sits inside a span (data-slot="popover-trigger") and, when it is a React element, receives aria-expanded, aria-controls and aria-haspopup. |
+| `content` | `ReactNode` | *required* | Content of the popover. It renders in a portal on the body, only while the popover is open and during the exit. |
+| `open` | `boolean` | — | Controlled state. Without it, the component keeps its own state (defaultOpen and onOpenChange). |
+| `defaultOpen` | `boolean` | `false` | Initial state when the popover is uncontrolled. |
+| `onOpenChange` | `(open: boolean) => void` | — | Called with the new state when the user opens or closes it: click on the trigger, Esc or a click outside. Combine it with open to control it from outside. |
+| `placement` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-start' \| 'bottom-end' \| 'left-start' \| 'left-end' \| 'start-start' \| 'start-end' \| 'end-start' \| 'end-end'` | `'bottom'` | Side and alignment relative to the trigger. start and end follow the direction of the UIProvider. Near the edge the popover flips to the other side, slides to fit and shrinks to the available space. |
+| `offset` | `number` | `8` | Distance in px between the trigger and the popover. |
+| `padding` | `number` | `8` | Margin in px to the edge of the window. |
+| `role` | `'dialog' \| 'listbox' \| 'tree' \| 'grid'` | `'dialog'` | Role of the content, which also becomes aria-haspopup on the trigger. The default is dialog; menu is not supported because it needs its own arrow-key navigation. |
+| `label` | `string` | — | Accessible name of the content (aria-label). |
+| `arrow` | `boolean` | `false` | Shows an arrow that points to the trigger. |
+| `closeOnEsc` | `boolean` | `true` | Esc closes only the top layer and returns the focus to the trigger. |
+| `closeOnOutsideClick` | `boolean` | `true` | A click outside closes the popover without taking the focus away from where the click landed. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | false turns off the transition. { recipe: "fade" } swaps the pop for a fade; { tuning: { duration, scale } } adjusts the duration and the scale. |
+| `className` | `string` | — | Class of the element that wraps the trigger (data-slot="popover-trigger"). |
+| `style` | `CSSProperties` | — | Style of the element that wraps the trigger. |
+| `contentClassName` | `string` | — | Class of the content (data-slot="popover-content"). You can also style it by data-state and data-placement. |
+| `contentStyle` | `CSSProperties` | — | Style of the content. |
 
 ### Progress
 
@@ -689,21 +689,21 @@ Guarda a fila de notificações e a região onde elas aparecem (role="region", c
 
 ### Tooltip
 
-Dica de texto para um gatilho, aberta por ponteiro e por foco. Dá uma descrição acessível ao gatilho e ajusta a posição perto da borda da tela.
+A text tooltip for a trigger, opened by pointer and by focus. It gives the trigger an accessible description and adjusts its position near the edge of the screen. Esc closes an open tooltip but is not intercepted: a `Modal` or `Popover` around the trigger receives the same key.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `text` | `string` | *required* | Texto da dica. Com describe ligado, ele também vira a descrição acessível do gatilho. |
-| `children` | `ReactNode` | *required* | O gatilho. Fica dentro de um div (data-slot="tooltip-trigger") e, com describe ligado, recebe aria-describedby. |
-| `position` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Lado do gatilho onde a dica aparece. start e end seguem a direção do UIProvider (esquerda e direita em ltr, o inverso em rtl). Perto da borda da tela a dica inverte o lado e se desloca para caber. |
-| `describe` | `boolean` | `true` | Liga a descrição acessível do gatilho. Desligue quando o gatilho já tem o mesmo texto como nome, como um botão só com ícone. |
-| `animation` | `false \| { recipe, tuning }` | `fade` | false desliga a transição. { recipe: "pop" } acrescenta uma escala leve; { tuning: { duration } } muda a duração em segundos. |
-| `openDelay` | `number` | `100` | Milissegundos entre entrar no gatilho e mostrar a dica. 0 mostra na hora. Com outra dica aberta, ou fechada há menos de 300 ms, a próxima abre sem esperar e sem animação. |
-| `closeDelay` | `number` | `120` | Milissegundos entre sair do gatilho e esconder a dica. Mover o ponteiro para a própria dica mantém ela aberta. |
-| `className` | `string` | — | Classe do elemento que envolve o gatilho (data-slot="tooltip-trigger"). |
-| `style` | `CSSProperties` | — | Estilo do elemento que envolve o gatilho. |
-| `bubbleClassName` | `string` | — | Classe da dica (data-slot="tooltip-bubble"). Também dá para estilizar por data-slot, data-position e data-state. |
-| `bubbleStyle` | `CSSProperties` | — | Estilo da dica. |
+| `text` | `string` | *required* | Text of the tooltip. With describe on, it also becomes the accessible description of the trigger. |
+| `children` | `ReactNode` | *required* | The trigger. It sits inside a div (data-slot="tooltip-trigger") and, with describe on, receives aria-describedby. |
+| `position` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Side of the trigger where the tooltip appears. start and end follow the direction of the UIProvider (left and right in ltr, the reverse in rtl). Near the edge of the screen the tooltip flips to the other side and shifts to fit. |
+| `describe` | `boolean` | `true` | Turns on the accessible description of the trigger. Turn it off when the trigger already has the same text as its name, like an icon-only button. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | false turns off the transition. The default recipe is "pop", a fade with a light scale; { recipe: "fade" } only fades; { tuning: { duration } } changes the duration in seconds. |
+| `openDelay` | `number` | `100` | Milliseconds between entering the trigger and showing the tooltip. 0 shows it at once. With another tooltip open, or one closed less than 300 ms ago, the next one opens without waiting and without animation. |
+| `closeDelay` | `number` | `120` | Milliseconds between leaving the trigger and hiding the tooltip. Moving the pointer onto the tooltip itself keeps it open. |
+| `className` | `string` | — | Class of the element that wraps the trigger (data-slot="tooltip-trigger"). |
+| `style` | `CSSProperties` | — | Style of the element that wraps the trigger. |
+| `bubbleClassName` | `string` | — | Class of the tooltip (data-slot="tooltip-bubble"). You can also style it by data-slot, data-position and data-state. |
+| `bubbleStyle` | `CSSProperties` | — | Style of the tooltip. |
 
 ### UIProvider
 
@@ -721,7 +721,7 @@ Configuração compartilhada por todos os componentes: idioma e textos, breakpoi
 
 ### VisuallyHidden
 
-Esconde o texto da tela mas o mantém na árvore de acessibilidade. Serve para dar nome a controles que só têm ícone.
+Hides the text from the screen but keeps it in the accessibility tree. Use it to name controls that only have an icon.
 
 No props of its own.
 
@@ -815,8 +815,8 @@ Exported by `enchase/icons`, one component per icon, and only the ones that some
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `size` | `number` | `24` | Lado do ícone em pixels. |
-| `title` | `string` | — | Nome acessível. Sem ele o ícone é decorativo (aria-hidden="true"); com ele vira role="img" e ganha um elemento title dentro do SVG. |
+| `size` | `number` | `24` | Side length of the icon in pixels. |
+| `title` | `string` | — | Accessible name. Without it, the icon is decorative (aria-hidden="true"); with it, it becomes role="img" and gets a title element inside the SVG. |
 
 Also accepts the other attributes of `<svg>`, passed on to the element.
 

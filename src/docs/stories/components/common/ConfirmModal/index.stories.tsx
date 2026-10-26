@@ -26,65 +26,65 @@ const meta = {
     isOpen: false,
     onClose: () => undefined,
     onConfirm: () => undefined,
-    message: 'Esta ação não pode ser desfeita.',
+    message: 'This action cannot be undone.',
     confirmVariant: 'primary'
   },
   argTypes: {
     isOpen: {
-      description: 'Abre e fecha a confirmação. Como o Modal, ela é sempre controlada: quem usa guarda o estado e o muda em onClose.',
+      description: 'Opens and closes the confirmation. Like the Modal, it is always controlled: you keep the state and change it in onClose.',
       control: false
     },
     onClose: {
-      description: 'Chamado ao cancelar, ao fechar por Esc, pelo botão de fechar ou pelo fundo, e logo depois de onConfirm.',
+      description: 'Called on cancel, when closed by Esc, the close button or the backdrop, and right after onConfirm.',
       control: false
     },
     onConfirm: {
-      description: 'Chamado ao clicar no botão de confirmar. O modal chama onClose em seguida, então não é preciso fechar aqui.',
+      description: 'Called when the confirm button is clicked. The modal calls onClose right after, so there is no need to close it here.',
       control: false
     },
     title: {
-      description: 'Título da confirmação. Sem ele, usa o texto labels.confirmAction do UIProvider.',
+      description: 'Title of the confirmation. Without it, it uses the labels.confirmAction text of the UIProvider.',
       control: 'text'
     },
     message: {
-      description: 'Texto da pergunta, no corpo do modal. O diálogo é um alertdialog e o corpo vira a descrição acessível.',
+      description: 'Text of the question, in the body of the modal. The dialog is an alertdialog and the body becomes the accessible description.',
       control: 'text'
     },
     confirmText: {
-      description: 'Texto do botão de confirmar. Sem ele, usa labels.confirm do UIProvider.',
+      description: 'Text of the confirm button. Without it, it uses labels.confirm from the UIProvider.',
       control: 'text'
     },
     cancelText: {
-      description: 'Texto do botão de cancelar, que recebe o foco inicial. Sem ele, usa labels.cancel do UIProvider.',
+      description: 'Text of the cancel button, which receives the initial focus. Without it, it uses labels.cancel from the UIProvider.',
       control: 'text'
     },
     confirmVariant: {
-      description: 'Estilo do botão de confirmar, o mesmo do Button.',
+      description: 'Style of the confirm button, the same as in the Button.',
       control: 'select',
       options: ['primary', 'secondary', 'outline', 'ghost'],
       table: { defaultValue: { summary: 'primary' } }
     },
     animation: {
-      description: 'false desliga o movimento; { recipe, tuning } ajusta a duração, a distância e a escala, como no Modal.',
+      description: 'false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale, as in the Modal.',
       control: false
     },
     className: {
-      description: 'Classe do painel. Vence a da biblioteca sem !important.',
+      description: 'Class of the panel. It wins over the library class without !important.',
       control: false
     },
     style: {
-      description: 'Estilo do painel, mesclado com o da biblioteca (o seu vence).',
+      description: 'Style of the panel, merged with the library style (yours wins).',
       control: false
     }
   },
   parameters: {
     docs: {
       description: {
-        component: 'Modal de confirmação pronto: um alertdialog com a pergunta e os botões de cancelar e confirmar. Use o Modal quando precisar de conteúdo próprio.'
+        component: 'A ready-made confirmation modal: an alertdialog with the question and the cancel and confirm buttons. Use the Modal when you need content of your own.'
       }
     }
   },
-  render: (args) => <ConfirmDemo {...args} label="Excluir item" />
+  render: (args) => <ConfirmDemo {...args} label="Delete item" />
 } satisfies Meta<typeof ConfirmModal>
 
 export default meta
@@ -94,5 +94,5 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const CustomTexts: Story = {
-  args: { title: 'Excluir o projeto?', message: 'Todos os arquivos do projeto serão apagados.', confirmText: 'Excluir', cancelText: 'Manter' }
+  args: { title: 'Delete the project?', message: 'All the files in the project will be deleted.', confirmText: 'Delete', cancelText: 'Keep' }
 }

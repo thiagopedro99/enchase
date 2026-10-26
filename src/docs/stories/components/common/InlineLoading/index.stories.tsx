@@ -10,26 +10,26 @@ const meta = {
   },
   argTypes: {
     size: {
-      description: 'Diâmetro do anel, para usar ao lado de um texto ou dentro de um botão.',
+      description: 'Diameter of the ring, for use next to text or inside a button.',
       control: 'inline-radio',
       options: ['xs', 'sm', 'md'],
       table: { defaultValue: { summary: 'sm' } }
     },
     color: {
-      description: 'Cor do trecho que gira (qualquer cor CSS).',
+      description: 'Color of the spinning arc (any CSS color).',
       control: 'color'
     },
     label: {
-      description: 'Texto só para leitores de tela. Sem ele, anuncia labels.loading do UIProvider.',
+      description: 'Text for screen readers only. Without it, it announces labels.loading from the UIProvider.',
       control: 'text'
     },
     animation: {
-      description: 'false para de girar. { tuning: { duration } } muda a volta completa em segundos. Com movimento reduzido o giro vira um pulso de opacidade.',
+      description: 'false stops the spinning. { tuning: { duration } } sets the seconds of one full turn. With reduced motion the spin becomes an opacity pulse.',
       control: 'object',
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'spin' } }
     },
     className: {
-      description: 'Classe do elemento raiz (data-slot="inline-loading").',
+      description: 'Class of the root element (data-slot="inline-loading").',
       control: 'text'
     },
     style: { control: false }
@@ -37,7 +37,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Indicador de carregamento em linha: um span com role="status" e o anel. Para cobrir um bloco ou a página inteira, use o Loading.'
+        component: 'An inline loading indicator: a span with role="status" and the ring. To cover a block or the whole page, use the Loading.'
       }
     }
   }
@@ -52,7 +52,7 @@ export const Playground: Story = {}
 export const InsideAButton: Story = {
   render: (args) => (
     <Button disabled>
-      <InlineLoading {...args} label="Salvando" /> Salvando
+      <InlineLoading {...args} label="Saving" /> Saving
     </Button>
   )
 }

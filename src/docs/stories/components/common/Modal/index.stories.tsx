@@ -23,8 +23,8 @@ const meta = {
   args: {
     isOpen: false,
     onClose: () => undefined,
-    title: 'Editar perfil',
-    children: 'O foco fica preso no painel, a página atrás fica inerte e Esc devolve o foco ao botão.',
+    title: 'Edit profile',
+    children: 'The focus stays trapped in the panel, the page behind it is inert and Esc returns the focus to the button.',
     size: 'md',
     showCloseButton: true,
     closeOnOverlayClick: true,
@@ -33,41 +33,41 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Diálogo modal renderizado em um portal: o foco fica preso no painel, a página atrás fica inerte, e Esc ou o clique no fundo fecham. Entra e sai com animação. É sempre controlado por `isOpen` e `onClose`.'
+        component: 'A modal dialog rendered in a portal: the focus stays trapped in the panel, the page behind it is inert, and Esc or a click on the backdrop closes it. It enters and exits with animation. It is always controlled by `isOpen` and `onClose`.'
       }
     }
   },
   argTypes: {
     isOpen: {
-      description: 'Abre e fecha o modal. Ele é sempre controlado: quem usa guarda o estado e o muda em onClose. Renderiza em um portal no body, só depois de montar, e continua montado até a animação de saída terminar.',
+      description: 'Opens and closes the modal. It is always controlled: you keep the state and change it in onClose. It renders in a portal on the body, only after mounting, and stays mounted until the exit animation ends.',
       control: false
     },
     onClose: {
-      description: 'Chamado quando o usuário pede para fechar: botão de fechar, clique no fundo ou Esc, conforme showCloseButton, closeOnOverlayClick e closeOnEsc. O modal não se fecha sozinho.',
+      description: 'Called when the user asks to close: close button, click on the backdrop or Esc, depending on showCloseButton, closeOnOverlayClick and closeOnEsc. The modal does not close itself.',
       control: false
     },
-    title: { description: 'Título do diálogo (h2), que dá o nome acessível. Sem ele, use ariaLabel.', control: 'text' },
-    ariaLabel: { description: 'Nome acessível do diálogo quando não há title.', control: 'text' },
+    title: { description: 'Title of the dialog (h2), which gives the accessible name. Without it, use ariaLabel.', control: 'text' },
+    ariaLabel: { description: 'Accessible name of the dialog when there is no title.', control: 'text' },
     role: {
-      description: 'dialog é o padrão. alertdialog é para confirmações que exigem uma resposta: o corpo passa a ser a descrição acessível (aria-describedby).',
+      description: 'dialog is the default. alertdialog is for confirmations that require a response: the body becomes the accessible description (aria-describedby).',
       control: 'inline-radio',
       options: ['dialog', 'alertdialog'],
       table: { defaultValue: { summary: 'dialog' } }
     },
     size: {
-      description: 'Largura máxima do painel.',
+      description: 'Maximum width of the panel.',
       control: 'inline-radio',
       options: ['sm', 'md', 'lg', 'xl', 'full'],
       table: { defaultValue: { summary: 'md' } }
     },
-    showCloseButton: { description: 'Mostra o botão de fechar no cabeçalho.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
-    closeOnOverlayClick: { description: 'Fecha ao clicar no fundo.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
-    closeOnEsc: { description: 'Fecha com Esc. Com modais empilhados, só o de cima fecha.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
-    className: { description: 'Classe do painel. Vence a da biblioteca sem !important.', control: false },
-    style: { description: 'Estilo do painel, mesclado com o da biblioteca (o seu vence).', control: false },
-    animation: { description: 'false desliga o movimento; { recipe, tuning } ajusta a duração, a distância e a escala.', control: false },
-    children: { description: 'Conteúdo do corpo do modal.', control: 'text' },
-    footer: { description: 'Conteúdo fixo abaixo do corpo, como os botões de ação.', control: false }
+    showCloseButton: { description: 'Shows the close button in the header.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
+    closeOnOverlayClick: { description: 'Closes when the backdrop is clicked.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
+    closeOnEsc: { description: 'Closes with Esc. With stacked modals, only the top one closes.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
+    className: { description: 'Class of the panel. It wins over the library class without !important.', control: false },
+    style: { description: 'Style of the panel, merged with the library style (yours wins).', control: false },
+    animation: { description: 'false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale.', control: false },
+    children: { description: 'Content of the modal body.', control: 'text' },
+    footer: { description: 'Fixed content below the body, such as the action buttons.', control: false }
   }
 } satisfies Meta<typeof Modal>
 
@@ -76,9 +76,9 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {
-  render: (args) => <ModalDemo {...args} label="Abrir modal" footer={<Button>Salvar</Button>} />
+  render: (args) => <ModalDemo {...args} label="Open modal" footer={<Button>Save</Button>} />
 }
 
 export const WithoutMotion: Story = {
-  render: (args) => <ModalDemo {...args} label="Abrir sem animação" animation={false} />
+  render: (args) => <ModalDemo {...args} label="Open without animation" animation={false} />
 }

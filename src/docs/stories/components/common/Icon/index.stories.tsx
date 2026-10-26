@@ -5,9 +5,9 @@ import * as icons from 'enchase/icons'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const iconsRecipe = [
-  'Contêiner SVG de 24x24, com traço de 2 px e a cor do texto (`currentColor`). Use-o para desenhar os seus ícones a partir de caminhos SVG.',
+  'A 24x24 SVG container, with a 2 px stroke and the color of the text (`currentColor`). Use it to draw your own icons from SVG paths.',
   '',
-  'Os ícones que os componentes usam por dentro (menu, fechar, setas, mais, menos, olho, sol e lua, entre outros) saem prontos de `enchase/icons`, um componente por ícone, na story Gallery. Não é uma biblioteca de ícones: só tem o que algum componente usa. Para os demais, use uma biblioteca de ícones direto, sem o `Icon`. Qualquer nó React serve onde há conteúdo ou uma prop `icon`:',
+  'The icons that the components use inside (menu, close, arrows, plus, minus, eye, sun and moon, among others) come ready-made from `enchase/icons`, one component per icon, in the Gallery story. It is not an icon library: it only has what some component uses. For the rest, use an icon library directly, without the `Icon`. Any React node works where there is content or an `icon` prop:',
   '',
   '```tsx',
   "import { Rocket } from 'lucide-react'",
@@ -16,12 +16,12 @@ const iconsRecipe = [
   '',
   '<Button variant="primary">',
   '  <CheckIcon size={18} />',
-  '  Confirmar',
+  '  Confirm',
   '</Button>',
   '',
   '<Button variant="outline">',
   '  <Rocket size={18} aria-hidden="true" />',
-  '  Começar',
+  '  Get started',
   '</Button>',
   '```'
 ].join('\n')
@@ -34,29 +34,29 @@ const meta = {
   },
   argTypes: {
     children: {
-      description: 'Formas SVG (path, circle, rect, line) desenhadas em um viewBox de 24x24.',
+      description: 'SVG shapes (path, circle, rect, line) drawn in a 24x24 viewBox.',
       control: false
     },
     name: {
-      description: 'Identificador opcional. Vira o atributo data-icon, útil para estilizar de fora ou nos testes.',
+      description: 'Optional identifier. It becomes the data-icon attribute, useful for styling from outside or in tests.',
       control: 'text'
     },
     size: {
-      description: 'Lado do ícone em pixels.',
+      description: 'Side length of the icon in pixels.',
       control: 'number',
       table: { defaultValue: { summary: '24' } }
     },
     title: {
-      description: 'Nome acessível. Sem ele o ícone é decorativo (aria-hidden="true"); com ele vira role="img" e ganha um elemento title dentro do SVG.',
+      description: 'Accessible name. Without it, the icon is decorative (aria-hidden="true"); with it, it becomes role="img" and gets a title element inside the SVG.',
       control: 'text'
     },
     directional: {
-      description: 'Espelha o ícone em RTL. Use em setas e chevrons.',
+      description: 'Mirrors the icon in RTL. Use it on arrows and chevrons.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     className: {
-      description: 'Classe do elemento (data-slot="icon"), que vence o estilo da biblioteca.',
+      description: 'Class of the element (data-slot="icon"), which wins over the library style.',
       control: 'text'
     },
     style: { control: false }
@@ -75,12 +75,12 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const WithTitle: Story = {
-  args: { name: 'plus', title: 'Adicionar', size: 32 }
+  args: { name: 'plus', title: 'Add', size: 32 }
 }
 
 export const Directional: Story = {
   args: { name: 'arrow-right', directional: true, children: <path d="M5 12h14M13 6l6 6-6 6" /> },
-  parameters: { docs: { description: { story: 'Em uma página com dir="rtl" a seta aponta para a esquerda.' } } }
+  parameters: { docs: { description: { story: 'On a page with dir="rtl" the arrow points to the left.' } } }
 }
 
 export const InsideAButton: Story = {
@@ -89,7 +89,7 @@ export const InsideAButton: Story = {
       <Icon size={18}>
         <path d="M20 6 9 17l-5-5" />
       </Icon>
-      Confirmar
+      Confirm
     </Button>
   )
 }
@@ -97,7 +97,7 @@ export const InsideAButton: Story = {
 export const Gallery: Story = {
   parameters: {
     controls: { disable: true },
-    docs: { description: { story: 'Os ícones de `enchase/icons`. Cada um aceita `size`, `title` e os atributos de um `<svg>`; sem `title` é decorativo. Os que apontam para um lado espelham em RTL sozinhos.' } }
+    docs: { description: { story: 'The icons of `enchase/icons`. Each one accepts `size`, `title` and the attributes of an `<svg>`; without `title` it is decorative. The ones that point to one side mirror in RTL on their own.' } }
   },
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '0.75rem', maxInlineSize: '48rem' }}>
@@ -114,10 +114,10 @@ export const Gallery: Story = {
 export const IconOnlyButton: Story = {
   parameters: {
     controls: { disable: true },
-    docs: { description: { story: 'Um botão só com ícone precisa de `aria-label`: o ícone é decorativo e o botão ganha o nome dele.' } }
+    docs: { description: { story: 'An icon-only button needs an `aria-label`: the icon is decorative and the button gets its name from the label.' } }
   },
   render: () => (
-    <Button variant="ghost" aria-label="Fechar">
+    <Button variant="ghost" aria-label="Close">
       <CloseIcon />
     </Button>
   )

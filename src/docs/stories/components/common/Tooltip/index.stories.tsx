@@ -6,62 +6,62 @@ const meta = {
   title: 'Components/Tooltip',
   component: Tooltip,
   args: {
-    text: 'Salvar alterações',
+    text: 'Save changes',
     position: 'top',
     describe: true,
     openDelay: 0,
     closeDelay: 120,
-    children: <Button>Salvar</Button>
+    children: <Button>Save</Button>
   },
   parameters: {
     docs: {
       description: {
-        component: 'Dica de texto para um gatilho, aberta por ponteiro e por foco. Dá uma descrição acessível ao gatilho e ajusta a posição perto da borda da tela.'
+        component: 'A text tooltip for a trigger, opened by pointer and by focus. It gives the trigger an accessible description and adjusts its position near the edge of the screen. Esc closes an open tooltip but is not intercepted: a `Modal` or `Popover` around the trigger receives the same key.'
       }
     }
   },
   argTypes: {
     text: {
-      description: 'Texto da dica. Com describe ligado, ele também vira a descrição acessível do gatilho.',
+      description: 'Text of the tooltip. With describe on, it also becomes the accessible description of the trigger.',
       control: 'text'
     },
     position: {
-      description: 'Lado do gatilho onde a dica aparece. start e end seguem a direção do UIProvider (esquerda e direita em ltr, o inverso em rtl). Perto da borda da tela a dica inverte o lado e se desloca para caber.',
+      description: 'Side of the trigger where the tooltip appears. start and end follow the direction of the UIProvider (left and right in ltr, the reverse in rtl). Near the edge of the screen the tooltip flips to the other side and shifts to fit.',
       control: 'select',
       options: ['top', 'bottom', 'left', 'right', 'start', 'end'],
       table: { defaultValue: { summary: 'top' } }
     },
     describe: {
-      description: 'Liga a descrição acessível do gatilho. Desligue quando o gatilho já tem o mesmo texto como nome, como um botão só com ícone.',
+      description: 'Turns on the accessible description of the trigger. Turn it off when the trigger already has the same text as its name, like an icon-only button.',
       control: 'boolean',
       table: { defaultValue: { summary: 'true' } }
     },
     openDelay: {
-      description: 'Milissegundos entre entrar no gatilho e mostrar a dica. 0 mostra na hora. Com outra dica aberta, ou fechada há menos de 300 ms, a próxima abre sem esperar e sem animação.',
+      description: 'Milliseconds between entering the trigger and showing the tooltip. 0 shows it at once. With another tooltip open, or one closed less than 300 ms ago, the next one opens without waiting and without animation.',
       control: 'number',
       table: { defaultValue: { summary: '100' } }
     },
     closeDelay: {
-      description: 'Milissegundos entre sair do gatilho e esconder a dica. Mover o ponteiro para a própria dica mantém ela aberta.',
+      description: 'Milliseconds between leaving the trigger and hiding the tooltip. Moving the pointer onto the tooltip itself keeps it open.',
       control: 'number',
       table: { defaultValue: { summary: '120' } }
     },
     animation: {
-      description: 'false desliga a transição. { recipe: "pop" } acrescenta uma escala leve; { tuning: { duration } } muda a duração em segundos.',
+      description: 'false turns off the transition. The default recipe is "pop", a fade with a light scale; { recipe: "fade" } only fades; { tuning: { duration } } changes the duration in seconds.',
       control: 'object',
-      table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'fade' } }
+      table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'pop' } }
     },
     className: {
-      description: 'Classe do elemento que envolve o gatilho (data-slot="tooltip-trigger").',
+      description: 'Class of the element that wraps the trigger (data-slot="tooltip-trigger").',
       control: 'text'
     },
     bubbleClassName: {
-      description: 'Classe da dica (data-slot="tooltip-bubble"). Também dá para estilizar por data-slot, data-position e data-state.',
+      description: 'Class of the tooltip (data-slot="tooltip-bubble"). You can also style it by data-slot, data-position and data-state.',
       control: 'text'
     },
-    children: { description: 'O gatilho. Fica dentro de um div (data-slot="tooltip-trigger") e, com describe ligado, recebe aria-describedby.', control: false },
-    style: { description: 'Estilo do elemento que envolve o gatilho.', control: false },
-    bubbleStyle: { description: 'Estilo da dica.', control: false }
+    children: { description: 'The trigger. It sits inside a div (data-slot="tooltip-trigger") and, with describe on, receives aria-describedby.', control: false },
+    style: { description: 'Style of the element that wraps the trigger.', control: false },
+    bubbleStyle: { description: 'Style of the tooltip.', control: false }
   }
 } satisfies Meta<typeof Tooltip>
 
@@ -75,7 +75,7 @@ export const Positions: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: '1.5rem', padding: '3rem 4rem', flexWrap: 'wrap' }}>
       {(['top', 'bottom', 'left', 'right'] as const).map((position) => (
-        <Tooltip key={position} {...args} position={position} text={`Lado ${position}`}>
+        <Tooltip key={position} {...args} position={position} text={`Side: ${position}`}>
           <Button variant="outline">{position}</Button>
         </Tooltip>
       ))}
@@ -84,7 +84,7 @@ export const Positions: Story = {
 }
 
 export const IconOnly: Story = {
-  args: { text: 'Fechar', describe: false, children: <Button variant="ghost" aria-label="Fechar">×</Button> }
+  args: { text: 'Close', describe: false, children: <Button variant="ghost" aria-label="Close">×</Button> }
 }
 
 export const WithDelay: Story = {

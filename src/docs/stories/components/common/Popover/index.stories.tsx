@@ -8,9 +8,9 @@ import type { ComponentProps } from 'react'
 
 const panel = (
   <div style={{ display: 'grid', gap: '0.5rem', inlineSize: '16rem' }}>
-    <strong>Detalhes do pedido</strong>
-    <span>Três itens, entrega prevista para sexta-feira.</span>
-    <Button size="sm">Ver pedido</Button>
+    <strong>Order details</strong>
+    <span>Three items, delivery expected on Friday.</span>
+    <Button size="sm">View order</Button>
   </div>
 )
 
@@ -25,95 +25,95 @@ const meta = {
     arrow: defaultArrow,
     closeOnEsc: defaultCloseOnEsc,
     closeOnOutsideClick: defaultCloseOnOutsideClick,
-    label: 'Detalhes do pedido',
+    label: 'Order details',
     content: panel,
-    children: <Button>Abrir detalhes</Button>
+    children: <Button>Open details</Button>
   },
   parameters: {
     docs: {
       description: {
-        component: 'Painel flutuante ligado a um gatilho. A posição se ajusta sozinha perto da borda (inverte o lado, desliza e encolhe), o foco é gerenciado, e Esc ou um clique fora fecham.'
+        component: 'A floating panel attached to a trigger. Its position adjusts itself near the edge (it flips to the other side, slides and shrinks), the focus is managed, and Esc or a click outside closes it.'
       }
     }
   },
   argTypes: {
     placement: {
-      description: 'Lado e alinhamento em relação ao gatilho. start e end seguem a direção do UIProvider. Perto da borda o popover inverte o lado, desliza para caber e encolhe até o espaço disponível.',
+      description: 'Side and alignment relative to the trigger. start and end follow the direction of the UIProvider. Near the edge the popover flips to the other side, slides to fit and shrinks to the available space.',
       control: 'select',
       options: placements,
       table: { defaultValue: { summary: defaultPlacement } }
     },
     offset: {
-      description: 'Distância em px entre o gatilho e o popover.',
+      description: 'Distance in px between the trigger and the popover.',
       control: 'number',
       table: { defaultValue: { summary: String(defaultOffset) } }
     },
     padding: {
-      description: 'Margem em px até a borda da janela.',
+      description: 'Margin in px to the edge of the window.',
       control: 'number',
       table: { defaultValue: { summary: String(defaultPadding) } }
     },
     role: {
-      description: 'Papel do conteúdo, que também vira aria-haspopup no gatilho. O padrão é dialog; menu não é suportado porque exige navegação própria por setas.',
+      description: 'Role of the content, which also becomes aria-haspopup on the trigger. The default is dialog; menu is not supported because it needs its own arrow-key navigation.',
       control: 'select',
       options: ['dialog', 'listbox', 'tree', 'grid'],
       table: { defaultValue: { summary: defaultRole } }
     },
     label: {
-      description: 'Nome acessível do conteúdo (aria-label).',
+      description: 'Accessible name of the content (aria-label).',
       control: 'text'
     },
     arrow: {
-      description: 'Mostra uma seta apontando para o gatilho.',
+      description: 'Shows an arrow that points to the trigger.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultArrow) } }
     },
     closeOnEsc: {
-      description: 'Esc fecha só a camada de cima e devolve o foco ao gatilho.',
+      description: 'Esc closes only the top layer and returns the focus to the trigger.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultCloseOnEsc) } }
     },
     closeOnOutsideClick: {
-      description: 'Um clique fora fecha o popover sem tirar o foco de onde o clique caiu.',
+      description: 'A click outside closes the popover without taking the focus away from where the click landed.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultCloseOnOutsideClick) } }
     },
     open: {
-      description: 'Estado controlado. Sem ele, o componente guarda o próprio estado (defaultOpen e onOpenChange).',
+      description: 'Controlled state. Without it, the component keeps its own state (defaultOpen and onOpenChange).',
       control: 'boolean'
     },
     defaultOpen: {
-      description: 'Estado inicial quando o popover não é controlado.',
+      description: 'Initial state when the popover is uncontrolled.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     onOpenChange: {
-      description: 'Chamado com o novo estado quando o usuário abre ou fecha: clique no gatilho, Esc ou clique fora. Combine com open para controlar de fora.',
+      description: 'Called with the new state when the user opens or closes it: click on the trigger, Esc or a click outside. Combine it with open to control it from outside.',
       control: false
     },
     animation: {
-      description: 'false desliga a transição. { recipe: "fade" } troca o pop por um fade; { tuning: { duration, scale } } ajusta duração e escala.',
+      description: 'false turns off the transition. { recipe: "fade" } swaps the pop for a fade; { tuning: { duration, scale } } adjusts the duration and the scale.',
       control: 'object',
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'pop' } }
     },
     className: {
-      description: 'Classe do elemento que envolve o gatilho (data-slot="popover-trigger").',
+      description: 'Class of the element that wraps the trigger (data-slot="popover-trigger").',
       control: 'text'
     },
     contentClassName: {
-      description: 'Classe do conteúdo (data-slot="popover-content"). Também dá para estilizar por data-state e data-placement.',
+      description: 'Class of the content (data-slot="popover-content"). You can also style it by data-state and data-placement.',
       control: 'text'
     },
     children: {
-      description: 'O gatilho: um clique nele abre e fecha o popover. Fica dentro de um span (data-slot="popover-trigger") e, sendo um elemento React, recebe aria-expanded, aria-controls e aria-haspopup.',
+      description: 'The trigger: a click on it opens and closes the popover. It sits inside a span (data-slot="popover-trigger") and, when it is a React element, receives aria-expanded, aria-controls and aria-haspopup.',
       control: false
     },
     content: {
-      description: 'Conteúdo do popover. Renderiza em um portal no body, só enquanto o popover está aberto e durante a saída.',
+      description: 'Content of the popover. It renders in a portal on the body, only while the popover is open and during the exit.',
       control: false
     },
-    style: { description: 'Estilo do elemento que envolve o gatilho.', control: false },
-    contentStyle: { description: 'Estilo do conteúdo.', control: false }
+    style: { description: 'Style of the element that wraps the trigger.', control: false },
+    contentStyle: { description: 'Style of the content.', control: false }
   }
 } satisfies Meta<typeof Popover>
 
@@ -144,10 +144,10 @@ const ModalDemo = (args: ComponentProps<typeof Popover>) => {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Abrir modal</Button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Modal com popover">
+      <Button onClick={() => setOpen(true)}>Open modal</Button>
+      <Modal isOpen={open} onClose={() => setOpen(false)} title="Modal with popover">
         <Popover {...args}>
-          <Button variant="outline">Abrir popover</Button>
+          <Button variant="outline">Open popover</Button>
         </Popover>
       </Modal>
     </>

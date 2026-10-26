@@ -12,7 +12,7 @@ type ToastStoryArgs = {
 const Launcher = ({ type, duration, message }: ToastStoryArgs) => {
   const toast = useToast()
 
-  return <Button onClick={() => toast[type](message, duration)}>Mostrar notificação</Button>
+  return <Button onClick={() => toast[type](message, duration)}>Show notification</Button>
 }
 
 const meta = {
@@ -21,21 +21,21 @@ const meta = {
   args: {
     type: 'success',
     duration: 3000,
-    message: 'Alterações salvas'
+    message: 'Changes saved'
   },
   argTypes: {
     type: {
-      description: 'Tipo da notificação: define a cor e o ícone. Só error usa role="alert"; os demais são anunciados pela região de notificações.',
+      description: 'Type of the notification: sets the color and the icon. Only error uses role="alert"; the others are announced by the notification region.',
       control: 'inline-radio',
       options: ['success', 'error', 'warning', 'info']
     },
     duration: {
-      description: 'Milissegundos até a notificação fechar sozinha. 0 mantém aberta até o usuário fechar. A contagem pausa com o ponteiro ou o foco dentro dela.',
+      description: 'Milliseconds until the notification closes by itself. 0 keeps it open until the user closes it. The countdown pauses while the pointer or the focus is inside it.',
       control: 'number',
       table: { defaultValue: { summary: '3000' } }
     },
     message: {
-      description: 'Texto da notificação.',
+      description: 'Text of the notification.',
       control: 'text'
     }
   }
@@ -45,12 +45,12 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const Padrao: Story = {}
+export const Playground: Story = {}
 
-export const Erro: Story = {
-  args: { type: 'error', message: 'Não foi possível salvar' }
+export const ErrorToast: Story = {
+  args: { type: 'error', message: 'Could not save' }
 }
 
-export const Fixa: Story = {
-  args: { type: 'info', duration: 0, message: 'Esta notificação só fecha quando você pedir' }
+export const Sticky: Story = {
+  args: { type: 'info', duration: 0, message: 'This notification only closes when you ask it to' }
 }

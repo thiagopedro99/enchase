@@ -12,37 +12,37 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Indicador de carregamento em anel, com texto opcional. Com `overlay`, cobre a página, deixa o resto inerte e trava a rolagem.'
+        component: 'A ring-shaped loading indicator, with optional text. With `overlay`, it covers the page, makes the rest inert and locks scrolling.'
       }
     }
   },
   argTypes: {
     size: {
-      description: 'Diâmetro do anel.',
+      description: 'Diameter of the ring.',
       control: 'select',
       options: ['xs', 'sm', 'md', 'lg', 'xl'],
       table: { defaultValue: { summary: 'md' } }
     },
     overlay: {
-      description: 'Cobre a página, deixa o resto inerte e trava a rolagem enquanto estiver montado.',
+      description: 'Covers the page, makes the rest inert and locks scrolling while it is mounted.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     text: {
-      description: 'Texto visível. Sem ele o leitor de tela anuncia labels.loading.',
+      description: 'Visible text. Without it, a screen reader announces labels.loading.',
       control: 'text'
     },
     color: {
-      description: 'Cor do trecho que gira (qualquer cor CSS).',
+      description: 'Color of the spinning arc (any CSS color).',
       control: 'color'
     },
     animation: {
-      description: 'false para de girar. { tuning: { duration } } muda a volta completa em segundos. Com movimento reduzido o giro vira um pulso de opacidade.',
+      description: 'false stops the spinning. { tuning: { duration } } sets the seconds of one full turn. With reduced motion the spin becomes an opacity pulse.',
       control: 'object',
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'spin' } }
     },
     className: {
-      description: 'Classe do elemento raiz (data-slot="loading").',
+      description: 'Class of the root element (data-slot="loading").',
       control: 'text'
     },
     style: { control: false }
@@ -56,7 +56,7 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const WithText: Story = {
-  args: { text: 'Salvando alterações' }
+  args: { text: 'Saving changes' }
 }
 
 export const Sizes: Story = {
@@ -72,7 +72,7 @@ export const Sizes: Story = {
 export const Inline: Story = {
   render: () => (
     <p>
-      Enviando <InlineLoading label="Enviando" />
+      Sending <InlineLoading label="Sending" />
     </p>
   )
 }
