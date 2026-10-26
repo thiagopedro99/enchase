@@ -1,7 +1,7 @@
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { defaultToastDuration, reducedMotionQuery } from './defaultData.ts'
+import { defaultToastDuration, defaultToastPosition, reducedMotionQuery } from './defaultData.ts'
 import { VisuallyHidden } from '@components/common/VisuallyHidden/index.tsx'
 import { inertExemptSlot } from '@hooks/useInertSiblings.ts'
 import { resolvePortalContainer } from '@utils/portalContainer.ts'
@@ -16,10 +16,12 @@ import { useFlip } from './useFlip.ts'
 import styles from './styles.module.css'
 
 import type { Toast, ToastEntry, ToastOptions, ToastProviderProps, ToastPromiseMessages, ToastType, ToastUpdate } from './types.ts'
-import type { ReactNode } from 'react'
+import type { FocusEvent, ReactNode } from 'react'
 
-export const ToastProvider = ({ children, container, animation, className, style }: ToastProviderProps) => {
+export const ToastProvider = ({ children, container, position = defaultToastPosition, limit, animation, className, style }: ToastProviderProps) => {
   const [entries, setEntries] = useState<ToastEntry[]>([])
+  const [hovered, setHovered] = useState(false)
+  const [focused, setFocused] = useState(false)
   const viewportRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
   const reduced = useMediaQuery(reducedMotionQuery)
@@ -93,12 +95,28 @@ export const ToastProvider = ({ children, container, animation, className, style
 
   const actions = useMemo(() => ({ addToast, removeToast, update, promise, success, error, warning, info }), [addToast, removeToast, update, promise, success, error, warning, info])
 
+  const shown = useMemo(() => {
+    const capacity = limit === undefined || Number.isNaN(limit) ? Infinity : Math.max(1, Math.floor(limit))
+    const waiting = new Set(entries.filter((entry) => !entry.closing).slice(0, capacity).map((entry) => entry.toast.id))
+
+    return entries.filter((entry) => entry.closing || waiting.has(entry.toast.id))
+  }, [entries, limit])
+
+  const from = position.endsWith('start') ? 'left' : 'right'
+
   const viewportProps = mergeProps(
     {
       ...slot('toast', 'viewport'),
       className: styles.container,
       role: 'region',
-      'aria-label': labels.notifications
+      'aria-label': labels.notifications,
+      'data-position': position,
+      onMouseEnter: () => setHovered(true),
+      onMouseLeave: () => setHovered(false),
+      onFocus: () => setFocused(true),
+      onBlur: (event: FocusEvent<HTMLElement>) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false)
+      }
     },
     { className, style }
   )
@@ -112,8 +130,8 @@ export const ToastProvider = ({ children, container, animation, className, style
         {alertText}
       </VisuallyHidden>
       <div ref={viewportRef} {...viewportProps}>
-        {entries.map(({ toast, closing }) => (
-          <ToastItemComponent key={toast.id} toast={toast} open={!closing} onRemove={removeToast} onDispose={disposeToast} onAnnounce={announce} animation={animation} />
+        {shown.map(({ toast, closing }) => (
+          <ToastItemComponent key={toast.id} toast={toast} open={!closing} onRemove={removeToast} onDispose={disposeToast} onAnnounce={announce} paused={hovered || focused} from={from} animation={animation} />
         ))}
       </div>
     </>

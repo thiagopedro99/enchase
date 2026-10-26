@@ -1,8 +1,10 @@
 import type { PortalContainer } from '@utils/portalContainer.ts'
-import type { MotionOverride } from '@motion/types.ts'
+import type { MotionOverride, SlideFrom } from '@motion/types.ts'
 import type { CSSProperties, ReactNode } from 'react'
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
+
+export type ToastPosition = 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end'
 
 export interface ToastAction {
   label: ReactNode
@@ -45,6 +47,8 @@ export interface ToastContextType {
 export interface ToastProviderProps {
   children: ReactNode
   container?: PortalContainer | undefined
+  position?: ToastPosition | undefined
+  limit?: number | undefined
   animation?: MotionOverride | undefined
   className?: string | undefined
   style?: CSSProperties | undefined
@@ -61,5 +65,7 @@ export interface ToastItemProps {
   onRemove: (id: string) => void
   onDispose: (id: string) => void
   onAnnounce: (type: ToastType, text: string) => void
+  paused: boolean
+  from: SlideFrom
   animation?: MotionOverride | undefined
 }

@@ -682,12 +682,14 @@ A `<style>` with the `--enchase-*` CSS variables of the theme. The `ColorModePro
 
 ### ToastProvider
 
-Holds the queue of notifications and the region where they appear (`role="region"`, named by `labels.notifications`, not a live region). Two hidden announcers, which exist before the first notification, read the text of each one aloud: `role="status"` for success, info and warning, and `role="alert"` for error. The `success`, `error`, `warning` and `info` methods of `useToast` open the notifications, and the message can be text or nodes.
+Holds the queue of notifications and the region where they appear (`role="region"`, named by `labels.notifications`, not a live region). Two hidden announcers, which exist before the first notification, read the text of each one aloud: `role="status"` for success, info and warning, and `role="alert"` for error. The countdown of all the notifications stops while the pointer or the keyboard focus is anywhere in the region. The `success`, `error`, `warning` and `info` methods of `useToast` open the notifications, and the message can be text or nodes.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `children` | `ReactNode` | *required* | The app. The components inside it use `useToast` to open notifications. |
 | `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it (called on the client, never on the server). Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
+| `position` | `'top-start' \| 'top-end' \| 'bottom-start' \| 'bottom-end'` | `top-end` | Corner of the window where the notifications stack: `top-end` (the default), `top-start`, `bottom-end` or `bottom-start`. Start and end follow the direction of the page, and the notifications slide in from that side. The oldest one is always first from top to bottom. |
+| `limit` | `number` | — | Most notifications on the screen at once, from 1 up. The others wait in a queue, in order, and appear as the visible ones close; a waiting one is neither announced nor counted down until it appears. Without it, there is no limit. |
 | `animation` | `false \| { recipe, from, tuning }` | `slide` | Entry and exit motion of the notifications, which slide in from the right with a short spring. `false` turns it off; `{ recipe, from, tuning }` adjusts the recipe, the side and the duration. |
 | `className` | `string` | — | Class of the notification region (`data-slot="toast-viewport"`), which wins over the one of the library. |
 | `style` | `CSSProperties` | — | Style of the notification region. |

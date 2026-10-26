@@ -21,18 +21,15 @@ const Icons = {
   info: <InfoIcon size={20} />
 }
 
-const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, animation }: ToastItemProps) => {
+const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, paused, from, animation }: ToastItemProps) => {
   const { labels } = useUIConfig()
-  const motionStyle = useMotionStyle('slide', 'toast', animation, 'right', toastBase)
+  const motionStyle = useMotionStyle('slide', 'toast', animation, from, toastBase)
   const duration = toast.duration ?? defaultToastDuration
   const sticky = duration === 0
   const dismissible = toast.dismissible !== false
   const [shown, setShown] = useState(false)
-  const [hovered, setHovered] = useState(false)
-  const [focused, setFocused] = useState(false)
   const remaining = useRef(duration)
   const announced = useRef('')
-  const paused = hovered || focused
   const { mounted, state, ref } = usePresence<HTMLDivElement>(shown && open)
 
   const handleClose = useCallback(() => onRemove(toast.id), [onRemove, toast.id])
@@ -88,10 +85,6 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, anim
       'data-flip-id': toast.id,
       'data-dismissible': dismissible ? undefined : 'false',
       inert: state === 'exiting' ? true : undefined,
-      onMouseEnter: () => setHovered(true),
-      onMouseLeave: () => setHovered(false),
-      onFocus: () => setFocused(true),
-      onBlur: () => setFocused(false),
       onKeyDown: handleKeyDown,
       onClick: dismissible ? handleClose : undefined
     },

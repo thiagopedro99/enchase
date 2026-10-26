@@ -14,7 +14,7 @@ import { renderInBrowser } from './harness.tsx'
 import { setReducedMotion } from './media.ts'
 import { isSettled, isStable, soak } from './settle.ts'
 
-import type { ReactElement } from 'react'
+import type { ComponentProps, ReactElement } from 'react'
 
 const renderWithDir = (ui: ReactElement, dir: 'ltr' | 'rtl') => {
   document.documentElement.dir = dir
@@ -141,6 +141,45 @@ describe('Toast in a real browser', () => {
 
     expect(onScreen).toBeGreaterThan(gama().getBoundingClientRect().top + 20)
     expect(from).toBeCloseTo(onScreen - gama().getBoundingClientRect().top, 0)
+  })
+
+  it('slides the toasts that move down when the last one of a bottom stack leaves', async () => {
+    renderInBrowser(
+      <ToastProvider position="bottom-end">
+        <Launcher />
+      </ToastProvider>,
+      'auto'
+    )
+    await fire('alfa', 'beta')
+    const firstTop = itemWith('Alfa')?.getBoundingClientRect().top as number
+
+    await userEvent.click(page.getByRole('button', { name: 'Fechar notificação' }).last())
+
+    await expect.poll(() => flipAnimations().length).toBeGreaterThan(0)
+    await expect.poll(() => items().length).toBe(1)
+    await expect.poll(() => (itemWith('Alfa')?.getBoundingClientRect().top as number) > firstTop).toBe(true)
+    await expect.poll(() => flipAnimations().length, { timeout: 4000 }).toBe(0)
+  })
+
+  it('does not slide the toasts that stay in place when the first one of a bottom stack leaves', async () => {
+    renderInBrowser(
+      <ToastProvider position="bottom-end">
+        <Launcher />
+      </ToastProvider>,
+      'auto'
+    )
+    await fire('alfa', 'beta')
+    const animate = vi.spyOn(HTMLElement.prototype, 'animate')
+    const betaTop = itemWith('Beta')?.getBoundingClientRect().top as number
+
+    await userEvent.click(page.getByRole('button', { name: 'Fechar notificação' }).first())
+    await expect.poll(() => items().length).toBe(1)
+
+    const flips = animate.mock.calls.filter(([, options]) => typeof options === 'object' && options?.id === 'enchase-flip')
+    animate.mockRestore()
+
+    expect(flips).toHaveLength(0)
+    expect(Math.round(itemWith('Beta')?.getBoundingClientRect().top as number)).toBe(Math.round(betaTop))
   })
 
   it('does not slide anything when the user prefers reduced motion', async () => {
@@ -460,5 +499,115 @@ describe('a toast that follows a promise in a real browser', () => {
 
     expect(itemWith('Could not save')).toBeDefined()
     await expect.poll(() => document.querySelector('[data-slot="toast-host"] [role="alert"]')?.textContent).toBe('Could not save')
+  })
+})
+
+const renderPositioned = (props: Omit<ComponentProps<typeof ToastProvider>, 'children'>, ui: ReactElement, dir: 'ltr' | 'rtl' = 'ltr') => {
+  document.documentElement.dir = dir
+
+  return render(
+    <ColorModeProvider defaultMode="light" storage={null}>
+      <GlobalStyles />
+      <UIProvider locale={{ ...ptBR, dir }} motion={{ mode: 'never' }} navigate={() => undefined} currentHref="/">
+        <ToastProvider {...props}>{ui}</ToastProvider>
+      </UIProvider>
+    </ColorModeProvider>
+  )
+}
+
+const fixedViewport = () => {
+  const probe = document.createElement('div')
+
+  probe.style.cssText = 'position: fixed; inset: 0; visibility: hidden; pointer-events: none'
+  document.body.append(probe)
+
+  const box = probe.getBoundingClientRect()
+
+  probe.remove()
+
+  return box
+}
+
+const Pair = ({ duration = 60000 }: { duration?: number }) => {
+  const toast = useToast()
+
+  return (
+    <button
+      onClick={() => {
+        toast.info('First', duration)
+        toast.success('Second', duration)
+      }}
+    >
+      pair
+    </button>
+  )
+}
+
+describe('the position of the notification region in a real browser', () => {
+  const region = () => (document.querySelector('[data-slot="toast-viewport"]') as HTMLElement).getBoundingClientRect()
+
+  const corner = async (position: 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end', dir: 'ltr' | 'rtl' = 'ltr') => {
+    renderPositioned({ position }, <Pair />, dir)
+    await userEvent.click(page.getByRole('button', { name: 'pair' }))
+    await expect.poll(() => items().length).toBe(2)
+
+    return { box: region(), view: fixedViewport() }
+  }
+
+  it.each([
+    ['top-end', 'right', 'top'],
+    ['top-start', 'left', 'top'],
+    ['bottom-end', 'right', 'bottom'],
+    ['bottom-start', 'left', 'bottom']
+  ] as const)('puts %s in the %s %s corner of the window', async (position, horizontal, vertical) => {
+    const { box, view } = await corner(position)
+
+    if (horizontal === 'right') expect(Math.abs(view.right - box.right - 16)).toBeLessThanOrEqual(1)
+    else expect(Math.abs(box.left - view.left - 16)).toBeLessThanOrEqual(1)
+
+    if (vertical === 'top') expect(Math.abs(box.top - view.top - 16)).toBeLessThanOrEqual(1)
+    else expect(Math.abs(view.bottom - box.bottom - 16)).toBeLessThanOrEqual(1)
+  })
+
+  it('follows the direction: the start corner is on the right in a right-to-left page', async () => {
+    const { box, view } = await corner('top-start', 'rtl')
+
+    expect(Math.abs(view.right - box.right - 16)).toBeLessThanOrEqual(1)
+  })
+
+  it('keeps the oldest toast first from top to bottom, also at the bottom', async () => {
+    await corner('bottom-end')
+    const [first, second] = items().map((item) => item.getBoundingClientRect())
+
+    expect(second.top).toBeGreaterThanOrEqual(first.bottom - 1)
+  })
+})
+
+describe('the pause of the whole stack in a real browser', () => {
+  it('stops every countdown while the pointer is over one toast, and resumes them after', async () => {
+    renderPositioned({}, <Pair duration={900} />)
+    await userEvent.click(page.getByRole('button', { name: 'pair' }))
+    await expect.poll(() => items().length).toBe(2)
+
+    await userEvent.hover(itemWith('First') as HTMLElement)
+    await soak(1400)
+
+    expect(items()).toHaveLength(2)
+    expect(items().every((item) => item.hasAttribute('data-paused'))).toBe(true)
+
+    await userEvent.unhover(itemWith('First') as HTMLElement)
+
+    await expect.poll(() => items().length, { timeout: 4000 }).toBe(0)
+  })
+
+  it('stops every countdown while the keyboard focus is on a toast', async () => {
+    renderPositioned({}, <Pair duration={900} />)
+    await userEvent.click(page.getByRole('button', { name: 'pair' }))
+    await expect.poll(() => items().length).toBe(2)
+
+    ;(items()[0].querySelector('[data-slot="toast-close"]') as HTMLElement).focus()
+    await soak(1400)
+
+    expect(items()).toHaveLength(2)
   })
 })

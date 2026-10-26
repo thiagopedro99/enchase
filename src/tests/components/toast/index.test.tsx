@@ -11,7 +11,7 @@ import { ToastProvider, useToast } from '@components/toast/index.ts'
 import { ptBR } from '@locales/ptBR.ts'
 
 import type { RenderWithProvidersOptions } from '@tests/types.ts'
-import type { ToastOptions, ToastPromiseMessages } from '@components/toast/types.ts'
+import type { ToastOptions, ToastPromiseMessages, ToastProviderProps } from '@components/toast/types.ts'
 import type { ReactElement } from 'react'
 
 const renderWithToasts = (ui: ReactElement, options: RenderWithProvidersOptions = {}) => renderWithProviders(ui, { ...options, toasts: true })
@@ -959,5 +959,201 @@ describe('Toast promise', () => {
 
     expect(itemOf('Saved')).toHaveClass('mine')
     expect(itemOf('Saved')).toHaveAttribute('data-dismissible', 'false')
+  })
+})
+
+const withProvider = (props: Omit<ToastProviderProps, 'children'>, ui: ReactElement) =>
+  render(
+    <UIProvider locale={ptBR}>
+      <ToastProvider {...props}>{ui}</ToastProvider>
+    </UIProvider>
+  )
+
+const Burst = ({ count = 4, duration = 0 }: { count?: number; duration?: number }) => {
+  const toast = useToast()
+
+  return (
+    <button
+      onClick={() => {
+        for (let number = 1; number <= count; number += 1) toast.info(`Toast ${number}`, duration)
+      }}
+    >
+      burst
+    </button>
+  )
+}
+
+describe('Toast position', () => {
+  it('is at the top end by default', () => {
+    withProvider({}, <Probe />)
+
+    expect(screen.getByRole('region', { name: 'Notificações' })).toHaveAttribute('data-position', 'top-end')
+  })
+
+  it.each(['top-start', 'top-end', 'bottom-start', 'bottom-end'] as const)('puts the region at %s', (position) => {
+    withProvider({ position }, <Probe />)
+
+    expect(screen.getByRole('region', { name: 'Notificações' })).toHaveAttribute('data-position', position)
+  })
+
+  it('slides in from the side of the position, unless the animation says otherwise', async () => {
+    const user = userEvent.setup()
+    const entry = async (props: Omit<ToastProviderProps, 'children'>) => {
+      const view = withProvider(props, <Probe duration={0} />)
+
+      await user.click(screen.getByRole('button', { name: 'success' }))
+      const direction = itemOf('Saved').style.getPropertyValue('--enchase-toast-dx')
+
+      view.unmount()
+
+      return direction
+    }
+
+    const end = await entry({ position: 'top-end' })
+    const start = await entry({ position: 'top-start' })
+    const forced = await entry({ position: 'top-start', animation: { recipe: 'slide', from: 'right' } })
+
+    expect(end).not.toBe('')
+    expect(start).not.toBe(end)
+    expect(forced).toBe(end)
+  })
+})
+
+describe('Toast limit', () => {
+  it('shows only that many toasts and keeps the others waiting', async () => {
+    const user = userEvent.setup()
+    withProvider({ limit: 2 }, <Burst />)
+
+    await user.click(screen.getByRole('button', { name: 'burst' }))
+
+    expect(titleOf('Toast 1')).toBeInTheDocument()
+    expect(titleOf('Toast 2')).toBeInTheDocument()
+    expect(titleOf('Toast 3')).not.toBeInTheDocument()
+    expect(titleOf('Toast 4')).not.toBeInTheDocument()
+  })
+
+  it('shows everything without a limit', async () => {
+    const user = userEvent.setup()
+    withProvider({}, <Burst />)
+
+    await user.click(screen.getByRole('button', { name: 'burst' }))
+
+    expect(document.querySelectorAll('[data-slot="toast"]')).toHaveLength(4)
+  })
+
+  it('brings the next one in, in order, when a visible one is closed', async () => {
+    const user = userEvent.setup()
+    withProvider({ limit: 2 }, <Burst />)
+
+    await user.click(screen.getByRole('button', { name: 'burst' }))
+    await user.click(within(itemOf('Toast 1')).getByRole('button', { name: 'Fechar notificação' }))
+
+    await waitFor(() => expect(titleOf('Toast 3')).toBeInTheDocument())
+    expect(titleOf('Toast 4')).not.toBeInTheDocument()
+
+    await user.click(within(itemOf('Toast 2')).getByRole('button', { name: 'Fechar notificação' }))
+
+    await waitFor(() => expect(titleOf('Toast 4')).toBeInTheDocument())
+  })
+
+  it('announces a toast when it shows up, not while it waits', async () => {
+    const user = userEvent.setup()
+    withProvider({ limit: 1 }, <Burst count={2} />)
+
+    await user.click(screen.getByRole('button', { name: 'burst' }))
+    await waitFor(() => expect(announcer('status')).toHaveTextContent('Toast 1'))
+
+    expect(announcer('status')).not.toHaveTextContent('Toast 2')
+
+    await user.click(within(itemOf('Toast 1')).getByRole('button', { name: 'Fechar notificação' }))
+
+    await waitFor(() => expect(announcer('status')).toHaveTextContent('Toast 2'))
+  })
+
+  it('starts the countdown of a waiting toast only when it shows up', async () => {
+    const user = userEvent.setup()
+    withProvider({ limit: 1 }, <Burst count={2} duration={300} />)
+
+    await user.click(screen.getByRole('button', { name: 'burst' }))
+    await waitFor(() => expect(titleOf('Toast 2')).toBeInTheDocument(), { timeout: 2000 })
+    await new Promise((resolve) => setTimeout(resolve, 150))
+
+    expect(titleOf('Toast 2')).toBeInTheDocument()
+
+    await waitFor(() => expect(titleOf('Toast 2')).not.toBeInTheDocument(), { timeout: 2000 })
+  })
+
+  it('drops a waiting toast that is removed, without showing it', async () => {
+    const user = userEvent.setup()
+
+    const Queue = () => {
+      const toast = useToast()
+      const [ids, setIds] = useState<string[]>([])
+
+      return (
+        <>
+          <button onClick={() => setIds([toast.info('First', 0), toast.info('Second', 0)])}>queue</button>
+          <button onClick={() => toast.removeToast(ids[1] ?? '')}>drop second</button>
+        </>
+      )
+    }
+
+    withProvider({ limit: 1 }, <Queue />)
+    await user.click(screen.getByRole('button', { name: 'queue' }))
+    await user.click(screen.getByRole('button', { name: 'drop second' }))
+    await user.click(within(itemOf('First')).getByRole('button', { name: 'Fechar notificação' }))
+
+    await waitFor(() => expect(titleOf('First')).not.toBeInTheDocument())
+    expect(titleOf('Second')).not.toBeInTheDocument()
+  })
+})
+
+describe('Toast pause of the whole stack', () => {
+  it('stops every countdown while the pointer is over the region', async () => {
+    const user = userEvent.setup()
+    withProvider({}, <Burst count={2} duration={250} />)
+
+    await user.click(screen.getByRole('button', { name: 'burst' }))
+    await user.hover(itemOf('Toast 1'))
+    await new Promise((resolve) => setTimeout(resolve, 600))
+
+    expect(titleOf('Toast 1')).toBeInTheDocument()
+    expect(titleOf('Toast 2')).toBeInTheDocument()
+    expect(itemOf('Toast 2')).toHaveAttribute('data-paused')
+
+    await user.unhover(itemOf('Toast 1'))
+
+    await waitFor(() => expect(titleOf('Toast 2')).not.toBeInTheDocument(), { timeout: 2000 })
+    expect(titleOf('Toast 1')).not.toBeInTheDocument()
+  })
+
+  it('stops every countdown while the focus is inside the region, also when it moves between toasts', async () => {
+    const user = userEvent.setup()
+    withProvider({}, <Burst count={2} duration={250} />)
+
+    await user.click(screen.getByRole('button', { name: 'burst' }))
+    within(itemOf('Toast 1')).getByRole('button', { name: 'Fechar notificação' }).focus()
+    within(itemOf('Toast 2')).getByRole('button', { name: 'Fechar notificação' }).focus()
+    await new Promise((resolve) => setTimeout(resolve, 600))
+
+    expect(titleOf('Toast 1')).toBeInTheDocument()
+    expect(titleOf('Toast 2')).toBeInTheDocument()
+
+    act(() => (document.activeElement as HTMLElement).blur())
+
+    await waitFor(() => expect(titleOf('Toast 1')).not.toBeInTheDocument(), { timeout: 2000 })
+  })
+
+  it('starts a toast that arrives during the pause already paused', async () => {
+    const user = userEvent.setup()
+    withProvider({}, <Burst count={1} duration={250} />)
+
+    await user.click(screen.getByRole('button', { name: 'burst' }))
+    await user.hover(itemOf('Toast 1'))
+    screen.getByRole('button', { name: 'burst' }).focus()
+    await user.keyboard('{Enter}')
+    await new Promise((resolve) => setTimeout(resolve, 500))
+
+    expect(document.querySelectorAll('[data-slot="toast"]')).toHaveLength(2)
   })
 })

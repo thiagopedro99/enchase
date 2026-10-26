@@ -16,6 +16,21 @@
   inset-inline-end: max(1em, env(safe-area-inset-left, 0px));
 }
 
+.container:where([data-position='top-start'], [data-position='bottom-start']) {
+  inset-inline-end: auto;
+  inset-inline-start: max(1em, env(safe-area-inset-left, 0px));
+}
+
+[dir='rtl'] .container:where([data-position='top-start'], [data-position='bottom-start']) {
+  inset-inline-end: auto;
+  inset-inline-start: max(1em, env(safe-area-inset-right, 0px));
+}
+
+.container:where([data-position='bottom-start'], [data-position='bottom-end']) {
+  inset-block-start: auto;
+  inset-block-end: max(1em, env(safe-area-inset-bottom, 0px));
+}
+
 .item {
   position: relative;
   box-sizing: border-box;
