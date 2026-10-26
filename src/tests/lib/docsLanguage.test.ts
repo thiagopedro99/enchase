@@ -117,35 +117,22 @@ const entries: Entry[] = [
   ...['README.md', 'CONTRIBUTING.md', 'public/llms.txt', ...filesIn('src/docs/pages').filter((file) => file.endsWith('.mdx'))].flatMap(proseTexts)
 ]
 
-const pending = JSON.parse(read('src/tests/lib/docsLanguagePending.json')) as string[]
-
 const scanned = [...new Set(entries.map((entry) => entry.file))]
 
-const isPortuguese = (file: string) => entries.some((entry) => entry.file === file && portugueseIn(entry.text).length > 0)
-
 describe('the language of the docs', () => {
-  it('keeps the text of every file that is already in English free of Portuguese', () => {
-    const found = entries
-      .filter((entry) => !pending.includes(entry.file))
-      .flatMap((entry) => {
-        const words = portugueseIn(entry.text)
+  it('keeps the text of every doc free of Portuguese', () => {
+    const found = entries.flatMap((entry) => {
+      const words = portugueseIn(entry.text)
 
-        return words.length > 0 ? [`${entry.file} (${entry.where}): ${words.join(', ')}`] : []
-      })
+      return words.length > 0 ? [`${entry.file} (${entry.where}): ${words.join(', ')}`] : []
+    })
 
     expect(found, 'write the docs in English, with the terms of scripts/docsGlossary.json').toEqual([])
   })
 
-  it('takes a file off the pending list once it is translated', () => {
-    expect(
-      pending.filter((file) => !isPortuguese(file)),
-      'remove these files from src/tests/lib/docsLanguagePending.json'
-    ).toEqual([])
-  })
-
-  it('lists only files the guard scans, sorted and without repeats', () => {
-    expect(pending.filter((file) => !scanned.includes(file))).toEqual([])
-    expect(pending).toEqual([...new Set(pending)].sort())
+  it('scans the stories, the pages, the shared texts, the generator and the root docs', () => {
+    expect(scanned).toEqual(expect.arrayContaining(['README.md', 'CONTRIBUTING.md', 'public/llms.txt', 'scripts/apiDocs.mjs', 'src/docs/pages/introduction.mdx', 'src/docs/pages/motion.mdx', 'src/docs/shared/apiNotes.ts', 'src/docs/shared/argTypes.ts']))
+    expect(scanned.filter((file) => file.endsWith('.stories.tsx')).length).toBeGreaterThan(40)
   })
 
   it('has English on the right side of every term of the glossary', () => {

@@ -69,7 +69,7 @@ Regra geral: se o conteúdo não cabe legível em ~100 caracteres, indente. Comp
 - Animação por CSS com `usePresence` e a prop `animation`; textos de acessibilidade por `useUIConfig().labels`.
 - Teste de comportamento e `axe` espelhado em `src/tests/`.
 - Story com Playground em `src/docs/stories/`, com as descrições das props em `argTypes`.
-- Texto da documentação em inglês (descrições das stories e das `argTypes`, páginas `mdx`, gerador do `API.md`, `README.md`, `CONTRIBUTING.md`, `llms.txt`), com os termos de `scripts/docsGlossary.json`. O `docsLanguage.test.ts` falha se um arquivo que não está em `src/tests/lib/docsLanguagePending.json` tiver português: arquivo novo já nasce em inglês, e quem traduz um arquivo da lista o tira dela no mesmo commit. A lista só encolhe. O `README.pt-BR.md` é o guia em português e fica de fora.
+- Texto da documentação em inglês (descrições das stories e das `argTypes`, páginas `mdx`, gerador do `API.md`, `README.md`, `CONTRIBUTING.md`, `llms.txt`), com os termos de `scripts/docsGlossary.json`. O `docsLanguage.test.ts` falha se algum desses arquivos tiver português, então arquivo novo já nasce em inglês. Os dados de exemplo das stories também ficam em inglês, exceto numa demonstração que existe para mostrar o `ptBR`. O `README.pt-BR.md` é o guia em português e fica de fora.
 - Conferido no navegador nos dois temas.
 
 ## Linguagem visual (Material Design 3)
