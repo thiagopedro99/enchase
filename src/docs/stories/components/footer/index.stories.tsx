@@ -9,23 +9,23 @@ const meta = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Rodapé com o ano, o nome da empresa, um aviso e links. O ano padrão é o atual.'
+        component: 'A footer with the year, the company name, a notice and links. The default year is the current year.'
       }
     }
   },
   args: {
     companyName: 'Enchase',
-    notice: 'Licença MIT.'
+    notice: 'MIT License.'
   },
   argTypes: {
-    companyName: { description: 'Nome exibido depois do ano. Sem valor padrão.', control: 'text' },
-    notice: { description: 'Aviso depois do nome, como a licença. Sem valor padrão.', control: 'text' },
-    year: { description: 'Ano exibido. O padrão é o ano atual.', control: 'number' },
+    companyName: { description: 'Name shown after the year. No default value.', control: 'text' },
+    notice: { description: 'Notice after the name, such as the license. No default value.', control: 'text' },
+    year: { description: 'Year shown. The default is the current year.', control: 'number' },
     links: {
-      description: 'Links exibidos antes do aviso, como [{ label, href }].',
+      description: 'Links shown before the notice, like [{ label, href }].',
       control: 'object'
     },
-    className: { description: 'Classe da raiz (data-slot="footer").', control: 'text' },
+    className: { description: 'Class of the root (data-slot="footer").', control: 'text' },
     style: { control: false }
   }
 } satisfies Meta<typeof Footer>
@@ -39,8 +39,8 @@ export const Playground: Story = {}
 export const WithLinks: Story = {
   args: {
     links: [
-      { label: 'Documentação', href: '/docs' },
-      { label: 'Repositório', href: 'https://github.com/thiagopedro99/enchase' }
+      { label: 'Documentation', href: '/docs' },
+      { label: 'Repository', href: 'https://github.com/thiagopedro99/enchase' }
     ]
   }
 }

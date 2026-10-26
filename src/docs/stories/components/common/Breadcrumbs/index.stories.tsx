@@ -7,8 +7,8 @@ const meta = {
   component: Breadcrumbs,
   args: {
     items: [
-      { id: 'home', label: 'Início', href: '/' },
-      { id: 'docs', label: 'Documentação', href: '/docs' },
+      { id: 'home', label: 'Home', href: '/' },
+      { id: 'docs', label: 'Documentation', href: '/docs' },
       { id: 'api', label: 'API' }
     ],
     maxItems: 4
@@ -16,25 +16,25 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Trilha de navegação: um `<nav>` com lista ordenada, em que o último item é a página atual. Trilhas longas escondem o miolo atrás de um botão de reticências que mostra o caminho completo.'
+        component: 'A breadcrumb trail: a `<nav>` with an ordered list, in which the last item is the current page. A long trail hides the middle items behind an ellipsis button that shows the full path.'
       }
     }
   },
   argTypes: {
     items: {
-      description: 'Trilha em ordem. O último item é a página atual; os demais viram links quando têm href.',
+      description: 'The trail, in order. The last item is the current page; the others become links when they have an href.',
       control: 'object'
     },
     maxItems: {
-      description: 'Acima desse número, o miolo vira um botão de reticências que mostra o caminho completo.',
+      description: 'Above this number, the middle items become an ellipsis button that shows the full path.',
       control: 'number'
     },
     ariaLabel: {
-      description: 'Nome acessível da navegação. O padrão vem do UIProvider (labels.breadcrumb).',
+      description: 'Accessible name of the navigation. The default comes from the UIProvider (labels.breadcrumb).',
       control: 'text'
     },
     className: {
-      description: 'Classe do usuário, aplicada na raiz depois da classe da biblioteca. Também aceita style e data-slot nas partes.',
+      description: 'User class, applied to the root after the library class. It also accepts style and data-slot on the parts.',
       control: false
     }
   }
@@ -49,12 +49,12 @@ export const Playground: Story = {}
 export const Collapsed: Story = {
   args: {
     items: [
-      { id: 'a', label: 'Nível A', href: '/a' },
-      { id: 'b', label: 'Nível B', href: '/b' },
-      { id: 'c', label: 'Nível C', href: '/c' },
-      { id: 'd', label: 'Nível D', href: '/d' },
-      { id: 'e', label: 'Nível E', href: '/e' },
-      { id: 'f', label: 'Nível F' }
+      { id: 'a', label: 'Level A', href: '/a' },
+      { id: 'b', label: 'Level B', href: '/b' },
+      { id: 'c', label: 'Level C', href: '/c' },
+      { id: 'd', label: 'Level D', href: '/d' },
+      { id: 'e', label: 'Level E', href: '/e' },
+      { id: 'f', label: 'Level F' }
     ],
     maxItems: 4
   }

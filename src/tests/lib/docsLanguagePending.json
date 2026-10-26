@@ -1,13 +1,4 @@
 [
-  "src/docs/stories/components/common/Breadcrumbs/index.stories.tsx",
-  "src/docs/stories/components/common/Container/index.stories.tsx",
-  "src/docs/stories/components/common/Flex/index.stories.tsx",
-  "src/docs/stories/components/common/Grid/index.stories.tsx",
-  "src/docs/stories/components/common/Pagination/index.stories.tsx",
-  "src/docs/stories/components/common/Sidebar/index.stories.tsx",
-  "src/docs/stories/components/footer/index.stories.tsx",
-  "src/docs/stories/components/layout/index.stories.tsx",
-  "src/docs/stories/components/navbar/index.stories.tsx",
   "src/docs/stories/system/Brand/index.stories.tsx",
   "src/docs/stories/system/ColorModeProvider/index.stories.tsx",
   "src/docs/stories/system/Motion/index.stories.tsx",

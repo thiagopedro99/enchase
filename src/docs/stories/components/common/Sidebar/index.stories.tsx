@@ -8,11 +8,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 const sections: SidebarSection[] = [
   {
     id: 'app',
-    title: 'Aplicação',
+    title: 'Application',
     items: [
       {
         id: 'home',
-        label: 'Início',
+        label: 'Home',
         icon: (
           <Icon name="home">
             <path d="M3 11l9-8 9 8" />
@@ -22,10 +22,10 @@ const sections: SidebarSection[] = [
         ),
         href: '/'
       },
-      { id: 'components', label: 'Componentes', href: '/components', badge: 'Novo' }
+      { id: 'components', label: 'Components', href: '/components', badge: 'New' }
     ]
   },
-  { id: 'guide', title: 'Nesta página', items: [{ id: 'usage', label: 'Uso', href: '#uso' }] }
+  { id: 'guide', title: 'On this page', items: [{ id: 'usage', label: 'Usage', href: '#usage' }] }
 ]
 
 const meta = {
@@ -35,73 +35,73 @@ const meta = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Menu lateral. `permanent` fica na página e recolhe para uma barra de ícones; `modal` vira um drawer com foco preso. Cada item é uma rota, uma âncora ou uma ação.'
+        component: 'A side menu. `permanent` stays on the page and collapses to a bar of icons; `modal` becomes a drawer with trapped focus. Each item is a route, an anchor or an action.'
       }
     }
   },
   args: { sections, variant: 'permanent', collapsed: false },
   argTypes: {
     sections: {
-      description: 'Seções do menu, como [{ id, title?, items: [{ id, label, icon?, href?, native?, badge?, onClick? }] }]. Um item com href é um link; sem href é um botão que chama onClick. Sem icon, o item mostra a inicial do rótulo.',
+      description: 'Sections of the menu, like [{ id, title?, items: [{ id, label, icon?, href?, native?, badge?, onClick? }] }]. An item with href is a link; without href it is a button that calls onClick. Without icon, the item shows the first letter of its label.',
       control: false
     },
     activeSectionId: {
-      description: 'Id do item de âncora marcado como localização atual (aria-current="location"): um item com href #id, ou /pagina#id na própria página. Use useScrollSpy para obtê-lo.',
+      description: 'Id of the anchor item marked as the current location (aria-current="location"): an item with href #id, or /page#id on the page itself. Use useScrollSpy to get it.',
       control: 'text'
     },
     currentHref: {
-      description: 'Caminho atual, que marca o item da página (aria-current="page") e vale também para o hash da página atual. Sem ele vale o currentHref do UIProvider.',
+      description: 'Current path. It marks the item of the page (aria-current="page") and also applies to the hash of the current page. Without it, the currentHref of the UIProvider is used.',
       control: 'text'
     },
     header: {
-      description: 'Conteúdo fixo no topo, como a marca. Pode ser uma função que recebe { collapsed } para trocar o conteúdo na barra recolhida.',
+      description: 'Fixed content at the top, such as the brand. It can be a function that receives { collapsed } to change the content on the collapsed bar.',
       control: false
     },
     footer: {
-      description: 'Conteúdo fixo no rodapé, acima do botão de recolher. Pode ser uma função que recebe { collapsed }.',
+      description: 'Fixed content in the footer, above the collapse button. It can be a function that receives { collapsed }.',
       control: false
     },
     variant: {
-      description: 'permanent fica na página; modal vira um drawer com foco preso, página inerte e Esc para fechar, que só fecha a camada de cima.',
+      description: 'permanent stays on the page; modal becomes a drawer with trapped focus, an inert page and Esc to close; Esc closes only the top layer.',
       control: 'inline-radio',
       options: ['permanent', 'modal'],
       table: { defaultValue: { summary: 'permanent' } }
     },
     collapsed: {
-      description: 'Barra só de ícones (80px) em vez da completa. A largura anima por data-state (expanded, collapsing, collapsed e expanding); com animation={false} muda de uma vez. Só vale em permanent.',
+      description: 'An icon-only bar (80px) instead of the full one. The width animates through data-state (expanded, collapsing, collapsed and expanding); with animation={false} it changes at once. It only applies to permanent.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     onToggleCollapsed: {
-      description: 'Mostra o botão de recolher no rodapé e é chamado ao clicar nele. Sem esta prop o botão não aparece; quem usa guarda o estado de collapsed.',
+      description: 'Shows the collapse button in the footer and is called when the button is clicked. Without this prop the button does not appear; you keep the state of collapsed.',
       control: false
     },
     open: {
-      description: 'Só em modal: abre o drawer. Fechado, nada é renderizado.',
+      description: 'Only in modal: opens the drawer. When closed, nothing is rendered.',
       control: 'boolean'
     },
     onClose: {
-      description: 'Só em modal: chamado ao clicar no fundo, apertar Esc ou escolher um item.',
+      description: 'Only in modal: called when the backdrop is clicked, Esc is pressed or an item is chosen.',
       control: false
     },
     ariaLabel: {
-      description: 'Nome acessível da navegação. O padrão vem do UIProvider: labels.mainNavigation em permanent e labels.mobileNavigation em modal.',
+      description: 'Accessible name of the navigation. The default comes from the UIProvider: labels.mainNavigation in permanent and labels.mobileNavigation in modal.',
       control: 'text'
     },
     id: {
-      description: 'id da raiz em permanent ou do painel em modal, útil para o aria-controls do botão que abre o menu.',
+      description: 'id of the root in permanent or of the panel in modal, useful for the aria-controls of the button that opens the menu.',
       control: 'text'
     },
     animation: {
-      description: 'false desliga o movimento. Em permanent ajusta o recolher ({ tuning: { duration } }); em modal, o deslize do drawer ({ tuning: { distance, duration } }).',
+      description: 'false turns off the motion. In permanent it adjusts the collapse ({ tuning: { duration } }); in modal, the slide of the drawer ({ tuning: { distance, duration } }).',
       control: 'object',
       table: { type: { summary: 'false | { recipe, from, tuning }' } }
     },
     className: {
-      description: 'Classe da raiz (data-slot="sidebar"); no drawer, do painel (data-slot="sidebar-panel"). Também dá para estilizar por data-slot, data-state e data-variant.',
+      description: 'Class of the root (data-slot="sidebar"); in the drawer, of the panel (data-slot="sidebar-panel"). You can also style it by data-slot, data-state and data-variant.',
       control: 'text'
     },
-    style: { description: 'Estilo da raiz em permanent ou do painel em modal.', control: false }
+    style: { description: 'Style of the root in permanent or of the panel in modal.', control: false }
   }
 } satisfies Meta<typeof Sidebar>
 
@@ -126,13 +126,13 @@ const DrawerDemo = (args: SidebarProps) => {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>Abrir menu</Button>
+      <Button onClick={() => setOpen(true)}>Open menu</Button>
       <Sidebar {...args} variant="modal" open={open} onClose={() => setOpen(false)} />
     </>
   )
 }
 
-export const Permanente: Story = {
+export const Permanent: Story = {
   render: (args) => <PermanentDemo {...args} />
 }
 

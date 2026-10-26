@@ -12,7 +12,7 @@ const meta = {
     layout: 'fullscreen',
     docs: {
       description: {
-        component: 'Limita a largura do conteúdo pelos breakpoints do `UIProvider`, com espaçamento lateral e centralização opcionais. Com `as`, a raiz vira a tag de estrutura certa, como `main` ou `section`.'
+        component: 'Limits the width of the content using the breakpoints of the `UIProvider`, with optional side spacing and centering. With `as`, the root becomes the right structure tag, such as `main` or `section`.'
       }
     }
   },
@@ -20,27 +20,27 @@ const meta = {
     maxWidth: 'lg',
     padding: true,
     center: true,
-    children: <div style={box}>Conteúdo limitado pela largura máxima</div>
+    children: <div style={box}>Content limited by the maximum width</div>
   },
   argTypes: {
     as: asArgType,
     maxWidth: {
-      description: 'Largura máxima, tirada dos breakpoints do UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px por padrão). full não limita. 2xl continua aceito como alias de xxl.',
+      description: 'Maximum width, taken from the breakpoints of the UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px by default). full sets no limit. 2xl is still accepted as an alias of xxl.',
       control: 'inline-radio',
       options: ['sm', 'md', 'lg', 'xl', 'xxl', 'full'],
       table: { defaultValue: { summary: 'lg' } }
     },
     padding: {
-      description: 'true usa o espaçamento padrão nas laterais, false remove, e um texto CSS define o valor (variável --enchase-container-padding).',
+      description: 'true uses the default spacing on the sides, false removes it, and a CSS string sets the value (variable --enchase-container-padding).',
       control: 'text',
       table: { defaultValue: { summary: 'true' } }
     },
     center: {
-      description: 'Centraliza o container. Com false ele fica no início, e em RTL no lado direito.',
+      description: 'Centers the container. With false it stays at the start, and in RTL on the right side.',
       control: 'boolean',
       table: { defaultValue: { summary: 'true' } }
     },
-    className: { description: 'Classe da raiz (data-slot="container"), que vence os estilos padrão.', control: 'text' },
+    className: { description: 'Class of the root (data-slot="container"), which wins over the default styles.', control: 'text' },
     style: { control: false }
   }
 } satisfies Meta<typeof Container>

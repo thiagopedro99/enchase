@@ -9,8 +9,8 @@ const ControlledDemo = () => {
 
   return (
     <div style={{ display: 'grid', gap: '0.75rem', justifyItems: 'start' }}>
-      <Pagination ariaLabel="Resultados" pageCount={24} page={page} onPageChange={setPage} />
-      <div style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>Página {page} de 24</div>
+      <Pagination ariaLabel="Results" pageCount={24} page={page} onPageChange={setPage} />
+      <div style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>Page {page} of 24</div>
     </div>
   )
 }
@@ -20,7 +20,7 @@ const meta = {
   component: Pagination,
   args: {
     pageCount: 20,
-    ariaLabel: 'Resultados',
+    ariaLabel: 'Results',
     siblingCount: defaultSiblingCount,
     boundaryCount: defaultBoundaryCount,
     size: defaultSize
@@ -29,50 +29,50 @@ const meta = {
     docs: {
       description: {
         component:
-          'Navegação entre as páginas de uma lista ou tabela: botões numerados, anterior e próxima, com reticências quando a lista é longa. É uma `<nav>` com uma lista de botões, e a página atual leva `aria-current="page"`. Anterior e próxima ficam indisponíveis (`aria-disabled`) nas pontas, sem tirar o foco de quem acabou de clicar. Os textos para leitores de tela vêm de `labels.pagination`, `labels.previousPage` e `labels.nextPage` do `UIProvider`. Aceita `ref`, que vai para a `<nav>`, e os atributos dela.'
+          'Navigation between the pages of a list or table: numbered buttons, previous and next, with ellipses when the list is long. It is a `<nav>` with a list of buttons, and the current page has `aria-current="page"`. Previous and next become unavailable (`aria-disabled`) at the ends, without taking the focus away from the user who just clicked. The texts for screen readers come from `labels.pagination`, `labels.previousPage` and `labels.nextPage` of the `UIProvider`. It accepts `ref`, which goes to the `<nav>`, and the attributes of the `<nav>`.'
       }
     }
   },
   argTypes: {
     pageCount: {
-      description: 'Total de páginas. Com menos de 1, o componente não mostra nada.',
+      description: 'Total number of pages. Below 1, the component shows nothing.',
       control: 'number'
     },
     page: {
-      description: 'Página atual quando o componente é controlado; a primeira é 1. Exige também onPageChange. Fora do intervalo, vale a primeira ou a última. Veja a story Controlled.',
+      description: 'Current page when the component is controlled; the first page is 1. It also requires onPageChange. Outside the range, the first or the last page is used. See the Controlled story.',
       control: false
     },
     defaultPage: {
-      description: 'Página inicial, para uso sem controle externo.',
+      description: 'Initial page, for use without external control.',
       control: 'number',
       table: { defaultValue: { summary: String(defaultPage) } }
     },
     onPageChange: {
-      description: 'Chamada com o número da página que o usuário escolheu, pelos números ou por anterior e próxima.',
+      description: 'Called with the number of the page the user chose, through the numbered buttons or through previous and next.',
       control: false
     },
     siblingCount: {
-      description: 'Quantas páginas aparecem de cada lado da atual antes das reticências.',
+      description: 'How many pages show on each side of the current one before the ellipses.',
       control: 'number',
       table: { defaultValue: { summary: String(defaultSiblingCount) } }
     },
     boundaryCount: {
-      description: 'Quantas páginas ficam sempre visíveis no começo e no fim da lista.',
+      description: 'How many pages are always visible at the start and at the end of the list.',
       control: 'number',
       table: { defaultValue: { summary: String(defaultBoundaryCount) } }
     },
     size: {
-      description: 'Tamanho dos botões: sm tem 2 rem de lado e md, 2,5 rem.',
+      description: 'Size of the buttons: sm is 2 rem on a side and md is 2.5 rem.',
       control: 'inline-radio',
       options: ['sm', 'md'],
       table: { defaultValue: { summary: `'${defaultSize}'` } }
     },
     ariaLabel: {
-      description: 'Nome da navegação para leitores de tela. Sem ele, vale labels.pagination do UIProvider.',
+      description: 'Name of the navigation for screen readers. Without it, labels.pagination of the UIProvider is used.',
       control: 'text'
     },
     animation: {
-      description: 'Animação do realce dos botões ao passar o mouse e ao pressionar. false desliga; { tuning: { duration } } ajusta a duração em segundos.',
+      description: 'Animation of the button highlight on hover and on press. false turns it off; { tuning: { duration } } sets the duration in seconds.',
       control: false,
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'fade' } }
     }

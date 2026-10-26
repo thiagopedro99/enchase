@@ -63,13 +63,13 @@ Also accepts the other attributes of `<span>`, passed on to the element.
 
 ### Breadcrumbs
 
-Trilha de navegação: um `<nav>` com lista ordenada, em que o último item é a página atual. Trilhas longas escondem o miolo atrás de um botão de reticências que mostra o caminho completo.
+A breadcrumb trail: a `<nav>` with an ordered list, in which the last item is the current page. A long trail hides the middle items behind an ellipsis button that shows the full path.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `BreadcrumbItem[]` | *required* | Trilha em ordem. O último item é a página atual; os demais viram links quando têm href. |
-| `maxItems` | `number` | `4` | Acima desse número, o miolo vira um botão de reticências que mostra o caminho completo. |
-| `ariaLabel` | `string` | — | Nome acessível da navegação. O padrão vem do UIProvider (labels.breadcrumb). |
+| `items` | `BreadcrumbItem[]` | *required* | The trail, in order. The last item is the current page; the others become links when they have an href. |
+| `maxItems` | `number` | `4` | Above this number, the middle items become an ellipsis button that shows the full path. |
+| `ariaLabel` | `string` | — | Accessible name of the navigation. The default comes from the UIProvider (labels.breadcrumb). |
 
 Also accepts the other HTML attributes of the root element.
 
@@ -199,14 +199,14 @@ A ready-made confirmation modal: an alertdialog with the question and the cancel
 
 ### Container
 
-Limita a largura do conteúdo pelos breakpoints do `UIProvider`, com espaçamento lateral e centralização opcionais. Com `as`, a raiz vira a tag de estrutura certa, como `main` ou `section`.
+Limits the width of the content using the breakpoints of the `UIProvider`, with optional side spacing and centering. With `as`, the root becomes the right structure tag, such as `main` or `section`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
-| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Largura máxima, tirada dos breakpoints do UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px por padrão). full não limita. 2xl continua aceito como alias de xxl. |
-| `padding` | `boolean \| string` | `true` | true usa o espaçamento padrão nas laterais, false remove, e um texto CSS define o valor (variável --enchase-container-padding). |
-| `center` | `boolean` | `true` | Centraliza o container. Com false ele fica no início, e em RTL no lado direito. |
+| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Maximum width, taken from the breakpoints of the UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px by default). full sets no limit. 2xl is still accepted as an alias of xxl. |
+| `padding` | `boolean \| string` | `true` | true uses the default spacing on the sides, false removes it, and a CSS string sets the value (variable --enchase-container-padding). |
+| `center` | `boolean` | `true` | Centers the container. With false it stays at the start, and in RTL on the right side. |
 
 Also accepts the other HTML attributes of the root element.
 
@@ -223,29 +223,29 @@ Also accepts the other attributes of `<hr>`, passed on to the element.
 
 ### Flex
 
-Contêiner flexbox configurado por props: direção, alinhamento, distribuição, espaço entre os filhos e quebra de linha. Em RTL, `row` começa pelo lado direito. Com `as="ul"`, vira uma lista de verdade, como uma fileira de etiquetas.
+A flexbox container configured by props: direction, alignment, distribution, space between the children and line wrapping. In RTL, `row` starts on the right side. With `as="ul"`, it becomes a real list, such as a row of badges.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
-| `direction` | `'row' \| 'column' \| 'row-reverse' \| 'column-reverse'` | `'row'` | Eixo principal. Em RTL, row começa pelo lado direito. |
-| `align` | `'start' \| 'center' \| 'end' \| 'stretch' \| 'baseline'` | `'stretch'` | Alinhamento no eixo cruzado. |
-| `justify` | `'start' \| 'center' \| 'end' \| 'between' \| 'around' \| 'evenly'` | `'start'` | Distribuição no eixo principal. |
-| `gap` | `string` | — | Espaço entre os filhos, passado por variável CSS. O padrão vem do token de espaçamento. |
-| `wrap` | `boolean` | `false` | Permite quebrar linha. |
+| `direction` | `'row' \| 'column' \| 'row-reverse' \| 'column-reverse'` | `'row'` | Main axis. In RTL, row starts on the right side. |
+| `align` | `'start' \| 'center' \| 'end' \| 'stretch' \| 'baseline'` | `'stretch'` | Alignment on the cross axis. |
+| `justify` | `'start' \| 'center' \| 'end' \| 'between' \| 'around' \| 'evenly'` | `'start'` | Distribution on the main axis. |
+| `gap` | `string` | — | Space between the children, passed through a CSS variable. The default comes from the spacing token. |
+| `wrap` | `boolean` | `false` | Allows line wrapping. |
 
 Also accepts the other HTML attributes of the root element.
 
 ### Footer
 
-Rodapé com o ano, o nome da empresa, um aviso e links. O ano padrão é o atual.
+A footer with the year, the company name, a notice and links. The default year is the current year.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `companyName` | `string` | — | Nome exibido depois do ano. Sem valor padrão. |
-| `notice` | `string` | — | Aviso depois do nome, como a licença. Sem valor padrão. |
-| `year` | `number` | — | Ano exibido. O padrão é o ano atual. |
-| `links` | `FooterLink[]` | `[]` | Links exibidos antes do aviso, como [{ label, href }]. |
+| `companyName` | `string` | — | Name shown after the year. No default value. |
+| `notice` | `string` | — | Notice after the name, such as the license. No default value. |
+| `year` | `number` | — | Year shown. The default is the current year. |
+| `links` | `FooterLink[]` | `[]` | Links shown before the notice, like [{ label, href }]. |
 
 Also accepts the other HTML attributes of the root element.
 
@@ -257,15 +257,15 @@ No props of its own.
 
 ### Grid
 
-Grade CSS que reduz as colunas sozinha quando elas não cabem, sem media query. Com `columns` em objeto, o número de colunas muda nos breakpoints do `UIProvider`, em CSS puro e sem quadro errado antes da hidratação. Com `centerLastRow`, a última linha incompleta fica centralizada. Com `as`, a raiz vira outra tag de estrutura, como `ul` para uma lista de cartões.
+A CSS grid that reduces its columns by itself when they do not fit, without a media query. With `columns` as an object, the number of columns changes at the breakpoints of the `UIProvider`, in plain CSS and with no wrong frame before hydration. With `centerLastRow`, the last incomplete row is centered. With `as`, the root becomes another structure tag, such as `ul` for a list of cards.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
-| `columns` | `number \| { xs?: number, sm?: number, md?: number, lg?: number, xl?: number, xxl?: number }` | `1` | Um número, que é o máximo de colunas em telas largas: quando elas não cabem, o grid reduz sozinho, sem media query. Ou um objeto com o número de colunas a partir de cada breakpoint (`{ xs: 1, md: 2, lg: 4 }`): é mobile first, um breakpoint sem valor repete o menor que veio antes, e os valores dos breakpoints são os do `UIProvider`. Números vão para inteiros de pelo menos 1. |
-| `gap` | `string` | — | Espaço entre as células, por variável CSS. O padrão vem do token de espaçamento. |
-| `minColumnWidth` | `string` | — | Largura mínima de cada coluna (qualquer valor CSS). Quando definida, vale no lugar de columns e o grid usa auto-fit. |
-| `centerLastRow` | `boolean` | `false` | Centraliza a última linha quando ela fica incompleta, como os dois últimos cards de cinco em três colunas. O grid passa a ser uma linha flexível que quebra: cada célula tem a largura de uma coluna e as linhas cheias continuam alinhadas nas colunas. Vale com `columns` (número ou objeto) e é ignorado com `minColumnWidth`, porque o número de colunas então depende da largura. |
+| `columns` | `number \| { xs?: number, sm?: number, md?: number, lg?: number, xl?: number, xxl?: number }` | `1` | A number, which is the maximum number of columns on wide screens: when they do not fit, the grid reduces them by itself, without a media query. Or an object with the number of columns from each breakpoint up (`{ xs: 1, md: 2, lg: 4 }`): it is mobile first, a breakpoint without a value repeats the smaller one before it, and the breakpoint values are those of the `UIProvider`. Numbers become integers of at least 1. |
+| `gap` | `string` | — | Space between the cells, through a CSS variable. The default comes from the spacing token. |
+| `minColumnWidth` | `string` | — | Minimum width of each column (any CSS value). When set, it is used instead of columns and the grid uses auto-fit. |
+| `centerLastRow` | `boolean` | `false` | Centers the last row when it is incomplete, such as the last two cards of five in three columns. The grid becomes a flex row that wraps: each cell has the width of one column and the full rows stay aligned to the columns. It works with `columns` (number or object) and is ignored with `minColumnWidth`, because then the number of columns depends on the width. |
 
 Also accepts the other HTML attributes of the root element.
 
@@ -333,35 +333,35 @@ Also accepts the other attributes of `<input>`, passed on to the element. Forwar
 
 ### Layout
 
-Casca de página: barra superior com a trilha de navegação e o menu lateral (permanente ou drawer), ou uma `Navbar`; o conteúdo em `<main>` e o rodapé. Não traz navegação, marca nem rodapé próprios, e não altera `document.title`.
+A page shell: a top bar with the breadcrumb trail and the side menu (permanent or drawer), or a `Navbar`; the content in `<main>` and the footer. It has no navigation, brand or footer of its own, and it does not change `document.title`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *required* | Conteúdo da página. Fica em `<main id="main-content">`, dentro de um `Container`, e é o destino do link para pular ao conteúdo. |
-| `pageTitle` | `string` | — | Título da página. Entra na trilha de navegação quando nenhum item do menu corresponde à página atual. O Layout não altera document.title. |
-| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Largura máxima do conteúdo, tirada dos breakpoints. |
-| `padding` | `boolean \| string` | `true` | Espaçamento lateral do conteúdo, como no Container: true usa o padrão, false remove, e um texto CSS define o valor. |
-| `hideNavbar` | `boolean` | `false` | Esconde a navegação (a barra superior, a sidebar e a navbar). |
-| `hideFooter` | `boolean` | `false` | Esconde o rodapé. |
-| `centered` | `boolean` | `false` | Centraliza o conteúdo na vertical. |
-| `navigation` | `'sidebar' \| 'navbar'` | `'sidebar'` | sidebar mostra a barra superior com o botão de menu e o menu lateral. navbar mostra a barra de navegação clássica no topo. |
-| `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | `'md'` | Breakpoint em que a sidebar deixa de ser um drawer e passa a ser permanente. Os valores vêm do UIProvider. |
-| `translucent` | `boolean` | `false` | Deixa a barra do topo semitransparente, com desfoque do conteúdo que rola por baixo: a `AppBar` com a navegação sidebar, ou a `Navbar` com a navegação navbar. O fundo e o desfoque vêm de `--enchase-app-bar-background` e `--enchase-app-bar-blur` na AppBar (padrão: a cor `--enchase-app-bar-background-solid`, que é a `surface` do tema, a `--enchase-app-bar-background-alpha`, 0,8, e `12px`) e de `--enchase-navbar-background` e `--enchase-navbar-blur` na Navbar (a `--enchase-navbar-background-solid`, que é a `surfaceContainer`, a `--enchase-navbar-background-alpha`). Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco. |
-| `brand` | `string` | — | Nome da marca. No topo da sidebar é um link para a raiz, com a inicial do nome no lugar da imagem; com navigation="navbar" vira o logo da Navbar. |
-| `brandLogo` | `string` | — | URL de uma imagem para a marca da sidebar, no lugar da inicial do nome. A imagem é decorativa, e o nome continua como texto. |
-| `footerProps` | `FooterProps` | — | companyName, notice, year e links do rodapé. |
-| `sidebarFooter` | `SidebarSlot` | — | Conteúdo fixo no rodapé da sidebar, acima do botão de recolher. Pode ser uma função que recebe { collapsed }. |
-| `navigationSections` | `SidebarSection[]` | `[]` | Seções do menu principal, como em Sidebar: [{ id, title?, items: [{ id, label, href?, native?, icon?, badge?, onClick? }] }]. |
-| `pageSections` | `SidebarSection[]` | `[]` | Seções de âncora acrescentadas ao menu. |
-| `activePageSectionId` | `string` | — | Id do item de âncora que está na tela (use useScrollSpy): fica marcado no menu (aria-current="location") e vira o último item da trilha. |
-| `breadcrumbs` | `BreadcrumbItem[]` | — | Trilha explícita. Sem ela o Layout deriva a trilha do menu e da página atual. |
-| `collapsed` | `boolean` | — | Sidebar recolhida, controlada de fora junto com onCollapsedChange. Sem ela o estado é interno (defaultCollapsed) e pode ser guardado com storageKey. |
-| `defaultCollapsed` | `boolean` | `false` | Estado inicial da sidebar recolhida. collapsed e onCollapsedChange controlam de fora. |
-| `onCollapsedChange` | `(collapsed: boolean) => void` | — | Chamado com o novo valor quando a sidebar é recolhida ou expandida. |
-| `storageKey` | `string` | — | Guarda o estado recolhido no localStorage com esse nome, lido só depois de montar. Ignorado quando collapsed é controlado. |
-| `open` | `boolean` | — | Drawer do menu em telas estreitas (abaixo do breakpoint), controlado de fora junto com onOpenChange. Sem ele o estado é interno (defaultOpen). |
-| `defaultOpen` | `boolean` | `false` | Estado inicial do drawer quando ele não é controlado. |
-| `onOpenChange` | `(open: boolean) => void` | — | Chamado com o novo valor quando o drawer abre ou fecha. |
+| `children` | `ReactNode` | *required* | Content of the page. It sits in `<main id="main-content">`, inside a `Container`, and it is the target of the skip-to-content link. |
+| `pageTitle` | `string` | — | Title of the page. It goes into the breadcrumb trail when no menu item matches the current page. The Layout does not change document.title. |
+| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Maximum width of the content, taken from the breakpoints. |
+| `padding` | `boolean \| string` | `true` | Side spacing of the content, as in the Container: true uses the default, false removes it, and a CSS string sets the value. |
+| `hideNavbar` | `boolean` | `false` | Hides the navigation (the top bar, the sidebar and the navbar). |
+| `hideFooter` | `boolean` | `false` | Hides the footer. |
+| `centered` | `boolean` | `false` | Centers the content vertically. |
+| `navigation` | `'sidebar' \| 'navbar'` | `'sidebar'` | sidebar shows the top bar with the menu button and the side menu. navbar shows the classic navigation bar at the top. |
+| `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | `'md'` | Breakpoint at which the sidebar stops being a drawer and becomes permanent. The values come from the UIProvider. |
+| `translucent` | `boolean` | `false` | Makes the top bar semitransparent, blurring the content that scrolls underneath: the `AppBar` with the sidebar navigation, or the `Navbar` with the navbar navigation. The background and the blur come from `--enchase-app-bar-background` and `--enchase-app-bar-blur` on the AppBar (default: the color `--enchase-app-bar-background-solid`, which is the `surface` of the theme, at `--enchase-app-bar-background-alpha`, 0.8, and `12px`) and from `--enchase-navbar-background` and `--enchase-navbar-blur` on the Navbar (the color `--enchase-navbar-background-solid`, which is the `surfaceContainer`, at `--enchase-navbar-background-alpha`). With `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, forced colors or without `backdrop-filter`, the background is opaque. |
+| `brand` | `string` | — | Name of the brand. At the top of the sidebar it is a link to the site root, with the first letter of the name in place of the image; with navigation="navbar" it becomes the logo of the Navbar. |
+| `brandLogo` | `string` | — | URL of an image for the brand of the sidebar, in place of the first letter of the name. The image is decorative, and the name stays as text. |
+| `footerProps` | `FooterProps` | — | companyName, notice, year and links of the footer. |
+| `sidebarFooter` | `SidebarSlot` | — | Fixed content in the footer of the sidebar, above the collapse button. It can be a function that receives { collapsed }. |
+| `navigationSections` | `SidebarSection[]` | `[]` | Sections of the main menu, as in Sidebar: [{ id, title?, items: [{ id, label, href?, native?, icon?, badge?, onClick? }] }]. |
+| `pageSections` | `SidebarSection[]` | `[]` | Anchor sections added to the menu. |
+| `activePageSectionId` | `string` | — | Id of the anchor item that is on screen (use useScrollSpy): it is marked in the menu (aria-current="location") and becomes the last item of the breadcrumb trail. |
+| `breadcrumbs` | `BreadcrumbItem[]` | — | Explicit breadcrumb trail. Without it, the Layout derives the trail from the menu and the current page. |
+| `collapsed` | `boolean` | — | Collapsed sidebar, controlled from the outside together with onCollapsedChange. Without it, the state is internal (defaultCollapsed) and can be saved with storageKey. |
+| `defaultCollapsed` | `boolean` | `false` | Initial state of the collapsed sidebar. collapsed and onCollapsedChange control it from the outside. |
+| `onCollapsedChange` | `(collapsed: boolean) => void` | — | Called with the new value when the sidebar is collapsed or expanded. |
+| `storageKey` | `string` | — | Saves the collapsed state in localStorage under this name, read only after mounting. Ignored when collapsed is controlled. |
+| `open` | `boolean` | — | Menu drawer on narrow screens (below the breakpoint), controlled from the outside together with onOpenChange. Without it, the state is internal (defaultOpen). |
+| `defaultOpen` | `boolean` | `false` | Initial state of the drawer when it is not controlled. |
+| `onOpenChange` | `(open: boolean) => void` | — | Called with the new value when the drawer opens or closes. |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
 
@@ -413,19 +413,19 @@ A modal dialog rendered in a portal: the focus stays trapped in the panel, the p
 
 ### Navbar
 
-Barra de navegação no topo, com a marca, os links, ações e o botão de tema. Abaixo do breakpoint, os links vão para um drawer. Com `translucent`, o fundo fica semitransparente e desfoca o que rola por baixo, e volta ao fundo opaco quando o sistema pede menos transparência ou mais contraste, em cores forçadas e em navegadores sem `backdrop-filter`.
+A navigation bar at the top, with the brand, the links, actions and the theme button. Below the breakpoint, the links go into a drawer. With `translucent`, the background becomes semitransparent and blurs what scrolls underneath, and goes back to an opaque background when the system asks for less transparency or more contrast, in forced colors and in browsers without `backdrop-filter`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `logo` | `ReactNode` | `'Logo'` | Marca exibida à esquerda (ou à direita em rtl). Aceita texto ou qualquer nó React, como uma imagem ou um SVG. É um link para logoHref (data-slot="navbar-logo"). |
-| `logoHref` | `string` | `'/'` | Destino do link da marca. Aceita uma rota, uma âncora (#inicio) ou uma URL. |
-| `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | `'md'` | Breakpoint a partir do qual os links aparecem na barra. Abaixo dele, a barra mostra o botão de menu e os links vão para o drawer. Os valores vêm do UIProvider. |
-| `sections` | `SidebarSection[]` | — | Itens do menu, no mesmo formato da Sidebar: [{ id, items: [{ id, label, href }] }]. Só os itens com href aparecem, e os títulos das seções não são exibidos. |
-| `activeSectionId` | `string` | — | Id do item de âncora (href #id, ou /pagina#id na página atual) marcado como localização atual (aria-current="location"). Use useScrollSpy para obtê-lo. |
-| `actions` | `ReactNode` | — | Ações ao lado do menu, como um botão de chamada. Em telas largas ficam na barra, entre o menu e o botão de tema (data-slot="navbar-cta"). Em telas estreitas vão para o drawer, abaixo dos links (data-slot="navbar-drawer-cta"), e um clique em um link dentro delas fecha o drawer. O nó é renderizado em um lugar por vez. |
-| `translucent` | `boolean` | `false` | Deixa o fundo da barra semitransparente, com desfoque do que passa por trás. O fundo vem de `--enchase-navbar-background` (padrão: a cor `--enchase-navbar-background-solid`, que é a `surfaceContainer` do tema, a `--enchase-navbar-background-alpha`, 0,8) e o desfoque de `--enchase-navbar-blur` (padrão `12px`), que você muda no `style` ou no CSS. Com `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, cores forçadas ou sem `backdrop-filter`, o fundo é opaco. Com o tema padrão, o texto da marca e do menu mantém 4,5:1 mesmo sobre preto ou branco puro (3:1 na cor de destaque da marca ao passar o mouse); confira o contraste se mudar a cor ou o tema. |
-| `className` | `string` | — | Classe do cabeçalho (`data-slot="navbar"`). As partes seguem `data-slot="navbar-*"`; o drawer mobile é `navbar-drawer`, com `data-state`. |
-| `style` | `CSSProperties` | — | Estilo do cabeçalho. |
+| `logo` | `ReactNode` | `'Logo'` | Brand shown on the left (or on the right in rtl). It accepts text or any React node, such as an image or an SVG. It is a link to logoHref (data-slot="navbar-logo"). |
+| `logoHref` | `string` | `'/'` | Destination of the brand link. It accepts a route, an anchor (#home) or a URL. |
+| `breakpoint` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` | `'md'` | Breakpoint from which the links appear in the bar. Below it, the bar shows the menu button and the links go into the drawer. The values come from the UIProvider. |
+| `sections` | `SidebarSection[]` | — | Items of the menu, in the same format as the Sidebar: [{ id, items: [{ id, label, href }] }]. Only the items with href appear, and the titles of the sections are not shown. |
+| `activeSectionId` | `string` | — | Id of the anchor item (href #id, or /page#id on the current page) marked as the current location (aria-current="location"). Use useScrollSpy to get it. |
+| `actions` | `ReactNode` | — | Actions next to the menu, such as a call-to-action button. On wide screens they stay in the bar, between the menu and the theme button (data-slot="navbar-cta"). On narrow screens they go into the drawer, below the links (data-slot="navbar-drawer-cta"), and a click on a link inside them closes the drawer. The node is rendered in one place at a time. |
+| `translucent` | `boolean` | `false` | Makes the background of the bar semitransparent, blurring what passes behind it. The background comes from `--enchase-navbar-background` (default: the color `--enchase-navbar-background-solid`, which is the `surfaceContainer` of the theme, at `--enchase-navbar-background-alpha`, 0.8) and the blur from `--enchase-navbar-blur` (default `12px`), which you change in the `style` or in the CSS. With `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, forced colors or without `backdrop-filter`, the background is opaque. With the default theme, the text of the brand and of the menu keeps 4.5:1 even over pure black or white (3:1 on the accent color of the brand on hover); check the contrast if you change the color or the theme. |
+| `className` | `string` | — | Class of the header (`data-slot="navbar"`). The parts follow `data-slot="navbar-*"`; the mobile drawer is `navbar-drawer`, with `data-state`. |
+| `style` | `CSSProperties` | — | Style of the header. |
 
 ### NumberInput
 
@@ -454,19 +454,19 @@ Also accepts the other attributes of `<input>`, passed on to the element. Forwar
 
 ### Pagination
 
-Navegação entre as páginas de uma lista ou tabela: botões numerados, anterior e próxima, com reticências quando a lista é longa. É uma `<nav>` com uma lista de botões, e a página atual leva `aria-current="page"`. Anterior e próxima ficam indisponíveis (`aria-disabled`) nas pontas, sem tirar o foco de quem acabou de clicar. Os textos para leitores de tela vêm de `labels.pagination`, `labels.previousPage` e `labels.nextPage` do `UIProvider`. Aceita `ref`, que vai para a `<nav>`, e os atributos dela.
+Navigation between the pages of a list or table: numbered buttons, previous and next, with ellipses when the list is long. It is a `<nav>` with a list of buttons, and the current page has `aria-current="page"`. Previous and next become unavailable (`aria-disabled`) at the ends, without taking the focus away from the user who just clicked. The texts for screen readers come from `labels.pagination`, `labels.previousPage` and `labels.nextPage` of the `UIProvider`. It accepts `ref`, which goes to the `<nav>`, and the attributes of the `<nav>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `pageCount` | `number` | *required* | Total de páginas. Com menos de 1, o componente não mostra nada. |
-| `page` | `number` | — | Página atual quando o componente é controlado; a primeira é 1. Exige também onPageChange. Fora do intervalo, vale a primeira ou a última. Veja a story Controlled. |
-| `defaultPage` | `number` | `1` | Página inicial, para uso sem controle externo. |
-| `onPageChange` | `(page: number) => void` | — | Chamada com o número da página que o usuário escolheu, pelos números ou por anterior e próxima. |
-| `siblingCount` | `number` | `1` | Quantas páginas aparecem de cada lado da atual antes das reticências. |
-| `boundaryCount` | `number` | `1` | Quantas páginas ficam sempre visíveis no começo e no fim da lista. |
-| `size` | `'sm' \| 'md'` | `'md'` | Tamanho dos botões: sm tem 2 rem de lado e md, 2,5 rem. |
-| `ariaLabel` | `string` | — | Nome da navegação para leitores de tela. Sem ele, vale labels.pagination do UIProvider. |
-| `animation` | `false \| { recipe, tuning }` | `fade` | Animação do realce dos botões ao passar o mouse e ao pressionar. false desliga; { tuning: { duration } } ajusta a duração em segundos. |
+| `pageCount` | `number` | *required* | Total number of pages. Below 1, the component shows nothing. |
+| `page` | `number` | — | Current page when the component is controlled; the first page is 1. It also requires onPageChange. Outside the range, the first or the last page is used. See the Controlled story. |
+| `defaultPage` | `number` | `1` | Initial page, for use without external control. |
+| `onPageChange` | `(page: number) => void` | — | Called with the number of the page the user chose, through the numbered buttons or through previous and next. |
+| `siblingCount` | `number` | `1` | How many pages show on each side of the current one before the ellipses. |
+| `boundaryCount` | `number` | `1` | How many pages are always visible at the start and at the end of the list. |
+| `size` | `'sm' \| 'md'` | `'md'` | Size of the buttons: sm is 2 rem on a side and md is 2.5 rem. |
+| `ariaLabel` | `string` | — | Name of the navigation for screen readers. Without it, labels.pagination of the UIProvider is used. |
+| `animation` | `false \| { recipe, tuning }` | `fade` | Animation of the button highlight on hover and on press. false turns it off; { tuning: { duration } } sets the duration in seconds. |
 
 Also accepts the other HTML attributes of the root element. Forwards the `ref` to the root element.
 
@@ -549,25 +549,25 @@ Also accepts the other attributes of `<select>`, passed on to the element. Forwa
 
 ### Sidebar
 
-Menu lateral. `permanent` fica na página e recolhe para uma barra de ícones; `modal` vira um drawer com foco preso. Cada item é uma rota, uma âncora ou uma ação.
+A side menu. `permanent` stays on the page and collapses to a bar of icons; `modal` becomes a drawer with trapped focus. Each item is a route, an anchor or an action.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `sections` | `SidebarSection[]` | *required* | Seções do menu, como [{ id, title?, items: [{ id, label, icon?, href?, native?, badge?, onClick? }] }]. Um item com href é um link; sem href é um botão que chama onClick. Sem icon, o item mostra a inicial do rótulo. |
-| `activeSectionId` | `string` | — | Id do item de âncora marcado como localização atual (aria-current="location"): um item com href #id, ou /pagina#id na própria página. Use useScrollSpy para obtê-lo. |
-| `currentHref` | `string` | — | Caminho atual, que marca o item da página (aria-current="page") e vale também para o hash da página atual. Sem ele vale o currentHref do UIProvider. |
-| `header` | `SidebarSlot` | — | Conteúdo fixo no topo, como a marca. Pode ser uma função que recebe { collapsed } para trocar o conteúdo na barra recolhida. |
-| `footer` | `SidebarSlot` | — | Conteúdo fixo no rodapé, acima do botão de recolher. Pode ser uma função que recebe { collapsed }. |
-| `variant` | `'permanent' \| 'modal'` | `'permanent'` | permanent fica na página; modal vira um drawer com foco preso, página inerte e Esc para fechar, que só fecha a camada de cima. |
-| `collapsed` | `boolean` | `false` | Barra só de ícones (80px) em vez da completa. A largura anima por data-state (expanded, collapsing, collapsed e expanding); com animation={false} muda de uma vez. Só vale em permanent. |
-| `onToggleCollapsed` | `() => void` | — | Mostra o botão de recolher no rodapé e é chamado ao clicar nele. Sem esta prop o botão não aparece; quem usa guarda o estado de collapsed. |
-| `open` | `boolean` | — | Só em modal: abre o drawer. Fechado, nada é renderizado. |
-| `onClose` | `() => void` | — | Só em modal: chamado ao clicar no fundo, apertar Esc ou escolher um item. |
-| `ariaLabel` | `string` | — | Nome acessível da navegação. O padrão vem do UIProvider: labels.mainNavigation em permanent e labels.mobileNavigation em modal. |
-| `id` | `string` | — | id da raiz em permanent ou do painel em modal, útil para o aria-controls do botão que abre o menu. |
-| `animation` | `false \| { recipe, from, tuning }` | — | false desliga o movimento. Em permanent ajusta o recolher ({ tuning: { duration } }); em modal, o deslize do drawer ({ tuning: { distance, duration } }). |
-| `className` | `string` | — | Classe da raiz (data-slot="sidebar"); no drawer, do painel (data-slot="sidebar-panel"). Também dá para estilizar por data-slot, data-state e data-variant. |
-| `style` | `CSSProperties` | — | Estilo da raiz em permanent ou do painel em modal. |
+| `sections` | `SidebarSection[]` | *required* | Sections of the menu, like [{ id, title?, items: [{ id, label, icon?, href?, native?, badge?, onClick? }] }]. An item with href is a link; without href it is a button that calls onClick. Without icon, the item shows the first letter of its label. |
+| `activeSectionId` | `string` | — | Id of the anchor item marked as the current location (aria-current="location"): an item with href #id, or /page#id on the page itself. Use useScrollSpy to get it. |
+| `currentHref` | `string` | — | Current path. It marks the item of the page (aria-current="page") and also applies to the hash of the current page. Without it, the currentHref of the UIProvider is used. |
+| `header` | `SidebarSlot` | — | Fixed content at the top, such as the brand. It can be a function that receives { collapsed } to change the content on the collapsed bar. |
+| `footer` | `SidebarSlot` | — | Fixed content in the footer, above the collapse button. It can be a function that receives { collapsed }. |
+| `variant` | `'permanent' \| 'modal'` | `'permanent'` | permanent stays on the page; modal becomes a drawer with trapped focus, an inert page and Esc to close; Esc closes only the top layer. |
+| `collapsed` | `boolean` | `false` | An icon-only bar (80px) instead of the full one. The width animates through data-state (expanded, collapsing, collapsed and expanding); with animation={false} it changes at once. It only applies to permanent. |
+| `onToggleCollapsed` | `() => void` | — | Shows the collapse button in the footer and is called when the button is clicked. Without this prop the button does not appear; you keep the state of collapsed. |
+| `open` | `boolean` | — | Only in modal: opens the drawer. When closed, nothing is rendered. |
+| `onClose` | `() => void` | — | Only in modal: called when the backdrop is clicked, Esc is pressed or an item is chosen. |
+| `ariaLabel` | `string` | — | Accessible name of the navigation. The default comes from the UIProvider: labels.mainNavigation in permanent and labels.mobileNavigation in modal. |
+| `id` | `string` | — | id of the root in permanent or of the panel in modal, useful for the aria-controls of the button that opens the menu. |
+| `animation` | `false \| { recipe, from, tuning }` | — | false turns off the motion. In permanent it adjusts the collapse ({ tuning: { duration } }); in modal, the slide of the drawer ({ tuning: { distance, duration } }). |
+| `className` | `string` | — | Class of the root (data-slot="sidebar"); in the drawer, of the panel (data-slot="sidebar-panel"). You can also style it by data-slot, data-state and data-variant. |
+| `style` | `CSSProperties` | — | Style of the root in permanent or of the panel in modal. |
 
 ### Skeleton
 
