@@ -4,6 +4,7 @@ import { userEvent } from 'vitest/browser'
 
 import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Alert } from '@components/common/Alert/index.tsx'
+import { Avatar } from '@components/common/Avatar/index.tsx'
 import { Badge } from '@components/common/Badge/index.tsx'
 import Breadcrumbs from '@components/common/Breadcrumbs/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
@@ -20,6 +21,7 @@ import { Select } from '@components/common/Select/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
+import { Tag } from '@components/common/Tag/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import { builtInStyleEntries } from '@tests/shared/fixtures/styles.ts'
 import { contrastRatio } from '@styles/theme/contrast.ts'
@@ -71,6 +73,14 @@ const everything = (
           {variant}
         </Badge>
       ))}
+    </div>
+    <div>
+      <Tag>Static tag</Tag>
+      <Tag size="sm" onRemove={() => undefined}>
+        Removable tag
+      </Tag>
+      <Avatar name="Ana Souza" size="sm" />
+      <Avatar name="Ana Souza" />
     </div>
     {(['info', 'success', 'warning', 'error'] as const).map((variant) => (
       <Alert key={variant} variant={variant} title={`Alert ${variant}`}>

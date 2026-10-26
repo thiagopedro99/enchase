@@ -37,6 +37,7 @@ export type UILabels = {
   nextPage?: string | undefined
   increaseValue?: string | undefined
   decreaseValue?: string | undefined
+  removeTag?: string | undefined
 }
 
 export type UIConfig = {

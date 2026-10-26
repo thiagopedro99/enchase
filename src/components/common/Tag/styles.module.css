@@ -1,0 +1,81 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  vertical-align: middle;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+:where(.tag) {
+  gap: var(--enchase-tag-gap, var(--enchase-space-xs));
+  max-inline-size: var(--enchase-tag-max-width, 100%);
+  margin: 0;
+  border: var(--enchase-border-width, 1px) solid var(--enchase-tag-border-color, var(--enchase-color-border-strong));
+  border-radius: var(--enchase-tag-radius, var(--enchase-radius-button));
+  background-color: var(--enchase-tag-background, transparent);
+  color: var(--enchase-tag-color, var(--enchase-color-text-primary));
+  font-weight: var(--enchase-tag-font-weight, var(--enchase-font-weight-medium));
+  line-height: var(--enchase-tag-line-height, var(--enchase-line-height-none, 1));
+}
+
+:where(.tag[data-size='sm']) {
+  min-block-size: var(--enchase-tag-min-height-sm, 1.75rem);
+  padding-inline: var(--enchase-tag-padding-inline-sm, var(--enchase-space-sm));
+  font-size: var(--enchase-tag-font-size-sm, var(--enchase-font-size-xs));
+}
+
+:where(.tag[data-size='md']) {
+  min-block-size: var(--enchase-tag-min-height-md, 2rem);
+  padding-inline: var(--enchase-tag-padding-inline-md, var(--enchase-space-md));
+  font-size: var(--enchase-tag-font-size-md, var(--enchase-font-size-sm));
+}
+
+:where(.tag[data-removable]) {
+  padding-inline-end: var(--enchase-tag-padding-inline-end, 0.125rem);
+}
+
+.label {
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.remove {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: background-color var(--enchase-tag-duration, var(--enchase-motion-duration-fast)) var(--enchase-tag-ease, var(--enchase-motion-ease-out));
+}
+
+:where(.remove) {
+  inline-size: max(24px, var(--enchase-tag-remove-size, 1.5rem));
+  block-size: max(24px, var(--enchase-tag-remove-size, 1.5rem));
+  border-radius: var(--enchase-tag-remove-radius, var(--enchase-radius-button));
+}
+
+.remove:focus-visible {
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset, 2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .remove:hover {
+    background-color: color-mix(in srgb, currentColor calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
+  }
+}
+
+.remove:active {
+  background-color: color-mix(in srgb, currentColor calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
+}

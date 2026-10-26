@@ -30,7 +30,8 @@ export const ptBR: Locale = {
     previousPage: 'Página anterior',
     nextPage: 'Próxima página',
     increaseValue: 'Aumentar valor',
-    decreaseValue: 'Diminuir valor'
+    decreaseValue: 'Diminuir valor',
+    removeTag: 'Remover'
   }
 }
 

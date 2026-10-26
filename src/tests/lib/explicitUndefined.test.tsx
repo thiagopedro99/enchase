@@ -28,6 +28,7 @@ import { Skeleton } from '@components/common/Skeleton/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
+import { Tag } from '@components/common/Tag/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 
 import type { ComponentType } from 'react'
@@ -87,6 +88,7 @@ const cases: [string, string, ComponentType<never>, Record<string, unknown>][] =
   ['Switch', 'SwitchProps', Switch, { label: 'Notifications' }],
   ['Table', 'TableProps', Table, { columns: [{ key: 'id', header: 'Id' }], rows: [{ id: 1 }] }],
   ['Tabs', 'TabsProps', Tabs, { ariaLabel: 'Sections', items: [{ value: 'a', label: 'A', content: 'x' }] }],
+  ['Tag', 'TagProps', Tag, { children: 'React' }],
   ['Textarea', 'TextareaProps', Textarea, { label: 'Message' }]
 ]
 

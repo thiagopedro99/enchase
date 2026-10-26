@@ -118,7 +118,7 @@ Each toast method (`success`, `error`, `warning`, `info` and `addToast`) returns
 
 - **Actions:** `Button`, `ButtonLink`, `Link`, `ThemeToggle`
 - **Forms:** `Input`, `Textarea`, `NumberInput`, `Select`, `Checkbox`, `Switch`, `RadioGroup`
-- **Content:** `Accordion`, `Alert`, `Avatar`, `Badge`, `Card`, `CardButton`, `CardLink`, `Divider`, `Skeleton`, `Table`, `Tabs`
+- **Content:** `Accordion`, `Alert`, `Avatar`, `Badge`, `Card`, `CardButton`, `CardLink`, `Divider`, `Skeleton`, `Table`, `Tabs`, `Tag`
 - **Feedback and overlays:** `Loading`, `InlineLoading`, `Modal`, `ConfirmModal`, `Popover`, `Tooltip`, and the toasts (`ToastProvider` and `useToast`)
 - **Navigation and layout:** `Breadcrumbs`, `Footer`, `Layout`, `Navbar`, `Pagination`, `Sidebar`, `Container`, `Flex`, `Grid`
 - **Utilities:** `Icon`, `VisuallyHidden`, and the 19 icons the components use inside, in `enchase/icons`

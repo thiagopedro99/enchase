@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -613,6 +613,18 @@ Abas para dividir um conteúdo em painéis e mostrar um por vez. Seguem o padrã
 | `animation` | `false \| { recipe, tuning }` | `fade` | Animação do indicador, que desliza até a aba escolhida, e do painel, que aparece com um fade. false desliga; { tuning: { duration } } ajusta a duração em segundos. |
 
 Also accepts the other attributes of `<div>`, passed on to the element. Forwards the `ref` to `<div>`.
+
+### Tag
+
+A label for content that belongs to the user, such as a keyword, a filter or a recipient. Unlike the `Badge`, which reports a state or a count, a tag is an outlined chip that can hold longer text and, with `onRemove`, a button to take it away. The button is named with the `removeTag` label of the `UIProvider` followed by the content of the tag, and it is the only thing in the tag that takes the focus. When a tag leaves the page, move the focus yourself. It is a `<span>` and accepts the attributes of the `<span>`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | *required* | Content of the tag: a short text. Long text is cut with an ellipsis when the tag has no room. |
+| `size` | `'sm' \| 'md'` | `'md'` | Size of the tag: sm is 1.75 rem tall and md is 2 rem. |
+| `onRemove` | `() => void` | — | Called, with no arguments, when the remove button is activated. The button only exists when this is set. The tag does not remove itself: take it out of your list. |
+
+Also accepts the other attributes of `<span>`, passed on to the element.
 
 ### Textarea
 
@@ -1664,6 +1676,30 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-tabs-tab-min-height` | `2.75rem` | `min-block-size` |
 | `--enchase-tabs-tab-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
 | `--enchase-tabs-tab-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+
+### Tag
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-tag-background` | `transparent` | `background-color` |
+| `--enchase-tag-border-color` | `var(--enchase-color-border-strong)` | `border` |
+| `--enchase-tag-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-tag-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-tag-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-tag-font-size-md` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-tag-font-size-sm` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-tag-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-tag-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-tag-line-height` | `1` (`--enchase-line-height-none`) | `line-height` |
+| `--enchase-tag-max-width` | `100%` | `max-inline-size` |
+| `--enchase-tag-min-height-md` | `2rem` | `min-block-size` |
+| `--enchase-tag-min-height-sm` | `1.75rem` | `min-block-size` |
+| `--enchase-tag-padding-inline-end` | `0.125rem` | `padding-inline-end` |
+| `--enchase-tag-padding-inline-md` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-tag-padding-inline-sm` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
+| `--enchase-tag-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-tag-remove-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-tag-remove-size` | `1.5rem` | `inline-size`, `block-size` |
 
 ### Textarea
 

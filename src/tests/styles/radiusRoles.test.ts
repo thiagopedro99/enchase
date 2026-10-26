@@ -12,6 +12,7 @@ const circles: Record<string, number> = {
 const buttons = [
   'common/Button/styles.module.css',
   'common/Badge/styles.module.css',
+  'common/Tag/styles.module.css',
   'common/Alert/styles.module.css',
   'common/Breadcrumbs/styles.module.css',
   'common/Input/styles.module.css',

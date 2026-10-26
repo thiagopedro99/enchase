@@ -30,7 +30,8 @@ export const en: Locale = {
     previousPage: 'Previous page',
     nextPage: 'Next page',
     increaseValue: 'Increase value',
-    decreaseValue: 'Decrease value'
+    decreaseValue: 'Decrease value',
+    removeTag: 'Remove'
   }
 }
 
