@@ -115,9 +115,10 @@ describe('springs in a real browser', () => {
 
   it('lets a bouncier spring overshoot the final scale', async () => {
     renderInBrowser(<ModalPage bouncy />, 'auto')
+    const sampling = sample(() => (panel() ? scaleOf(panel() as HTMLElement) : 1), 1500)
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.element(page.getByRole('dialog')).toBeVisible()
-    const values = await sample(() => scaleOf(panel() as HTMLElement), 900)
+    const values = await sampling
 
     expect(Math.max(...values)).toBeGreaterThan(1.001)
     expect(values[values.length - 1]).toBeCloseTo(1, 3)
@@ -125,10 +126,11 @@ describe('springs in a real browser', () => {
 
   it('slides the toast in with the snappy spring and overshoots its resting place', async () => {
     renderInBrowser(<ToastPage />, 'auto')
+    const sampling = sample(() => translateXOf(document.querySelector<HTMLElement>('[data-slot="toast"]') ?? document.body), 1500)
     await userEvent.click(page.getByRole('button', { name: 'Avisar' }))
     await expect.poll(() => document.querySelector('[data-slot="toast"]')).toBeTruthy()
     const element = document.querySelector<HTMLElement>('[data-slot="toast"]') as HTMLElement
-    const values = await sample(() => translateXOf(element), 700)
+    const values = await sampling
 
     expect(getComputedStyle(element).transitionTimingFunction).toContain('linear(')
     expect(Math.min(...values)).toBeLessThan(-0.05)
