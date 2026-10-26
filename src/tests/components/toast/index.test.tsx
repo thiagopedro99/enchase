@@ -10,6 +10,11 @@ import UIProvider from '@components/uiProvider/index.tsx'
 import { ToastProvider, useToast } from '@components/toast/index.ts'
 import { ptBR } from '@locales/ptBR.ts'
 
+import type { RenderWithProvidersOptions } from '@tests/types.ts'
+import type { ReactElement } from 'react'
+
+const renderWithToasts = (ui: ReactElement, options: RenderWithProvidersOptions = {}) => renderWithProviders(ui, { ...options, toasts: true })
+
 describePortalContainerContract({
   name: 'ToastProvider',
   slot: 'toast-host',
@@ -31,6 +36,42 @@ const Probe = ({ duration }: { duration?: number }) => {
     </>
   )
 }
+
+const Typed = () => {
+  const toast = useToast()
+
+  return (
+    <>
+      <button onClick={() => toast.success('Saved', 0)}>success</button>
+      <button onClick={() => toast.info('Heads up', 0)}>info</button>
+      <button onClick={() => toast.warning('Careful', 0)}>warning</button>
+      <button onClick={() => toast.error('Failed', 0)}>error</button>
+    </>
+  )
+}
+
+const NodeProbe = () => {
+  const toast = useToast()
+
+  return (
+    <button
+      onClick={() =>
+        toast.success(
+          <>
+            <strong>Saved</strong> to <em>Drive</em>
+          </>,
+          0
+        )
+      }
+    >
+      node
+    </button>
+  )
+}
+
+const host = () => document.querySelector('[data-slot="toast-host"]') as HTMLElement
+
+const announcer = (role: 'status' | 'alert') => within(host()).getByRole(role)
 
 const FiresWhileMounting = () => {
   const toast = useToast()
@@ -96,7 +137,7 @@ describe('useToast consumers', () => {
   it('do not render again when toasts appear or disappear', async () => {
     const user = userEvent.setup()
     renders.current = 0
-    renderWithProviders(<Dispatcher />)
+    renderWithToasts(<Dispatcher />)
     const initialRenders = renders.current
 
     await user.click(screen.getByRole('button', { name: 'fire' }))
@@ -109,7 +150,7 @@ describe('useToast consumers', () => {
 
 describe('Toast', () => {
   it('renders its live region in the body, outside the tree of the app', () => {
-    const { container } = renderWithProviders(<Probe />)
+    const { container } = renderWithToasts(<Probe />)
     const region = screen.getByRole('region', { name: 'Notificações' })
 
     expect(container.contains(region)).toBe(false)
@@ -118,7 +159,7 @@ describe('Toast', () => {
   })
 
   it('unmounts without error when something emptied the body in the meantime', () => {
-    const { unmount } = renderWithProviders(<Probe />)
+    const { unmount } = renderWithToasts(<Probe />)
 
     document.body.innerHTML = ''
 
@@ -166,13 +207,13 @@ describe('Toast', () => {
   })
 
   it('shows a toast that a child fires while it mounts, before the host is attached to the body', () => {
-    renderWithProviders(<FiresWhileMounting />)
+    renderWithToasts(<FiresWhileMounting />)
 
     expect(within(screen.getByRole('region', { name: 'Notificações' })).getByText('Hello')).toBeInTheDocument()
   })
 
   it('leaves nothing of its own in the body once it unmounts', () => {
-    const { unmount } = renderWithProviders(<Probe />)
+    const { unmount } = renderWithToasts(<Probe />)
 
     unmount()
 
@@ -184,7 +225,7 @@ describe('Toast', () => {
   it('gives back the id of the toast, which removeToast takes to close it', async () => {
     const user = userEvent.setup()
     issued.length = 0
-    renderWithProviders(<Remote />)
+    renderWithToasts(<Remote />)
 
     await user.click(screen.getByRole('button', { name: 'open' }))
     await expectCount(1)
@@ -200,7 +241,7 @@ describe('Toast', () => {
   it('gives a different id for each toast, whichever method opened it', async () => {
     const user = userEvent.setup()
     issued.length = 0
-    renderWithProviders(<Every />)
+    renderWithToasts(<Every />)
 
     await user.click(screen.getByRole('button', { name: 'all' }))
 
@@ -209,38 +250,113 @@ describe('Toast', () => {
     expect(issued.every((id) => typeof id === 'string' && id !== '')).toBe(true)
   })
 
-  it('renders into a persistent labelled live region', () => {
-    renderWithProviders(<Probe />)
+  it('renders a persistent named region that is not a live region itself', () => {
+    renderWithToasts(<Probe />)
 
     const region = screen.getByRole('region', { name: 'Notificações' })
-    expect(region).toHaveAttribute('aria-live', 'polite')
+
+    expect(region).not.toHaveAttribute('aria-live')
+    expect(region).not.toHaveAttribute('aria-relevant')
   })
 
-  it('announces a toast inside the live region', async () => {
+  it('shows a toast inside the notification region', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<Probe />)
+    renderWithToasts(<Probe />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
 
     const region = screen.getByRole('region', { name: 'Notificações' })
-    expect(await screen.findByText('Saved')).toBeInTheDocument()
-    expect(region).toContainElement(screen.getByText('Saved'))
+
+    expect(await screen.findByText('Saved', { selector: '[data-slot="toast-title"]' })).toBeInTheDocument()
+    expect(region).toContainElement(screen.getByText('Saved', { selector: '[data-slot="toast-title"]' }))
   })
 
-  it('uses role alert for errors only', async () => {
-    const user = userEvent.setup()
-    renderWithProviders(<Probe />)
+  it('has a status announcer and an alert announcer from the start, outside the region and before any toast', () => {
+    renderWithToasts(<Probe />)
 
-    await user.click(screen.getByRole('button', { name: 'success' }))
+    expect(announcer('status')).toBeEmptyDOMElement()
+    expect(announcer('alert')).toBeEmptyDOMElement()
+    expect(announcer('status')).toHaveAttribute('aria-atomic', 'true')
+    expect(host()).toContainElement(announcer('status'))
+    expect(screen.getByRole('region', { name: 'Notificações' })).not.toContainElement(announcer('alert'))
+  })
+
+  it('announces success, info and warning in the status announcer and nothing in the alert one', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Typed />)
+
+    for (const [name, text] of [['success', 'Saved'], ['info', 'Heads up'], ['warning', 'Careful']]) {
+      await user.click(screen.getByRole('button', { name }))
+      await waitFor(() => expect(announcer('status')).toHaveTextContent(text))
+    }
+
+    expect(announcer('alert')).toBeEmptyDOMElement()
+  })
+
+  it('announces an error in the alert announcer and not in the status one', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Typed />)
+
     await user.click(screen.getByRole('button', { name: 'error' }))
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('Failed')
+    await waitFor(() => expect(announcer('alert')).toHaveTextContent('Failed'))
+    expect(announcer('status')).toBeEmptyDOMElement()
+  })
+
+  it('gives the visual toasts no role of their own, so nothing is announced twice', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Typed />)
+
+    await user.click(screen.getByRole('button', { name: 'error' }))
+    await user.click(screen.getByRole('button', { name: 'success' }))
+    await waitFor(() => expect(document.querySelectorAll('[data-slot="toast"]')).toHaveLength(2))
+
+    for (const item of document.querySelectorAll('[data-slot="toast"]')) expect(item).not.toHaveAttribute('role')
     expect(screen.getAllByRole('alert')).toHaveLength(1)
+  })
+
+  it('announces the text of a message that is made of nodes', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<NodeProbe />)
+
+    await user.click(screen.getByRole('button', { name: 'node' }))
+
+    await waitFor(() => expect(announcer('status')).toHaveTextContent('Saved to Drive'))
+    expect(document.querySelector('[data-slot="toast-title"] strong')).toHaveTextContent('Saved')
+  })
+
+  it('clears the announcer before it says the same text again', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Probe duration={0} />)
+    const seen: string[] = []
+    const observer = new MutationObserver(() => seen.push(announcer('status').textContent ?? ''))
+
+    observer.observe(announcer('status'), { childList: true, characterData: true, subtree: true })
+    await user.click(screen.getByRole('button', { name: 'success' }))
+    await waitFor(() => expect(seen).toEqual(['Saved']))
+    await user.click(screen.getByRole('button', { name: 'success' }))
+    await waitFor(() => expect(seen).toEqual(['Saved', '', 'Saved']))
+
+    observer.disconnect()
+  })
+
+  it('keeps the announcers when the last toast goes away', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Probe duration={0} />)
+    const status = announcer('status')
+
+    await user.click(screen.getByRole('button', { name: 'success' }))
+    await expectCount(1)
+    await user.click(screen.getByRole('button', { name: 'Fechar notificação' }))
+    await expectCount(0)
+
+    expect(announcer('status')).toBe(status)
+    expect(announcer('alert')).toBeInTheDocument()
   })
 
   it('labels the close button with a configurable label', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<Probe />, { labels: { closeToast: 'Dismiss' } })
+    renderWithToasts(<Probe />, { labels: { closeToast: 'Dismiss' } })
 
     await user.click(screen.getByRole('button', { name: 'success' }))
 
@@ -249,7 +365,7 @@ describe('Toast', () => {
 
   it('dismisses with the close button, keeping other toasts', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<Probe duration={0} />)
+    renderWithToasts(<Probe duration={0} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await user.click(screen.getByRole('button', { name: 'error' }))
@@ -262,7 +378,7 @@ describe('Toast', () => {
 
   it('dismisses the focused toast with Escape', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<Probe duration={0} />)
+    renderWithToasts(<Probe duration={0} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     const close = await screen.findByRole('button', { name: 'Fechar notificação' })
@@ -275,7 +391,7 @@ describe('Toast', () => {
   it('auto dismisses after the duration', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    renderWithProviders(<Probe duration={1000} />)
+    renderWithToasts(<Probe duration={1000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await expectCount(1)
@@ -291,7 +407,7 @@ describe('Toast', () => {
   it('pauses the timer while hovered', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    renderWithProviders(<Probe duration={1000} />)
+    renderWithToasts(<Probe duration={1000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     const toastItem = (await screen.findByText('Saved')).closest('div[class]') as HTMLElement
@@ -313,7 +429,7 @@ describe('Toast', () => {
   it('pauses the timer while focus is inside the toast', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    renderWithProviders(<Probe duration={1000} />)
+    renderWithToasts(<Probe duration={1000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     const close = await screen.findByRole('button', { name: 'Fechar notificação' })
@@ -335,7 +451,7 @@ describe('Toast', () => {
   it('keeps a sticky toast (duration 0) without a progress bar', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    renderWithProviders(<Probe duration={0} />)
+    renderWithToasts(<Probe duration={0} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await act(async () => {
@@ -348,7 +464,7 @@ describe('Toast', () => {
 
   it('marks the viewport, the toast and its parts with slots and states', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<Probe duration={0} />)
+    renderWithToasts(<Probe duration={0} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     const item = (await screen.findByText('Saved')).closest('[data-slot="toast"]') as HTMLElement
@@ -362,14 +478,14 @@ describe('Toast', () => {
 
   it('has a progress bar slot only when the toast expires', async () => {
     const user = userEvent.setup()
-    const { unmount } = renderWithProviders(<Probe duration={5000} />)
+    const { unmount } = renderWithToasts(<Probe duration={5000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await screen.findByText('Saved')
     expect(document.querySelector('[data-slot="toast-progress"]')).toBeInTheDocument()
 
     unmount()
-    renderWithProviders(<Probe duration={0} />)
+    renderWithToasts(<Probe duration={0} />)
     await user.click(screen.getByRole('button', { name: 'success' }))
     await screen.findByText('Saved')
     expect(document.querySelector('[data-slot="toast-progress"]')).not.toBeInTheDocument()
@@ -402,7 +518,7 @@ describe('Toast', () => {
 
   it('keeps a dismissed toast mounted and inert while it leaves', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<Probe duration={0} />)
+    renderWithToasts(<Probe duration={0} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await user.click(await screen.findByRole('button', { name: 'Fechar notificação' }))
@@ -415,7 +531,7 @@ describe('Toast', () => {
 
   it('removes the toast at once when animation is off', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<Probe duration={0} />, { motion: { mode: 'never' } })
+    renderWithToasts(<Probe duration={0} />, { motion: { mode: 'never' } })
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await user.click(await screen.findByRole('button', { name: 'Fechar notificação' }))
@@ -425,7 +541,7 @@ describe('Toast', () => {
 
   it('marks a hovered toast as paused for the progress bar', async () => {
     const user = userEvent.setup()
-    renderWithProviders(<Probe duration={5000} />)
+    renderWithToasts(<Probe duration={5000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     const item = (await screen.findByText('Saved')).closest('[data-slot="toast"]') as HTMLElement
@@ -440,7 +556,7 @@ describe('Toast', () => {
 
   it('has no axe violations', async () => {
     const user = userEvent.setup()
-    const { container } = renderWithProviders(<Probe duration={0} />)
+    const { container } = renderWithToasts(<Probe duration={0} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await user.click(screen.getByRole('button', { name: 'error' }))

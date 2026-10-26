@@ -245,4 +245,41 @@ describe('a toast fired while a modal is open, in a real browser', () => {
 
     expect(page.getByRole('dialog').element().contains(document.activeElement)).toBe(true)
   })
+
+  it('is announced by an announcer that is not inert', async () => {
+    await openModalAndToast()
+    const announcer = document.querySelector<HTMLElement>('[data-slot="toast-host"] [role="alert"]') as HTMLElement
+
+    expect(announcer.closest('[inert]')).toBeNull()
+    await expect.poll(() => announcer.textContent).toBe('Falha ao salvar')
+  })
+})
+
+describe('the announcers of the notification region in a real browser', () => {
+  const announcers = () => ['status', 'alert'].map((role) => document.querySelector<HTMLElement>(`[data-slot="toast-host"] [role="${role}"]`) as HTMLElement)
+
+  it('are there before any toast, and nobody can see them', async () => {
+    renderInBrowser(<Launcher />, 'auto')
+
+    for (const announcer of announcers()) {
+      const box = announcer.getBoundingClientRect()
+
+      expect(announcer.textContent).toBe('')
+      expect(box.width).toBeLessThanOrEqual(1)
+      expect(box.height).toBeLessThanOrEqual(1)
+      expect(getComputedStyle(announcer).clipPath).toBe('inset(50%)')
+    }
+  })
+
+  it('say the text of a toast while the visible toast keeps no role', async () => {
+    renderInBrowser(<Launcher />, 'auto')
+    await fire('alfa')
+    const [status, alert] = announcers()
+
+    await expect.poll(() => status.textContent).toBe('Alfa')
+
+    expect(alert.textContent).toBe('')
+    expect(itemWith('Alfa')?.hasAttribute('role')).toBe(false)
+    expect(document.querySelector('[data-slot="toast-viewport"]')?.hasAttribute('aria-live')).toBe(false)
+  })
 })

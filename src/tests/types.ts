@@ -8,4 +8,5 @@ export type RenderWithProvidersOptions = {
   motion?: UIProviderProps['motion']
   labels?: UIProviderProps['labels']
   locale?: UIProviderProps['locale']
+  toasts?: boolean
 }

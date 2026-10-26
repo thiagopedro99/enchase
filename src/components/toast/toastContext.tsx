@@ -2,11 +2,13 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { defaultToastDuration, reducedMotionQuery } from './defaultData.ts'
+import { VisuallyHidden } from '@components/common/VisuallyHidden/index.tsx'
 import { inertExemptSlot } from '@hooks/useInertSiblings.ts'
 import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { useIsClient } from '@hooks/useIsClient.ts'
+import { useAnnouncer } from './useAnnouncer.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import ToastItemComponent from './toastItem.tsx'
 import { ToastContext } from './context.ts'
@@ -14,6 +16,7 @@ import { useFlip } from './useFlip.ts'
 import styles from './styles.module.css'
 
 import type { Toast, ToastEntry, ToastOptions, ToastType, ToastProviderProps } from './types.ts'
+import type { ReactNode } from 'react'
 
 export const ToastProvider = ({ children, container, animation, className, style }: ToastProviderProps) => {
   const [entries, setEntries] = useState<ToastEntry[]>([])
@@ -21,6 +24,8 @@ export const ToastProvider = ({ children, container, animation, className, style
   const { labels } = useUIConfig()
   const reduced = useMediaQuery(reducedMotionQuery)
   const isClient = useIsClient()
+  const [statusText, announceStatus] = useAnnouncer()
+  const [alertText, announceAlert] = useAnnouncer()
   const host = useMemo(() => {
     if (!isClient) return null
 
@@ -44,7 +49,9 @@ export const ToastProvider = ({ children, container, animation, className, style
 
   useFlip(viewportRef, !reduced)
 
-  const addToast = useCallback((message: string, type: ToastType, duration = defaultToastDuration, options?: ToastOptions) => {
+  const announce = useCallback((type: ToastType, text: string) => (type === 'error' ? announceAlert(text) : announceStatus(text)), [announceAlert, announceStatus])
+
+  const addToast = useCallback((message: ReactNode, type: ToastType, duration = defaultToastDuration, options?: ToastOptions) => {
     const id = Math.random().toString(36).slice(2, 11)
     const toast: Toast = { id, message, type, duration, ...options }
 
@@ -61,10 +68,10 @@ export const ToastProvider = ({ children, container, animation, className, style
     setEntries((previous) => previous.filter((entry) => entry.toast.id !== id))
   }, [])
 
-  const success = useCallback((message: string, duration?: number, options?: ToastOptions) => addToast(message, 'success', duration, options), [addToast])
-  const error = useCallback((message: string, duration?: number, options?: ToastOptions) => addToast(message, 'error', duration, options), [addToast])
-  const warning = useCallback((message: string, duration?: number, options?: ToastOptions) => addToast(message, 'warning', duration, options), [addToast])
-  const info = useCallback((message: string, duration?: number, options?: ToastOptions) => addToast(message, 'info', duration, options), [addToast])
+  const success = useCallback((message: ReactNode, duration?: number, options?: ToastOptions) => addToast(message, 'success', duration, options), [addToast])
+  const error = useCallback((message: ReactNode, duration?: number, options?: ToastOptions) => addToast(message, 'error', duration, options), [addToast])
+  const warning = useCallback((message: ReactNode, duration?: number, options?: ToastOptions) => addToast(message, 'warning', duration, options), [addToast])
+  const info = useCallback((message: ReactNode, duration?: number, options?: ToastOptions) => addToast(message, 'info', duration, options), [addToast])
 
   const actions = useMemo(() => ({ addToast, removeToast, success, error, warning, info }), [addToast, removeToast, success, error, warning, info])
 
@@ -73,19 +80,25 @@ export const ToastProvider = ({ children, container, animation, className, style
       ...slot('toast', 'viewport'),
       className: styles.container,
       role: 'region',
-      'aria-label': labels.notifications,
-      'aria-live': 'polite' as const,
-      'aria-relevant': 'additions' as const
+      'aria-label': labels.notifications
     },
     { className, style }
   )
 
   const viewport = (
-    <div ref={viewportRef} {...viewportProps}>
-      {entries.map(({ toast, closing }) => (
-        <ToastItemComponent key={toast.id} toast={toast} open={!closing} onRemove={removeToast} onDispose={disposeToast} animation={animation} />
-      ))}
-    </div>
+    <>
+      <VisuallyHidden role="status" aria-atomic="true">
+        {statusText}
+      </VisuallyHidden>
+      <VisuallyHidden role="alert" aria-atomic="true">
+        {alertText}
+      </VisuallyHidden>
+      <div ref={viewportRef} {...viewportProps}>
+        {entries.map(({ toast, closing }) => (
+          <ToastItemComponent key={toast.id} toast={toast} open={!closing} onRemove={removeToast} onDispose={disposeToast} onAnnounce={announce} animation={animation} />
+        ))}
+      </div>
+    </>
   )
 
   return (

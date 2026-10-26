@@ -25,7 +25,7 @@ const meta = {
   },
   argTypes: {
     type: {
-      description: 'Type of the notification: sets the color and the icon. Only error uses role="alert"; the others are announced by the notification region.',
+      description: 'Type of the notification: sets the color and the icon, and the way it is announced. Success, info and warning are announced politely (role="status") and error at once (role="alert"), by two hidden announcers of the provider.',
       control: 'inline-radio',
       options: ['success', 'error', 'warning', 'info']
     },
@@ -35,7 +35,7 @@ const meta = {
       table: { defaultValue: { summary: '3000' } }
     },
     message: {
-      description: 'Text of the notification.',
+      description: 'Content of the notification: text or nodes, such as a link. The text of the content is what screen readers announce.',
       control: 'text'
     }
   }

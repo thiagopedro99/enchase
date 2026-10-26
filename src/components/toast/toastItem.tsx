@@ -21,7 +21,7 @@ const Icons = {
   info: <InfoIcon size={20} />
 }
 
-const ToastItemComponent = ({ toast, open, onRemove, onDispose, animation }: ToastItemProps) => {
+const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, animation }: ToastItemProps) => {
   const { labels } = useUIConfig()
   const motionStyle = useMotionStyle('slide', 'toast', animation, 'right', toastBase)
   const duration = toast.duration ?? defaultToastDuration
@@ -30,12 +30,25 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, animation }: Toa
   const [hovered, setHovered] = useState(false)
   const [focused, setFocused] = useState(false)
   const remaining = useRef(duration)
+  const announced = useRef('')
   const paused = hovered || focused
   const { mounted, state, ref } = usePresence<HTMLDivElement>(shown && open)
 
   const handleClose = useCallback(() => onRemove(toast.id), [onRemove, toast.id])
 
   useEffect(() => setShown(true), [])
+
+  useEffect(() => {
+    if (!mounted) return
+
+    const text = ref.current?.querySelector('[data-slot="toast-title"]')?.textContent?.trim() ?? ''
+    const key = `${toast.type}:${text}`
+
+    if (!text || announced.current === key) return
+
+    announced.current = key
+    onAnnounce(toast.type, text)
+  }, [mounted, toast.type, toast.message, onAnnounce, ref])
 
   useEffect(() => {
     if (!open && !mounted) onDispose(toast.id)
@@ -68,7 +81,6 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, animation }: Toa
       'data-state': state,
       'data-paused': paused ? '' : undefined,
       'data-flip-id': toast.id,
-      role: toast.type === 'error' ? 'alert' : undefined,
       inert: state === 'exiting' ? true : undefined,
       onMouseEnter: () => setHovered(true),
       onMouseLeave: () => setHovered(false),

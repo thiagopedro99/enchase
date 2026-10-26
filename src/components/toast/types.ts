@@ -11,18 +11,18 @@ export interface ToastOptions {
 
 export interface Toast extends ToastOptions {
   id: string
-  message: string
+  message: ReactNode
   type: ToastType
   duration?: number | undefined
 }
 
 export interface ToastContextType {
-  addToast: (message: string, type: ToastType, duration?: number, options?: ToastOptions) => string
+  addToast: (message: ReactNode, type: ToastType, duration?: number, options?: ToastOptions) => string
   removeToast: (id: string) => void
-  success: (message: string, duration?: number, options?: ToastOptions) => string
-  error: (message: string, duration?: number, options?: ToastOptions) => string
-  warning: (message: string, duration?: number, options?: ToastOptions) => string
-  info: (message: string, duration?: number, options?: ToastOptions) => string
+  success: (message: ReactNode, duration?: number, options?: ToastOptions) => string
+  error: (message: ReactNode, duration?: number, options?: ToastOptions) => string
+  warning: (message: ReactNode, duration?: number, options?: ToastOptions) => string
+  info: (message: ReactNode, duration?: number, options?: ToastOptions) => string
 }
 
 export interface ToastProviderProps {
@@ -43,5 +43,6 @@ export interface ToastItemProps {
   open: boolean
   onRemove: (id: string) => void
   onDispose: (id: string) => void
+  onAnnounce: (type: ToastType, text: string) => void
   animation?: MotionOverride | undefined
 }

@@ -682,7 +682,7 @@ A `<style>` with the `--enchase-*` CSS variables of the theme. The `ColorModePro
 
 ### ToastProvider
 
-Holds the queue of notifications and the region where they appear (`role="region"`, with `aria-live`). The `success`, `error`, `warning` and `info` methods of `useToast` open the notifications.
+Holds the queue of notifications and the region where they appear (`role="region"`, named by `labels.notifications`, not a live region). Two hidden announcers, which exist before the first notification, read the text of each one aloud: `role="status"` for success, info and warning, and `role="alert"` for error. The `success`, `error`, `warning` and `info` methods of `useToast` open the notifications, and the message can be text or nodes.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -790,12 +790,12 @@ Returns:
 
 | Member | Type |
 | --- | --- |
-| `addToast` | `(message: string, type: ToastType, duration?: number, options?: ToastOptions) => string` |
+| `addToast` | `(message: ReactNode, type: ToastType, duration?: number, options?: ToastOptions) => string` |
 | `removeToast` | `(id: string) => void` |
-| `success` | `(message: string, duration?: number, options?: ToastOptions) => string` |
-| `error` | `(message: string, duration?: number, options?: ToastOptions) => string` |
-| `warning` | `(message: string, duration?: number, options?: ToastOptions) => string` |
-| `info` | `(message: string, duration?: number, options?: ToastOptions) => string` |
+| `success` | `(message: ReactNode, duration?: number, options?: ToastOptions) => string` |
+| `error` | `(message: ReactNode, duration?: number, options?: ToastOptions) => string` |
+| `warning` | `(message: ReactNode, duration?: number, options?: ToastOptions) => string` |
+| `info` | `(message: ReactNode, duration?: number, options?: ToastOptions) => string` |
 
 ### useUIConfig
 

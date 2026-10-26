@@ -9,11 +9,11 @@ import { ToastProvider } from '@components/toast/index.ts'
 import type { RenderWithProvidersOptions } from './types.ts'
 import type { ReactElement } from 'react'
 
-export const renderWithProviders = (ui: ReactElement, { theme = 'light', route = '/', navigate = vi.fn(), motion, labels, locale = ptBR }: RenderWithProvidersOptions = {}) => ({
+export const renderWithProviders = (ui: ReactElement, { theme = 'light', route = '/', navigate = vi.fn(), motion, labels, locale = ptBR, toasts = false }: RenderWithProvidersOptions = {}) => ({
   ...render(
     <ColorModeProvider defaultMode={theme} storage={null}>
       <UIProvider motion={motion} locale={locale} labels={labels} navigate={navigate} currentHref={route}>
-        <ToastProvider>{ui}</ToastProvider>
+        {toasts ? <ToastProvider>{ui}</ToastProvider> : ui}
       </UIProvider>
     </ColorModeProvider>
   ),
