@@ -6,21 +6,21 @@ import type { TableColumn } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { Order } from './defaultData.ts'
 
-const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' })
+const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
 
 const columns: TableColumn<Order>[] = [
-  { key: 'id', header: 'Pedido', rowHeader: true },
-  { key: 'customer', header: 'Cliente' },
+  { key: 'id', header: 'Order', rowHeader: true },
+  { key: 'customer', header: 'Customer' },
   {
     key: 'status',
-    header: 'Situação',
+    header: 'Status',
     cell: (row) => (
       <Badge variant={statusVariants[row.status]} size="sm">
         {statusLabels[row.status]}
       </Badge>
     )
   },
-  { key: 'date', header: 'Data' },
+  { key: 'date', header: 'Date' },
   { key: 'total', header: 'Total', align: 'end', cell: (row) => currency.format(row.total) }
 ]
 
@@ -30,12 +30,12 @@ const PaginatedDemo = () => {
 
   return (
     <div style={{ display: 'grid', gap: '1rem', inlineSize: 'min(48rem, 100%)' }}>
-      <Table caption="Pedidos" columns={columns} rows={orders.slice(first, first + pageSize)} getRowKey={(row) => row.id} />
+      <Table caption="Orders" columns={columns} rows={orders.slice(first, first + pageSize)} getRowKey={(row) => row.id} />
       <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap' }}>
         <div style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>
-          Mostrando {first + 1} a {Math.min(first + pageSize, orders.length)} de {orders.length}
+          Showing {first + 1} to {Math.min(first + pageSize, orders.length)} of {orders.length}
         </div>
-        <Pagination ariaLabel="Páginas de pedidos" pageCount={Math.ceil(orders.length / pageSize)} page={page} onPageChange={setPage} size="sm" />
+        <Pagination ariaLabel="Order pages" pageCount={Math.ceil(orders.length / pageSize)} page={page} onPageChange={setPage} size="sm" />
       </div>
     </div>
   )
@@ -45,7 +45,7 @@ const meta = {
   title: 'Components/Table',
   component: Table<Order>,
   args: {
-    caption: 'Pedidos recentes',
+    caption: 'Recent orders',
     columns,
     rows: orders.slice(0, 6),
     size: defaultSize,
@@ -56,7 +56,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Tabela de dados semântica, montada a partir de `columns` e `rows`: uma `<table>` com legenda (`<caption>`), cabeçalhos de coluna (`scope="col"`), cabeçalhos de linha opcionais e células que aceitam qualquer conteúdo pela função `cell`. É genérica: o tipo da linha passa das `rows` para as colunas. Quando a tabela é mais larga que o espaço, o contêiner rola na horizontal e vira uma região focável com o nome da tabela, para quem usa só o teclado. Não ordena nem pagina: ordene os dados antes e use a `Pagination` ao lado. Aceita `ref`, que vai para o contêiner, e os atributos do `<div>`; `className` e `style` também vão para ele.'
+          'A semantic data table, built from `columns` and `rows`: a `<table>` with a caption (`<caption>`), column headers (`scope="col"`), optional row headers and cells that accept any content through the `cell` function. It is generic: the row type flows from the `rows` to the columns. When the table is wider than the space available, the container scrolls horizontally and becomes a focusable region with the name of the table, for keyboard-only users. It does not sort or paginate: sort the data first and use the `Pagination` next to it. It accepts a `ref`, which goes to the container, and the attributes of the `<div>`; `className` and `style` go to it as well.'
       }
     }
   },
@@ -70,37 +70,37 @@ const meta = {
   argTypes: {
     columns: {
       description:
-        'Colunas da tabela, na ordem da tela. Cada uma tem `key` (o campo da linha que ela mostra), `header` (texto do cabeçalho) e, se quiser, `cell` (função que devolve o conteúdo da célula de uma linha), `align` (`start`, `center` ou `end`), `width` (largura CSS, como `8rem`) e `rowHeader` (as células dela viram cabeçalhos de linha). Sem `cell`, a coluna mostra `row[key]` como texto.',
+        'Columns of the table, in the order they appear on screen. Each one has `key` (the field of the row that it shows), `header` (the header text) and, optionally, `cell` (a function that returns the content of the cell of a row), `align` (`start`, `center` or `end`), `width` (CSS width, such as `8rem`) and `rowHeader` (its cells become row headers). Without `cell`, the column shows `row[key]` as text.',
       control: false
     },
     rows: {
-      description: 'Linhas da tabela, um objeto por linha. O tipo das linhas liga as colunas a elas: `TableColumn<Pedido>[]` com `rows` de `Pedido`.',
+      description: 'Rows of the table, one object per row. The row type links the columns to the rows: `TableColumn<Order>[]` with `rows` of `Order`.',
       control: false
     },
     getRowKey: {
-      description: 'Devolve a chave estável de uma linha, como o id, para o React reaproveitar a linha quando a ordem muda. Sem ela, vale a posição.',
+      description: 'Returns the stable key of a row, such as the id, so React can reuse the row when the order changes. Without it, the position is used.',
       control: false
     },
     caption: {
-      description: 'Título da tabela, escrito como `<caption>` acima dela, que também dá o nome acessível. Para um nome que não aparece, passe ariaLabel.',
+      description: 'Title of the table, rendered as a `<caption>` above it, which also gives the accessible name. For a name that is not shown, pass ariaLabel.',
       control: 'text'
     },
     ariaLabel: {
-      description: 'Nome da tabela para leitores de tela, útil quando não há legenda. Com as duas, vale ariaLabel.',
+      description: 'Name of the table for screen readers, useful when there is no caption. With both, ariaLabel is used.',
       control: 'text'
     },
     empty: {
-      description: 'Conteúdo mostrado em uma célula que ocupa todas as colunas quando não há linhas. Sem ele, só o cabeçalho aparece.',
+      description: 'Content shown in a cell that spans all the columns when there are no rows. Without it, only the header appears.',
       control: 'text'
     },
     size: {
-      description: 'Densidade das linhas: sm é compacta e md é a padrão.',
+      description: 'Density of the rows: sm is compact and md is the default.',
       control: 'inline-radio',
       options: ['sm', 'md'],
       table: { defaultValue: { summary: `'${defaultSize}'` } }
     },
     striped: {
-      description: 'Alterna o fundo das linhas para ajudar a seguir uma linha comprida.',
+      description: 'Alternates the background of the rows to help follow a long row.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultStriped) } }
     }
@@ -122,11 +122,11 @@ export const Small: Story = {
 }
 
 export const WithoutCaption: Story = {
-  args: { caption: undefined, ariaLabel: 'Pedidos recentes' }
+  args: { caption: undefined, ariaLabel: 'Recent orders' }
 }
 
 export const Empty: Story = {
-  args: { rows: [], empty: 'Nenhum pedido ainda' }
+  args: { rows: [], empty: 'No orders yet' }
 }
 
 export const Scrolls: Story = {

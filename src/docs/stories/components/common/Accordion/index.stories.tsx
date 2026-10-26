@@ -17,16 +17,16 @@ const company = (name: string, current = false) => (
     <span>{name}</span>
     {current && (
       <Badge variant="success" size="sm">
-        Atual
+        Current
       </Badge>
     )}
   </span>
 )
 
 const experience = [
-  { value: 'acme', title: company('Acme Ltda', true), content: <p style={{ margin: 0 }}>Desde 2023, na equipe de plataforma.</p> },
-  { value: 'globex', title: company('Globex S.A.'), content: <p style={{ margin: 0 }}>De 2019 a 2022, no time de produto.</p> },
-  { value: 'initech', title: company('Initech'), content: <p style={{ margin: 0 }}>De 2016 a 2019, como desenvolvedor.</p> }
+  { value: 'acme', title: company('Acme Labs', true), content: <p style={{ margin: 0 }}>Since 2023, on the platform team.</p> },
+  { value: 'globex', title: company('Globex Corp.'), content: <p style={{ margin: 0 }}>From 2019 to 2022, on the product team.</p> },
+  { value: 'initech', title: company('Initech'), content: <p style={{ margin: 0 }}>From 2016 to 2019, as a developer.</p> }
 ]
 
 const ControlledDemo = () => {
@@ -36,10 +36,10 @@ const ControlledDemo = () => {
     <div style={{ display: 'grid', gap: '1rem', inlineSize: 'min(36rem, 100%)' }}>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
         <Button size="sm" variant="outline" onClick={() => setOpen(faq.map(({ value }) => value))}>
-          Abrir todos
+          Open all
         </Button>
         <Button size="sm" variant="outline" onClick={() => setOpen([])}>
-          Fechar todos
+          Close all
         </Button>
       </div>
       <Accordion multiple items={items} value={open} onValueChange={setOpen} />
@@ -60,7 +60,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Lista de itens que abrem e fecham para mostrar um conteúdo por vez, ou vários com `multiple`, como em perguntas frequentes. Segue o padrão ARIA de acordeão: cada item é um botão com `aria-expanded` dentro de um título (`<h3>` por padrão), e o painel é uma região ligada ao botão. Tab percorre os botões, Enter e Espaço abrem e fecham, e as setas, Home e End movem o foco. Os painéis fechados ficam no documento, então o estado do conteúdo se mantém. Aceita `ref`, que vai para a raiz, e os atributos do `<div>`.'
+          'A list of items that open and close to show one piece of content at a time, or several with `multiple`, as in frequently asked questions. It follows the ARIA accordion pattern: each item is a button with `aria-expanded` inside a heading (`<h3>` by default), and the panel is a region linked to the button. Tab moves through the buttons, Enter and Space open and close the item, and the arrow keys, Home and End move the focus. Closed panels stay in the document, so the content keeps its state. It accepts a `ref`, which goes to the root, and the attributes of the `<div>`.'
       }
     }
   },
@@ -74,34 +74,34 @@ const meta = {
   argTypes: {
     items: {
       description:
-        'Itens do acordeão, na ordem da tela. Cada item tem `value` (único), `title` (o conteúdo do botão: texto ou nós, como um logo, um `span` e um `Badge`), `content` (conteúdo do painel) e, se quiser, `disabled`. O `title` fica dentro de um `<button>`, então só cabem elementos de texto, sem outro botão, link ou campo, e tudo o que está nele entra no nome do botão e do painel. Os painéis fechados ficam no documento, então o estado do conteúdo se mantém.',
+        'Items of the accordion, in the order they appear on screen. Each item has `value` (unique), `title` (the content of the button: text or nodes, such as a logo, a `span` and a `Badge`), `content` (the content of the panel) and, optionally, `disabled`. The `title` sits inside a `<button>`, so only text elements fit, with no other button, link or field, and everything in it is included in the name of the button and of the panel. Closed panels stay in the document, so the content keeps its state.',
       control: false
     },
     multiple: {
-      description: 'Deixa vários itens abertos ao mesmo tempo. Sem ela, abrir um item fecha o que estava aberto, e o item aberto ainda pode ser fechado de novo.',
+      description: 'Lets several items stay open at the same time. Without it, opening an item closes the one that was open, and the open item can still be closed again.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultMultiple) } }
     },
     value: {
-      description: 'Valores dos itens abertos quando o componente é controlado, em uma lista. Exige também onValueChange. Veja a story Controlled.',
+      description: 'Values of the open items when the component is controlled, as a list. It also requires onValueChange. See the Controlled story.',
       control: false
     },
     defaultValue: {
-      description: 'Valores dos itens abertos no início, em uma lista, para uso sem controle externo. Sem multiple, vale só o primeiro.',
+      description: 'Values of the items that start open, as a list, for use without external control. Without multiple, only the first one is used.',
       control: 'object'
     },
     onValueChange: {
-      description: 'Chamada com a lista dos itens abertos depois de cada clique.',
+      description: 'Called with the list of open items after each click.',
       control: false
     },
     headingLevel: {
-      description: 'Nível do título, de h2 a h6, que envolve o botão de cada item. Escolha o nível que continua a hierarquia de títulos da página.',
+      description: 'Level of the heading, from h2 to h6, that wraps the button of each item. Choose the level that continues the heading hierarchy of the page.',
       control: 'inline-radio',
       options: [2, 3, 4, 5, 6],
       table: { defaultValue: { summary: String(defaultHeadingLevel) } }
     },
     animation: {
-      description: 'Animação do painel, que aparece com um fade e um pequeno deslize, e da seta, que gira. A altura não anima. false desliga; { tuning: { duration, distance } } ajusta a duração em segundos e o deslize em pixels.',
+      description: 'Animation of the panel, which appears with a fade and a small slide, and of the arrow, which rotates. The height does not animate. false turns it off; { tuning: { duration, distance } } sets the duration in seconds and the slide in pixels.',
       control: false,
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'pop' } }
     }
@@ -136,7 +136,7 @@ export const WithNodesInTitle: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'O `title` aceita nós, não só texto: aqui o logo da empresa, o nome e um `Badge` ficam no botão, em vez de irem para o corpo do painel. Use elementos de texto (`span`, `Badge`, imagens): o título está dentro de um `<button>`. O nome do botão e do painel é o texto de tudo o que está nele, então o logo decorativo leva `aria-hidden` e as imagens, `alt=""`.'
+        story: 'The `title` accepts nodes, not only text: here the company logo, the name and a `Badge` sit in the button, instead of going into the body of the panel. Use text elements (`span`, `Badge`, images): the title is inside a `<button>`. The name of the button and of the panel is the text of everything in it, so the decorative logo gets `aria-hidden` and the images get `alt=""`.'
       }
     }
   }

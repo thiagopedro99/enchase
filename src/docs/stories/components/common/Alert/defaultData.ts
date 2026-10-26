@@ -3,8 +3,8 @@ export const defaultVariant = 'info'
 export const variants = ['info', 'success', 'warning', 'error'] as const
 
 export const variantTexts = {
-  info: { title: 'Nova versão disponível', message: 'Atualize para ver as novidades.' },
-  success: { title: 'Alterações salvas', message: 'Tudo certo com o seu cadastro.' },
-  warning: { title: 'Atenção ao prazo', message: 'A sua assinatura vence hoje.' },
-  error: { title: 'Não foi possível enviar', message: 'Confira a conexão e tente de novo.' }
+  info: { title: 'New version available', message: 'Update to see what is new.' },
+  success: { title: 'Changes saved', message: 'Everything is fine with your profile.' },
+  warning: { title: 'Deadline approaching', message: 'Your subscription expires today.' },
+  error: { title: 'Could not send', message: 'Check your connection and try again.' }
 } as const

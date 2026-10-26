@@ -8,34 +8,34 @@ const meta = {
   component: Card,
   args: {
     variant: 'default',
-    children: 'Conteúdo do cartão'
+    children: 'Card content'
   },
   parameters: {
     docs: {
       description: {
-        component: 'Superfície para agrupar conteúdo, nas variantes `default`, `elevated` e `outlined`. Só a `elevated` sobe ao passar o ponteiro. Com `as`, a raiz vira outra tag de estrutura, como `li` de uma lista de cartões. Para um cartão inteiro clicável, use `CardLink` ou `CardButton`.'
+        component: 'A surface that groups content, in the variants `default`, `elevated` and `outlined`. Only the `elevated` one rises when the pointer is over it. With `as`, the root becomes another structure tag, such as an `li` in a list of cards. For a card that is clickable as a whole, use `CardLink` or `CardButton`.'
       }
     }
   },
   argTypes: {
     as: asArgType,
     variant: {
-      description: 'Aparência do cartão. Só o elevated sobe ao passar o ponteiro.',
+      description: 'Appearance of the card. Only elevated rises when the pointer is over it.',
       control: 'select',
       options: ['default', 'elevated', 'outlined'],
       table: { defaultValue: { summary: 'default' } }
     },
     padding: {
-      description: 'Espaçamento interno (qualquer valor CSS). Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence.',
+      description: 'Inner spacing (any CSS value). Without it, the default spacing applies, and a class of your own always wins over it.',
       control: 'text'
     },
     animation: {
-      description: 'false desliga o movimento. { tuning: { duration, distance } } ajusta o lift (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido.',
+      description: 'false turns the motion off. { tuning: { duration, distance } } sets the lift (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion.',
       control: 'object',
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'lift' } }
     },
     className: {
-      description: 'Classe do cartão (data-slot="card"). Também dá para estilizar por data-variant e data-motion.',
+      description: 'Class of the card (data-slot="card"). You can also style it by data-variant and data-motion.',
       control: 'text'
     },
     children: { control: 'text' },
@@ -63,8 +63,8 @@ export const NoLift: Story = {
 
 export const ListOfCards: Story = {
   render: (args) => (
-    <Grid as="ul" columns={3} aria-label="Projetos">
-      {['Biblioteca de componentes', 'Painel de métricas', 'Loja de exemplo'].map((label) => (
+    <Grid as="ul" columns={3} aria-label="Projects">
+      {['Component library', 'Metrics dashboard', 'Example store'].map((label) => (
         <Card key={label} {...args} as="li">
           {label}
         </Card>
@@ -74,7 +74,7 @@ export const ListOfCards: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Uma lista de verdade: o `Grid` é um `ul` e cada `Card` é um `li`, sem `role` na mão. Como o `li` é item da grade, ele estica até a altura da linha sem `block-size: 100%`.'
+        story: 'A real list: the `Grid` is a `ul` and each `Card` is an `li`, with no hand-written `role`. Because the `li` is an item of the grid, it stretches to the height of the row without `block-size: 100%`.'
       }
     }
   }

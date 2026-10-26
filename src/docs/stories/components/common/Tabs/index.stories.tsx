@@ -18,7 +18,7 @@ const ControlledDemo = () => {
           </Button>
         ))}
       </div>
-      <Tabs ariaLabel="Seções da conta" items={items} value={tab} onValueChange={setTab} />
+      <Tabs ariaLabel="Account sections" items={items} value={tab} onValueChange={setTab} />
     </div>
   )
 }
@@ -27,7 +27,7 @@ const meta = {
   title: 'Components/Tabs',
   component: Tabs,
   args: {
-    ariaLabel: 'Seções da conta',
+    ariaLabel: 'Account sections',
     items,
     activation: defaultActivation
   },
@@ -36,40 +36,40 @@ const meta = {
     docs: {
       description: {
         component:
-          'Abas para dividir um conteúdo em painéis e mostrar um por vez. Seguem o padrão ARIA de abas: `role="tablist"`, uma única parada do Tab na aba escolhida, setas, Home e End para navegar e cada painel ligado à sua aba. Um indicador desliza até a aba escolhida, e a lista rola na horizontal quando as abas não cabem. As abas são horizontais. Aceita `ref`, que vai para a raiz, e os atributos do `<div>`.'
+          'A set of tabs that splits content into panels and shows one at a time. It follows the ARIA tabs pattern: `role="tablist"`, a single Tab stop on the selected tab, the arrow keys, Home and End to navigate, and each panel linked to its tab. An indicator slides to the selected tab, and the list scrolls horizontally when the tabs do not fit. The tabs are horizontal. It accepts a `ref`, which goes to the root, and the attributes of the `<div>`.'
       }
     }
   },
   argTypes: {
     items: {
       description:
-        'Abas da lista, na ordem da tela. Cada item tem `value` (único), `label` (o conteúdo da aba: texto ou nós, como um `span` e um `Badge`), `content` (conteúdo do painel) e, se quiser, `disabled`. O `label` fica dentro de um `<button>`, então só cabem elementos de texto, sem outro botão, link ou campo, e tudo o que está nele entra no nome da aba e do painel. Todos os painéis ficam no documento e só o da aba escolhida aparece, então o estado dos outros se mantém.',
+        'Tabs of the list, in the order they appear on screen. Each item has `value` (unique), `label` (the content of the tab: text or nodes, such as a `span` and a `Badge`), `content` (the content of the panel) and, optionally, `disabled`. The `label` sits inside a `<button>`, so only text elements fit, with no other button, link or field, and everything in it is included in the name of the tab and of the panel. All panels stay in the document and only the panel of the selected tab is shown, so the others keep their state.',
       control: false
     },
     value: {
-      description: 'Valor da aba escolhida quando o componente é controlado. Exige também onValueChange. Veja a story Controlled.',
+      description: 'Value of the selected tab when the component is controlled. It also requires onValueChange. See the Controlled story.',
       control: false
     },
     defaultValue: {
-      description: 'Valor da aba escolhida no início, para uso sem controle externo. Sem ele, vale a primeira aba que não está desativada.',
+      description: 'Value of the tab that starts selected, for use without external control. Without it, the first tab that is not disabled is used.',
       control: 'text'
     },
     onValueChange: {
-      description: 'Chamada com o valor da aba que o usuário acabou de escolher, por clique ou pelo teclado.',
+      description: 'Called with the value of the tab that the user has just selected, by click or by keyboard.',
       control: false
     },
     activation: {
-      description: 'Quando a aba focada pelas setas passa a valer: automatic escolhe a aba ao focá-la e manual só move o foco, e Enter ou Espaço escolhe. Prefira manual quando o painel demora a carregar.',
+      description: 'When a tab focused with the arrow keys becomes the selected one: automatic selects the tab as soon as it gets the focus; manual only moves the focus, and Enter or Space selects it. Prefer manual when the panel is slow to load.',
       control: 'inline-radio',
       options: ['automatic', 'manual'],
       table: { defaultValue: { summary: `'${defaultActivation}'` } }
     },
     ariaLabel: {
-      description: 'Nome da lista de abas para leitores de tela. Não aparece na tela: descreva o que as abas organizam, como Seções da conta.',
+      description: 'Name of the list of tabs for screen readers. It does not appear on the screen: describe what the tabs organize, such as Account sections.',
       control: 'text'
     },
     animation: {
-      description: 'Animação do indicador, que desliza até a aba escolhida, e do painel, que aparece com um fade. false desliga; { tuning: { duration } } ajusta a duração em segundos.',
+      description: 'Animation of the indicator, which slides to the selected tab, and of the panel, which appears with a fade. false turns it off; { tuning: { duration } } sets the duration in seconds.',
       control: false,
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'fade' } }
     }
@@ -103,7 +103,7 @@ export const ManyTabs: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
     <div style={{ inlineSize: 'min(24rem, 100%)' }}>
-      <Tabs ariaLabel="Áreas do painel" items={manySections.map((label) => ({ value: label, label, content: <p style={{ margin: 0 }}>Conteúdo de {label}.</p> }))} />
+      <Tabs ariaLabel="Dashboard areas" items={manySections.map((label) => ({ value: label, label, content: <p style={{ margin: 0 }}>{label} content.</p> }))} />
     </div>
   )
 }
@@ -113,10 +113,10 @@ export const KeepsState: Story = {
   render: () => (
     <div style={{ inlineSize: 'min(28rem, 100%)' }}>
       <Tabs
-        ariaLabel="Cadastro"
+        ariaLabel="Registration"
         items={[
-          { value: 'form', label: 'Formulário', content: <Input label="Nome" /> },
-          { value: 'help', label: 'Ajuda', content: <p style={{ margin: 0 }}>Escreva algo no formulário, troque de aba e volte: o texto continua lá.</p> }
+          { value: 'form', label: 'Form', content: <Input label="Name" /> },
+          { value: 'help', label: 'Help', content: <p style={{ margin: 0 }}>Type something in the form, switch tabs and come back: the text is still there.</p> }
         ]}
       />
     </div>
@@ -128,28 +128,28 @@ export const WithNodesInLabel: Story = {
     controls: { disable: true },
     docs: {
       description: {
-        story: 'O `label` aceita nós, não só texto: aqui a aba de notificações leva um `Badge` com a contagem. O indicador acompanha a largura da aba inteira, e o nome da aba é o texto de tudo o que está nela ("Notificações 12").'
+        story: 'The `label` accepts nodes, not only text: here the notifications tab holds a `Badge` with the count. The indicator follows the width of the whole tab, and the name of the tab is the text of everything in it ("Notifications 12").'
       }
     }
   },
   render: () => (
     <div style={{ inlineSize: 'min(32rem, 100%)' }}>
       <Tabs
-        ariaLabel="Caixa de entrada"
+        ariaLabel="Inbox"
         defaultValue="notifications"
         items={[
-          { value: 'messages', label: 'Mensagens', content: <p style={{ margin: 0 }}>Nenhuma mensagem nova.</p> },
+          { value: 'messages', label: 'Messages', content: <p style={{ margin: 0 }}>No new messages.</p> },
           {
             value: 'notifications',
             label: (
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span>Notificações</span>
+                <span>Notifications</span>
                 <Badge variant="primary" size="sm">
                   12
                 </Badge>
               </span>
             ),
-            content: <p style={{ margin: 0 }}>Doze notificações para ler.</p>
+            content: <p style={{ margin: 0 }}>Twelve notifications to read.</p>
           }
         ]}
       />

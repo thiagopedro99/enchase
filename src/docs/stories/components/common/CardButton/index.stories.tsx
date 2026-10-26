@@ -4,12 +4,12 @@ import { Badge, CardButton, Grid } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const skills = [
-  ['React', 'Componentes e hooks'],
-  ['TypeScript', 'Tipos de ponta a ponta'],
-  ['CSS Modules', 'Estilo sem runtime'],
-  ['Vite', 'Build rápido'],
-  ['Storybook', 'Documentação viva'],
-  ['Vitest', 'Testes de comportamento']
+  ['React', 'Components and hooks'],
+  ['TypeScript', 'End-to-end types'],
+  ['CSS Modules', 'Styling with no runtime'],
+  ['Vite', 'Fast build'],
+  ['Storybook', 'Living documentation'],
+  ['Vitest', 'Behavior tests']
 ]
 
 const content = (title: string, text: string) => (
@@ -24,7 +24,7 @@ const SelectableSkills = () => {
 
   return (
     <div style={{ display: 'grid', gap: '1rem' }}>
-      <Grid as="ul" columns={{ xs: 1, sm: 2, lg: 3 }} aria-label="Habilidades">
+      <Grid as="ul" columns={{ xs: 1, sm: 2, lg: 3 }} aria-label="Skills">
         {skills.map(([title, text]) => (
           <li key={title}>
             <CardButton variant={title === selected ? 'elevated' : 'outlined'} aria-pressed={title === selected} onClick={() => setSelected(title)}>
@@ -33,7 +33,7 @@ const SelectableSkills = () => {
           </li>
         ))}
       </Grid>
-      <output>Escolhida: {selected}</output>
+      <output>Selected: {selected}</output>
     </div>
   )
 }
@@ -43,38 +43,38 @@ const meta = {
   component: CardButton,
   args: {
     variant: 'default',
-    children: content('React', 'Componentes e hooks')
+    children: content('React', 'Components and hooks')
   },
   parameters: {
     docs: {
       description: {
         component:
-          'Cartão inteiro clicável que faz uma ação: um `<button type="button">` de verdade, com a superfície do `Card` (`variant`, `padding` e `animation`, e os mesmos ganchos `--enchase-card-*`), anel de foco, camadas de hover e de pressionado, e `disabled`. O `type` padrão é `button`, então ele não envia um formulário sozinho. O conteúdo de um `<button>` só pode ter elementos de texto (`span`, `strong`, `Badge`, imagens), sem outro botão, link ou campo dentro, e tudo o que está dentro entra no nome acessível. Para navegar, use `CardLink`. Dentro de uma lista, ponha o botão num `li`: ele ocupa a altura do item.'
+          'A card that is clickable as a whole and performs an action: a real `<button type="button">`, with the surface of the `Card` (`variant`, `padding` and `animation`, and the same `--enchase-card-*` hooks), a focus ring, hover and pressed layers, and `disabled`. The default `type` is `button`, so it does not submit a form on its own. The content of a `<button>` can only hold text elements (`span`, `strong`, `Badge`, images), with no other button, link or field inside, and everything inside is included in the accessible name. To navigate, use `CardLink`. Inside a list, put the button in an `li`: it fills the height of the item.'
       }
     }
   },
   argTypes: {
     variant: {
-      description: 'Aparência da superfície, a mesma do `Card`. Só a `elevated` sobe ao passar o ponteiro.',
+      description: 'Appearance of the surface, the same as the `Card`. Only the `elevated` one rises when the pointer is over it.',
       control: 'select',
       options: ['default', 'elevated', 'outlined'],
       table: { defaultValue: { summary: 'default' } }
     },
     padding: {
-      description: 'Espaçamento interno (qualquer valor CSS), como no `Card`. Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence.',
+      description: 'Inner spacing (any CSS value), as in the `Card`. Without it, the default spacing applies, and a class of your own always wins over it.',
       control: 'text'
     },
     animation: {
-      description: 'false desliga o movimento. { tuning: { duration, distance } } ajusta o lift da variante `elevated` (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido.',
+      description: 'false turns the motion off. { tuning: { duration, distance } } sets the lift of the `elevated` variant (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion.',
       control: 'object',
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'lift' } }
     },
     disabled: {
-      description: 'Desativa o botão: ele sai da ordem do Tab, não responde ao clique e fica com a opacidade de `--enchase-card-opacity-disabled`.',
+      description: 'Disables the button: it leaves the Tab order, does not respond to clicks and gets the opacity of `--enchase-card-opacity-disabled`.',
       control: 'boolean'
     },
     className: {
-      description: 'Classe do botão (`data-slot="card-button"`). Também dá para estilizar por `data-variant` e `data-motion`.',
+      description: 'Class of the button (`data-slot="card-button"`). You can also style it by `data-variant` and `data-motion`.',
       control: 'text'
     },
     children: { control: false },
@@ -97,7 +97,7 @@ export const Outlined: Story = {
 }
 
 export const Disabled: Story = {
-  args: { variant: 'outlined', disabled: true, children: content('Em breve', 'Ainda não está disponível') }
+  args: { variant: 'outlined', disabled: true, children: content('Coming soon', 'Not available yet') }
 }
 
 export const WithBadge: Story = {
@@ -105,9 +105,9 @@ export const WithBadge: Story = {
     variant: 'outlined',
     children: (
       <>
-        <span style={{ display: 'block', fontWeight: 600 }}>Experiência</span>
+        <span style={{ display: 'block', fontWeight: 600 }}>Experience</span>
         <span style={{ display: 'block', color: 'var(--enchase-color-text-secondary)' }}>
-          Acme Ltda <Badge variant="success">Atual</Badge>
+          Acme Labs <Badge variant="success">Current</Badge>
         </span>
       </>
     )
@@ -119,7 +119,7 @@ export const InAList: Story = {
     controls: { disable: true },
     docs: {
       description: {
-        story: 'Uma grade de escolhas sem CSS à mão: o `Grid` é um `ul`, cada botão fica num `li` e ocupa a altura da linha. Aqui o botão escolhido usa `aria-pressed` e a variante `elevated`.'
+        story: 'A grid of choices with no hand-written CSS: the `Grid` is a `ul`, each button sits in an `li` and fills the height of the row. Here the selected button uses `aria-pressed` and the `elevated` variant.'
       }
     }
   },

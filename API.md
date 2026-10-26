@@ -10,30 +10,30 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ### Accordion
 
-Lista de itens que abrem e fecham para mostrar um conteúdo por vez, ou vários com `multiple`, como em perguntas frequentes. Segue o padrão ARIA de acordeão: cada item é um botão com `aria-expanded` dentro de um título (`<h3>` por padrão), e o painel é uma região ligada ao botão. Tab percorre os botões, Enter e Espaço abrem e fecham, e as setas, Home e End movem o foco. Os painéis fechados ficam no documento, então o estado do conteúdo se mantém. Aceita `ref`, que vai para a raiz, e os atributos do `<div>`.
+A list of items that open and close to show one piece of content at a time, or several with `multiple`, as in frequently asked questions. It follows the ARIA accordion pattern: each item is a button with `aria-expanded` inside a heading (`<h3>` by default), and the panel is a region linked to the button. Tab moves through the buttons, Enter and Space open and close the item, and the arrow keys, Home and End move the focus. Closed panels stay in the document, so the content keeps its state. It accepts a `ref`, which goes to the root, and the attributes of the `<div>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `AccordionItem[]` | *required* | Itens do acordeão, na ordem da tela. Cada item tem `value` (único), `title` (o conteúdo do botão: texto ou nós, como um logo, um `span` e um `Badge`), `content` (conteúdo do painel) e, se quiser, `disabled`. O `title` fica dentro de um `<button>`, então só cabem elementos de texto, sem outro botão, link ou campo, e tudo o que está nele entra no nome do botão e do painel. Os painéis fechados ficam no documento, então o estado do conteúdo se mantém. |
-| `multiple` | `boolean` | `false` | Deixa vários itens abertos ao mesmo tempo. Sem ela, abrir um item fecha o que estava aberto, e o item aberto ainda pode ser fechado de novo. |
-| `value` | `string[]` | — | Valores dos itens abertos quando o componente é controlado, em uma lista. Exige também onValueChange. Veja a story Controlled. |
-| `defaultValue` | `string[]` | — | Valores dos itens abertos no início, em uma lista, para uso sem controle externo. Sem multiple, vale só o primeiro. |
-| `onValueChange` | `(value: string[]) => void` | — | Chamada com a lista dos itens abertos depois de cada clique. |
-| `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3` | Nível do título, de h2 a h6, que envolve o botão de cada item. Escolha o nível que continua a hierarquia de títulos da página. |
-| `animation` | `false \| { recipe, tuning }` | `pop` | Animação do painel, que aparece com um fade e um pequeno deslize, e da seta, que gira. A altura não anima. false desliga; { tuning: { duration, distance } } ajusta a duração em segundos e o deslize em pixels. |
+| `items` | `AccordionItem[]` | *required* | Items of the accordion, in the order they appear on screen. Each item has `value` (unique), `title` (the content of the button: text or nodes, such as a logo, a `span` and a `Badge`), `content` (the content of the panel) and, optionally, `disabled`. The `title` sits inside a `<button>`, so only text elements fit, with no other button, link or field, and everything in it is included in the name of the button and of the panel. Closed panels stay in the document, so the content keeps its state. |
+| `multiple` | `boolean` | `false` | Lets several items stay open at the same time. Without it, opening an item closes the one that was open, and the open item can still be closed again. |
+| `value` | `string[]` | — | Values of the open items when the component is controlled, as a list. It also requires onValueChange. See the Controlled story. |
+| `defaultValue` | `string[]` | — | Values of the items that start open, as a list, for use without external control. Without multiple, only the first one is used. |
+| `onValueChange` | `(value: string[]) => void` | — | Called with the list of open items after each click. |
+| `headingLevel` | `2 \| 3 \| 4 \| 5 \| 6` | `3` | Level of the heading, from h2 to h6, that wraps the button of each item. Choose the level that continues the heading hierarchy of the page. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the panel, which appears with a fade and a small slide, and of the arrow, which rotates. The height does not animate. false turns it off; { tuning: { duration, distance } } sets the duration in seconds and the slide in pixels. |
 
 Also accepts the other attributes of `<div>`, passed on to the element. Forwards the `ref` to `<div>`.
 
 ### Alert
 
-Mensagem de status dentro da página, em quatro tipos (`info`, `success`, `warning` e `error`), com título, ícone e botão de fechar opcionais. Para avisos temporários que somem sozinhos, use as notificações (`useToast`). É um `<div>` e aceita os atributos dele.
+A status message inside the page, in four types (`info`, `success`, `warning` and `error`), with an optional title, icon and close button. For temporary messages that go away on their own, use notifications (`useToast`). It is a `<div>` and accepts the attributes of the `<div>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'info' \| 'success' \| 'warning' \| 'error'` | `'info'` | Tipo da mensagem: define a cor, o ícone e o papel ARIA. Só error usa role="alert" e é anunciado na hora; os outros usam role="status", que leitores de tela costumam não anunciar quando o alerta já aparece com o texto. Para um aviso inserido depois do carregamento da página e que precise ser lido, passe role="alert". |
-| `title` | `string` | — | Título em destaque, acima da mensagem. |
-| `icon` | `ReactNode` | — | Ícone no lugar do padrão de cada tipo. Com null ou false, não mostra ícone. O ícone é decorativo (aria-hidden), então o texto precisa dizer tudo. |
-| `onClose` | `() => void` | — | Mostra o botão de fechar e é chamado ao clicar nele. O Alert não some sozinho: quem usa o remove. O nome do botão vem de labels.closeToast do UIProvider. |
+| `variant` | `'info' \| 'success' \| 'warning' \| 'error'` | `'info'` | Type of the message: it sets the color, the icon and the ARIA role. Only error uses role="alert" and is announced at once; the others use role="status", which screen readers usually do not announce when the alert already appears with its text. For a message that is inserted after the page has loaded and has to be read, pass role="alert". |
+| `title` | `string` | — | Highlighted title, above the message. |
+| `icon` | `ReactNode` | — | Icon in place of the default one of each type. With null or false, the Alert shows no icon. The icon is decorative (aria-hidden), so the text has to say everything. |
+| `onClose` | `() => void` | — | Shows the close button and is called when it is clicked. The Alert does not go away on its own: you remove it. The name of the button comes from labels.closeToast of the UIProvider. |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
 
@@ -52,12 +52,12 @@ Also accepts the other attributes of `<span>`, passed on to the element.
 
 ### Badge
 
-Etiqueta pequena para um estado ou uma contagem, como "Novo", "Pago" ou "3". A cor vem de pares de papéis do tema, com o contraste conferido, e o texto sempre carrega o significado: nunca dependa só da cor. É um `<span>` e aceita os atributos dele.
+A small label for a state or a count, such as "New", "Paid" or "3". The color comes from pairs of theme roles, with the contrast checked, and the text always carries the meaning: never rely on color alone. It is a `<span>` and accepts the attributes of the `<span>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'neutral' \| 'primary' \| 'success' \| 'warning' \| 'error' \| 'info'` | `'neutral'` | Cor da etiqueta, por papel do tema: neutral é cinza, primary usa a cor principal e success, warning, error e info seguem os estados. |
-| `size` | `'sm' \| 'md'` | `'md'` | Tamanho da etiqueta: sm tem 20 px de altura e md, 24 px. |
+| `variant` | `'neutral' \| 'primary' \| 'success' \| 'warning' \| 'error' \| 'info'` | `'neutral'` | Color of the badge, by theme role: neutral is gray, primary uses the main color and success, warning, error and info follow the states. |
+| `size` | `'sm' \| 'md'` | `'md'` | Size of the badge: sm is 20 px tall and md is 24 px. |
 
 Also accepts the other attributes of `<span>`, passed on to the element.
 
@@ -104,40 +104,40 @@ Also accepts the other attributes of `<a>`, passed on to the element.
 
 ### Card
 
-Superfície para agrupar conteúdo, nas variantes `default`, `elevated` e `outlined`. Só a `elevated` sobe ao passar o ponteiro. Com `as`, a raiz vira outra tag de estrutura, como `li` de uma lista de cartões. Para um cartão inteiro clicável, use `CardLink` ou `CardButton`.
+A surface that groups content, in the variants `default`, `elevated` and `outlined`. Only the `elevated` one rises when the pointer is over it. With `as`, the root becomes another structure tag, such as an `li` in a list of cards. For a card that is clickable as a whole, use `CardLink` or `CardButton`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
-| `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Aparência do cartão. Só o elevated sobe ao passar o ponteiro. |
-| `padding` | `string` | — | Espaçamento interno (qualquer valor CSS). Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence. |
-| `animation` | `false \| { recipe, tuning }` | `lift` | false desliga o movimento. { tuning: { duration, distance } } ajusta o lift (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido. |
+| `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Appearance of the card. Only elevated rises when the pointer is over it. |
+| `padding` | `string` | — | Inner spacing (any CSS value). Without it, the default spacing applies, and a class of your own always wins over it. |
+| `animation` | `false \| { recipe, tuning }` | `lift` | false turns the motion off. { tuning: { duration, distance } } sets the lift (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion. |
 
 Also accepts the other HTML attributes of the root element.
 
 ### CardButton
 
-Cartão inteiro clicável que faz uma ação: um `<button type="button">` de verdade, com a superfície do `Card` (`variant`, `padding` e `animation`, e os mesmos ganchos `--enchase-card-*`), anel de foco, camadas de hover e de pressionado, e `disabled`. O `type` padrão é `button`, então ele não envia um formulário sozinho. O conteúdo de um `<button>` só pode ter elementos de texto (`span`, `strong`, `Badge`, imagens), sem outro botão, link ou campo dentro, e tudo o que está dentro entra no nome acessível. Para navegar, use `CardLink`. Dentro de uma lista, ponha o botão num `li`: ele ocupa a altura do item.
+A card that is clickable as a whole and performs an action: a real `<button type="button">`, with the surface of the `Card` (`variant`, `padding` and `animation`, and the same `--enchase-card-*` hooks), a focus ring, hover and pressed layers, and `disabled`. The default `type` is `button`, so it does not submit a form on its own. The content of a `<button>` can only hold text elements (`span`, `strong`, `Badge`, images), with no other button, link or field inside, and everything inside is included in the accessible name. To navigate, use `CardLink`. Inside a list, put the button in an `li`: it fills the height of the item.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `animation` | `false \| { recipe, tuning }` | `lift` | false desliga o movimento. { tuning: { duration, distance } } ajusta o lift da variante `elevated` (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido. |
-| `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Aparência da superfície, a mesma do `Card`. Só a `elevated` sobe ao passar o ponteiro. |
-| `padding` | `string` | — | Espaçamento interno (qualquer valor CSS), como no `Card`. Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence. |
+| `animation` | `false \| { recipe, tuning }` | `lift` | false turns the motion off. { tuning: { duration, distance } } sets the lift of the `elevated` variant (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion. |
+| `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Appearance of the surface, the same as the `Card`. Only the `elevated` one rises when the pointer is over it. |
+| `padding` | `string` | — | Inner spacing (any CSS value), as in the `Card`. Without it, the default spacing applies, and a class of your own always wins over it. |
 
 Also accepts the other attributes of `<button>`, passed on to the element.
 
 ### CardLink
 
-Cartão inteiro clicável que leva a outra página: um `<a href>` de verdade, com a superfície do `Card` (`variant`, `padding` e `animation`, e os mesmos ganchos `--enchase-card-*`), anel de foco e camadas de hover e de pressionado. Passa pelo `navigate` do `UIProvider` nas rotas do app, como o `Link` (veja `native`, `target` e `download`). Com `target="_blank"`, o `rel` vira `noopener noreferrer` e o texto "abre em nova aba" entra no nome acessível, sem ícone: o desenho do cartão é seu. Tudo o que está dentro do cartão entra no nome do link, então prefira um título curto e um apoio curto. O conteúdo de um `<a>` aceita títulos e parágrafos, mas não outro link ou botão. Para uma ação, use `CardButton`.
+A card that is clickable as a whole and leads to another page: a real `<a href>`, with the surface of the `Card` (`variant`, `padding` and `animation`, and the same `--enchase-card-*` hooks), a focus ring and hover and pressed layers. It goes through the `navigate` of the `UIProvider` for app routes, like the `Link` (see `native`, `target` and `download`). With `target="_blank"`, the `rel` becomes `noopener noreferrer` and the text "opens in a new tab" is added to the accessible name, with no icon: the design of the card is yours. Everything inside the card is included in the name of the link, so prefer a short title and a short supporting text. The content of an `<a>` accepts headings and paragraphs, but not another link or button. For an action, use `CardButton`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `href` | `string` | *required* | Destino do link, com as mesmas regras do `Link`: uma rota do app vai para o `navigate` do `UIProvider`; âncoras, o hash da página atual e URLs externas ficam com o navegador. |
-| `native` | `boolean` | `false` | Deixa o clique com o navegador mesmo em uma rota do app. |
-| `animation` | `false \| { recipe, tuning }` | `lift` | false desliga o movimento. { tuning: { duration, distance } } ajusta o lift da variante `elevated` (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido. |
-| `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Aparência da superfície, a mesma do `Card`. Só a `elevated` sobe ao passar o ponteiro. |
-| `padding` | `string` | — | Espaçamento interno (qualquer valor CSS), como no `Card`. Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence. |
+| `href` | `string` | *required* | Destination of the link, with the same rules as the `Link`: an app route goes to the `navigate` of the `UIProvider`; anchors, the hash of the current page and external URLs are left to the browser. |
+| `native` | `boolean` | `false` | Leaves the click to the browser even on an app route. |
+| `animation` | `false \| { recipe, tuning }` | `lift` | false turns the motion off. { tuning: { duration, distance } } sets the lift of the `elevated` variant (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion. |
+| `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Appearance of the surface, the same as the `Card`. Only the `elevated` one rises when the pointer is over it. |
+| `padding` | `string` | — | Inner spacing (any CSS value), as in the `Card`. Without it, the default spacing applies, and a class of your own always wins over it. |
 
 Also accepts the other attributes of `<a>`, passed on to the element.
 
@@ -571,14 +571,14 @@ Menu lateral. `permanent` fica na página e recolhe para uma barra de ícones; `
 
 ### Skeleton
 
-Espaço reservado enquanto o conteúdo carrega, com brilho animado, nas formas texto, círculo e retângulo.
+A placeholder shown while the content loads, with an animated shimmer, in text, circle and rectangle shapes.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'text' \| 'circular' \| 'rectangular'` | `'text'` | Forma do espaço reservado. |
-| `width` | `string` | — | Largura (qualquer valor CSS). No circular, width ou height define os dois lados. |
-| `height` | `string` | — | Altura (qualquer valor CSS). |
-| `animation` | `false \| { recipe, tuning }` | `shimmer` | false desliga o brilho. { tuning: { duration } } muda a duração em segundos. Com movimento reduzido o brilho vira um pulso de opacidade. |
+| `variant` | `'text' \| 'circular' \| 'rectangular'` | `'text'` | Shape of the placeholder. |
+| `width` | `string` | — | Width (any CSS value). On the circular variant, width or height sets both sides. |
+| `height` | `string` | — | Height (any CSS value). |
+| `animation` | `false \| { recipe, tuning }` | `shimmer` | false turns the shimmer off. { tuning: { duration } } changes the duration in seconds. With reduced motion the shimmer becomes a pulse of opacity. |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
 
@@ -597,34 +597,34 @@ Also accepts the other attributes of `<input>`, passed on to the element. Forwar
 
 ### Table
 
-Tabela de dados semântica, montada a partir de `columns` e `rows`: uma `<table>` com legenda (`<caption>`), cabeçalhos de coluna (`scope="col"`), cabeçalhos de linha opcionais e células que aceitam qualquer conteúdo pela função `cell`. É genérica: o tipo da linha passa das `rows` para as colunas. Quando a tabela é mais larga que o espaço, o contêiner rola na horizontal e vira uma região focável com o nome da tabela, para quem usa só o teclado. Não ordena nem pagina: ordene os dados antes e use a `Pagination` ao lado. Aceita `ref`, que vai para o contêiner, e os atributos do `<div>`; `className` e `style` também vão para ele.
+A semantic data table, built from `columns` and `rows`: a `<table>` with a caption (`<caption>`), column headers (`scope="col"`), optional row headers and cells that accept any content through the `cell` function. It is generic: the row type flows from the `rows` to the columns. When the table is wider than the space available, the container scrolls horizontally and becomes a focusable region with the name of the table, for keyboard-only users. It does not sort or paginate: sort the data first and use the `Pagination` next to it. It accepts a `ref`, which goes to the container, and the attributes of the `<div>`; `className` and `style` go to it as well.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `columns` | `TableColumn<Row>[]` | *required* | Colunas da tabela, na ordem da tela. Cada uma tem `key` (o campo da linha que ela mostra), `header` (texto do cabeçalho) e, se quiser, `cell` (função que devolve o conteúdo da célula de uma linha), `align` (`start`, `center` ou `end`), `width` (largura CSS, como `8rem`) e `rowHeader` (as células dela viram cabeçalhos de linha). Sem `cell`, a coluna mostra `row[key]` como texto. |
-| `rows` | `Row[]` | *required* | Linhas da tabela, um objeto por linha. O tipo das linhas liga as colunas a elas: `TableColumn<Pedido>[]` com `rows` de `Pedido`. |
-| `getRowKey` | `(row: Row, index: number) => string \| number` | — | Devolve a chave estável de uma linha, como o id, para o React reaproveitar a linha quando a ordem muda. Sem ela, vale a posição. |
-| `caption` | `string` | — | Título da tabela, escrito como `<caption>` acima dela, que também dá o nome acessível. Para um nome que não aparece, passe ariaLabel. |
-| `ariaLabel` | `string` | — | Nome da tabela para leitores de tela, útil quando não há legenda. Com as duas, vale ariaLabel. |
-| `empty` | `ReactNode` | — | Conteúdo mostrado em uma célula que ocupa todas as colunas quando não há linhas. Sem ele, só o cabeçalho aparece. |
-| `size` | `'sm' \| 'md'` | `'md'` | Densidade das linhas: sm é compacta e md é a padrão. |
-| `striped` | `boolean` | `false` | Alterna o fundo das linhas para ajudar a seguir uma linha comprida. |
+| `columns` | `TableColumn<Row>[]` | *required* | Columns of the table, in the order they appear on screen. Each one has `key` (the field of the row that it shows), `header` (the header text) and, optionally, `cell` (a function that returns the content of the cell of a row), `align` (`start`, `center` or `end`), `width` (CSS width, such as `8rem`) and `rowHeader` (its cells become row headers). Without `cell`, the column shows `row[key]` as text. |
+| `rows` | `Row[]` | *required* | Rows of the table, one object per row. The row type links the columns to the rows: `TableColumn<Order>[]` with `rows` of `Order`. |
+| `getRowKey` | `(row: Row, index: number) => string \| number` | — | Returns the stable key of a row, such as the id, so React can reuse the row when the order changes. Without it, the position is used. |
+| `caption` | `string` | — | Title of the table, rendered as a `<caption>` above it, which also gives the accessible name. For a name that is not shown, pass ariaLabel. |
+| `ariaLabel` | `string` | — | Name of the table for screen readers, useful when there is no caption. With both, ariaLabel is used. |
+| `empty` | `ReactNode` | — | Content shown in a cell that spans all the columns when there are no rows. Without it, only the header appears. |
+| `size` | `'sm' \| 'md'` | `'md'` | Density of the rows: sm is compact and md is the default. |
+| `striped` | `boolean` | `false` | Alternates the background of the rows to help follow a long row. |
 
 Also accepts the other attributes of `<div>`, passed on to the element. Forwards the `ref` to `<div>`.
 
 ### Tabs
 
-Abas para dividir um conteúdo em painéis e mostrar um por vez. Seguem o padrão ARIA de abas: `role="tablist"`, uma única parada do Tab na aba escolhida, setas, Home e End para navegar e cada painel ligado à sua aba. Um indicador desliza até a aba escolhida, e a lista rola na horizontal quando as abas não cabem. As abas são horizontais. Aceita `ref`, que vai para a raiz, e os atributos do `<div>`.
+A set of tabs that splits content into panels and shows one at a time. It follows the ARIA tabs pattern: `role="tablist"`, a single Tab stop on the selected tab, the arrow keys, Home and End to navigate, and each panel linked to its tab. An indicator slides to the selected tab, and the list scrolls horizontally when the tabs do not fit. The tabs are horizontal. It accepts a `ref`, which goes to the root, and the attributes of the `<div>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `TabsItem[]` | *required* | Abas da lista, na ordem da tela. Cada item tem `value` (único), `label` (o conteúdo da aba: texto ou nós, como um `span` e um `Badge`), `content` (conteúdo do painel) e, se quiser, `disabled`. O `label` fica dentro de um `<button>`, então só cabem elementos de texto, sem outro botão, link ou campo, e tudo o que está nele entra no nome da aba e do painel. Todos os painéis ficam no documento e só o da aba escolhida aparece, então o estado dos outros se mantém. |
-| `value` | `string` | — | Valor da aba escolhida quando o componente é controlado. Exige também onValueChange. Veja a story Controlled. |
-| `defaultValue` | `string` | — | Valor da aba escolhida no início, para uso sem controle externo. Sem ele, vale a primeira aba que não está desativada. |
-| `onValueChange` | `(value: string) => void` | — | Chamada com o valor da aba que o usuário acabou de escolher, por clique ou pelo teclado. |
-| `activation` | `'automatic' \| 'manual'` | `'automatic'` | Quando a aba focada pelas setas passa a valer: automatic escolhe a aba ao focá-la e manual só move o foco, e Enter ou Espaço escolhe. Prefira manual quando o painel demora a carregar. |
-| `ariaLabel` | `string` | — | Nome da lista de abas para leitores de tela. Não aparece na tela: descreva o que as abas organizam, como Seções da conta. |
-| `animation` | `false \| { recipe, tuning }` | `fade` | Animação do indicador, que desliza até a aba escolhida, e do painel, que aparece com um fade. false desliga; { tuning: { duration } } ajusta a duração em segundos. |
+| `items` | `TabsItem[]` | *required* | Tabs of the list, in the order they appear on screen. Each item has `value` (unique), `label` (the content of the tab: text or nodes, such as a `span` and a `Badge`), `content` (the content of the panel) and, optionally, `disabled`. The `label` sits inside a `<button>`, so only text elements fit, with no other button, link or field, and everything in it is included in the name of the tab and of the panel. All panels stay in the document and only the panel of the selected tab is shown, so the others keep their state. |
+| `value` | `string` | — | Value of the selected tab when the component is controlled. It also requires onValueChange. See the Controlled story. |
+| `defaultValue` | `string` | — | Value of the tab that starts selected, for use without external control. Without it, the first tab that is not disabled is used. |
+| `onValueChange` | `(value: string) => void` | — | Called with the value of the tab that the user has just selected, by click or by keyboard. |
+| `activation` | `'automatic' \| 'manual'` | `'automatic'` | When a tab focused with the arrow keys becomes the selected one: automatic selects the tab as soon as it gets the focus; manual only moves the focus, and Enter or Space selects it. Prefer manual when the panel is slow to load. |
+| `ariaLabel` | `string` | — | Name of the list of tabs for screen readers. It does not appear on the screen: describe what the tabs organize, such as Account sections. |
+| `animation` | `false \| { recipe, tuning }` | `fade` | Animation of the indicator, which slides to the selected tab, and of the panel, which appears with a fade. false turns it off; { tuning: { duration } } sets the duration in seconds. |
 
 Also accepts the other attributes of `<div>`, passed on to the element. Forwards the `ref` to `<div>`.
 

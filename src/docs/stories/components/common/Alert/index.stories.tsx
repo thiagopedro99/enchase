@@ -11,7 +11,7 @@ const DismissibleDemo = (args: ComponentProps<typeof Alert>) => {
   if (!open) {
     return (
       <Button variant="outline" onClick={() => setOpen(true)}>
-        Mostrar de novo
+        Show again
       </Button>
     )
   }
@@ -26,7 +26,7 @@ const meta = {
     layout: 'padded',
     docs: {
       description: {
-        component: 'Mensagem de status dentro da página, em quatro tipos (`info`, `success`, `warning` e `error`), com título, ícone e botão de fechar opcionais. Para avisos temporários que somem sozinhos, use as notificações (`useToast`). É um `<div>` e aceita os atributos dele.'
+        component: 'A status message inside the page, in four types (`info`, `success`, `warning` and `error`), with an optional title, icon and close button. For temporary messages that go away on their own, use notifications (`useToast`). It is a `<div>` and accepts the attributes of the `<div>`.'
       }
     }
   },
@@ -37,25 +37,25 @@ const meta = {
   },
   argTypes: {
     children: {
-      description: 'Mensagem do alerta. Aceita texto e outros elementos, como links.',
+      description: 'Message of the alert. It accepts text and other elements, such as links.',
       control: 'text'
     },
     variant: {
-      description: 'Tipo da mensagem: define a cor, o ícone e o papel ARIA. Só error usa role="alert" e é anunciado na hora; os outros usam role="status", que leitores de tela costumam não anunciar quando o alerta já aparece com o texto. Para um aviso inserido depois do carregamento da página e que precise ser lido, passe role="alert".',
+      description: 'Type of the message: it sets the color, the icon and the ARIA role. Only error uses role="alert" and is announced at once; the others use role="status", which screen readers usually do not announce when the alert already appears with its text. For a message that is inserted after the page has loaded and has to be read, pass role="alert".',
       control: 'inline-radio',
       options: variants,
       table: { defaultValue: { summary: `'${defaultVariant}'` } }
     },
     title: {
-      description: 'Título em destaque, acima da mensagem.',
+      description: 'Highlighted title, above the message.',
       control: 'text'
     },
     icon: {
-      description: 'Ícone no lugar do padrão de cada tipo. Com null ou false, não mostra ícone. O ícone é decorativo (aria-hidden), então o texto precisa dizer tudo.',
+      description: 'Icon in place of the default one of each type. With null or false, the Alert shows no icon. The icon is decorative (aria-hidden), so the text has to say everything.',
       control: false
     },
     onClose: {
-      description: 'Mostra o botão de fechar e é chamado ao clicar nele. O Alert não some sozinho: quem usa o remove. O nome do botão vem de labels.closeToast do UIProvider.',
+      description: 'Shows the close button and is called when it is clicked. The Alert does not go away on its own: you remove it. The name of the button comes from labels.closeToast of the UIProvider.',
       control: false
     }
   }
@@ -96,7 +96,7 @@ export const WithAction: Story = {
       <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
         <span>{variantTexts.warning.message}</span>
         <Button size="sm" variant="outline">
-          Renovar agora
+          Renew now
         </Button>
       </div>
     </Alert>
@@ -106,8 +106,8 @@ export const WithAction: Story = {
 export const CustomIcon: Story = {
   args: {
     variant: 'info',
-    title: 'Dica',
-    children: 'Use o atalho para abrir a busca.',
+    title: 'Tip',
+    children: 'Use the shortcut to open the search.',
     icon: (
       <Icon size={20}>
         <path d="M12 3v1M5.6 5.6l.7.7M3 12h1M5.6 18.4l.7-.7M12 20v1M18.4 18.4l-.7-.7M20 12h1M18.4 5.6l-.7.7" />

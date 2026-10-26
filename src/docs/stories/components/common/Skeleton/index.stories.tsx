@@ -11,32 +11,32 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Espaço reservado enquanto o conteúdo carrega, com brilho animado, nas formas texto, círculo e retângulo.'
+        component: 'A placeholder shown while the content loads, with an animated shimmer, in text, circle and rectangle shapes.'
       }
     }
   },
   argTypes: {
     variant: {
-      description: 'Forma do espaço reservado.',
+      description: 'Shape of the placeholder.',
       control: 'select',
       options: ['text', 'circular', 'rectangular'],
       table: { defaultValue: { summary: 'text' } }
     },
     width: {
-      description: 'Largura (qualquer valor CSS). No circular, width ou height define os dois lados.',
+      description: 'Width (any CSS value). On the circular variant, width or height sets both sides.',
       control: 'text'
     },
     height: {
-      description: 'Altura (qualquer valor CSS).',
+      description: 'Height (any CSS value).',
       control: 'text'
     },
     animation: {
-      description: 'false desliga o brilho. { tuning: { duration } } muda a duração em segundos. Com movimento reduzido o brilho vira um pulso de opacidade.',
+      description: 'false turns the shimmer off. { tuning: { duration } } changes the duration in seconds. With reduced motion the shimmer becomes a pulse of opacity.',
       control: 'object',
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'shimmer' } }
     },
     className: {
-      description: 'Classe do elemento (data-slot="skeleton"), que vence os tamanhos e raios padrão.',
+      description: 'Class of the element (data-slot="skeleton"), which wins over the default sizes and radii.',
       control: 'text'
     },
     style: { control: false }

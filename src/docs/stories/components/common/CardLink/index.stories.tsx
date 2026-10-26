@@ -5,9 +5,9 @@ import { ClickProbe } from '@docs/shared/components/ClickProbe.tsx'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const projects = [
-  ['Enchase', 'Biblioteca de componentes em React', '/projects/enchase'],
-  ['Painel de métricas', 'Gráficos e tabelas em tempo real', '/projects/metrics'],
-  ['Loja de exemplo', 'Carrinho, pagamento e pedidos', '/projects/shop']
+  ['Enchase', 'React component library', '/projects/enchase'],
+  ['Metrics dashboard', 'Real-time charts and tables', '/projects/metrics'],
+  ['Example store', 'Cart, payment and orders', '/projects/shop']
 ]
 
 const content = (title: string, text: string) => (
@@ -23,60 +23,60 @@ const meta = {
   args: {
     href: '/projects/enchase',
     variant: 'outlined',
-    children: content('Enchase', 'Biblioteca de componentes em React')
+    children: content('Enchase', 'React component library')
   },
   parameters: {
     docs: {
       description: {
         component:
-          'Cartão inteiro clicável que leva a outra página: um `<a href>` de verdade, com a superfície do `Card` (`variant`, `padding` e `animation`, e os mesmos ganchos `--enchase-card-*`), anel de foco e camadas de hover e de pressionado. Passa pelo `navigate` do `UIProvider` nas rotas do app, como o `Link` (veja `native`, `target` e `download`). Com `target="_blank"`, o `rel` vira `noopener noreferrer` e o texto "abre em nova aba" entra no nome acessível, sem ícone: o desenho do cartão é seu. Tudo o que está dentro do cartão entra no nome do link, então prefira um título curto e um apoio curto. O conteúdo de um `<a>` aceita títulos e parágrafos, mas não outro link ou botão. Para uma ação, use `CardButton`.'
+          'A card that is clickable as a whole and leads to another page: a real `<a href>`, with the surface of the `Card` (`variant`, `padding` and `animation`, and the same `--enchase-card-*` hooks), a focus ring and hover and pressed layers. It goes through the `navigate` of the `UIProvider` for app routes, like the `Link` (see `native`, `target` and `download`). With `target="_blank"`, the `rel` becomes `noopener noreferrer` and the text "opens in a new tab" is added to the accessible name, with no icon: the design of the card is yours. Everything inside the card is included in the name of the link, so prefer a short title and a short supporting text. The content of an `<a>` accepts headings and paragraphs, but not another link or button. For an action, use `CardButton`.'
       }
     }
   },
   argTypes: {
     href: {
-      description: 'Destino do link, com as mesmas regras do `Link`: uma rota do app vai para o `navigate` do `UIProvider`; âncoras, o hash da página atual e URLs externas ficam com o navegador.',
+      description: 'Destination of the link, with the same rules as the `Link`: an app route goes to the `navigate` of the `UIProvider`; anchors, the hash of the current page and external URLs are left to the browser.',
       control: 'text'
     },
     variant: {
-      description: 'Aparência da superfície, a mesma do `Card`. Só a `elevated` sobe ao passar o ponteiro.',
+      description: 'Appearance of the surface, the same as the `Card`. Only the `elevated` one rises when the pointer is over it.',
       control: 'select',
       options: ['default', 'elevated', 'outlined'],
       table: { defaultValue: { summary: 'default' } }
     },
     padding: {
-      description: 'Espaçamento interno (qualquer valor CSS), como no `Card`. Sem ele vale o espaçamento padrão, que a classe de quem usa sempre vence.',
+      description: 'Inner spacing (any CSS value), as in the `Card`. Without it, the default spacing applies, and a class of your own always wins over it.',
       control: 'text'
     },
     animation: {
-      description: 'false desliga o movimento. { tuning: { duration, distance } } ajusta o lift da variante `elevated` (segundos e pixels). O lift só roda com ponteiro fino e sem preferência de movimento reduzido.',
+      description: 'false turns the motion off. { tuning: { duration, distance } } sets the lift of the `elevated` variant (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion.',
       control: 'object',
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'lift' } }
     },
     native: {
-      description: 'Deixa o clique com o navegador mesmo em uma rota do app.',
+      description: 'Leaves the click to the browser even on an app route.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     target: {
-      description: 'Com `_blank`, abre em nova aba e acrescenta o texto "abre em nova aba" para leitores de tela. O `rel` padrão passa a ser `noopener noreferrer`.',
+      description: 'With `_blank`, it opens in a new tab and adds the text "opens in a new tab" for screen readers. The default `rel` becomes `noopener noreferrer`.',
       control: 'inline-radio',
       options: ['_self', '_blank']
     },
     download: {
-      description: 'Qualquer valor, inclusive vazio, faz o navegador baixar o arquivo em vez de navegar.',
+      description: 'Any value, including an empty one, makes the browser download the file instead of navigating.',
       control: 'text'
     },
     rel: {
-      description: 'Relação do link. Sem valor, `target="_blank"` usa `noopener noreferrer`.',
+      description: 'Relationship of the link. Without a value, `target="_blank"` uses `noopener noreferrer`.',
       control: 'text'
     },
     onClick: {
-      description: 'Roda antes do tratamento do clique. Se chamar `preventDefault`, o `navigate` não é chamado.',
+      description: 'Runs before the click is handled. If it calls `preventDefault`, `navigate` is not called.',
       control: false
     },
     className: {
-      description: 'Classe do link (`data-slot="card-link"`). Também dá para estilizar por `data-variant` e `data-motion`.',
+      description: 'Class of the link (`data-slot="card-link"`). You can also style it by `data-variant` and `data-motion`.',
       control: 'text'
     },
     children: { control: false },
@@ -102,7 +102,7 @@ export const Elevated: Story = {
 }
 
 export const OpensInNewTab: Story = {
-  args: { href: 'https://github.com/thiagopedro99/enchase', target: '_blank', children: content('Código no GitHub', 'Abre o repositório') }
+  args: { href: 'https://github.com/thiagopedro99/enchase', target: '_blank', children: content('Code on GitHub', 'Opens the repository') }
 }
 
 export const WithBadge: Story = {
@@ -110,9 +110,9 @@ export const WithBadge: Story = {
     children: (
       <>
         <h3 style={{ margin: 0, fontSize: '1rem' }}>
-          Enchase <Badge variant="success">Novo</Badge>
+          Enchase <Badge variant="success">New</Badge>
         </h3>
-        <p style={{ margin: '0.25rem 0 0', color: 'var(--enchase-color-text-secondary)' }}>Biblioteca de componentes em React</p>
+        <p style={{ margin: '0.25rem 0 0', color: 'var(--enchase-color-text-secondary)' }}>React component library</p>
       </>
     )
   }
@@ -123,13 +123,13 @@ export const ProjectList: Story = {
     controls: { disable: true },
     docs: {
       description: {
-        story: 'Uma lista de projetos de verdade: o `Grid` é um `ul`, cada cartão fica num `li` e ocupa a altura da linha, mesmo quando os textos têm tamanhos diferentes. Sem `role` na mão e sem CSS repetido.'
+        story: 'A real list of projects: the `Grid` is a `ul`, each card sits in an `li` and fills the height of the row, even when the texts have different lengths. No hand-written `role` and no repeated CSS.'
       }
     }
   },
   render: () => (
     <ClickProbe>
-      <Grid as="ul" columns={{ xs: 1, md: 3 }} aria-label="Projetos">
+      <Grid as="ul" columns={{ xs: 1, md: 3 }} aria-label="Projects">
         {projects.map(([title, text, href], index) => (
           <li key={href}>
             <CardLink href={href} variant={index === 0 ? 'elevated' : 'outlined'}>
