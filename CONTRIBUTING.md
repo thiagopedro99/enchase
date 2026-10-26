@@ -47,6 +47,8 @@ Mudança em foco, `inert`, layout ou animação também deve ser conferida no na
 
 O trabalho entra na `dev`. A `main` não recebe commit direto: ela só avança por fast-forward a partir da `dev`, e o push nela é o que publica na npm (veja "Publicação"). Por isso a `dev` precisa sempre conter a `main`, e o commit de release sai na `dev`.
 
+Enquanto uma versão está sendo preparada na `dev`, a `main` fica parada no último commit publicado e só avança no commit de release. Se aparecer um bug urgente nesse período, o hotfix sai da `main`: crie uma branch a partir dela, faça a correção e o `chore(release)` da versão de correção e envie o resultado para a `main` em fast-forward (`git push origin <branch>:main`). Depois traga o hotfix de volta com `git merge main` na `dev`, nunca com rebase: a `dev` não é reescrita, continua contendo a `main`, e o próximo release segue em fast-forward.
+
 A CI (`package.yml` e `browser-tests.yml`) roda em todo push na `dev` e na `main` e em todo pull request. Um push novo cancela a execução anterior da mesma branch ou do mesmo pull request, para não enfileirar duas matrizes de navegadores. Na `main` nenhuma execução é cancelada, porque a publicação espera pela CI do commit.
 
 ## Publicação
