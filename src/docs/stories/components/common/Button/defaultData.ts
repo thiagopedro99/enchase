@@ -13,8 +13,8 @@ export const defaultDisabled = false
 export const defaultRecipe = 'press'
 
 export const motionLabels: Record<ButtonMotionChoice, string> = {
-  default: 'Padrão (press)',
-  off: 'Desligada',
+  default: 'Default (press)',
+  off: 'Off',
   press: 'press',
   lift: 'lift'
 }

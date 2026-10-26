@@ -10,12 +10,12 @@ const ControlledDemo = () => {
 
   return (
     <div style={{ display: 'grid', gap: '0.75rem', justifyItems: 'start' }}>
-      <NumberInput label="Quantidade" min={1} max={20} value={quantity} onValueChange={setQuantity} />
+      <NumberInput label="Quantity" min={1} max={20} value={quantity} onValueChange={setQuantity} />
       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
         <Button size="sm" variant="outline" onClick={() => setQuantity(10)}>
-          Definir 10
+          Set to 10
         </Button>
-        <span style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>Valor: {quantity === null ? 'vazio' : quantity}</span>
+        <span style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>Value: {quantity === null ? 'empty' : quantity}</span>
       </div>
     </div>
   )
@@ -31,11 +31,11 @@ const FormDemo = () => {
 
   return (
     <form onSubmit={submit} style={{ display: 'grid', gap: '0.75rem', justifyItems: 'start' }}>
-      <NumberInput label="Preço" name="price" defaultValue={1234.5} formatOptions={{ style: 'currency', currency: 'BRL' }} />
+      <NumberInput label="Price" name="price" defaultValue={1234.5} formatOptions={{ style: 'currency', currency: 'USD' }} />
       <Button type="submit" size="sm">
-        Enviar
+        Submit
       </Button>
-      <span style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>{sent ? `price=${sent}` : 'Nada enviado'}</span>
+      <span style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>{sent ? `price=${sent}` : 'Nothing submitted'}</span>
     </form>
   )
 }
@@ -44,7 +44,7 @@ const meta = {
   title: 'Components/NumberInput',
   component: NumberInput,
   args: {
-    label: 'Quantidade',
+    label: 'Quantity',
     defaultValue: 3,
     min: 0,
     max: 99,
@@ -58,99 +58,99 @@ const meta = {
     docs: {
       description: {
         component:
-          'Campo para digitar um número, com rótulo, mensagem de erro, texto de ajuda e botões para diminuir e aumentar. É um `<input type="text">` com `role="spinbutton"` e teclado numérico no celular, em vez de `type="number"`: o texto segue o idioma do `UIProvider` (vírgula decimal e ponto de milhar em pt-BR), aceita moeda e porcentagem por `formatOptions`, e o valor sai como `number`, ou `null` com o campo vazio. As setas mudam o valor por `step`; Shift com as setas e Page Up e Page Down, por `largeStep`; Home e End vão ao `min` e ao `max`. O valor é confirmado ao sair do campo ou com Enter, limitado ao intervalo e arredondado às casas do formato. Com `name`, o número vai para o formulário num campo oculto, sem a formatação da tela. Os botões ficam fora da ordem do Tab, porque o teclado já tem as setas, e seus nomes vêm de `labels.increaseValue` e `labels.decreaseValue` do `UIProvider`. Aceita `ref`, que vai para o `<input>`, e os atributos dele.'
+          'A field for typing a number, with a label, an error message, helper text and buttons to decrease and increase. It is an `<input type="text">` with `role="spinbutton"` and a numeric keyboard on phones, instead of `type="number"`: the text follows the language of the `UIProvider` (a decimal comma and a period for thousands in pt-BR), it accepts currency and percent through `formatOptions`, and the value comes out as a `number`, or `null` when the field is empty. The arrow keys change the value by `step`; Shift with the arrow keys, Page Up and Page Down change it by `largeStep`; Home and End go to `min` and `max`. The value is confirmed when the user leaves the field or presses Enter, limited to the range and rounded to the decimal places of the format. With `name`, the number goes to the form in a hidden field, without the formatting shown on screen. The buttons stay out of the Tab order, because the keyboard already has the arrow keys, and their names come from `labels.increaseValue` and `labels.decreaseValue` of the `UIProvider`. It accepts `ref`, which goes to the `<input>`, and the attributes of the `<input>`.'
       }
     }
   },
   argTypes: {
     value: {
-      description: 'Valor quando o componente é controlado; `null` é o campo vazio. Exige também onValueChange. Veja a story Controlled.',
+      description: 'Value when the component is controlled; `null` is the empty field. It also requires onValueChange. See the Controlled story.',
       control: false
     },
     defaultValue: {
-      description: 'Valor inicial, para uso sem controle externo. `null` começa com o campo vazio.',
+      description: 'Initial value, for use without external control. `null` starts with the field empty.',
       control: 'number',
       table: { defaultValue: { summary: String(defaultValue) } }
     },
     onValueChange: {
-      description: 'Chamada com o número confirmado, ou `null` se o campo ficou vazio. Acontece ao sair do campo, com Enter, com as setas e com os botões, nunca a cada tecla digitada.',
+      description: 'Called with the confirmed number, or `null` if the field was left empty. It happens when the user leaves the field, on Enter, with the arrow keys and with the buttons, never on every key typed.',
       control: false
     },
     min: {
-      description: 'Menor valor aceito. O que for digitado abaixo dele volta ao mínimo ao sair do campo, o botão de diminuir se desativa nele e Home vai até ele. Com `min` de zero ou mais, o sinal de menos não é aceito. No iPhone o teclado numérico não tem o sinal de menos: para aceitar negativos, passe `inputMode="text"`.',
+      description: 'Smallest accepted value. What is typed below it goes back to the minimum when the user leaves the field, the decrease button is disabled at it and Home goes to it. With a `min` of zero or more, the minus sign is not accepted. On iPhone the numeric keyboard has no minus sign: to accept negative values, pass `inputMode="text"`.',
       control: 'number'
     },
     max: {
-      description: 'Maior valor aceito. O que for digitado acima dele volta ao máximo ao sair do campo, o botão de aumentar se desativa nele e End vai até ele.',
+      description: 'Largest accepted value. What is typed above it goes back to the maximum when the user leaves the field, the increase button is disabled at it and End goes to it.',
       control: 'number'
     },
     step: {
-      description: 'Quanto o valor muda com as setas e com os botões. Os passos contam a partir de `min` (ou de 0), e as casas decimais do passo entram no formato. Um valor que não seja positivo vale 1.',
+      description: 'How much the value changes with the arrow keys and with the buttons. Steps count from `min` (or from 0), and the decimal places of the step go into the format. A value that is not positive is replaced by 1.',
       control: 'number',
       table: { defaultValue: { summary: String(defaultStep) } }
     },
     largeStep: {
-      description: 'Passo grande, de Shift com as setas e de Page Up e Page Down. Sem ele, vale dez vezes o `step`.',
+      description: 'Large step, used by Shift with the arrow keys and by Page Up and Page Down. Without it, ten times the `step` applies.',
       control: 'number'
     },
     formatOptions: {
       description:
-        'Formato do número, como no `Intl.NumberFormat`: `style` (`decimal`, `currency` ou `percent`), `currency` (código como `BRL`), `currencyDisplay`, `minimumFractionDigits`, `maximumFractionDigits` e `useGrouping`. O idioma vem do `UIProvider`. Sem `maximumFractionDigits`, valem as casas do estilo (3 no decimal, 2 na moeda, 0 no percentual) ou as que o `step` pedir. No percentual o valor é a fração: 0,15 aparece como 15%, e o `step` costuma ser 0,01.',
+        'Format of the number, as in `Intl.NumberFormat`: `style` (`decimal`, `currency` or `percent`), `currency` (a code such as `USD`), `currencyDisplay`, `minimumFractionDigits`, `maximumFractionDigits` and `useGrouping`. The language comes from the `UIProvider`. Without `maximumFractionDigits`, the decimal places of the style apply (3 for decimal, 2 for currency, 0 for percent) or the ones the `step` calls for. For percent the value is the fraction: 0.15 shows as 15%, and the `step` is usually 0.01.',
       control: false,
       table: { type: { summary: 'NumberInputFormat' } }
     },
     label: {
-      description: 'Rótulo do campo, associado ao input para leitores de tela.',
+      description: 'Label of the field, associated with the input for screen readers.',
       control: 'text'
     },
     labelPlacement: {
-      description: 'Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn.',
+      description: 'Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn.',
       control: 'inline-radio',
       options: ['floating', 'stacked'],
       table: { defaultValue: { summary: "'floating'" } }
     },
     helperText: {
-      description: 'Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro.',
+      description: 'Helper text. It is tied to the field by aria-describedby and disappears when there is an error.',
       control: 'text'
     },
     error: {
-      description: 'Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta.',
+      description: 'Error message. Marks the field as invalid (aria-invalid) and is announced as an alert.',
       control: 'text'
     },
     fullWidth: {
-      description: 'Ocupa toda a largura disponível.',
+      description: 'Takes up the full available width.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultFullWidth) } }
     },
     steppers: {
-      description: 'Mostra os botões de diminuir e aumentar, e o aviso por voz do novo valor quando um deles é usado. Sem eles, o teclado continua com as setas.',
+      description: 'Shows the decrease and increase buttons, and the spoken announcement of the new value when one of them is used. Without them, the keyboard still has the arrow keys.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultSteppers) } }
     },
     name: {
-      description: 'Nome do campo no formulário. O número vai num campo oculto, como `1234.5`, e o texto da tela não é enviado.',
+      description: 'Name of the field in the form. The number goes in a hidden field, as `1234.5`, and the text shown on screen is not sent.',
       control: 'text'
     },
     placeholder: {
-      description: 'Texto de exemplo exibido quando o campo está vazio. Com rótulo, ele só aparece com o foco.',
+      description: 'Example text shown when the field is empty. With a label, it only appears on focus.',
       control: 'text'
     },
     disabled: {
-      description: 'Desativa o campo e os botões.',
+      description: 'Disables the field and the buttons.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     readOnly: {
-      description: 'Deixa o valor só para leitura: não se digita, as setas não mudam o valor e os botões ficam desativados.',
+      description: 'Makes the value read-only: nothing can be typed, the arrow keys do not change the value and the buttons are disabled.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     wrapperClassName: {
-      description: 'Classe da raiz (data-slot="number-input"). className e style continuam no input (data-slot="number-input-field").',
+      description: 'Class of the root (data-slot="number-input"). className and style stay on the input (data-slot="number-input-field").',
       control: 'text'
     },
     wrapperStyle: {
-      description: 'Estilo da raiz (data-slot="number-input"). style continua no input.',
+      description: 'Style of the root (data-slot="number-input"). style stays on the input.',
       control: false
     }
   }
@@ -163,31 +163,31 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const WithHelperText: Story = {
-  args: { helperText: 'De 0 a 99 unidades' }
+  args: { helperText: 'From 0 to 99 units' }
 }
 
 export const WithError: Story = {
-  args: { error: 'Informe uma quantidade de pelo menos 1', defaultValue: 0 }
+  args: { error: 'Enter a quantity of at least 1', defaultValue: 0 }
 }
 
 export const Decimals: Story = {
-  args: { label: 'Nota', defaultValue: 7.5, min: 0, max: 10, step: 0.1 }
+  args: { label: 'Score', defaultValue: 7.5, min: 0, max: 10, step: 0.1 }
 }
 
 export const Currency: Story = {
-  args: { label: 'Preço', defaultValue: 1234.5, min: 0, max: undefined, step: 0.5, formatOptions: { style: 'currency', currency: 'BRL' } }
+  args: { label: 'Price', defaultValue: 1234.5, min: 0, max: undefined, step: 0.5, formatOptions: { style: 'currency', currency: 'USD' } }
 }
 
 export const Percent: Story = {
-  args: { label: 'Desconto', defaultValue: 0.15, min: 0, max: 1, step: 0.01, formatOptions: { style: 'percent' } }
+  args: { label: 'Discount', defaultValue: 0.15, min: 0, max: 1, step: 0.01, formatOptions: { style: 'percent' } }
 }
 
 export const Integers: Story = {
-  args: { label: 'Pessoas', defaultValue: 2, min: 1, max: 10, formatOptions: { maximumFractionDigits: 0 }, helperText: 'Digite só inteiros' }
+  args: { label: 'People', defaultValue: 2, min: 1, max: 10, formatOptions: { maximumFractionDigits: 0 }, helperText: 'Type integers only' }
 }
 
 export const Negative: Story = {
-  args: { label: 'Temperatura', defaultValue: -4, min: -30, max: 50, inputMode: 'text', formatOptions: { maximumFractionDigits: 0 } }
+  args: { label: 'Temperature', defaultValue: -4, min: -30, max: 50, inputMode: 'text', formatOptions: { maximumFractionDigits: 0 } }
 }
 
 export const WithoutSteppers: Story = {
@@ -195,7 +195,7 @@ export const WithoutSteppers: Story = {
 }
 
 export const Empty: Story = {
-  args: { defaultValue: null, placeholder: 'Quantas?' }
+  args: { defaultValue: null, placeholder: 'How many?' }
 }
 
 export const Disabled: Story = {

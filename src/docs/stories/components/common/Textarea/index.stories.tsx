@@ -7,8 +7,8 @@ const meta = {
   title: 'Components/Textarea',
   component: Textarea,
   args: {
-    label: 'Mensagem',
-    placeholder: 'Conte o que aconteceu',
+    label: 'Message',
+    placeholder: 'Tell us what happened',
     fullWidth: defaultFullWidth,
     resize: defaultResize,
     rows: defaultRows,
@@ -17,60 +17,60 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Campo de texto de várias linhas, com rótulo, mensagem de erro e texto de ajuda, como o `Input`. Aceita `ref` e os atributos do `<textarea>`.'
+        component: 'A multi-line text field, with a label, an error message and helper text, like the `Input`. It accepts `ref` and the attributes of the `<textarea>`.'
       }
     }
   },
   argTypes: {
     label: {
-      description: 'Rótulo do campo, associado ao textarea para leitores de tela.',
+      description: 'Label of the field, associated with the textarea for screen readers.',
       control: 'text'
     },
     labelPlacement: {
-      description: 'Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn.',
+      description: 'Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn.',
       control: 'inline-radio',
       options: ['floating', 'stacked'],
       table: { defaultValue: { summary: "'floating'" } }
     },
     helperText: {
-      description: 'Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro.',
+      description: 'Helper text. It is tied to the field by aria-describedby and disappears when there is an error.',
       control: 'text'
     },
     error: {
-      description: 'Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta.',
+      description: 'Error message. Marks the field as invalid (aria-invalid) and is announced as an alert.',
       control: 'text'
     },
     fullWidth: {
-      description: 'Ocupa toda a largura disponível.',
+      description: 'Takes up the full available width.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultFullWidth) } }
     },
     resize: {
-      description: 'Como o usuário redimensiona o campo pela alça do canto: none não deixa, vertical muda só a altura, horizontal só a largura e both as duas.',
+      description: 'How the user resizes the field with the handle in the corner: none does not allow it, vertical changes only the height, horizontal only the width and both changes the height and the width.',
       control: 'inline-radio',
       options: ['none', 'vertical', 'horizontal', 'both'],
       table: { defaultValue: { summary: `'${defaultResize}'` } }
     },
     rows: {
-      description: 'Número de linhas visíveis. O campo rola quando o texto passa disso.',
+      description: 'Number of visible rows. The field scrolls when the text goes past that.',
       control: 'number',
       table: { defaultValue: { summary: String(defaultRows) } }
     },
     placeholder: {
-      description: 'Texto de exemplo exibido quando o campo está vazio. Com rótulo, ele só aparece com o foco.',
+      description: 'Example text shown when the field is empty. With a label, it only appears on focus.',
       control: 'text'
     },
     disabled: {
-      description: 'Desativa o campo.',
+      description: 'Disables the field.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     wrapperClassName: {
-      description: 'Classe da raiz (data-slot="textarea"). className e style continuam no textarea nativo (data-slot="textarea-field").',
+      description: 'Class of the root (data-slot="textarea"). className and style stay on the native textarea (data-slot="textarea-field").',
       control: 'text'
     },
     wrapperStyle: {
-      description: 'Estilo da raiz (data-slot="textarea"). style continua no textarea nativo.',
+      description: 'Style of the root (data-slot="textarea"). style stays on the native textarea.',
       control: false
     }
   }
@@ -83,11 +83,11 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const WithHelperText: Story = {
-  args: { helperText: 'Quanto mais detalhes, mais rápido conseguimos ajudar' }
+  args: { helperText: 'The more details, the faster we can help' }
 }
 
 export const WithError: Story = {
-  args: { error: 'Este campo é obrigatório' }
+  args: { error: 'This field is required' }
 }
 
 export const FixedSize: Story = {
@@ -95,7 +95,7 @@ export const FixedSize: Story = {
 }
 
 export const Disabled: Story = {
-  args: { disabled: true, defaultValue: 'Este texto não pode ser editado' }
+  args: { disabled: true, defaultValue: 'This text cannot be edited' }
 }
 
 export const LabelAbove: Story = {

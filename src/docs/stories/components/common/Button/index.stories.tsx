@@ -8,7 +8,7 @@ const meta = {
   title: 'Components/Button',
   component: Button,
   args: {
-    children: 'Enviar',
+    children: 'Send',
     variant: defaultVariant,
     size: defaultSize,
     fullWidth: defaultFullWidth,
@@ -18,67 +18,67 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Botão com quatro variantes e três tamanhos, e feedback de toque feito só com CSS. É um `<button>` de verdade e aceita os atributos dele.'
+        component: 'A button with four variants and three sizes, and press feedback made with CSS only. It is a real `<button>` and accepts its attributes.'
       }
     }
   },
   argTypes: {
     variant: {
-      description: 'Estilo visual do botão.',
+      description: 'Visual style of the button.',
       control: 'select',
       options: ['primary', 'secondary', 'outline', 'ghost'],
       table: { defaultValue: { summary: defaultVariant } }
     },
     size: {
-      description: 'Tamanho do botão.',
+      description: 'Size of the button.',
       control: 'inline-radio',
       options: ['sm', 'md', 'lg'],
       table: { defaultValue: { summary: defaultSize } }
     },
     fullWidth: {
-      description: 'Ocupa toda a largura disponível.',
+      description: 'Takes up the full available width.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultFullWidth) } }
     },
     disabled: {
-      description: 'Desativa o botão e bloqueia o clique.',
+      description: 'Disables the button and blocks the click.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultDisabled) } }
     },
     animation: {
-      description: 'Receita de motion do botão, feita só com CSS. Use false para desligar a animação, ou { recipe, tuning } com press (escala ao pressionar) ou lift (sobe ao passar o mouse); outras receitas são ignoradas. A duração, a escala e a distância viram as variáveis --enchase-button-duration, --enchase-button-scale e --enchase-button-distance. Use os controles do grupo Motion para experimentar. O elemento raiz aceita className e style, e expõe data-slot="button".',
+      description: 'Motion recipe of the button, made with CSS only. Use false to turn the animation off, or { recipe, tuning } with press (scales on press) or lift (rises on hover); other recipes are ignored. The duration, the scale and the distance become the variables --enchase-button-duration, --enchase-button-scale and --enchase-button-distance. Use the controls of the Motion group to experiment. The root element accepts className and style, and exposes data-slot="button".',
       control: false,
       table: { type: { summary: 'false | { recipe, from, tuning }' }, defaultValue: { summary: defaultRecipe } }
     },
     children: {
-      description: 'Conteúdo do botão.',
+      description: 'Content of the button.',
       control: 'text'
     },
     motionRecipe: {
-      name: 'Receita',
-      description: 'Receita de motion aplicada ao botão.',
+      name: 'Recipe',
+      description: 'Motion recipe applied to the button.',
       control: 'select',
       options: Object.keys(motionLabels),
       labels: motionLabels,
       table: { category: 'Motion', defaultValue: { summary: motionLabels.default } }
     },
     motionDuration: {
-      name: 'Duração (s)',
-      description: 'Duração da animação em segundos, para press e lift. Vazio usa o valor da receita.',
+      name: 'Duration (s)',
+      description: 'Duration of the animation in seconds, for press and lift. Empty uses the value of the recipe.',
       control: { type: 'number', min: 0, step: 0.01 },
       if: { arg: 'motionRecipe', neq: 'default' },
       table: { category: 'Motion' }
     },
     motionScale: {
-      name: 'Escala',
-      description: 'Escala do botão ao ser pressionado. Vazio usa o valor da receita.',
+      name: 'Scale',
+      description: 'Scale of the button when it is pressed. Empty uses the value of the recipe.',
       control: { type: 'number', min: 0, max: 1, step: 0.01 },
       if: { arg: 'motionRecipe', eq: 'press' },
       table: { category: 'Motion' }
     },
     motionDistance: {
-      name: 'Distância (px)',
-      description: 'Quanto o botão sobe ao passar o mouse. Vazio usa o valor da receita.',
+      name: 'Distance (px)',
+      description: 'How much the button rises on hover. Empty uses the value of the recipe.',
       control: { type: 'number', min: 0, step: 1 },
       if: { arg: 'motionRecipe', eq: 'lift' },
       table: { category: 'Motion' }

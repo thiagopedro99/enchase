@@ -8,7 +8,7 @@ const meta = {
   component: Input,
   args: {
     label: 'Email',
-    placeholder: 'seu@email.com',
+    placeholder: 'you@example.com',
     type: 'text',
     fullWidth: defaultFullWidth,
     disabled: false
@@ -16,60 +16,60 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Campo de texto com rótulo, mensagem de erro, texto de ajuda e botão para revelar a senha. Aceita `ref` e os atributos do `<input>`.'
+        component: 'A text field with a label, an error message, helper text and a button to reveal the password. It accepts `ref` and the attributes of the `<input>`.'
       }
     }
   },
   argTypes: {
     label: {
-      description: 'Rótulo do campo, associado ao input para leitores de tela.',
+      description: 'Label of the field, associated with the input for screen readers.',
       control: 'text'
     },
     labelPlacement: {
-      description: 'Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn.',
+      description: 'Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn.',
       control: 'inline-radio',
       options: ['floating', 'stacked'],
       table: { defaultValue: { summary: "'floating'" } }
     },
     helperText: {
-      description: 'Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro.',
+      description: 'Helper text. It is tied to the field by aria-describedby and disappears when there is an error.',
       control: 'text'
     },
     error: {
-      description: 'Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta.',
+      description: 'Error message. Marks the field as invalid (aria-invalid) and is announced as an alert.',
       control: 'text'
     },
     fullWidth: {
-      description: 'Ocupa toda a largura disponível.',
+      description: 'Takes up the full available width.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultFullWidth) } }
     },
     passwordToggle: {
-      description: 'Mostra o botão para revelar ou ocultar a senha. Só vale quando type é password. Os textos do botão vêm do UIProvider.',
+      description: 'Shows the button to reveal or hide the password. It only applies when type is password. The texts of the button come from the UIProvider.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultPasswordToggle) } }
     },
     type: {
-      description: 'Tipo nativo do input.',
+      description: 'Native type of the input.',
       control: 'select',
       options: ['text', 'email', 'password', 'number', 'search', 'tel', 'url'],
       table: { defaultValue: { summary: 'text' } }
     },
     placeholder: {
-      description: 'Texto de exemplo exibido quando o campo está vazio.',
+      description: 'Example text shown when the field is empty.',
       control: 'text'
     },
     disabled: {
-      description: 'Desativa o campo.',
+      description: 'Disables the field.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     wrapperClassName: {
-      description: 'Classe da raiz (data-slot="input"). className e style continuam no input nativo (data-slot="input-field").',
+      description: 'Class of the root (data-slot="input"). className and style stay on the native input (data-slot="input-field").',
       control: 'text'
     },
     wrapperStyle: {
-      description: 'Estilo da raiz (data-slot="input"). style continua no input nativo.',
+      description: 'Style of the root (data-slot="input"). style stays on the native input.',
       control: false
     }
   }
@@ -82,15 +82,15 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const WithHelperText: Story = {
-  args: { helperText: 'Nunca compartilharemos seu email' }
+  args: { helperText: 'We never share your email' }
 }
 
 export const WithError: Story = {
-  args: { error: 'Este campo é obrigatório' }
+  args: { error: 'This field is required' }
 }
 
 export const Password: Story = {
-  args: { label: 'Senha', type: 'password', placeholder: undefined, helperText: 'Use o olho para conferir o que digitou' }
+  args: { label: 'Password', type: 'password', placeholder: undefined, helperText: 'Use the eye to check what you typed' }
 }
 
 export const Disabled: Story = {
@@ -98,5 +98,5 @@ export const Disabled: Story = {
 }
 
 export const LabelAbove: Story = {
-  args: { labelPlacement: 'stacked', helperText: 'Nunca compartilharemos seu email' }
+  args: { labelPlacement: 'stacked', helperText: 'We never share your email' }
 }

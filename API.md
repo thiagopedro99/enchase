@@ -75,30 +75,30 @@ Also accepts the other HTML attributes of the root element.
 
 ### Button
 
-Botão com quatro variantes e três tamanhos, e feedback de toque feito só com CSS. É um `<button>` de verdade e aceita os atributos dele.
+A button with four variants and three sizes, and press feedback made with CSS only. It is a real `<button>` and accepts its attributes.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Estilo visual do botão. |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Tamanho do botão. |
-| `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
-| `animation` | `false \| { recipe, from, tuning }` | `press` | Receita de motion do botão, feita só com CSS. Use false para desligar a animação, ou { recipe, tuning } com press (escala ao pressionar) ou lift (sobe ao passar o mouse); outras receitas são ignoradas. A duração, a escala e a distância viram as variáveis --enchase-button-duration, --enchase-button-scale e --enchase-button-distance. Use os controles do grupo Motion para experimentar. O elemento raiz aceita className e style, e expõe data-slot="button". |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Visual style of the button. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the button. |
+| `fullWidth` | `boolean` | `false` | Takes up the full available width. |
+| `animation` | `false \| { recipe, from, tuning }` | `press` | Motion recipe of the button, made with CSS only. Use false to turn the animation off, or { recipe, tuning } with press (scales on press) or lift (rises on hover); other recipes are ignored. The duration, the scale and the distance become the variables --enchase-button-duration, --enchase-button-scale and --enchase-button-distance. Use the controls of the Motion group to experiment. The root element accepts className and style, and exposes data-slot="button". |
 
 Also accepts the other attributes of `<button>`, passed on to the element.
 
 ### ButtonLink
 
-Link com a aparência de um `Button`. É um `<a href>` de verdade, e passa pelo `navigate` do `UIProvider` nas rotas do app, como o `Link`.
+A link that looks like a `Button`. It is a real `<a href>`, and goes through the `navigate` of the `UIProvider` for app routes, like the `Link`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `href` | `string` | *required* | Destino do link, com as mesmas regras do `Link`: uma rota do app vai para o `navigate` do `UIProvider`; âncoras, o hash da página atual e URLs externas ficam com o navegador. |
-| `native` | `boolean` | `false` | Deixa o clique com o navegador mesmo em uma rota do app. |
-| `externalIcon` | `boolean` | `true` | Com `target="_blank"`, mostra o ícone de link externo depois do conteúdo. `false` tira só o ícone (útil em um botão só de ícone) e mantém o texto "abre em nova aba" para leitores de tela; em um link só de ícone com `aria-label`, ponha o aviso no próprio rótulo. |
-| `animation` | `false \| { recipe, from, tuning }` | `press` | Receita de motion do `Button`. Use false para desligar, ou { recipe, tuning } com press ou lift. |
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Estilo visual, o mesmo do `Button`. |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Tamanho, o mesmo do `Button`. |
-| `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
+| `href` | `string` | *required* | Destination of the link, with the same rules as the `Link`: an app route goes to the `navigate` of the `UIProvider`; anchors, the hash of the current page and external URLs are left to the browser. |
+| `native` | `boolean` | `false` | Leaves the click to the browser even on an app route. |
+| `externalIcon` | `boolean` | `true` | With `target="_blank"`, shows the external link icon after the content. `false` removes only the icon (useful in an icon-only button) and keeps the "opens in a new tab" text for screen readers; in an icon-only link with `aria-label`, put the warning in the label itself. |
+| `animation` | `false \| { recipe, from, tuning }` | `press` | Motion recipe of the `Button`. Use false to turn it off, or { recipe, tuning } with press or lift. |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Visual style, the same as the `Button`. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size, the same as the `Button`. |
+| `fullWidth` | `boolean` | `false` | Takes up the full available width. |
 
 Also accepts the other attributes of `<a>`, passed on to the element.
 
@@ -143,14 +143,14 @@ Also accepts the other attributes of `<a>`, passed on to the element.
 
 ### Checkbox
 
-Caixa de seleção nativa estilizada, com rótulo clicável e traço animado. Aceita `ref` e os atributos do `<input>`.
+A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — | Texto do rótulo. Clicar nele também marca a caixa. |
-| `wrapperClassName` | `string` | — | Classe da raiz (data-slot="checkbox"). className continua no input nativo (data-slot="checkbox-input"). |
-| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="checkbox"). style continua no input nativo. |
-| `animation` | `false \| { recipe, tuning }` | `pop` | Animação do traço de marcado, que cresce com um pop curto. false desliga; { tuning: { duration, scale } } ajusta a duração em segundos e a escala inicial. |
+| `label` | `string` | — | Text of the label. Clicking it also checks the box. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="checkbox"). className stays on the native input (data-slot="checkbox-input"). |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="checkbox"). style stays on the native input. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the check mark, which grows with a short pop. false turns it off; { tuning: { duration, scale } } sets the duration in seconds and the initial scale. |
 
 Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.
 
@@ -316,18 +316,18 @@ Also accepts the other attributes of `<span>`, passed on to the element.
 
 ### Input
 
-Campo de texto com rótulo, mensagem de erro, texto de ajuda e botão para revelar a senha. Aceita `ref` e os atributos do `<input>`.
+A text field with a label, an error message, helper text and a button to reveal the password. It accepts `ref` and the attributes of the `<input>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — | Rótulo do campo, associado ao input para leitores de tela. |
-| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn. |
-| `error` | `string` | — | Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta. |
-| `helperText` | `string` | — | Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro. |
-| `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
-| `passwordToggle` | `boolean` | `true` | Mostra o botão para revelar ou ocultar a senha. Só vale quando type é password. Os textos do botão vêm do UIProvider. |
-| `wrapperClassName` | `string` | — | Classe da raiz (data-slot="input"). className e style continuam no input nativo (data-slot="input-field"). |
-| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="input"). style continua no input nativo. |
+| `label` | `string` | — | Label of the field, associated with the input for screen readers. |
+| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
+| `helperText` | `string` | — | Helper text. It is tied to the field by aria-describedby and disappears when there is an error. |
+| `fullWidth` | `boolean` | `false` | Takes up the full available width. |
+| `passwordToggle` | `boolean` | `true` | Shows the button to reveal or hide the password. It only applies when type is password. The texts of the button come from the UIProvider. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="input"). className and style stay on the native input (data-slot="input-field"). |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="input"). style stays on the native input. |
 
 Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.
 
@@ -367,12 +367,12 @@ Also accepts the other attributes of `<div>`, passed on to the element.
 
 ### Link
 
-Link de texto que passa pelo `navigate` do `UIProvider` quando o destino é uma rota do app, sem depender de um roteador. Sem `navigate`, é um `<a href>` comum. A story "Quem trata cada href" mostra cada caso.
+A text link that goes through the `navigate` of the `UIProvider` when the destination is an app route, without depending on a router. Without `navigate`, it is a plain `<a href>`. The story "Who handles each href" shows each case.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `href` | `string` | *required* | Destino do link. Uma rota do app (`/sobre`, `/sobre#equipe`) vai para o `navigate` do `UIProvider` quando ele existe. Âncoras (`#id`), o hash da página atual, URLs externas, `mailto:` e `tel:` ficam com o navegador, assim como Ctrl, Cmd, Shift e o botão do meio. |
-| `native` | `boolean` | `false` | Deixa o clique com o navegador mesmo em uma rota do app. Use em rotas que pertencem a outro app, como a documentação publicada no mesmo domínio. |
+| `href` | `string` | *required* | Destination of the link. An app route (`/about`, `/about#team`) goes to the `navigate` of the `UIProvider` when there is one. Anchors (`#id`), the hash of the current page, external URLs, `mailto:` and `tel:` are left to the browser, as are Ctrl, Cmd, Shift and the middle button. |
+| `native` | `boolean` | `false` | Leaves the click to the browser even on an app route. Use it for routes that belong to another app, such as documentation published on the same domain. |
 
 Also accepts the other attributes of `<a>`, passed on to the element.
 
@@ -429,26 +429,26 @@ Barra de navegação no topo, com a marca, os links, ações e o botão de tema.
 
 ### NumberInput
 
-Campo para digitar um número, com rótulo, mensagem de erro, texto de ajuda e botões para diminuir e aumentar. É um `<input type="text">` com `role="spinbutton"` e teclado numérico no celular, em vez de `type="number"`: o texto segue o idioma do `UIProvider` (vírgula decimal e ponto de milhar em pt-BR), aceita moeda e porcentagem por `formatOptions`, e o valor sai como `number`, ou `null` com o campo vazio. As setas mudam o valor por `step`; Shift com as setas e Page Up e Page Down, por `largeStep`; Home e End vão ao `min` e ao `max`. O valor é confirmado ao sair do campo ou com Enter, limitado ao intervalo e arredondado às casas do formato. Com `name`, o número vai para o formulário num campo oculto, sem a formatação da tela. Os botões ficam fora da ordem do Tab, porque o teclado já tem as setas, e seus nomes vêm de `labels.increaseValue` e `labels.decreaseValue` do `UIProvider`. Aceita `ref`, que vai para o `<input>`, e os atributos dele.
+A field for typing a number, with a label, an error message, helper text and buttons to decrease and increase. It is an `<input type="text">` with `role="spinbutton"` and a numeric keyboard on phones, instead of `type="number"`: the text follows the language of the `UIProvider` (a decimal comma and a period for thousands in pt-BR), it accepts currency and percent through `formatOptions`, and the value comes out as a `number`, or `null` when the field is empty. The arrow keys change the value by `step`; Shift with the arrow keys, Page Up and Page Down change it by `largeStep`; Home and End go to `min` and `max`. The value is confirmed when the user leaves the field or presses Enter, limited to the range and rounded to the decimal places of the format. With `name`, the number goes to the form in a hidden field, without the formatting shown on screen. The buttons stay out of the Tab order, because the keyboard already has the arrow keys, and their names come from `labels.increaseValue` and `labels.decreaseValue` of the `UIProvider`. It accepts `ref`, which goes to the `<input>`, and the attributes of the `<input>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `value` | `number \| null` | — | Valor quando o componente é controlado; `null` é o campo vazio. Exige também onValueChange. Veja a story Controlled. |
-| `defaultValue` | `number \| null` | `null` | Valor inicial, para uso sem controle externo. `null` começa com o campo vazio. |
-| `onValueChange` | `(value: number \| null) => void` | — | Chamada com o número confirmado, ou `null` se o campo ficou vazio. Acontece ao sair do campo, com Enter, com as setas e com os botões, nunca a cada tecla digitada. |
-| `min` | `number` | — | Menor valor aceito. O que for digitado abaixo dele volta ao mínimo ao sair do campo, o botão de diminuir se desativa nele e Home vai até ele. Com `min` de zero ou mais, o sinal de menos não é aceito. No iPhone o teclado numérico não tem o sinal de menos: para aceitar negativos, passe `inputMode="text"`. |
-| `max` | `number` | — | Maior valor aceito. O que for digitado acima dele volta ao máximo ao sair do campo, o botão de aumentar se desativa nele e End vai até ele. |
-| `step` | `number` | `1` | Quanto o valor muda com as setas e com os botões. Os passos contam a partir de `min` (ou de 0), e as casas decimais do passo entram no formato. Um valor que não seja positivo vale 1. |
-| `largeStep` | `number` | — | Passo grande, de Shift com as setas e de Page Up e Page Down. Sem ele, vale dez vezes o `step`. |
-| `formatOptions` | `NumberInputFormat` | — | Formato do número, como no `Intl.NumberFormat`: `style` (`decimal`, `currency` ou `percent`), `currency` (código como `BRL`), `currencyDisplay`, `minimumFractionDigits`, `maximumFractionDigits` e `useGrouping`. O idioma vem do `UIProvider`. Sem `maximumFractionDigits`, valem as casas do estilo (3 no decimal, 2 na moeda, 0 no percentual) ou as que o `step` pedir. No percentual o valor é a fração: 0,15 aparece como 15%, e o `step` costuma ser 0,01. |
-| `label` | `string` | — | Rótulo do campo, associado ao input para leitores de tela. |
-| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn. |
-| `error` | `string` | — | Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta. |
-| `helperText` | `string` | — | Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro. |
-| `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
-| `steppers` | `boolean` | `true` | Mostra os botões de diminuir e aumentar, e o aviso por voz do novo valor quando um deles é usado. Sem eles, o teclado continua com as setas. |
-| `wrapperClassName` | `string` | — | Classe da raiz (data-slot="number-input"). className e style continuam no input (data-slot="number-input-field"). |
-| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="number-input"). style continua no input. |
+| `value` | `number \| null` | — | Value when the component is controlled; `null` is the empty field. It also requires onValueChange. See the Controlled story. |
+| `defaultValue` | `number \| null` | `null` | Initial value, for use without external control. `null` starts with the field empty. |
+| `onValueChange` | `(value: number \| null) => void` | — | Called with the confirmed number, or `null` if the field was left empty. It happens when the user leaves the field, on Enter, with the arrow keys and with the buttons, never on every key typed. |
+| `min` | `number` | — | Smallest accepted value. What is typed below it goes back to the minimum when the user leaves the field, the decrease button is disabled at it and Home goes to it. With a `min` of zero or more, the minus sign is not accepted. On iPhone the numeric keyboard has no minus sign: to accept negative values, pass `inputMode="text"`. |
+| `max` | `number` | — | Largest accepted value. What is typed above it goes back to the maximum when the user leaves the field, the increase button is disabled at it and End goes to it. |
+| `step` | `number` | `1` | How much the value changes with the arrow keys and with the buttons. Steps count from `min` (or from 0), and the decimal places of the step go into the format. A value that is not positive is replaced by 1. |
+| `largeStep` | `number` | — | Large step, used by Shift with the arrow keys and by Page Up and Page Down. Without it, ten times the `step` applies. |
+| `formatOptions` | `NumberInputFormat` | — | Format of the number, as in `Intl.NumberFormat`: `style` (`decimal`, `currency` or `percent`), `currency` (a code such as `USD`), `currencyDisplay`, `minimumFractionDigits`, `maximumFractionDigits` and `useGrouping`. The language comes from the `UIProvider`. Without `maximumFractionDigits`, the decimal places of the style apply (3 for decimal, 2 for currency, 0 for percent) or the ones the `step` calls for. For percent the value is the fraction: 0.15 shows as 15%, and the `step` is usually 0.01. |
+| `label` | `string` | — | Label of the field, associated with the input for screen readers. |
+| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
+| `helperText` | `string` | — | Helper text. It is tied to the field by aria-describedby and disappears when there is an error. |
+| `fullWidth` | `boolean` | `false` | Takes up the full available width. |
+| `steppers` | `boolean` | `true` | Shows the decrease and increase buttons, and the spoken announcement of the new value when one of them is used. Without them, the keyboard still has the arrow keys. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="number-input"). className and style stay on the input (data-slot="number-input-field"). |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="number-input"). style stays on the input. |
 
 Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.
 
@@ -511,39 +511,39 @@ Also accepts the other attributes of `<div>`, passed on to the element.
 
 ### RadioGroup
 
-Grupo de botões de opção para escolher uma entre poucas alternativas que cabem na tela de uma vez; para muitas, use o `Select`. Monta um `<fieldset>` com `role="radiogroup"`, título, texto de ajuda e mensagem de erro, como os outros campos. Cada opção é um `<input type="radio">` nativo de mesmo `name`, então o teclado já funciona: Tab entra no grupo e as setas movem e marcam a opção. Aceita `ref`, que vai para o `<fieldset>`, e os atributos dele; `className` e `style` também vão para ele.
+A group of radio buttons to choose one among a few alternatives that fit on the screen at once; for many, use the `Select`. It builds a `<fieldset>` with `role="radiogroup"`, a title, helper text and an error message, like the other fields. Each option is a native `<input type="radio">` with the same `name`, so the keyboard already works: Tab enters the group, and the arrow keys move to an option and check it. It accepts `ref`, which goes to the `<fieldset>`, and the attributes of the `<fieldset>`; `className` and `style` also go to it.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `options` | `RadioGroupOption[]` | *required* | Opções do grupo, cada uma com `value`, `label` e, se quiser, `disabled`. A ordem do array é a ordem na tela. |
-| `label` | `string` | — | Título do grupo, desenhado como a `<legend>` do `<fieldset>`. Sem título visível, passe aria-label ao grupo. |
-| `name` | `string` | — | Nome do campo no formulário, igual para todas as opções. Sem ele, o grupo usa um nome gerado, que mantém as opções ligadas entre si e separa um grupo do outro. |
-| `value` | `string` | — | Valor da opção marcada quando o grupo é controlado. Exige também onValueChange. Para controlar sem nenhuma marcada, passe uma string vazia. Veja a story Controlled. |
-| `defaultValue` | `string` | — | Valor da opção marcada no início, para uso sem controle externo. Veja a story WithDefaultValue. |
-| `onValueChange` | `(value: string) => void` | — | Chamada com o valor da opção que o usuário acabou de marcar, por clique ou pelas setas do teclado. |
-| `required` | `boolean` | `false` | Exige uma opção marcada ao enviar o formulário e avisa leitores de tela com aria-required. |
-| `error` | `string` | — | Mensagem de erro. Marca o grupo como inválido (aria-invalid), pinta o título e as opções de vermelho e é anunciada como alerta. Substitui o helperText. |
-| `helperText` | `string` | — | Texto de ajuda sob o grupo. Fica ligado a ele por aria-describedby e some quando há erro. |
-| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Direção da lista: vertical empilha as opções e horizontal as põe lado a lado, quebrando a linha quando falta espaço. |
-| `animation` | `false \| { recipe, tuning }` | `pop` | Animação do ponto de marcado, que cresce com um pop curto. false desliga; { tuning: { duration, scale } } ajusta a duração em segundos e a escala inicial. |
+| `options` | `RadioGroupOption[]` | *required* | Options of the group, each one with `value`, `label` and, optionally, `disabled`. The order of the array is the order on the screen. |
+| `label` | `string` | — | Title of the group, rendered as the `<legend>` of the `<fieldset>`. Without a visible title, pass aria-label to the group. |
+| `name` | `string` | — | Name of the field in the form, the same for all the options. Without it, the group uses a generated name, which keeps the options linked to each other and separates one group from another. |
+| `value` | `string` | — | Value of the checked option when the group is controlled. It also requires onValueChange. To control it with none checked, pass an empty string. See the Controlled story. |
+| `defaultValue` | `string` | — | Value of the option checked at the start, for use without external control. See the WithDefaultValue story. |
+| `onValueChange` | `(value: string) => void` | — | Called with the value of the option the user just checked, by click or with the arrow keys of the keyboard. |
+| `required` | `boolean` | `false` | Requires a checked option when the form is submitted and tells screen readers with aria-required. |
+| `error` | `string` | — | Error message. Marks the group as invalid (aria-invalid), paints the title and the options red and is announced as an alert. It replaces the helperText. |
+| `helperText` | `string` | — | Helper text under the group. It is tied to the group by aria-describedby and disappears when there is an error. |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Direction of the list: vertical stacks the options and horizontal puts them side by side, wrapping to a new line when there is not enough room. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the dot of the checked option, which grows with a short pop. false turns it off; { tuning: { duration, scale } } sets the duration in seconds and the initial scale. |
 
 Also accepts the other attributes of `<fieldset>`, passed on to the element. Forwards the `ref` to `<fieldset>`.
 
 ### Select
 
-Seleção nativa estilizada, com rótulo, mensagem de erro, texto de ajuda e `placeholder`. Aceita `ref` e os atributos do `<select>`.
+A styled native select, with a label, an error message, helper text and a `placeholder`. It accepts `ref` and the attributes of the `<select>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — | Rótulo do campo, associado ao select para leitores de tela. |
-| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn. |
-| `error` | `string` | — | Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta. |
-| `helperText` | `string` | — | Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro. |
-| `options` | `SelectOption[]` | *required* | Lista de opções. Cada uma tem value, label e, se quiser, disabled. |
-| `placeholder` | `string` | — | Texto da opção inicial, exibido enquanto nada foi escolhido. Para aparecer, o campo precisa começar com defaultValue vazio. |
-| `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
-| `wrapperClassName` | `string` | — | Classe da raiz (data-slot="select"). className e style continuam no select nativo (data-slot="select-field"). |
-| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="select"). style continua no select nativo. |
+| `label` | `string` | — | Label of the field, associated with the select for screen readers. |
+| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
+| `helperText` | `string` | — | Helper text. It is tied to the field by aria-describedby and disappears when there is an error. |
+| `options` | `SelectOption[]` | *required* | List of options. Each one has value, label and, optionally, disabled. |
+| `placeholder` | `string` | — | Text of the initial option, shown while nothing has been chosen. For it to appear, the field needs to start with an empty defaultValue. |
+| `fullWidth` | `boolean` | `false` | Takes up the full available width. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="select"). className and style stay on the native select (data-slot="select-field"). |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="select"). style stays on the native select. |
 
 Also accepts the other attributes of `<select>`, passed on to the element. Forwards the `ref` to `<select>`.
 
@@ -584,14 +584,14 @@ Also accepts the other attributes of `<div>`, passed on to the element.
 
 ### Switch
 
-Interruptor de liga e desliga para uma configuração que vale na hora, com rótulo clicável. É um `<input type="checkbox">` com `role="switch"`, então leitores de tela o anunciam como interruptor e o formulário envia o valor só quando ligado. Aceita `ref` e os atributos do `<input>`. Para uma escolha que só vale ao enviar o formulário, prefira o `Checkbox`.
+An on and off switch for a setting that takes effect at once, with a clickable label. It is an `<input type="checkbox">` with `role="switch"`, so screen readers announce it as a switch and the form sends the value only when it is on. It accepts `ref` and the attributes of the `<input>`. For a choice that only takes effect when the form is submitted, prefer the `Checkbox`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — | Texto do rótulo. Clicar nele também liga e desliga. Sem rótulo visível, passe aria-label. |
-| `wrapperClassName` | `string` | — | Classe da raiz (data-slot="switch"). className continua no input nativo (data-slot="switch-input"). |
-| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="switch"). style continua no input nativo. |
-| `animation` | `false \| { recipe, tuning }` | `fade` | Animação da troca: a bolinha desliza e a trilha muda de cor. false desliga; { tuning: { duration } } ajusta a duração em segundos. |
+| `label` | `string` | — | Text of the label. Clicking it also turns the switch on or off. Without a visible label, pass aria-label. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="switch"). className stays on the native input (data-slot="switch-input"). |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="switch"). style stays on the native input. |
+| `animation` | `false \| { recipe, tuning }` | `fade` | Animation of the toggle: the thumb slides and the track changes color. false turns it off; { tuning: { duration } } sets the duration in seconds. |
 
 Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.
 
@@ -642,29 +642,29 @@ Also accepts the other attributes of `<span>`, passed on to the element.
 
 ### Textarea
 
-Campo de texto de várias linhas, com rótulo, mensagem de erro e texto de ajuda, como o `Input`. Aceita `ref` e os atributos do `<textarea>`.
+A multi-line text field, with a label, an error message and helper text, like the `Input`. It accepts `ref` and the attributes of the `<textarea>`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `label` | `string` | — | Rótulo do campo, associado ao textarea para leitores de tela. |
-| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn. |
-| `error` | `string` | — | Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta. |
-| `helperText` | `string` | — | Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro. |
-| `fullWidth` | `boolean` | `false` | Ocupa toda a largura disponível. |
-| `resize` | `'none' \| 'vertical' \| 'horizontal' \| 'both'` | `'vertical'` | Como o usuário redimensiona o campo pela alça do canto: none não deixa, vertical muda só a altura, horizontal só a largura e both as duas. |
-| `rows` | `number` | `3` | Número de linhas visíveis. O campo rola quando o texto passa disso. |
-| `wrapperClassName` | `string` | — | Classe da raiz (data-slot="textarea"). className e style continuam no textarea nativo (data-slot="textarea-field"). |
-| `wrapperStyle` | `CSSProperties` | — | Estilo da raiz (data-slot="textarea"). style continua no textarea nativo. |
+| `label` | `string` | — | Label of the field, associated with the textarea for screen readers. |
+| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
+| `helperText` | `string` | — | Helper text. It is tied to the field by aria-describedby and disappears when there is an error. |
+| `fullWidth` | `boolean` | `false` | Takes up the full available width. |
+| `resize` | `'none' \| 'vertical' \| 'horizontal' \| 'both'` | `'vertical'` | How the user resizes the field with the handle in the corner: none does not allow it, vertical changes only the height, horizontal only the width and both changes the height and the width. |
+| `rows` | `number` | `3` | Number of visible rows. The field scrolls when the text goes past that. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="textarea"). className and style stay on the native textarea (data-slot="textarea-field"). |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="textarea"). style stays on the native textarea. |
 
 Also accepts the other attributes of `<textarea>`, passed on to the element. Forwards the `ref` to `<textarea>`.
 
 ### ThemeToggle
 
-Botão que alterna entre o modo claro e o escuro, com o ícone trocando por crossfade. Precisa de um `ColorModeProvider`.
+A button that toggles between the light and the dark mode, with the icon swapping by crossfade. It needs a `ColorModeProvider`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `animation` | `MotionOverride` | — | false desliga o feedback de toque; { recipe } ajusta. O ícone troca por crossfade de CSS em até 150 ms. |
+| `animation` | `MotionOverride` | — | false turns off the press feedback; { recipe } adjusts it. The icon swaps by a CSS crossfade in up to 150 ms. |
 
 Also accepts the other attributes of `<button>`, passed on to the element.
 

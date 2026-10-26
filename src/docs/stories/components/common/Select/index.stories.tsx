@@ -7,8 +7,8 @@ const meta = {
   title: 'Components/Select',
   component: Select,
   args: {
-    label: 'País',
-    placeholder: 'Selecione...',
+    label: 'Country',
+    placeholder: 'Select...',
     options: countryOptions,
     defaultValue: '',
     fullWidth: defaultFullWidth,
@@ -17,62 +17,62 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Seleção nativa estilizada, com rótulo, mensagem de erro, texto de ajuda e `placeholder`. Aceita `ref` e os atributos do `<select>`.'
+        component: 'A styled native select, with a label, an error message, helper text and a `placeholder`. It accepts `ref` and the attributes of the `<select>`.'
       }
     }
   },
   argTypes: {
     label: {
-      description: 'Rótulo do campo, associado ao select para leitores de tela.',
+      description: 'Label of the field, associated with the select for screen readers.',
       control: 'text'
     },
     labelPlacement: {
-      description: 'Onde fica o rótulo: floating (dentro do campo, sobe para o contorno ao focar ou preencher) ou stacked (acima do controle, sem entalhe no contorno). Sem a prop, vale o style do tema (createTheme): floating no padrão e stacked no shadcn.',
+      description: 'Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn.',
       control: 'inline-radio',
       options: ['floating', 'stacked'],
       table: { defaultValue: { summary: "'floating'" } }
     },
     options: {
-      description: 'Lista de opções. Cada uma tem value, label e, se quiser, disabled.',
+      description: 'List of options. Each one has value, label and, optionally, disabled.',
       control: 'object',
       table: { type: { summary: 'SelectOption[]' } }
     },
     placeholder: {
-      description: 'Texto da opção inicial, exibido enquanto nada foi escolhido. Para aparecer, o campo precisa começar com defaultValue vazio.',
+      description: 'Text of the initial option, shown while nothing has been chosen. For it to appear, the field needs to start with an empty defaultValue.',
       control: 'text'
     },
     helperText: {
-      description: 'Texto de ajuda. Fica ligado ao campo por aria-describedby e some quando há erro.',
+      description: 'Helper text. It is tied to the field by aria-describedby and disappears when there is an error.',
       control: 'text'
     },
     error: {
-      description: 'Mensagem de erro. Marca o campo como inválido (aria-invalid) e é anunciada como alerta.',
+      description: 'Error message. Marks the field as invalid (aria-invalid) and is announced as an alert.',
       control: 'text'
     },
     fullWidth: {
-      description: 'Ocupa toda a largura disponível.',
+      description: 'Takes up the full available width.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultFullWidth) } }
     },
     disabled: {
-      description: 'Desativa o campo.',
+      description: 'Disables the field.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     wrapperClassName: {
-      description: 'Classe da raiz (data-slot="select"). className e style continuam no select nativo (data-slot="select-field").',
+      description: 'Class of the root (data-slot="select"). className and style stay on the native select (data-slot="select-field").',
       control: 'text'
     },
     wrapperStyle: {
-      description: 'Estilo da raiz (data-slot="select"). style continua no select nativo.',
+      description: 'Style of the root (data-slot="select"). style stays on the native select.',
       control: false
     },
     defaultValue: {
-      description: 'Valor inicial quando o campo não é controlado. Use vazio para mostrar o placeholder.',
+      description: 'Initial value when the field is uncontrolled. Use an empty value to show the placeholder.',
       control: false
     },
     value: {
-      description: 'Valor atual quando o campo é controlado. Exige também onChange.',
+      description: 'Current value when the field is controlled. It also requires onChange.',
       control: false
     }
   }
@@ -85,11 +85,11 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const WithHelperText: Story = {
-  args: { helperText: 'Usado para definir o idioma padrão' }
+  args: { helperText: 'Used to set the default language' }
 }
 
 export const WithError: Story = {
-  args: { error: 'Selecione um país' }
+  args: { error: 'Select a country' }
 }
 
 export const Disabled: Story = {

@@ -1,13 +1,13 @@
 import type { HrefCase } from './types.ts'
 
 export const hrefCases: HrefCase[] = [
-  { id: 'section', href: '#recursos', outcome: 'Âncora da página: o navegador rola até o elemento.' },
-  { id: 'route', href: '/sobre', outcome: 'Rota do app: vai para o navigate do UIProvider.' },
-  { id: 'route-hash', href: '/sobre#equipe', outcome: 'Rota com hash em outra página: vai para o navigate, com o hash no href.' },
-  { id: 'same-page-hash', href: '/docs#props', outcome: 'Hash da página atual (currentHref="/docs"): o navegador rola e o navigate não é chamado.' },
-  { id: 'external', href: 'https://example.com', outcome: 'URL externa: o navegador.' },
-  { id: 'mail', href: 'mailto:oi@example.com', outcome: 'mailto: e tel: seguem o navegador.' },
-  { id: 'native', href: '/referencia', native: true, outcome: 'native: o navegador, mesmo sendo uma rota. Serve para rotas de outro app no mesmo domínio.' },
-  { id: 'blank', href: '/sobre', target: '_blank', outcome: 'target diferente de _self: o navegador abre o destino.' },
-  { id: 'download', href: '/manual.pdf', download: '', outcome: 'download: o navegador baixa o arquivo.' }
+  { id: 'section', href: '#features', outcome: 'Page anchor: the browser scrolls to the element.' },
+  { id: 'route', href: '/about', outcome: 'App route: goes to the navigate of the UIProvider.' },
+  { id: 'route-hash', href: '/about#team', outcome: 'Route with a hash on another page: goes to the navigate, with the hash in the href.' },
+  { id: 'same-page-hash', href: '/docs#props', outcome: 'Hash of the current page (currentHref="/docs"): the browser scrolls and the navigate is not called.' },
+  { id: 'external', href: 'https://example.com', outcome: 'External URL: the browser.' },
+  { id: 'mail', href: 'mailto:ada@example.com', outcome: 'mailto: and tel: go to the browser.' },
+  { id: 'native', href: '/reference', native: true, outcome: 'native: the browser, even though it is a route. It is for routes of another app on the same domain.' },
+  { id: 'blank', href: '/about', target: '_blank', outcome: 'target other than _self: the browser opens the destination.' },
+  { id: 'download', href: '/manual.pdf', download: '', outcome: 'download: the browser downloads the file.' }
 ]

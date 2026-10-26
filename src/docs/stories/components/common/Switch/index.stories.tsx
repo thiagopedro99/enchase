@@ -9,8 +9,8 @@ const ControlledDemo = () => {
 
   return (
     <div style={{ display: 'grid', gap: '0.5rem', justifyItems: 'start' }}>
-      <Switch label="Receber notificações" checked={enabled} onChange={(event) => setEnabled(event.target.checked)} />
-      <div style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>{enabled ? 'Notificações ligadas' : 'Notificações desligadas'}</div>
+      <Switch label="Receive notifications" checked={enabled} onChange={(event) => setEnabled(event.target.checked)} />
+      <div style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>{enabled ? 'Notifications on' : 'Notifications off'}</div>
     </div>
   )
 }
@@ -19,44 +19,44 @@ const meta = {
   title: 'Components/Switch',
   component: Switch,
   args: {
-    label: 'Receber notificações',
+    label: 'Receive notifications',
     disabled: false
   },
   parameters: {
     docs: {
       description: {
-        component: 'Interruptor de liga e desliga para uma configuração que vale na hora, com rótulo clicável. É um `<input type="checkbox">` com `role="switch"`, então leitores de tela o anunciam como interruptor e o formulário envia o valor só quando ligado. Aceita `ref` e os atributos do `<input>`. Para uma escolha que só vale ao enviar o formulário, prefira o `Checkbox`.'
+        component: 'An on and off switch for a setting that takes effect at once, with a clickable label. It is an `<input type="checkbox">` with `role="switch"`, so screen readers announce it as a switch and the form sends the value only when it is on. It accepts `ref` and the attributes of the `<input>`. For a choice that only takes effect when the form is submitted, prefer the `Checkbox`.'
       }
     }
   },
   argTypes: {
     label: {
-      description: 'Texto do rótulo. Clicar nele também liga e desliga. Sem rótulo visível, passe aria-label.',
+      description: 'Text of the label. Clicking it also turns the switch on or off. Without a visible label, pass aria-label.',
       control: 'text'
     },
     disabled: {
-      description: 'Desativa o interruptor e bloqueia a troca.',
+      description: 'Disables the switch and blocks toggling.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     defaultChecked: {
-      description: 'Estado inicial ligado, para uso sem controle externo. Veja a story Checked.',
+      description: 'Initial on state, for use without external control. See the Checked story.',
       control: false
     },
     checked: {
-      description: 'Estado ligado quando o componente é controlado. Exige também onChange. Veja a story Controlled.',
+      description: 'On state when the component is controlled. It also requires onChange. See the Controlled story.',
       control: false
     },
     wrapperClassName: {
-      description: 'Classe da raiz (data-slot="switch"). className continua no input nativo (data-slot="switch-input").',
+      description: 'Class of the root (data-slot="switch"). className stays on the native input (data-slot="switch-input").',
       control: 'text'
     },
     wrapperStyle: {
-      description: 'Estilo da raiz (data-slot="switch"). style continua no input nativo.',
+      description: 'Style of the root (data-slot="switch"). style stays on the native input.',
       control: false
     },
     animation: {
-      description: 'Animação da troca: a bolinha desliza e a trilha muda de cor. false desliga; { tuning: { duration } } ajusta a duração em segundos.',
+      description: 'Animation of the toggle: the thumb slides and the track changes color. false turns it off; { tuning: { duration } } sets the duration in seconds.',
       control: false,
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'fade' } }
     }
@@ -87,7 +87,7 @@ export const Controlled: Story = {
 }
 
 export const WithoutLabel: Story = {
-  args: { label: undefined, 'aria-label': 'Modo escuro' }
+  args: { label: undefined, 'aria-label': 'Dark mode' }
 }
 
 export const Preferences: Story = {

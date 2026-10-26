@@ -10,67 +10,67 @@ const meta = {
   component: ButtonLink,
   args: {
     href: '/docs',
-    children: 'Documentação',
+    children: 'Documentation',
     variant: 'primary',
     size: 'md',
     fullWidth: false
   },
   argTypes: {
     href: {
-      description: 'Destino do link, com as mesmas regras do `Link`: uma rota do app vai para o `navigate` do `UIProvider`; âncoras, o hash da página atual e URLs externas ficam com o navegador.',
+      description: 'Destination of the link, with the same rules as the `Link`: an app route goes to the `navigate` of the `UIProvider`; anchors, the hash of the current page and external URLs are left to the browser.',
       control: 'text'
     },
     variant: {
-      description: 'Estilo visual, o mesmo do `Button`.',
+      description: 'Visual style, the same as the `Button`.',
       control: 'select',
       options: ['primary', 'secondary', 'outline', 'ghost'],
       table: { defaultValue: { summary: 'primary' } }
     },
     size: {
-      description: 'Tamanho, o mesmo do `Button`.',
+      description: 'Size, the same as the `Button`.',
       control: 'inline-radio',
       options: ['sm', 'md', 'lg'],
       table: { defaultValue: { summary: 'md' } }
     },
     fullWidth: {
-      description: 'Ocupa toda a largura disponível.',
+      description: 'Takes up the full available width.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     native: {
-      description: 'Deixa o clique com o navegador mesmo em uma rota do app.',
+      description: 'Leaves the click to the browser even on an app route.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     externalIcon: {
-      description: 'Com `target="_blank"`, mostra o ícone de link externo depois do conteúdo. `false` tira só o ícone (útil em um botão só de ícone) e mantém o texto "abre em nova aba" para leitores de tela; em um link só de ícone com `aria-label`, ponha o aviso no próprio rótulo.',
+      description: 'With `target="_blank"`, shows the external link icon after the content. `false` removes only the icon (useful in an icon-only button) and keeps the "opens in a new tab" text for screen readers; in an icon-only link with `aria-label`, put the warning in the label itself.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultExternalIcon) } }
     },
     target: {
-      description: 'Com `_blank`, abre em nova aba, mostra um ícone (veja `externalIcon`) e acrescenta o texto "abre em nova aba" para leitores de tela. O `rel` padrão passa a ser `noopener noreferrer`.',
+      description: 'With `_blank`, it opens in a new tab, shows an icon (see `externalIcon`) and adds the "opens in a new tab" text for screen readers. The default `rel` becomes `noopener noreferrer`.',
       control: 'inline-radio',
       options: ['_self', '_blank']
     },
     download: {
-      description: 'Qualquer valor, inclusive vazio, faz o navegador baixar o arquivo em vez de navegar.',
+      description: 'Any value, including an empty one, makes the browser download the file instead of navigating.',
       control: 'text'
     },
     rel: {
-      description: 'Relação do link. Sem valor, `target="_blank"` usa `noopener noreferrer`.',
+      description: 'Relationship of the link. Without a value, `target="_blank"` uses `noopener noreferrer`.',
       control: 'text'
     },
     animation: {
-      description: 'Receita de motion do `Button`. Use false para desligar, ou { recipe, tuning } com press ou lift.',
+      description: 'Motion recipe of the `Button`. Use false to turn it off, or { recipe, tuning } with press or lift.',
       control: false,
       table: { type: { summary: 'false | { recipe, from, tuning }' }, defaultValue: { summary: 'press' } }
     },
     onClick: {
-      description: 'Roda antes do tratamento do clique. Se chamar `preventDefault`, o `navigate` não é chamado.',
+      description: 'Runs before the click is handled. If it calls `preventDefault`, the `navigate` is not called.',
       control: false
     },
     className: {
-      description: 'Classe do elemento (`data-slot="button-link"`), que vence o estilo da biblioteca.',
+      description: 'Class of the element (`data-slot="button-link"`), which wins over the style of the library.',
       control: 'text'
     },
     style: { control: false }
@@ -78,7 +78,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Link com a aparência de um `Button`. É um `<a href>` de verdade, e passa pelo `navigate` do `UIProvider` nas rotas do app, como o `Link`.'
+        component: 'A link that looks like a `Button`. It is a real `<a href>`, and goes through the `navigate` of the `UIProvider` for app routes, like the `Link`.'
       }
     }
   },
@@ -100,15 +100,15 @@ export const Variants: Story = {
   render: () => (
     <ClickProbe>
       <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-        <ButtonLink href="/docs">Primário</ButtonLink>
+        <ButtonLink href="/docs">Primary</ButtonLink>
         <ButtonLink href="/docs" variant="secondary">
-          Secundário
+          Secondary
         </ButtonLink>
         <ButtonLink href="/docs" variant="outline">
-          Contorno
+          Outline
         </ButtonLink>
         <ButtonLink href="/docs" variant="ghost">
-          Fantasma
+          Ghost
         </ButtonLink>
       </div>
     </ClickProbe>
@@ -116,14 +116,14 @@ export const Variants: Story = {
 }
 
 export const OpensInNewTab: Story = {
-  args: { href: 'https://github.com/thiagopedro99/enchase', target: '_blank', variant: 'outline', children: 'Repositório' }
+  args: { href: 'https://github.com/thiagopedro99/enchase', target: '_blank', variant: 'outline', children: 'Repository' }
 }
 
 export const IconOnly: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
     <ClickProbe>
-      <ButtonLink href="https://github.com/thiagopedro99/enchase" target="_blank" externalIcon={false} variant="outline" aria-label="Código no GitHub (abre em nova aba)">
+      <ButtonLink href="https://github.com/thiagopedro99/enchase" target="_blank" externalIcon={false} variant="outline" aria-label="Code on GitHub (opens in a new tab)">
         <Icon>
           <path d="M8 8l-4 4 4 4" />
           <path d="M16 8l4 4-4 4" />

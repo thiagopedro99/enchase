@@ -8,17 +8,17 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Botão que alterna entre o modo claro e o escuro, com o ícone trocando por crossfade. Precisa de um `ColorModeProvider`.'
+        component: 'A button that toggles between the light and the dark mode, with the icon swapping by crossfade. It needs a `ColorModeProvider`.'
       }
     }
   },
   argTypes: {
     animation: {
-      description: 'false desliga o feedback de toque; { recipe } ajusta. O ícone troca por crossfade de CSS em até 150 ms.',
+      description: 'false turns off the press feedback; { recipe } adjusts it. The icon swaps by a CSS crossfade in up to 150 ms.',
       control: false
     },
     className: {
-      description: 'Classe do usuário, aplicada no botão depois da classe da biblioteca.',
+      description: 'Class of whoever uses the library, applied to the button after the class of the library.',
       control: false
     }
   }

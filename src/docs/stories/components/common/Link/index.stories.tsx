@@ -9,38 +9,38 @@ const meta = {
   title: 'Components/Link',
   component: Link,
   args: {
-    href: '/sobre',
-    children: 'Sobre'
+    href: '/about',
+    children: 'About'
   },
   argTypes: {
     href: {
-      description: 'Destino do link. Uma rota do app (`/sobre`, `/sobre#equipe`) vai para o `navigate` do `UIProvider` quando ele existe. Âncoras (`#id`), o hash da página atual, URLs externas, `mailto:` e `tel:` ficam com o navegador, assim como Ctrl, Cmd, Shift e o botão do meio.',
+      description: 'Destination of the link. An app route (`/about`, `/about#team`) goes to the `navigate` of the `UIProvider` when there is one. Anchors (`#id`), the hash of the current page, external URLs, `mailto:` and `tel:` are left to the browser, as are Ctrl, Cmd, Shift and the middle button.',
       control: 'text'
     },
     native: {
-      description: 'Deixa o clique com o navegador mesmo em uma rota do app. Use em rotas que pertencem a outro app, como a documentação publicada no mesmo domínio.',
+      description: 'Leaves the click to the browser even on an app route. Use it for routes that belong to another app, such as documentation published on the same domain.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     target: {
-      description: 'Com `_blank` (ou qualquer valor diferente de `_self`) o navegador abre o destino e o `navigate` não é chamado. Com `_blank`, o `rel` padrão é `noopener noreferrer`.',
+      description: 'With `_blank` (or any value other than `_self`) the browser opens the destination and the `navigate` is not called. With `_blank`, the default `rel` is `noopener noreferrer`.',
       control: 'inline-radio',
       options: ['_self', '_blank']
     },
     download: {
-      description: 'Qualquer valor, inclusive vazio, faz o navegador baixar o arquivo em vez de navegar. Texto vira o nome do arquivo.',
+      description: 'Any value, including an empty one, makes the browser download the file instead of navigating. Text becomes the name of the file.',
       control: 'text'
     },
     rel: {
-      description: 'Relação do link. Sem valor, `target="_blank"` usa `noopener noreferrer`.',
+      description: 'Relationship of the link. Without a value, `target="_blank"` uses `noopener noreferrer`.',
       control: 'text'
     },
     onClick: {
-      description: 'Roda antes do tratamento do clique. Se chamar `preventDefault`, o `navigate` não é chamado.',
+      description: 'Runs before the click is handled. If it calls `preventDefault`, the `navigate` is not called.',
       control: false
     },
     className: {
-      description: 'Classe do elemento (`data-slot="link"`), que vence o estilo da biblioteca.',
+      description: 'Class of the element (`data-slot="link"`), which wins over the style of the library.',
       control: 'text'
     },
     style: { control: false }
@@ -48,7 +48,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'Link de texto que passa pelo `navigate` do `UIProvider` quando o destino é uma rota do app, sem depender de um roteador. Sem `navigate`, é um `<a href>` comum. A story "Quem trata cada href" mostra cada caso.'
+        component: 'A text link that goes through the `navigate` of the `UIProvider` when the destination is an app route, without depending on a router. Without `navigate`, it is a plain `<a href>`. The story "Who handles each href" shows each case.'
       }
     }
   },
@@ -66,7 +66,7 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const WhoHandlesEachHref: Story = {
-  name: 'Quem trata cada href',
+  name: 'Who handles each href',
   parameters: { controls: { disable: true } },
   render: () => (
     <ClickProbe currentHref="/docs">

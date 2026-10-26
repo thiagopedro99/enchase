@@ -6,44 +6,44 @@ const meta = {
   title: 'Components/Checkbox',
   component: Checkbox,
   args: {
-    label: 'Aceito os termos',
+    label: 'I accept the terms',
     disabled: false
   },
   parameters: {
     docs: {
       description: {
-        component: 'Caixa de seleção nativa estilizada, com rótulo clicável e traço animado. Aceita `ref` e os atributos do `<input>`.'
+        component: 'A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`.'
       }
     }
   },
   argTypes: {
     label: {
-      description: 'Texto do rótulo. Clicar nele também marca a caixa.',
+      description: 'Text of the label. Clicking it also checks the box.',
       control: 'text'
     },
     disabled: {
-      description: 'Desativa a caixa e bloqueia a marcação.',
+      description: 'Disables the box and blocks checking it.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     defaultChecked: {
-      description: 'Estado inicial marcado, para uso sem controle externo. Veja a story Checked.',
+      description: 'Initial checked state, for use without external control. See the Checked story.',
       control: false
     },
     checked: {
-      description: 'Estado marcado quando o componente é controlado. Exige também onChange.',
+      description: 'Checked state when the component is controlled. It also requires onChange.',
       control: false
     },
     wrapperClassName: {
-      description: 'Classe da raiz (data-slot="checkbox"). className continua no input nativo (data-slot="checkbox-input").',
+      description: 'Class of the root (data-slot="checkbox"). className stays on the native input (data-slot="checkbox-input").',
       control: 'text'
     },
     wrapperStyle: {
-      description: 'Estilo da raiz (data-slot="checkbox"). style continua no input nativo.',
+      description: 'Style of the root (data-slot="checkbox"). style stays on the native input.',
       control: false
     },
     animation: {
-      description: 'Animação do traço de marcado, que cresce com um pop curto. false desliga; { tuning: { duration, scale } } ajusta a duração em segundos e a escala inicial.',
+      description: 'Animation of the check mark, which grows with a short pop. false turns it off; { tuning: { duration, scale } } sets the duration in seconds and the initial scale.',
       control: false,
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'pop' } }
     }
