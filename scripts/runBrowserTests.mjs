@@ -22,12 +22,16 @@ const result = spawnSync(npx, ['vitest', 'run', '--config', 'vitest.browser.conf
   env: { ...process.env, ENCHASE_BROWSER: browser }
 })
 const output = `${result.stdout}\n${result.stderr}`
+const late = [...new Set([...output.matchAll(/dependency optimized: (\S+)/g)].map((match) => match[1]))]
+const status = result.status ?? 1
 
 process.stdout.write(output)
 
-if (result.status !== 0) {
+if (late.length > 0) console.error(`\nVite optimized ${late.join(', ')} while the tests were running and reloaded the page. Add ${late.length > 1 ? 'them' : 'it'} to optimizeDeps.include in vitest.browser.config.ts.`)
+
+if (status !== 0 || late.length > 0) {
   mkdirSync('.vitest/failures', { recursive: true })
   writeFileSync(`.vitest/failures/${browser}.log`, output)
 }
 
-process.exit(result.status ?? 1)
+process.exit(late.length > 0 ? 1 : status)
