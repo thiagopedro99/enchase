@@ -40,7 +40,7 @@ jobs:
 
   publish:
     needs: [decide, package, browsers]
-    if: ${{ !failure() && !cancelled() && (needs.decide.outputs.action == 'publish' || needs.decide.outputs.action == 'tag') }}
+    if: ${{ !cancelled() && needs.decide.result == 'success' && ((needs.decide.outputs.action == 'publish' && needs.package.result == 'success' && needs.browsers.result == 'success') || (needs.decide.outputs.action == 'tag' && needs.package.result == 'skipped' && needs.browsers.result == 'skipped')) }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
