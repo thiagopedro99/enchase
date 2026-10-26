@@ -28,6 +28,7 @@ import { Input } from '@components/common/Input/index.tsx'
 import { Divider } from '@components/common/Divider/index.tsx'
 import { Avatar } from '@components/common/Avatar/index.tsx'
 import { Tag } from '@components/common/Tag/index.tsx'
+import { Progress } from '@components/common/Progress/index.tsx'
 import { Badge } from '@components/common/Badge/index.tsx'
 import { Alert } from '@components/common/Alert/index.tsx'
 import { ToastProvider } from '@components/toast/index.ts'
@@ -85,6 +86,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Flex as a list of badges', element: <Flex as="ul" wrap aria-label="Stack"><li><Badge>One</Badge></li><li><Badge variant="success">Two</Badge></li></Flex> },
   { name: 'Badge', element: <Badge variant="success">New</Badge> },
   { name: 'Tag static and removable', element: <Flex wrap gap="0.5rem"><Tag>React</Tag><Tag size="sm" onRemove={noop}>TypeScript</Tag><Tag onRemove={noop}>Vite</Tag></Flex> },
+  { name: 'Progress in every shape', element: <Flex direction="column" gap="0.5rem"><Progress value={40} aria-label="Linear" /><Progress aria-label="Linear indeterminate" /><Progress variant="circular" value={40} aria-label="Circular" /><Progress variant="circular" size="lg" aria-label="Circular indeterminate" /></Flex> },
   { name: 'Avatar', element: <Flex><Avatar name="Ana Souza" /><Avatar name="Ana Souza" src="/ana.png" size="lg" /><Avatar size="sm" /></Flex> },
   { name: 'Divider', element: <Flex><span>One</span><Divider orientation="vertical" /><span>Two</span><Divider decorative /></Flex> },
   { name: 'Alert', element: <Alert variant="warning" title="Heads up" onClose={noop}>The deadline is today.</Alert> },

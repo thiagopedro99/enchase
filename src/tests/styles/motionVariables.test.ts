@@ -17,6 +17,7 @@ const prefixes: Record<string, string> = {
   'common/NumberInput/styles.module.css': 'number-input',
   'common/Pagination/styles.module.css': 'pagination',
   'common/Popover/styles.module.css': 'popover',
+  'common/Progress/styles.module.css': 'progress',
   'common/Select/styles.module.css': 'select',
   'common/Sidebar/styles.module.css': 'sidebar',
   'common/Skeleton/styles.module.css': 'skeleton',

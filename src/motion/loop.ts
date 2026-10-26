@@ -17,7 +17,7 @@ export const loopDurationVariable: Record<LoopRecipe, string> = {
 
 const off: LoopMotion = { motion: 'off', style: undefined }
 
-export const resolveLoopMotion = (name: LoopRecipe, settings: MotionSettings, override?: MotionOverride): LoopMotion => {
+export const resolveLoopMotion = (name: LoopRecipe, settings: MotionSettings, override?: MotionOverride, variable = loopDurationVariable[name]): LoopMotion => {
   if (override === false || settings.mode === 'never' || settings.preset === 'off') return off
 
   const requested = override && override.recipe ? override.recipe : name
@@ -29,5 +29,5 @@ export const resolveLoopMotion = (name: LoopRecipe, settings: MotionSettings, ov
 
   if (duration === undefined) return { motion: 'on', style: undefined }
 
-  return { motion: 'on', style: { [loopDurationVariable[name]]: `${Math.round(duration * 1000)}ms` } as CSSProperties }
+  return { motion: 'on', style: { [variable]: `${Math.round(duration * 1000)}ms` } as CSSProperties }
 }

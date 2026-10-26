@@ -141,6 +141,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Tooltip` | `<Tooltip text="Ajuda"><button>?</button></Tooltip>` |
 | `Popover` | `<Popover label="Detalhes" content={<p>Conteúdo</p>}><button>Abrir</button></Popover>` |
 | `Loading`, `InlineLoading` | `<Loading overlay text="Carregando" />` |
+| `Progress` | `<Progress value={40} aria-label="Enviando fotos" />`; sem `value` é indeterminado, e `variant="circular"` desenha um anel |
 | `Skeleton` | `<Skeleton variant="text" width="12rem" />` |
 | `Divider` | `<Divider />`, ou `<Divider orientation="vertical" />` entre botões de uma linha `Flex` |
 | `Breadcrumbs` | `<Breadcrumbs items={[{ id: 'home', label: 'Início', href: '/' }, { id: 'page', label: 'Atual' }]} />` |

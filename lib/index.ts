@@ -1,4 +1,4 @@
-export { Accordion, Alert, Avatar, Badge, Breadcrumbs, Button, ButtonLink, Card, CardButton, CardLink, Checkbox, ConfirmModal, Container, Divider, Flex, Grid, InlineLoading, Input, Loading, Modal, NumberInput, Pagination, Popover, RadioGroup, Select, Sidebar, Skeleton, Switch, Table, Tabs, Tag, Textarea, ThemeToggle, Tooltip, VisuallyHidden } from '../src/components/common/index.ts'
+export { Accordion, Alert, Avatar, Badge, Breadcrumbs, Button, ButtonLink, Card, CardButton, CardLink, Checkbox, ConfirmModal, Container, Divider, Flex, Grid, InlineLoading, Input, Loading, Modal, NumberInput, Pagination, Popover, Progress, RadioGroup, Select, Sidebar, Skeleton, Switch, Table, Tabs, Tag, Textarea, ThemeToggle, Tooltip, VisuallyHidden } from '../src/components/common/index.ts'
 export { Icon } from '../src/components/common/Icon/index.tsx'
 export { Link } from '../src/components/common/Link/index.tsx'
 export { ColorModeProvider, ColorModeScript } from '../src/components/colorMode/index.tsx'
@@ -59,3 +59,4 @@ export type { VisuallyHiddenProps } from '../src/components/common/VisuallyHidde
 export type { DividerProps } from '../src/components/common/Divider/types.ts'
 export type { AvatarProps } from '../src/components/common/Avatar/types.ts'
 export type { TagProps } from '../src/components/common/Tag/types.ts'
+export type { ProgressProps } from '../src/components/common/Progress/types.ts'

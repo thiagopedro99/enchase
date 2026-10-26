@@ -22,6 +22,7 @@ import { Input } from '@components/common/Input/index.tsx'
 import { Loading } from '@components/common/Loading/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
+import { Progress } from '@components/common/Progress/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Skeleton } from '@components/common/Skeleton/index.tsx'
@@ -82,6 +83,7 @@ const cases: [string, string, ComponentType<never>, Record<string, unknown>][] =
   ['Loading', 'LoadingProps', Loading, {}],
   ['NumberInput', 'NumberInputProps', NumberInput, { label: 'Quantity' }],
   ['Pagination', 'PaginationProps', Pagination, { pageCount: 5 }],
+  ['Progress', 'ProgressProps', Progress, {}],
   ['RadioGroup', 'RadioGroupProps', RadioGroup, { label: 'Plan', options }],
   ['Select', 'SelectProps', Select, { label: 'Plan', options }],
   ['Skeleton', 'SkeletonProps', Skeleton, {}],

@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -494,6 +494,20 @@ Painel flutuante ligado a um gatilho. A posição se ajusta sozinha perto da bor
 | `style` | `CSSProperties` | — | Estilo do elemento que envolve o gatilho. |
 | `contentClassName` | `string` | — | Classe do conteúdo (data-slot="popover-content"). Também dá para estilizar por data-state e data-placement. |
 | `contentStyle` | `CSSProperties` | — | Estilo do conteúdo. |
+
+### Progress
+
+Shows how far a task has come, as a bar or as a ring. With a `value` it is determinate; without one it is indeterminate and loops until the task ends. It is a `progressbar` with `aria-valuenow`, `aria-valuemin` and `aria-valuemax`, and the indeterminate one leaves `aria-valuenow` out. Give it a name that says what is progressing, with `aria-label` or `aria-labelledby`; without one the name is the `loading` label of the `UIProvider`. The bar eases to a new value and the ring follows it, and the loop of the indeterminate state follows the `shimmer` recipe for the bar and the `spin` recipe for the ring. With reduced motion the loop becomes a pulse of the whole bar or ring. It is a `<div>` and accepts the attributes of the `<div>`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `number` | — | How far the task has come, from 0 to `max`. A value out of the range is held at the nearest end. Leave it out for an indeterminate progress, when you cannot tell how long the task takes. |
+| `max` | `number` | `100` | Value that means the task is done. A number that is not above 0 is replaced by 100. |
+| `variant` | `'linear' \| 'circular'` | `'linear'` | Shape of the progress: a bar that fills its row, or a ring that sits in the text. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the progress. For the bar it sets the thickness (sm is 0.25 rem, md is 0.5 rem and lg is 0.75 rem) and for the ring the diameter (sm is 1.5 rem, md is 2.5 rem and lg is 3.5 rem). |
+| `animation` | `false \| { recipe, tuning }` | `shimmer (bar), spin (ring)` | Loop of the indeterminate state. false turns it off and leaves a still, faded bar or ring. { tuning: { duration } } sets the seconds of one cycle. The determinate bar and ring also stop easing when it is false. |
+
+Also accepts the other attributes of `<div>`, passed on to the element.
 
 ### RadioGroup
 
@@ -1430,6 +1444,27 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-popover-max-height` | `100vh` | `max-block-size` |
 | `--enchase-popover-max-width` | `100vw` | `max-inline-size` |
 | `--enchase-popover-scale` | `1` | `transform` |
+
+### Progress
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-progress-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition` |
+| `--enchase-progress-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-progress-indicator-background` | `var(--enchase-color-primary)` | `background-color`, `stroke` |
+| `--enchase-progress-indicator-duration` | `1.5s` | `animation` |
+| `--enchase-progress-indicator-width` | `40%` | `inline-size` |
+| `--enchase-progress-loop-ease` | `cubic-bezier(0.4, 0, 0.2, 1)` (`--enchase-motion-ease-in-out`) | `animation` |
+| `--enchase-progress-ring-duration` | `0.8s` | `animation` |
+| `--enchase-progress-size-lg` | `3.5rem` | `inline-size`, `block-size` |
+| `--enchase-progress-size-md` | `2.5rem` | `inline-size`, `block-size` |
+| `--enchase-progress-size-sm` | `1.5rem` | `inline-size`, `block-size` |
+| `--enchase-progress-thickness` | `4` | `stroke-width` |
+| `--enchase-progress-track-background` | `var(--enchase-color-surface-container-high)` | `background-color`, `stroke` |
+| `--enchase-progress-track-height-lg` | `0.75rem` | `block-size` |
+| `--enchase-progress-track-height-md` | `0.5rem` | `block-size` |
+| `--enchase-progress-track-height-sm` | `0.25rem` | `block-size` |
+| `--enchase-progress-track-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 
 ### RadioGroup
 

@@ -23,4 +23,10 @@ describe('resolveLoopMotion', () => {
     expect(resolveLoopMotion('shimmer', defaultMotionSettings, { tuning: { duration: 2 } }).style).toEqual({ '--enchase-skeleton-duration': '2000ms' })
     expect(resolveLoopMotion('spin', { ...defaultMotionSettings, recipes: { spin: { duration: 0.5 } } }, { tuning: { duration: 1 } }).style).toEqual({ '--enchase-loading-duration': '1000ms' })
   })
+
+  it('writes the duration into the variable of the component that asks for another one', () => {
+    expect(resolveLoopMotion('shimmer', defaultMotionSettings, { tuning: { duration: 2 } }, '--enchase-progress-indicator-duration').style).toEqual({ '--enchase-progress-indicator-duration': '2000ms' })
+    expect(resolveLoopMotion('spin', { ...defaultMotionSettings, preset: 'subtle' }, undefined, '--enchase-progress-indicator-duration').style).toEqual({ '--enchase-progress-indicator-duration': '600ms' })
+    expect(resolveLoopMotion('spin', defaultMotionSettings, undefined, '--enchase-progress-indicator-duration').style).toBeUndefined()
+  })
 })
