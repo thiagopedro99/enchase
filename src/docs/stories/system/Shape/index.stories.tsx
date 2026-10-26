@@ -11,20 +11,20 @@ const meta = {
   args: { shape: defaultShape, buttonRadius: '', controlRadius: '', cardRadius: '' },
   argTypes: {
     shape: {
-      description: 'Preset da forma, passado em createTheme({ shape }): pill (o visual padrão, com botões em pílula), soft (cantos arredondados em todo o kit, botões e campos de 0.75rem) ou square (cantos quase retos). Muda só os raios; cores, fontes e movimento ficam como estão.',
+      description: 'Shape preset, passed in `createTheme({ shape })`: `pill` (the default look, with pill buttons), `soft` (rounded corners across the whole kit, with buttons and fields at 0.75rem) or `square` (almost square corners). It changes only the radii; colors, fonts and motion stay as they are.',
       control: 'inline-radio',
       options: shapes
     },
     buttonRadius: {
-      description: 'Raio dos botões, dos itens de menu, dos badges e dos botões de ícone (createTheme({ radius: { button } })), por cima do preset. Vazio usa o do preset. Aceita 0, rem, em, px ou %.',
+      description: 'Radius of the buttons, the menu items, the badges and the icon buttons (`createTheme({ radius: { button } })`), on top of the preset. Empty uses the one of the preset. Accepts `0` or a value in `rem`, `em`, `px` or `%`.',
       control: 'text'
     },
     controlRadius: {
-      description: 'Raio dos campos (createTheme({ radius: { control } })), por cima do preset. Vazio usa o do preset.',
+      description: 'Radius of the fields (`createTheme({ radius: { control } })`), on top of the preset. Empty uses the one of the preset.',
       control: 'text'
     },
     cardRadius: {
-      description: 'Raio dos cartões (createTheme({ radius: { xl } })), por cima do preset. Vazio usa o do preset.',
+      description: 'Radius of the cards (`createTheme({ radius: { xl } })`), on top of the preset. Empty uses the one of the preset.',
       control: 'text'
     }
   },
@@ -37,14 +37,14 @@ type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
 
-export const Suave: Story = {
+export const Soft: Story = {
   args: { shape: 'soft' }
 }
 
-export const Quadrada: Story = {
+export const Square: Story = {
   args: { shape: 'square' }
 }
 
-export const SoOsBotoesMudam: Story = {
+export const OnlyTheButtonsChange: Story = {
   args: { buttonRadius: '0.5rem' }
 }

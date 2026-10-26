@@ -11,6 +11,6 @@ export const shapes: ShapeChoice[] = ['', 'pill', 'soft', 'square']
 
 export const placements: PlacementChoice[] = ['', 'floating', 'stacked']
 
-export const placementLabels: Record<PlacementChoice, string> = { '': 'do estilo', floating: 'floating', stacked: 'stacked' }
+export const placementLabels: Record<PlacementChoice, string> = { '': 'from the style', floating: 'floating', stacked: 'stacked' }
 
-export const shapeLabels: Record<ShapeChoice, string> = { '': 'do estilo', pill: 'pill', soft: 'soft', square: 'square' }
+export const shapeLabels: Record<ShapeChoice, string> = { '': 'from the style', pill: 'pill', soft: 'soft', square: 'square' }

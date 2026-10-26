@@ -1,6 +1,5 @@
 import { Accordion, Alert, Badge, Breadcrumbs, Button, Card, Checkbox, ColorModeProvider, Input, NumberInput, Pagination, RadioGroup, Select, Switch, Table, Tabs, Textarea, UIProvider, useColorMode } from 'enchase'
 import { createTheme } from 'enchase/theme'
-import { ptBR } from 'enchase/locales'
 
 import { storyStyles } from '../../../shared/styles.ts'
 
@@ -18,13 +17,13 @@ const readTheme = (input: ThemeInput) => {
 }
 
 const countries = [
-  { value: 'br', label: 'Brasil' },
+  { value: 'br', label: 'Brazil' },
   { value: 'pt', label: 'Portugal' }
 ]
 
 const orders = [
-  { id: '#1001', status: 'Pago', total: 'R$ 120,00' },
-  { id: '#1002', status: 'Pendente', total: 'R$ 80,00' }
+  { id: '#1001', status: 'Paid', total: '$120.00' },
+  { id: '#1002', status: 'Pending', total: '$80.00' }
 ]
 
 export const Preview = (props: PreviewProps) => {
@@ -37,7 +36,7 @@ export const Preview = (props: PreviewProps) => {
 
   return (
     <ColorModeProvider mode={resolvedMode} theme={input} storage={null}>
-      <UIProvider locale={ptBR}>
+      <UIProvider>
         <div style={{ display: 'grid', gap: '1.5rem', padding: '1.5rem', maxInlineSize: '48rem', borderRadius: 'var(--enchase-radius-xl)', background: 'var(--enchase-color-background)', color: 'var(--enchase-color-text-primary)' }}>
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <Button variant="primary">Primary</Button>
@@ -58,32 +57,32 @@ export const Preview = (props: PreviewProps) => {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(14rem, 1fr))', gap: '1rem', alignItems: 'start' }}>
-            <Input label="E-mail" placeholder="voce@exemplo.com" helperText="Nunca compartilhamos o seu e-mail." labelPlacement={labelPlacement} />
-            <Input label="Senha" type="password" defaultValue="segredo" error="Use pelo menos 8 caracteres." labelPlacement={labelPlacement} />
-            <NumberInput label="Quantidade" defaultValue={3} min={0} labelPlacement={labelPlacement} />
-            <Select label="País" options={countries} defaultValue="br" labelPlacement={labelPlacement} />
-            <Textarea label="Mensagem" placeholder="Conte o que aconteceu" labelPlacement={labelPlacement} />
-            <Input label="Desabilitado" defaultValue="Somente leitura" disabled labelPlacement={labelPlacement} />
+            <Input label="Email" placeholder="ada@example.com" helperText="We never share your email." labelPlacement={labelPlacement} />
+            <Input label="Password" type="password" defaultValue="secret" error="Use at least 8 characters." labelPlacement={labelPlacement} />
+            <NumberInput label="Quantity" defaultValue={3} min={0} labelPlacement={labelPlacement} />
+            <Select label="Country" options={countries} defaultValue="br" labelPlacement={labelPlacement} />
+            <Textarea label="Message" placeholder="Tell us what happened" labelPlacement={labelPlacement} />
+            <Input label="Disabled" defaultValue="Read-only" disabled labelPlacement={labelPlacement} />
           </div>
 
           <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', alignItems: 'start' }}>
             <div style={{ display: 'grid', gap: '0.25rem' }}>
-              <Checkbox label="Aceito os termos" defaultChecked />
-              <Checkbox label="Receber novidades" />
-              <Checkbox label="Desabilitado" disabled />
+              <Checkbox label="I accept the terms" defaultChecked />
+              <Checkbox label="Receive updates" />
+              <Checkbox label="Disabled" disabled />
             </div>
             <div style={{ display: 'grid', gap: '0.25rem' }}>
-              <Switch label="Notificações" defaultChecked />
-              <Switch label="Modo avião" />
-              <Switch label="Desabilitado" disabled />
+              <Switch label="Notifications" defaultChecked />
+              <Switch label="Airplane mode" />
+              <Switch label="Disabled" disabled />
             </div>
-            <RadioGroup label="Plano" defaultValue="pro" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }, { value: 'team', label: 'Equipe', disabled: true }]} />
+            <RadioGroup label="Plan" defaultValue="pro" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }, { value: 'team', label: 'Team', disabled: true }]} />
           </div>
 
           <div style={{ display: 'grid', gap: '0.75rem' }}>
             {(['info', 'success', 'warning', 'error'] as const).map((variant) => (
-              <Alert key={variant} variant={variant} title={`Alerta ${variant}`} onClose={() => undefined}>
-                Mensagem de status do tipo {variant}.
+              <Alert key={variant} variant={variant} title={`Alert ${variant}`} onClose={() => undefined}>
+                Status message of type {variant}.
               </Alert>
             ))}
           </div>
@@ -91,35 +90,35 @@ export const Preview = (props: PreviewProps) => {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(14rem, 1fr))', gap: '1rem' }}>
             {(['default', 'elevated', 'outlined'] as const).map((variant) => (
               <Card key={variant} variant={variant}>
-                <p style={{ margin: 0 }}>{`Cartão ${variant}`}</p>
+                <p style={{ margin: 0 }}>{`Card ${variant}`}</p>
               </Card>
             ))}
           </div>
 
-          <Tabs ariaLabel="Seções" items={[{ value: 'a', label: 'Conta', content: <p style={{ margin: 0 }}>Dados da conta</p> }, { value: 'b', label: 'Senha', content: <p style={{ margin: 0 }}>Troca de senha</p> }, { value: 'c', label: 'Equipe', content: null, disabled: true }]} />
+          <Tabs ariaLabel="Sections" items={[{ value: 'a', label: 'Account', content: <p style={{ margin: 0 }}>Account details</p> }, { value: 'b', label: 'Password', content: <p style={{ margin: 0 }}>Change password</p> }, { value: 'c', label: 'Team', content: null, disabled: true }]} />
 
           <Accordion
             defaultValue={['a']}
             items={[
-              { value: 'a', title: 'É acessível?', content: <p style={{ margin: 0 }}>Sim, segue o padrão WAI-ARIA.</p> },
-              { value: 'b', title: 'Dá para trocar o visual?', content: <p style={{ margin: 0 }}>Sim, com createTheme({'{ style }'}).</p> }
+              { value: 'a', title: 'Is it accessible?', content: <p style={{ margin: 0 }}>Yes, it follows the WAI-ARIA pattern.</p> },
+              { value: 'b', title: 'Can I change the look?', content: <p style={{ margin: 0 }}>Yes, with createTheme({'{ style }'}).</p> }
             ]}
           />
 
           <Breadcrumbs
             items={[
-              { id: 'home', label: 'Início', href: '/' },
-              { id: 'docs', label: 'Documentos', href: '/docs' },
-              { id: 'now', label: 'Atual' }
+              { id: 'home', label: 'Home', href: '/' },
+              { id: 'docs', label: 'Documents', href: '/docs' },
+              { id: 'now', label: 'Current' }
             ]}
           />
 
           <Pagination pageCount={9} defaultPage={4} />
 
           <Table
-            caption="Pedidos"
+            caption="Orders"
             columns={[
-              { key: 'id', header: 'Pedido', rowHeader: true },
+              { key: 'id', header: 'Order', rowHeader: true },
               { key: 'status', header: 'Status' },
               { key: 'total', header: 'Total', align: 'end' }
             ]}
@@ -127,29 +126,29 @@ export const Preview = (props: PreviewProps) => {
           />
 
           <table style={{ borderCollapse: 'collapse', fontSize: '0.875rem' }}>
-            <caption style={{ textAlign: 'start', paddingBlockEnd: '0.5rem' }}>Valores do tema</caption>
+            <caption style={{ textAlign: 'start', paddingBlockEnd: '0.5rem' }}>Theme values</caption>
             <tbody>
               <tr>
                 <th scope="row" style={{ textAlign: 'start', paddingInlineEnd: '1.5rem', fontWeight: 500 }}>
-                  Altura do controle (md)
+                  Control height (md)
                 </th>
                 <td>{theme.base.control.height.md}</td>
               </tr>
               <tr>
                 <th scope="row" style={{ textAlign: 'start', paddingInlineEnd: '1.5rem', fontWeight: 500 }}>
-                  Raio do botão
+                  Button radius
                 </th>
                 <td>{theme.base.borderRadius.button}</td>
               </tr>
               <tr>
                 <th scope="row" style={{ textAlign: 'start', paddingInlineEnd: '1.5rem', fontWeight: 500 }}>
-                  Rótulo dos campos
+                  Field label
                 </th>
                 <td>{theme.defaults?.labelPlacement ?? 'floating'}</td>
               </tr>
               <tr>
                 <th scope="row" style={{ textAlign: 'start', paddingInlineEnd: '1.5rem', fontWeight: 500 }}>
-                  Ganchos de CSS definidos
+                  CSS hooks defined
                 </th>
                 <td>{Object.keys({ ...theme.hooks, ...theme.light.hooks }).length}</td>
               </tr>

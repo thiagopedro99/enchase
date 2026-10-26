@@ -23,7 +23,7 @@ const Inspector = () => {
 
   return (
     <div style={{ display: 'grid', gap: '0.5rem' }}>
-      <p style={headingStyle}>O que os componentes recebem do UIProvider (useUIConfig)</p>
+      <p style={headingStyle}>What the components receive from the UIProvider (useUIConfig)</p>
       <dl style={{ display: 'grid', gridTemplateColumns: 'auto auto 1fr', gap: '0.25rem 1rem', margin: 0 }}>
         {rows.map(([name, value, meaning]) => (
           <Fragment key={name}>
@@ -39,7 +39,7 @@ const Inspector = () => {
 
 const Links = () => (
   <div style={{ display: 'grid', gap: '0.5rem' }}>
-    <p style={headingStyle}>navigate e currentHref: quem trata o clique em cada link</p>
+    <p style={headingStyle}>navigate and currentHref: who handles the click on each link</p>
     <ul style={{ display: 'grid', gap: '0.5rem', margin: 0, paddingInlineStart: '1.25rem' }}>
       {linkCases.map(({ href, outcome }) => (
         <li key={href}>
@@ -57,41 +57,41 @@ const meta = {
   args: { children: undefined, currentHref: '/docs' },
   argTypes: {
     children: {
-      description: 'A aplicação. Os componentes leem a configuração do UIProvider mais próximo; sem nenhum, valem os padrões.',
+      description: 'The app. The components read the configuration of the nearest `UIProvider`; without one, the defaults apply.',
       control: false
     },
     motion: {
-      description: 'Movimento de todos os componentes: { mode, preset, recipes }. mode "auto" respeita prefers-reduced-motion e "never" desliga todo o movimento. preset escala a duração e a distância: "off", "subtle", "standard" ou "expressive". recipes ajusta fade, pop, slide, press, lift, resize, spin e shimmer, como { slide: { distance: 48 } }.',
+      description: 'Motion of all the components: `{ mode, preset, recipes }`. With `mode`, `"auto"` respects `prefers-reduced-motion` and `"never"` turns off all motion. `preset` scales the duration and the distance: `"off"`, `"subtle"`, `"standard"` or `"expressive"`. `recipes` adjusts `fade`, `pop`, `slide`, `press`, `lift`, `resize`, `spin` and `shimmer`, as in `{ slide: { distance: 48 } }`.',
       control: 'object',
       table: { type: { summary: '{ mode?, preset?, recipes? }' }, defaultValue: { summary: "{ mode: 'auto', preset: 'standard' }" } }
     },
     locale: {
-      description: 'Idioma, no formato { locale, dir, messages }, como o ptBR e o en de enchase/locales. Define os textos de acessibilidade dos componentes e a direção (ltr ou rtl) que eles usam. O `dir` do `<html>` continua sendo do app.',
+      description: 'Language, in the format `{ locale, dir, messages }`, such as `ptBR` and `en` from `enchase/locales`. It sets the accessibility texts of the components and the direction (`ltr` or `rtl`) they use. The `dir` of the `<html>` is still up to the app.',
       control: false,
       table: { defaultValue: { summary: 'en' } }
     },
     labels: {
-      description: 'Troca textos avulsos, como { closeModal: "Dispensar" }, sobre os do locale.',
+      description: 'Replaces individual texts of the locale, such as `{ closeModal: "Dismiss" }`.',
       control: 'object'
     },
     breakpoints: {
-      description: 'Largura de cada breakpoint (xs, sm, md, lg, xl e xxl) em qualquer valor CSS de largura, como { md: "1000px" }. Valem para Container, Layout, Navbar, Sidebar e useBreakpoint.',
+      description: 'Width of each breakpoint (`xs`, `sm`, `md`, `lg`, `xl` and `xxl`), in any CSS width value, such as `{ md: "1000px" }`. They apply to `Container`, `Layout`, `Navbar`, `Sidebar` and `useBreakpoint`.',
       control: 'object',
       table: { defaultValue: { summary: "{ xs: '0px', sm: '576px', md: '768px', lg: '992px', xl: '1200px', xxl: '1400px' }" } }
     },
     navigate: {
-      description: 'Chamado com o href quando há um clique simples em uma rota do app (um href que começa com /). Ligue ao seu roteador, como (href) => router.push(href). Sem ele, os links recarregam a página.',
+      description: 'Called with the `href` when there is a plain click on an app route (an `href` that starts with `/`). Connect it to your router, as in `(href) => router.push(href)`. Without it, the links reload the page.',
       control: false
     },
     currentHref: {
-      description: 'Caminho atual do app. Marca o item ativo dos menus (aria-current="page"), deriva os Breadcrumbs do Layout e faz um link com hash para a própria página (/docs#props) rolar sem passar pelo navigate. Sem ele, o hash é comparado com a URL do navegador.',
+      description: 'Current path of the app. It marks the active item of the menus (`aria-current="page"`), derives the `Breadcrumbs` of the `Layout` and makes a link with a hash to its own page (`/docs#props`) scroll without going through the `navigate`. Without it, the hash is compared with the URL of the browser.',
       control: 'text'
     }
   },
   parameters: {
     docs: {
       description: {
-        component: 'Configuração compartilhada por todos os componentes: idioma e textos, breakpoints, movimento e navegação (navigate e currentHref). É opcional: sem ele, os componentes usam inglês, os breakpoints do Bootstrap 5, movimento automático e links que recarregam a página.'
+        component: 'Configuration shared by all the components: language and texts, breakpoints, motion and navigation (`navigate` and `currentHref`). It is optional: without it, the components use English, the Bootstrap 5 breakpoints, automatic motion and links that reload the page.'
       }
     }
   },
@@ -120,7 +120,7 @@ export const RightToLeft: Story = {
 }
 
 export const CustomLabels: Story = {
-  args: { locale: ptBR, labels: { closeModal: 'Dispensar' } }
+  args: { labels: { closeModal: 'Dismiss' } }
 }
 
 export const CustomBreakpoints: Story = {

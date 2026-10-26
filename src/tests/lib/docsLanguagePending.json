@@ -1,9 +1,1 @@
-[
-  "src/docs/stories/system/Brand/index.stories.tsx",
-  "src/docs/stories/system/ColorModeProvider/index.stories.tsx",
-  "src/docs/stories/system/Motion/index.stories.tsx",
-  "src/docs/stories/system/Shape/index.stories.tsx",
-  "src/docs/stories/system/Styles/index.stories.tsx",
-  "src/docs/stories/system/ToastProvider/index.stories.tsx",
-  "src/docs/stories/system/UIProvider/index.stories.tsx"
-]
+[]

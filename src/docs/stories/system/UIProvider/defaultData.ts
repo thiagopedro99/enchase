@@ -1,12 +1,12 @@
 export const configMeanings = {
-  dir: 'direção do texto, definida pelo locale',
-  closeModal: 'um dos textos de acessibilidade, vindo do locale e de labels',
-  breakpoint: 'largura do breakpoint md, usada pelo Container, pelo Layout e pela Navbar',
-  motion: 'modo e preset do movimento de todos os componentes'
+  dir: 'text direction, set by the locale',
+  closeModal: 'one of the accessibility texts, coming from the locale and from labels',
+  breakpoint: 'width of the md breakpoint, used by the Container, the Layout and the Navbar',
+  motion: 'mode and preset of the motion of all the components'
 } as const
 
 export const linkCases = [
-  { href: '/sobre', outcome: 'rota do app: o clique vai para o navigate' },
-  { href: '/docs#props', outcome: 'hash da página /docs: com currentHref="/docs" o navegador rola a página; com outra página, vai para o navigate' },
-  { href: 'https://example.com', outcome: 'link externo: fica com o navegador' }
+  { href: '/about', outcome: 'app route: the click goes to the navigate' },
+  { href: '/docs#props', outcome: 'hash of the /docs page: with currentHref="/docs" the browser scrolls the page; with another page, it goes to the navigate' },
+  { href: 'https://example.com', outcome: 'external link: left to the browser' }
 ] as const

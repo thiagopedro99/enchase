@@ -11,28 +11,28 @@ const meta = {
     layout: 'padded',
     docs: {
       description: {
-        component: 'O `style` do `createTheme` (e da prop `theme` do `ColorModeProvider`) troca o visual do kit inteiro: a paleta, os raios, as alturas, os pesos, as bordas, as sombras e o lugar do rótulo dos campos. Cada estilo é um objeto que se importa da entrada dele, `enchase/styles/<nome>` (`import { shadcn } from \'enchase/styles/shadcn\'`), e se passa em `createTheme({ style: shadcn })`: só quem importa um estilo leva os dados dele. `enchase` é o visual de sempre; `shadcn` aproxima o kit do shadcn/ui, sem abrir mão do contraste da biblioteca. O que você passa em `brand`, `shape`, `radius`, `fonts`, `motion`, `light` e `dark` vence o estilo. A barra de ferramentas do Storybook, em Estilo, troca o estilo de todas as stories.'
+        component: 'The `style` of `createTheme` (and of the `theme` prop of the `ColorModeProvider`) changes the look of the whole kit: the palette, the radii, the heights, the font weights, the borders, the shadows and the placement of the field label. Each style is an object that you import from its own entry, `enchase/styles/<name>` (`import { shadcn } from \'enchase/styles/shadcn\'`), and pass in `createTheme({ style: shadcn })`: only whoever imports a style gets its data. `enchase` is the usual look; `shadcn` brings the kit closer to shadcn/ui, without giving up the contrast of the library. What you pass in `brand`, `shape`, `radius`, `fonts`, `motion`, `light` and `dark` wins over the style. The Style item of the Storybook toolbar switches the style of all the stories.'
       }
     }
   },
   args: { style: defaultStyle, brand: '', shape: '', labelPlacement: '' },
   argTypes: {
     style: {
-      description: 'Estilo visual, importado de `enchase/styles/<nome>` e passado em `createTheme({ style })`: enchase (o visual padrão, sem sobrescritas) ou shadcn (paleta neutra, bordas no lugar de sombras, controles de 36px, cantos de 0.5rem, rótulo acima do campo).',
+      description: 'Visual style, imported from `enchase/styles/<name>` and passed in `createTheme({ style })`: `enchase` (the default look, with no overrides) or `shadcn` (neutral palette, borders instead of shadows, 36px controls, 0.5rem corners, label above the field).',
       control: 'inline-radio',
       options: styles
     },
     brand: {
-      description: 'Cor da marca (createTheme({ brand })), por cima do estilo. Vazio usa a do estilo. Com o shadcn, só o acento muda: os neutros ficam. Aceita hex ou rgb().',
+      description: 'Brand color (`createTheme({ brand })`), on top of the style. Empty uses the color of the style. With `shadcn`, only the accent changes: the neutrals stay. Accepts hex or `rgb()`.',
       control: 'text'
     },
     shape: {
-      description: 'Forma dos cantos (createTheme({ shape })), por cima do estilo. Vazio usa os raios do estilo.',
+      description: 'Shape of the corners (`createTheme({ shape })`), on top of the style. Empty uses the radii of the style.',
       control: { type: 'inline-radio', labels: shapeLabels },
       options: shapes
     },
     labelPlacement: {
-      description: 'Onde fica o rótulo dos campos (prop labelPlacement do Input, do NumberInput, do Select e do Textarea), por cima do estilo. Vazio usa o do estilo: floating no enchase e stacked no shadcn.',
+      description: 'Where the field label goes (`labelPlacement` prop of the `Input`, the `NumberInput`, the `Select` and the `Textarea`), on top of the style. Empty uses the one of the style: `floating` in `enchase` and `stacked` in `shadcn`.',
       control: { type: 'inline-radio', labels: placementLabels },
       options: placements
     }
@@ -50,14 +50,14 @@ export const Shadcn: Story = {
   args: { style: 'shadcn' }
 }
 
-export const ShadcnComMarca: Story = {
+export const ShadcnWithBrand: Story = {
   args: { style: 'shadcn', brand: '#0b6bcb' }
 }
 
-export const ShadcnComBotoesEmPilula: Story = {
+export const ShadcnWithPillButtons: Story = {
   args: { style: 'shadcn', shape: 'pill' }
 }
 
-export const RotuloEmCima: Story = {
+export const LabelAbove: Story = {
   args: { style: 'enchase', labelPlacement: 'stacked' }
 }

@@ -1,6 +1,5 @@
 import { Button, Card, Checkbox, ColorModeProvider, Input, Link, UIProvider, useColorMode } from 'enchase'
 import { createTheme, validateTheme } from 'enchase/theme'
-import { ptBR } from 'enchase/locales'
 
 import { swatchTokens } from './defaultData.ts'
 
@@ -26,10 +25,10 @@ export const Preview = ({ brand }: PreviewProps) => {
 
   return (
     <ColorModeProvider mode={resolvedMode} theme={{ brand }} storage={null}>
-      <UIProvider locale={ptBR}>
+      <UIProvider>
         <div style={{ display: 'grid', gap: '1.25rem', padding: '1.5rem', maxInlineSize: '40rem', borderRadius: '1rem', background: 'var(--enchase-color-background)', color: 'var(--enchase-color-text-primary)' }}>
           <p style={{ margin: 0 }}>
-            {issues === 0 ? 'Nenhum par de cor abaixo do contraste mínimo, nos dois temas.' : `${issues} par(es) de cor abaixo do contraste mínimo.`} Primary claro: <strong>{theme.light.colors.primary}</strong>, escuro: <strong>{theme.dark.colors.primary}</strong>.
+            {issues === 0 ? 'No color pair below the minimum contrast, in both themes.' : `${issues} color pair(s) below the minimum contrast.`} Light primary: <strong>{theme.light.colors.primary}</strong>, dark: <strong>{theme.dark.colors.primary}</strong>.
           </p>
 
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
@@ -39,15 +38,15 @@ export const Preview = ({ brand }: PreviewProps) => {
             <Button variant="ghost">Ghost</Button>
           </div>
 
-          <Input label="E-mail" placeholder="voce@exemplo.com" />
+          <Input label="Email" placeholder="ada@example.com" />
 
           <Card variant="elevated">
             <p style={{ margin: 0 }}>
-              Cartão com <Link href="#">um link</Link> e texto comum.
+              Card with <Link href="#">a link</Link> and plain text.
             </p>
           </Card>
 
-          <Checkbox label="Aceito os termos" defaultChecked />
+          <Checkbox label="I accept the terms" defaultChecked />
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(8rem, 1fr))', gap: '0.5rem' }}>
             {swatchTokens.map((token) => (

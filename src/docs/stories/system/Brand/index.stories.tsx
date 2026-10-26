@@ -11,7 +11,7 @@ const meta = {
   args: { brand: defaultBrand },
   argTypes: {
     brand: {
-      description: 'Cor da marca (hex ou rgb(), opaca), passada em createTheme({ brand }). O primary claro é essa cor quando ela passa nos contrastes do tema; senão, a mesma cor, mais escura. Troque o tema na barra para ver o escuro.',
+      description: 'Brand color (hex or `rgb()`, opaque), passed in `createTheme({ brand })`. The light `primary` is that color when it passes the contrast checks of the theme; otherwise, the same color, darker. Switch the theme in the toolbar to see the dark one.',
       control: { type: 'color', presetColors: brandPresets }
     }
   },
@@ -24,14 +24,14 @@ type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
 
-export const MarcaClara: Story = {
+export const LightBrand: Story = {
   args: { brand: '#FFD400' }
 }
 
-export const MarcaVibrante: Story = {
+export const VibrantBrand: Story = {
   args: { brand: '#E11D48' }
 }
 
-export const Cinza: Story = {
+export const Gray: Story = {
   args: { brand: '#808080' }
 }

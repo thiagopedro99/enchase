@@ -156,18 +156,18 @@ Also accepts the other attributes of `<input>`, passed on to the element. Forwar
 
 ### ColorModeProvider
 
-Aplica o tema: injeta as variáveis `--enchase-*`, define `data-theme` e `color-scheme` no `<html>` e guarda o modo (`light`, `dark` ou `system`). Os componentes leem as variáveis, e `useColorMode` devolve `{ mode, resolvedMode, setMode, toggleMode }`.
+Applies the theme: it injects the `--enchase-*` variables, sets `data-theme` and `color-scheme` on the `<html>` and saves the mode (`light`, `dark` or `system`). The components read the variables, and `useColorMode` returns `{ mode, resolvedMode, setMode, toggleMode }`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *required* | A aplicação. |
-| `theme` | `ThemeInput` | — | Tema personalizado, como { style, brand, fonts, motion, shape, radius, light, dark }, o mesmo que createTheme aceita: style troca o visual do kit inteiro (um estilo importado de `enchase/styles/<nome>`, como o shadcn), a cor da marca gera a paleta, shape escolhe a forma dos cantos (pill, soft ou square) e radius ajusta um raio, e light e dark ajustam cores por modo. O que você passa vence o style. Todo valor é validado, e em desenvolvimento o provedor avisa no console sobre contraste e duração. Sem ele vale o tema padrão. |
-| `mode` | `'light' \| 'dark' \| 'system'` | — | Modo controlado: light, dark ou system. Com ele o provedor não guarda a escolha, e quem usa muda o valor em onModeChange. |
-| `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Modo usado enquanto não há escolha guardada nem a prop mode. system segue a preferência do sistema. |
-| `onModeChange` | `(mode: ColorMode) => void` | — | Chamado com o novo modo quando setMode ou toggleMode são usados, inclusive com mode controlado. |
-| `storage` | `{ getItem, setItem } \| null` | `localStorage` | Onde guardar a escolha, com getItem e setItem. O padrão é o localStorage, lido só depois de montar. null desliga a persistência. |
-| `storageKey` | `string` | `'enchase-color-mode'` | Chave da escolha no storage. Use a mesma no ColorModeScript. |
-| `cssLayer` | `string` | — | Nome de uma @layer para as variáveis do tema. Use com enchase/styles.layer.css, como cssLayer="enchase-theme". |
+| `children` | `ReactNode` | *required* | The app. |
+| `theme` | `ThemeInput` | — | Custom theme, such as `{ style, brand, fonts, motion, shape, radius, light, dark }`, the same input that `createTheme` accepts: `style` changes the look of the whole kit (a style imported from `enchase/styles/<name>`, such as `shadcn`), the brand color (`brand`) generates the palette, `shape` picks the shape of the corners (`pill`, `soft` or `square`), `radius` adjusts a radius, and `light` and `dark` adjust colors per mode. What you pass wins over `style`. Every value is validated, and in development the provider warns in the console about contrast and duration. Without it, the default theme applies. |
+| `mode` | `'light' \| 'dark' \| 'system'` | — | Controlled mode: `light`, `dark` or `system`. With it, the provider does not save the choice, and you change the value in `onModeChange`. |
+| `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Mode used while there is no saved choice and no `mode` prop. `system` follows the preference of the system. |
+| `onModeChange` | `(mode: ColorMode) => void` | — | Called with the new mode when `setMode` or `toggleMode` is used, including with a controlled `mode`. |
+| `storage` | `{ getItem, setItem } \| null` | `localStorage` | Where to save the choice, with `getItem` and `setItem`. The default is `localStorage`, read only after mounting. `null` turns off persistence. |
+| `storageKey` | `string` | `'enchase-color-mode'` | Key of the choice in the storage. Use the same one in the `ColorModeScript`. |
+| `cssLayer` | `string` | — | Name of an `@layer` for the theme variables. Use it with `enchase/styles.layer.css`, as in `cssLayer="enchase-theme"`. |
 
 ### ColorModeScript
 
@@ -678,14 +678,14 @@ A `<style>` with the `--enchase-*` CSS variables of the theme. The `ColorModePro
 
 ### ToastProvider
 
-Guarda a fila de notificações e a região onde elas aparecem (role="region", com aria-live). Os métodos success, error, warning e info de useToast abrem as notificações.
+Holds the queue of notifications and the region where they appear (`role="region"`, with `aria-live`). The `success`, `error`, `warning` and `info` methods of `useToast` open the notifications.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *required* | A aplicação. Os componentes dentro dela usam useToast para abrir notificações. |
-| `animation` | `false \| { recipe, from, tuning }` | `slide` | Movimento de entrada e saída das notificações, que deslizam da direita com uma mola curta. false desliga; { recipe, from, tuning } ajusta a receita, o lado e a duração. |
-| `className` | `string` | — | Classe da região de notificações (data-slot="toast-viewport"), que vence a da biblioteca. |
-| `style` | `CSSProperties` | — | Estilo da região de notificações. |
+| `children` | `ReactNode` | *required* | The app. The components inside it use `useToast` to open notifications. |
+| `animation` | `false \| { recipe, from, tuning }` | `slide` | Entry and exit motion of the notifications, which slide in from the right with a short spring. `false` turns it off; `{ recipe, from, tuning }` adjusts the recipe, the side and the duration. |
+| `className` | `string` | — | Class of the notification region (`data-slot="toast-viewport"`), which wins over the one of the library. |
+| `style` | `CSSProperties` | — | Style of the notification region. |
 
 ### Tooltip
 
@@ -707,17 +707,17 @@ A text tooltip for a trigger, opened by pointer and by focus. It gives the trigg
 
 ### UIProvider
 
-Configuração compartilhada por todos os componentes: idioma e textos, breakpoints, movimento e navegação (navigate e currentHref). É opcional: sem ele, os componentes usam inglês, os breakpoints do Bootstrap 5, movimento automático e links que recarregam a página.
+Configuration shared by all the components: language and texts, breakpoints, motion and navigation (`navigate` and `currentHref`). It is optional: without it, the components use English, the Bootstrap 5 breakpoints, automatic motion and links that reload the page.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `children` | `ReactNode` | *required* | A aplicação. Os componentes leem a configuração do UIProvider mais próximo; sem nenhum, valem os padrões. |
-| `motion` | `{ mode?, preset?, recipes? }` | `{ mode: 'auto', preset: 'standard' }` | Movimento de todos os componentes: { mode, preset, recipes }. mode "auto" respeita prefers-reduced-motion e "never" desliga todo o movimento. preset escala a duração e a distância: "off", "subtle", "standard" ou "expressive". recipes ajusta fade, pop, slide, press, lift, resize, spin e shimmer, como { slide: { distance: 48 } }. |
-| `locale` | `Locale` | `en` | Idioma, no formato { locale, dir, messages }, como o ptBR e o en de enchase/locales. Define os textos de acessibilidade dos componentes e a direção (ltr ou rtl) que eles usam. O `dir` do `<html>` continua sendo do app. |
-| `labels` | `Partial<UILabels>` | — | Troca textos avulsos, como { closeModal: "Dispensar" }, sobre os do locale. |
-| `breakpoints` | `Partial<Breakpoints>` | `{ xs: '0px', sm: '576px', md: '768px', lg: '992px', xl: '1200px', xxl: '1400px' }` | Largura de cada breakpoint (xs, sm, md, lg, xl e xxl) em qualquer valor CSS de largura, como { md: "1000px" }. Valem para Container, Layout, Navbar, Sidebar e useBreakpoint. |
-| `navigate` | `(href: string) => void` | — | Chamado com o href quando há um clique simples em uma rota do app (um href que começa com /). Ligue ao seu roteador, como (href) => router.push(href). Sem ele, os links recarregam a página. |
-| `currentHref` | `string` | — | Caminho atual do app. Marca o item ativo dos menus (aria-current="page"), deriva os Breadcrumbs do Layout e faz um link com hash para a própria página (/docs#props) rolar sem passar pelo navigate. Sem ele, o hash é comparado com a URL do navegador. |
+| `children` | `ReactNode` | *required* | The app. The components read the configuration of the nearest `UIProvider`; without one, the defaults apply. |
+| `motion` | `{ mode?, preset?, recipes? }` | `{ mode: 'auto', preset: 'standard' }` | Motion of all the components: `{ mode, preset, recipes }`. With `mode`, `"auto"` respects `prefers-reduced-motion` and `"never"` turns off all motion. `preset` scales the duration and the distance: `"off"`, `"subtle"`, `"standard"` or `"expressive"`. `recipes` adjusts `fade`, `pop`, `slide`, `press`, `lift`, `resize`, `spin` and `shimmer`, as in `{ slide: { distance: 48 } }`. |
+| `locale` | `Locale` | `en` | Language, in the format `{ locale, dir, messages }`, such as `ptBR` and `en` from `enchase/locales`. It sets the accessibility texts of the components and the direction (`ltr` or `rtl`) they use. The `dir` of the `<html>` is still up to the app. |
+| `labels` | `Partial<UILabels>` | — | Replaces individual texts of the locale, such as `{ closeModal: "Dismiss" }`. |
+| `breakpoints` | `Partial<Breakpoints>` | `{ xs: '0px', sm: '576px', md: '768px', lg: '992px', xl: '1200px', xxl: '1400px' }` | Width of each breakpoint (`xs`, `sm`, `md`, `lg`, `xl` and `xxl`), in any CSS width value, such as `{ md: "1000px" }`. They apply to `Container`, `Layout`, `Navbar`, `Sidebar` and `useBreakpoint`. |
+| `navigate` | `(href: string) => void` | — | Called with the `href` when there is a plain click on an app route (an `href` that starts with `/`). Connect it to your router, as in `(href) => router.push(href)`. Without it, the links reload the page. |
+| `currentHref` | `string` | — | Current path of the app. It marks the active item of the menus (`aria-current="page"`), derives the `Breadcrumbs` of the `Layout` and makes a link with a hash to its own page (`/docs#props`) scroll without going through the `navigate`. Without it, the hash is compared with the URL of the browser. |
 
 ### VisuallyHidden
 

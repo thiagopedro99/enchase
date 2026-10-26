@@ -1,5 +1,4 @@
 import { ColorModeProvider, ToastProvider, UIProvider, useColorMode } from 'enchase'
-import { ptBR } from 'enchase/locales'
 
 import { buildMotionTheme } from './defaultData.ts'
 
@@ -13,7 +12,7 @@ export const Stage = ({ args, children }: StageProps) => {
 
   return (
     <ColorModeProvider mode={mode} theme={buildMotionTheme(args)} storage={null}>
-      <UIProvider locale={ptBR} motion={{ mode: args.mode, preset: args.preset }}>
+      <UIProvider motion={{ mode: args.mode, preset: args.preset }}>
         <ToastProvider>{children}</ToastProvider>
       </UIProvider>
     </ColorModeProvider>

@@ -36,45 +36,45 @@ export const buildMotionTheme = ({ baseDuration, distance, gentleDuration, snapp
 export const menuSections: SidebarSection[] = [
   {
     id: 'main',
-    title: 'Aplicação',
+    title: 'Application',
     items: [
-      { id: 'home', label: 'Início', href: '/' },
-      { id: 'components', label: 'Componentes', href: '/components' },
-      { id: 'docs', label: 'Documentação', href: '/docs' },
+      { id: 'home', label: 'Home', href: '/' },
+      { id: 'components', label: 'Components', href: '/components' },
+      { id: 'docs', label: 'Documentation', href: '/docs' },
       { id: 'api', label: 'API', href: '/api' },
-      { id: 'about', label: 'Sobre', href: '/about' }
+      { id: 'about', label: 'About', href: '/about' }
     ]
   }
 ]
 
 export const toastSteps = [
-  { message: 'Primeira notificação (2 s)', duration: 2000, type: 'info' },
-  { message: 'Segunda notificação (4 s)', duration: 4000, type: 'success' },
-  { message: 'Terceira notificação (6 s)', duration: 6000, type: 'warning' }
+  { message: 'First notification (2 s)', duration: 2000, type: 'info' },
+  { message: 'Second notification (4 s)', duration: 4000, type: 'success' },
+  { message: 'Third notification (6 s)', duration: 6000, type: 'warning' }
 ] as const
 
 export const reducedMotionInstructions = [
-  'Abra as ferramentas do desenvolvedor (F12).',
-  'Abra o menu de comandos (Ctrl+Shift+P) e procure "Rendering".',
-  'Em "Emulate CSS media feature prefers-reduced-motion", escolha "reduce".',
-  'Dispare as demonstrações de novo: o deslocamento e a escala somem, o fade continua.'
+  'Open the developer tools (F12).',
+  'Open the command menu (Ctrl+Shift+P) and search for "Rendering".',
+  'Under "Emulate CSS media feature prefers-reduced-motion", choose "reduce".',
+  'Trigger the demos again: the displacement and the scale go away, the fade stays.'
 ].join('\n')
 
 export const variableRows: VariableRow[] = [
-  { component: 'modal', variables: '-duration, -exit-duration, -distance, -dx, -dy, -scale, -ease (mola gentle na entrada), -fade-ease, -exit-ease' },
+  { component: 'modal', variables: '-duration, -exit-duration, -distance, -dx, -dy, -scale, -ease (gentle spring on entry), -fade-ease, -exit-ease' },
   {
-    component: 'sidebar (recolher e drawer)',
+    component: 'sidebar (collapse and drawer)',
     variables:
       '-duration, -exit-duration, -distance, -dx, -dy, -ease, -label-duration, -width, -width-collapsed, -item-duration, -item-scale, -indicator-duration, -stagger, -item-offset'
   },
   { component: 'navbar (drawer)', variables: '-duration, -exit-duration, -distance, -dx, -dy, -ease, -stagger, -item-offset' },
-  { component: 'toast', variables: '-duration, -exit-duration, -distance, -dx, -dy, -ease (mola snappy na entrada e no reflow), -fade-ease, -exit-ease, -lifetime' },
-  { component: 'tooltip', variables: '-duration, -scale, -ease (o segundo tooltip aberto em até 300 ms entra sem animação e sem atraso)' },
-  { component: 'button (e theme-toggle)', variables: '-duration, -scale (press), -distance (lift), -ease' },
+  { component: 'toast', variables: '-duration, -exit-duration, -distance, -dx, -dy, -ease (snappy spring on entry and on reflow), -fade-ease, -exit-ease, -lifetime' },
+  { component: 'tooltip', variables: '-duration, -scale, -ease (the second tooltip opened within 300 ms enters with no animation and no delay)' },
+  { component: 'button (and theme-toggle)', variables: '-duration, -scale (press), -distance (lift), -ease' },
   { component: 'card', variables: '-duration, -distance (lift), -ease' },
-  { component: 'loading', variables: '-duration (volta do spinner), -ease' },
-  { component: 'skeleton', variables: '-duration (brilho), -ease' },
-  { component: 'checkbox', variables: '-duration, -scale (marca), -ease' },
+  { component: 'loading', variables: '-duration (spinner turn), -ease' },
+  { component: 'skeleton', variables: '-duration (shimmer), -ease' },
+  { component: 'checkbox', variables: '-duration, -scale (check mark), -ease' },
   { component: 'input, select, link, breadcrumbs, footer, app-bar', variables: '-duration, -ease' },
   { component: 'icon-swap', variables: '-duration, -ease, -rotate' }
 ]

@@ -1,6 +1,5 @@
 import { Alert, Badge, Button, Card, ColorModeProvider, Input, NumberInput, Pagination, RadioGroup, Select, Switch, Tabs, UIProvider, useColorMode } from 'enchase'
 import { createTheme } from 'enchase/theme'
-import { ptBR } from 'enchase/locales'
 
 import { radiusTokens } from './defaultData.ts'
 
@@ -33,42 +32,42 @@ export const Preview = (props: PreviewProps) => {
 
   return (
     <ColorModeProvider mode={resolvedMode} theme={input} storage={null}>
-      <UIProvider locale={ptBR}>
+      <UIProvider>
         <div style={{ display: 'grid', gap: '1.25rem', padding: '1.5rem', maxInlineSize: '44rem', borderRadius: 'var(--enchase-radius-xl)', background: 'var(--enchase-color-background)', color: 'var(--enchase-color-text-primary)' }}>
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
             <Button variant="primary">Primary</Button>
             <Button variant="secondary">Secondary</Button>
             <Button variant="outline">Outline</Button>
             <Button variant="ghost">Ghost</Button>
-            <Badge variant="success">Pago</Badge>
-            <Badge variant="primary">Novo</Badge>
+            <Badge variant="success">Paid</Badge>
+            <Badge variant="primary">New</Badge>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(12rem, 1fr))', gap: '0.75rem' }}>
-            <Input label="E-mail" placeholder="voce@exemplo.com" />
-            <NumberInput label="Quantidade" defaultValue={3} min={0} />
-            <Select label="País" placeholder="Escolha" options={[{ value: 'br', label: 'Brasil' }, { value: 'pt', label: 'Portugal' }]} />
+            <Input label="Email" placeholder="ada@example.com" />
+            <NumberInput label="Quantity" defaultValue={3} min={0} />
+            <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }, { value: 'pt', label: 'Portugal' }]} />
           </div>
 
           <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <Switch label="Notificações" defaultChecked />
-            <RadioGroup label="Plano" defaultValue="pro" orientation="horizontal" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }]} />
+            <Switch label="Notifications" defaultChecked />
+            <RadioGroup label="Plan" defaultValue="pro" orientation="horizontal" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }]} />
           </div>
 
           <Card variant="elevated">
-            <p style={{ margin: 0 }}>Cartão com texto comum, para ver o canto da superfície.</p>
+            <p style={{ margin: 0 }}>Card with plain text, to see the corner of the surface.</p>
           </Card>
 
-          <Alert variant="info" title="Aviso">
-            O canto do alerta segue a escala do tema.
+          <Alert variant="info" title="Notice">
+            The corner of the alert follows the scale of the theme.
           </Alert>
 
-          <Tabs ariaLabel="Seções" items={[{ value: 'a', label: 'Primeira', content: <p style={{ margin: 0 }}>Primeiro painel</p> }, { value: 'b', label: 'Segunda', content: <p style={{ margin: 0 }}>Segundo painel</p> }]} />
+          <Tabs ariaLabel="Sections" items={[{ value: 'a', label: 'First', content: <p style={{ margin: 0 }}>First panel</p> }, { value: 'b', label: 'Second', content: <p style={{ margin: 0 }}>Second panel</p> }]} />
 
           <Pagination pageCount={9} defaultPage={4} />
 
           <table style={{ borderCollapse: 'collapse', fontSize: '0.875rem' }}>
-            <caption style={{ textAlign: 'start', paddingBlockEnd: '0.5rem' }}>Raios do tema</caption>
+            <caption style={{ textAlign: 'start', paddingBlockEnd: '0.5rem' }}>Theme radii</caption>
             <tbody>
               {radiusTokens.map((token) => (
                 <tr key={token}>
