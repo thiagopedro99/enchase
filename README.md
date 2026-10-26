@@ -188,11 +188,11 @@ Not guaranteed:
 - [API.md](API.md): props, types, defaults, hooks and CSS hooks of every component. It ships inside the package, in `node_modules/enchase/API.md`.
 - [README.pt-BR.md](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md): the full guide, with routing and how each `href` is handled, the theme in depth, how to create a style, motion, customization by CSS, server rendering and tests.
 
-The full guide, the Storybook and `API.md` are in Portuguese for now. The code, the prop names and the types are in English.
+The Storybook, `API.md` and `CONTRIBUTING.md` are in English. The full guide is `README.pt-BR.md`, in Portuguese.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md), in Portuguese.
+See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
