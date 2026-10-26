@@ -56,6 +56,10 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, anim
   }, [open, mounted, onDispose, toast.id])
 
   useEffect(() => {
+    remaining.current = duration
+  }, [duration])
+
+  useEffect(() => {
     if (sticky || paused || !open) return
 
     const startedAt = Date.now()
@@ -65,7 +69,7 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, anim
       clearTimeout(timer)
       remaining.current = Math.max(0, remaining.current - (Date.now() - startedAt))
     }
-  }, [paused, sticky, open, handleClose])
+  }, [paused, sticky, open, duration, handleClose])
 
   if (!mounted) return null
 
@@ -137,7 +141,7 @@ const ToastItemComponent = ({ toast, open, onRemove, onDispose, onAnnounce, anim
         </button>
       )}
 
-      {!sticky && <div {...slot('toast', 'progress')} className={styles.progress} aria-hidden="true" />}
+      {!sticky && <div key={duration} {...slot('toast', 'progress')} className={styles.progress} aria-hidden="true" />}
     </div>
   )
 }

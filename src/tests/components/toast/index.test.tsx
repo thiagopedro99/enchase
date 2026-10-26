@@ -11,6 +11,7 @@ import { ToastProvider, useToast } from '@components/toast/index.ts'
 import { ptBR } from '@locales/ptBR.ts'
 
 import type { RenderWithProvidersOptions } from '@tests/types.ts'
+import type { ToastOptions, ToastPromiseMessages } from '@components/toast/types.ts'
 import type { ReactElement } from 'react'
 
 const renderWithToasts = (ui: ReactElement, options: RenderWithProvidersOptions = {}) => renderWithProviders(ui, { ...options, toasts: true })
@@ -740,5 +741,223 @@ describe('Toast dismissible', () => {
 
     expect(retry).toHaveBeenCalledTimes(1)
     await waitFor(() => expect(screen.queryByText('Syncing', { selector: '[data-slot="toast-title"]' })).not.toBeInTheDocument())
+  })
+})
+
+const Updater = ({ duration = 0 }: { duration?: number }) => {
+  const toast = useToast()
+  const [id, setId] = useState('')
+
+  return (
+    <>
+      <button onClick={() => setId(toast.info('Uploading', duration))}>start</button>
+      <button onClick={() => toast.update(id, { message: 'Uploaded', type: 'success' })}>finish</button>
+      <button onClick={() => toast.update(id, { type: 'error', message: 'Failed' })}>fail</button>
+      <button onClick={() => toast.update(id, { duration: 80 })}>shorten</button>
+      <button onClick={() => toast.update(id, { action: { label: 'Retry', onClick: vi.fn() } })}>action</button>
+      <button onClick={() => toast.update(id, { action: undefined })}>no action</button>
+      <button onClick={() => toast.update('missing', { message: 'Nothing' })}>missing</button>
+    </>
+  )
+}
+
+const titleOf = (text: string) => screen.queryByText(text, { selector: '[data-slot="toast-title"]' })
+
+describe('Toast update', () => {
+  it('changes the message and the type of the same toast in place', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Updater />)
+
+    await user.click(screen.getByRole('button', { name: 'start' }))
+    const item = itemOf('Uploading')
+
+    await user.click(screen.getByRole('button', { name: 'finish' }))
+
+    expect(titleOf('Uploading')).not.toBeInTheDocument()
+    expect(itemOf('Uploaded')).toBe(item)
+    expect(item).toHaveAttribute('data-type', 'success')
+  })
+
+  it('announces the new text, and moves an error to the alert announcer', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Updater />)
+
+    await user.click(screen.getByRole('button', { name: 'start' }))
+    await waitFor(() => expect(announcer('status')).toHaveTextContent('Uploading'))
+    await user.click(screen.getByRole('button', { name: 'fail' }))
+
+    await waitFor(() => expect(announcer('alert')).toHaveTextContent('Failed'))
+  })
+
+  it('does not say the text again when only something else changes', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Updater />)
+
+    await user.click(screen.getByRole('button', { name: 'start' }))
+    await waitFor(() => expect(announcer('status')).toHaveTextContent('Uploading'))
+    const seen: string[] = []
+    const observer = new MutationObserver(() => seen.push(announcer('status').textContent ?? ''))
+
+    observer.observe(announcer('status'), { childList: true, characterData: true, subtree: true })
+    await user.click(screen.getByRole('button', { name: 'shorten' }))
+    await user.click(screen.getByRole('button', { name: 'action' }))
+    await new Promise((resolve) => setTimeout(resolve, 200))
+    observer.disconnect()
+
+    expect(seen).toEqual([])
+  })
+
+  it('restarts the countdown with the new duration, and a sticky toast starts to expire', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Updater />)
+
+    await user.click(screen.getByRole('button', { name: 'start' }))
+    expect(itemOf('Uploading').querySelector('[data-slot="toast-progress"]')).toBeNull()
+
+    await user.click(screen.getByRole('button', { name: 'shorten' }))
+
+    await waitFor(() => expect(titleOf('Uploading')).not.toBeInTheDocument())
+  })
+
+  it('adds and removes an action', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Updater />)
+
+    await user.click(screen.getByRole('button', { name: 'start' }))
+    await user.click(screen.getByRole('button', { name: 'action' }))
+
+    expect(await screen.findByRole('button', { name: 'Retry' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'no action' }))
+
+    await waitFor(() => expect(screen.queryByRole('button', { name: 'Retry' })).not.toBeInTheDocument())
+  })
+
+  it('ignores an id that does not exist', async () => {
+    const user = userEvent.setup()
+    renderWithToasts(<Updater />)
+
+    await user.click(screen.getByRole('button', { name: 'start' }))
+    await user.click(screen.getByRole('button', { name: 'missing' }))
+
+    expect(titleOf('Nothing')).not.toBeInTheDocument()
+    expect(titleOf('Uploading')).toBeInTheDocument()
+  })
+})
+
+const Promiser = ({ task, messages, options }: { task: () => Promise<string>; messages: ToastPromiseMessages<string>; options?: ToastOptions }) => {
+  const toast = useToast()
+  const [result, setResult] = useState('')
+
+  return (
+    <>
+      <button onClick={() => toast.promise(task(), messages, options).then(setResult, (reason: unknown) => setResult(`rejected ${String(reason)}`))}>run</button>
+      <output>{result}</output>
+    </>
+  )
+}
+
+const deferred = () => {
+  const control: { resolve: (value: string) => void; reject: (reason: unknown) => void } = { resolve: () => undefined, reject: () => undefined }
+  const promise = new Promise<string>((resolve, reject) => {
+    control.resolve = resolve
+    control.reject = reject
+  })
+
+  return { promise, ...control }
+}
+
+describe('Toast promise', () => {
+  it('shows the loading message at first, as a toast that does not expire', async () => {
+    const user = userEvent.setup()
+    const task = deferred()
+    renderWithToasts(<Promiser task={() => task.promise} messages={{ loading: 'Saving', success: 'Saved', error: 'Failed' }} />)
+
+    await user.click(screen.getByRole('button', { name: 'run' }))
+
+    expect(itemOf('Saving')).toHaveAttribute('data-type', 'info')
+    expect(itemOf('Saving').querySelector('[data-slot="toast-progress"]')).toBeNull()
+  })
+
+  it('turns into a success that expires when the promise resolves, and hands the value back', async () => {
+    const user = userEvent.setup()
+    const task = deferred()
+    renderWithToasts(<Promiser task={() => task.promise} messages={{ loading: 'Saving', success: (value) => `Saved ${value}`, error: 'Failed' }} />)
+
+    await user.click(screen.getByRole('button', { name: 'run' }))
+    const item = itemOf('Saving')
+    await act(async () => task.resolve('draft'))
+
+    await waitFor(() => expect(titleOf('Saved draft')).toBeInTheDocument())
+    expect(itemOf('Saved draft')).toBe(item)
+    expect(item).toHaveAttribute('data-type', 'success')
+    expect(item.querySelector('[data-slot="toast-progress"]')).not.toBeNull()
+    expect(screen.getByText('draft', { selector: 'output' })).toBeInTheDocument()
+  })
+
+  it('turns into an error when the promise rejects, and still rejects for the caller', async () => {
+    const user = userEvent.setup()
+    const task = deferred()
+    renderWithToasts(<Promiser task={() => task.promise} messages={{ loading: 'Saving', success: 'Saved', error: (reason) => `Could not save: ${String(reason)}` }} />)
+
+    await user.click(screen.getByRole('button', { name: 'run' }))
+    await act(async () => task.reject('offline'))
+
+    await waitFor(() => expect(titleOf('Could not save: offline')).toBeInTheDocument())
+    expect(itemOf('Could not save: offline')).toHaveAttribute('data-type', 'error')
+    expect(screen.getByText('rejected offline', { selector: 'output' })).toBeInTheDocument()
+  })
+
+  it('announces the loading message and then the result', async () => {
+    const user = userEvent.setup()
+    const task = deferred()
+    renderWithToasts(<Promiser task={() => task.promise} messages={{ loading: 'Saving', success: 'Saved', error: 'Failed' }} />)
+
+    await user.click(screen.getByRole('button', { name: 'run' }))
+    await waitFor(() => expect(announcer('status')).toHaveTextContent('Saving'))
+    await act(async () => task.resolve('x'))
+
+    await waitFor(() => expect(announcer('status')).toHaveTextContent('Saved'))
+  })
+
+  it('announces a failure in the alert announcer', async () => {
+    const user = userEvent.setup()
+    const task = deferred()
+    renderWithToasts(<Promiser task={() => task.promise} messages={{ loading: 'Saving', success: 'Saved', error: 'Failed' }} />)
+
+    await user.click(screen.getByRole('button', { name: 'run' }))
+    await act(async () => task.reject(new Error('x')))
+
+    await waitFor(() => expect(announcer('alert')).toHaveTextContent('Failed'))
+  })
+
+  it('shows no result when the loading toast was closed before the promise settled', async () => {
+    const user = userEvent.setup()
+    const task = deferred()
+    renderWithToasts(<Promiser task={() => task.promise} messages={{ loading: 'Saving', success: 'Saved', error: 'Failed' }} />)
+
+    await user.click(screen.getByRole('button', { name: 'run' }))
+    await user.click(within(itemOf('Saving')).getByRole('button', { name: 'Fechar notificação' }))
+    await waitFor(() => expect(titleOf('Saving')).not.toBeInTheDocument())
+    await act(async () => task.resolve('x'))
+
+    expect(titleOf('Saved')).not.toBeInTheDocument()
+  })
+
+  it('keeps the options on every state of the toast', async () => {
+    const user = userEvent.setup()
+    const task = deferred()
+    renderWithToasts(<Promiser task={() => task.promise} messages={{ loading: 'Saving', success: 'Saved', error: 'Failed' }} options={{ className: 'mine', dismissible: false }} />)
+
+    await user.click(screen.getByRole('button', { name: 'run' }))
+
+    expect(itemOf('Saving')).toHaveClass('mine')
+    expect(itemOf('Saving')).toHaveAttribute('data-dismissible', 'false')
+
+    await act(async () => task.resolve('x'))
+    await waitFor(() => expect(titleOf('Saved')).toBeInTheDocument())
+
+    expect(itemOf('Saved')).toHaveClass('mine')
+    expect(itemOf('Saved')).toHaveAttribute('data-dismissible', 'false')
   })
 })

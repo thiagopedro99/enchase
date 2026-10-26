@@ -784,7 +784,7 @@ Returns the `id` of the section that is in the reading band, from `topOffset` px
 useToast(): ToastContextType
 ```
 
-Opens notifications through the `success`, `error`, `warning` and `info` methods, for example `success("Saved", 3000)`, and each one returns the id of the notification, which `removeToast(id)` accepts to close it. `duration` is in milliseconds and 0 keeps the notification open until someone closes it. Throws an error outside the `ToastProvider`.
+Opens notifications through the `success`, `error`, `warning` and `info` methods, for example `success("Saved", 3000)`, and each one returns the id of the notification, which `removeToast(id)` accepts to close it and `update(id, patch)` accepts to change it. The message is text or nodes. `duration` is in milliseconds and 0 keeps the notification open until someone closes it. The third argument takes `className`, `style`, `action` (`{ label, onClick }`, a button that runs `onClick` and closes the notification) and `dismissible` (false removes the close button and the close by click or Esc). `update(id, patch)` changes `message`, `type`, `duration`, `action`, `dismissible`, `className` or `style` in place, and a new `duration` restarts the countdown. `promise(task, { loading, success, error })` shows `loading` as a notification that does not expire and turns it into `success` or `error` when the promise settles (both can be functions of the value or of the reason), and returns the same promise. Throws an error outside the `ToastProvider`.
 
 Returns:
 
@@ -792,6 +792,8 @@ Returns:
 | --- | --- |
 | `addToast` | `(message: ReactNode, type: ToastType, duration?: number, options?: ToastOptions) => string` |
 | `removeToast` | `(id: string) => void` |
+| `update` | `(id: string, patch: ToastUpdate) => void` |
+| `promise` | `<T>(task: Promise<T>, messages: ToastPromiseMessages<T>, options?: ToastOptions) => Promise<T>` |
 | `success` | `(message: ReactNode, duration?: number, options?: ToastOptions) => string` |
 | `error` | `(message: ReactNode, duration?: number, options?: ToastOptions) => string` |
 | `warning` | `(message: ReactNode, duration?: number, options?: ToastOptions) => string` |

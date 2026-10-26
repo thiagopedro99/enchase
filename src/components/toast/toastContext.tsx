@@ -15,7 +15,7 @@ import { ToastContext } from './context.ts'
 import { useFlip } from './useFlip.ts'
 import styles from './styles.module.css'
 
-import type { Toast, ToastEntry, ToastOptions, ToastType, ToastProviderProps } from './types.ts'
+import type { Toast, ToastEntry, ToastOptions, ToastProviderProps, ToastPromiseMessages, ToastType, ToastUpdate } from './types.ts'
 import type { ReactNode } from 'react'
 
 export const ToastProvider = ({ children, container, animation, className, style }: ToastProviderProps) => {
@@ -68,12 +68,30 @@ export const ToastProvider = ({ children, container, animation, className, style
     setEntries((previous) => previous.filter((entry) => entry.toast.id !== id))
   }, [])
 
+  const update = useCallback((id: string, patch: ToastUpdate) => {
+    setEntries((previous) => previous.map((entry) => (entry.toast.id === id ? { ...entry, toast: { ...entry.toast, ...patch } } : entry)))
+  }, [])
+
+  const promise = useCallback(
+    <T,>(task: Promise<T>, messages: ToastPromiseMessages<T>, options?: ToastOptions) => {
+      const id = addToast(messages.loading, 'info', 0, options)
+
+      task.then(
+        (value) => update(id, { message: typeof messages.success === 'function' ? messages.success(value) : messages.success, type: 'success', duration: defaultToastDuration }),
+        (reason: unknown) => update(id, { message: typeof messages.error === 'function' ? messages.error(reason) : messages.error, type: 'error', duration: defaultToastDuration })
+      )
+
+      return task
+    },
+    [addToast, update]
+  )
+
   const success = useCallback((message: ReactNode, duration?: number, options?: ToastOptions) => addToast(message, 'success', duration, options), [addToast])
   const error = useCallback((message: ReactNode, duration?: number, options?: ToastOptions) => addToast(message, 'error', duration, options), [addToast])
   const warning = useCallback((message: ReactNode, duration?: number, options?: ToastOptions) => addToast(message, 'warning', duration, options), [addToast])
   const info = useCallback((message: ReactNode, duration?: number, options?: ToastOptions) => addToast(message, 'info', duration, options), [addToast])
 
-  const actions = useMemo(() => ({ addToast, removeToast, success, error, warning, info }), [addToast, removeToast, success, error, warning, info])
+  const actions = useMemo(() => ({ addToast, removeToast, update, promise, success, error, warning, info }), [addToast, removeToast, update, promise, success, error, warning, info])
 
   const viewportProps = mergeProps(
     {

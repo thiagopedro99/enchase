@@ -373,3 +373,50 @@ describe('a toast that is not dismissible in a real browser', () => {
     expect(items()).toHaveLength(1)
   })
 })
+
+const Saving = ({ outcome }: { outcome: 'resolve' | 'reject' }) => {
+  const toast = useToast()
+
+  const run = () => {
+    const task = new Promise<string>((resolve, reject) => setTimeout(() => (outcome === 'resolve' ? resolve('ok') : reject(new Error('offline'))), 1500))
+
+    toast.promise(task, { loading: 'Saving', success: 'Saved', error: 'Could not save' }).catch(() => undefined)
+  }
+
+  return <button onClick={run}>save</button>
+}
+
+describe('a toast that follows a promise in a real browser', () => {
+  const state = () => items()[0]?.dataset.type
+
+  it('goes from loading to success in the same place, with the countdown starting then', async () => {
+    renderInBrowser(<Saving outcome="resolve" />, 'auto')
+    await userEvent.click(page.getByRole('button', { name: 'save' }))
+    await expect.poll(() => items().filter((item) => item.dataset.state === 'open').length).toBe(1)
+    await expect.poll(() => items().every((item) => isSettled(item))).toBe(true)
+    const before = items()[0].getBoundingClientRect()
+    const loadingBackground = getComputedStyle(items()[0]).backgroundColor
+
+    expect(state()).toBe('info')
+    expect(part('progress') ?? null).toBeNull()
+
+    await expect.poll(() => state(), { timeout: 4000 }).toBe('success')
+    await expect.poll(() => items().every((item) => isSettled(item))).toBe(true)
+    const after = items()[0].getBoundingClientRect()
+
+    expect(itemWith('Saved')).toBeDefined()
+    expect(Math.abs(after.top - before.top)).toBeLessThan(1)
+    expect(getComputedStyle(items()[0]).backgroundColor).not.toBe(loadingBackground)
+    expect(part('progress').getAnimations().some((animation) => animation.playState === 'running')).toBe(true)
+  })
+
+  it('goes from loading to error when the promise rejects', async () => {
+    renderInBrowser(<Saving outcome="reject" />, 'auto')
+    await userEvent.click(page.getByRole('button', { name: 'save' }))
+
+    await expect.poll(() => state(), { timeout: 4000 }).toBe('error')
+
+    expect(itemWith('Could not save')).toBeDefined()
+    await expect.poll(() => document.querySelector('[data-slot="toast-host"] [role="alert"]')?.textContent).toBe('Could not save')
+  })
+})
