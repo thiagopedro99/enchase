@@ -132,6 +132,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `CardButton` | `<CardButton onClick={escolher}><span>React</span></CardButton>` |
 | `CardLink` | `<CardLink href="/projetos/enchase"><h3>Enchase</h3><p>Biblioteca de componentes</p></CardLink>` |
 | `Badge` | `<Badge variant="success">Pago</Badge>` |
+| `Avatar` | `<Avatar name="Ana Souza" src="/ana.png" />`: sem `src`, ou se a imagem falhar, mostra as iniciais do nome |
 | `Alert` | `<Alert variant="warning" title="Atenção" onClose={fechar}>O prazo termina hoje.</Alert>` |
 | `Container`, `Flex`, `Grid` | `<Grid as="ul" minColumnWidth="14rem" gap="1rem">...</Grid>` |
 | `Modal` | `<Modal isOpen={open} onClose={close} title="Editar">...</Modal>` |

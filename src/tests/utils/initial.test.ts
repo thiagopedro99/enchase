@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { initialOf } from '@utils/initial.ts'
+import { initialOf, initialsOf } from '@utils/initial.ts'
 
 describe('initialOf', () => {
   it.each([
@@ -24,5 +24,32 @@ describe('initialOf', () => {
     expect(initialOf('')).toBe('?')
     expect(initialOf('   ')).toBe('?')
     expect(initialOf('', '•')).toBe('•')
+  })
+})
+
+describe('initialsOf', () => {
+  it.each([
+    ['Ana Souza', 'AS'],
+    ['ana', 'A'],
+    ['  Sam   Lee ', 'SL'],
+    ['Maria de Fátima Souza', 'MS'],
+    ['Ólafur Darri Ólafsson', 'ÓÓ'],
+    ['王秀英', '王'],
+    ['نور الهدى عبد الرحمن', 'نا'],
+    ['🦊 Fox', '🦊F'],
+    ['👩🏽‍💻 Priya', '👩🏽‍💻P']
+  ])('takes the first letter of the first and of the last word of %s', (name, expected) => {
+    expect(initialsOf(name)).toBe(expected)
+  })
+
+  it('never returns half of a surrogate pair', () => {
+    expect(initialsOf('🦊 🦝')).not.toMatch(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])/)
+    expect(initialsOf('🦊 🦝')).toBe('🦊🦝')
+  })
+
+  it('falls back when there is no name', () => {
+    expect(initialsOf('')).toBe('?')
+    expect(initialsOf('   ')).toBe('?')
+    expect(initialsOf('', '•')).toBe('•')
   })
 })

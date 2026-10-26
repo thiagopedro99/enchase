@@ -17,3 +17,12 @@ export const initialOf = (name: string, fallback = '?') => {
 
   return first ? first.toLocaleUpperCase() : fallback
 }
+
+export const initialsOf = (name: string, fallback = '?') => {
+  const words = name.split(/\s+/).filter(Boolean)
+  const first = firstGrapheme(words[0] ?? '')
+  const last = words.length > 1 ? firstGrapheme(words[words.length - 1] ?? '') : ''
+  const initials = `${first}${last}`
+
+  return initials ? initials.toLocaleUpperCase() : fallback
+}

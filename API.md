@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -36,6 +36,19 @@ Mensagem de status dentro da página, em quatro tipos (`info`, `success`, `warni
 | `onClose` | `() => void` | — | Mostra o botão de fechar e é chamado ao clicar nele. O Alert não some sozinho: quem usa o remove. O nome do botão vem de labels.closeToast do UIProvider. |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
+
+### Avatar
+
+A round picture for a person or an entity. It shows the image when there is one and falls back to the initials of the name while the image loads, when it fails and when there is no `src`. With a `name` it is announced as an image with that name; when the name is already written next to it, pass `aria-hidden="true"`. It is a `<span>` and accepts the attributes of the `<span>`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `name` | `string` | — | Name of the person or the entity. It gives the initials of the fallback (the first letter of the first and of the last word) and the accessible name of the avatar. Without it the avatar shows a question mark that assistive technology skips. |
+| `src` | `string` | — | Address of the image. While it loads, and if it fails, the avatar shows the initials. Change it and the avatar waits for the new image. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the avatar: sm is 2 rem, md is 2.5 rem and lg is 3.5 rem. |
+| `children` | `ReactNode` | — | Content shown instead of the initials when there is no image, for example an icon. It does not change the accessible name. |
+
+Also accepts the other attributes of `<span>`, passed on to the element.
 
 ### Badge
 
@@ -885,6 +898,22 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-layout-header-menu-button-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-layout-header-menu-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-layout-header-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+
+### Avatar
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-avatar-background` | `var(--enchase-color-primary-container)` | `background-color` |
+| `--enchase-avatar-color` | `var(--enchase-color-on-primary-container)` | `color` |
+| `--enchase-avatar-font-size-lg` | `1.375rem` (`--enchase-font-size-xl`) | `font-size` |
+| `--enchase-avatar-font-size-md` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-avatar-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-avatar-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-avatar-line-height` | `1` (`--enchase-line-height-none`) | `line-height` |
+| `--enchase-avatar-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
+| `--enchase-avatar-size-lg` | `3.5rem` | `inline-size`, `block-size` |
+| `--enchase-avatar-size-md` | `2.5rem` | `inline-size`, `block-size` |
+| `--enchase-avatar-size-sm` | `2rem` | `inline-size`, `block-size` |
 
 ### Badge
 

@@ -1,0 +1,46 @@
+.avatar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  vertical-align: middle;
+  user-select: none;
+  font-family: inherit;
+}
+
+:where(.avatar) {
+  border-radius: var(--enchase-avatar-radius, var(--enchase-radius-full));
+  background-color: var(--enchase-avatar-background, var(--enchase-color-primary-container));
+  color: var(--enchase-avatar-color, var(--enchase-color-on-primary-container));
+  font-weight: var(--enchase-avatar-font-weight, var(--enchase-font-weight-medium));
+  line-height: var(--enchase-avatar-line-height, var(--enchase-line-height-none, 1));
+}
+
+:where(.avatar[data-size='sm']) {
+  inline-size: var(--enchase-avatar-size-sm, 2rem);
+  block-size: var(--enchase-avatar-size-sm, 2rem);
+  font-size: var(--enchase-avatar-font-size-sm, var(--enchase-font-size-sm));
+}
+
+:where(.avatar[data-size='md']) {
+  inline-size: var(--enchase-avatar-size-md, 2.5rem);
+  block-size: var(--enchase-avatar-size-md, 2.5rem);
+  font-size: var(--enchase-avatar-font-size-md, var(--enchase-font-size-base));
+}
+
+:where(.avatar[data-size='lg']) {
+  inline-size: var(--enchase-avatar-size-lg, 3.5rem);
+  block-size: var(--enchase-avatar-size-lg, 3.5rem);
+  font-size: var(--enchase-avatar-font-size-lg, var(--enchase-font-size-xl));
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}

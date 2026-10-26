@@ -7,6 +7,7 @@ import { cleanup } from '@testing-library/react'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Alert } from '@components/common/Alert/index.tsx'
+import { Avatar } from '@components/common/Avatar/index.tsx'
 import { Badge } from '@components/common/Badge/index.tsx'
 import { Breadcrumbs } from '@components/common/Breadcrumbs/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
@@ -65,6 +66,7 @@ const options = [
 const cases: [string, string, ComponentType<never>, Record<string, unknown>][] = [
   ['Accordion', 'AccordionProps', Accordion, { items: [{ value: 'a', title: 'A', content: 'x' }] }],
   ['Alert', 'AlertProps', Alert, { children: 'Saved' }],
+  ['Avatar', 'AvatarProps', Avatar, { name: 'Ana Souza' }],
   ['Badge', 'BadgeProps', Badge, { children: 'New' }],
   ['Breadcrumbs', 'BreadcrumbsProps', Breadcrumbs, { items: [{ label: 'Home', href: '/' }, { label: 'Page' }] }],
   ['Button', 'ButtonProps', Button, { children: 'Save' }],
