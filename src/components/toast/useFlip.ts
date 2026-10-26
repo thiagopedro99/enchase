@@ -15,6 +15,14 @@ const longestTransition = (element: HTMLElement) =>
       .filter(Number.isFinite)
   )
 
+const runningFlips = (element: HTMLElement) => (element.getAnimations?.() ?? []).filter((animation) => animation.id === flipAnimationId)
+
+const flipOffset = (element: HTMLElement) => {
+  if (runningFlips(element).length === 0) return 0
+
+  return Number.parseFloat(getComputedStyle(element).translate.split(' ')[1] ?? '') || 0
+}
+
 export const useFlip = (containerRef: RefObject<HTMLElement | null>, enabled: boolean) => {
   const tops = useRef(new Map<string, number>())
 
@@ -28,13 +36,15 @@ export const useFlip = (containerRef: RefObject<HTMLElement | null>, enabled: bo
     for (const child of Array.from(container.children)) {
       if (!(child instanceof HTMLElement) || !child.dataset.flipId) continue
 
-      for (const animation of child.getAnimations?.() ?? []) if (animation.id === flipAnimationId) animation.cancel()
-
-      const top = child.getBoundingClientRect().top
+      const offset = flipOffset(child)
+      const top = child.getBoundingClientRect().top - offset
       const previous = tops.current.get(child.dataset.flipId)
 
       next.set(child.dataset.flipId, top)
-      if (previous !== undefined && Math.abs(previous - top) >= 1) moved.push([child, previous - top])
+      if (previous === undefined || Math.abs(previous - top) < 1) continue
+
+      runningFlips(child).forEach((animation) => animation.cancel())
+      moved.push([child, previous - top + offset])
     }
 
     tops.current = next
@@ -48,8 +58,7 @@ export const useFlip = (containerRef: RefObject<HTMLElement | null>, enabled: bo
       const durationMs = longestTransition(element)
       if (durationMs <= 0) continue
 
-      const animation = element.animate([{ translate: `0 ${delta}px` }, { translate: '0 0' }], { duration: durationMs, easing: spring || reflowEase })
-      animation.id = flipAnimationId
+      element.animate([{ translate: `0 ${delta}px` }, { translate: '0 0' }], { id: flipAnimationId, duration: durationMs, easing: spring || reflowEase })
     }
   })
 }

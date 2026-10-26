@@ -101,6 +101,48 @@ describe('Toast in a real browser', () => {
     await expect.poll(() => Math.round((itemWith('Beta')?.getBoundingClientRect().top as number) - firstTop)).toBe(0)
   })
 
+  it('keeps the slide going when the stack renders again in the middle of it', async () => {
+    renderInBrowser(<Launcher />, 'auto')
+    await fire('alfa', 'beta')
+    addStyle('[data-slot="toast"] { transition-duration: 1200ms !important }', 'end')
+
+    await userEvent.click(page.getByRole('button', { name: 'Fechar notificação' }).first())
+    await expect.poll(() => flipAnimations().length, { timeout: 4000 }).toBeGreaterThan(0)
+    const slide = flipAnimations()[0]
+
+    await userEvent.click(page.getByRole('button', { name: 'gama' }))
+
+    expect(slide.playState).toBe('running')
+    await expect.poll(() => flipAnimations().length, { timeout: 4000 }).toBe(0)
+  })
+
+  it('starts the next slide from where the item is on screen', async () => {
+    renderInBrowser(<Launcher />, 'auto')
+    await fire('alfa', 'beta', 'gama')
+    const gama = () => itemWith('Gama') as HTMLElement
+
+    await userEvent.click(page.getByRole('button', { name: 'Fechar notificação' }).first())
+    await expect.poll(() => flipAnimations().length).toBeGreaterThan(0)
+    flipAnimations().forEach((animation) => {
+      animation.pause()
+      animation.currentTime = 100
+    })
+    const onScreen = gama().getBoundingClientRect().top
+    const animate = vi.spyOn(HTMLElement.prototype, 'animate')
+
+    await userEvent.click(page.getByRole('button', { name: 'Fechar notificação' }).first())
+    await expect.poll(() => items().length).toBe(1)
+    await expect.poll(() => flipAnimations().length, { timeout: 4000 }).toBe(0)
+
+    const starts = animate.mock.calls.filter(([, options]) => typeof options === 'object' && options?.id === 'enchase-flip')
+    animate.mockRestore()
+    const [keyframes] = starts[starts.length - 1] as [Keyframe[]]
+    const from = Number.parseFloat(String(keyframes[0].translate).split(' ')[1])
+
+    expect(onScreen).toBeGreaterThan(gama().getBoundingClientRect().top + 20)
+    expect(from).toBeCloseTo(onScreen - gama().getBoundingClientRect().top, 0)
+  })
+
   it('does not slide anything when the user prefers reduced motion', async () => {
     await setReducedMotion('reduce')
     renderInBrowser(<Launcher />, 'auto')
