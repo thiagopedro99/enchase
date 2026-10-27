@@ -3,11 +3,10 @@ import { createPortal } from 'react-dom'
 
 import { bubbleOffset, closeDelay as defaultCloseDelay, defaultPosition, joinsGroup, openDelay as defaultOpenDelay, resolveAnimation, tooltipGroup, viewportPadding } from './defaultData.ts'
 import { autoUpdate, computePosition, resolvePlacement } from '../../../positioning/index.ts'
-import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { classNames } from '@utils/classNames.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
-import { useIsClient } from '@hooks/useIsClient.ts'
+import { usePortalContainer } from '@hooks/usePortalContainer.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import styles from './styles.module.css'
 
@@ -29,7 +28,7 @@ export const Tooltip = ({
   bubbleStyle
 }: TooltipProps) => {
   const { motion, dir } = useUIConfig()
-  const isClient = useIsClient()
+  const target = usePortalContainer(container)
   const motionSettings = resolveAnimation(animation, motion)
   const [open, setOpen] = useState(false)
   const [instant, setInstant] = useState(false)
@@ -140,7 +139,7 @@ export const Tooltip = ({
           {text}
         </span>
       )}
-      {isClient && createPortal(presence.mounted ? <span {...bubbleProps}>{text}</span> : null, resolvePortalContainer(container))}
+      {target && createPortal(presence.mounted ? <span {...bubbleProps}>{text}</span> : null, target)}
     </div>
   )
 }

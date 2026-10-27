@@ -1,10 +1,9 @@
 import { createPortal } from 'react-dom'
 import { useEffect, useRef, useState } from 'react'
 
-import { useIsClient } from '@hooks/useIsClient.ts'
+import { usePortalContainer } from '@hooks/usePortalContainer.ts'
 import { useInertSiblings } from '@hooks/useInertSiblings.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
-import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useScrollLock } from '@hooks/useScrollLock.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -48,12 +47,12 @@ const OverlayLoading = ({ size, text, color, animation, ...props }: Required<Pic
 
 export const Loading = ({ size = 'md', overlay = false, container, text, color, animation, ...props }: LoadingProps) => {
   const { labels } = useUIConfig()
-  const isClient = useIsClient()
+  const target = usePortalContainer(container)
 
   if (overlay) {
-    if (!isClient) return null
+    if (!target) return null
 
-    return createPortal(<OverlayLoading size={size} text={text} color={color} animation={animation} {...props} />, resolvePortalContainer(container))
+    return createPortal(<OverlayLoading size={size} text={text} color={color} animation={animation} {...props} />, target)
   }
 
   const own = { ...slot('loading'), className: styles.container, role: 'status', 'aria-live': 'polite' as const }

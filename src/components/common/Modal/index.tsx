@@ -1,6 +1,6 @@
 import { createPortal } from 'react-dom'
 
-import { useIsClient } from '@hooks/useIsClient.ts'
+import { usePortalContainer } from '@hooks/usePortalContainer.ts'
 import { useId, useRef } from 'react'
 import { CloseIcon } from '../Icon/icons/CloseIcon.tsx'
 
@@ -8,7 +8,6 @@ import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { usePresence } from '@hooks/usePresence.ts'
-import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { Button } from '../Button/index.tsx'
@@ -110,10 +109,10 @@ export const Modal = ({
   ...props
 }: ModalProps) => {
   const motionStyle = useMotionStyle('pop', 'modal', props.animation, undefined, modalBase)
-  const isClient = useIsClient()
+  const target = usePortalContainer(container)
   const { mounted, state, ref } = usePresence<HTMLDivElement>(isOpen)
 
-  if (!isClient) return null
+  if (!target) return null
 
   return createPortal(
     mounted ? (
@@ -130,7 +129,7 @@ export const Modal = ({
         {...props}
       />
     ) : null,
-    resolvePortalContainer(container)
+    target
   )
 }
 

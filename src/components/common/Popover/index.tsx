@@ -9,10 +9,9 @@ import { usePopoverPosition } from './usePopoverPosition.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { focusFirst } from './focus.ts'
-import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { tabbablesIn } from '@utils/tabbable.ts'
-import { useIsClient } from '@hooks/useIsClient.ts'
+import { usePortalContainer } from '@hooks/usePortalContainer.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import styles from './styles.module.css'
@@ -42,7 +41,7 @@ export const Popover = ({
   contentStyle
 }: PopoverProps) => {
   const { dir } = useUIConfig()
-  const isClient = useIsClient()
+  const target = usePortalContainer(container)
   const [isOpen, setOpen] = useControllableState(open, initiallyOpen, onOpenChange)
   const { mounted, state, ref } = usePresence<HTMLDivElement>(isOpen)
   const id = useId()
@@ -99,7 +98,7 @@ export const Popover = ({
   return (
     <>
       <span {...triggerProps}>{trigger}</span>
-      {isClient &&
+      {target &&
         createPortal(
           mounted ? (
             <PopoverTreeContext.Provider value={tree}>
@@ -109,7 +108,7 @@ export const Popover = ({
               </div>
             </PopoverTreeContext.Provider>
           ) : null,
-          resolvePortalContainer(container)
+          target
         )}
     </>
   )

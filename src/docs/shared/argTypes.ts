@@ -8,7 +8,7 @@ export const asArgType = {
 
 export const containerArgType = {
   description:
-    'Element that the overlay renders in, or a function that returns it (called on the client, never on the server). Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it.',
+    'Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it.',
   control: false,
   table: { type: { summary: 'HTMLElement | (() => HTMLElement | null) | null' } }
 } as const

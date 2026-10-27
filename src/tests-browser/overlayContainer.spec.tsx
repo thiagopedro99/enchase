@@ -255,3 +255,53 @@ describe('A toast host in a container inside the page', () => {
     await expect.poll(() => document.querySelectorAll('[inert]').length).toBe(0)
   })
 })
+
+const byQuery = () => document.querySelector<HTMLElement>('[data-island]')
+
+const Fire = () => {
+  const toast = useToast()
+
+  return <button onClick={() => toast.info('Saved', 0)}>Fire</button>
+}
+
+describe('A container given as a function that finds an element of the same tree', () => {
+  it('puts a modal that is open from the first render inside the element', async () => {
+    renderInBrowser(
+      <div data-island="">
+        <Modal isOpen onClose={() => undefined} title="Already open" container={byQuery}>
+          <p>Body</p>
+        </Modal>
+      </div>
+    )
+    await expect.element(page.getByRole('dialog')).toBeVisible()
+
+    expect(island().contains(slotOf('modal'))).toBe(true)
+  })
+
+  it('puts a loading overlay that shows from the first render inside the element', async () => {
+    renderInBrowser(
+      <div data-island="">
+        <Loading overlay text="Saving" container={byQuery} />
+      </div>
+    )
+    await expect.poll(() => document.querySelector('[data-slot="loading"]')).not.toBeNull()
+
+    expect(island().contains(slotOf('loading'))).toBe(true)
+  })
+
+  it('puts the toast host inside the element without waiting for the provider to render again', async () => {
+    renderInBrowser(
+      <div data-island="">
+        <ToastProvider container={byQuery}>
+          <Fire />
+        </ToastProvider>
+      </div>
+    )
+    await expect.poll(() => document.querySelector('[data-slot="toast-host"]')).not.toBeNull()
+
+    expect(slotOf('toast-host').parentElement).toBe(island())
+
+    await userEvent.click(page.getByRole('button', { name: 'Fire' }))
+    await expect.poll(() => island().querySelectorAll('[data-slot="toast"]').length).toBe(1)
+  })
+})

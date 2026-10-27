@@ -4,9 +4,9 @@ import { createPortal } from 'react-dom'
 import { defaultToastDuration, defaultToastPosition, reducedMotionQuery } from './defaultData.ts'
 import { VisuallyHidden } from '@components/common/VisuallyHidden/index.tsx'
 import { inertExemptSlot } from '@hooks/useInertSiblings.ts'
-import { resolvePortalContainer } from '@utils/portalContainer.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
+import { usePortalContainer } from '@hooks/usePortalContainer.ts'
 import { useIsClient } from '@hooks/useIsClient.ts'
 import { useAnnouncer } from './useAnnouncer.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -39,7 +39,7 @@ export const ToastProvider = ({ children, container, position = defaultToastPosi
     return element
   }, [isClient])
 
-  const target = isClient ? resolvePortalContainer(container) : null
+  const target = usePortalContainer(container)
 
   useLayoutEffect(() => {
     if (!host || !target) return
