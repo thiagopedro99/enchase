@@ -52,7 +52,7 @@ export const Popover = ({
   const isTop = useOverlayStack(isOpen)
   const { contains, tree } = usePopoverTree(ref, mounted)
 
-  usePopoverPosition({ triggerRef, contentRef: ref, arrowRef, mounted, placement, offset, padding, rtl: dir === 'rtl' })
+  usePopoverPosition({ triggerRef, contentRef: ref, arrowRef, mounted: mounted && target !== null, placement, offset, padding, rtl: dir === 'rtl' })
   usePopoverDismiss({ open: isOpen, triggerRef, contentRef: ref, isTop, wasTopAtPointerDown: isTop.wasTopAtPointerDown, contains, closeOnEsc, closeOnOutsideClick, onClose: () => setOpen(false) })
 
   useEffect(() => {

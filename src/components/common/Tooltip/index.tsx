@@ -90,7 +90,7 @@ export const Tooltip = ({
   useLayoutEffect(() => {
     const bubble = presence.ref.current
     const reference = wrapperRef.current
-    if (!presence.mounted || !bubble || !reference) return undefined
+    if (!presence.mounted || !target || !bubble || !reference) return undefined
 
     let first = true
     const update = () => {
@@ -104,7 +104,7 @@ export const Tooltip = ({
     }
 
     return autoUpdate(reference, bubble, update)
-  }, [presence.mounted, presence.ref, position, dir])
+  }, [presence.mounted, presence.ref, position, dir, target])
 
   const trigger = describe && isValidElement(children) ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string | undefined }>, { 'aria-describedby': id }) : children
 
