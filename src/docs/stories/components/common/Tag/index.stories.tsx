@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button, Flex, Tag } from 'enchase'
 import { defaultSize, sizes, stack } from './defaultData.ts'
 
@@ -6,23 +6,44 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const RemovableDemo = () => {
   const [tags, setTags] = useState(stack)
+  const root = useRef<HTMLDivElement>(null)
+  const next = useRef<number | null>(null)
 
-  if (tags.length === 0) {
-    return (
-      <Button variant="outline" onClick={() => setTags(stack)}>
-        Bring the tags back
-      </Button>
-    )
+  useEffect(() => {
+    if (next.current === null) return
+
+    const buttons = root.current?.querySelectorAll('button') ?? []
+
+    buttons[Math.min(next.current, buttons.length - 1)]?.focus()
+    next.current = null
+  }, [tags])
+
+  const remove = (tag: string) => {
+    next.current = tags.indexOf(tag)
+    setTags((current) => current.filter((item) => item !== tag))
+  }
+
+  const restore = () => {
+    next.current = 0
+    setTags(stack)
   }
 
   return (
-    <Flex as="ul" wrap gap="0.5rem" aria-label="Stack" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-      {tags.map((tag) => (
-        <li key={tag}>
-          <Tag onRemove={() => setTags((current) => current.filter((item) => item !== tag))}>{tag}</Tag>
-        </li>
-      ))}
-    </Flex>
+    <div ref={root}>
+      {tags.length === 0 ? (
+        <Button variant="outline" onClick={restore}>
+          Bring the tags back
+        </Button>
+      ) : (
+        <Flex as="ul" wrap gap="0.5rem" aria-label="Stack" style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+          {tags.map((tag) => (
+            <li key={tag}>
+              <Tag onRemove={() => remove(tag)}>{tag}</Tag>
+            </li>
+          ))}
+        </Flex>
+      )}
+    </div>
   )
 }
 
@@ -65,7 +86,10 @@ type Story = StoryObj<typeof meta>
 export const Playground: Story = {}
 
 export const Removable: Story = {
-  parameters: { controls: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    docs: { description: { story: 'A tag does not move the focus when it leaves, so the story does: it goes to the button of the tag that takes its place, to the last one when the last tag was removed, and to the button that brings the tags back when none is left.' } }
+  },
   render: () => <RemovableDemo />
 }
 
