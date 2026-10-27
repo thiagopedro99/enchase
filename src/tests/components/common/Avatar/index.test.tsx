@@ -38,6 +38,30 @@ describe('Avatar', () => {
     expect(avatar.querySelector('[data-slot="avatar-fallback"]')).toHaveAttribute('aria-hidden', 'true')
   })
 
+  it('hides the fallback from assistive technology when there is a name, which the avatar already carries', () => {
+    renderWithProviders(<Avatar name="Ana Souza" data-testid="avatar" />)
+
+    expect(screen.getByTestId('avatar').querySelector('[data-slot="avatar-fallback"]')).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('hides the children used as the fallback when there is a name', () => {
+    renderWithProviders(
+      <Avatar name="Acme Ltda" data-testid="avatar">
+        <svg />
+      </Avatar>
+    )
+
+    expect(screen.getByTestId('avatar').querySelector('[data-slot="avatar-fallback"]')).toHaveAttribute('aria-hidden', 'true')
+  })
+
+  it('leaves the children readable when there is no name, since they are the only content', () => {
+    renderWithProviders(<Avatar data-testid="avatar">VIP</Avatar>)
+    const fallback = screen.getByTestId('avatar').querySelector('[data-slot="avatar-fallback"]')
+
+    expect(fallback).toHaveTextContent('VIP')
+    expect(fallback).not.toHaveAttribute('aria-hidden')
+  })
+
   it('shows the children instead of the initials', () => {
     renderWithProviders(
       <Avatar name="Acme Ltda">

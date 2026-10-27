@@ -29,7 +29,7 @@ export const Avatar = ({ name, src, size = defaultSize, children, ...props }: Av
   return (
     <span {...mergeProps(own, props)}>
       {status !== 'loaded' && (
-        <span className={styles.fallback} {...slot('avatar', 'fallback')} aria-hidden={!name && children === undefined ? 'true' : undefined}>
+        <span className={styles.fallback} {...slot('avatar', 'fallback')} aria-hidden={name || children === undefined ? 'true' : undefined}>
           {children ?? initialsOf(name ?? '')}
         </span>
       )}
