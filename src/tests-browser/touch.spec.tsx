@@ -14,6 +14,7 @@ import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Slider } from '@components/common/Slider/index.tsx'
+import { Table } from '@components/common/Table/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import { builtInStyleEntries } from '@tests/shared/fixtures/styles.ts'
@@ -323,6 +324,31 @@ describe('the slider on a touch device in a real browser', () => {
 
       expect(value()).toBe(30)
       expect(window.scrollY).toBeGreaterThan(300)
+    } finally {
+      await disableTouch()
+    }
+  })
+})
+
+describe('the sort buttons of the table on a touch device in a real browser', () => {
+  touchCapable('touchEmulation')('sorts with a tap and does not tint the cell on hover', async () => {
+    await enableTouch()
+    try {
+      const calls: unknown[] = []
+
+      renderInBrowser(<Table caption="Pedidos" columns={[{ key: 'id', header: 'Pedido', sortable: true }, { key: 'customer', header: 'Cliente', sortable: true }]} rows={[{ id: '#1', customer: 'Ana' }]} onSortChange={(sort) => calls.push(sort)} />)
+      const [first, second] = parts('table-sort')
+
+      expect(matchMedia('(hover: none)').matches).toBe(true)
+
+      await page.elementLocator(first).hover()
+      await frames(4)
+
+      expect(getComputedStyle(first, '::after').backgroundColor).toBe('rgba(0, 0, 0, 0)')
+
+      await page.elementLocator(second).click()
+
+      await expect.poll(() => calls).toEqual([{ key: 'customer', direction: 'ascending' }])
     } finally {
       await disableTouch()
     }

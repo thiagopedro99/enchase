@@ -12,6 +12,7 @@ import { Modal } from '@components/common/Modal/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Slider } from '@components/common/Slider/index.tsx'
+import { Table } from '@components/common/Table/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
@@ -171,6 +172,15 @@ describe('touch handling on the interactive controls', () => {
 
     expect(getComputedStyle(item).touchAction).toBe('manipulation')
     if (supportsTapHighlight) expect(getComputedStyle(item).getPropertyValue('-webkit-tap-highlight-color')).toBe(noHighlight)
+  })
+
+  it('applies the same handling to the sort buttons of the table', () => {
+    renderInBrowser(<Table caption="Pedidos" columns={[{ key: 'a', header: 'Pedido', sortable: true }]} rows={[{ a: '#1' }]} />)
+
+    const button = document.querySelector('[data-slot="table-sort"]') as HTMLElement
+
+    expect(getComputedStyle(button).touchAction).toBe('manipulation')
+    if (supportsTapHighlight) expect(getComputedStyle(button).getPropertyValue('-webkit-tap-highlight-color')).toBe(noHighlight)
   })
 
   it('leaves the horizontal drag of the slider to the control, with no tap highlight', () => {

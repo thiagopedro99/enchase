@@ -226,6 +226,19 @@ describe('the table from the hooks', () => {
 
     expect([style('table-empty').paddingTop, style('table-empty').color]).toEqual(['9px', 'rgb(1, 2, 3)'])
   })
+
+  it('takes the gap of the sort button and the size and the strength of its indicator from their hooks', () => {
+    renderInBrowser(
+      scoped(
+        { '--enchase-table-sort-gap': '13px', '--enchase-table-sort-icon-width': '21px', '--enchase-table-sort-icon-height': '19px', '--enchase-table-sort-icon-opacity': '0.7' },
+        <Table columns={[{ key: 'name', header: 'Name', sortable: true }]} rows={rows} />
+      )
+    )
+
+    expect(style('table-sort').columnGap).toBe('13px')
+    expect([style('table-sort-icon').width, style('table-sort-icon').height]).toEqual(['21px', '19px'])
+    expect(getComputedStyle(part('table-sort-icon').querySelector('path') as SVGPathElement).opacity).toBe('0.7')
+  })
 })
 
 describe('the accordion from the hooks', () => {

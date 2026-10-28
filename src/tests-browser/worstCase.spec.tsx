@@ -224,11 +224,12 @@ describe.each(widths)('worst case data at %ipx', (width) => {
       <Table
         caption={worstCase.longTitle}
         columns={[
-          { key: 'name', header: worstCase.germanCompound },
-          { key: 'email', header: 'E-mail' },
+          { key: 'name', header: worstCase.germanCompound, sortable: true },
+          { key: 'email', header: 'E-mail', sortable: true },
           { key: 'file', header: 'Arquivo' },
-          { key: 'url', header: 'Endereço' }
+          { key: 'url', header: worstCase.longTitle, sortable: true }
         ]}
+        sort={{ key: 'email', direction: 'descending' }}
         rows={[
           { name: worstCase.longName, email: worstCase.longEmail, file: worstCase.fileName, url: worstCase.longUrl },
           { name: worstCase.thaiName, email: worstCase.uuid, file: worstCase.longTag, url: worstCase.longStatus }
@@ -240,6 +241,17 @@ describe.each(widths)('worst case data at %ipx', (width) => {
     expect(audit(`table@${width}`).join(' | ')).toBe('')
     if (width === 320) expect(box.scrollWidth).toBeGreaterThan(box.clientWidth)
     expect(box.getBoundingClientRect().right).toBeLessThanOrEqual(document.documentElement.clientWidth + 0.5)
+  })
+
+  it('keeps the table inside the page while it loads and with a sticky header', async () => {
+    await setup(
+      <div style={{ display: 'grid', gap: 12 }}>
+        <Table caption={worstCase.longTitle} columns={[{ key: 'name', header: worstCase.germanCompound, sortable: true }, { key: 'email', header: 'E-mail' }]} rows={[]} loading />
+        <Table caption={worstCase.longTitle} columns={[{ key: 'name', header: worstCase.germanCompound, sortable: true }, { key: 'email', header: 'E-mail' }]} rows={Array.from({ length: 12 }, () => ({ name: worstCase.longName, email: worstCase.longEmail }))} stickyHeader style={{ maxBlockSize: 160 }} />
+      </div>
+    )
+
+    expect(audit(`loading table@${width}`).join(' | ')).toBe('')
   })
 
   it('keeps the breadcrumbs inside the page', async () => {

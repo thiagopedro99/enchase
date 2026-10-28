@@ -112,6 +112,7 @@ const everything = (
     />
     <Pagination pageCount={5} defaultPage={2} />
     <Table caption="Orders" columns={[{ key: 'name', header: 'Name' }]} rows={[{ name: 'Ana' }]} />
+    <Table caption="Sorted orders" columns={[{ key: 'name', header: 'Name', sortable: true }, { key: 'total', header: 'Total', align: 'end', sortable: true }]} rows={[{ name: 'Ana', total: 10 }]} sort={{ key: 'name', direction: 'ascending' }} />
     <Card>Card text</Card>
     <CardButton>Button tile text</CardButton>
     <CardLink href="/tile" variant="outlined">
