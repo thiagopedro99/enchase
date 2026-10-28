@@ -120,6 +120,17 @@
   overflow-wrap: anywhere;
 }
 
+.select {
+  inline-size: 1%;
+  padding-block: 0;
+  text-align: center;
+}
+
+.select > [data-slot='checkbox'] {
+  display: flex;
+  justify-content: center;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .sort:hover::after {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
@@ -159,9 +170,18 @@
   background-color: var(--enchase-table-row-background-striped, var(--enchase-color-surface-container-low));
 }
 
+.row[data-selected] {
+  background-color: var(--enchase-table-row-background-selected, var(--enchase-color-surface-container-high));
+}
+
 @media (hover: hover) and (pointer: fine) {
   .row:not([data-placeholder]):hover {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-row-hover, 0.06) * 100%), transparent);
+  }
+
+  .row[data-selected]:not([data-placeholder]):hover {
+    background-color: var(--enchase-table-row-background-selected, var(--enchase-color-surface-container-high));
+    background-image: linear-gradient(color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-row-hover, 0.06) * 100%), transparent), color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-row-hover, 0.06) * 100%), transparent));
   }
 }
 

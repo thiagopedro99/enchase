@@ -56,6 +56,24 @@ const SortableDemo = () => {
   )
 }
 
+const SelectableDemo = () => {
+  const [selected, setSelected] = useState<(string | number)[]>(['#1041'])
+  const [sort, setSort] = useState<TableSort>({ key: 'date', direction: 'descending' })
+  const rows = [...orders].sort((a, b) => (sort.direction === 'ascending' ? 1 : -1) * compareOrders(a, b, sort.key)).slice(0, 6)
+
+  return (
+    <div style={{ display: 'grid', gap: '0.75rem', justifyItems: 'start', inlineSize: 'min(48rem, 100%)' }}>
+      <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <Button size="sm" variant="outline" onClick={() => setSelected([])} disabled={selected.length === 0}>
+          Clear selection
+        </Button>
+        <span style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>{selected.length} selected</span>
+      </div>
+      <Table caption="Orders" columns={sortableColumns} rows={rows} getRowKey={(row) => row.id} sort={sort} onSortChange={setSort} selectedKeys={selected} onSelectedKeysChange={setSelected} style={{ inlineSize: '100%' }} />
+    </div>
+  )
+}
+
 const ReloadDemo = () => {
   const [loading, setLoading] = useState(false)
 
@@ -110,7 +128,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'A semantic data table, built from `columns` and `rows`: a `<table>` with a caption (`<caption>`), column headers (`scope="col"`), optional row headers and cells that accept any content through the `cell` function. It is generic: the row type flows from the `rows` to the columns. When the table is wider than the space available, the container scrolls horizontally and becomes a focusable region with the name of the table, for keyboard-only users. It does not order or paginate the data itself: with `sortable` columns, `sort` and `onSortChange` it draws the sort buttons and marks `aria-sort` while the app orders the `rows`, and for pages you use the `Pagination` next to it. `stickyHeader` keeps the header in view while the rows scroll, and `loading` swaps the rows for placeholders. It accepts a `ref`, which goes to the container, and the attributes of the `<div>`; `className` and `style` go to it as well.'
+          'A semantic data table, built from `columns` and `rows`: a `<table>` with a caption (`<caption>`), column headers (`scope="col"`), optional row headers and cells that accept any content through the `cell` function. It is generic: the row type flows from the `rows` to the columns. When the table is wider than the space available, the container scrolls horizontally and becomes a focusable region with the name of the table, for keyboard-only users. It does not order or paginate the data itself: with `sortable` columns, `sort` and `onSortChange` it draws the sort buttons and marks `aria-sort` while the app orders the `rows`, and for pages you use the `Pagination` next to it. `stickyHeader` keeps the header in view while the rows scroll, `loading` swaps the rows for placeholders, and `selectedKeys` adds a column of checkboxes, with a select all in the header, that the app keeps in state. It accepts a `ref`, which goes to the container, and the attributes of the `<div>`; `className` and `style` go to it as well.'
       }
     }
   },
@@ -170,6 +188,14 @@ const meta = {
       description: 'Keeps the header at the top of the table while the rows scroll under it. It only works when the table has a height limit, such as `style={{ maxBlockSize: "16rem" }}`: without one the page scrolls and the header goes with it.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultStickyHeader) } }
+    },
+    selectedKeys: {
+      description: 'The keys of the selected rows, in a list that the app keeps. Passing it, even empty, adds a first column with a checkbox per row and a select all in the header, which is checked when every row is selected and mixed when only some are. A key is what `getRowKey` returns for the row, or its position when there is no `getRowKey`, so pass `getRowKey` when the rows can be sorted or filtered. Keys of rows that are not in the table, such as those of another page, are kept. A selected row has `data-selected`. The table is not a grid, so there is no `aria-selected`.',
+      control: false
+    },
+    onSelectedKeysChange: {
+      description: 'Called with the whole new list of keys when a row box or the select all box is used. A row is added at the end or taken out; the select all adds the rows that are missing, or takes out the rows of the table when they are all selected. It does not change anything by itself: pass the list back in `selectedKeys`. The names of the boxes come from the `selectRow` and `selectAllRows` labels, and each row box also reads the row header.',
+      control: false
     },
     loading: {
       description: 'Swaps the rows for placeholder rows, as many as the rows or five when there are none, marks the table `aria-busy` and announces the loading label. The `empty` content waits until it stops loading. Pass a boolean always, even false, so the announcement works: the status region is created when the prop is not undefined.',
@@ -241,4 +267,12 @@ export const WithHeaderNodes: Story = {
 export const WithPagination: Story = {
   parameters: { controls: { disable: true } },
   render: () => <PaginatedDemo />
+}
+
+export const Selectable: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: { description: { story: 'Passing `selectedKeys` adds a column of checkboxes. The select all box in the header is checked when every row is selected and mixed when only some are, and the selected rows are marked with `data-selected`. The app owns the list: `onSelectedKeysChange` gets the whole new list and the table shows what is passed back. The selection follows the record by its key, so it survives sorting, as here.' } }
+  },
+  render: () => <SelectableDemo />
 }

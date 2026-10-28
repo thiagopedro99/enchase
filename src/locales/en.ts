@@ -31,7 +31,9 @@ export const en: Locale = {
     nextPage: 'Next page',
     increaseValue: 'Increase value',
     decreaseValue: 'Decrease value',
-    removeTag: 'Remove'
+    removeTag: 'Remove',
+    selectRow: 'Select row',
+    selectAllRows: 'Select all rows'
   }
 }
 

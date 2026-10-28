@@ -7,6 +7,8 @@ export interface TableSort {
   direction: TableSortDirection
 }
 
+export type TableRowKey = string | number
+
 export interface TableColumn<Row> {
   key: string
   header: ReactNode
@@ -30,4 +32,6 @@ export interface TableProps<Row> extends Omit<HTMLAttributes<HTMLDivElement>, 'c
   onSortChange?: ((sort: TableSort) => void) | undefined
   stickyHeader?: boolean | undefined
   loading?: boolean | undefined
+  selectedKeys?: TableRowKey[] | undefined
+  onSelectedKeysChange?: ((keys: TableRowKey[]) => void) | undefined
 }

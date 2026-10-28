@@ -705,7 +705,7 @@ Also accepts the other attributes of `<input>`, passed on to the element. Forwar
 
 ### Table
 
-A semantic data table, built from `columns` and `rows`: a `<table>` with a caption (`<caption>`), column headers (`scope="col"`), optional row headers and cells that accept any content through the `cell` function. It is generic: the row type flows from the `rows` to the columns. When the table is wider than the space available, the container scrolls horizontally and becomes a focusable region with the name of the table, for keyboard-only users. It does not order or paginate the data itself: with `sortable` columns, `sort` and `onSortChange` it draws the sort buttons and marks `aria-sort` while the app orders the `rows`, and for pages you use the `Pagination` next to it. `stickyHeader` keeps the header in view while the rows scroll, and `loading` swaps the rows for placeholders. It accepts a `ref`, which goes to the container, and the attributes of the `<div>`; `className` and `style` go to it as well.
+A semantic data table, built from `columns` and `rows`: a `<table>` with a caption (`<caption>`), column headers (`scope="col"`), optional row headers and cells that accept any content through the `cell` function. It is generic: the row type flows from the `rows` to the columns. When the table is wider than the space available, the container scrolls horizontally and becomes a focusable region with the name of the table, for keyboard-only users. It does not order or paginate the data itself: with `sortable` columns, `sort` and `onSortChange` it draws the sort buttons and marks `aria-sort` while the app orders the `rows`, and for pages you use the `Pagination` next to it. `stickyHeader` keeps the header in view while the rows scroll, `loading` swaps the rows for placeholders, and `selectedKeys` adds a column of checkboxes, with a select all in the header, that the app keeps in state. It accepts a `ref`, which goes to the container, and the attributes of the `<div>`; `className` and `style` go to it as well.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -721,6 +721,8 @@ A semantic data table, built from `columns` and `rows`: a `<table>` with a capti
 | `onSortChange` | `(sort: TableSort) => void` | — | Called when a sort button is activated, with the sort that was asked for: ascending for a column that is not sorted and the opposite direction for the sorted one. It does not change anything by itself: order the rows and pass the new `sort` back. Without it the buttons do nothing. |
 | `stickyHeader` | `boolean` | `false` | Keeps the header at the top of the table while the rows scroll under it. It only works when the table has a height limit, such as `style={{ maxBlockSize: "16rem" }}`: without one the page scrolls and the header goes with it. |
 | `loading` | `boolean` | `false` | Swaps the rows for placeholder rows, as many as the rows or five when there are none, marks the table `aria-busy` and announces the loading label. The `empty` content waits until it stops loading. Pass a boolean always, even false, so the announcement works: the status region is created when the prop is not undefined. |
+| `selectedKeys` | `TableRowKey[]` | — | The keys of the selected rows, in a list that the app keeps. Passing it, even empty, adds a first column with a checkbox per row and a select all in the header, which is checked when every row is selected and mixed when only some are. A key is what `getRowKey` returns for the row, or its position when there is no `getRowKey`, so pass `getRowKey` when the rows can be sorted or filtered. Keys of rows that are not in the table, such as those of another page, are kept. A selected row has `data-selected`. The table is not a grid, so there is no `aria-selected`. |
+| `onSelectedKeysChange` | `(keys: TableRowKey[]) => void` | — | Called with the whole new list of keys when a row box or the select all box is used. A row is added at the end or taken out; the select all adds the rows that are missing, or takes out the rows of the table when they are all selected. It does not change anything by itself: pass the list back in `selectedKeys`. The names of the boxes come from the `selectRow` and `selectAllRows` labels, and each row box also reads the row header. |
 
 Also accepts the other attributes of `<div>`, passed on to the element. Forwards the `ref` to `<div>`.
 
@@ -1950,6 +1952,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-table-header-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-table-header-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 | `--enchase-table-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-table-row-background-selected` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-table-row-background-striped` | `var(--enchase-color-surface-container-low)` | `background-color` |
 | `--enchase-table-row-header-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-table-sort-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |

@@ -31,7 +31,9 @@ export const ptBR: Locale = {
     nextPage: 'Próxima página',
     increaseValue: 'Aumentar valor',
     decreaseValue: 'Diminuir valor',
-    removeTag: 'Remover'
+    removeTag: 'Remover',
+    selectRow: 'Selecionar linha',
+    selectAllRows: 'Selecionar todas as linhas'
   }
 }
 

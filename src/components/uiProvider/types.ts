@@ -38,6 +38,8 @@ export type UILabels = {
   increaseValue?: string | undefined
   decreaseValue?: string | undefined
   removeTag?: string | undefined
+  selectRow?: string | undefined
+  selectAllRows?: string | undefined
 }
 
 export type UIConfig = {

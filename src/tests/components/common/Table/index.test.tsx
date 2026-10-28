@@ -607,3 +607,295 @@ describe('Table loading', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('Table row selection', () => {
+  const byId = (row: Order) => row.id
+
+  const boxes = () => screen.getAllByRole('checkbox') as HTMLInputElement[]
+
+  const SelectableTable = ({ initial = [], rows = orders, ...props }: { initial?: (string | number)[]; rows?: Order[] } & Partial<Parameters<typeof Table<Order>>[0]>) => {
+    const [selected, setSelected] = useState(initial)
+
+    return <Table caption="Pedidos" columns={columns} rows={rows} getRowKey={byId} selectedKeys={selected} onSelectedKeysChange={setSelected} {...props} />
+  }
+
+  it('has no selection column and no checkbox until selectedKeys is given', () => {
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} onSelectedKeysChange={vi.fn()} />)
+
+    expect(screen.queryAllByRole('checkbox')).toHaveLength(0)
+    expect(screen.getAllByRole('columnheader')).toHaveLength(3)
+  })
+
+  it('adds a column with a checkbox per row and one in the header when selectedKeys is given, even if it is empty', () => {
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={[]} />)
+
+    expect(boxes()).toHaveLength(4)
+    expect(screen.getAllByRole('columnheader')).toHaveLength(4)
+    expect(within(screen.getAllByRole('row')[0]).getAllByRole('checkbox')).toHaveLength(1)
+    expect(within(screen.getAllByRole('row')[2]).getAllByRole('checkbox')).toHaveLength(1)
+  })
+
+  it('names the select all box from the labels, and each row box with the label and the row header', () => {
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={[]} />)
+
+    expect(screen.getByRole('checkbox', { name: 'Selecionar todas as linhas' })).toBeInTheDocument()
+    expect(screen.getByRole('checkbox', { name: 'Selecionar linha #1001' })).toBeInTheDocument()
+    expect(screen.getByRole('checkbox', { name: 'Selecionar linha #1003' })).toBeInTheDocument()
+  })
+
+  it('names the row boxes with the label alone when no column is a row header', () => {
+    renderWithProviders(<Table columns={columns.map(({ rowHeader, ...column }) => (void rowHeader, column))} rows={orders} getRowKey={byId} selectedKeys={[]} />)
+
+    expect(screen.getAllByRole('checkbox', { name: 'Selecionar linha' })).toHaveLength(3)
+  })
+
+  it('takes the names from the labels of the provider', () => {
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={[]} />, { labels: { selectRow: 'Pick', selectAllRows: 'Pick them all' } })
+
+    expect(screen.getByRole('checkbox', { name: 'Pick them all' })).toBeInTheDocument()
+    expect(screen.getByRole('checkbox', { name: 'Pick #1002' })).toBeInTheDocument()
+  })
+
+  it('checks the boxes of the selected keys and marks their rows, and no row is aria-selected', () => {
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={['#1002']} />)
+    const rows = screen.getAllByRole('row')
+
+    expect(boxes().map((box) => box.checked)).toEqual([false, false, true, false])
+    expect(rows[2]).toHaveAttribute('data-selected')
+    expect(rows[1]).not.toHaveAttribute('data-selected')
+    expect(rows[3]).not.toHaveAttribute('data-selected')
+    expect(document.querySelector('[aria-selected]')).toBeNull()
+  })
+
+  it('uses the index of the row as its key when there is no getRowKey', () => {
+    renderWithProviders(<Table columns={columns} rows={orders} selectedKeys={[2]} />)
+
+    expect(boxes().map((box) => box.checked)).toEqual([false, false, false, true])
+  })
+
+  it('ignores the selected keys that are not among the rows, and keeps them when it asks for a change', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={['#9999']} onSelectedKeysChange={onChange} />)
+
+    expect(boxes().map((box) => box.checked)).toEqual([false, false, false, false])
+    expect(boxes()[0]).not.toBePartiallyChecked()
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar linha #1001' }))
+
+    expect(onChange).toHaveBeenCalledWith(['#9999', '#1001'])
+  })
+
+  it('asks for the key of the row added at the end, and without it when the row is unchecked', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={['#1003', '#1001']} onSelectedKeysChange={onChange} />)
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar linha #1002' }))
+    expect(onChange).toHaveBeenLastCalledWith(['#1003', '#1001', '#1002'])
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar linha #1003' }))
+    expect(onChange).toHaveBeenLastCalledWith(['#1001'])
+  })
+
+  it('leaves the boxes as they are until the app passes the new keys', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={[]} onSelectedKeysChange={vi.fn()} />)
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar linha #1001' }))
+
+    expect(boxes().every((box) => !box.checked)).toBe(true)
+    expect(document.querySelector('[data-selected]')).toBeNull()
+  })
+
+  it('does nothing and does not throw without onSelectedKeysChange', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={[]} />)
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar linha #1001' }))
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar todas as linhas' }))
+
+    expect(boxes().every((box) => !box.checked)).toBe(true)
+  })
+
+  it('shows the select all box unchecked, mixed and checked as the rows are selected', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<SelectableTable />)
+    const all = screen.getByRole('checkbox', { name: 'Selecionar todas as linhas' })
+
+    expect(all).not.toBeChecked()
+    expect(all).not.toBePartiallyChecked()
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar linha #1001' }))
+    expect(all).toBePartiallyChecked()
+    expect(all).not.toBeChecked()
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar linha #1002' }))
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar linha #1003' }))
+    expect(all).toBeChecked()
+    expect(all).not.toBePartiallyChecked()
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar linha #1002' }))
+    expect(all).toBePartiallyChecked()
+  })
+
+  it('selects every row from the select all box, from none and from a partial selection', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    const Switching = () => {
+      const [partial, setPartial] = useState(false)
+
+      return (
+        <>
+          <button onClick={() => setPartial(true)}>Parcial</button>
+          <Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={partial ? ['#1003'] : []} onSelectedKeysChange={onChange} />
+        </>
+      )
+    }
+    renderWithProviders(<Switching />)
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar todas as linhas' }))
+    expect(onChange).toHaveBeenLastCalledWith(['#1001', '#1002', '#1003'])
+
+    await user.click(screen.getByRole('button', { name: 'Parcial' }))
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar todas as linhas' }))
+    expect(onChange).toHaveBeenLastCalledWith(['#1003', '#1001', '#1002'])
+  })
+
+  it('clears only the rows of the table from the select all box when every row is selected', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={['#7000', '#1001', '#1002', '#1003']} onSelectedKeysChange={onChange} />)
+
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar todas as linhas' }))
+
+    expect(onChange).toHaveBeenCalledWith(['#7000'])
+  })
+
+  it('works through a full cycle with the state in the app', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<SelectableTable initial={['#1001']} />)
+    const all = screen.getByRole('checkbox', { name: 'Selecionar todas as linhas' })
+
+    expect(all).toBePartiallyChecked()
+    await user.click(all)
+    expect(boxes().every((box) => box.checked)).toBe(true)
+    expect(all).not.toBePartiallyChecked()
+
+    await user.click(all)
+    expect(boxes().every((box) => !box.checked)).toBe(true)
+    expect(document.querySelector('[data-selected]')).toBeNull()
+  })
+
+  it('keeps the selection with the record when the rows are reordered', async () => {
+    const user = userEvent.setup()
+    const Reorderable = () => {
+      const [reversed, setReversed] = useState(false)
+
+      return (
+        <>
+          <button onClick={() => setReversed(true)}>Inverter</button>
+          <SelectableTable initial={['#1001']} rows={reversed ? [...orders].reverse() : orders} />
+        </>
+      )
+    }
+    renderWithProviders(<Reorderable />)
+
+    expect(screen.getAllByRole('row')[1]).toHaveAttribute('data-selected')
+    await user.click(screen.getByRole('button', { name: 'Inverter' }))
+
+    expect(screen.getAllByRole('row')[3]).toHaveAttribute('data-selected')
+    expect(screen.getByRole('checkbox', { name: 'Selecionar linha #1001' })).toBeChecked()
+    expect(screen.getAllByRole('row')[1]).not.toHaveAttribute('data-selected')
+  })
+
+  it('disables the select all box when there are no rows, and shows the empty content across the new column too', () => {
+    renderWithProviders(<Table columns={columns} rows={[]} selectedKeys={[]} empty="Nenhum pedido" />)
+
+    expect(screen.getByRole('checkbox', { name: 'Selecionar todas as linhas' })).toBeDisabled()
+    expect(screen.getByText('Nenhum pedido')).toHaveAttribute('colspan', '4')
+  })
+
+  it('disables the select all box while it loads and gives the placeholder rows a cell for the column', () => {
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={['#1001']} loading />)
+    const placeholders = [...document.querySelectorAll('[data-placeholder]')]
+
+    expect(screen.getByRole('checkbox', { name: 'Selecionar todas as linhas', hidden: false })).toBeDisabled()
+    expect(placeholders).toHaveLength(3)
+    expect(placeholders.every((row) => row.children.length === 4)).toBe(true)
+    expect(placeholders.every((row) => row.querySelector('input') === null)).toBe(true)
+    expect(document.querySelector('[data-selected]')).toBeNull()
+  })
+
+  it('shows the boxes again when it stops loading, with the selection kept', async () => {
+    const user = userEvent.setup()
+    const Loadable = () => {
+      const [loading, setLoading] = useState(true)
+
+      return (
+        <>
+          <button onClick={() => setLoading(false)}>Pronto</button>
+          <Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={['#1002']} loading={loading} />
+        </>
+      )
+    }
+    renderWithProviders(<Loadable />)
+
+    await user.click(screen.getByRole('button', { name: 'Pronto' }))
+
+    expect(screen.getByRole('checkbox', { name: 'Selecionar linha #1002' })).toBeChecked()
+    expect(screen.getByRole('checkbox', { name: 'Selecionar todas as linhas' })).toBeEnabled()
+  })
+
+  it('works along with the sorting, whose buttons stay in the other headers', async () => {
+    const user = userEvent.setup()
+    const onSortChange = vi.fn()
+    renderWithProviders(<SelectableTable columns={columns.map((column) => ({ ...column, sortable: column.key !== 'total' }))} sort={{ key: 'id', direction: 'ascending' }} onSortChange={onSortChange} />)
+
+    await user.click(screen.getByRole('button', { name: 'Cliente' }))
+    await user.click(screen.getByRole('checkbox', { name: 'Selecionar linha #1002' }))
+
+    expect(onSortChange).toHaveBeenCalledWith({ key: 'customer', direction: 'ascending' })
+    expect(screen.getByRole('checkbox', { name: 'Selecionar linha #1002' })).toBeChecked()
+    expect(screen.getByRole('columnheader', { name: 'Pedido' })).toHaveAttribute('aria-sort', 'ascending')
+  })
+
+  it('is reachable by keyboard, header box first, and toggles with Space', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<SelectableTable />)
+
+    await user.tab()
+    expect(screen.getByRole('checkbox', { name: 'Selecionar todas as linhas' })).toHaveFocus()
+    await user.tab()
+    expect(screen.getByRole('checkbox', { name: 'Selecionar linha #1001' })).toHaveFocus()
+    await user.keyboard(' ')
+
+    expect(screen.getByRole('checkbox', { name: 'Selecionar linha #1001' })).toBeChecked()
+  })
+
+  it('marks the select cells with a data-slot, and the boxes inside them with the checkbox ones', () => {
+    renderWithProviders(<Table columns={columns} rows={orders} getRowKey={byId} selectedKeys={[]} />)
+
+    expect(document.querySelector('th[data-slot="table-select-header"] [data-slot="checkbox"]')).toBeInTheDocument()
+    expect(document.querySelectorAll('td[data-slot="table-select"] [data-slot="checkbox"]')).toHaveLength(3)
+  })
+
+  it('does not pass the selection props to the page', () => {
+    const { container } = renderWithProviders(<Table columns={columns} rows={orders} selectedKeys={[0]} onSelectedKeysChange={vi.fn()} />)
+
+    expect(container.querySelector('[selectedkeys], [onselectedkeyschange], [selectedKeys]')).toBeNull()
+  })
+
+  it('has no axe violations with the boxes, with a partial selection and with every feature on', async () => {
+    const { container } = renderWithProviders(
+      <>
+        <Table caption="Vazia" columns={columns} rows={orders} getRowKey={byId} selectedKeys={[]} />
+        <Table caption="Parcial" columns={columns} rows={orders} getRowKey={byId} selectedKeys={['#1001']} />
+        <Table caption="Completa" columns={columns.map((column) => ({ ...column, sortable: true }))} rows={orders} getRowKey={byId} selectedKeys={['#1001', '#1002', '#1003']} sort={{ key: 'id', direction: 'descending' }} stickyHeader striped size="sm" />
+        <Table caption="Carregando" columns={columns} rows={orders} getRowKey={byId} selectedKeys={[]} loading />
+      </>
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
