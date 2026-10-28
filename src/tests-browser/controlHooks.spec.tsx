@@ -201,7 +201,7 @@ describe('the modal, the popover and the tooltip from the hooks', () => {
       ['--enchase-popover-arrow-size', '12px', at('popover-arrow'), 'top', '-6px'],
       ['--enchase-popover-content-background', 'rgb(1, 2, 3)', at('popover-content'), 'background-color'],
       ['--enchase-popover-content-color', 'rgb(4, 5, 6)', at('popover-content'), 'color'],
-      ['--enchase-popover-content-padding-inline', '19px', at('popover-content'), 'padding-left']
+      ['--enchase-popover-content-padding-inline', '19px', at('popover-body'), 'padding-left']
     ] as Parameters<typeof expectHooks>[0]
 
     setHooks(probes)
@@ -215,6 +215,46 @@ describe('the modal, the popover and the tooltip from the hooks', () => {
     await expect.poll(() => parts('popover-content').length).toBe(1)
 
     expectHooks(probes)
+  })
+
+  it('takes the border of the content and of the arrow from the border hooks, and keeps the arrow on the outer edge of the border', async () => {
+    const probes = [
+      ['--enchase-popover-content-border-width', '3px', at('popover-content'), 'border-top-width'],
+      ['--enchase-popover-content-border-width', '3px', at('popover-arrow'), 'border-top-width'],
+      ['--enchase-popover-content-border-width', '3px', at('popover-arrow'), 'border-left-width'],
+      ['--enchase-popover-content-border-width', '3px', at('popover-arrow'), 'border-bottom-width', '0px'],
+      ['--enchase-popover-content-border-color', 'rgb(7, 8, 9)', at('popover-content'), 'border-top-color'],
+      ['--enchase-popover-content-border-color', 'rgb(7, 8, 9)', at('popover-arrow'), 'border-top-color']
+    ] as Parameters<typeof expectHooks>[0]
+
+    setHooks(probes)
+    renderInBrowser(
+      <div style={{ padding: '4rem' }}>
+        <Popover defaultOpen arrow content={<p>Content</p>}>
+          <button type="button">Open</button>
+        </Popover>
+      </div>
+    )
+    await expect.poll(() => parts('popover-content').length).toBe(1)
+    const arrow = part('popover-arrow').getBoundingClientRect()
+
+    expectHooks(probes)
+    expect(arrow.top + arrow.height / 2).toBeCloseTo(part('popover-content').getBoundingClientRect().top, 0)
+  })
+
+  it('keeps the arrow on the edge of the box when the border width is written without a unit', async () => {
+    onRoot({ '--enchase-popover-content-border-width': '0' })
+    renderInBrowser(
+      <div style={{ padding: '4rem' }}>
+        <Popover defaultOpen arrow content={<p>Content</p>}>
+          <button type="button">Open</button>
+        </Popover>
+      </div>
+    )
+    await expect.poll(() => parts('popover-content').length).toBe(1)
+    const arrow = part('popover-arrow').getBoundingClientRect()
+
+    expect(arrow.top + arrow.height / 2).toBeCloseTo(part('popover-content').getBoundingClientRect().top, 0)
   })
 
   it('takes the color of the bubble of a tooltip from its hook', async () => {

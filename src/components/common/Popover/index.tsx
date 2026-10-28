@@ -47,19 +47,20 @@ export const Popover = ({
   const id = useId()
   const triggerRef = useRef<HTMLSpanElement>(null)
   const arrowRef = useRef<HTMLSpanElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
   const byKeyboard = useRef(false)
   const motionStyle = useMotionStyle('pop', 'popover', animation, undefined, popoverBase)
   const isTop = useOverlayStack(isOpen)
   const { contains, tree } = usePopoverTree(ref, mounted)
 
   usePopoverPosition({ triggerRef, contentRef: ref, arrowRef, mounted: mounted && target !== null, placement, offset, padding, rtl: dir === 'rtl' })
-  usePopoverDismiss({ open: isOpen, triggerRef, contentRef: ref, isTop, wasTopAtPointerDown: isTop.wasTopAtPointerDown, contains, closeOnEsc, closeOnOutsideClick, onClose: () => setOpen(false) })
+  usePopoverDismiss({ open: isOpen, triggerRef, contentRef: ref, bodyRef, isTop, wasTopAtPointerDown: isTop.wasTopAtPointerDown, contains, closeOnEsc, closeOnOutsideClick, onClose: () => setOpen(false) })
 
   useEffect(() => {
     if (state !== 'entering' || !byKeyboard.current || !ref.current) return
 
     byKeyboard.current = false
-    focusFirst(ref.current)
+    focusFirst(ref.current, bodyRef.current)
   }, [state, ref])
 
   const handleClick = (event: MouseEvent) => {
@@ -72,7 +73,7 @@ export const Popover = ({
     if (event.key !== 'Tab' || event.shiftKey || !isOpen || !ref.current || event.target !== items[items.length - 1]) return
 
     event.preventDefault()
-    focusFirst(ref.current)
+    focusFirst(ref.current, bodyRef.current)
   }
 
   const trigger = isValidElement(children) ? cloneElement(children as ReactElement<Record<string, unknown>>, { 'aria-expanded': isOpen, 'aria-controls': isOpen ? id : undefined, 'aria-haspopup': role }) : children
@@ -103,7 +104,9 @@ export const Popover = ({
           mounted ? (
             <PopoverTreeContext.Provider value={tree}>
               <div {...contentProps}>
-                {content}
+                <div ref={bodyRef} tabIndex={-1} {...slot('popover', 'body')} className={styles.body}>
+                  {content}
+                </div>
                 {arrow && <span ref={arrowRef} aria-hidden="true" {...slot('popover', 'arrow')} className={styles.arrow} />}
               </div>
             </PopoverTreeContext.Provider>

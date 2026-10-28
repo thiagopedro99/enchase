@@ -202,9 +202,9 @@ overscrollSuite('scrolling inside the overlays', () => {
         <button>Gatilho</button>
       </Popover>
     )
-    await expect.poll(() => document.querySelector('[data-slot="popover-content"]')).toBeTruthy()
+    await expect.poll(() => document.querySelector('[data-slot="popover-body"]')).toBeTruthy()
 
-    expect(overscrollOf('popover-content')).toBe('contain')
+    expect(overscrollOf('popover-body')).toBe('contain')
   })
 
   it('stops the page from chaining scroll while a modal locks it and restores everything after', async () => {

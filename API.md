@@ -489,14 +489,14 @@ A floating panel attached to a trigger. Its position adjusts itself near the edg
 | `padding` | `number` | `8` | Margin in px to the edge of the window. |
 | `role` | `'dialog' \| 'listbox' \| 'tree' \| 'grid'` | `'dialog'` | Role of the content, which also becomes aria-haspopup on the trigger. The default is dialog; menu is not supported because it needs its own arrow-key navigation. |
 | `label` | `string` | — | Accessible name of the content (aria-label). |
-| `arrow` | `boolean` | `false` | Shows an arrow that points to the trigger. |
+| `arrow` | `boolean` | `false` | Shows an arrow that points to the trigger. When the box has a border (--enchase-popover-content-border-width), the arrow carries the border on its two outer sides. |
 | `closeOnEsc` | `boolean` | `true` | Esc closes only the top layer and returns the focus to the trigger. |
 | `closeOnOutsideClick` | `boolean` | `true` | A click outside closes the popover without taking the focus away from where the click landed. |
 | `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
 | `animation` | `false \| { recipe, tuning }` | `pop` | false turns off the transition. { recipe: "fade" } swaps the pop for a fade; { tuning: { duration, scale } } adjusts the duration and the scale. |
 | `className` | `string` | — | Class of the element that wraps the trigger (data-slot="popover-trigger"). |
 | `style` | `CSSProperties` | — | Style of the element that wraps the trigger. |
-| `contentClassName` | `string` | — | Class of the content (data-slot="popover-content"). You can also style it by data-state and data-placement. |
+| `contentClassName` | `string` | — | Class of the content (data-slot="popover-content"), the box that carries the background, the border, the shadow and the arrow. What scrolls and carries the padding is the body (data-slot="popover-body"). You can also style it by data-state and data-placement. |
 | `contentStyle` | `CSSProperties` | — | Style of the content. |
 
 ### Progress
@@ -1442,7 +1442,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-popover-arrow-size` | `10px` | `inline-size`, `block-size`, `inset-block-end`, `inset-block-start`, `right`, `left` |
 | `--enchase-popover-content-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-popover-content-border-color` | `transparent` | `border` |
-| `--enchase-popover-content-border-width` | `0` | `border` |
+| `--enchase-popover-content-border-width` | `0px` | `border`, `--arrow-border` |
 | `--enchase-popover-content-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-popover-content-padding-block` | `1rem` (`--enchase-space-md`) | `padding-block` |
 | `--enchase-popover-content-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |

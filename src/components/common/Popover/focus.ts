@@ -1,7 +1,7 @@
 import { tabbablesIn } from '@utils/tabbable.ts'
 
-export const focusFirst = (container: HTMLElement) => {
-  const target = tabbablesIn(container)[0] ?? container
+export const focusFirst = (container: HTMLElement, fallback: HTMLElement | null) => {
+  const target = tabbablesIn(container)[0] ?? fallback ?? container
   target.focus({ preventScroll: true })
 }
 

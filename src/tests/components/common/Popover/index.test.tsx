@@ -275,6 +275,36 @@ describe('Popover', () => {
     expect(document.querySelector('[data-slot="popover-trigger"]')).toHaveStyle({ color: 'rgb(1, 2, 3)' })
   })
 
+  it('puts the content in a body of its own and the arrow next to the body, outside the part that scrolls', async () => {
+    renderWithProviders(
+      <Popover defaultOpen arrow content={content}>
+        <button>Abrir</button>
+      </Popover>
+    )
+    const dialog = await screen.findByRole('dialog')
+    const body = dialog.querySelector('[data-slot="popover-body"]') as HTMLElement
+    const arrow = dialog.querySelector('[data-slot="popover-arrow"]') as HTMLElement
+
+    expect(body.parentElement).toBe(dialog)
+    expect(within(body).getByRole('button', { name: 'Dentro' })).toBeInTheDocument()
+    expect(arrow.parentElement).toBe(dialog)
+    expect(body.contains(arrow)).toBe(false)
+  })
+
+  it('moves the focus to the body when the content has nothing to tab to and the popover opens by keyboard', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Popover content={<p>Só texto</p>}>
+        <button>Abrir</button>
+      </Popover>
+    )
+    screen.getByRole('button', { name: 'Abrir' }).focus()
+    await user.keyboard('{Enter}')
+    const dialog = await screen.findByRole('dialog')
+
+    await waitFor(() => expect(dialog.querySelector('[data-slot="popover-body"]')).toHaveFocus())
+  })
+
   it('exposes the motion as variables and turns them off with animation false', async () => {
     const { unmount } = renderWithProviders(
       <Popover defaultOpen content={content}>

@@ -65,7 +65,7 @@ const meta = {
       control: 'text'
     },
     arrow: {
-      description: 'Shows an arrow that points to the trigger.',
+      description: 'Shows an arrow that points to the trigger. When the box has a border (--enchase-popover-content-border-width), the arrow carries the border on its two outer sides.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultArrow) } }
     },
@@ -103,7 +103,7 @@ const meta = {
       control: 'text'
     },
     contentClassName: {
-      description: 'Class of the content (data-slot="popover-content"). You can also style it by data-state and data-placement.',
+      description: 'Class of the content (data-slot="popover-content"), the box that carries the background, the border, the shadow and the arrow. What scrolls and carries the padding is the body (data-slot="popover-body"). You can also style it by data-state and data-placement.',
       control: 'text'
     },
     children: {
