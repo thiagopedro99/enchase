@@ -7,6 +7,7 @@ import { Button } from '@components/common/Button/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { CardButton } from '@components/common/CardButton/index.tsx'
 import { CardLink } from '@components/common/CardLink/index.tsx'
+import { Combobox } from '@components/common/Combobox/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Menu } from '@components/common/Menu/index.tsx'
@@ -20,6 +21,7 @@ import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index
 import { builtInStyleEntries } from '@tests/shared/fixtures/styles.ts'
 import { renderInBrowser } from './harness.tsx'
 import { part, parts } from './hookProbes.ts'
+import { parkMouse } from './pointer.ts'
 import { frames } from './settle.ts'
 import { chromiumOnly } from './browserSkips.ts'
 import { disableTouch, dragFinger, enableTouch, touchCapable } from './touchInput.ts'
@@ -220,6 +222,78 @@ describe('the menu on a touch device in a real browser', () => {
 
       await expect.poll(() => part('popover-content'), { timeout: 4000 }).toBeUndefined()
       expect(log).toEqual(['duplicate'])
+    } finally {
+      await disableTouch()
+    }
+  })
+})
+
+describe('the combobox on a touch device in a real browser', () => {
+  const fruits = [
+    { value: 'apple', label: 'Maçã' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'grape', label: 'Uva' }
+  ]
+
+  touchCapable('touchEmulation')('opens with a tap, chooses an option with a tap and keeps the text at 16px or more', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(<Combobox label="Fruta" options={fruits} />)
+      await page.getByRole('combobox', { name: 'Fruta' }).click()
+      await expect.poll(() => part('combobox-listbox')?.getAttribute('data-state'), { timeout: 4000 }).toBe('open')
+
+      expect(matchMedia('(hover: none)').matches).toBe(true)
+      expect(parseFloat(getComputedStyle(part('combobox-input')).fontSize)).toBeGreaterThanOrEqual(16)
+
+      await page.elementLocator(parts('combobox-option')[1]).click()
+
+      await expect.poll(() => part('combobox-listbox')).toBeUndefined()
+      expect((part('combobox-input') as HTMLInputElement).value).toBe('Banana')
+    } finally {
+      await disableTouch()
+    }
+  })
+
+  chromiumOnly('touchEmulation')('leaves no option active after a tap in the multiple mode, where the list stays open', async () => {
+    await enableTouch()
+    try {
+      await parkMouse()
+      renderInBrowser(
+        <div style={{ position: 'absolute', top: 16, left: 300, width: 320 }}>
+          <Combobox multiple label="Fruta" options={fruits} />
+        </div>
+      )
+      const input = part('combobox-input').getBoundingClientRect()
+
+      await dragFinger([{ x: input.left + 20, y: input.top + input.height / 2 }])
+      await expect.poll(() => part('combobox-listbox')?.getAttribute('data-state'), { timeout: 4000 }).toBe('open')
+
+      const target = parts('combobox-option')[1].getBoundingClientRect()
+
+      await dragFinger([{ x: target.left + 20, y: target.top + target.height / 2 }])
+
+      await expect.poll(() => parts('tag').length).toBe(1)
+      await frames(4)
+
+      expect(parts('tag')[0].textContent).toBe('Banana')
+      expect(part('combobox-listbox')?.getAttribute('data-state')).toBe('open')
+      expect(parts('combobox-option').some((option) => option.hasAttribute('data-active'))).toBe(false)
+      expect(part('combobox-input').hasAttribute('aria-activedescendant')).toBe(false)
+
+      const last = parts('combobox-option')[2].getBoundingClientRect()
+      const x = last.left + 20
+      const y = last.top + last.height / 2
+
+      await dragFinger([
+        { x, y },
+        { x, y: y + 20 },
+        { x, y: y + 40 },
+        { x, y: y + 60 }
+      ])
+      await frames(4)
+
+      expect(parts('combobox-option').some((option) => option.hasAttribute('data-active'))).toBe(false)
+      expect(parts('tag').length).toBe(1)
     } finally {
       await disableTouch()
     }
