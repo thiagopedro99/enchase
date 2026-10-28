@@ -12,6 +12,8 @@ const prefixes: Record<string, string> = {
   'common/Combobox/styles.module.css': 'combobox',
   'common/Combobox/subcomponentes/ComboboxToggle/styles.module.css': 'combobox',
   'common/Combobox/subcomponentes/ListboxPopup/styles.module.css': 'combobox',
+  'common/DatePicker/subcomponentes/Calendar/subcomponentes/CalendarGrid/styles.module.css': 'date-picker',
+  'common/DatePicker/subcomponentes/Calendar/subcomponentes/CalendarHeader/styles.module.css': 'date-picker',
   'common/Drawer/styles.module.css': 'drawer',
   'common/Icon/swap.module.css': 'icon-swap',
   'common/Input/styles.module.css': 'input',

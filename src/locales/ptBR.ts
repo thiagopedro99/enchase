@@ -35,7 +35,9 @@ export const ptBR: Locale = {
     selectRow: 'Selecionar linha',
     selectAllRows: 'Selecionar todas as linhas',
     noResults: 'Nenhum resultado',
-    showOptions: 'Mostrar opções'
+    showOptions: 'Mostrar opções',
+    previousMonth: 'Mês anterior',
+    nextMonth: 'Próximo mês'
   }
 }
 

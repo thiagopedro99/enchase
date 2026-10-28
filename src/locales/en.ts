@@ -35,7 +35,9 @@ export const en: Locale = {
     selectRow: 'Select row',
     selectAllRows: 'Select all rows',
     noResults: 'No results',
-    showOptions: 'Show options'
+    showOptions: 'Show options',
+    previousMonth: 'Previous month',
+    nextMonth: 'Next month'
   }
 }
 

@@ -1,0 +1,76 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:where(.header) {
+  gap: var(--enchase-date-picker-calendar-header-gap, var(--enchase-space-sm));
+}
+
+.title {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  margin: 0;
+  font-family: inherit;
+  text-align: center;
+}
+
+:where(.title) {
+  font-size: var(--enchase-date-picker-calendar-title-font-size, var(--enchase-font-size-base));
+  font-weight: var(--enchase-date-picker-calendar-title-font-weight, var(--enchase-font-weight-medium));
+  color: var(--enchase-date-picker-calendar-title-color, var(--enchase-color-text-primary));
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  background-color: transparent;
+  border: none;
+  color: var(--enchase-date-picker-calendar-nav-color, var(--enchase-color-text-secondary));
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--enchase-date-picker-duration, var(--enchase-motion-duration-fast)) var(--enchase-date-picker-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-date-picker-duration, var(--enchase-motion-duration-fast)) var(--enchase-date-picker-ease, var(--enchase-motion-ease-out));
+}
+
+:where(.nav) {
+  inline-size: max(24px, var(--enchase-hit-size, 40px));
+  block-size: max(24px, var(--enchase-hit-size, 40px));
+  border-radius: var(--enchase-date-picker-calendar-nav-radius, var(--enchase-radius-button));
+}
+
+.nav:focus-visible {
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset, 2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
+    color: var(--enchase-date-picker-calendar-nav-color-hover, var(--enchase-color-text-primary));
+  }
+}
+
+.nav:active:not(:disabled) {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
+}
+
+.nav:disabled {
+  color: var(--enchase-date-picker-calendar-nav-color-disabled, var(--enchase-color-text-disabled));
+  cursor: not-allowed;
+}

@@ -42,6 +42,8 @@ export type UILabels = {
   selectAllRows?: string | undefined
   noResults?: string | undefined
   showOptions?: string | undefined
+  previousMonth?: string | undefined
+  nextMonth?: string | undefined
 }
 
 export type UIConfig = {

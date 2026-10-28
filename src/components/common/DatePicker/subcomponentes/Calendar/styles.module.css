@@ -1,0 +1,12 @@
+.calendar {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+:where(.calendar) {
+  gap: var(--enchase-date-picker-calendar-gap, var(--enchase-space-sm));
+  padding-block: var(--enchase-date-picker-calendar-padding-block, var(--enchase-space-xs));
+  padding-inline: var(--enchase-date-picker-calendar-padding-inline, var(--enchase-space-xs));
+}

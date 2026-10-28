@@ -1223,6 +1223,46 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-shadow-secondary` | `none` | `box-shadow` |
 | `--enchase-button-shadow-secondary-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
 
+### Calendar
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-date-picker-calendar-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-date-picker-calendar-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-date-picker-calendar-padding-inline` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
+
+### CalendarGrid
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-date-picker-calendar-day-background-selected` | `var(--enchase-color-primary)` | `background-color`, `border-color` |
+| `--enchase-date-picker-calendar-day-border-color-today` | `var(--enchase-color-primary)` | `border-color` |
+| `--enchase-date-picker-calendar-day-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-date-picker-calendar-day-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-date-picker-calendar-day-color-outside` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-date-picker-calendar-day-color-selected` | `var(--enchase-color-on-primary)` | `color` |
+| `--enchase-date-picker-calendar-day-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-date-picker-calendar-day-font-weight` | `400` (`--enchase-font-weight-regular`) | `font-weight` |
+| `--enchase-date-picker-calendar-day-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-date-picker-calendar-weekday-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-date-picker-calendar-weekday-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-date-picker-calendar-weekday-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-date-picker-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` (also in CalendarHeader) |
+| `--enchase-date-picker-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` (also in CalendarHeader) |
+
+### CalendarHeader
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-date-picker-calendar-header-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-date-picker-calendar-nav-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-date-picker-calendar-nav-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-date-picker-calendar-nav-color-hover` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-date-picker-calendar-nav-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-date-picker-calendar-title-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-date-picker-calendar-title-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-date-picker-calendar-title-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+
 ### Card
 
 | Hook | Default | Property |
