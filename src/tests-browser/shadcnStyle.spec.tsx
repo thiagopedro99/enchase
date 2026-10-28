@@ -9,6 +9,7 @@ import { Button } from '@components/common/Button/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
+import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
@@ -390,6 +391,24 @@ describe('the containers of the shadcn style', () => {
     expect(px(panel.borderTopLeftRadius)).toBe(10)
     expect(px(panel.maxWidth)).toBe(512)
     expect(px(style('modal-body').fontSize)).toBe(14)
+  })
+
+  it('draws the drawer with a border on its inner edge, square corners, a 384px width and 14px text', async () => {
+    show(
+      <Drawer open onClose={() => undefined} title="Title">
+        Body
+      </Drawer>
+    )
+    await expect.poll(() => parts('drawer-panel').length).toBe(1)
+    const panel = style('drawer-panel')
+
+    expect([panel.borderRightWidth, panel.borderLeftWidth, panel.borderTopWidth]).toEqual(['1px', '0px', '0px'])
+    expect(panel.borderRightColor).toBe('rgb(229, 229, 229)')
+    expect([px(panel.borderTopRightRadius), px(panel.borderBottomRightRadius)]).toEqual([0, 0])
+    expect(panel.backgroundColor).toBe('rgb(255, 255, 255)')
+    expect(px(panel.width)).toBe(384)
+    expect(px(style('drawer-body').fontSize)).toBe(14)
+    expect([px(style('drawer-title').fontSize), style('drawer-title').fontWeight]).toEqual([18, '600'])
   })
 
   it('draws the open popover with a border and 8px corners, and the tooltip with 8px corners', async () => {

@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react'
+import { useState } from 'react'
 import { describe, expect } from 'vitest'
 import { page } from 'vitest/browser'
 
@@ -6,6 +7,7 @@ import { Button } from '@components/common/Button/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { CardButton } from '@components/common/CardButton/index.tsx'
 import { CardLink } from '@components/common/CardLink/index.tsx'
+import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
@@ -16,6 +18,19 @@ import { renderInBrowser } from './harness.tsx'
 import { part } from './hookProbes.ts'
 import { frames } from './settle.ts'
 import { disableTouch, enableTouch, touchCapable } from './touchInput.ts'
+
+const DrawerPage = () => {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Abrir</button>
+      <Drawer open={open} onClose={() => setOpen(false)} title="Filtros">
+        <p>Texto</p>
+      </Drawer>
+    </>
+  )
+}
 
 describe('touch pointer in a real browser', () => {
   touchCapable('touchEmulation')('does not apply the hover state on a touch device', async () => {
@@ -133,6 +148,34 @@ describe.each(builtInStyleEntries)('touch pointer with the %s style in a real br
       const fields = ['input-field', 'number-input-field', 'select-field', 'textarea-field'].map((name) => part(name))
 
       await expect.poll(() => fields.map((field) => getComputedStyle(field).fontSize)).toEqual(['16px', '16px', '16px', '16px'])
+    } finally {
+      await disableTouch()
+    }
+  })
+})
+
+describe('the drawer on a touch device in a real browser', () => {
+  touchCapable('touchEmulation')('fits the screen, takes the whole height and does not tint its close button on hover', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(<DrawerPage />)
+      await page.getByRole('button', { name: 'Abrir' }).click()
+      await expect.poll(() => part('drawer-panel')?.getAttribute('data-state'), { timeout: 4000 }).toBe('open')
+
+      const box = part('drawer-panel').getBoundingClientRect()
+      const area = part('drawer-overlay').getBoundingClientRect()
+      const close = part('drawer-close')
+      const before = getComputedStyle(close).color
+
+      expect(matchMedia('(hover: none)').matches).toBe(true)
+      expect(Math.round(box.width)).toBe(Math.round(Math.min(400, window.innerWidth * 0.9)))
+      expect([Math.round(box.left - area.left), Math.round(box.top - area.top), Math.round(box.height)]).toEqual([0, 0, Math.round(area.height)])
+
+      await page.elementLocator(close).hover()
+      await frames(4)
+
+      expect(getComputedStyle(close).color).toBe(before)
+      expect(getComputedStyle(close).backgroundColor).toBe('rgba(0, 0, 0, 0)')
     } finally {
       await disableTouch()
     }

@@ -4,6 +4,7 @@ import { cdp, page, userEvent } from 'vitest/browser'
 
 import { Button } from '@components/common/Button/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
+import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Link } from '@components/common/Link/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
@@ -54,6 +55,19 @@ const DrawerPage = () => {
     <>
       <button onClick={() => setOpen(true)}>Abrir menu</button>
       <Sidebar variant="modal" open={open} onClose={() => setOpen(false)} sections={demoSections} />
+    </>
+  )
+}
+
+const PublicDrawerPage = () => {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setOpen(true)}>Abrir gaveta</button>
+      <Drawer open={open} onClose={() => setOpen(false)} title="Filtros">
+        <p>Texto</p>
+      </Drawer>
     </>
   )
 }
@@ -121,6 +135,18 @@ describe('touch handling on the interactive controls', () => {
     }
   })
 
+  it('applies the same handling to the close button of the drawer', async () => {
+    await page.viewport(390, 844)
+    renderInBrowser(<PublicDrawerPage />)
+    await userEvent.click(page.getByRole('button', { name: 'Abrir gaveta' }))
+    await expect.poll(() => document.querySelector('[data-slot="drawer-close"]')).toBeTruthy()
+
+    const close = document.querySelector('[data-slot="drawer-close"]') as HTMLElement
+
+    expect(getComputedStyle(close).touchAction).toBe('manipulation')
+    if (supportsTapHighlight) expect(getComputedStyle(close).getPropertyValue('-webkit-tap-highlight-color')).toBe(noHighlight)
+  })
+
   it('keeps the text of the fields at 16px or more so iOS does not zoom the page', async () => {
     renderInBrowser(
       <div style={{ ['--enchase-font-size-base' as string]: '14px' }}>
@@ -175,6 +201,24 @@ describe('viewport units and safe areas', () => {
       await cdp().send('Emulation.setSafeAreaInsetsOverride', { insets: { top: 0, bottom: 0, left: 0, right: 0 } })
     }
   })
+
+  chromiumOnly('touchEmulation')('pads the drawer by the safe area insets', async () => {
+    await cdp().send('Emulation.setSafeAreaInsetsOverride', { insets: { top: 47, bottom: 34, left: 0, right: 0 } })
+
+    try {
+      await page.viewport(390, 844)
+      renderInBrowser(<PublicDrawerPage />)
+      await userEvent.click(page.getByRole('button', { name: 'Abrir gaveta' }))
+      await expect.poll(() => document.querySelector('[data-slot="drawer-panel"]')).toBeTruthy()
+
+      const panel = document.querySelector('[data-slot="drawer-panel"]') as HTMLElement
+
+      expect(parseFloat(getComputedStyle(panel).paddingTop)).toBeGreaterThanOrEqual(47)
+      expect(parseFloat(getComputedStyle(panel).paddingBottom)).toBeGreaterThanOrEqual(34)
+    } finally {
+      await cdp().send('Emulation.setSafeAreaInsetsOverride', { insets: { top: 0, bottom: 0, left: 0, right: 0 } })
+    }
+  })
 })
 
 overscrollSuite('scrolling inside the overlays', () => {
@@ -194,6 +238,14 @@ overscrollSuite('scrolling inside the overlays', () => {
     await expect.poll(() => document.querySelector('[data-slot="sidebar-nav"]')).toBeTruthy()
 
     expect(overscrollOf('sidebar-nav')).toBe('contain')
+  })
+
+  it('contains the overscroll inside the drawer body', async () => {
+    renderInBrowser(<PublicDrawerPage />)
+    await userEvent.click(page.getByRole('button', { name: 'Abrir gaveta' }))
+    await expect.poll(() => document.querySelector('[data-slot="drawer-body"]')).toBeTruthy()
+
+    expect(overscrollOf('drawer-body')).toBe('contain')
   })
 
   it('contains the overscroll inside the popover', async () => {
