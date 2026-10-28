@@ -9,6 +9,7 @@ import { CardButton } from '@components/common/CardButton/index.tsx'
 import { CardLink } from '@components/common/CardLink/index.tsx'
 import { Calendar } from '@components/common/DatePicker/subcomponentes/Calendar/index.tsx'
 import { Combobox } from '@components/common/Combobox/index.tsx'
+import { DatePicker } from '@components/common/DatePicker/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Menu } from '@components/common/Menu/index.tsx'
@@ -147,15 +148,17 @@ describe.each(builtInStyleEntries)('touch pointer with the %s style in a real br
           <NumberInput label="Amount" />
           <Select label="Country" options={[{ value: 'br', label: 'Brasil' }]} />
           <Textarea label="Notes" />
+          <Combobox label="Fruit" options={[{ value: 'apple', label: 'Maçã' }]} />
+          <DatePicker label="Date" />
         </>,
         'never',
         'light',
         { style: themeStyle }
       )
 
-      const fields = ['input-field', 'number-input-field', 'select-field', 'textarea-field'].map((name) => part(name))
+      const fields = ['input-field', 'number-input-field', 'select-field', 'textarea-field', 'combobox-input', 'date-picker-input'].map((name) => part(name))
 
-      await expect.poll(() => fields.map((field) => getComputedStyle(field).fontSize)).toEqual(['16px', '16px', '16px', '16px'])
+      await expect.poll(() => fields.map((field) => getComputedStyle(field).fontSize)).toEqual(['16px', '16px', '16px', '16px', '16px', '16px'])
     } finally {
       await disableTouch()
     }
@@ -326,6 +329,33 @@ describe('the calendar on a touch device in a real browser', () => {
       await page.getByRole('button', { name: 'Próximo mês' }).click()
 
       await expect.poll(() => part('date-picker-calendar-title')?.textContent).toBe('novembro de 2026')
+    } finally {
+      await disableTouch()
+    }
+  })
+})
+
+describe('the date picker on a touch device in a real browser', () => {
+  touchCapable('touchEmulation')('opens from the button with a tap, chooses a day with a tap and does not tint the button on hover', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(<DatePicker label="Data" defaultValue="2026-10-15" />)
+      const field = part('date-picker-input') as HTMLInputElement
+      const toggle = part('date-picker-toggle')
+
+      expect(matchMedia('(hover: none)').matches).toBe(true)
+
+      await page.elementLocator(toggle).hover()
+      await frames(4)
+
+      expect(getComputedStyle(toggle).backgroundColor).toBe('rgba(0, 0, 0, 0)')
+
+      await page.getByRole('button', { name: 'Abrir calendário' }).click()
+      await expect.poll(() => document.querySelector('[data-slot="popover-content"]')?.getAttribute('data-state')).toBe('open')
+      await page.elementLocator(document.querySelector('[data-date="2026-10-20"]') as HTMLElement).click()
+
+      await expect.poll(() => field.value).toBe('20/10/2026')
+      await expect.poll(() => document.querySelector('[data-slot="popover-content"]')).toBeNull()
     } finally {
       await disableTouch()
     }

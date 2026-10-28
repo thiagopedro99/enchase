@@ -9,6 +9,7 @@ import { Button } from '@components/common/Button/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
+import { DatePicker } from '@components/common/DatePicker/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Menu } from '@components/common/Menu/index.tsx'
@@ -230,6 +231,29 @@ describe('the fields of the shadcn style', () => {
     expect(stepper.height).toBe(32)
     expect(stepper.top).toBeGreaterThan(field.top)
     expect(stepper.bottom).toBeLessThan(field.bottom)
+  })
+
+  it('draws the date picker as a field with the smaller button inside it, 14px messages and a calendar in 14px type', async () => {
+    show(<DatePicker label="Date" defaultValue="2026-10-15" helperText="Type it" defaultOpen />)
+    await expect.poll(() => part('date-picker-calendar')).toBeTruthy()
+    const outline = part('date-picker-outline').getBoundingClientRect()
+    const toggle = part('date-picker-toggle').getBoundingClientRect()
+
+    expect(getComputedStyle(part('date-picker-label')).position).toBe('static')
+    expect(toggle.height).toBe(32)
+    expect(toggle.top).toBeGreaterThan(outline.top)
+    expect(toggle.bottom).toBeLessThan(outline.bottom)
+    expect(style('date-picker-helper').fontSize).toBe('14px')
+    expect(style('date-picker-calendar-title').fontSize).toBe('14px')
+    expect(style('date-picker-calendar-weekday').fontSize).toBe('12px')
+    expect(style('date-picker-calendar-day-number').fontSize).toBe('14px')
+    expect(part('date-picker-calendar-day-number').getBoundingClientRect().height).toBe(32)
+  })
+
+  it('draws the error of the date picker in 14px type', () => {
+    show(<DatePicker label="Date" error="Wrong date" />)
+
+    expect(style('date-picker-error').fontSize).toBe('14px')
   })
 
   it('lets the label placement of the prop win over the style, in both directions', () => {
