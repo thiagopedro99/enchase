@@ -18,6 +18,7 @@ import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { Skeleton } from '@components/common/Skeleton/index.tsx'
+import { Slider } from '@components/common/Slider/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
@@ -83,6 +84,8 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'CheckboxGroup with an error', element: <CheckboxGroup label="Topics" value={['offers']} onValueChange={noop} error="Pick at least one" orientation="horizontal" options={[{ value: 'news', label: 'News' }, { value: 'offers', label: 'Offers' }]} /> },
   { name: 'SegmentedControl', element: <SegmentedControl ariaLabel="View" defaultValue="board" size="sm" items={[{ value: 'list', label: 'List' }, { value: 'board', label: 'Board' }, { value: 'old', label: 'Old', disabled: true }]} /> },
   { name: 'SegmentedControl that chooses several', element: <SegmentedControl multiple fullWidth ariaLabel="Days" value={['mon']} onValueChange={noop} items={[{ value: 'mon', label: 'Mon' }, { value: 'tue', label: 'Tue' }]} /> },
+  { name: 'Slider', element: <Slider label="Volume" showValue defaultValue={30} name="volume" formatValue={(value) => `${value}%`} /> },
+  { name: 'Slider that is disabled', element: <Slider ariaLabel="Brightness" min={0} max={1} step={0.1} value={0.4} onValueChange={noop} disabled /> },
   { name: 'Card', element: <Card variant="elevated">Content</Card> },
   { name: 'Grid', element: <Grid columns={{ xs: 1, md: 3 }} centerLastRow><p>One</p><p>Two</p><p>Three</p><p>Four</p></Grid> },
   { name: 'CardButton', element: <CardButton variant="elevated"><span>Open</span></CardButton> },

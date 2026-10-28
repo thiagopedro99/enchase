@@ -1,4 +1,4 @@
-export { Accordion, Alert, Avatar, Badge, Breadcrumbs, Button, ButtonLink, Card, CardButton, CardLink, Checkbox, CheckboxGroup, ConfirmModal, Container, Divider, Drawer, Flex, Grid, InlineLoading, Input, Loading, Menu, Modal, NumberInput, Pagination, Popover, Progress, RadioGroup, SegmentedControl, Select, Sidebar, Skeleton, Switch, Table, Tabs, Tag, Textarea, ThemeToggle, Tooltip, VisuallyHidden } from '../src/components/common/index.ts'
+export { Accordion, Alert, Avatar, Badge, Breadcrumbs, Button, ButtonLink, Card, CardButton, CardLink, Checkbox, CheckboxGroup, ConfirmModal, Container, Divider, Drawer, Flex, Grid, InlineLoading, Input, Loading, Menu, Modal, NumberInput, Pagination, Popover, Progress, RadioGroup, SegmentedControl, Select, Sidebar, Skeleton, Slider, Switch, Table, Tabs, Tag, Textarea, ThemeToggle, Tooltip, VisuallyHidden } from '../src/components/common/index.ts'
 export { Icon } from '../src/components/common/Icon/index.tsx'
 export { Link } from '../src/components/common/Link/index.tsx'
 export { ColorModeProvider, ColorModeScript } from '../src/components/colorMode/index.tsx'
@@ -37,6 +37,7 @@ export type { CheckboxGroupOption, CheckboxGroupProps } from '../src/components/
 export type { SwitchProps } from '../src/components/common/Switch/types.ts'
 export type { RadioGroupProps } from '../src/components/common/RadioGroup/types.ts'
 export type { SegmentedControlItem, SegmentedControlProps } from '../src/components/common/SegmentedControl/types.ts'
+export type { SliderProps } from '../src/components/common/Slider/types.ts'
 export type { TabsProps } from '../src/components/common/Tabs/types.ts'
 export type { AccordionProps } from '../src/components/common/Accordion/types.ts'
 export type { PaginationProps } from '../src/components/common/Pagination/types.ts'

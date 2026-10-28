@@ -28,6 +28,7 @@ import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Skeleton } from '@components/common/Skeleton/index.tsx'
+import { Slider } from '@components/common/Slider/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
@@ -93,6 +94,7 @@ const cases: [string, string, ComponentType<never>, Record<string, unknown>][] =
   ['SegmentedControl', 'SegmentedControlMultipleProps', SegmentedControl, { multiple: true, items: options.map(({ value, label }) => ({ value, label })) }],
   ['Select', 'SelectProps', Select, { label: 'Plan', options }],
   ['Skeleton', 'SkeletonProps', Skeleton, {}],
+  ['Slider', 'SliderProps', Slider, { ariaLabel: 'Volume' }],
   ['Switch', 'SwitchProps', Switch, { label: 'Notifications' }],
   ['Table', 'TableProps', Table, { columns: [{ key: 'id', header: 'Id' }], rows: [{ id: 1 }] }],
   ['Tabs', 'TabsProps', Tabs, { ariaLabel: 'Sections', items: [{ value: 'a', label: 'A', content: 'x' }] }],

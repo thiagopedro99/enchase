@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [CheckboxGroup](#checkboxgroup) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [SegmentedControl](#segmentedcontrol) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [CheckboxGroup](#checkboxgroup) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [SegmentedControl](#segmentedcontrol) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Slider](#slider) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -666,6 +666,28 @@ A placeholder shown while the content loads, with an animated shimmer, in text, 
 | `animation` | `false \| { recipe, tuning }` | `shimmer` | false turns the shimmer off. { tuning: { duration } } changes the duration in seconds. With reduced motion the shimmer becomes a pulse of opacity. |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
+
+### Slider
+
+Picks one number in a range by dragging a thumb, clicking the track or using the keyboard. It is a `slider` with `aria-valuemin`, `aria-valuemax` and `aria-valuenow`: the arrow keys move by one `step`, PageUp and PageDown by a tenth of the range, and Home and End go to the ends. In a right-to-left page the left and right arrows swap, and the track fills from the right. On a touch screen it moves with a tap or a horizontal drag, so a swipe up or down that starts on it still scrolls the page. It picks one value only: there is no range with two thumbs. Give it a name with `label`, `ariaLabel` or `aria-labelledby`. When the number is not enough for a person who cannot see the thumb, such as a price or a temperature, pass `formatValue` so that `aria-valuetext` says it with its unit. It accepts `ref`, which goes to the root, and the attributes of the `<div>`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `number` | — | Value of the slider when it is controlled. It also requires onValueChange. A value outside the range, or off a step, is shown at the nearest allowed one. See the Controlled story. |
+| `defaultValue` | `number` | — | Value at the start, for use without external control. Without it, the slider starts at `min`. |
+| `onValueChange` | `(value: number) => void` | — | Called with the new value each time it changes, by pointer or by keyboard, already rounded to the step and held inside the range. It is not called when the value stays the same. |
+| `min` | `number` | `0` | Smallest value. |
+| `max` | `number` | `100` | Largest value. When it is not a multiple of `step` away from `min`, the largest value that can be picked is the last step before it. |
+| `step` | `number` | `1` | Distance between two values. It accepts fractions, such as 0.1. A number that is not above 0 is replaced by 1. |
+| `label` | `string` | — | Visible name of the slider, above the track. It also names the thumb for screen readers. |
+| `ariaLabel` | `string` | — | Name of the slider for screen readers when there is no visible `label`. Without any name, pass aria-labelledby. |
+| `formatValue` | `(value: number) => string` | — | Turns the value into the text that is shown with `showValue` and read to screen readers as `aria-valuetext`, such as 30% or $120. Without it the number is shown as it is and `aria-valuetext` is not set. |
+| `showValue` | `boolean` | `false` | Shows the current value beside the label. It is hidden from screen readers, which read the value of the thumb. |
+| `name` | `string` | — | Name of the field that carries the value in a form. Without it nothing is submitted, and a disabled slider does not submit it either, as a native control would not. |
+| `disabled` | `boolean` | `false` | Disables the slider: the thumb leaves the Tab order and neither the pointer nor the keyboard change the value. |
+| `animation` | `false \| { recipe, tuning }` | `fade` | Animation of the filled part and of the thumb when the value changes by a key or by a click. Dragging follows the pointer with no delay. false turns it off; { tuning: { duration } } sets the duration in seconds. |
+
+Also accepts the other attributes of `<div>`, passed on to the element. Forwards the `ref` to `<div>`.
 
 ### Switch
 
@@ -1837,6 +1859,32 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-skeleton-ease` | `cubic-bezier(0.4, 0, 0.2, 1)` (`--enchase-motion-ease-in-out`) | `animation` |
 | `--enchase-skeleton-radius-rectangular` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-skeleton-radius-text` | `0.5rem` (`--enchase-radius-sm`) | `border-radius` |
+
+### Slider
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-slider-control-padding-inline` | `calc(var(--enchase-slider-thumb-size, 1.25rem) / 2)` | `padding-inline` |
+| `--enchase-slider-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-slider-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-slider-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-slider-header-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-slider-label-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-slider-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-slider-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-slider-label-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-slider-opacity-disabled` | `0.38` (`--enchase-state-disabled-content`) | `opacity` |
+| `--enchase-slider-range-background` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-slider-thumb-background` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-slider-thumb-border-color` | `var(--enchase-color-primary)` | `border` |
+| `--enchase-slider-thumb-border-width` | `2px` (`--enchase-border-width-strong`) | `border` |
+| `--enchase-slider-thumb-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
+| `--enchase-slider-thumb-size` | `1.25rem` | `padding-inline`, `inline-size`, `block-size` |
+| `--enchase-slider-track-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-slider-track-height` | `0.25rem` | `block-size` |
+| `--enchase-slider-track-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
+| `--enchase-slider-value-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-slider-value-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 
 ### Switch
 

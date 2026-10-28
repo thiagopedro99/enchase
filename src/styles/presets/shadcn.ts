@@ -164,6 +164,13 @@ const controls: HookValues = {
   '--enchase-segmented-control-item-padding-inline-md': '0.75rem',
   '--enchase-segmented-control-item-padding-inline-lg': '1rem',
 
+  '--enchase-slider-track-height': '0.375rem',
+  '--enchase-slider-thumb-size': '1rem',
+  '--enchase-slider-thumb-border-width': 'var(--enchase-border-width)',
+  '--enchase-slider-label-font-size': 'var(--enchase-font-size-sm)',
+  '--enchase-slider-value-font-size': 'var(--enchase-font-size-sm)',
+  '--enchase-slider-opacity-disabled': '0.5',
+
   '--enchase-switch-track-width': '2rem',
   '--enchase-switch-track-height': '1.15rem',
   '--enchase-switch-thumb-size': '1rem',
@@ -311,6 +318,9 @@ const colorHooks: HookValues = {
   '--enchase-segmented-control-item-background-selected': 'var(--enchase-color-surface-container)',
   '--enchase-segmented-control-item-color-selected': 'var(--enchase-color-text-primary)',
   '--enchase-checkbox-group-legend-color': 'var(--enchase-color-text-primary)',
+  '--enchase-slider-track-background': 'var(--enchase-color-surface-container)',
+  '--enchase-slider-thumb-background': 'var(--enchase-color-background)',
+  '--enchase-slider-label-color': 'var(--enchase-color-text-primary)',
   '--enchase-switch-track-background': 'var(--enchase-color-border-strong)',
   '--enchase-switch-thumb-background': 'var(--enchase-color-background)',
   '--enchase-switch-thumb-background-checked': 'var(--enchase-color-background)',
