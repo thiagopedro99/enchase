@@ -1,4 +1,5 @@
 export { AlertTriangleIcon } from '../src/components/common/Icon/icons/AlertTriangleIcon.tsx'
+export { CalendarIcon } from '../src/components/common/Icon/icons/CalendarIcon.tsx'
 export { CheckIcon } from '../src/components/common/Icon/icons/CheckIcon.tsx'
 export { ChevronDownIcon } from '../src/components/common/Icon/icons/ChevronDownIcon.tsx'
 export { ChevronLeftIcon } from '../src/components/common/Icon/icons/ChevronLeftIcon.tsx'

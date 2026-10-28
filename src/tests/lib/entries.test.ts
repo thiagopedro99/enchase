@@ -18,7 +18,7 @@ const typeExportsOf = (file: string) => {
 
 describe('public entries', () => {
   it('exports the components, providers and hooks from enchase', () => {
-    for (const name of ['Button', 'Textarea', 'Badge', 'Alert', 'Switch', 'RadioGroup', 'CheckboxGroup', 'Combobox', 'SegmentedControl', 'Slider', 'Tabs', 'Accordion', 'Pagination', 'Table', 'NumberInput', 'Modal', 'Popover', 'Sidebar', 'Layout', 'Navbar', 'Footer', 'Icon', 'Link', 'CardButton', 'CardLink', 'Divider', 'Drawer', 'Menu', 'Avatar', 'Tag', 'Progress', 'UIProvider', 'ColorModeProvider', 'ToastProvider', 'GlobalStyles', 'useToast', 'useColorMode', 'useScrollSpy', 'useUIConfig']) {
+    for (const name of ['Button', 'Textarea', 'Badge', 'Alert', 'Switch', 'RadioGroup', 'CheckboxGroup', 'Combobox', 'DatePicker', 'SegmentedControl', 'Slider', 'Tabs', 'Accordion', 'Pagination', 'Table', 'NumberInput', 'Modal', 'Popover', 'Sidebar', 'Layout', 'Navbar', 'Footer', 'Icon', 'Link', 'CardButton', 'CardLink', 'Divider', 'Drawer', 'Menu', 'Avatar', 'Tag', 'Progress', 'UIProvider', 'ColorModeProvider', 'ToastProvider', 'GlobalStyles', 'useToast', 'useColorMode', 'useScrollSpy', 'useUIConfig']) {
       expect(main, name).toHaveProperty(name)
     }
   })
@@ -47,7 +47,7 @@ describe('public entries', () => {
   })
 
   it('exports the icons of the components from enchase/icons and nothing else', () => {
-    expect(Object.keys(icons)).toHaveLength(19)
+    expect(Object.keys(icons)).toHaveLength(20)
     expect(icons).toHaveProperty('CloseIcon')
     expect(icons).toHaveProperty('ChevronDownIcon')
     expect(icons).not.toHaveProperty('Icon')

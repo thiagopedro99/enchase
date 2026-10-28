@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
 import { AlertTriangleIcon } from '@components/common/Icon/icons/AlertTriangleIcon.tsx'
+import { CalendarIcon } from '@components/common/Icon/icons/CalendarIcon.tsx'
 import { CheckIcon } from '@components/common/Icon/icons/CheckIcon.tsx'
 import { EyeOffIcon } from '@components/common/Icon/icons/EyeOffIcon.tsx'
 import { InfoIcon } from '@components/common/Icon/icons/InfoIcon.tsx'
@@ -38,6 +39,7 @@ const icons = [
   ['check', CheckIcon],
   ['info', InfoIcon],
   ['alert-triangle', AlertTriangleIcon],
+  ['calendar', CalendarIcon],
   ['eye', EyeIcon],
   ['eye-off', EyeOffIcon],
   ['sun', SunIcon],

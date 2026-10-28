@@ -37,7 +37,9 @@ export const ptBR: Locale = {
     noResults: 'Nenhum resultado',
     showOptions: 'Mostrar opções',
     previousMonth: 'Mês anterior',
-    nextMonth: 'Próximo mês'
+    nextMonth: 'Próximo mês',
+    openCalendar: 'Abrir calendário',
+    chooseDate: 'Escolher data'
   }
 }
 

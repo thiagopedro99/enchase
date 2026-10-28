@@ -18,6 +18,7 @@ import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { Combobox } from '@components/common/Combobox/index.tsx'
+import { DatePicker } from '@components/common/DatePicker/index.tsx'
 import { Skeleton } from '@components/common/Skeleton/index.tsx'
 import { Slider } from '@components/common/Slider/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
@@ -75,6 +76,8 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Combobox', element: <Combobox label="Country" placeholder="Choose" helperText="Type to filter" options={[{ value: 'br', label: 'Brazil' }, { value: 'pt', label: 'Portugal', disabled: true }]} defaultValue="br" /> },
   { name: 'Combobox with several choices', element: <Combobox multiple label="Countries" name="countries" options={[{ value: 'br', label: 'Brazil' }, { value: 'pt', label: 'Portugal' }]} defaultValue={['br', 'pt']} error="Choose at most one" loading /> },
   { name: 'Combobox that starts open', element: <Combobox label="Country" defaultOpen options={[{ value: 'br', label: 'Brazil' }]} /> },
+  { name: 'DatePicker', element: <DatePicker label="Birthday" name="birthday" helperText="Type it or open the calendar" defaultValue="2026-10-28" min="2026-01-01" max="2026-12-31" /> },
+  { name: 'DatePicker that starts open', element: <DatePicker label="Date" defaultOpen defaultValue="2026-10-28" error="Choose another date" /> },
   { name: 'Checkbox', element: <Checkbox label="Accept" /> },
   { name: 'Checkbox that is indeterminate', element: <Checkbox label="Select all" indeterminate defaultChecked /> },
   { name: 'Switch', element: <Switch label="Notifications" defaultChecked /> },

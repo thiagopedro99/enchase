@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [CheckboxGroup](#checkboxgroup) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [Combobox](#combobox) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [SegmentedControl](#segmentedcontrol) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Slider](#slider) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [CheckboxGroup](#checkboxgroup) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [Combobox](#combobox) · [ConfirmModal](#confirmmodal) · [Container](#container) · [DatePicker](#datepicker) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [SegmentedControl](#segmentedcontrol) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Slider](#slider) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -261,6 +261,36 @@ Limits the width of the content using the breakpoints of the `UIProvider`, with 
 | `center` | `boolean` | `true` | Centers the container. With false it stays at the start, and in RTL on the right side. |
 
 Also accepts the other HTML attributes of the root element.
+
+### DatePicker
+
+A field for a single date. The user types it, in the order and with the separators of the language of the `UIProvider` (28/10/2026 in pt-BR, 10/28/2026 in en, and the compact 28102026 or the ISO 2026-10-28 are read too), or presses the button at the end of the field to choose it in a calendar that opens in a dialog. The value is a string in the local ISO form, `YYYY-MM-DD`, with no time and no time zone, the same text that `<input type="date">` gives, or `null` when the field is empty: no `Date` object is involved, so the day never moves with the zone of the machine. The text is read when the user leaves the field or presses Enter, and what is not a date, or is a date that `min`, `max` or `isDateDisabled` rule out, is put back as it was. The calendar is a grid: the arrow keys move by a day and by a week, Home and End go to the start and to the end of the week, Page Up and Page Down change the month and Shift with them the year, Enter and Space choose the day and Esc closes the calendar and gives the focus back to the button. It opens with the focus on the chosen day, or on today. The names of the months and of the weekdays, the first day of the week and the right-to-left mirroring follow the language of the `UIProvider`. Today is read in the browser when the calendar opens, so the server renders only the field. The calendar renders in a portal, like the `Popover`, and accepts `container`. It accepts `ref`, which goes to the input, and the attributes of the `<input>`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string \| null` | — | Date of the field when it is controlled, as `YYYY-MM-DD`, or `null` for an empty field. It also requires onValueChange. Text that is not a date counts as empty. See the Controlled story. |
+| `defaultValue` | `string \| null` | — | Date at the start, as `YYYY-MM-DD`, for use without external control. Without it, the field starts empty. |
+| `onValueChange` | `(value: string \| null) => void` | — | Called with the new date as `YYYY-MM-DD`, or with `null` when the user empties the field, when the user chooses a day or when the typed text is confirmed. It is not called for text that is not a date, for a date that is ruled out, nor for the date the field already has. |
+| `min` | `string` | — | Earliest date that can be chosen or typed, as `YYYY-MM-DD`. The days before it are disabled in the calendar and its previous-month button stops at it. See the MinAndMax story. |
+| `max` | `string` | — | Latest date that can be chosen or typed, as `YYYY-MM-DD`. The days after it are disabled in the calendar and its next-month button stops at it. |
+| `isDateDisabled` | `(date: string) => boolean` | — | Rules out dates one by one: it receives each date as `YYYY-MM-DD` and returns `true` for the ones that cannot be chosen or typed. A disabled day stays in the calendar, with `aria-disabled`, and can be reached with the keyboard but not chosen. See the WeekdaysOnly story. |
+| `firstDayOfWeek` | `number` | — | First column of the calendar, from 0 (Sunday) to 6 (Saturday). Without it, the language of the provider decides: Sunday in pt-BR and in en, Monday in most of Europe. A number that is not a day of the week is ignored. |
+| `label` | `string` | — | Label of the field, tied to the input. Without it, give the input an `aria-label`. |
+| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
+| `helperText` | `string` | — | Helper text. It is tied to the input by aria-describedby and disappears when there is an error. |
+| `fullWidth` | `boolean` | `false` | Takes up the full available width. |
+| `open` | `boolean` | — | Opens and closes the calendar, when you control it. Use it together with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Whether the calendar starts open, when you do not control it. An open calendar does not take the focus on the first render, so it does not steal it from the page. |
+| `onOpenChange` | `(open: boolean) => void` | — | Called with the new state whenever the calendar opens or closes: the button, Esc, the choice of a day, Enter in the field or a click outside. |
+| `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the calendar when it opens and closes. false turns it off; { tuning: { duration } } sets the duration in seconds. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="date-picker"). className and style stay on the input (data-slot="date-picker-input"). |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="date-picker"). style stays on the input. |
+| `popupClassName` | `string` | — | Class of the dialog that holds the calendar (data-slot="popover-content"), which renders in a portal and not inside the root. |
+| `popupStyle` | `CSSProperties` | — | Style of the dialog, merged with the library style (yours wins). |
+
+Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.
 
 ### Divider
 
@@ -974,6 +1004,7 @@ Also accepts the other attributes of `<svg>`, passed on to the element.
 | Icon | `data-icon` | Mirrors in RTL |
 | --- | --- | --- |
 | `AlertTriangleIcon` | `alert-triangle` | — |
+| `CalendarIcon` | `calendar` | — |
 | `CheckIcon` | `check` | — |
 | `ChevronDownIcon` | `chevron-down` | — |
 | `ChevronLeftIcon` | `chevron-left` | yes |
@@ -1247,8 +1278,6 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-date-picker-calendar-weekday-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-date-picker-calendar-weekday-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-date-picker-calendar-weekday-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
-| `--enchase-date-picker-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` (also in CalendarHeader) |
-| `--enchase-date-picker-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` (also in CalendarHeader) |
 
 ### CalendarHeader
 
@@ -1382,6 +1411,26 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-container-max` | `100%` | `max-inline-size` |
 | `--enchase-container-padding` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 
+### DatePicker
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-date-picker-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-date-picker-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` (also in CalendarGrid, CalendarHeader, DatePickerToggle) |
+| `--enchase-date-picker-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` (also in CalendarGrid, CalendarHeader, DatePickerToggle) |
+| `--enchase-date-picker-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-date-picker-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-date-picker-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+
+### DatePickerToggle
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-date-picker-toggle-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-date-picker-toggle-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-date-picker-toggle-color-hover` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-date-picker-toggle-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+
 ### Divider
 
 | Hook | Default | Property |
@@ -1479,41 +1528,41 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-input-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-input-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
-| `--enchase-input-error-color` | `var(--enchase-color-error)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-error-color` | `var(--enchase-color-error)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
-| `--enchase-input-field-color` | `var(--enchase-color-text-primary)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-field-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-field-color-placeholder` | `var(--enchase-color-text-placeholder)` | `color` (also in Combobox, NumberInput, Textarea) |
+| `--enchase-input-field-color` | `var(--enchase-color-text-primary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-field-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-field-color-placeholder` | `var(--enchase-color-text-placeholder)` | `color` (also in Combobox, DatePicker, NumberInput, Textarea) |
 | `--enchase-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
-| `--enchase-input-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-height` | `3.5rem` | `min-block-size`, `block-size`, `inset-block-start`, `transform` (also in Combobox, ComboboxToggle, NumberInput, Select) |
-| `--enchase-input-helper-color` | `var(--enchase-color-text-secondary)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-height` | `3.5rem` | `min-block-size`, `block-size`, `inset-block-start`, `transform` (also in Combobox, ComboboxToggle, DatePicker, NumberInput, Select) |
+| `--enchase-input-helper-color` | `var(--enchase-color-text-secondary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
-| `--enchase-input-label-color` | `var(--enchase-color-text-secondary)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-error` | `var(--enchase-color-error)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-error-focus` | `var(--enchase-color-error)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-focus` | `var(--enchase-color-primary)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-stacked` | `var(--enchase-color-text-primary)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-stacked-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-stacked-error` | `var(--enchase-color-error)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-label-font-size-stacked` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-label-font-weight-stacked` | `500` (`--enchase-font-weight-medium`) | `font-weight` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-label-line-height-stacked` | `1.4` (`--enchase-line-height-snug`) | `line-height` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-min-width` | `200px` | `min-inline-size` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-opacity-disabled` | `1` | `opacity` (also in Combobox, ComboboxToggle, NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color` | `var(--enchase-color-border-strong)` | `border` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-error` | `var(--enchase-color-error)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-error-focus` | `var(--enchase-color-error)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-error-hover` | `var(--enchase-color-error)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-focus` | `var(--enchase-color-primary)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-hover` | `var(--enchase-color-text-primary)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-outline-shadow` | `none` | `box-shadow` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-outline-shadow-focus` | `none` (`--enchase-input-outline-shadow`) | `box-shadow` (also in Combobox, NumberInput, Select, Textarea) |
-| `--enchase-input-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline-start`, `inset-inline-start`, `max-inline-size`, `padding-inline` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color` | `var(--enchase-color-text-secondary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-error` | `var(--enchase-color-error)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-error-focus` | `var(--enchase-color-error)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-focus` | `var(--enchase-color-primary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-stacked` | `var(--enchase-color-text-primary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-stacked-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-stacked-error` | `var(--enchase-color-error)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-label-font-size-stacked` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-label-font-weight-stacked` | `500` (`--enchase-font-weight-medium`) | `font-weight` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-label-line-height-stacked` | `1.4` (`--enchase-line-height-snug`) | `line-height` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-min-width` | `200px` | `min-inline-size` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-opacity-disabled` | `1` | `opacity` (also in Combobox, ComboboxToggle, DatePicker, DatePickerToggle, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color` | `var(--enchase-color-border-strong)` | `border` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `border-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-error` | `var(--enchase-color-error)` | `border-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-error-focus` | `var(--enchase-color-error)` | `border-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-error-hover` | `var(--enchase-color-error)` | `border-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-focus` | `var(--enchase-color-primary)` | `border-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-hover` | `var(--enchase-color-text-primary)` | `border-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-shadow` | `none` | `box-shadow` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-shadow-focus` | `none` (`--enchase-input-outline-shadow`) | `box-shadow` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline-start`, `inset-inline-start`, `max-inline-size`, `padding-inline` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-toggle-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-input-toggle-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-input-toggle-color-hover` | `var(--enchase-color-text-primary)` | `color` |

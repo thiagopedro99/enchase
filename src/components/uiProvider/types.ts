@@ -44,6 +44,8 @@ export type UILabels = {
   showOptions?: string | undefined
   previousMonth?: string | undefined
   nextMonth?: string | undefined
+  openCalendar?: string | undefined
+  chooseDate?: string | undefined
 }
 
 export type UIConfig = {

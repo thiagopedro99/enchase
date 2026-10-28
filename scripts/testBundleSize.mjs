@@ -25,6 +25,7 @@ const budgets = [
   { label: 'Table', source: "export { Table } from 'enchase'\n", maxBytes: 21504 },
   { label: 'Menu', source: "export { Menu } from 'enchase'\n", maxBytes: 36864 },
   { label: 'Combobox', source: "export { Combobox } from 'enchase'\n", maxBytes: 43008 },
+  { label: 'DatePicker', source: "export { DatePicker } from 'enchase'\n", maxBytes: 53248 },
   { label: 'ColorModeProvider', source: "export { ColorModeProvider } from 'enchase'\n", maxBytes: 40960, styles: [] },
   { label: 'createTheme', source: "export { createTheme } from 'enchase/theme'\n", maxBytes: 32768, styles: [] },
   { label: 'enchase style', source: "export { enchase } from 'enchase/styles/enchase'\n", maxBytes: 16384, styles: ['enchase'] },

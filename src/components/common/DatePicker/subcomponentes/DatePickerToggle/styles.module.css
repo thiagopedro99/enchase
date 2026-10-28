@@ -1,0 +1,53 @@
+.toggle {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-end: var(--enchase-space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  background-color: transparent;
+  border: none;
+  color: var(--enchase-date-picker-toggle-color, var(--enchase-color-text-secondary));
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translateY(-50%);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--enchase-date-picker-duration, var(--enchase-motion-duration-fast)) var(--enchase-date-picker-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-date-picker-duration, var(--enchase-motion-duration-fast)) var(--enchase-date-picker-ease, var(--enchase-motion-ease-out));
+}
+
+:where(.toggle) {
+  inline-size: max(24px, var(--enchase-hit-size, 40px));
+  block-size: max(24px, var(--enchase-hit-size, 40px));
+  min-inline-size: 24px;
+  min-block-size: 24px;
+  border-radius: var(--enchase-date-picker-toggle-radius, var(--enchase-radius-button));
+}
+
+.toggle:focus-visible {
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset, 2px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .toggle:hover:not(:disabled) {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
+    color: var(--enchase-date-picker-toggle-color-hover, var(--enchase-color-text-primary));
+  }
+}
+
+.toggle:active:not(:disabled) {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
+}
+
+.toggle:disabled {
+  color: var(--enchase-date-picker-toggle-color-disabled, var(--enchase-color-text-disabled));
+  opacity: var(--enchase-input-opacity-disabled, 1);
+  cursor: not-allowed;
+}

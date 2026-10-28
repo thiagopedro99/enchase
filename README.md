@@ -117,11 +117,11 @@ Each toast method (`success`, `error`, `warning`, `info` and `addToast`) returns
 ## Components
 
 - **Actions:** `Button`, `ButtonLink`, `Link`, `ThemeToggle`
-- **Forms:** `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `Checkbox`, `CheckboxGroup`, `Switch`, `RadioGroup`, `SegmentedControl`, `Slider`
+- **Forms:** `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `Checkbox`, `CheckboxGroup`, `Switch`, `RadioGroup`, `SegmentedControl`, `Slider`
 - **Content:** `Accordion`, `Alert`, `Avatar`, `Badge`, `Card`, `CardButton`, `CardLink`, `Divider`, `Skeleton`, `Table`, `Tabs`, `Tag`
 - **Feedback and overlays:** `Loading`, `InlineLoading`, `Progress`, `Modal`, `ConfirmModal`, `Drawer`, `Popover`, `Menu`, `Tooltip`, and the toasts (`ToastProvider` and `useToast`)
 - **Navigation and layout:** `Breadcrumbs`, `Footer`, `Layout`, `Navbar`, `Pagination`, `Sidebar`, `Container`, `Flex`, `Grid`
-- **Utilities:** `Icon`, `VisuallyHidden`, and the 19 icons the components use inside, in `enchase/icons`
+- **Utilities:** `Icon`, `VisuallyHidden`, and the 20 icons the components use inside, in `enchase/icons`
 
 Each one has a page in the [Storybook](https://enchase.othiagosilva.com.br/docs/) and a section in [API.md](API.md).
 
@@ -149,7 +149,7 @@ What you pass overrides the style, and your own CSS overrides both: every part h
 - **No router needed.** `Link`, `ButtonLink`, the items of `Sidebar` and `Navbar`, `Breadcrumbs` and the links of `Footer` are real `<a href>`. Give `UIProvider` a `navigate` function and a plain click on a route of your app goes through it; without one, the links reload the page. `currentHref` marks the active item.
 - **Languages and RTL.** The accessibility texts come from the `locale` of `UIProvider`: English by default, and `ptBR` ships in `enchase/locales`. A custom locale with `dir: 'rtl'` covers right-to-left languages. The CSS uses logical properties, and what has to be mirrored (the directional icons, the thumb of the switch, the notch of the floating labels) follows the `dir` attribute of the document or of an ancestor, whatever its `lang`, through plain attribute selectors that no build step rewrites. Setting `dir="rtl"` on `<html>` is up to your app, and a `dir="ltr"` island inside a right-to-left page is not un-mirrored.
 - **Server rendering.** The components render on the server without hydration errors. The package is marked `'use client'`, so server pages and layouts import the components directly.
-- **Overlays and local themes.** `Modal`, `ConfirmModal`, `Drawer`, `Popover`, `Menu`, the list of the `Combobox`, `Tooltip`, the `Loading` overlay and the notification region of `ToastProvider` render in a portal on `<body>`. The theme reaches them, because its variables live on `:root` and `[data-theme]`, but a variable that you override on an element of your app does not, because inheritance follows the DOM tree. Pass `container`, an element or a function that returns one, to render the overlay inside that element so it inherits your overrides; a notification region inside the page stays reachable when a modal makes the rest of the page inert. The overlays are `position: fixed`, so an ancestor of the container with `transform`, `filter` or `contain` moves them, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines their `z-index` to it: pick a container without those.
+- **Overlays and local themes.** `Modal`, `ConfirmModal`, `Drawer`, `Popover`, `Menu`, the list of the `Combobox`, the calendar of the `DatePicker`, `Tooltip`, the `Loading` overlay and the notification region of `ToastProvider` render in a portal on `<body>`. The theme reaches them, because its variables live on `:root` and `[data-theme]`, but a variable that you override on an element of your app does not, because inheritance follows the DOM tree. Pass `container`, an element or a function that returns one, to render the overlay inside that element so it inherits your overrides; a notification region inside the page stays reachable when a modal makes the rest of the page inert. The overlays are `position: fixed`, so an ancestor of the container with `transform`, `filter` or `contain` moves them, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines their `z-index` to it: pick a container without those.
 - **Two stylesheets.** `enchase/styles.css` is the one in the quick start. `enchase/styles.layer.css` is the same CSS inside `@layer enchase`, so any unlayered CSS of yours wins in any order. Import one of them, never both.
 
 ## Package entries
@@ -160,7 +160,7 @@ What you pass overrides the style, and your own CSS overrides both: every part h
 | `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring`, `timedSpring`, `themeCss` and the tokens (`baseTokens`, `defaultTheme`, `lightTheme`, `darkTheme`, `breakpoints`, `colorRoles`, `themeModes`, `defaultThemeCss`), with their types. Nothing else is public. No React. |
 | `enchase/styles/<name>` | One visual style per entry: `enchase/styles/shadcn` and `enchase/styles/enchase`. Data only, no React, and only in the bundle of whoever imports it. |
 | `enchase/locales` | `en` and `ptBR` (`{ locale, dir, messages }`). Data only. |
-| `enchase/icons` | The 19 icons the components use inside, one component per icon. Works in Server Components. |
+| `enchase/icons` | The 20 icons the components use inside, one component per icon. Works in Server Components. |
 | `enchase/styles.css` | The CSS of the components. |
 | `enchase/styles.layer.css` | The same CSS inside `@layer enchase`. |
 | `enchase/theme.css` | The variables of the default theme, light and dark, as a static file. |

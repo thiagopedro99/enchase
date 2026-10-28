@@ -19,6 +19,7 @@ const buttons = [
   'common/Breadcrumbs/styles.module.css',
   'common/Combobox/subcomponentes/ComboboxOptions/styles.module.css',
   'common/Combobox/subcomponentes/ComboboxToggle/styles.module.css',
+  'common/DatePicker/subcomponentes/DatePickerToggle/styles.module.css',
   'common/DatePicker/subcomponentes/Calendar/subcomponentes/CalendarGrid/styles.module.css',
   'common/DatePicker/subcomponentes/Calendar/subcomponentes/CalendarHeader/styles.module.css',
   'common/Drawer/styles.module.css',

@@ -16,6 +16,7 @@ import { Card } from '@components/common/Card/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { Combobox } from '@components/common/Combobox/index.tsx'
+import { DatePicker } from '@components/common/DatePicker/index.tsx'
 import { Container } from '@components/common/Container/index.tsx'
 import { Divider } from '@components/common/Divider/index.tsx'
 import { Flex } from '@components/common/Flex/index.tsx'
@@ -83,6 +84,7 @@ const cases: [string, string, ComponentType<never>, Record<string, unknown>][] =
   ['Combobox', 'ComboboxBaseProps', Combobox, { options }],
   ['Combobox', 'ComboboxSingleProps', Combobox, { options }],
   ['Combobox', 'ComboboxMultipleProps', Combobox, { multiple: true, options }],
+  ['DatePicker', 'DatePickerProps', DatePicker, {}],
   ['Container', 'ContainerProps', Container, { children: 'x' }],
   ['Divider', 'DividerProps', Divider, {}],
   ['Flex', 'FlexProps', Flex, { children: 'x' }],

@@ -37,7 +37,9 @@ export const en: Locale = {
     noResults: 'No results',
     showOptions: 'Show options',
     previousMonth: 'Previous month',
-    nextMonth: 'Next month'
+    nextMonth: 'Next month',
+    openCalendar: 'Open calendar',
+    chooseDate: 'Choose date'
   }
 }
 

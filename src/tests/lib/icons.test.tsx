@@ -44,7 +44,7 @@ describe('enchase/icons', () => {
     )
 
     expect(names).toEqual([...used].sort())
-    expect(names).toHaveLength(19)
+    expect(names).toHaveLength(20)
   })
 
   it('has a source file for every icon it exports and exports every source file', () => {
