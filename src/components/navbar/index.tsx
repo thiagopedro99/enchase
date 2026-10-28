@@ -4,11 +4,10 @@ import { MenuIcon } from '@components/common/Icon/icons/MenuIcon.tsx'
 
 import { defaultLogo, defaultLogoHref, defaultSections, defaultTranslucent, drawerOverride, staggerVariables } from './defaultData.ts'
 import { currentOf } from '../common/Sidebar/defaultData.ts'
+import { DrawerLayer } from '@components/common/Drawer/DrawerLayer.tsx'
 import { useCurrentHref } from '@hooks/useCurrentHref.ts'
 import { Link } from '@components/common/Link/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
-import { useModalBehavior } from '@hooks/useModalBehavior.ts'
-import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { useIsClient } from '@hooks/useIsClient.ts'
@@ -43,50 +42,40 @@ const NavbarLinks = ({ items, activeSectionId, linkClassName, onSelect, staggere
 }
 
 const MobileDrawer = ({ layout, id, items, activeSectionId, actions, open, state, drawerRef, motionStyle, onClose }: MobileDrawerProps) => {
-  const rootRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
-  const isTop = useOverlayStack(open)
-
-  useModalBehavior({ rootRef, dialogRef: drawerRef, onEscape: () => isTop() && onClose() })
 
   const closeOnLink = (event: MouseEvent<HTMLElement>) => {
     if ((event.target as Element).closest('a[href]')) onClose()
   }
 
   return (
-    <div ref={rootRef} {...slot('navbar', 'drawer-root')} className={styles.drawerRoot} data-layout={layout}>
-      <div {...slot('navbar', 'overlay')} className={styles.overlay} style={motionStyle} data-state={state} onClick={onClose} />
-
-      <div
-        ref={drawerRef}
-        {...slot('navbar', 'drawer')}
-        id={id}
-        className={styles.mobileMenu}
-        style={{ ...motionStyle, ...staggerVariables(motionStyle) }}
-        data-state={state}
-        role="dialog"
-        aria-modal="true"
-        aria-label={labels.mobileNavigation}
-        tabIndex={-1}
-      >
-        <div {...slot('navbar', 'drawer-header')} className={styles.drawerHeader}>
-          <ThemeToggle />
-          <button {...slot('navbar', 'drawer-close')} type="button" className={styles.closeButton} onClick={onClose} aria-label={labels.closeMenu}>
-            <CloseIcon />
-          </button>
-        </div>
-
-        <nav {...slot('navbar', 'drawer-nav')} className={styles.mobileNav} aria-label={labels.mobileNavigation}>
-          <NavbarLinks items={items} activeSectionId={activeSectionId} linkClassName={styles.mobileMenuLink} onSelect={onClose} staggered />
-        </nav>
-
-        {actions ? (
-          <div {...slot('navbar', 'drawer-cta')} className={styles.drawerCta} onClick={closeOnLink}>
-            {actions}
-          </div>
-        ) : null}
+    <DrawerLayer
+      open={open}
+      state={state}
+      panelRef={drawerRef}
+      label={labels.mobileNavigation}
+      onClose={onClose}
+      root={{ ...slot('navbar', 'drawer-root'), className: styles.drawerRoot, 'data-layout': layout }}
+      overlay={{ ...slot('navbar', 'overlay'), className: styles.overlay, style: motionStyle }}
+      panel={{ ...slot('navbar', 'drawer'), id, className: styles.mobileMenu, style: { ...motionStyle, ...staggerVariables(motionStyle) } }}
+    >
+      <div {...slot('navbar', 'drawer-header')} className={styles.drawerHeader}>
+        <ThemeToggle />
+        <button {...slot('navbar', 'drawer-close')} type="button" className={styles.closeButton} onClick={onClose} aria-label={labels.closeMenu}>
+          <CloseIcon />
+        </button>
       </div>
-    </div>
+
+      <nav {...slot('navbar', 'drawer-nav')} className={styles.mobileNav} aria-label={labels.mobileNavigation}>
+        <NavbarLinks items={items} activeSectionId={activeSectionId} linkClassName={styles.mobileMenuLink} onSelect={onClose} staggered />
+      </nav>
+
+      {actions ? (
+        <div {...slot('navbar', 'drawer-cta')} className={styles.drawerCta} onClick={closeOnLink}>
+          {actions}
+        </div>
+      ) : null}
+    </DrawerLayer>
   )
 }
 
