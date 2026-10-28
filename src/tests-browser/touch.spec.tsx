@@ -11,6 +11,7 @@ import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Menu } from '@components/common/Menu/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
+import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
@@ -216,6 +217,39 @@ describe('the menu on a touch device in a real browser', () => {
 
       await expect.poll(() => part('popover-content'), { timeout: 4000 }).toBeUndefined()
       expect(log).toEqual(['duplicate'])
+    } finally {
+      await disableTouch()
+    }
+  })
+})
+
+describe('the segmented control on a touch device in a real browser', () => {
+  touchCapable('touchEmulation')('checks an option with a tap and does not tint the others on hover', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(
+        <SegmentedControl
+          ariaLabel="Visão"
+          items={[
+            { value: 'list', label: 'Lista' },
+            { value: 'board', label: 'Quadro' }
+          ]}
+        />
+      )
+
+      const [list, board] = parts('segmented-control-item')
+
+      expect(matchMedia('(hover: none)').matches).toBe(true)
+
+      await page.elementLocator(list).hover()
+      await frames(4)
+
+      expect(getComputedStyle(list).backgroundColor).toBe('rgba(0, 0, 0, 0)')
+
+      await page.elementLocator(board).click()
+
+      await expect.poll(() => board.getAttribute('aria-checked')).toBe('true')
+      expect(list.getAttribute('aria-checked')).toBe('false')
     } finally {
       await disableTouch()
     }

@@ -9,6 +9,7 @@ import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
+import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
@@ -67,6 +68,7 @@ describe('minimum target size in a real browser', () => {
         <Checkbox label="Aceito" />
         <Switch label="Ligado" />
         <RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }]} />
+        <SegmentedControl ariaLabel="Visão" size="sm" items={[{ value: 'list', label: 'Lista' }]} />
         <CheckboxGroup label="Assuntos" options={[{ value: 'news', label: 'Novidades' }]} />
         <Tabs items={[{ value: 'a', label: 'Aba', content: 'Conteúdo' }]} />
         <Accordion items={[{ value: 'a', title: 'Pergunta', content: 'Resposta' }]} />
@@ -83,6 +85,7 @@ describe('minimum target size in a real browser', () => {
       page.getByRole('checkbox', { name: 'Aceito' }),
       page.getByRole('switch', { name: 'Ligado' }),
       page.getByRole('radio', { name: 'Grátis' }),
+      page.getByRole('radio', { name: 'Lista' }),
       page.getByRole('tab', { name: 'Aba' }),
       page.getByRole('button', { name: 'Pergunta' }),
       page.getByRole('button', { name: '2', exact: true }),

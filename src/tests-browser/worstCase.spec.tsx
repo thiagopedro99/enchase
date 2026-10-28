@@ -14,6 +14,7 @@ import { Modal } from '@components/common/Modal/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
+import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
@@ -159,6 +160,8 @@ describe.each(widths)('worst case data at %ipx', (width) => {
         <RadioGroup label={worstCase.germanCompound} helperText={worstCase.longUrl} options={[{ value: 'a', label: `${worstCase.frenchLabel} ${worstCase.longEmail}` }, { value: 'b', label: worstCase.shortName }]} />
         <RadioGroup label={worstCase.longTitle} error={worstCase.longUrl} orientation="horizontal" options={[{ value: 'a', label: worstCase.longEmail }, { value: 'b', label: worstCase.fileName }]} />
         <CheckboxGroup label={worstCase.germanCompound} helperText={worstCase.longUrl} options={[{ value: 'a', label: `${worstCase.frenchLabel} ${worstCase.longEmail}` }, { value: 'b', label: worstCase.shortName }]} />
+        <SegmentedControl ariaLabel={worstCase.germanCompound} items={[{ value: 'a', label: worstCase.germanCompound }, { value: 'b', label: worstCase.shortName }]} />
+        <SegmentedControl multiple fullWidth ariaLabel={worstCase.longTitle} items={[{ value: 'a', label: worstCase.longEmail }, { value: 'b', label: worstCase.fileName }, { value: 'c', label: worstCase.shortName }]} />
         <CheckboxGroup label={worstCase.longTitle} error={worstCase.longUrl} orientation="horizontal" options={[{ value: 'a', label: worstCase.longEmail }, { value: 'b', label: worstCase.fileName }]} />
       </div>
     )

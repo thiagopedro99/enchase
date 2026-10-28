@@ -10,6 +10,7 @@ import { Link } from '@components/common/Link/index.tsx'
 import { Menu } from '@components/common/Menu/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
+import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
@@ -157,6 +158,15 @@ describe('touch handling on the interactive controls', () => {
     await expect.poll(() => document.querySelector('[data-slot="menu-item"]')).toBeTruthy()
 
     const item = document.querySelector('[data-slot="menu-item"]') as HTMLElement
+
+    expect(getComputedStyle(item).touchAction).toBe('manipulation')
+    if (supportsTapHighlight) expect(getComputedStyle(item).getPropertyValue('-webkit-tap-highlight-color')).toBe(noHighlight)
+  })
+
+  it('applies the same handling to the options of the segmented control', () => {
+    renderInBrowser(<SegmentedControl ariaLabel="Visão" items={[{ value: 'a', label: 'Lista' }]} />)
+
+    const item = document.querySelector('[data-slot="segmented-control-item"]') as HTMLElement
 
     expect(getComputedStyle(item).touchAction).toBe('manipulation')
     if (supportsTapHighlight) expect(getComputedStyle(item).getPropertyValue('-webkit-tap-highlight-color')).toBe(noHighlight)

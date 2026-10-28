@@ -17,6 +17,7 @@ import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
 import Popover from '@components/common/Popover/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
+import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
@@ -328,6 +329,18 @@ describe('the selection controls of the shadcn style', () => {
     show(<CheckboxGroup label="Topics" options={[{ value: 'a', label: 'A' }]} />)
 
     expect(style('checkbox-group-legend').color).toBe(roleColor('text-primary'))
+  })
+
+  it('draws the segmented control with a light border, 8px corners, a gray fill on the checked option and 36px of height', () => {
+    show(<SegmentedControl ariaLabel="View" items={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }]} defaultValue="a" />)
+
+    expect(style('segmented-control').borderTopColor).toBe('rgb(229, 229, 229)')
+    expect(px(style('segmented-control').borderTopLeftRadius)).toBe(8)
+    expect(px(style('segmented-control').height)).toBe(36)
+    expect(style('segmented-control-item', 0).backgroundColor).toBe('rgb(245, 245, 245)')
+    expect(style('segmented-control-item', 0).color).toBe('rgb(10, 10, 10)')
+    expect(style('segmented-control-item', 1).borderInlineStartColor).toBe('rgb(229, 229, 229)')
+    expect([px(style('segmented-control-item', 0).paddingLeft), px(style('segmented-control-item', 0).fontSize)]).toEqual([12, 14])
   })
 
   it('keeps the 2px ring 2px from the box of the checkbox', async () => {
