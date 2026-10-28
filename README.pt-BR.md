@@ -141,6 +141,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Drawer` | `<Drawer open={open} onClose={close} title="Filtros" side="end">...</Drawer>`: painel que desliza de uma borda da página, com portal, `container`, foco preso e a página inerte, como o `Modal`; `side` (`start` ou `end`) acompanha a direção da página |
 | `Tooltip` | `<Tooltip text="Ajuda"><button>?</button></Tooltip>` |
 | `Popover` | `<Popover label="Detalhes" content={<p>Conteúdo</p>}><button>Abrir</button></Popover>` |
+| `Menu` | `<Menu label="Ações" items={[{ id: 'editar', label: 'Editar', onSelect: editar }, { id: 'sep', separator: true }, { id: 'apagar', label: 'Apagar', onSelect: apagar }]}><button>Ações</button></Menu>`: lista de ações aberta por um botão (`role="menu"`, sobre o `Popover`), com setas, Home, End e digitação para ir a um item; escolher um item chama o `onSelect` dele, fecha o menu e devolve o foco ao botão, e Esc e Tab também fecham |
 | `Loading`, `InlineLoading` | `<Loading overlay text="Carregando" />` |
 | `Progress` | `<Progress value={40} aria-label="Enviando fotos" />`; sem `value` é indeterminado, e `variant="circular"` desenha um anel |
 | `Skeleton` | `<Skeleton variant="text" width="12rem" />` |
@@ -221,7 +222,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `value`, `defaultValue` e `onValueChange` (numérico) | `NumberInput` | O número do campo, ou `null` com o campo vazio, controlado ou não. `onValueChange` recebe o número já confirmado (ao sair do campo, com Enter, com as setas e com os botões), limitado a `min` e `max` e arredondado às casas do formato, nunca a cada tecla. |
 | `page`, `defaultPage` e `onPageChange` | `Pagination` | Página atual (a primeira é 1), controlada ou não. `onPageChange` recebe o número da página que o usuário escolheu. |
 | `onClose` | `Alert` | Mostra o botão de fechar. O `Alert` não some sozinho: quem usa o remove ao receber o evento. |
-| `open`, `defaultOpen` e `onOpenChange` | `Popover` e o drawer do `Layout` | Controlados ou não. A `Sidebar` modal usa `open` e `onClose`. |
+| `open`, `defaultOpen` e `onOpenChange` | `Popover`, `Menu` e o drawer do `Layout` | Controlados ou não. A `Sidebar` modal usa `open` e `onClose`. |
 
 Componentes que estendem um elemento HTML (`Button`, `Input`, `Card`, `Footer`, `Layout` e outros) repassam os demais atributos para ele, como `id`, `aria-*`, `data-*` e handlers.
 
@@ -690,7 +691,7 @@ O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 
 ### Overlays dentro de um trecho da página
 
-`Modal`, `ConfirmModal`, `Drawer`, `Popover`, `Tooltip`, o `Loading` com `overlay` e a região de notificações do `ToastProvider` renderizam num portal no `<body>`. As variáveis do tema chegam até eles, porque são declaradas em `:root` e em `[data-theme]`, mas uma variável que você muda num elemento do app (uma ilha com `data-theme="dark"`, um `div` com ganchos `--enchase-*` próprios) não chega, porque a herança segue a árvore do DOM e o portal está no `body`. A prop `container`, um elemento ou uma função que o devolve, monta o overlay dentro desse elemento, que passa a herdar as variáveis dele (a região de notificações dentro da página continua alcançável quando um modal deixa o resto da página inerte):
+`Modal`, `ConfirmModal`, `Drawer`, `Popover`, `Menu`, `Tooltip`, o `Loading` com `overlay` e a região de notificações do `ToastProvider` renderizam num portal no `<body>`. As variáveis do tema chegam até eles, porque são declaradas em `:root` e em `[data-theme]`, mas uma variável que você muda num elemento do app (uma ilha com `data-theme="dark"`, um `div` com ganchos `--enchase-*` próprios) não chega, porque a herança segue a árvore do DOM e o portal está no `body`. A prop `container`, um elemento ou uma função que o devolve, monta o overlay dentro desse elemento, que passa a herdar as variáveis dele (a região de notificações dentro da página continua alcançável quando um modal deixa o resto da página inerte):
 
 ```tsx
 const [island, setIsland] = useState<HTMLElement | null>(null)
@@ -712,7 +713,7 @@ Os componentes renderizam no servidor sem erro de hidratação.
 
 - `ColorModeScript` aplica o `data-theme` antes da primeira pintura (por isso o `suppressHydrationWarning` no `<html>`). Sem JavaScript, o tema escuro do sistema vale por `@media (prefers-color-scheme: dark)`.
 - `Layout` e `Navbar` renderizam o modo desktop no servidor e trocam pelo breakpoint com CSS gerado, sem quadro compacto antes da hidratação.
-- Portais (`Modal`, `Drawer`, `Loading` com overlay, `Tooltip`, `Popover` e a região de notificações do `ToastProvider`) abrem só depois da montagem. A região de notificações vive em um `div` próprio no `<body>` (`data-slot="toast-host"`, com `display: contents`), fora da árvore do app: um modal deixa o resto da página `inert`, mas não essa região, então uma notificação disparada com o modal aberto continua anunciada e clicável. O `data-slot="toast-host"` é um detalhe interno: não é uma API para isentar uma região sua do `inert`.
+- Portais (`Modal`, `Drawer`, `Loading` com overlay, `Tooltip`, `Popover`, `Menu` e a região de notificações do `ToastProvider`) abrem só depois da montagem. A região de notificações vive em um `div` próprio no `<body>` (`data-slot="toast-host"`, com `display: contents`), fora da árvore do app: um modal deixa o resto da página `inert`, mas não essa região, então uma notificação disparada com o modal aberto continua anunciada e clicável. O `data-slot="toast-host"` é um detalhe interno: não é uma API para isentar uma região sua do `inert`.
 - O pacote marca todo o `enchase` como `'use client'`: páginas e layouts de servidor importam os componentes direto, e a fronteira de cliente é o pacote inteiro.
 
 ## Testes

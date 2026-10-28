@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -413,6 +413,27 @@ A ring-shaped loading indicator, with optional text. With `overlay`, it covers t
 | `animation` | `false \| { recipe, tuning }` | `spin` | false stops the spinning. { tuning: { duration } } sets the seconds of one full turn. With reduced motion the spin becomes an opacity pulse. |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
+
+### Menu
+
+A button that opens a list of actions. It is a `Popover` with `role="menu"`: the arrow keys, Home and End move through the items, typing letters jumps to the item that starts with them, Enter, Space or a click chooses the item, and the menu closes and gives the focus back to the button. Esc closes it too, and Tab closes it and moves the focus on, as in the menus of the operating system. Use it for commands, such as the actions of a row. For a choice that stays selected, use the `Select`; for a panel with fields or text, use the `Popover`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `children` | `ReactNode` | *required* | The element that opens the menu, normally a button. It receives aria-haspopup, aria-expanded and aria-controls, and the arrow keys: ArrowDown opens the menu on the first item and ArrowUp on the last. |
+| `items` | `MenuEntry[]` | *required* | The entries of the menu, in order. An item is { id, label, textValue?, icon?, disabled?, onSelect? } and a separator is { id, separator: true }. The label is any node; give textValue when it is not a string, so that typing letters can find the item. A disabled item is announced as unavailable, is skipped by the arrow keys and by typing, and does nothing when it is clicked. |
+| `label` | `string` | *required* | Accessible name of the menu (aria-label of the list). It is not shown: name what the actions are about. |
+| `open` | `boolean` | — | Opens and closes the menu, when you control it. Use it together with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Whether the menu starts open, when you do not control it. An open menu does not take the focus until the user interacts. |
+| `onOpenChange` | `(open: boolean) => void` | — | Called with the new state whenever the menu opens or closes: click, keyboard, Esc, a click outside or a chosen item. |
+| `placement` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-start' \| 'bottom-end' \| 'left-start' \| 'left-end' \| 'start-start' \| 'start-end' \| 'end-start' \| 'end-end'` | `'bottom-start'` | Side and alignment relative to the button. start and end follow the direction of the UIProvider. Near the edge the menu flips to the other side, slides to fit and shrinks to the available space, scrolling inside. |
+| `offset` | `number` | `4` | Distance in px between the button and the menu. |
+| `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
+| `animation` | `MotionOverride` | — | false turns off the motion; { tuning: { duration } } changes how long the menu takes to appear and the hover color to change. |
+| `className` | `string` | — | Class of the wrapper around the button (data-slot="popover-trigger"). It wins over the library class without !important. |
+| `style` | `CSSProperties` | — | Style of the wrapper around the button, merged with the library style (yours wins). |
+| `contentClassName` | `string` | — | Class of the box of the menu (data-slot="popover-content"): the background, the border and the shadow. The list inside is data-slot="menu" and each item is data-slot="menu-item". |
+| `contentStyle` | `CSSProperties` | — | Style of the box of the menu, merged with the library style (yours wins). |
 
 ### Modal
 
@@ -1349,6 +1370,30 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-loading-text-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-loading-text-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-loading-text-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+
+### Menu
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-menu-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-menu-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-menu-item-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-menu-item-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-menu-item-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-menu-item-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-menu-item-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-menu-item-icon-height` | `1.25rem` | `block-size` |
+| `--enchase-menu-item-icon-width` | `1.25rem` | `inline-size` |
+| `--enchase-menu-item-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
+| `--enchase-menu-item-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-menu-item-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-menu-item-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-menu-min-width` | `10rem` | `min-inline-size` |
+| `--enchase-menu-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-menu-padding-inline` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
+| `--enchase-menu-separator-background` | `var(--enchase-color-border)` | `background-color` |
+| `--enchase-menu-separator-margin-block` | `0.25rem` (`--enchase-space-xs`) | `margin-block` |
+| `--enchase-menu-separator-margin-inline` | `0` | `margin-inline` |
 
 ### MenuToggleIcon
 

@@ -113,7 +113,7 @@ export const Popover = ({
             <PopoverTreeContext.Provider value={tree}>
               <PopoverControlContext.Provider value={control}>
                 <div {...contentProps}>
-                  <div ref={bodyRef} tabIndex={-1} {...slot('popover', 'body')} className={styles.body}>
+                  <div ref={bodyRef} tabIndex={role === 'menu' ? undefined : -1} {...slot('popover', 'body')} className={styles.body}>
                     {content}
                   </div>
                   {arrow && <span ref={arrowRef} aria-hidden="true" {...slot('popover', 'arrow')} className={styles.arrow} />}

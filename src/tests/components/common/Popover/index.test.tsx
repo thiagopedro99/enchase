@@ -385,6 +385,16 @@ describe('Popover with the menu role', () => {
     expect(await screen.findByRole('menu', { name: 'Ações' })).toHaveAttribute('id', trigger.getAttribute('aria-controls'))
   })
 
+  it('does not make the scrolling body focusable, since the items hold the focus', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(withNeighbours)
+
+    await user.click(screen.getByRole('button', { name: 'Abrir' }))
+    await screen.findByRole('menu')
+
+    expect(document.querySelector('[data-slot="popover-body"]')).not.toHaveAttribute('tabindex')
+  })
+
   it('closes with Tab from any item and takes the focus to the next element after the trigger', async () => {
     const user = userEvent.setup()
     renderWithProviders(withNeighbours)

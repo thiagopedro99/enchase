@@ -1,10 +1,17 @@
 import { useEffect, useRef } from 'react'
 
-import type { KeyboardEvent } from 'react'
-
 export type NavigationItem = {
   disabled?: boolean | undefined
   text?: string | undefined
+}
+
+export type NavigationEvent = {
+  key: string
+  altKey: boolean
+  ctrlKey: boolean
+  metaKey: boolean
+  shiftKey: boolean
+  currentTarget: EventTarget | null
 }
 
 export type ListNavigationOptions = {
@@ -57,7 +64,7 @@ export const useListNavigation = ({ items, orientation = defaultOrientation, loo
 
   useEffect(() => () => clearTimeout(search.current.timer), [])
 
-  return (event: KeyboardEvent<HTMLElement>, current: number) => {
+  return (event: NavigationEvent, current: number) => {
     if (event.altKey || event.ctrlKey || event.metaKey) return undefined
 
     const enabled = items.flatMap((item, index) => (item.disabled ? [] : [index]))
@@ -78,7 +85,7 @@ export const useListNavigation = ({ items, orientation = defaultOrientation, loo
     if (event.key === 'Home') return enabled[0]
     if (event.key === 'End') return enabled[enabled.length - 1]
 
-    const step = stepOf(event.key, orientation, getComputedStyle(event.currentTarget).direction === 'rtl')
+    const step = stepOf(event.key, orientation, getComputedStyle(event.currentTarget as Element).direction === 'rtl')
 
     return step === 0 ? undefined : move(enabled, current, step, loop)
   }

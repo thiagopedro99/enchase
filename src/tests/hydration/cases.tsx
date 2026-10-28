@@ -27,6 +27,7 @@ import { Table } from '@components/common/Table/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Divider } from '@components/common/Divider/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
+import { Menu } from '@components/common/Menu/index.tsx'
 import { Avatar } from '@components/common/Avatar/index.tsx'
 import { Tag } from '@components/common/Tag/index.tsx'
 import { Progress } from '@components/common/Progress/index.tsx'
@@ -100,6 +101,8 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'ConfirmModal open', element: <ConfirmModal isOpen onClose={noop} onConfirm={noop} message="Are you sure?" /> },
   { name: 'Drawer closed', element: <Drawer open={false} onClose={noop} title="Menu">Body</Drawer> },
   { name: 'Drawer open', element: <Drawer open onClose={noop} title="Menu" side="end" size="lg" footer={<Button>Apply</Button>}>Body</Drawer> },
+  { name: 'Menu closed', element: <Menu label="Actions" items={[{ id: 'edit', label: 'Edit' }]}><Button>Actions</Button></Menu> },
+  { name: 'Menu open', element: <Menu open label="Actions" items={[{ id: 'edit', label: 'Edit' }, { id: 'sep', separator: true }, { id: 'delete', label: 'Delete', disabled: true }]}><Button>Actions</Button></Menu> },
   { name: 'Loading overlay', element: <Loading overlay text="Loading" /> },
   { name: 'Loading inline', element: <InlineLoading label="Loading" /> },
   { name: 'Skeleton', element: <Skeleton /> },

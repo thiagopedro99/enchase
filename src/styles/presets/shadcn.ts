@@ -217,6 +217,16 @@ const containers: HookValues = {
   '--enchase-popover-content-radius': 'var(--enchase-radius-md)',
   '--enchase-popover-content-border-width': 'var(--enchase-border-width)',
 
+  '--enchase-menu-min-width': '8rem',
+  '--enchase-menu-item-padding-block': '0.375rem',
+  '--enchase-menu-item-padding-inline': '0.5rem',
+  '--enchase-menu-item-radius': 'var(--enchase-radius-sm)',
+  '--enchase-menu-item-font-size': 'var(--enchase-font-size-sm)',
+  '--enchase-menu-item-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-menu-item-icon-width': '1rem',
+  '--enchase-menu-item-icon-height': '1rem',
+  '--enchase-menu-separator-margin-inline': '-0.25rem',
+
   '--enchase-tooltip-bubble-radius': 'var(--enchase-radius-md)',
   '--enchase-tooltip-bubble-padding': '0.375rem 0.75rem',
 

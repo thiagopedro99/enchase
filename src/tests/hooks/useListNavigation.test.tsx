@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { act, fireEvent, render, screen } from '@testing-library/react'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { useListNavigation } from '@hooks/useListNavigation.ts'
 
@@ -47,6 +47,34 @@ const Harness = ({ labels = defaultLabels, disabled = [], direction, ...options 
       ))}
     </div>
   )
+}
+
+const NativeHarness = () => {
+  const ref = useRef<HTMLDivElement>(null)
+  const navigate = useListNavigation({ items: defaultLabels.map((text) => ({ text })), typeahead: true })
+  const latest = useRef(navigate)
+
+  latest.current = navigate
+
+  useEffect(() => {
+    const node = ref.current
+
+    if (!node) return undefined
+
+    const controller = new AbortController()
+
+    node.addEventListener(
+      'keydown',
+      (event) => {
+        node.dataset.target = String(latest.current(event, Number(node.dataset.current)))
+      },
+      { signal: controller.signal }
+    )
+
+    return () => controller.abort()
+  }, [])
+
+  return <div ref={ref} data-testid="native" data-current="0" tabIndex={-1} />
 }
 
 const focusItem = (name: string) => act(() => screen.getByRole('button', { name }).focus())
@@ -226,6 +254,24 @@ describe('useListNavigation', () => {
       focusItem('Beta')
       press('ArrowDown')
       expect(focused()).toBe('Bravo')
+    })
+  })
+
+  describe('with a native keyboard event', () => {
+    it('answers a listener added with addEventListener, as it does for a React handler', () => {
+      render(<NativeHarness />)
+      const node = screen.getByTestId('native')
+      const targetOf = (key: string, init: KeyboardEventInit = {}) => {
+        fireEvent.keyDown(node, { key, ...init })
+
+        return node.dataset.target
+      }
+
+      expect(targetOf('ArrowDown')).toBe('1')
+      expect(targetOf('End')).toBe('4')
+      expect(targetOf('d')).toBe('4')
+      expect(targetOf('ArrowDown', { ctrlKey: true })).toBe('undefined')
+      expect(targetOf('Tab')).toBe('undefined')
     })
   })
 

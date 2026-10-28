@@ -18,6 +18,7 @@ const buttons = [
   'common/Breadcrumbs/styles.module.css',
   'common/Drawer/styles.module.css',
   'common/Input/styles.module.css',
+  'common/Menu/styles.module.css',
   'common/Modal/styles.module.css',
   'common/NumberInput/styles.module.css',
   'common/Sidebar/styles.module.css',
