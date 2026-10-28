@@ -13,7 +13,7 @@ const defaults = layoutVariables(baseTokens)
 
 const token = (name: string) => `var(--enchase-${name}, ${defaults[`--enchase-${name}`]})`
 
-const fieldFiles = ['common/Input', 'common/NumberInput', 'common/Select', 'common/Textarea'].map((name) => `${name}/styles.module.css`)
+const fieldFiles = ['common/Input', 'common/NumberInput', 'common/Select', 'common/Textarea', 'common/Combobox'].map((name) => `${name}/styles.module.css`)
 
 const forcedColorsFloor = `border-width: max(${token('border-width-strong')}, ${defaults['--enchase-border-width-strong']})`
 

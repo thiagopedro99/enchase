@@ -6,7 +6,7 @@ import { hookUses, withoutVariables } from './hooks.ts'
 
 const root = path.resolve(__dirname, '../../components/common')
 
-const fields = ['Input', 'NumberInput', 'Select', 'Textarea']
+const fields = ['Input', 'NumberInput', 'Select', 'Textarea', 'Combobox']
 
 const hooks: Record<string, string> = {
   '--enchase-input-min-width': '200px',
@@ -20,6 +20,7 @@ const hooks: Record<string, string> = {
 const geometry = /^(?:min-inline-size|max-inline-size|padding-block|padding-inline|padding-inline-end|font-size|inset-inline-start|transform)$/
 
 const fixed: Record<string, string[]> = {
+  'Combobox/styles.module.css': ['max-inline-size: 0.01px'],
   'Input/styles.module.css': ['max-inline-size: 0.01px'],
   'NumberInput/styles.module.css': ['max-inline-size: 0.01px'],
   'Select/styles.module.css': ['padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md)) 2.75rem', 'max-inline-size: calc(100% - 4rem)', 'max-inline-size: 0.01px'],
@@ -66,7 +67,7 @@ describe('the geometry of the fields', () => {
   })
 
   it('places the floating label from the height of the field instead of half of its default', () => {
-    for (const name of ['Input', 'NumberInput', 'Select']) {
+    for (const name of ['Input', 'NumberInput', 'Select', 'Combobox']) {
       const css = files.find(([file]) => file.startsWith(`${name}/`))?.[1] ?? ''
 
       expect(css, name).not.toContain('28px')

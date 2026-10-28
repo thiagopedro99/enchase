@@ -101,7 +101,7 @@ const dark: ThemeStyleMode = {
 
 const shadowXs = '0 1px 2px 0 rgb(0 0 0 / 0.05)'
 
-const fieldComponents = ['input', 'number-input', 'select', 'textarea']
+const fieldComponents = ['input', 'number-input', 'select', 'textarea', 'combobox']
 
 const fields: HookValues = {
   '--enchase-input-height': 'var(--enchase-control-height-md)',
@@ -119,6 +119,14 @@ const fields: HookValues = {
   '--enchase-select-option-padding-inline': '0.5rem',
   '--enchase-select-option-radius': 'var(--enchase-radius-sm)',
   '--enchase-select-option-font-weight-checked': 'var(--enchase-font-weight-regular)',
+  '--enchase-combobox-option-padding-block': '0.375rem',
+  '--enchase-combobox-option-padding-inline': '0.5rem',
+  '--enchase-combobox-option-radius': 'var(--enchase-radius-sm)',
+  '--enchase-combobox-option-font-size': 'var(--enchase-font-size-sm)',
+  '--enchase-combobox-option-font-weight-selected': 'var(--enchase-font-weight-regular)',
+  '--enchase-combobox-message-padding-block': '0.375rem',
+  '--enchase-combobox-message-padding-inline': '0.5rem',
+  '--enchase-combobox-message-font-size': 'var(--enchase-font-size-sm)',
   ...Object.fromEntries(fieldComponents.flatMap((name) => [[`--enchase-${name}-helper-font-size`, 'var(--enchase-font-size-sm)'], [`--enchase-${name}-error-font-size`, 'var(--enchase-font-size-sm)']]))
 }
 

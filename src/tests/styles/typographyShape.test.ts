@@ -8,6 +8,7 @@ import { hookUses } from './hooks.ts'
 
 const fixed: Record<string, string[]> = {
   'common/Input/styles.module.css': ['font-size: var(--enchase-font-size-base)', 'font-weight: var(--enchase-font-weight-regular)', 'font-size: var(--enchase-font-size-xs)'],
+  'common/Combobox/styles.module.css': ['font-size: var(--enchase-font-size-base)', 'font-weight: var(--enchase-font-weight-regular)', 'font-size: var(--enchase-font-size-xs)'],
   'common/NumberInput/styles.module.css': ['font-size: var(--enchase-font-size-base)', 'font-weight: var(--enchase-font-weight-regular)', 'font-size: var(--enchase-font-size-xs)'],
   'common/Select/styles.module.css': ['font-size: var(--enchase-font-size-base)', 'font-weight: var(--enchase-font-weight-regular)', 'font-size: var(--enchase-font-size-xs)'],
   'common/Textarea/styles.module.css': ['font-size: var(--enchase-font-size-base)', 'font-weight: var(--enchase-font-weight-regular)', 'line-height: 1.5', 'font-size: var(--enchase-font-size-xs)']
@@ -95,9 +96,9 @@ describe('the typography and the shape of the components', () => {
   })
 
   it('shares one hook between the field and its outline, so the border and the input keep the same corners', () => {
-    for (const name of ['Input', 'NumberInput', 'Select', 'Textarea']) {
+    for (const name of ['Input', 'NumberInput', 'Select', 'Textarea', 'Combobox']) {
       const css = files.find(([file]) => file.startsWith(`common/${name}/`))?.[1] ?? ''
-      const radii = hookUses(css).filter((use) => /-field-radius$/.test(use.name))
+      const radii = hookUses(css).filter((use) => /-(?:field|control)-radius$/.test(use.name))
 
       expect(radii.length, name).toBeGreaterThanOrEqual(2)
       expect(new Set(radii.map((use) => use.name)).size, name).toBe(1)

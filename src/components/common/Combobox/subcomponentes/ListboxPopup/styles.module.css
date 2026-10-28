@@ -1,0 +1,66 @@
+.listbox {
+  position: fixed;
+  z-index: var(--enchase-z-popover);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-inline-size: var(--combobox-anchor-width, 0);
+  max-inline-size: var(--combobox-max-width, 100vw);
+  max-block-size: min(var(--enchase-combobox-listbox-max-height, 16rem), var(--combobox-max-height, 100vh));
+  max-block-size: min(var(--enchase-combobox-listbox-max-height, 16rem), var(--combobox-max-height, 100dvh));
+  overflow: auto;
+  overscroll-behavior: contain;
+  background-color: var(--enchase-popover-content-background, var(--enchase-color-surface-container-high));
+  color: var(--enchase-popover-content-color, var(--enchase-color-text-primary));
+  border: var(--enchase-popover-content-border-width, 0px) solid var(--enchase-popover-content-border-color, transparent);
+  box-shadow: var(--enchase-popover-content-shadow, var(--enchase-shadow-md));
+  opacity: 1;
+  transform: none;
+  transition-property: opacity, transform;
+  transition-duration: var(--enchase-combobox-duration, var(--enchase-motion-spring-snappy-duration));
+  transition-timing-function: var(--enchase-combobox-ease, var(--enchase-motion-spring-snappy));
+}
+
+:where(.listbox) {
+  padding-block: var(--enchase-combobox-listbox-padding-block, var(--enchase-space-xs));
+  padding-inline: var(--enchase-combobox-listbox-padding-inline, var(--enchase-space-xs));
+  border-radius: var(--enchase-popover-content-radius, var(--enchase-radius-lg));
+}
+
+.listbox:focus {
+  outline: none;
+}
+
+.listbox:where([data-state='entering'], [data-state='exiting']) {
+  opacity: 0;
+  transform: scale(var(--enchase-combobox-scale, 1));
+}
+
+.listbox:where([data-state='exiting']) {
+  transition-duration: var(--enchase-combobox-exit-duration, var(--enchase-motion-duration-fast));
+  transition-timing-function: var(--enchase-combobox-ease, var(--enchase-motion-ease-out));
+}
+
+.listbox:where([data-placement^='top']) {
+  transform-origin: 50% 100%;
+}
+
+.listbox:where([data-placement^='bottom']) {
+  transform-origin: 50% 0;
+}
+
+.listbox:where([data-reference-hidden]) {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .listbox:where([data-state='entering'], [data-state='exiting']) {
+    transform: none;
+  }
+
+  .listbox {
+    transition-property: opacity;
+  }
+}

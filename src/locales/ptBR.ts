@@ -33,7 +33,9 @@ export const ptBR: Locale = {
     decreaseValue: 'Diminuir valor',
     removeTag: 'Remover',
     selectRow: 'Selecionar linha',
-    selectAllRows: 'Selecionar todas as linhas'
+    selectAllRows: 'Selecionar todas as linhas',
+    noResults: 'Nenhum resultado',
+    showOptions: 'Mostrar opções'
   }
 }
 

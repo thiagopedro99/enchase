@@ -40,6 +40,8 @@ export type UILabels = {
   removeTag?: string | undefined
   selectRow?: string | undefined
   selectAllRows?: string | undefined
+  noResults?: string | undefined
+  showOptions?: string | undefined
 }
 
 export type UIConfig = {

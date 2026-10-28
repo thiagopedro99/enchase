@@ -17,6 +17,8 @@ const buttons = [
   'common/Tag/styles.module.css',
   'common/Alert/styles.module.css',
   'common/Breadcrumbs/styles.module.css',
+  'common/Combobox/subcomponentes/ComboboxOptions/styles.module.css',
+  'common/Combobox/subcomponentes/ComboboxToggle/styles.module.css',
   'common/Drawer/styles.module.css',
   'common/Input/styles.module.css',
   'common/Menu/styles.module.css',

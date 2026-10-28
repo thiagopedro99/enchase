@@ -1,0 +1,266 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:where(.wrapper) {
+  gap: var(--enchase-input-gap, var(--enchase-space-xs));
+  inline-size: auto;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+:where(.wrapper[data-full-width]) {
+  inline-size: 100%;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+:where(.field) {
+  inline-size: 100%;
+  min-inline-size: var(--enchase-input-min-width, 200px);
+  min-block-size: var(--enchase-input-height, 3.5rem);
+  padding-block: 0;
+  padding-inline-start: var(--enchase-input-padding-inline, var(--enchase-space-md));
+  padding-inline-end: calc(max(24px, var(--enchase-hit-size, 40px)) + var(--enchase-space-sm) * 2);
+  gap: var(--enchase-combobox-control-gap, var(--enchase-space-xs));
+  border-radius: var(--enchase-combobox-control-radius, var(--enchase-radius-control));
+}
+
+:where(.field[data-multiple]) {
+  padding-block: var(--enchase-combobox-control-padding-block-multiple, var(--enchase-space-sm));
+}
+
+.input {
+  flex: 1 1 var(--enchase-combobox-input-min-width, 6rem);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  color: var(--enchase-input-field-color, var(--enchase-color-text-primary));
+  background-color: transparent;
+  border: none;
+}
+
+:where(.input) {
+  min-inline-size: 0;
+  block-size: var(--enchase-input-height, 3.5rem);
+  font-size: var(--enchase-input-font-size, var(--enchase-font-size-base));
+}
+
+:where(.field[data-multiple] .input) {
+  block-size: auto;
+  min-block-size: var(--enchase-combobox-input-min-height-multiple, 2rem);
+}
+
+.input:focus {
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--enchase-input-field-color-placeholder, var(--enchase-color-text-placeholder));
+  opacity: 1;
+  transition: opacity var(--enchase-combobox-duration, var(--enchase-motion-duration-fast)) var(--enchase-combobox-ease, var(--enchase-motion-ease-out));
+}
+
+.input[data-has-label]::placeholder {
+  opacity: 0;
+}
+
+.field:focus-within .input::placeholder {
+  opacity: 1;
+}
+
+.input:disabled {
+  color: var(--enchase-input-field-color-disabled, var(--enchase-color-text-disabled));
+  opacity: var(--enchase-input-opacity-disabled, 1);
+  cursor: not-allowed;
+}
+
+.label {
+  position: absolute;
+  inset-inline-start: var(--enchase-input-padding-inline, var(--enchase-space-md));
+  inset-block-start: calc(var(--enchase-input-height, 3.5rem) / 2);
+  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2 - max(24px, var(--enchase-hit-size, 40px)));
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--enchase-font-size-base);
+  font-weight: var(--enchase-font-weight-regular);
+  color: var(--enchase-input-label-color, var(--enchase-color-text-secondary));
+  transform: translateY(-50%);
+  transform-origin: left top;
+  pointer-events: none;
+  transition:
+    transform var(--enchase-combobox-duration, var(--enchase-motion-duration-fast)) var(--enchase-combobox-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-combobox-duration, var(--enchase-motion-duration-fast)) var(--enchase-combobox-ease, var(--enchase-motion-ease-out));
+}
+
+[dir='rtl'] .label {
+  transform-origin: right top;
+}
+
+.field:focus-within > .label,
+.field[data-floated] > .label {
+  transform: translateY(calc(-50% - var(--enchase-input-height, 3.5rem) / 2)) scale(0.75);
+}
+
+.label[data-has-error] {
+  color: var(--enchase-input-label-color-error, var(--enchase-color-error));
+}
+
+.field:focus-within > .label {
+  color: var(--enchase-input-label-color-focus, var(--enchase-color-primary));
+}
+
+.field:focus-within > .label[data-has-error] {
+  color: var(--enchase-input-label-color-error-focus, var(--enchase-color-error));
+}
+
+.input:disabled ~ .label {
+  color: var(--enchase-input-label-color-disabled, var(--enchase-color-text-disabled));
+  opacity: var(--enchase-input-opacity-disabled, 1);
+}
+
+.outline {
+  position: absolute;
+  inset-block: -5px 0;
+  inset-inline: 0;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: var(--enchase-space-sm);
+  font: inherit;
+  text-align: start;
+  pointer-events: none;
+  border: var(--enchase-border-width, 1px) solid var(--enchase-input-outline-border-color, var(--enchase-color-border-strong));
+  border-radius: var(--enchase-combobox-control-radius, var(--enchase-radius-control));
+  box-shadow: var(--enchase-input-outline-shadow, none);
+  transition: border-color var(--enchase-combobox-duration, var(--enchase-motion-duration-fast)) var(--enchase-combobox-ease, var(--enchase-motion-ease-out));
+}
+
+.outline[data-has-error] {
+  border-color: var(--enchase-input-outline-border-color-error, var(--enchase-color-error));
+}
+
+.outline legend {
+  display: block;
+  inline-size: auto;
+  max-inline-size: 0.01px;
+  block-size: 11px;
+  padding: 0;
+  font-size: var(--enchase-font-size-xs);
+  visibility: hidden;
+  white-space: nowrap;
+  transition: max-inline-size var(--enchase-combobox-duration, var(--enchase-motion-duration-fast)) var(--enchase-combobox-ease, var(--enchase-motion-ease-out));
+}
+
+.outline legend span {
+  display: inline-block;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  padding: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0;
+  visibility: visible;
+}
+
+.outline[data-has-label] legend span {
+  padding-block: 0;
+  padding-inline: var(--enchase-space-sm);
+}
+
+.field:focus-within > .outline legend,
+.field[data-floated] > .outline legend {
+  max-inline-size: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wrapper:not([data-disabled]) .field:hover:not(:focus-within) > .outline {
+    border-color: var(--enchase-input-outline-border-color-hover, var(--enchase-color-text-primary));
+  }
+
+  .wrapper:not([data-disabled]) .field:hover:not(:focus-within) > .outline[data-has-error] {
+    border-color: var(--enchase-input-outline-border-color-error-hover, var(--enchase-color-error));
+  }
+}
+
+.field:focus-within > .outline {
+  border-width: var(--enchase-border-width-strong, 2px);
+  border-color: var(--enchase-input-outline-border-color-focus, var(--enchase-color-primary));
+  box-shadow: var(--enchase-input-outline-shadow-focus, var(--enchase-input-outline-shadow, none));
+}
+
+.field:focus-within > .outline[data-has-error] {
+  border-color: var(--enchase-input-outline-border-color-error-focus, var(--enchase-color-error));
+}
+
+@media (forced-colors: active) {
+  .field:focus-within > .outline {
+    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+  }
+}
+
+.input:disabled ~ .outline {
+  border-color: var(--enchase-input-outline-border-color-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent));
+  opacity: var(--enchase-input-opacity-disabled, 1);
+}
+
+.error {
+  font-size: var(--enchase-combobox-error-font-size, var(--enchase-font-size-xs));
+  color: var(--enchase-input-error-color, var(--enchase-color-error));
+  font-weight: var(--enchase-combobox-error-font-weight, var(--enchase-font-weight-medium));
+}
+
+.helper {
+  font-size: var(--enchase-combobox-helper-font-size, var(--enchase-font-size-xs));
+  color: var(--enchase-input-helper-color, var(--enchase-color-text-secondary));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .label {
+    transition-property: color;
+  }
+}
+
+@media (pointer: coarse) {
+  :where(.input) {
+    font-size: max(16px, var(--enchase-input-font-size, var(--enchase-font-size-base)));
+  }
+}
+
+.wrapper[data-label-placement='stacked'] > .label {
+  position: static;
+  inset: auto;
+  max-inline-size: 100%;
+  overflow: visible;
+  white-space: normal;
+  font-size: var(--enchase-input-label-font-size-stacked, var(--enchase-font-size-sm));
+  font-weight: var(--enchase-input-label-font-weight-stacked, var(--enchase-font-weight-medium));
+  line-height: var(--enchase-input-label-line-height-stacked, var(--enchase-line-height-snug, 1.4));
+  color: var(--enchase-input-label-color-stacked, var(--enchase-color-text-primary));
+  transform: none;
+  pointer-events: auto;
+}
+
+.wrapper[data-label-placement='stacked'] > .label[data-has-error] {
+  color: var(--enchase-input-label-color-stacked-error, var(--enchase-color-error));
+}
+
+.wrapper[data-label-placement='stacked'][data-disabled] > .label {
+  color: var(--enchase-input-label-color-stacked-disabled, var(--enchase-color-text-disabled));
+  opacity: var(--enchase-input-opacity-disabled, 1);
+}

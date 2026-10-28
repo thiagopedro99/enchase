@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [CheckboxGroup](#checkboxgroup) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [SegmentedControl](#segmentedcontrol) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Slider](#slider) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [CheckboxGroup](#checkboxgroup) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [Combobox](#combobox) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [SegmentedControl](#segmentedcontrol) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Slider](#slider) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -198,6 +198,37 @@ Inline script that applies `data-theme` and `color-scheme` on the `<html>` befor
 | `storageKey` | `string` | `'enchase-color-mode'` | Key read from `localStorage`. Use the same one as the `ColorModeProvider`. |
 | `defaultMode` | `'light' \| 'dark' \| 'system'` | `'system'` | Mode used when there is no saved choice. `system` follows the preference of the system. |
 | `nonce` | `string` | — | `nonce` of the Content-Security-Policy, so the inline script is accepted. |
+
+### Combobox
+
+A text field with a list of options under it. Typing filters the options, the arrow keys move through the list, Enter chooses the active option, Esc closes the list and Tab leaves the field. It follows the ARIA 1.2 combobox pattern: the focus never leaves the input and the active option is announced through `aria-activedescendant`, so a screen reader keeps reading the field while the list changes. By default it chooses one option and its label fills the field; with `multiple` the chosen options become tags before the input, each with a button that removes it, and Backspace in an empty field removes the last one. Use it instead of the `Select` when the list is long enough to need a search, or when the options come from a server: turn the filter off and search in `onInputChange`. It is not a free text field: the value is always one of the options, and leaving the field puts the label of the chosen option back. The list renders in a portal, like the `Popover`, and accepts `container`. It accepts `ref`, which goes to the input, and the attributes of the `<input>`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `multiple` | `boolean` | `false` | Chooses several options instead of one. The chosen options become tags before the input, the list stays open after a choice and the text is cleared, and `value` and `defaultValue` become lists. See the Multiple story. |
+| `value` | `string \| null \| string[]` | — | Value of the chosen option when the field is controlled, or the list of the chosen values with `multiple`. It also requires onValueChange. Pass `null`, or an empty list, to control it with nothing chosen. See the Controlled story. |
+| `defaultValue` | `string \| null \| string[]` | — | Option chosen at the start, or the list of the chosen ones with `multiple`, for use without external control. Without it, nothing is chosen. |
+| `onValueChange` | `((value: string \| null) => void) \| ((value: string[]) => void)` | — | Called with the value of the option the user has just chosen, or `null` when the user empties the field and leaves it, and with the whole list of the chosen values, in the order they were chosen, with `multiple`. It is not called for an option that is disabled. |
+| `options` | `ComboboxOption[]` | *required* | The options, in order. Each one has `value` (unique), `label` (the text that is shown, filtered and read) and, optionally, `disabled`: a disabled option stays in the list, is skipped by the arrow keys and cannot be chosen. The label of a chosen option is remembered, so a list that the app replaces while the user searches does not blank the field or the tags. |
+| `label` | `string` | — | Label of the field, tied to the input and used as the name of the list. Without it, give the input an `aria-label`. |
+| `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
+| `helperText` | `string` | — | Helper text. It is tied to the input by aria-describedby and disappears when there is an error. |
+| `fullWidth` | `boolean` | `false` | Takes up the full available width. |
+| `filter` | `((option: ComboboxOption, query: string) => boolean) \| false` | — | How the options are filtered by what is typed. By default an option stays when its label contains the text, ignoring case and accents. Pass a function `(option, query) => boolean` to decide for yourself, or `false` to show every option, for when the app searches on a server and passes the results as `options`. See the AsyncSearch and CustomFilter stories. |
+| `onInputChange` | `(text: string) => void` | — | Called with the text of the input every time the user types, and with an empty text when a choice clears it with `multiple`. Use it to search on a server. Choosing an option in the single mode does not call it. |
+| `loading` | `boolean` | `false` | Shows a loading row after the options, marks the list as busy (aria-busy) and announces it in a status region. Use it while the options are on their way. |
+| `open` | `boolean` | — | Opens and closes the list, when you control it. Use it together with onOpenChange. |
+| `defaultOpen` | `boolean` | `false` | Whether the list starts open, when you do not control it. |
+| `onOpenChange` | `(open: boolean) => void` | — | Called with the new state whenever the list opens or closes: typing, a click, the arrow keys, Esc, a choice or a click outside. |
+| `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the list when it opens and closes. false turns it off; { tuning: { duration } } sets the duration in seconds. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="combobox"). className and style stay on the input (data-slot="combobox-input"). |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="combobox"). style stays on the input. |
+| `listboxClassName` | `string` | — | Class of the list (data-slot="combobox-listbox"), which renders in a portal and not inside the root. Each option is data-slot="combobox-option". |
+| `listboxStyle` | `CSSProperties` | — | Style of the list, merged with the library style (yours wins). |
+
+Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.
 
 ### ConfirmModal
 
@@ -1261,6 +1292,49 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-checkbox-group-options-column-gap-horizontal` | `1.5rem` (`--enchase-space-lg`) | `column-gap` |
 | `--enchase-checkbox-group-options-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 
+### Combobox
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-combobox-control-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-combobox-control-padding-block-multiple` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
+| `--enchase-combobox-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-combobox-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition`, `transition-duration` (also in ComboboxToggle, ListboxPopup) |
+| `--enchase-combobox-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition`, `transition-timing-function` (also in ComboboxToggle, ListboxPopup) |
+| `--enchase-combobox-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-combobox-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-combobox-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-combobox-input-min-height-multiple` | `2rem` | `min-block-size` |
+| `--enchase-combobox-input-min-width` | `6rem` | `flex` |
+
+### ComboboxOptions
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-combobox-message-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-combobox-message-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-combobox-message-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-combobox-message-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-combobox-option-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-combobox-option-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-combobox-option-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-combobox-option-font-weight` | `400` (`--enchase-font-weight-regular`) | `font-weight` |
+| `--enchase-combobox-option-font-weight-selected` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-combobox-option-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-combobox-option-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
+| `--enchase-combobox-option-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-combobox-option-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-combobox-option-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+
+### ComboboxToggle
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-combobox-toggle-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-combobox-toggle-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-combobox-toggle-color-hover` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-combobox-toggle-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+
 ### Container
 
 | Hook | Default | Property |
@@ -1365,41 +1439,41 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-input-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-input-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
-| `--enchase-input-error-color` | `var(--enchase-color-error)` | `color` (also in NumberInput, Select, Textarea) |
+| `--enchase-input-error-color` | `var(--enchase-color-error)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
 | `--enchase-input-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
-| `--enchase-input-field-color` | `var(--enchase-color-text-primary)` | `color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-field-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-field-color-placeholder` | `var(--enchase-color-text-placeholder)` | `color` (also in NumberInput, Textarea) |
+| `--enchase-input-field-color` | `var(--enchase-color-text-primary)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-field-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-field-color-placeholder` | `var(--enchase-color-text-placeholder)` | `color` (also in Combobox, NumberInput, Textarea) |
 | `--enchase-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
-| `--enchase-input-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-height` | `3.5rem` | `block-size`, `transform` (also in NumberInput, Select) |
-| `--enchase-input-helper-color` | `var(--enchase-color-text-secondary)` | `color` (also in NumberInput, Select, Textarea) |
+| `--enchase-input-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-height` | `3.5rem` | `min-block-size`, `block-size`, `inset-block-start`, `transform` (also in Combobox, ComboboxToggle, NumberInput, Select) |
+| `--enchase-input-helper-color` | `var(--enchase-color-text-secondary)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
 | `--enchase-input-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
-| `--enchase-input-label-color` | `var(--enchase-color-text-secondary)` | `color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-error` | `var(--enchase-color-error)` | `color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-error-focus` | `var(--enchase-color-error)` | `color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-focus` | `var(--enchase-color-primary)` | `color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-stacked` | `var(--enchase-color-text-primary)` | `color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-stacked-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-label-color-stacked-error` | `var(--enchase-color-error)` | `color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-label-font-size-stacked` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-label-font-weight-stacked` | `500` (`--enchase-font-weight-medium`) | `font-weight` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-label-line-height-stacked` | `1.4` (`--enchase-line-height-snug`) | `line-height` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-min-width` | `200px` | `min-inline-size` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-opacity-disabled` | `1` | `opacity` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color` | `var(--enchase-color-border-strong)` | `border` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `border-color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-error` | `var(--enchase-color-error)` | `border-color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-error-focus` | `var(--enchase-color-error)` | `border-color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-error-hover` | `var(--enchase-color-error)` | `border-color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-focus` | `var(--enchase-color-primary)` | `border-color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-outline-border-color-hover` | `var(--enchase-color-text-primary)` | `border-color` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-outline-shadow` | `none` | `box-shadow` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-outline-shadow-focus` | `none` (`--enchase-input-outline-shadow`) | `box-shadow` (also in NumberInput, Select, Textarea) |
-| `--enchase-input-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline`, `inset-inline-start`, `max-inline-size` (also in NumberInput, Select, Textarea) |
+| `--enchase-input-label-color` | `var(--enchase-color-text-secondary)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-error` | `var(--enchase-color-error)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-error-focus` | `var(--enchase-color-error)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-focus` | `var(--enchase-color-primary)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-stacked` | `var(--enchase-color-text-primary)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-stacked-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-color-stacked-error` | `var(--enchase-color-error)` | `color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-font-size-stacked` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-font-weight-stacked` | `500` (`--enchase-font-weight-medium`) | `font-weight` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-label-line-height-stacked` | `1.4` (`--enchase-line-height-snug`) | `line-height` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-min-width` | `200px` | `min-inline-size` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-opacity-disabled` | `1` | `opacity` (also in Combobox, ComboboxToggle, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color` | `var(--enchase-color-border-strong)` | `border` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-error` | `var(--enchase-color-error)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-error-focus` | `var(--enchase-color-error)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-error-hover` | `var(--enchase-color-error)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-focus` | `var(--enchase-color-primary)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-border-color-hover` | `var(--enchase-color-text-primary)` | `border-color` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-shadow` | `none` | `box-shadow` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-shadow-focus` | `none` (`--enchase-input-outline-shadow`) | `box-shadow` (also in Combobox, NumberInput, Select, Textarea) |
+| `--enchase-input-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline-start`, `inset-inline-start`, `max-inline-size`, `padding-inline` (also in Combobox, NumberInput, Select, Textarea) |
 | `--enchase-input-toggle-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-input-toggle-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-input-toggle-color-hover` | `var(--enchase-color-text-primary)` | `color` |
@@ -1429,6 +1503,16 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-link-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-link-radius` | `0.5rem` (`--enchase-radius-sm`) | `border-radius` |
 | `--enchase-link-underline-offset` | `0.2em` | `text-underline-offset` |
+
+### ListboxPopup
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-combobox-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
+| `--enchase-combobox-listbox-max-height` | `16rem` | `max-block-size` |
+| `--enchase-combobox-listbox-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-combobox-listbox-padding-inline` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
+| `--enchase-combobox-scale` | `1` | `transform` |
 
 ### Loading
 
@@ -1631,14 +1715,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | Hook | Default | Property |
 | --- | --- | --- |
 | `--enchase-popover-arrow-size` | `10px` | `inline-size`, `block-size`, `inset-block-end`, `inset-block-start`, `right`, `left` |
-| `--enchase-popover-content-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
-| `--enchase-popover-content-border-color` | `transparent` | `border` |
-| `--enchase-popover-content-border-width` | `0px` | `border`, `--arrow-border` |
-| `--enchase-popover-content-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-popover-content-background` | `var(--enchase-color-surface-container-high)` | `background-color` (also in ListboxPopup) |
+| `--enchase-popover-content-border-color` | `transparent` | `border` (also in ListboxPopup) |
+| `--enchase-popover-content-border-width` | `0px` | `border`, `--arrow-border` (also in ListboxPopup) |
+| `--enchase-popover-content-color` | `var(--enchase-color-text-primary)` | `color` (also in ListboxPopup) |
 | `--enchase-popover-content-padding-block` | `1rem` (`--enchase-space-md`) | `padding-block` |
 | `--enchase-popover-content-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-popover-content-radius` | `1rem` (`--enchase-radius-lg`) | `border-radius` |
-| `--enchase-popover-content-shadow` | `var(--enchase-shadow-md)` | `box-shadow` |
+| `--enchase-popover-content-radius` | `1rem` (`--enchase-radius-lg`) | `border-radius` (also in ListboxPopup) |
+| `--enchase-popover-content-shadow` | `var(--enchase-shadow-md)` | `box-shadow` (also in ListboxPopup) |
 | `--enchase-popover-duration` | `300ms` (`--enchase-motion-spring-snappy-duration`) | `transition-duration` |
 | `--enchase-popover-ease` | `linear(0, 0.016, 0.056, 0.114, 0.182, 0.257, 0.333, 0.408, 0.48, 0.549, 0.612, 0.669, 0.721, 0.767, 0.807, 0.842, 0.873, 0.898, 0.92, 0.939, 0.954, 0.966, 0.976, 0.984, 0.99, 0.995, 0.999, 1.002, 1.004, 1.005, 1.006, 1.006, 1.006, 1.006, 1.006, 1.006, 1.005, 1.005, 1.004, 1.004, 1.003, 1.003, 1.002, 1.002, 1.002, 1.001, 1.001, 1)` (`--enchase-motion-spring-snappy`) | `transition-timing-function` |
 | `--enchase-popover-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |

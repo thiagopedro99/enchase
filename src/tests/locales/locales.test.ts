@@ -15,9 +15,9 @@ describe('locales', () => {
     }
   })
 
-  it('defines the pagination, number input, tag and table selection texts in every locale, which are optional in the type', () => {
+  it('defines the pagination, number input, tag, table selection and combobox texts in every locale, which are optional in the type', () => {
     for (const locale of [en, ptBR]) {
-      for (const key of ['pagination', 'previousPage', 'nextPage', 'increaseValue', 'decreaseValue', 'removeTag', 'selectRow', 'selectAllRows'] as const) expect(locale.messages[key], `${locale.locale}.${key}`).toBeTruthy()
+      for (const key of ['pagination', 'previousPage', 'nextPage', 'increaseValue', 'decreaseValue', 'removeTag', 'selectRow', 'selectAllRows', 'noResults', 'showOptions'] as const) expect(locale.messages[key], `${locale.locale}.${key}`).toBeTruthy()
     }
   })
 

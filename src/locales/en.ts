@@ -33,7 +33,9 @@ export const en: Locale = {
     decreaseValue: 'Decrease value',
     removeTag: 'Remove',
     selectRow: 'Select row',
-    selectAllRows: 'Select all rows'
+    selectAllRows: 'Select all rows',
+    noResults: 'No results',
+    showOptions: 'Show options'
   }
 }
 

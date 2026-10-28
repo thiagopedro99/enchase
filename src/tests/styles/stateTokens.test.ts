@@ -12,7 +12,7 @@ const rolesOf = (selector: string) => {
 
   if (/:disabled/.test(plain)) return ['disabled-container', 'disabled-content']
   if (/:active/.test(plain)) return ['pressed']
-  if (/:hover|:focus-visible/.test(plain)) return ['hover', 'row-hover']
+  if (/:hover|:focus-visible|\[data-active\]/.test(plain)) return ['hover', 'row-hover']
 
   return []
 }
