@@ -20,6 +20,7 @@ const prefixes: Record<string, string> = {
   'common/Pagination/styles.module.css': 'pagination',
   'common/Popover/styles.module.css': 'popover',
   'common/Progress/styles.module.css': 'progress',
+  'common/SegmentedControl/styles.module.css': 'segmented-control',
   'common/Select/styles.module.css': 'select',
   'common/Sidebar/styles.module.css': 'sidebar',
   'common/Skeleton/styles.module.css': 'skeleton',

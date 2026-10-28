@@ -21,6 +21,7 @@ const buttons = [
   'common/Menu/styles.module.css',
   'common/Modal/styles.module.css',
   'common/NumberInput/styles.module.css',
+  'common/SegmentedControl/styles.module.css',
   'common/Sidebar/styles.module.css',
   'common/ThemeToggle/styles.module.css',
   'layout/subcomponentes/AppBar/styles.module.css',

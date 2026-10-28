@@ -11,6 +11,7 @@ import { CloseIcon } from '@components/common/Icon/icons/CloseIcon.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Breadcrumbs } from '@components/common/Breadcrumbs/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
+import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
 import { Accordion } from '@components/common/Accordion/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
@@ -80,6 +81,8 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'RadioGroup', element: <RadioGroup label="Plan" defaultValue="pro" helperText="Billed monthly" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }]} /> },
   { name: 'CheckboxGroup', element: <CheckboxGroup label="Topics" defaultValue={['news']} helperText="Pick what you like" options={[{ value: 'news', label: 'News' }, { value: 'offers', label: 'Offers', disabled: true }]} /> },
   { name: 'CheckboxGroup with an error', element: <CheckboxGroup label="Topics" value={['offers']} onValueChange={noop} error="Pick at least one" orientation="horizontal" options={[{ value: 'news', label: 'News' }, { value: 'offers', label: 'Offers' }]} /> },
+  { name: 'SegmentedControl', element: <SegmentedControl ariaLabel="View" defaultValue="board" size="sm" items={[{ value: 'list', label: 'List' }, { value: 'board', label: 'Board' }, { value: 'old', label: 'Old', disabled: true }]} /> },
+  { name: 'SegmentedControl that chooses several', element: <SegmentedControl multiple fullWidth ariaLabel="Days" value={['mon']} onValueChange={noop} items={[{ value: 'mon', label: 'Mon' }, { value: 'tue', label: 'Tue' }]} /> },
   { name: 'Card', element: <Card variant="elevated">Content</Card> },
   { name: 'Grid', element: <Grid columns={{ xs: 1, md: 3 }} centerLastRow><p>One</p><p>Two</p><p>Three</p><p>Four</p></Grid> },
   { name: 'CardButton', element: <CardButton variant="elevated"><span>Open</span></CardButton> },

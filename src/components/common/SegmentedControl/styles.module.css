@@ -1,0 +1,122 @@
+.group {
+  position: relative;
+  display: inline-flex;
+  align-items: stretch;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  margin: 0;
+  overflow: hidden;
+  border: var(--enchase-segmented-control-border-width, var(--enchase-border-width, 1px)) solid var(--enchase-segmented-control-border-color, var(--enchase-color-border-strong));
+  border-radius: var(--enchase-segmented-control-radius, var(--enchase-radius-button));
+  background-color: var(--enchase-segmented-control-background, transparent);
+}
+
+:where(.group[data-size='sm']) {
+  min-block-size: var(--enchase-control-height-sm, 2rem);
+}
+
+:where(.group[data-size='md']) {
+  min-block-size: var(--enchase-control-height-md, 2.5rem);
+}
+
+:where(.group[data-size='lg']) {
+  min-block-size: var(--enchase-control-height-lg, 3rem);
+}
+
+:where(.group[data-full-width]) {
+  display: flex;
+  inline-size: 100%;
+}
+
+.item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-inline-size: 24px;
+  margin: 0;
+  border: 0;
+  background-color: transparent;
+  color: var(--enchase-segmented-control-item-color, var(--enchase-color-text-primary));
+  font-family: inherit;
+  font-weight: var(--enchase-segmented-control-item-font-weight, var(--enchase-font-weight-medium));
+  line-height: var(--enchase-segmented-control-item-line-height, var(--enchase-line-height-tight, 1.2));
+  text-align: center;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  user-select: none;
+  appearance: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition:
+    background-color var(--enchase-segmented-control-duration, var(--enchase-motion-duration-fast)) var(--enchase-segmented-control-ease, var(--enchase-motion-ease-out)),
+    color var(--enchase-segmented-control-duration, var(--enchase-motion-duration-fast)) var(--enchase-segmented-control-ease, var(--enchase-motion-ease-out));
+}
+
+:where(.item) {
+  gap: var(--enchase-segmented-control-item-gap, var(--enchase-space-sm));
+}
+
+.item + .item {
+  border-inline-start: var(--enchase-segmented-control-item-border-width, var(--enchase-border-width, 1px)) solid var(--enchase-segmented-control-item-border-color, var(--enchase-color-border-strong));
+}
+
+:where(.group[data-full-width] .item) {
+  flex: 1 1 0;
+}
+
+:where(.group[data-size='sm'] .item) {
+  padding-block: var(--enchase-segmented-control-item-padding-block-sm, var(--enchase-space-xs));
+  padding-inline: var(--enchase-segmented-control-item-padding-inline-sm, var(--enchase-space-md));
+  font-size: var(--enchase-segmented-control-item-font-size-sm, var(--enchase-font-size-sm));
+}
+
+:where(.group[data-size='md'] .item) {
+  padding-block: var(--enchase-segmented-control-item-padding-block-md, var(--enchase-space-xs));
+  padding-inline: var(--enchase-segmented-control-item-padding-inline-md, var(--enchase-space-md));
+  font-size: var(--enchase-segmented-control-item-font-size-md, var(--enchase-font-size-sm));
+}
+
+:where(.group[data-size='lg'] .item) {
+  padding-block: var(--enchase-segmented-control-item-padding-block-lg, var(--enchase-space-xs));
+  padding-inline: var(--enchase-segmented-control-item-padding-inline-lg, var(--enchase-space-lg));
+  font-size: var(--enchase-segmented-control-item-font-size-lg, var(--enchase-font-size-base));
+}
+
+.item:where([aria-checked='true'], [aria-pressed='true']) {
+  background-color: var(--enchase-segmented-control-item-background-selected, var(--enchase-color-secondary-container));
+  color: var(--enchase-segmented-control-item-color-selected, var(--enchase-color-on-secondary-container));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item:where(:not([aria-checked='true'], [aria-pressed='true'], :disabled)):hover {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
+  }
+}
+
+.item:where(:not([aria-checked='true'], [aria-pressed='true'], :disabled)):active {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
+}
+
+.item:focus-visible {
+  outline-offset: var(--enchase-focus-offset-inset, -2px);
+}
+
+.item:disabled {
+  background-color: transparent;
+  color: var(--enchase-segmented-control-item-color-disabled, var(--enchase-color-text-disabled));
+  cursor: not-allowed;
+}
+
+.item:disabled:where([aria-checked='true'], [aria-pressed='true']) {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent);
+}
+
+@media (forced-colors: active) {
+  .item:where([aria-checked='true'], [aria-pressed='true']) {
+    background-color: Highlight;
+    color: HighlightText;
+  }
+}

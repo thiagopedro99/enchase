@@ -25,6 +25,7 @@ import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
 import { Progress } from '@components/common/Progress/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
+import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Skeleton } from '@components/common/Skeleton/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
@@ -87,6 +88,9 @@ const cases: [string, string, ComponentType<never>, Record<string, unknown>][] =
   ['Pagination', 'PaginationProps', Pagination, { pageCount: 5 }],
   ['Progress', 'ProgressProps', Progress, {}],
   ['RadioGroup', 'RadioGroupProps', RadioGroup, { label: 'Plan', options }],
+  ['SegmentedControl', 'SegmentedControlBaseProps', SegmentedControl, { items: options.map(({ value, label }) => ({ value, label })) }],
+  ['SegmentedControl', 'SegmentedControlSingleProps', SegmentedControl, { items: options.map(({ value, label }) => ({ value, label })) }],
+  ['SegmentedControl', 'SegmentedControlMultipleProps', SegmentedControl, { multiple: true, items: options.map(({ value, label }) => ({ value, label })) }],
   ['Select', 'SelectProps', Select, { label: 'Plan', options }],
   ['Skeleton', 'SkeletonProps', Skeleton, {}],
   ['Switch', 'SwitchProps', Switch, { label: 'Notifications' }],

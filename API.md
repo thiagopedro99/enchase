@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [CheckboxGroup](#checkboxgroup) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [CheckboxGroup](#checkboxgroup) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [SegmentedControl](#segmentedcontrol) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -594,6 +594,25 @@ A group of radio buttons to choose one among a few alternatives that fit on the 
 | `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the dot of the checked option, which grows with a short pop. false turns it off; { tuning: { duration, scale } } sets the duration in seconds and the initial scale. |
 
 Also accepts the other attributes of `<fieldset>`, passed on to the element. Forwards the `ref` to `<fieldset>`.
+
+### SegmentedControl
+
+A row of connected buttons to switch between a few alternatives that mean the same kind of thing, such as a view or a unit, without leaving the page. By default it chooses one: it is a `radiogroup`, with a single Tab stop on the checked option and the arrow keys, Home and End to move and check. With `multiple` it is a group of toggle buttons (`aria-pressed`), each one pressed or not, and Tab moves between them. It is not a set of tabs: nothing here shows or hides a panel, so use `Tabs` for that. It accepts `ref`, which goes to the root, and the attributes of the `<div>`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `multiple` | `boolean` | `false` | Chooses several options instead of one. The control becomes a group of toggle buttons, and value and defaultValue become lists. See the Multiple story. |
+| `value` | `string \| string[]` | — | Value of the checked option when the control is controlled, or the list of the pressed values with multiple. It also requires onValueChange. To control it with nothing chosen, pass an empty string, or an empty list with multiple. See the Controlled story. |
+| `defaultValue` | `string \| string[]` | — | Option checked at the start, or the list of the pressed ones with multiple, for use without external control. Without it, nothing is chosen. |
+| `onValueChange` | `((value: string) => void) \| ((value: string[]) => void)` | — | Called with the value of the option the user has just checked, by click or by keyboard, or with the list of all the pressed values, in the order of the items, with multiple. Clicking the checked option of a single control does nothing. |
+| `items` | `SegmentedControlItem[]` | *required* | Options of the control, in the order they appear. Each item has `value` (unique), `label` (text or nodes, such as an icon and a word), `ariaLabel` (the name of an option whose label is only an icon) and, optionally, `disabled`. The `label` sits inside a `<button>`, so no other button, link or field fits in it. |
+| `ariaLabel` | `string` | — | Name of the control for screen readers, such as View. It is not shown: describe what the options change. Without it, pass aria-labelledby. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Height of the control: sm is as tall as a small button, md as a medium button and lg as a large one. |
+| `fullWidth` | `boolean` | `false` | Makes the control fill the width of its container, with options of the same width. |
+| `disabled` | `boolean` | `false` | Disables all the options. |
+| `animation` | `false \| { recipe, tuning }` | `fade` | Animation of the color of the options when they are checked or pressed. false turns it off; { tuning: { duration } } sets the duration in seconds. |
+
+Also accepts the other attributes of `<div>`, passed on to the element. Forwards the `ref` to `<div>`.
 
 ### Select
 
@@ -1655,6 +1674,35 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-radio-group-options-column-gap-horizontal` | `1.5rem` (`--enchase-space-lg`) | `column-gap` |
 | `--enchase-radio-group-options-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-radio-group-scale` | `0.6` | `transform` |
+
+### SegmentedControl
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-segmented-control-background` | `transparent` | `background-color` |
+| `--enchase-segmented-control-border-color` | `var(--enchase-color-border-strong)` | `border` |
+| `--enchase-segmented-control-border-width` | `1px` (`--enchase-border-width`) | `border` |
+| `--enchase-segmented-control-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-segmented-control-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-segmented-control-item-background-selected` | `var(--enchase-color-secondary-container)` | `background-color` |
+| `--enchase-segmented-control-item-border-color` | `var(--enchase-color-border-strong)` | `border-inline-start` |
+| `--enchase-segmented-control-item-border-width` | `1px` (`--enchase-border-width`) | `border-inline-start` |
+| `--enchase-segmented-control-item-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-segmented-control-item-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-segmented-control-item-color-selected` | `var(--enchase-color-on-secondary-container)` | `color` |
+| `--enchase-segmented-control-item-font-size-lg` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-segmented-control-item-font-size-md` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-segmented-control-item-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-segmented-control-item-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-segmented-control-item-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-segmented-control-item-line-height` | `1.2` (`--enchase-line-height-tight`) | `line-height` |
+| `--enchase-segmented-control-item-padding-block-lg` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-segmented-control-item-padding-block-md` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-segmented-control-item-padding-block-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-segmented-control-item-padding-inline-lg` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
+| `--enchase-segmented-control-item-padding-inline-md` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-segmented-control-item-padding-inline-sm` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-segmented-control-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 
 ### Select
 

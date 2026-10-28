@@ -20,6 +20,7 @@ const budgets = [
   { label: 'Button', source: "export { Button } from 'enchase'\n", maxBytes: 12288 },
   { label: 'Drawer', source: "export { Drawer } from 'enchase'\n", maxBytes: 22528 },
   { label: 'CheckboxGroup', source: "export { CheckboxGroup } from 'enchase'\n", maxBytes: 14336 },
+  { label: 'SegmentedControl', source: "export { SegmentedControl } from 'enchase'\n", maxBytes: 14336 },
   { label: 'Menu', source: "export { Menu } from 'enchase'\n", maxBytes: 36864 },
   { label: 'ColorModeProvider', source: "export { ColorModeProvider } from 'enchase'\n", maxBytes: 40960, styles: [] },
   { label: 'createTheme', source: "export { createTheme } from 'enchase/theme'\n", maxBytes: 32768, styles: [] },
