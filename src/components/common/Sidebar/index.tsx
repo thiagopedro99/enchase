@@ -1,9 +1,6 @@
-import { useRef } from 'react'
-
 import { drawerOverride, drawerWidth, itemMotionVariables } from './defaultData.ts'
+import { DrawerLayer } from '../Drawer/DrawerLayer.tsx'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
-import { useOverlayStack } from '@hooks/useOverlayStack.ts'
-import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useCollapsePhase } from '@hooks/useCollapsePhase.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { usePresence } from '@hooks/usePresence.ts'
@@ -50,36 +47,33 @@ const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, foot
 type ModalPanelProps = SidebarProps & { open: boolean; state: PresenceState; panelRef: RefObject<HTMLDivElement | null>; motionStyle: CSSProperties }
 
 const ModalSidebarPanel = ({ sections, activeSectionId, currentHref, header, footer, onClose, ariaLabel, id, className, style, open, state, panelRef, motionStyle }: ModalPanelProps) => {
-  const rootRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
-  const isTop = useOverlayStack(open)
   const name = ariaLabel ?? labels.mobileNavigation
-
-  useModalBehavior({ rootRef, dialogRef: panelRef, onEscape: () => isTop() && onClose?.() })
 
   const panelProps = mergeProps(
     {
+      id,
       ...slot('sidebar', 'panel'),
       className: styles.panel,
       style: { ...motionStyle, ...itemMotionVariables(motionStyle), inlineSize: drawerWidth },
-      'data-variant': 'modal',
-      'data-state': state,
-      role: 'dialog',
-      'aria-modal': true,
-      'aria-label': name,
-      tabIndex: -1
+      'data-variant': 'modal'
     },
     { className, style }
   )
 
   return (
-    <div ref={rootRef} {...slot('sidebar')} data-variant="modal">
-      <div {...slot('sidebar', 'overlay')} className={styles.overlay} style={motionStyle} data-state={state} onClick={onClose} />
-
-      <div ref={panelRef} id={id} {...panelProps}>
-        <SidebarContent sections={sections} activeSectionId={activeSectionId} currentHref={currentHref} header={header} footer={footer} collapsed={false} onSelect={onClose} ariaLabel={name} />
-      </div>
-    </div>
+    <DrawerLayer
+      open={open}
+      state={state}
+      panelRef={panelRef}
+      label={name}
+      onClose={onClose}
+      root={{ ...slot('sidebar'), 'data-variant': 'modal' }}
+      overlay={{ ...slot('sidebar', 'overlay'), className: styles.overlay, style: motionStyle }}
+      panel={panelProps}
+    >
+      <SidebarContent sections={sections} activeSectionId={activeSectionId} currentHref={currentHref} header={header} footer={footer} collapsed={false} onSelect={onClose} ariaLabel={name} />
+    </DrawerLayer>
   )
 }
 
