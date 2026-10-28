@@ -30,6 +30,7 @@ const ControlledDemo = () => {
 const LanguagesDemo = () => {
   const [name, setName] = useState('en')
   const locales = { en, ptBR, de: { ...en, locale: 'de' }, ja: { ...en, locale: 'ja' }, ar: { ...en, locale: 'ar', dir: 'rtl' as const } }
+  const locale = locales[name as keyof typeof locales]
 
   return (
     <div style={{ display: 'grid', gap: '0.75rem', justifyItems: 'start' }}>
@@ -40,9 +41,11 @@ const LanguagesDemo = () => {
           </Button>
         ))}
       </Flex>
-      <UIProvider key={name} locale={locales[name as keyof typeof locales]}>
-        <DatePicker label="Date" defaultValue="2026-10-28" />
-      </UIProvider>
+      <div dir={locale.dir}>
+        <UIProvider key={name} locale={locale}>
+          <DatePicker label="Date" defaultValue="2026-10-28" />
+        </UIProvider>
+      </div>
       <div style={noteStyle}>The language of the provider decides the order, the separators and the digits of the text, the names of the months and of the weekdays, and the first day of the week.</div>
     </div>
   )
@@ -249,7 +252,7 @@ export const MondayFirst: Story = {
 export const Languages: Story = {
   parameters: {
     controls: { disable: true },
-    docs: { description: { story: 'The language of the `UIProvider` decides how the date is written and read, the names in the calendar, the first day of the week and the direction: with `dir: "rtl"` the grid and its buttons mirror.' } }
+    docs: { description: { story: 'The language of the `UIProvider` decides how the date is written and read, the names in the calendar, the first day of the week and the direction: with `dir: "rtl"` the grid and its buttons mirror. The `dir` of the page is still up to the app, as in this demo.' } }
   },
   render: () => <LanguagesDemo />
 }
