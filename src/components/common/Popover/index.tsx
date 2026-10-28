@@ -68,6 +68,8 @@ export const Popover = ({
     if (state !== 'entering' || !byKeyboard.current || !ref.current) return
 
     byKeyboard.current = false
+    if (ref.current.contains(document.activeElement)) return
+
     focusFirst(ref.current, bodyRef.current)
   }, [state, ref])
 

@@ -141,6 +141,27 @@ describe('Popover', () => {
     expect(trigger).toHaveFocus()
   })
 
+  it('leaves the focus where the content put it when the popover opens by keyboard', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Popover
+        content={
+          <>
+            <button>Primeiro</button>
+            <button autoFocus>Segundo</button>
+          </>
+        }
+      >
+        <button>Abrir</button>
+      </Popover>
+    )
+    screen.getByRole('button', { name: 'Abrir' }).focus()
+    await user.keyboard('{Enter}')
+    await screen.findByRole('dialog')
+
+    expect(screen.getByRole('button', { name: 'Segundo' })).toHaveFocus()
+  })
+
   it('takes the focus to the next element after the trigger when Tab leaves the last element', async () => {
     const user = userEvent.setup()
     renderWithProviders(
