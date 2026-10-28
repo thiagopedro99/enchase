@@ -16,6 +16,7 @@ const buttons = [
   'common/Tag/styles.module.css',
   'common/Alert/styles.module.css',
   'common/Breadcrumbs/styles.module.css',
+  'common/Drawer/styles.module.css',
   'common/Input/styles.module.css',
   'common/Modal/styles.module.css',
   'common/NumberInput/styles.module.css',

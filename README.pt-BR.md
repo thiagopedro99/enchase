@@ -138,6 +138,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Container`, `Flex`, `Grid` | `<Grid as="ul" minColumnWidth="14rem" gap="1rem">...</Grid>` |
 | `Modal` | `<Modal isOpen={open} onClose={close} title="Editar">...</Modal>` |
 | `ConfirmModal` | `<ConfirmModal isOpen={open} onClose={close} onConfirm={apagar} message="Apagar item?" />` |
+| `Drawer` | `<Drawer open={open} onClose={close} title="Filtros" side="end">...</Drawer>`: painel que desliza de uma borda da página, com portal, `container`, foco preso e a página inerte, como o `Modal`; `side` (`start` ou `end`) acompanha a direção da página |
 | `Tooltip` | `<Tooltip text="Ajuda"><button>?</button></Tooltip>` |
 | `Popover` | `<Popover label="Detalhes" content={<p>Conteúdo</p>}><button>Abrir</button></Popover>` |
 | `Loading`, `InlineLoading` | `<Loading overlay text="Carregando" />` |
@@ -204,7 +205,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | Prop | Onde | O que faz |
 | --- | --- | --- |
 | `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card`, `CardButton` e `CardLink` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
-| `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` e `Table` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`) | Tamanho. |
+| `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` e `Table` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`), `Drawer` (`sm`, `md`, `lg`) | Tamanho. |
 | `label` | `Input`, `Textarea`, `NumberInput`, `Select`, `Checkbox`, `Switch`, `RadioGroup` | Rótulo visível, ligado ao controle. No `RadioGroup`, é o título do grupo. |
 | `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
 | `helperText` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
@@ -215,6 +216,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
 | `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup`, vão para o `<fieldset>`, que é a raiz. |
 | `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
+| `open` e `onClose` | `Drawer` | Sempre controlados. |
 | `value`, `defaultValue` e `onValueChange` | `RadioGroup`, `Tabs`, `Accordion` | Valor da opção marcada, da aba escolhida ou, no `Accordion`, a lista dos itens abertos (`string[]`), controlado ou não. `onValueChange` recebe o valor que o usuário acabou de escolher. |
 | `value`, `defaultValue` e `onValueChange` (numérico) | `NumberInput` | O número do campo, ou `null` com o campo vazio, controlado ou não. `onValueChange` recebe o número já confirmado (ao sair do campo, com Enter, com as setas e com os botões), limitado a `min` e `max` e arredondado às casas do formato, nunca a cada tecla. |
 | `page`, `defaultPage` e `onPageChange` | `Pagination` | Página atual (a primeira é 1), controlada ou não. `onPageChange` recebe o número da página que o usuário escolheu. |
@@ -688,7 +690,7 @@ O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 
 ### Overlays dentro de um trecho da página
 
-`Modal`, `ConfirmModal`, `Popover`, `Tooltip`, o `Loading` com `overlay` e a região de notificações do `ToastProvider` renderizam num portal no `<body>`. As variáveis do tema chegam até eles, porque são declaradas em `:root` e em `[data-theme]`, mas uma variável que você muda num elemento do app (uma ilha com `data-theme="dark"`, um `div` com ganchos `--enchase-*` próprios) não chega, porque a herança segue a árvore do DOM e o portal está no `body`. A prop `container`, um elemento ou uma função que o devolve, monta o overlay dentro desse elemento, que passa a herdar as variáveis dele (a região de notificações dentro da página continua alcançável quando um modal deixa o resto da página inerte):
+`Modal`, `ConfirmModal`, `Drawer`, `Popover`, `Tooltip`, o `Loading` com `overlay` e a região de notificações do `ToastProvider` renderizam num portal no `<body>`. As variáveis do tema chegam até eles, porque são declaradas em `:root` e em `[data-theme]`, mas uma variável que você muda num elemento do app (uma ilha com `data-theme="dark"`, um `div` com ganchos `--enchase-*` próprios) não chega, porque a herança segue a árvore do DOM e o portal está no `body`. A prop `container`, um elemento ou uma função que o devolve, monta o overlay dentro desse elemento, que passa a herdar as variáveis dele (a região de notificações dentro da página continua alcançável quando um modal deixa o resto da página inerte):
 
 ```tsx
 const [island, setIsland] = useState<HTMLElement | null>(null)
@@ -710,7 +712,7 @@ Os componentes renderizam no servidor sem erro de hidratação.
 
 - `ColorModeScript` aplica o `data-theme` antes da primeira pintura (por isso o `suppressHydrationWarning` no `<html>`). Sem JavaScript, o tema escuro do sistema vale por `@media (prefers-color-scheme: dark)`.
 - `Layout` e `Navbar` renderizam o modo desktop no servidor e trocam pelo breakpoint com CSS gerado, sem quadro compacto antes da hidratação.
-- Portais (`Modal`, `Loading` com overlay, `Tooltip`, `Popover` e a região de notificações do `ToastProvider`) abrem só depois da montagem. A região de notificações vive em um `div` próprio no `<body>` (`data-slot="toast-host"`, com `display: contents`), fora da árvore do app: um modal deixa o resto da página `inert`, mas não essa região, então uma notificação disparada com o modal aberto continua anunciada e clicável. O `data-slot="toast-host"` é um detalhe interno: não é uma API para isentar uma região sua do `inert`.
+- Portais (`Modal`, `Drawer`, `Loading` com overlay, `Tooltip`, `Popover` e a região de notificações do `ToastProvider`) abrem só depois da montagem. A região de notificações vive em um `div` próprio no `<body>` (`data-slot="toast-host"`, com `display: contents`), fora da árvore do app: um modal deixa o resto da página `inert`, mas não essa região, então uma notificação disparada com o modal aberto continua anunciada e clicável. O `data-slot="toast-host"` é um detalhe interno: não é uma API para isentar uma região sua do `inert`.
 - O pacote marca todo o `enchase` como `'use client'`: páginas e layouts de servidor importam os componentes direto, e a fronteira de cliente é o pacote inteiro.
 
 ## Testes

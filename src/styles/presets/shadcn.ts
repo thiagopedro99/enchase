@@ -207,6 +207,13 @@ const containers: HookValues = {
   '--enchase-modal-title-font-size': 'var(--enchase-font-size-lg)',
   '--enchase-modal-title-font-weight': 'var(--enchase-font-weight-semibold)',
 
+  '--enchase-drawer-panel-radius': '0px',
+  '--enchase-drawer-panel-border-width': 'var(--enchase-border-width)',
+  '--enchase-drawer-panel-width-md': '24rem',
+  '--enchase-drawer-body-font-size': 'var(--enchase-font-size-sm)',
+  '--enchase-drawer-title-font-size': 'var(--enchase-font-size-lg)',
+  '--enchase-drawer-title-font-weight': 'var(--enchase-font-weight-semibold)',
+
   '--enchase-popover-content-radius': 'var(--enchase-radius-md)',
   '--enchase-popover-content-border-width': 'var(--enchase-border-width)',
 
@@ -326,6 +333,9 @@ const colorHooks: HookValues = {
 
   '--enchase-modal-panel-background': 'var(--enchase-color-background)',
   '--enchase-modal-panel-border-color': 'var(--enchase-color-border)',
+
+  '--enchase-drawer-panel-background': 'var(--enchase-color-background)',
+  '--enchase-drawer-panel-border-color': 'var(--enchase-color-border)',
 
   '--enchase-popover-content-background': 'var(--enchase-color-surface)',
   '--enchase-popover-content-border-color': 'var(--enchase-color-border)',

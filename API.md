@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -221,6 +221,28 @@ A thin line that separates sections of content or groups of controls. It is an `
 | `decorative` | `boolean` | `false` | Hides the divider from assistive technology (`role="none"`). Use it when the line only adds to the look and the content already reads in order. |
 
 Also accepts the other attributes of `<hr>`, passed on to the element.
+
+### Drawer
+
+A panel that slides in from the edge of the page, rendered in a portal like the `Modal`: the focus stays trapped in the panel, the page behind it is inert and the scroll of the page is locked, and Esc or a click on the overlay closes it. It is always controlled by `open` and `onClose`. The side follows the direction of the page, so `start` is the right edge in a right-to-left page. Use it for a menu, a filter panel or a form that should not take the whole screen.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `open` | `boolean` | *required* | Opens and closes the drawer. It is always controlled: you keep the state and change it in onClose. It renders in a portal on the body, only after mounting, and stays mounted until the exit animation ends. |
+| `onClose` | `() => void` | *required* | Called when the user asks to close: close button, click on the overlay or Esc, depending on showCloseButton, closeOnOverlayClick and closeOnEsc. The drawer does not close itself. |
+| `title` | `string` | — | Title of the drawer (h2), which gives the accessible name. Without it, use ariaLabel. |
+| `ariaLabel` | `string` | — | Accessible name of the drawer when there is no title. |
+| `children` | `ReactNode` | *required* | Content of the drawer body, which scrolls when it is taller than the screen. |
+| `footer` | `ReactNode` | — | Fixed content below the body, such as the action buttons. |
+| `side` | `'start' \| 'end'` | `'start'` | Edge of the page the panel slides in from. start is the left edge in a left-to-right page and the right edge in a right-to-left one; end is the opposite. |
+| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Width of the panel: sm is 320 px, md is 400 px and lg is 560 px, and it is never wider than 90% of the screen. |
+| `showCloseButton` | `boolean` | `true` | Shows the close button in the header. |
+| `closeOnOverlayClick` | `boolean` | `true` | Closes when the overlay is clicked. |
+| `closeOnEsc` | `boolean` | `true` | Closes with Esc. With stacked overlays, only the top one closes. |
+| `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
+| `animation` | `MotionOverride` | — | false turns off the motion; { tuning: { duration } } changes how long the slide takes. The panel always travels at least its own width. |
+| `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
+| `style` | `CSSProperties` | — | Style of the panel, merged with the library style (yours wins). |
 
 ### Flex
 
@@ -1144,6 +1166,43 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-divider-border-color` | `var(--enchase-color-border)` | `border-block-start`, `border-inline-start` |
 | `--enchase-divider-min-height` | `1rem` | `min-block-size` |
+
+### Drawer
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-drawer-body-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-drawer-body-font-size` | `inherit` | `font-size` |
+| `--enchase-drawer-body-line-height` | `1.6` (`--enchase-line-height-relaxed`) | `line-height` |
+| `--enchase-drawer-body-padding-block` | `var(--enchase-space-md) var(--enchase-space-lg)` | `padding-block` |
+| `--enchase-drawer-body-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
+| `--enchase-drawer-close-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-drawer-close-color-active` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-drawer-close-color-hover` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-drawer-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-drawer-distance` | `0px` | `transform` |
+| `--enchase-drawer-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition` |
+| `--enchase-drawer-dx` | `0` | `transform` |
+| `--enchase-drawer-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-drawer-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
+| `--enchase-drawer-footer-padding-block` | `0 var(--enchase-space-lg)` | `padding-block` |
+| `--enchase-drawer-footer-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
+| `--enchase-drawer-header-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-drawer-header-padding-block` | `var(--enchase-space-lg) 0` | `padding-block` |
+| `--enchase-drawer-header-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
+| `--enchase-drawer-overlay-background` | `var(--enchase-color-overlay)` | `background-color` |
+| `--enchase-drawer-panel-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-drawer-panel-border-color` | `transparent` | `border-inline-end`, `border-inline-start` |
+| `--enchase-drawer-panel-border-width` | `0px` | `border-inline-end`, `border-inline-start` |
+| `--enchase-drawer-panel-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-drawer-panel-radius` | `1.75rem` (`--enchase-radius-2xl`) | `border-start-end-radius`, `border-end-end-radius`, `border-start-start-radius`, `border-end-start-radius` |
+| `--enchase-drawer-panel-shadow` | `var(--enchase-shadow-lg)` | `box-shadow` |
+| `--enchase-drawer-panel-width-lg` | `560px` | `inline-size` |
+| `--enchase-drawer-panel-width-md` | `400px` | `inline-size` |
+| `--enchase-drawer-panel-width-sm` | `320px` | `inline-size` |
+| `--enchase-drawer-title-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-drawer-title-font-size` | `1.75rem` (`--enchase-font-size-2xl`) | `font-size` |
+| `--enchase-drawer-title-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 
 ### Flex
 

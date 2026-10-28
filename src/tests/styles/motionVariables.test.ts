@@ -9,6 +9,7 @@ const prefixes: Record<string, string> = {
   'common/Card/styles.module.css': 'card',
   'common/CardButton/styles.module.css': 'card',
   'common/Checkbox/styles.module.css': 'checkbox',
+  'common/Drawer/styles.module.css': 'drawer',
   'common/Icon/swap.module.css': 'icon-swap',
   'common/Input/styles.module.css': 'input',
   'common/Link/styles.module.css': 'link',
