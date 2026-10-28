@@ -12,6 +12,7 @@ import { Card } from '@components/common/Card/index.tsx'
 import { CardButton } from '@components/common/CardButton/index.tsx'
 import { CardLink } from '@components/common/CardLink/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
+import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Menu } from '@components/common/Menu/index.tsx'
@@ -69,6 +70,8 @@ const everything = (
     <Checkbox label="Accept the terms" />
     <Switch label="Alerts" />
     <RadioGroup label="Plan" options={[{ value: 'a', label: 'Free' }]} helperText="Change any time" />
+    <CheckboxGroup label="Topics" options={[{ value: 'a', label: 'News' }]} defaultValue={['a']} helperText="Pick any" />
+    <CheckboxGroup label="Channels" options={[{ value: 'a', label: 'Email' }]} error="Pick one" />
     <div>
       {(['neutral', 'primary', 'success', 'warning', 'error', 'info'] as const).map((variant) => (
         <Badge key={variant} variant={variant}>

@@ -8,6 +8,7 @@ import { Table } from '@components/common/Table/index.tsx'
 import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
+import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
@@ -151,11 +152,14 @@ describe.each(widths)('worst case data at %ipx', (width) => {
         <Input label={worstCase.germanCompound} type="password" defaultValue={worstCase.uuid} />
         <Select label={worstCase.frenchLabel} defaultValue="a" options={[{ value: 'a', label: worstCase.longTitle }, { value: 'b', label: worstCase.fileName }]} />
         <Checkbox label={`${worstCase.frenchLabel} ${worstCase.longEmail}`} />
+        <Checkbox label={worstCase.germanCompound} />
         <Checkbox label={worstCase.shortName} />
         <Switch label={`${worstCase.frenchLabel} ${worstCase.longEmail}`} />
         <Switch label={worstCase.shortName} />
         <RadioGroup label={worstCase.germanCompound} helperText={worstCase.longUrl} options={[{ value: 'a', label: `${worstCase.frenchLabel} ${worstCase.longEmail}` }, { value: 'b', label: worstCase.shortName }]} />
         <RadioGroup label={worstCase.longTitle} error={worstCase.longUrl} orientation="horizontal" options={[{ value: 'a', label: worstCase.longEmail }, { value: 'b', label: worstCase.fileName }]} />
+        <CheckboxGroup label={worstCase.germanCompound} helperText={worstCase.longUrl} options={[{ value: 'a', label: `${worstCase.frenchLabel} ${worstCase.longEmail}` }, { value: 'b', label: worstCase.shortName }]} />
+        <CheckboxGroup label={worstCase.longTitle} error={worstCase.longUrl} orientation="horizontal" options={[{ value: 'a', label: worstCase.longEmail }, { value: 'b', label: worstCase.fileName }]} />
       </div>
     )
 

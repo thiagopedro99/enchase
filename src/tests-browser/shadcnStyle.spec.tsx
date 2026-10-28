@@ -8,6 +8,7 @@ import Breadcrumbs from '@components/common/Breadcrumbs/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
+import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Menu } from '@components/common/Menu/index.tsx'
@@ -312,6 +313,21 @@ describe('the selection controls of the shadcn style', () => {
     expect(style('radio-group-legend').fontWeight).toBe('500')
     expect(px(style('radio-group-legend').fontSize)).toBe(14)
     expect(style('radio-group-error').fontWeight).toBe('400')
+  })
+
+  it('shows the legend of the checkbox group in medium weight and the error in regular weight', () => {
+    show(<CheckboxGroup label="Topics" options={[{ value: 'a', label: 'A' }]} error="Pick one" />)
+
+    expect(style('checkbox-group-legend').fontWeight).toBe('500')
+    expect(px(style('checkbox-group-legend').fontSize)).toBe(14)
+    expect(style('checkbox-group-error').fontWeight).toBe('400')
+    expect(px(style('checkbox-group-error').fontSize)).toBe(14)
+  })
+
+  it('shows the legend of the checkbox group in the text color when there is no error', () => {
+    show(<CheckboxGroup label="Topics" options={[{ value: 'a', label: 'A' }]} />)
+
+    expect(style('checkbox-group-legend').color).toBe(roleColor('text-primary'))
   })
 
   it('keeps the 2px ring 2px from the box of the checkbox', async () => {

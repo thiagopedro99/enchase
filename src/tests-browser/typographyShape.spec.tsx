@@ -10,6 +10,7 @@ import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Link } from '@components/common/Link/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
+import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
@@ -136,6 +137,12 @@ describe('the text of the components from the hooks', () => {
     renderInBrowser(scoped({ '--enchase-radio-group-legend-font-weight': '800', '--enchase-radio-group-legend-font-size': '21px' }, <RadioGroup label="Plan" options={[{ value: 'a', label: 'A' }]} />))
 
     expect([style('radio-group-legend').fontWeight, style('radio-group-legend').fontSize]).toEqual(['800', '21px'])
+  })
+
+  it('takes the weight of the legend of a checkbox group from its hook', () => {
+    renderInBrowser(scoped({ '--enchase-checkbox-group-legend-font-weight': '800', '--enchase-checkbox-group-legend-font-size': '21px' }, <CheckboxGroup label="Topics" options={[{ value: 'a', label: 'A' }]} />))
+
+    expect([style('checkbox-group-legend').fontWeight, style('checkbox-group-legend').fontSize]).toEqual(['800', '21px'])
   })
 
   it('takes the underline offset of a link from its hook', () => {

@@ -7,6 +7,7 @@ import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
+import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
@@ -66,6 +67,7 @@ describe('minimum target size in a real browser', () => {
         <Checkbox label="Aceito" />
         <Switch label="Ligado" />
         <RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }]} />
+        <CheckboxGroup label="Assuntos" options={[{ value: 'news', label: 'Novidades' }]} />
         <Tabs items={[{ value: 'a', label: 'Aba', content: 'Conteúdo' }]} />
         <Accordion items={[{ value: 'a', title: 'Pergunta', content: 'Resposta' }]} />
         <Pagination pageCount={3} size="sm" />
