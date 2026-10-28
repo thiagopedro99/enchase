@@ -14,6 +14,7 @@ import { CardLink } from '@components/common/CardLink/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
+import { Menu } from '@components/common/Menu/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
@@ -179,6 +180,30 @@ describe.each(builtInStyleEntries)('the contract of the %s style in a real brows
       mode
     )
     await expect.poll(() => parts('drawer-panel').length).toBe(1)
+    await waitForSettled(() => document.body)
+    const { violations } = await audit()
+
+    expect(violations).toEqual([])
+  })
+
+  it.each(['light', 'dark'] as const)('keeps the menu above the contrast floor in the %s mode', async (mode) => {
+    paintPage()
+    show(
+      <Menu
+        defaultOpen
+        label="Actions"
+        items={[
+          { id: 'edit', label: 'Edit', icon: <svg /> },
+          { id: 'split', separator: true },
+          { id: 'archive', label: 'Archive', disabled: true },
+          { id: 'delete', label: 'Delete' }
+        ]}
+      >
+        <Button>Open</Button>
+      </Menu>,
+      mode
+    )
+    await expect.poll(() => parts('menu').length).toBe(1)
     await waitForSettled(() => document.body)
     const { violations } = await audit()
 

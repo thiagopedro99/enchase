@@ -7,6 +7,7 @@ import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Link } from '@components/common/Link/index.tsx'
+import { Menu } from '@components/common/Menu/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
@@ -145,6 +146,20 @@ describe('touch handling on the interactive controls', () => {
 
     expect(getComputedStyle(close).touchAction).toBe('manipulation')
     if (supportsTapHighlight) expect(getComputedStyle(close).getPropertyValue('-webkit-tap-highlight-color')).toBe(noHighlight)
+  })
+
+  it('applies the same handling to the items of the menu', async () => {
+    renderInBrowser(
+      <Menu defaultOpen label="Ações" items={[{ id: 'edit', label: 'Editar' }]}>
+        <button>Abrir</button>
+      </Menu>
+    )
+    await expect.poll(() => document.querySelector('[data-slot="menu-item"]')).toBeTruthy()
+
+    const item = document.querySelector('[data-slot="menu-item"]') as HTMLElement
+
+    expect(getComputedStyle(item).touchAction).toBe('manipulation')
+    if (supportsTapHighlight) expect(getComputedStyle(item).getPropertyValue('-webkit-tap-highlight-color')).toBe(noHighlight)
   })
 
   it('keeps the text of the fields at 16px or more so iOS does not zoom the page', async () => {

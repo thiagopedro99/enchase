@@ -9,13 +9,14 @@ import { CardButton } from '@components/common/CardButton/index.tsx'
 import { CardLink } from '@components/common/CardLink/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
+import { Menu } from '@components/common/Menu/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import { builtInStyleEntries } from '@tests/shared/fixtures/styles.ts'
 import { renderInBrowser } from './harness.tsx'
-import { part } from './hookProbes.ts'
+import { part, parts } from './hookProbes.ts'
 import { frames } from './settle.ts'
 import { disableTouch, enableTouch, touchCapable } from './touchInput.ts'
 
@@ -176,6 +177,45 @@ describe('the drawer on a touch device in a real browser', () => {
 
       expect(getComputedStyle(close).color).toBe(before)
       expect(getComputedStyle(close).backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    } finally {
+      await disableTouch()
+    }
+  })
+})
+
+describe('the menu on a touch device in a real browser', () => {
+  touchCapable('touchEmulation')('opens with a tap, chooses an item with a tap and does not tint the item on hover', async () => {
+    await enableTouch()
+    try {
+      const log: string[] = []
+
+      renderInBrowser(
+        <Menu
+          label="Ações"
+          items={[
+            { id: 'edit', label: 'Editar', onSelect: () => log.push('edit') },
+            { id: 'duplicate', label: 'Duplicar', onSelect: () => log.push('duplicate') }
+          ]}
+        >
+          <button>Abrir</button>
+        </Menu>
+      )
+      await page.getByRole('button', { name: 'Abrir' }).click()
+      await expect.poll(() => part('popover-content')?.getAttribute('data-state'), { timeout: 4000 }).toBe('open')
+
+      const [edit, duplicate] = parts('menu-item')
+
+      expect(matchMedia('(hover: none)').matches).toBe(true)
+
+      await page.elementLocator(edit).hover()
+      await frames(4)
+
+      expect(getComputedStyle(edit).backgroundColor).toBe('rgba(0, 0, 0, 0)')
+
+      await page.elementLocator(duplicate).click()
+
+      await expect.poll(() => part('popover-content'), { timeout: 4000 }).toBeUndefined()
+      expect(log).toEqual(['duplicate'])
     } finally {
       await disableTouch()
     }

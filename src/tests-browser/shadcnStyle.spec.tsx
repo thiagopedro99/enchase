@@ -10,6 +10,7 @@ import { Card } from '@components/common/Card/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
+import { Menu } from '@components/common/Menu/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
@@ -409,6 +410,32 @@ describe('the containers of the shadcn style', () => {
     expect(px(panel.width)).toBe(384)
     expect(px(style('drawer-body').fontSize)).toBe(14)
     expect([px(style('drawer-title').fontSize), style('drawer-title').fontWeight]).toEqual([18, '600'])
+  })
+
+  it('draws the menu with 8px by 6px items, 6px corners, 14px regular text, 16px icons and a separator that reaches the border', async () => {
+    show(
+      <Menu
+        defaultOpen
+        label="Actions"
+        items={[
+          { id: 'edit', label: 'Edit', icon: <svg /> },
+          { id: 'split', separator: true },
+          { id: 'delete', label: 'Delete' }
+        ]}
+      >
+        <button type="button">Open</button>
+      </Menu>
+    )
+    await expect.poll(() => parts('menu-item').length).toBe(2)
+    const item = style('menu-item')
+
+    expect([px(item.paddingTop), px(item.paddingBottom), px(item.paddingLeft), px(item.paddingRight)]).toEqual([6, 6, 8, 8])
+    expect(px(item.borderTopLeftRadius)).toBe(6)
+    expect([px(item.fontSize), item.fontWeight]).toEqual([14, '400'])
+    expect(px(style('menu').minWidth)).toBe(128)
+    expect([px(style('menu-item-icon').width), px(style('menu-item-icon').height)]).toEqual([16, 16])
+    expect(px(style('menu-separator').marginLeft)).toBe(-4)
+    expect(px(style('popover-content').borderTopWidth)).toBe(1)
   })
 
   it('draws the open popover with a border and 8px corners, and the tooltip with 8px corners', async () => {
