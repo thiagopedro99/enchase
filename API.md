@@ -143,11 +143,12 @@ Also accepts the other attributes of `<a>`, passed on to the element.
 
 ### Checkbox
 
-A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`. With `aria-invalid="true"` the box of an unchecked checkbox takes the color of the error on its border. To choose among several options, use the `CheckboxGroup`.
+A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`. With `indeterminate` it shows the mixed state of a box that summarizes other boxes, such as a select all (see the SelectAll story). With `aria-invalid="true"` the box of an unchecked checkbox takes the color of the error on its border. To choose among several options, use the `CheckboxGroup`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | — | Text of the label. Clicking it also checks the box. |
+| `indeterminate` | `boolean` | `false` | Shows the mixed state, for a box that summarizes other boxes. It sets the `indeterminate` property of the native input, so assistive technology reads it as mixed, and it does not change `checked`. A click does not clear it: do that in `onChange`. The property is set on the client, so a mixed box that is rendered on the server looks checked or unchecked until the page hydrates. |
 | `wrapperClassName` | `string` | — | Class of the root (data-slot="checkbox"). className stays on the native input (data-slot="checkbox-input"). |
 | `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="checkbox"). style stays on the native input. |
 | `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the check mark, which grows with a short pop. false turns it off; { tuning: { duration, scale } } sets the duration in seconds and the initial scale. |

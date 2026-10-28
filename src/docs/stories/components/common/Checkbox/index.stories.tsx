@@ -1,18 +1,37 @@
+import { useState } from 'react'
 import { Checkbox } from 'enchase'
+import { channels, defaultDisabled, defaultIndeterminate } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+
+const SelectAllDemo = () => {
+  const [selected, setSelected] = useState([channels[0]])
+  const all = selected.length === channels.length
+
+  return (
+    <div style={{ display: 'grid', gap: '0.25rem' }}>
+      <Checkbox label="All channels" checked={all} indeterminate={selected.length > 0 && !all} onChange={() => setSelected(all ? [] : channels)} />
+      <div style={{ display: 'grid', gap: '0.25rem', paddingInlineStart: '1.75rem' }}>
+        {channels.map((channel) => (
+          <Checkbox key={channel} label={channel} checked={selected.includes(channel)} onChange={() => setSelected(selected.includes(channel) ? selected.filter((value) => value !== channel) : [...selected, channel])} />
+        ))}
+      </div>
+    </div>
+  )
+}
 
 const meta = {
   title: 'Components/Checkbox',
   component: Checkbox,
   args: {
     label: 'I accept the terms',
-    disabled: false
+    disabled: defaultDisabled,
+    indeterminate: defaultIndeterminate
   },
   parameters: {
     docs: {
       description: {
-        component: 'A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`. With `aria-invalid="true"` the box of an unchecked checkbox takes the color of the error on its border. To choose among several options, use the `CheckboxGroup`.'
+        component: 'A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`. With `indeterminate` it shows the mixed state of a box that summarizes other boxes, such as a select all (see the SelectAll story). With `aria-invalid="true"` the box of an unchecked checkbox takes the color of the error on its border. To choose among several options, use the `CheckboxGroup`.'
       }
     }
   },
@@ -23,6 +42,11 @@ const meta = {
     },
     disabled: {
       description: 'Disables the box and blocks checking it.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } }
+    },
+    indeterminate: {
+      description: 'Shows the mixed state, for a box that summarizes other boxes. It sets the `indeterminate` property of the native input, so assistive technology reads it as mixed, and it does not change `checked`. A click does not clear it: do that in `onChange`. The property is set on the client, so a mixed box that is rendered on the server looks checked or unchecked until the page hydrates.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
@@ -70,4 +94,12 @@ export const DisabledChecked: Story = {
 
 export const Invalid: Story = {
   args: { 'aria-invalid': true }
+}
+
+export const Indeterminate: Story = {
+  args: { indeterminate: true }
+}
+
+export const SelectAll: Story = {
+  render: () => <SelectAllDemo />
 }

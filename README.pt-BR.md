@@ -121,7 +121,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Textarea` | `<Textarea label="Mensagem" rows={4} helperText="Conte o que aconteceu" />` |
 | `NumberInput` | `<NumberInput label="Preço" min={0} step={0.5} formatOptions={{ style: 'currency', currency: 'BRL' }} onValueChange={setPreco} />` |
 | `Select` | `<Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />` |
-| `Checkbox` | `<Checkbox label="Aceito os termos" />` |
+| `Checkbox` | `<Checkbox label="Aceito os termos" />`: com `indeterminate`, mostra o estado misto de uma caixa que resume outras, como um "selecionar todos" (`<Checkbox label="Todos" checked={todos} indeterminate={algum && !todos} onChange={alternarTodos} />`). A prop liga a propriedade `indeterminate` do `<input>` nativo, então o leitor de tela lê "misto"; ela não muda `checked`, o clique não a limpa (quem usa a limpa no `onChange`) e, como não existe atributo HTML para ela, uma caixa mista renderizada no servidor aparece marcada ou desmarcada até a hidratação. |
 | `Switch` | `<Switch label="Receber notificações" defaultChecked />` |
 | `RadioGroup` | `<RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }]} defaultValue="free" />` |
 | `CheckboxGroup` | `<CheckboxGroup label="Assuntos" options={[{ value: 'novidades', label: 'Novidades' }, { value: 'ofertas', label: 'Ofertas' }]} defaultValue={['novidades']} onValueChange={setAssuntos} />`: vários itens marcáveis num `<fieldset>`; o valor é a lista dos marcados, na ordem das opções. O grupo não exige escolha sozinho: valide no formulário e passe `error` |

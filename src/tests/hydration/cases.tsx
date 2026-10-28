@@ -72,6 +72,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Textarea', element: <Textarea label="Message" helperText="Tell us more" /> },
   { name: 'Select', element: <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} /> },
   { name: 'Checkbox', element: <Checkbox label="Accept" /> },
+  { name: 'Checkbox that is indeterminate', element: <Checkbox label="Select all" indeterminate defaultChecked /> },
   { name: 'Switch', element: <Switch label="Notifications" defaultChecked /> },
   { name: 'Table', element: <Table caption="Orders" striped columns={[{ key: 'id', header: 'Order', rowHeader: true }, { key: 'total', header: 'Total', align: 'end' }]} rows={[{ id: '#1', total: 10 }, { id: '#2', total: 20 }]} /> },
   { name: 'Table that sorts, sticks and loads', element: <Table caption="Orders" stickyHeader sort={{ key: 'total', direction: 'descending' }} onSortChange={noop} columns={[{ key: 'id', header: <abbr title="Order number">No.</abbr>, rowHeader: true, sortable: true }, { key: 'total', header: 'Total', align: 'end', sortable: true }]} rows={[{ id: '#1', total: 10 }, { id: '#2', total: 20 }]} loading /> },
