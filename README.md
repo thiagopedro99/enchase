@@ -117,7 +117,7 @@ Each toast method (`success`, `error`, `warning`, `info` and `addToast`) returns
 ## Components
 
 - **Actions:** `Button`, `ButtonLink`, `Link`, `ThemeToggle`
-- **Forms:** `Input`, `Textarea`, `NumberInput`, `Select`, `Checkbox`, `Switch`, `RadioGroup`
+- **Forms:** `Input`, `Textarea`, `NumberInput`, `Select`, `Checkbox`, `CheckboxGroup`, `Switch`, `RadioGroup`
 - **Content:** `Accordion`, `Alert`, `Avatar`, `Badge`, `Card`, `CardButton`, `CardLink`, `Divider`, `Skeleton`, `Table`, `Tabs`, `Tag`
 - **Feedback and overlays:** `Loading`, `InlineLoading`, `Progress`, `Modal`, `ConfirmModal`, `Drawer`, `Popover`, `Menu`, `Tooltip`, and the toasts (`ToastProvider` and `useToast`)
 - **Navigation and layout:** `Breadcrumbs`, `Footer`, `Layout`, `Navbar`, `Pagination`, `Sidebar`, `Container`, `Flex`, `Grid`

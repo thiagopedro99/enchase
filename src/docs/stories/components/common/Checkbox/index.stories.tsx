@@ -12,7 +12,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`.'
+        component: 'A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`. With `aria-invalid="true"` the box of an unchecked checkbox takes the color of the error on its border. To choose among several options, use the `CheckboxGroup`.'
       }
     }
   },
@@ -66,4 +66,8 @@ export const Disabled: Story = {
 
 export const DisabledChecked: Story = {
   args: { disabled: true, defaultChecked: true }
+}
+
+export const Invalid: Story = {
+  args: { 'aria-invalid': true }
 }

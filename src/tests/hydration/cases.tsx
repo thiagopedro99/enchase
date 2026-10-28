@@ -15,6 +15,7 @@ import { Pagination } from '@components/common/Pagination/index.tsx'
 import { Accordion } from '@components/common/Accordion/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
+import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { Skeleton } from '@components/common/Skeleton/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
@@ -77,6 +78,8 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Accordion', element: <Accordion defaultValue={['b']} items={[{ value: 'a', title: 'First', content: <p>One</p> }, { value: 'b', title: 'Second', content: <p>Two</p> }, { value: 'c', title: 'Third', content: <p>Three</p>, disabled: true }]} /> },
   { name: 'Tabs', element: <Tabs ariaLabel="Sections" defaultValue="b" items={[{ value: 'a', label: 'First', content: <p>One</p> }, { value: 'b', label: 'Second', content: <p>Two</p> }, { value: 'c', label: 'Third', content: <p>Three</p>, disabled: true }]} /> },
   { name: 'RadioGroup', element: <RadioGroup label="Plan" defaultValue="pro" helperText="Billed monthly" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }]} /> },
+  { name: 'CheckboxGroup', element: <CheckboxGroup label="Topics" defaultValue={['news']} helperText="Pick what you like" options={[{ value: 'news', label: 'News' }, { value: 'offers', label: 'Offers', disabled: true }]} /> },
+  { name: 'CheckboxGroup with an error', element: <CheckboxGroup label="Topics" value={['offers']} onValueChange={noop} error="Pick at least one" orientation="horizontal" options={[{ value: 'news', label: 'News' }, { value: 'offers', label: 'Offers' }]} /> },
   { name: 'Card', element: <Card variant="elevated">Content</Card> },
   { name: 'Grid', element: <Grid columns={{ xs: 1, md: 3 }} centerLastRow><p>One</p><p>Two</p><p>Three</p><p>Four</p></Grid> },
   { name: 'CardButton', element: <CardButton variant="elevated"><span>Open</span></CardButton> },

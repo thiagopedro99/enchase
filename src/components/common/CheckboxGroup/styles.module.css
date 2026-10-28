@@ -1,0 +1,61 @@
+.group {
+  box-sizing: border-box;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+:where(.group) {
+  max-inline-size: 100%;
+}
+
+.legend {
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  padding: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-checkbox-group-legend-font-size, var(--enchase-font-size-base));
+  font-weight: var(--enchase-checkbox-group-legend-font-weight, var(--enchase-font-weight-medium));
+  color: var(--enchase-checkbox-group-legend-color, var(--enchase-color-text-secondary));
+}
+
+:where(.legend) {
+  margin-block-end: var(--enchase-checkbox-group-legend-margin-block-end, var(--enchase-space-sm));
+}
+
+.group[data-invalid] .legend {
+  color: var(--enchase-checkbox-group-legend-color-invalid, var(--enchase-color-error));
+}
+
+.options {
+  display: flex;
+}
+
+:where(.options) {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--enchase-checkbox-group-options-gap, var(--enchase-space-xs));
+}
+
+:where(.group[data-orientation='horizontal'] .options) {
+  flex-flow: row wrap;
+  column-gap: var(--enchase-checkbox-group-options-column-gap-horizontal, var(--enchase-space-lg));
+}
+
+.error {
+  display: block;
+  margin-block-start: var(--enchase-checkbox-group-error-margin-block-start, var(--enchase-space-xs));
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-checkbox-group-error-font-size, var(--enchase-font-size-xs));
+  font-weight: var(--enchase-checkbox-group-error-font-weight, var(--enchase-font-weight-medium));
+  color: var(--enchase-checkbox-group-error-color, var(--enchase-color-error));
+}
+
+.helper {
+  display: block;
+  margin-block-start: var(--enchase-checkbox-group-helper-margin-block-start, var(--enchase-space-xs));
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-checkbox-group-helper-font-size, var(--enchase-font-size-xs));
+  color: var(--enchase-checkbox-group-helper-color, var(--enchase-color-text-secondary));
+}

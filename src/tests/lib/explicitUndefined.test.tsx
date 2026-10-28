@@ -14,6 +14,7 @@ import { Button } from '@components/common/Button/index.tsx'
 import { ButtonLink } from '@components/common/ButtonLink/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
+import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { Container } from '@components/common/Container/index.tsx'
 import { Divider } from '@components/common/Divider/index.tsx'
 import { Flex } from '@components/common/Flex/index.tsx'
@@ -75,6 +76,7 @@ const cases: [string, string, ComponentType<never>, Record<string, unknown>][] =
   ['ButtonLink', 'ButtonLinkProps', ButtonLink, { href: '/docs', children: 'Docs' }],
   ['Card', 'CardProps', Card, { children: 'Card' }],
   ['Checkbox', 'CheckboxProps', Checkbox, { label: 'Agree' }],
+  ['CheckboxGroup', 'CheckboxGroupProps', CheckboxGroup, { label: 'Topics', options }],
   ['Container', 'ContainerProps', Container, { children: 'x' }],
   ['Divider', 'DividerProps', Divider, {}],
   ['Flex', 'FlexProps', Flex, { children: 'x' }],

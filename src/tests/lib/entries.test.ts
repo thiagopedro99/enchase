@@ -18,7 +18,7 @@ const typeExportsOf = (file: string) => {
 
 describe('public entries', () => {
   it('exports the components, providers and hooks from enchase', () => {
-    for (const name of ['Button', 'Textarea', 'Badge', 'Alert', 'Switch', 'RadioGroup', 'Tabs', 'Accordion', 'Pagination', 'Table', 'NumberInput', 'Modal', 'Popover', 'Sidebar', 'Layout', 'Navbar', 'Footer', 'Icon', 'Link', 'CardButton', 'CardLink', 'Divider', 'Drawer', 'Menu', 'Avatar', 'Tag', 'Progress', 'UIProvider', 'ColorModeProvider', 'ToastProvider', 'GlobalStyles', 'useToast', 'useColorMode', 'useScrollSpy', 'useUIConfig']) {
+    for (const name of ['Button', 'Textarea', 'Badge', 'Alert', 'Switch', 'RadioGroup', 'CheckboxGroup', 'Tabs', 'Accordion', 'Pagination', 'Table', 'NumberInput', 'Modal', 'Popover', 'Sidebar', 'Layout', 'Navbar', 'Footer', 'Icon', 'Link', 'CardButton', 'CardLink', 'Divider', 'Drawer', 'Menu', 'Avatar', 'Tag', 'Progress', 'UIProvider', 'ColorModeProvider', 'ToastProvider', 'GlobalStyles', 'useToast', 'useColorMode', 'useScrollSpy', 'useUIConfig']) {
       expect(main, name).toHaveProperty(name)
     }
   })

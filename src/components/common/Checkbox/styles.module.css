@@ -79,6 +79,10 @@
   transform: none;
 }
 
+.hidden[aria-invalid='true']:not(:checked, :disabled) + .box {
+  border-color: var(--enchase-checkbox-box-border-color-invalid, var(--enchase-color-error));
+}
+
 .hidden:disabled + .box {
   border-color: var(--enchase-checkbox-box-border-color-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent));
   cursor: not-allowed;

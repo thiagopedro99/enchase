@@ -124,6 +124,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Checkbox` | `<Checkbox label="Aceito os termos" />` |
 | `Switch` | `<Switch label="Receber notificações" defaultChecked />` |
 | `RadioGroup` | `<RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }]} defaultValue="free" />` |
+| `CheckboxGroup` | `<CheckboxGroup label="Assuntos" options={[{ value: 'novidades', label: 'Novidades' }, { value: 'ofertas', label: 'Ofertas' }]} defaultValue={['novidades']} onValueChange={setAssuntos} />`: vários itens marcáveis num `<fieldset>`; o valor é a lista dos marcados, na ordem das opções. O grupo não exige escolha sozinho: valide no formulário e passe `error` |
 | `Accordion` | `<Accordion items={[{ value: 'envio', title: 'Quanto tempo leva o envio?', content: <p>Até dois dias úteis.</p> }]} />` |
 | `Pagination` | `<Pagination pageCount={20} page={page} onPageChange={setPage} />` |
 | `Table` | `<Table caption="Pedidos" columns={[{ key: 'id', header: 'Pedido' }, { key: 'total', header: 'Total', align: 'end' }]} rows={pedidos} />` |
@@ -207,18 +208,19 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | --- | --- | --- |
 | `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card`, `CardButton` e `CardLink` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
 | `size` | `Button` e `ButtonLink` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` e `Table` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`), `Drawer` (`sm`, `md`, `lg`) | Tamanho. |
-| `label` | `Input`, `Textarea`, `NumberInput`, `Select`, `Checkbox`, `Switch`, `RadioGroup` | Rótulo visível, ligado ao controle. No `RadioGroup`, é o título do grupo. |
-| `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup` | Mensagem de erro: marca o campo com `aria-invalid`, aparece com `role="alert"` e substitui o `helperText`. |
-| `helperText` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
+| `label` | `Input`, `Textarea`, `NumberInput`, `Select`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup` | Rótulo visível, ligado ao controle. No `RadioGroup` e no `CheckboxGroup`, é o título do grupo. |
+| `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup`, `CheckboxGroup` | Mensagem de erro: marca o campo com `aria-invalid` (no `CheckboxGroup`, cada caixa), aparece com `role="alert"` e substitui o `helperText`. |
+| `helperText` | `Input`, `Textarea`, `NumberInput`, `Select`, `RadioGroup`, `CheckboxGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
 | `fullWidth` | `Button`, `ButtonLink`, `Input`, `Textarea`, `NumberInput`, `Select` | Ocupa toda a largura disponível. |
 | `labelPlacement` | `Input`, `Textarea`, `NumberInput`, `Select` | Onde fica o rótulo: `floating` (dentro do campo, sobe ao focar) ou `stacked` (acima do controle). Sem a prop, vale o `style` do tema: `floating` no `enchase` e `stacked` no `shadcn`. |
 | `externalIcon` | `ButtonLink` | Com `target="_blank"`, mostra o ícone de link externo (padrão `true`). `false` tira só o ícone e mantém o texto "abre em nova aba" para leitores de tela; em um link só de ícone com `aria-label`, ponha o aviso no próprio rótulo. |
 | `as` | `Container`, `Flex`, `Grid`, `Card` | Tag HTML da raiz, só entre as de estrutura: `div` (padrão), `section`, `article`, `aside`, `nav`, `header`, `footer`, `main`, `ul`, `ol` e `li`. Com `ul` e `ol` a raiz leva `role="list"`. Veja [Listas e cartões clicáveis](#listas-e-cartões-clicáveis). |
 | `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
-| `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup`, vão para o `<fieldset>`, que é a raiz. |
+| `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup` e no `CheckboxGroup`, vão para o `<fieldset>`, que é a raiz. |
 | `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
 | `open` e `onClose` | `Drawer` | Sempre controlados. |
 | `value`, `defaultValue` e `onValueChange` | `RadioGroup`, `Tabs`, `Accordion` | Valor da opção marcada, da aba escolhida ou, no `Accordion`, a lista dos itens abertos (`string[]`), controlado ou não. `onValueChange` recebe o valor que o usuário acabou de escolher. |
+| `value`, `defaultValue` e `onValueChange` (lista) | `CheckboxGroup` | A lista (`string[]`) dos valores marcados, controlada ou não. `onValueChange` recebe a lista inteira, na ordem das opções, a cada marca ou desmarca; uma opção desabilitada que está marcada continua na lista. |
 | `value`, `defaultValue` e `onValueChange` (numérico) | `NumberInput` | O número do campo, ou `null` com o campo vazio, controlado ou não. `onValueChange` recebe o número já confirmado (ao sair do campo, com Enter, com as setas e com os botões), limitado a `min` e `max` e arredondado às casas do formato, nunca a cada tecla. |
 | `page`, `defaultPage` e `onPageChange` | `Pagination` | Página atual (a primeira é 1), controlada ou não. `onPageChange` recebe o número da página que o usuário escolheu. |
 | `onClose` | `Alert` | Mostra o botão de fechar. O `Alert` não some sozinho: quem usa o remove ao receber o evento. |

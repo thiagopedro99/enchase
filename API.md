@@ -6,7 +6,7 @@ Usage examples are in the [README](README.md), in the [full guide](https://githu
 
 ## Components
 
-[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
+[Accordion](#accordion) · [Alert](#alert) · [Avatar](#avatar) · [Badge](#badge) · [Breadcrumbs](#breadcrumbs) · [Button](#button) · [ButtonLink](#buttonlink) · [Card](#card) · [CardButton](#cardbutton) · [CardLink](#cardlink) · [Checkbox](#checkbox) · [CheckboxGroup](#checkboxgroup) · [ColorModeProvider](#colormodeprovider) · [ColorModeScript](#colormodescript) · [ConfirmModal](#confirmmodal) · [Container](#container) · [Divider](#divider) · [Drawer](#drawer) · [Flex](#flex) · [Footer](#footer) · [GlobalStyles](#globalstyles) · [Grid](#grid) · [Icon](#icon) · [InlineLoading](#inlineloading) · [Input](#input) · [Layout](#layout) · [Link](#link) · [Loading](#loading) · [Menu](#menu) · [Modal](#modal) · [Navbar](#navbar) · [NumberInput](#numberinput) · [Pagination](#pagination) · [Popover](#popover) · [Progress](#progress) · [RadioGroup](#radiogroup) · [Select](#select) · [Sidebar](#sidebar) · [Skeleton](#skeleton) · [Switch](#switch) · [Table](#table) · [Tabs](#tabs) · [Tag](#tag) · [Textarea](#textarea) · [ThemeToggle](#themetoggle) · [ThemeVariables](#themevariables) · [ToastProvider](#toastprovider) · [Tooltip](#tooltip) · [UIProvider](#uiprovider) · [VisuallyHidden](#visuallyhidden)
 
 ### Accordion
 
@@ -143,7 +143,7 @@ Also accepts the other attributes of `<a>`, passed on to the element.
 
 ### Checkbox
 
-A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`.
+A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`. With `aria-invalid="true"` the box of an unchecked checkbox takes the color of the error on its border. To choose among several options, use the `CheckboxGroup`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -153,6 +153,25 @@ A styled native checkbox, with a clickable label and an animated check mark. It 
 | `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the check mark, which grows with a short pop. false turns it off; { tuning: { duration, scale } } sets the duration in seconds and the initial scale. |
 
 Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.
+
+### CheckboxGroup
+
+A group of checkboxes to choose any number of options that fit on the screen at once. It builds a `<fieldset>` with a title, helper text and an error message, like the other fields, and each option is the `Checkbox` of the library, so Tab moves from one checkbox to the next and Space checks the focused one. The value is the list of the checked values, in the order of the options. It accepts `ref`, which goes to the `<fieldset>`, and the attributes of the `<fieldset>`; `className` and `style` also go to it. The group does not know when a choice is required: validate in your form and pass `error`.
+
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `options` | `CheckboxGroupOption[]` | *required* | Options of the group, each one with `value`, `label` and, optionally, `disabled`. The order of the array is the order on the screen. |
+| `label` | `string` | — | Title of the group, rendered as the `<legend>` of the `<fieldset>`. Without a visible title, pass aria-label to the group. |
+| `name` | `string` | — | Name of the field in the form, the same for all the options, so that each checked value is submitted with it. Without it, the checkboxes have no name and the form does not receive them. |
+| `value` | `string[]` | — | Values of the checked options when the group is controlled. It also requires onValueChange. To control it with none checked, pass an empty array. See the Controlled story. |
+| `defaultValue` | `string[]` | — | Values of the options checked at the start, for use without external control. See the WithDefaultValue story. |
+| `onValueChange` | `(value: string[]) => void` | — | Called with the values of all the checked options, in the order of the options, each time the user checks or unchecks one. A disabled option that is checked stays in the list. |
+| `error` | `string` | — | Error message. Marks every checkbox as invalid (aria-invalid), paints the title and the unchecked boxes red and is announced as an alert. It replaces the helperText. See the Validated story. |
+| `helperText` | `string` | — | Helper text under the group. It is tied to the group by aria-describedby and disappears when there is an error. |
+| `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Direction of the list: vertical stacks the options and horizontal puts them side by side, wrapping to a new line when there is not enough room. |
+| `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the check mark of each option, which grows with a short pop. false turns it off; { tuning: { duration, scale } } sets the duration in seconds and the initial scale. |
+
+Also accepts the other attributes of `<fieldset>`, passed on to the element. Forwards the `ref` to `<fieldset>`.
 
 ### ColorModeProvider
 
@@ -1161,6 +1180,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-checkbox-box-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-checkbox-box-border-color-checked-disabled` | `transparent` | `border-color` |
 | `--enchase-checkbox-box-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
+| `--enchase-checkbox-box-border-color-invalid` | `var(--enchase-color-error)` | `border-color` |
 | `--enchase-checkbox-box-check-width` | `2px` | `border-width` |
 | `--enchase-checkbox-box-radius` | `2px` | `border-radius` |
 | `--enchase-checkbox-box-size` | `18px` | `inline-size`, `block-size`, `margin-block-start` |
@@ -1173,6 +1193,25 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-checkbox-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-checkbox-opacity-disabled` | `1` | `opacity` |
 | `--enchase-checkbox-scale` | `0.6` | `transform` |
+
+### CheckboxGroup
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-checkbox-group-error-color` | `var(--enchase-color-error)` | `color` |
+| `--enchase-checkbox-group-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-checkbox-group-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-checkbox-group-error-margin-block-start` | `0.25rem` (`--enchase-space-xs`) | `margin-block-start` |
+| `--enchase-checkbox-group-helper-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-checkbox-group-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-checkbox-group-helper-margin-block-start` | `0.25rem` (`--enchase-space-xs`) | `margin-block-start` |
+| `--enchase-checkbox-group-legend-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-checkbox-group-legend-color-invalid` | `var(--enchase-color-error)` | `color` |
+| `--enchase-checkbox-group-legend-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-checkbox-group-legend-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-checkbox-group-legend-margin-block-end` | `0.5rem` (`--enchase-space-sm`) | `margin-block-end` |
+| `--enchase-checkbox-group-options-column-gap-horizontal` | `1.5rem` (`--enchase-space-lg`) | `column-gap` |
+| `--enchase-checkbox-group-options-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 
 ### Container
 
