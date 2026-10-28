@@ -509,7 +509,7 @@ A floating panel attached to a trigger. Its position adjusts itself near the edg
 | `placement` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left' \| 'top-start' \| 'top-end' \| 'right-start' \| 'right-end' \| 'bottom-start' \| 'bottom-end' \| 'left-start' \| 'left-end' \| 'start-start' \| 'start-end' \| 'end-start' \| 'end-end'` | `'bottom'` | Side and alignment relative to the trigger. start and end follow the direction of the UIProvider. Near the edge the popover flips to the other side, slides to fit and shrinks to the available space. |
 | `offset` | `number` | `8` | Distance in px between the trigger and the popover. |
 | `padding` | `number` | `8` | Margin in px to the edge of the window. |
-| `role` | `'dialog' \| 'listbox' \| 'tree' \| 'grid'` | `'dialog'` | Role of the content, which also becomes aria-haspopup on the trigger. The default is dialog; menu is not supported because it needs its own arrow-key navigation. |
+| `role` | `'dialog' \| 'listbox' \| 'tree' \| 'grid' \| 'menu'` | `'dialog'` | Role of the content, which also becomes aria-haspopup on the trigger. The default is dialog. With menu, Tab closes the popup and moves the focus on, but the arrow-key navigation and the items are yours: use Menu for the whole pattern. |
 | `label` | `string` | — | Accessible name of the content (aria-label). |
 | `arrow` | `boolean` | `false` | Shows an arrow that points to the trigger. When the box has a border (--enchase-popover-content-border-width), the arrow carries the border on its two outer sides. |
 | `closeOnEsc` | `boolean` | `true` | Esc closes only the top layer and returns the focus to the trigger. |

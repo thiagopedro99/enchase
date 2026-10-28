@@ -1,14 +1,15 @@
-import { cloneElement, isValidElement, useEffect, useId, useRef } from 'react'
+import { cloneElement, isValidElement, useEffect, useId, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import { defaultArrow, defaultCloseOnEsc, defaultCloseOnOutsideClick, defaultOffset, defaultOpen, defaultPadding, defaultPlacement, defaultRole, popoverBase } from './defaultData.ts'
 import { useControllableState } from '@hooks/useControllableState.ts'
 import { PopoverTreeContext, usePopoverTree } from './popoverTree.ts'
+import { PopoverControlContext } from './popoverControl.ts'
 import { usePopoverDismiss } from './usePopoverDismiss.ts'
 import { usePopoverPosition } from './usePopoverPosition.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
-import { focusFirst } from './focus.ts'
+import { focusFirst, focusTrigger } from './focus.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { tabbablesIn } from '@utils/tabbable.ts'
 import { usePortalContainer } from '@hooks/usePortalContainer.ts'
@@ -17,7 +18,7 @@ import { useUIConfig } from '@hooks/useUIConfig.ts'
 import styles from './styles.module.css'
 
 import type { KeyboardEvent, MouseEvent, ReactElement } from 'react'
-import type { PopoverProps } from './types.ts'
+import type { PopoverControl, PopoverProps } from './types.ts'
 
 export const Popover = ({
   children,
@@ -54,7 +55,14 @@ export const Popover = ({
   const { contains, tree } = usePopoverTree(ref, mounted)
 
   usePopoverPosition({ triggerRef, contentRef: ref, arrowRef, mounted: mounted && target !== null, placement, offset, padding, rtl: dir === 'rtl' })
-  usePopoverDismiss({ open: isOpen, triggerRef, contentRef: ref, bodyRef, isTop, wasTopAtPointerDown: isTop.wasTopAtPointerDown, contains, closeOnEsc, closeOnOutsideClick, onClose: () => setOpen(false) })
+  usePopoverDismiss({ open: isOpen, triggerRef, contentRef: ref, bodyRef, isTop, wasTopAtPointerDown: isTop.wasTopAtPointerDown, contains, closeOnEsc, closeOnOutsideClick, menu: role === 'menu', onClose: () => setOpen(false) })
+
+  const closeRef = useRef<() => void>(() => undefined)
+  closeRef.current = () => {
+    setOpen(false)
+    if (triggerRef.current) focusTrigger(triggerRef.current)
+  }
+  const control = useMemo<PopoverControl>(() => ({ close: () => closeRef.current(), contentRef: ref }), [ref])
 
   useEffect(() => {
     if (state !== 'entering' || !byKeyboard.current || !ref.current) return
@@ -103,12 +111,14 @@ export const Popover = ({
         createPortal(
           mounted ? (
             <PopoverTreeContext.Provider value={tree}>
-              <div {...contentProps}>
-                <div ref={bodyRef} tabIndex={-1} {...slot('popover', 'body')} className={styles.body}>
-                  {content}
+              <PopoverControlContext.Provider value={control}>
+                <div {...contentProps}>
+                  <div ref={bodyRef} tabIndex={-1} {...slot('popover', 'body')} className={styles.body}>
+                    {content}
+                  </div>
+                  {arrow && <span ref={arrowRef} aria-hidden="true" {...slot('popover', 'arrow')} className={styles.arrow} />}
                 </div>
-                {arrow && <span ref={arrowRef} aria-hidden="true" {...slot('popover', 'arrow')} className={styles.arrow} />}
-              </div>
+              </PopoverControlContext.Provider>
             </PopoverTreeContext.Provider>
           ) : null,
           target

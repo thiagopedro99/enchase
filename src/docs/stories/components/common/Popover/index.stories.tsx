@@ -55,9 +55,9 @@ const meta = {
       table: { defaultValue: { summary: String(defaultPadding) } }
     },
     role: {
-      description: 'Role of the content, which also becomes aria-haspopup on the trigger. The default is dialog; menu is not supported because it needs its own arrow-key navigation.',
+      description: 'Role of the content, which also becomes aria-haspopup on the trigger. The default is dialog. With menu, Tab closes the popup and moves the focus on, but the arrow-key navigation and the items are yours: use Menu for the whole pattern.',
       control: 'select',
-      options: ['dialog', 'listbox', 'tree', 'grid'],
+      options: ['dialog', 'listbox', 'tree', 'grid', 'menu'],
       table: { defaultValue: { summary: defaultRole } }
     },
     label: {

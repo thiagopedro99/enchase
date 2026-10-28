@@ -16,10 +16,11 @@ type PopoverDismissOptions = {
   contains: PopoverTreeNode
   closeOnEsc: boolean
   closeOnOutsideClick: boolean
+  menu: boolean
   onClose: () => void
 }
 
-export const usePopoverDismiss = ({ open, triggerRef, contentRef, bodyRef, isTop, wasTopAtPointerDown, contains, closeOnEsc, closeOnOutsideClick, onClose }: PopoverDismissOptions) => {
+export const usePopoverDismiss = ({ open, triggerRef, contentRef, bodyRef, isTop, wasTopAtPointerDown, contains, closeOnEsc, closeOnOutsideClick, menu, onClose }: PopoverDismissOptions) => {
   const latest = useRef({ isTop, wasTopAtPointerDown, contains, onClose })
   latest.current = { isTop, wasTopAtPointerDown, contains, onClose }
 
@@ -62,18 +63,18 @@ export const usePopoverDismiss = ({ open, triggerRef, contentRef, bodyRef, isTop
 
       const items = tabbablesIn(content)
       const edge = event.shiftKey ? items[0] ?? content : items[items.length - 1] ?? content
-      if (document.activeElement !== edge && document.activeElement !== content && document.activeElement !== bodyRef.current) return
+      if (!menu && document.activeElement !== edge && document.activeElement !== content && document.activeElement !== bodyRef.current) return
 
       event.preventDefault()
       focusTrigger(trigger)
-      if (event.shiftKey) return
+      if (event.shiftKey && !menu) return
 
       latest.current.onClose()
-      focusNextAfter(trigger, content)
+      if (!event.shiftKey) focusNextAfter(trigger, content)
     }
 
     content.addEventListener('keydown', handleKeyDown)
 
     return () => content.removeEventListener('keydown', handleKeyDown)
-  }, [open, contentRef, bodyRef, triggerRef])
+  }, [open, menu, contentRef, bodyRef, triggerRef])
 }

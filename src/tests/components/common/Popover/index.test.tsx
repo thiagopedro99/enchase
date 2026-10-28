@@ -1,13 +1,14 @@
 import { describe, expect, it, vi } from 'vitest'
 import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { screen, waitFor, within } from '@testing-library/react'
+import { renderHook, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { renderToString } from 'react-dom/server'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { axe } from '@tests/axe.ts'
 
 import { Popover } from '@components/common/Popover/index.tsx'
+import { usePopoverControl } from '@components/common/Popover/popoverControl.ts'
 import { Modal } from '@components/common/Modal/index.tsx'
 
 const content = <button>Dentro</button>
@@ -347,5 +348,141 @@ describe('Popover', () => {
     expect(html).toContain('Abrir')
     expect(html).toContain('aria-expanded="true"')
     expect(html).not.toContain('Conteúdo do popover')
+  })
+})
+
+describe('Popover with the menu role', () => {
+  const items = (
+    <>
+      <button role="menuitem" tabIndex={-1}>
+        Um
+      </button>
+      <button role="menuitem" tabIndex={-1}>
+        Dois
+      </button>
+    </>
+  )
+
+  const withNeighbours = (
+    <div>
+      <button>Antes</button>
+      <Popover role="menu" label="Ações" content={items}>
+        <button>Abrir</button>
+      </Popover>
+      <button>Depois</button>
+    </div>
+  )
+
+  it('names the menu on the trigger and on the popup', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(withNeighbours)
+    const trigger = screen.getByRole('button', { name: 'Abrir' })
+
+    expect(trigger).toHaveAttribute('aria-haspopup', 'menu')
+
+    await user.click(trigger)
+
+    expect(await screen.findByRole('menu', { name: 'Ações' })).toHaveAttribute('id', trigger.getAttribute('aria-controls'))
+  })
+
+  it('closes with Tab from any item and takes the focus to the next element after the trigger', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(withNeighbours)
+    await user.click(screen.getByRole('button', { name: 'Abrir' }))
+    await screen.findByRole('menu')
+    screen.getByRole('menuitem', { name: 'Um' }).focus()
+
+    await user.tab()
+
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Depois' })).toHaveFocus())
+    await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument())
+  })
+
+  it('closes with Shift+Tab from any item and gives the focus back to the trigger', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(withNeighbours)
+    const trigger = screen.getByRole('button', { name: 'Abrir' })
+
+    await user.click(trigger)
+    await screen.findByRole('menu')
+    screen.getByRole('menuitem', { name: 'Dois' }).focus()
+
+    await user.tab({ shift: true })
+
+    await waitFor(() => expect(trigger).toHaveFocus())
+    await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument())
+  })
+
+  it('keeps a dialog popover open when Shift+Tab leaves its first element, as before', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Popover label="Painel" content={<button>Primeiro</button>}>
+        <button>Abrir</button>
+      </Popover>
+    )
+    const trigger = screen.getByRole('button', { name: 'Abrir' })
+
+    trigger.focus()
+    await user.keyboard('{Enter}')
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Primeiro' })).toHaveFocus())
+    await user.tab({ shift: true })
+
+    expect(trigger).toHaveFocus()
+    expect(screen.getByRole('dialog', { name: 'Painel' })).toBeInTheDocument()
+  })
+})
+
+describe('the control of a popover for its content', () => {
+  const Closer = () => {
+    const control = usePopoverControl()
+
+    return <button onClick={() => control?.close()}>Terminar</button>
+  }
+
+  it('closes the popover from inside and gives the focus back to the trigger', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Popover label="Painel" content={<Closer />}>
+        <button>Abrir</button>
+      </Popover>
+    )
+    const trigger = screen.getByRole('button', { name: 'Abrir' })
+
+    await user.click(trigger)
+    await user.click(await screen.findByRole('button', { name: 'Terminar' }))
+
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+    expect(trigger).toHaveFocus()
+  })
+
+  it('gives the content its element so it can listen to the keys of the popup', async () => {
+    const user = userEvent.setup()
+    let seen: HTMLElement | null = null
+
+    const Spy = () => {
+      const control = usePopoverControl()
+
+      useEffect(() => {
+        seen = control?.contentRef.current ?? null
+      }, [control])
+
+      return <button>Dentro</button>
+    }
+
+    renderWithProviders(
+      <Popover label="Painel" content={<Spy />}>
+        <button>Abrir</button>
+      </Popover>
+    )
+    await user.click(screen.getByRole('button', { name: 'Abrir' }))
+    const dialog = await screen.findByRole('dialog')
+
+    await waitFor(() => expect(seen).toBe(dialog))
+  })
+
+  it('is absent outside of a popover', () => {
+    const { result } = renderHook(() => usePopoverControl())
+
+    expect(result.current).toBeNull()
   })
 })
