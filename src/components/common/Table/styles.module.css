@@ -69,6 +69,76 @@
   background-color: var(--enchase-table-header-background, var(--enchase-color-surface-container-low));
 }
 
+.header[data-sortable] {
+  position: relative;
+}
+
+.container[data-sticky-header] {
+  isolation: isolate;
+}
+
+.container[data-sticky-header] .header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+}
+
+.sort {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  min-block-size: 24px;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  cursor: pointer;
+  background: none;
+  border: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(.sort) {
+  gap: var(--enchase-table-sort-gap, var(--enchase-space-xs));
+}
+
+.header[data-align='end'] .sort {
+  flex-direction: row-reverse;
+}
+
+.sort::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.label {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sort:hover::after {
+    background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
+  }
+}
+
+.sort:active::after {
+  background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
+}
+
+.sort:focus-visible {
+  outline: none;
+}
+
+.sort:focus-visible::after {
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset-inset, -2px);
+}
+
 .rowHeader {
   font-weight: var(--enchase-table-row-header-font-weight, var(--enchase-font-weight-medium));
 }
@@ -90,7 +160,7 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .row:hover {
+  .row:not([data-placeholder]):hover {
     background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-row-hover, 0.06) * 100%), transparent);
   }
 }
@@ -102,4 +172,18 @@
 
 :where(.empty) {
   padding: var(--enchase-table-empty-padding, var(--enchase-space-lg));
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  min-block-size: 1lh;
+}
+
+:where(.cell[data-align='center']) .placeholder {
+  justify-content: center;
+}
+
+:where(.cell[data-align='end']) .placeholder {
+  justify-content: flex-end;
 }

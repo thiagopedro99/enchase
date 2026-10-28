@@ -2,6 +2,8 @@ export const defaultSize = 'md'
 
 export const defaultStriped = false
 
+export const defaultStickyHeader = false
+
 export type Order = {
   id: string
   customer: string
@@ -15,6 +17,8 @@ export const statusLabels = { paid: 'Paid', pending: 'Pending', late: 'Late' } a
 export const statusVariants = { paid: 'success', pending: 'warning', late: 'error' } as const
 
 export const pageSize = 5
+
+export const compareOrders = (a: Order, b: Order, key: string) => (key === 'total' ? a.total - b.total : String(a[key as keyof Order]).localeCompare(String(b[key as keyof Order])))
 
 export const orders: Order[] = [
   { id: '#1042', customer: 'Alice Johnson', status: 'paid', date: '2026-10-12', total: 1289.9 },

@@ -704,11 +704,11 @@ Also accepts the other attributes of `<input>`, passed on to the element. Forwar
 
 ### Table
 
-A semantic data table, built from `columns` and `rows`: a `<table>` with a caption (`<caption>`), column headers (`scope="col"`), optional row headers and cells that accept any content through the `cell` function. It is generic: the row type flows from the `rows` to the columns. When the table is wider than the space available, the container scrolls horizontally and becomes a focusable region with the name of the table, for keyboard-only users. It does not sort or paginate: sort the data first and use the `Pagination` next to it. It accepts a `ref`, which goes to the container, and the attributes of the `<div>`; `className` and `style` go to it as well.
+A semantic data table, built from `columns` and `rows`: a `<table>` with a caption (`<caption>`), column headers (`scope="col"`), optional row headers and cells that accept any content through the `cell` function. It is generic: the row type flows from the `rows` to the columns. When the table is wider than the space available, the container scrolls horizontally and becomes a focusable region with the name of the table, for keyboard-only users. It does not order or paginate the data itself: with `sortable` columns, `sort` and `onSortChange` it draws the sort buttons and marks `aria-sort` while the app orders the `rows`, and for pages you use the `Pagination` next to it. `stickyHeader` keeps the header in view while the rows scroll, and `loading` swaps the rows for placeholders. It accepts a `ref`, which goes to the container, and the attributes of the `<div>`; `className` and `style` go to it as well.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `columns` | `TableColumn<Row>[]` | *required* | Columns of the table, in the order they appear on screen. Each one has `key` (the field of the row that it shows), `header` (the header text) and, optionally, `cell` (a function that returns the content of the cell of a row), `align` (`start`, `center` or `end`), `width` (CSS width, such as `8rem`) and `rowHeader` (its cells become row headers). Without `cell`, the column shows `row[key]` as text. |
+| `columns` | `TableColumn<Row>[]` | *required* | Columns of the table, in the order they appear on screen. Each one has `key` (the field of the row that it shows), `header` (text or nodes, such as an abbreviation or a unit in small type) and, optionally, `cell` (a function that returns the content of the cell of a row), `align` (`start`, `center` or `end`), `width` (CSS width, such as `8rem`), `rowHeader` (its cells become row headers) and `sortable` (puts a button in the header, which holds the header, so it cannot hold a button or a link). Without `cell`, the column shows `row[key]` as text. |
 | `rows` | `Row[]` | *required* | Rows of the table, one object per row. The row type links the columns to the rows: `TableColumn<Order>[]` with `rows` of `Order`. |
 | `getRowKey` | `(row: Row, index: number) => string \| number` | — | Returns the stable key of a row, such as the id, so React can reuse the row when the order changes. Without it, the position is used. |
 | `caption` | `string` | — | Title of the table, rendered as a `<caption>` above it, which also gives the accessible name. For a name that is not shown, pass ariaLabel. |
@@ -716,6 +716,10 @@ A semantic data table, built from `columns` and `rows`: a `<table>` with a capti
 | `empty` | `ReactNode` | — | Content shown in a cell that spans all the columns when there are no rows. Without it, only the header appears. |
 | `size` | `'sm' \| 'md'` | `'md'` | Density of the rows: sm is compact and md is the default. |
 | `striped` | `boolean` | `false` | Alternates the background of the rows to help follow a long row. |
+| `sort` | `TableSort` | — | How the rows are ordered now: `{ key, direction }`, where `key` is the key of a column and `direction` is `ascending` or `descending`. The table marks that column with `aria-sort`, whether it has a button or not, and shows the direction on its button. The rows themselves are yours to order. See the Sortable story. |
+| `onSortChange` | `(sort: TableSort) => void` | — | Called when a sort button is activated, with the sort that was asked for: ascending for a column that is not sorted and the opposite direction for the sorted one. It does not change anything by itself: order the rows and pass the new `sort` back. Without it the buttons do nothing. |
+| `stickyHeader` | `boolean` | `false` | Keeps the header at the top of the table while the rows scroll under it. It only works when the table has a height limit, such as `style={{ maxBlockSize: "16rem" }}`: without one the page scrolls and the header goes with it. |
+| `loading` | `boolean` | `false` | Swaps the rows for placeholder rows, as many as the rows or five when there are none, marks the table `aria-busy` and announces the loading label. The `empty` content waits until it stops loading. Pass a boolean always, even false, so the announcement works: the status region is created when the prop is not undefined. |
 
 Also accepts the other attributes of `<div>`, passed on to the element. Forwards the `ref` to `<div>`.
 
@@ -1886,6 +1890,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-slider-value-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-slider-value-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 
+### SortIndicator
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-table-sort-icon-height` | `1em` | `block-size` |
+| `--enchase-table-sort-icon-opacity` | `0.4` | `opacity` |
+| `--enchase-table-sort-icon-width` | `1em` | `inline-size` |
+
 ### Switch
 
 | Hook | Default | Property |
@@ -1939,6 +1951,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-table-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-table-row-background-striped` | `var(--enchase-color-surface-container-low)` | `background-color` |
 | `--enchase-table-row-header-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-table-sort-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 
 ### Tabs
 

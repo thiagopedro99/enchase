@@ -74,6 +74,8 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Checkbox', element: <Checkbox label="Accept" /> },
   { name: 'Switch', element: <Switch label="Notifications" defaultChecked /> },
   { name: 'Table', element: <Table caption="Orders" striped columns={[{ key: 'id', header: 'Order', rowHeader: true }, { key: 'total', header: 'Total', align: 'end' }]} rows={[{ id: '#1', total: 10 }, { id: '#2', total: 20 }]} /> },
+  { name: 'Table that sorts, sticks and loads', element: <Table caption="Orders" stickyHeader sort={{ key: 'total', direction: 'descending' }} onSortChange={noop} columns={[{ key: 'id', header: <abbr title="Order number">No.</abbr>, rowHeader: true, sortable: true }, { key: 'total', header: 'Total', align: 'end', sortable: true }]} rows={[{ id: '#1', total: 10 }, { id: '#2', total: 20 }]} loading /> },
+  { name: 'Table that sorts', element: <Table caption="Orders" sort={{ key: 'id', direction: 'ascending' }} onSortChange={noop} columns={[{ key: 'id', header: 'Order', rowHeader: true, sortable: true }, { key: 'total', header: 'Total', align: 'end' }]} rows={[{ id: '#1', total: 10 }, { id: '#2', total: 20 }]} loading={false} /> },
   { name: 'Pagination', element: <Pagination pageCount={12} defaultPage={6} size="sm" /> },
   { name: 'Icons', element: <div><CloseIcon /><ChevronLeftIcon title="Back" size={20} /></div> },
   { name: 'NumberInput', element: <NumberInput label="Price" name="price" defaultValue={1234.5} min={0} formatOptions={{ style: 'currency', currency: 'BRL' }} helperText="In reais" /> },

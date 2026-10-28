@@ -7,7 +7,8 @@ import { axe } from '@tests/axe.ts'
 
 import { Table } from '@components/common/Table/index.tsx'
 
-import type { TableColumn } from '@components/common/Table/types.ts'
+import type { ReactNode } from 'react'
+import type { TableColumn, TableSort } from '@components/common/Table/types.ts'
 
 type Order = { id: string; customer: string; total: number; note?: string | null; paid: boolean }
 
@@ -279,5 +280,330 @@ describe('Table contract', () => {
 
     expect(screen.getByTestId('orders')).toHaveAttribute('id', 'orders')
     expect(onClick).toHaveBeenCalled()
+  })
+})
+
+describe('Table headers that are nodes', () => {
+  it('renders a node as the header of a plain column and of a sortable one', () => {
+    renderWithProviders(
+      <Table
+        columns={[
+          { key: 'id', header: <abbr title="Número do pedido">Nº</abbr> },
+          { key: 'customer', header: <em>Cliente</em>, sortable: true }
+        ]}
+        rows={orders}
+      />
+    )
+
+    expect(screen.getByText('Nº').tagName).toBe('ABBR')
+    expect(screen.getByText('Cliente').tagName).toBe('EM')
+    expect(screen.getByRole('button', { name: 'Cliente' })).toContainElement(screen.getByText('Cliente'))
+  })
+})
+
+describe('Table sorting', () => {
+  const sortable: TableColumn<Order>[] = [
+    { key: 'id', header: 'Pedido', rowHeader: true, sortable: true },
+    { key: 'customer', header: 'Cliente', sortable: true },
+    { key: 'total', header: 'Total', align: 'end', sortable: true, cell: (row) => `R$ ${row.total.toFixed(2)}` },
+    { key: 'paid', header: 'Pago' }
+  ]
+
+  const header = (name: string) => screen.getByRole('columnheader', { name })
+
+  it('puts a button named after the header in a sortable column and none in the others', () => {
+    renderWithProviders(<Table columns={sortable} rows={orders} />)
+
+    expect(screen.getAllByRole('button').map((button) => button.textContent)).toEqual(['Pedido', 'Cliente', 'Total'])
+    expect(within(header('Pago')).queryByRole('button')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Total' })).toHaveAttribute('type', 'button')
+    expect(header('Cliente')).toHaveAttribute('data-sortable')
+    expect(header('Pago')).not.toHaveAttribute('data-sortable')
+  })
+
+  it('has no aria-sort in any header while nothing is sorted', () => {
+    const { container } = renderWithProviders(<Table columns={sortable} rows={orders} />)
+
+    expect(container.querySelectorAll('[aria-sort]')).toHaveLength(0)
+  })
+
+  it('marks only the sorted column with aria-sort, in the direction of the sort', () => {
+    const { container, rerender } = renderWithProviders(<Table columns={sortable} rows={orders} sort={{ key: 'customer', direction: 'ascending' }} />)
+
+    expect(container.querySelectorAll('[aria-sort]')).toHaveLength(1)
+    expect(header('Cliente')).toHaveAttribute('aria-sort', 'ascending')
+
+    rerender(<Table columns={sortable} rows={orders} sort={{ key: 'total', direction: 'descending' }} />)
+
+    expect(header('Cliente')).not.toHaveAttribute('aria-sort')
+    expect(header('Total')).toHaveAttribute('aria-sort', 'descending')
+  })
+
+  it('shows the sorted state of a column that has no button too, since it describes how the rows are ordered', () => {
+    renderWithProviders(<Table columns={sortable} rows={orders} sort={{ key: 'paid', direction: 'ascending' }} />)
+
+    expect(header('Pago')).toHaveAttribute('aria-sort', 'ascending')
+    expect(within(header('Pago')).queryByRole('button')).not.toBeInTheDocument()
+  })
+
+  it('does not mark anything for a sort of a key that is not a column', () => {
+    const { container } = renderWithProviders(<Table columns={sortable} rows={orders} sort={{ key: 'ghost', direction: 'ascending' }} />)
+
+    expect(container.querySelectorAll('[aria-sort]')).toHaveLength(0)
+  })
+
+  it('asks for ascending when a column that is not sorted is activated', async () => {
+    const user = userEvent.setup()
+    const onSortChange = vi.fn()
+    renderWithProviders(<Table columns={sortable} rows={orders} sort={{ key: 'customer', direction: 'descending' }} onSortChange={onSortChange} />)
+
+    await user.click(screen.getByRole('button', { name: 'Total' }))
+
+    expect(onSortChange).toHaveBeenCalledTimes(1)
+    expect(onSortChange).toHaveBeenCalledWith({ key: 'total', direction: 'ascending' })
+  })
+
+  it('asks for ascending on the first activation with no sort at all', async () => {
+    const user = userEvent.setup()
+    const onSortChange = vi.fn()
+    renderWithProviders(<Table columns={sortable} rows={orders} onSortChange={onSortChange} />)
+
+    await user.click(screen.getByRole('button', { name: 'Pedido' }))
+
+    expect(onSortChange).toHaveBeenCalledWith({ key: 'id', direction: 'ascending' })
+  })
+
+  it('asks for the other direction when the sorted column is activated, both ways', async () => {
+    const user = userEvent.setup()
+    const onSortChange = vi.fn()
+    const { rerender } = renderWithProviders(<Table columns={sortable} rows={orders} sort={{ key: 'customer', direction: 'ascending' }} onSortChange={onSortChange} />)
+
+    await user.click(screen.getByRole('button', { name: 'Cliente' }))
+    expect(onSortChange).toHaveBeenLastCalledWith({ key: 'customer', direction: 'descending' })
+
+    rerender(<Table columns={sortable} rows={orders} sort={{ key: 'customer', direction: 'descending' }} onSortChange={onSortChange} />)
+
+    await user.click(screen.getByRole('button', { name: 'Cliente' }))
+    expect(onSortChange).toHaveBeenLastCalledWith({ key: 'customer', direction: 'ascending' })
+  })
+
+  it('leaves the order and the aria-sort to the app: nothing changes until the sort prop does', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Table columns={sortable} rows={orders} sort={{ key: 'id', direction: 'ascending' }} onSortChange={() => undefined} />)
+
+    await user.click(screen.getByRole('button', { name: 'Cliente' }))
+
+    expect(header('Pedido')).toHaveAttribute('aria-sort', 'ascending')
+    expect(header('Cliente')).not.toHaveAttribute('aria-sort')
+    expect(screen.getAllByRole('rowheader').map((cell) => cell.textContent)).toEqual(['#1001', '#1002', '#1003'])
+  })
+
+  it('follows a sort that the app keeps in state, row by row', async () => {
+    const user = userEvent.setup()
+
+    const Sorted = () => {
+      const [sort, setSort] = useState<TableSort | undefined>()
+      const ordered = [...orders].sort((a, b) => (sort?.direction === 'descending' ? -1 : 1) * String(a[sort?.key as keyof Order]).localeCompare(String(b[sort?.key as keyof Order])))
+
+      return <Table columns={sortable} rows={sort ? ordered : orders} sort={sort} onSortChange={setSort} getRowKey={(row) => row.id} />
+    }
+    renderWithProviders(<Sorted />)
+
+    await user.click(screen.getByRole('button', { name: 'Cliente' }))
+    expect(header('Cliente')).toHaveAttribute('aria-sort', 'ascending')
+    expect(screen.getAllByRole('rowheader').map((cell) => cell.textContent)).toEqual(['#1001', '#1002', '#1003'])
+
+    await user.click(screen.getByRole('button', { name: 'Cliente' }))
+    expect(header('Cliente')).toHaveAttribute('aria-sort', 'descending')
+    expect(screen.getAllByRole('rowheader').map((cell) => cell.textContent)).toEqual(['#1003', '#1002', '#1001'])
+  })
+
+  it('is activated with Enter and with Space, like any button', async () => {
+    const user = userEvent.setup()
+    const onSortChange = vi.fn()
+    renderWithProviders(<Table columns={sortable} rows={orders} onSortChange={onSortChange} />)
+
+    await user.tab()
+    expect(screen.getByRole('button', { name: 'Pedido' })).toHaveFocus()
+
+    await user.keyboard('{Enter}')
+    await user.keyboard(' ')
+    await user.tab()
+    await user.keyboard('{Enter}')
+
+    expect(onSortChange.mock.calls.map(([value]) => value)).toEqual([
+      { key: 'id', direction: 'ascending' },
+      { key: 'id', direction: 'ascending' },
+      { key: 'customer', direction: 'ascending' }
+    ])
+  })
+
+  it('does nothing and does not throw when there is no onSortChange', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Table columns={sortable} rows={orders} />)
+
+    await user.click(screen.getByRole('button', { name: 'Total' }))
+
+    expect(screen.getAllByRole('row')).toHaveLength(4)
+  })
+
+  it('shows the direction on the indicator, which is hidden from screen readers', () => {
+    const { container } = renderWithProviders(<Table columns={sortable} rows={orders} sort={{ key: 'customer', direction: 'descending' }} />)
+    const icons = [...container.querySelectorAll('[data-slot="table-sort-icon"]')]
+
+    expect(icons.map((icon) => icon.getAttribute('data-direction'))).toEqual(['none', 'descending', 'none'])
+    expect(icons.every((icon) => icon.getAttribute('aria-hidden') === 'true')).toBe(true)
+  })
+
+  it('has no axe violations when sortable, sorted either way', async () => {
+    const { container } = renderWithProviders(
+      <>
+        <Table caption="Ascendente" columns={sortable} rows={orders} sort={{ key: 'customer', direction: 'ascending' }} onSortChange={() => undefined} />
+        <Table caption="Descendente" columns={sortable} rows={orders} sort={{ key: 'total', direction: 'descending' }} onSortChange={() => undefined} size="sm" />
+        <Table caption="Sem ordem" columns={sortable} rows={orders} onSortChange={() => undefined} />
+      </>
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Table sticky header', () => {
+  it('is not sticky by default and marks the root when it is', () => {
+    const { container, unmount } = renderWithProviders(<Table columns={columns} rows={orders} />)
+
+    expect(container.querySelector('[data-slot="table"]')).not.toHaveAttribute('data-sticky-header')
+    unmount()
+
+    const other = renderWithProviders(<Table columns={columns} rows={orders} stickyHeader />)
+
+    expect(other.container.querySelector('[data-slot="table"]')).toHaveAttribute('data-sticky-header')
+  })
+
+  it('becomes a focusable region named after the caption when the rows scroll inside it', () => {
+    vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockImplementation(() => 900)
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(() => 300)
+    const { container } = renderWithProviders(<Table caption="Pedidos" columns={columns} rows={orders} stickyHeader />)
+    const root = container.querySelector('[data-slot="table"]') as HTMLElement
+
+    expect(root).toHaveAttribute('tabindex', '0')
+    expect(screen.getByRole('region', { name: 'Pedidos' })).toBe(root)
+  })
+})
+
+const Loadable = ({ initial, children }: { initial: boolean; children: (loading: boolean) => ReactNode }) => {
+  const [loading, setLoading] = useState(initial)
+
+  return (
+    <>
+      <button onClick={() => setLoading((current) => !current)}>alternar</button>
+      {children(loading)}
+    </>
+  )
+}
+
+describe('Table loading', () => {
+  it('shows placeholder rows in place of the rows, as many as the rows, hidden from screen readers', () => {
+    const { container } = renderWithProviders(<Table columns={columns} rows={orders} loading />)
+    const placeholders = [...container.querySelectorAll('[data-placeholder]')]
+
+    expect(placeholders).toHaveLength(3)
+    expect(placeholders.every((row) => row.getAttribute('aria-hidden') === 'true')).toBe(true)
+    expect(container.querySelectorAll('[data-slot="table-placeholder"]')).toHaveLength(9)
+    expect(screen.queryByText('Ana')).not.toBeInTheDocument()
+    expect(screen.getAllByRole('row')).toHaveLength(1)
+  })
+
+  it('shows five placeholder rows when there are no rows yet, and not the empty content', () => {
+    const { container } = renderWithProviders(<Table columns={columns} rows={[]} empty="Nenhum pedido" loading />)
+
+    expect(container.querySelectorAll('[data-placeholder]')).toHaveLength(5)
+    expect(screen.queryByText('Nenhum pedido')).not.toBeInTheDocument()
+  })
+
+  it('shows the empty content again when it stops loading with no rows', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Loadable initial>{(loading) => <Table columns={columns} rows={[]} empty="Nenhum pedido" loading={loading} />}</Loadable>)
+
+    expect(screen.queryByText('Nenhum pedido')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'alternar' }))
+
+    expect(screen.getByText('Nenhum pedido')).toBeInTheDocument()
+    expect(document.querySelector('[data-placeholder]')).not.toBeInTheDocument()
+  })
+
+  it('brings the rows back when it stops loading, and takes them away when it starts again', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Loadable initial>{(loading) => <Table columns={columns} rows={orders} loading={loading} />}</Loadable>)
+
+    await user.click(screen.getByRole('button', { name: 'alternar' }))
+    expect(screen.getByText('Ana')).toBeInTheDocument()
+    expect(document.querySelector('[data-slot="table-placeholder"]')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'alternar' }))
+    expect(screen.queryByText('Ana')).not.toBeInTheDocument()
+    expect(document.querySelectorAll('[data-placeholder]')).toHaveLength(3)
+  })
+
+  it('marks the table as busy and the root as loading only while it loads', async () => {
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<Loadable initial>{(loading) => <Table columns={columns} rows={orders} loading={loading} />}</Loadable>)
+
+    expect(screen.getByRole('table')).toHaveAttribute('aria-busy', 'true')
+    expect(container.querySelector('[data-slot="table"]')).toHaveAttribute('data-loading')
+
+    await user.click(screen.getByRole('button', { name: 'alternar' }))
+
+    expect(screen.getByRole('table')).not.toHaveAttribute('aria-busy')
+    expect(container.querySelector('[data-slot="table"]')).not.toHaveAttribute('data-loading')
+  })
+
+  it('announces the loading label in a status region that exists before it loads and keeps the same element', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Loadable initial={false}>{(loading) => <Table columns={columns} rows={orders} loading={loading} />}</Loadable>)
+    const status = screen.getByRole('status')
+
+    expect(status).toBeEmptyDOMElement()
+
+    await user.click(screen.getByRole('button', { name: 'alternar' }))
+
+    expect(screen.getByRole('status')).toBe(status)
+    expect(status).toHaveTextContent('Carregando')
+
+    await user.click(screen.getByRole('button', { name: 'alternar' }))
+
+    expect(status).toBeEmptyDOMElement()
+  })
+
+  it('has no status region at all when the app never says whether it loads', () => {
+    renderWithProviders(<Table columns={columns} rows={orders} />)
+
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+  })
+
+  it('keeps the header, with its sort buttons, and hides the placeholders from screen readers', () => {
+    const { container } = renderWithProviders(<Table columns={[{ key: 'id', header: 'Pedido', sortable: true }, { key: 'customer', header: 'Cliente' }]} rows={orders} loading />)
+
+    expect(screen.getByRole('button', { name: 'Pedido' })).toBeInTheDocument()
+    expect(screen.getAllByRole('columnheader')).toHaveLength(2)
+    expect([...container.querySelectorAll('[data-slot="skeleton"]')].every((item) => item.getAttribute('aria-hidden') === 'true')).toBe(true)
+  })
+
+  it('aligns the placeholders with the alignment of their column', () => {
+    const { container } = renderWithProviders(<Table columns={columns} rows={orders} loading />)
+
+    expect([...container.querySelectorAll('[data-placeholder]:first-of-type > *')].map((cell) => cell.getAttribute('data-align'))).toEqual([null, null, 'end'])
+  })
+
+  it('has no axe violations while it loads', async () => {
+    const { container } = renderWithProviders(
+      <>
+        <Table caption="Carregando com linhas" columns={columns} rows={orders} loading />
+        <Table caption="Carregando sem linhas" columns={columns} rows={[]} empty="Nada" loading />
+      </>
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
   })
 })

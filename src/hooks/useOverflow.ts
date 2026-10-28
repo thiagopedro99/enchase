@@ -10,7 +10,7 @@ export const useOverflow = (ref: RefObject<HTMLElement | null>) => {
 
     if (!element) return
 
-    const measure = () => setOverflowing(element.scrollWidth > element.clientWidth + 1)
+    const measure = () => setOverflowing(element.scrollWidth > element.clientWidth + 1 || element.scrollHeight > element.clientHeight + 1)
 
     measure()
 

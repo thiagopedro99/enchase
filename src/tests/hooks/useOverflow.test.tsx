@@ -29,7 +29,7 @@ class FakeResizeObserver {
   }
 }
 
-const size = { scroll: 100, client: 100 }
+const size = { scroll: 100, client: 100, scrollHeight: 100, clientHeight: 100 }
 
 const Harness = () => {
   const ref = useRef<HTMLDivElement>(null)
@@ -47,9 +47,13 @@ describe('useOverflow', () => {
     observers.length = 0
     size.scroll = 100
     size.client = 100
+    size.scrollHeight = 100
+    size.clientHeight = 100
     vi.stubGlobal('ResizeObserver', FakeResizeObserver)
     vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockImplementation(() => size.scroll)
     vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(() => size.client)
+    vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockImplementation(() => size.scrollHeight)
+    vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(() => size.clientHeight)
   })
 
   afterEach(() => {
@@ -76,6 +80,34 @@ describe('useOverflow', () => {
 
     render(<Harness />)
 
+    expect(screen.getByTestId('box')).not.toHaveAttribute('data-overflowing')
+  })
+
+  it('reports an overflow in height, for a box that scrolls vertically', () => {
+    size.scrollHeight = 500
+
+    render(<Harness />)
+
+    expect(screen.getByTestId('box')).toHaveAttribute('data-overflowing')
+  })
+
+  it('ignores a difference of one pixel in height', () => {
+    size.scrollHeight = 101
+
+    render(<Harness />)
+
+    expect(screen.getByTestId('box')).not.toHaveAttribute('data-overflowing')
+  })
+
+  it('measures again when the height changes', () => {
+    render(<Harness />)
+
+    size.scrollHeight = 400
+    act(() => observers.at(-1)?.callback())
+    expect(screen.getByTestId('box')).toHaveAttribute('data-overflowing')
+
+    size.clientHeight = 400
+    act(() => observers.at(-1)?.callback())
     expect(screen.getByTestId('box')).not.toHaveAttribute('data-overflowing')
   })
 
