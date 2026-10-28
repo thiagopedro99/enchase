@@ -7,6 +7,7 @@ import { Button } from '@components/common/Button/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { CardButton } from '@components/common/CardButton/index.tsx'
 import { CardLink } from '@components/common/CardLink/index.tsx'
+import { Calendar } from '@components/common/DatePicker/subcomponentes/Calendar/index.tsx'
 import { Combobox } from '@components/common/Combobox/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
@@ -294,6 +295,37 @@ describe('the combobox on a touch device in a real browser', () => {
 
       expect(parts('combobox-option').some((option) => option.hasAttribute('data-active'))).toBe(false)
       expect(parts('tag').length).toBe(1)
+    } finally {
+      await disableTouch()
+    }
+  })
+})
+
+describe('the calendar on a touch device in a real browser', () => {
+  touchCapable('touchEmulation')('chooses a day with a tap, moves the month with a tap and does not tint a day on hover', async () => {
+    await enableTouch()
+    try {
+      let picked = ''
+
+      renderInBrowser(<Calendar today="2026-10-28" value="2026-10-15" onSelect={(date) => (picked = date)} />)
+      const day = (iso: string) => document.querySelector(`[data-date="${iso}"]`) as HTMLElement
+      const number = (iso: string) => day(iso).querySelector('[data-slot="date-picker-calendar-day-number"]') as HTMLElement
+
+      expect(matchMedia('(hover: none)').matches).toBe(true)
+      expect(day('2026-10-20').getBoundingClientRect().height).toBeGreaterThanOrEqual(40)
+
+      await page.elementLocator(day('2026-10-20')).hover()
+      await frames(4)
+
+      expect(getComputedStyle(number('2026-10-20')).backgroundColor).toBe('rgba(0, 0, 0, 0)')
+
+      await page.elementLocator(day('2026-10-20')).click()
+
+      await expect.poll(() => picked).toBe('2026-10-20')
+
+      await page.getByRole('button', { name: 'Próximo mês' }).click()
+
+      await expect.poll(() => part('date-picker-calendar-title')?.textContent).toBe('novembro de 2026')
     } finally {
       await disableTouch()
     }
