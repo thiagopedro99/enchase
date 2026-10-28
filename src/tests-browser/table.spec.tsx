@@ -1,4 +1,5 @@
-import { afterEach, describe, expect, it } from 'vitest'
+import { useState } from 'react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
 import { contrastRatio } from '@styles/theme/contrast.ts'
@@ -608,6 +609,275 @@ describe('Table loading in a real browser', () => {
     expect(page.getByRole('row').elements()).toHaveLength(1)
     expect(page.getByRole('columnheader').elements()).toHaveLength(5)
     expect(page.getByRole('button', { name: 'Cliente' }).element()).toBeTruthy()
+  })
+})
+
+describe('Table row selection in a real browser', () => {
+  const selectable = (initial: (string | number)[] = []) => {
+    const changes = vi.fn()
+    const Harness = ({ loading }: { loading?: boolean }) => {
+      const [selected, setSelected] = useState(initial)
+
+      return (
+        <Table
+          caption="Pedidos"
+          columns={columns}
+          rows={orders}
+          getRowKey={(row) => row.id}
+          selectedKeys={selected}
+          loading={loading}
+          onSelectedKeysChange={(keys) => {
+            changes(keys)
+            setSelected(keys)
+          }}
+        />
+      )
+    }
+
+    return { Harness, changes }
+  }
+
+  const inputs = () => [...document.body.querySelectorAll<HTMLInputElement>('[data-slot="checkbox-input"]')]
+
+  const rowBackground = (index: number) => getComputedStyle(parts('table-row')[index]).backgroundColor
+
+  const transparent = 'rgba(0, 0, 0, 0)'
+
+  it('keeps the first column as narrow as its box and its padding, and the others in the rest of the width', () => {
+    renderInBrowser(<Table caption="Pedidos" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={[]} />)
+    const cell = rect(part('table-select-header'))
+    const wrapper = rect(parts('checkbox')[0])
+    const padding = parseFloat(getComputedStyle(part('table-select-header')).paddingInlineStart) * 2
+
+    expect(cell.width).toBeLessThanOrEqual(wrapper.width + padding + 2)
+    expect(cell.width).toBeGreaterThanOrEqual(24)
+    expect(Math.abs(rect(part('table')).width - rect(part('table-element')).width)).toBeLessThanOrEqual(2)
+  })
+
+  it('puts the selection column first, before the row header, in both directions', () => {
+    renderInBrowser(<Table caption="Pedidos" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={[]} />)
+
+    expect(rect(part('table-select-header')).right).toBeLessThanOrEqual(rect(parts('table-header')[0]).left + 1)
+    expect(rect(part('table-select')).right).toBeLessThanOrEqual(rect(part('table-row-header')).left + 1)
+
+    document.documentElement.setAttribute('dir', 'rtl')
+
+    expect(rect(part('table-select-header')).left).toBeGreaterThanOrEqual(rect(parts('table-header')[0]).right - 1)
+    expect(rect(part('table-select')).left).toBeGreaterThanOrEqual(rect(part('table-row-header')).right - 1)
+  })
+
+  it('centers each box in its cell, in the header and in the rows', () => {
+    renderInBrowser(<Table caption="Pedidos" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={[]} />)
+
+    for (const [cell, box] of [[part('table-select-header'), parts('checkbox-box')[0]], [part('table-select'), parts('checkbox-box')[1]]] as const) {
+      const outer = rect(cell)
+      const inner = rect(box)
+
+      expect(Math.abs(outer.left + outer.width / 2 - (inner.left + inner.width / 2)), 'horizontally').toBeLessThanOrEqual(1)
+      expect(Math.abs(outer.top + outer.height / 2 - (inner.top + inner.height / 2)), 'vertically').toBeLessThanOrEqual(1)
+    }
+  })
+
+  it('does not make the rows taller than the touch area of the box, nor the header', () => {
+    renderInBrowser(
+      <>
+        <Table caption="Sem seleção" columns={columns} rows={orders} />
+        <Table caption="Com seleção" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={[]} />
+      </>
+    )
+    const hit = parseFloat(getComputedStyle(parts('checkbox')[0]).minBlockSize)
+
+    for (const index of [0, 1, 2, 3]) {
+      const plain = rect(parts('table-row')[index]).height
+      const withBox = rect(parts('table-row')[index + 4]).height
+
+      expect(withBox, `row ${index}`).toBeGreaterThanOrEqual(hit - 1)
+      expect(withBox, `row ${index}`).toBeLessThanOrEqual(Math.max(plain, hit) + 1)
+    }
+
+    expect(rect(part('table-select-header')).height).toBeGreaterThanOrEqual(hit - 1)
+    expect(rect(part('table-select-header')).height).toBeLessThanOrEqual(Math.max(rect(parts('table-header')[0]).height, hit) + 1)
+  })
+
+  it('keeps every box at least 24 by 24 px to click, in the header and in the rows, in the small size too', () => {
+    renderInBrowser(<Table caption="Pequena" size="sm" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={[]} />)
+
+    for (const wrapper of parts('checkbox')) {
+      expect(rect(wrapper).width).toBeGreaterThanOrEqual(24)
+      expect(rect(wrapper).height).toBeGreaterThanOrEqual(24)
+    }
+  })
+
+  it('keeps the width of the first column when it starts loading', async () => {
+    const Toggling = () => {
+      const [loading, setLoading] = useState(false)
+
+      return (
+        <>
+          <button onClick={() => setLoading(true)}>Carregar</button>
+          <Table caption="Pedidos" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={[]} loading={loading} />
+        </>
+      )
+    }
+    renderInBrowser(<Toggling />)
+    const loaded = rect(part('table-select-header')).width
+    const placeholderCell = () => document.body.querySelector('[data-placeholder] [data-slot="table-select"]')
+
+    await userEvent.click(page.getByRole('button', { name: 'Carregar' }))
+
+    await expect.poll(() => placeholderCell()).not.toBeNull()
+    expect(Math.abs(rect(part('table-select-header')).width - loaded)).toBeLessThanOrEqual(1)
+    expect(Math.abs(rect(placeholderCell() as Element).width - loaded)).toBeLessThanOrEqual(1)
+  })
+
+  it('shades only the selected rows, with the surface above the stripes, and no other', async () => {
+    renderInBrowser(<Table caption="Pedidos" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={['#1002', '#1004']} striped />)
+    const high = surface('surface-container-high')
+    const probe = document.createElement('span')
+
+    probe.style.backgroundColor = high
+    document.body.append(probe)
+
+    const expected = getComputedStyle(probe).backgroundColor
+
+    probe.remove()
+
+    expect(rowBackground(1)).toBe(expected)
+    expect(rowBackground(3)).toBe(expected)
+    expect(rowBackground(0)).toBe(transparent)
+    expect(rowBackground(2)).toBe(transparent)
+  })
+
+  it('takes the selected row from its hook', () => {
+    document.documentElement.style.setProperty('--enchase-table-row-background-selected', 'rgb(1, 2, 3)')
+    renderInBrowser(<Table caption="Pedidos" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={['#1001']} />)
+
+    expect(rowBackground(0)).toBe('rgb(1, 2, 3)')
+    document.documentElement.style.removeProperty('--enchase-table-row-background-selected')
+  })
+
+  it.each(['light', 'dark'] as const)('keeps the text and the boxes readable on a selected row in the %s theme', (mode) => {
+    renderInBrowser(<Table caption="Pedidos" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={['#1001', '#1002', '#1003', '#1004']} />, 'never', mode)
+    const background = rowBackground(0)
+
+    expect(contrastRatio(getComputedStyle(part('table-row-header')).color, background)).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(getComputedStyle(parts('table-cell')[1]).color, background)).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(getComputedStyle(parts('checkbox-box')[1]).backgroundColor, background)).toBeGreaterThanOrEqual(3)
+  })
+
+  it('keeps the selected shade under the pointer and adds the hover layer to it', async () => {
+    renderInBrowser(<Table caption="Pedidos" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={['#1002']} />)
+    const selected = rowBackground(1)
+
+    await userEvent.hover(parts('table-row')[1])
+
+    expect(rowBackground(1)).toBe(selected)
+    expect(getComputedStyle(parts('table-row')[1]).backgroundImage).toMatch(/linear-gradient/)
+
+    await userEvent.hover(parts('table-row')[0])
+
+    expect(getComputedStyle(parts('table-row')[1]).backgroundImage).toBe('none')
+    expect(rowBackground(0)).not.toBe(transparent)
+  })
+
+  it('selects a row with a mouse click on its box, and the select all box turns mixed', async () => {
+    const { Harness, changes } = selectable()
+    renderInBrowser(<Harness />)
+
+    await userEvent.click(parts('checkbox')[2])
+
+    expect(changes).toHaveBeenLastCalledWith(['#1002'])
+    expect(inputs()[2].checked).toBe(true)
+    expect(parts('table-row')[1].hasAttribute('data-selected')).toBe(true)
+    expect(inputs()[0].matches(':indeterminate')).toBe(true)
+    expect(inputs()[0].checked).toBe(false)
+  })
+
+  it('selects every row from the select all box and clears them from it, with the mixed state gone', async () => {
+    const { Harness, changes } = selectable(['#1003'])
+    renderInBrowser(<Harness />)
+
+    expect(inputs()[0].matches(':indeterminate')).toBe(true)
+    await userEvent.click(parts('checkbox')[0])
+
+    expect(changes).toHaveBeenLastCalledWith(['#1003', '#1001', '#1002', '#1004'])
+    expect(inputs().every((input) => input.checked)).toBe(true)
+    expect(inputs()[0].matches(':indeterminate')).toBe(false)
+
+    await userEvent.click(parts('checkbox')[0])
+
+    expect(changes).toHaveBeenLastCalledWith([])
+    expect(inputs().every((input) => !input.checked)).toBe(true)
+    expect(document.body.querySelector('[data-selected]')).toBeNull()
+  })
+
+  it('walks the boxes with Tab and selects with Space', async () => {
+    const { Harness, changes } = selectable()
+    renderInBrowser(<Harness />)
+
+    await userEvent.tab()
+    expect(document.activeElement).toBe(inputs()[0])
+    await userEvent.tab()
+    expect(document.activeElement).toBe(inputs()[1])
+    await userEvent.keyboard(' ')
+
+    expect(changes).toHaveBeenLastCalledWith(['#1001'])
+    expect(inputs()[1].checked).toBe(true)
+  })
+
+  it('names every box for a screen reader, the row boxes after the row header', () => {
+    renderInBrowser(<Table caption="Pedidos" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={['#1001']} />)
+
+    expect(page.getByRole('checkbox', { name: 'Selecionar todas as linhas' }).element()).toBe(inputs()[0])
+    expect(page.getByRole('checkbox', { name: 'Selecionar linha #1001' }).element()).toBe(inputs()[1])
+    expect(page.getByRole('checkbox', { name: 'Selecionar linha #1004' }).element()).toBe(inputs()[4])
+  })
+
+  it('shows the focus ring of a box whole, inside the container, when reached by keyboard', async () => {
+    renderInBrowser(<Table caption="Pedidos" columns={columns} rows={orders} getRowKey={(row) => row.id} selectedKeys={[]} />)
+
+    await userEvent.tab()
+    await userEvent.tab()
+
+    const box = rect(parts('checkbox-box')[1])
+    const container = rect(part('table'))
+    const ring = getComputedStyle(parts('checkbox-box')[1])
+    const reach = parseFloat(ring.outlineOffset) + parseFloat(ring.outlineWidth)
+
+    expect(ring.outlineStyle).toBe('solid')
+    expect(box.left - reach).toBeGreaterThanOrEqual(container.left)
+    expect(box.top - reach).toBeGreaterThanOrEqual(rect(parts('table-row')[0]).top)
+  })
+
+  it('keeps the select all box with the header when the rows scroll, and the boxes usable', async () => {
+    const Many = () => {
+      const [selected, setSelected] = useState<(string | number)[]>([])
+
+      return <Table caption="Pedidos" columns={columns} rows={many} getRowKey={(row) => row.id} selectedKeys={selected} onSelectedKeysChange={setSelected} stickyHeader style={{ maxBlockSize: 220 }} />
+    }
+
+    renderInBrowser(<Many />)
+    part('table').scrollTop = 300
+    await expect.poll(() => part('table').scrollTop).toBeGreaterThan(100)
+
+    const header = rect(part('table-select-header'))
+    const top = rect(part('table')).top + parseFloat(getComputedStyle(part('table')).borderTopWidth)
+
+    expect(getComputedStyle(part('table-select-header')).position).toBe('sticky')
+    expect(Math.abs(header.top - top)).toBeLessThanOrEqual(1)
+
+    await userEvent.click(parts('checkbox')[0])
+
+    expect(inputs().every((input) => input.checked)).toBe(true)
+  })
+
+  it('disables the select all box while it loads and draws no box in the placeholder rows', async () => {
+    const { Harness } = selectable(['#1001'])
+    renderInBrowser(<Harness loading />)
+
+    expect(inputs()).toHaveLength(1)
+    expect(inputs()[0].disabled).toBe(true)
+    expect(getComputedStyle(parts('checkbox-box')[0]).cursor).toBe('not-allowed')
   })
 })
 
