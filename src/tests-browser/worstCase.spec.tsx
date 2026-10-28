@@ -15,6 +15,7 @@ import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
+import { Slider } from '@components/common/Slider/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
@@ -163,6 +164,9 @@ describe.each(widths)('worst case data at %ipx', (width) => {
         <SegmentedControl ariaLabel={worstCase.germanCompound} items={[{ value: 'a', label: worstCase.germanCompound }, { value: 'b', label: worstCase.shortName }]} />
         <SegmentedControl multiple fullWidth ariaLabel={worstCase.longTitle} items={[{ value: 'a', label: worstCase.longEmail }, { value: 'b', label: worstCase.fileName }, { value: 'c', label: worstCase.shortName }]} />
         <CheckboxGroup label={worstCase.longTitle} error={worstCase.longUrl} orientation="horizontal" options={[{ value: 'a', label: worstCase.longEmail }, { value: 'b', label: worstCase.fileName }]} />
+        <Slider label={worstCase.longTitle} showValue defaultValue={40} />
+        <Slider label={worstCase.germanCompound} showValue defaultValue={40} formatValue={() => worstCase.longEmail} />
+        <Slider ariaLabel={worstCase.shortName} showValue defaultValue={40} formatValue={() => worstCase.longUrl} />
       </div>
     )
 

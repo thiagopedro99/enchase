@@ -21,6 +21,7 @@ import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Pagination } from '@components/common/Pagination/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
+import { Slider } from '@components/common/Slider/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
@@ -75,6 +76,7 @@ const everything = (
     <SegmentedControl multiple ariaLabel="Days" items={[{ value: 'a', label: 'Mon' }, { value: 'b', label: 'Tue' }]} defaultValue={['b']} />
     <CheckboxGroup label="Topics" options={[{ value: 'a', label: 'News' }]} defaultValue={['a']} helperText="Pick any" />
     <CheckboxGroup label="Channels" options={[{ value: 'a', label: 'Email' }]} error="Pick one" />
+    <Slider label="Volume" showValue defaultValue={40} />
     <div>
       {(['neutral', 'primary', 'success', 'warning', 'error', 'info'] as const).map((variant) => (
         <Badge key={variant} variant={variant}>

@@ -10,6 +10,7 @@ import { Textarea } from '@components/common/Textarea/index.tsx'
 import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
+import { Slider } from '@components/common/Slider/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
@@ -70,6 +71,7 @@ describe('minimum target size in a real browser', () => {
         <RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }]} />
         <SegmentedControl ariaLabel="Visão" size="sm" items={[{ value: 'list', label: 'Lista' }]} />
         <CheckboxGroup label="Assuntos" options={[{ value: 'news', label: 'Novidades' }]} />
+        <Slider ariaLabel="Volume" />
         <Tabs items={[{ value: 'a', label: 'Aba', content: 'Conteúdo' }]} />
         <Accordion items={[{ value: 'a', title: 'Pergunta', content: 'Resposta' }]} />
         <Pagination pageCount={3} size="sm" />
@@ -86,6 +88,7 @@ describe('minimum target size in a real browser', () => {
       page.getByRole('switch', { name: 'Ligado' }),
       page.getByRole('radio', { name: 'Grátis' }),
       page.getByRole('radio', { name: 'Lista' }),
+      page.getByRole('slider', { name: 'Volume' }),
       page.getByRole('tab', { name: 'Aba' }),
       page.getByRole('button', { name: 'Pergunta' }),
       page.getByRole('button', { name: '2', exact: true }),
@@ -101,7 +104,7 @@ describe('minimum target size in a real browser', () => {
 
     for (const target of targets) {
       const box = (target.element() as HTMLElement).getBoundingClientRect()
-      const label = (target.element() as HTMLElement).closest('label')?.getBoundingClientRect() ?? box
+      const label = (target.element() as HTMLElement).closest('label, [data-slot="slider-control"]')?.getBoundingClientRect() ?? box
 
       expect(Math.max(box.width, label.width), String(target)).toBeGreaterThanOrEqual(minimum)
       expect(Math.max(box.height, label.height), String(target)).toBeGreaterThanOrEqual(minimum)

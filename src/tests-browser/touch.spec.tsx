@@ -13,13 +13,15 @@ import { Menu } from '@components/common/Menu/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
+import { Slider } from '@components/common/Slider/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import { builtInStyleEntries } from '@tests/shared/fixtures/styles.ts'
 import { renderInBrowser } from './harness.tsx'
 import { part, parts } from './hookProbes.ts'
 import { frames } from './settle.ts'
-import { disableTouch, enableTouch, touchCapable } from './touchInput.ts'
+import { chromiumOnly } from './browserSkips.ts'
+import { disableTouch, dragFinger, enableTouch, touchCapable } from './touchInput.ts'
 
 const DrawerPage = () => {
   const [open, setOpen] = useState(false)
@@ -250,6 +252,77 @@ describe('the segmented control on a touch device in a real browser', () => {
 
       await expect.poll(() => board.getAttribute('aria-checked')).toBe('true')
       expect(list.getAttribute('aria-checked')).toBe('false')
+    } finally {
+      await disableTouch()
+    }
+  })
+})
+
+describe('the slider on a touch device in a real browser', () => {
+  const geometry = () => {
+    const inner = part('slider-track').getBoundingClientRect()
+    const outer = part('slider-control').getBoundingClientRect()
+
+    return { inner, outer, at: (ratio: number) => ({ x: inner.left + inner.width * ratio, y: outer.top + outer.height / 2 }) }
+  }
+
+  const value = () => Number(part('slider-thumb').getAttribute('aria-valuenow'))
+
+  touchCapable('touchEmulation')('leaves the horizontal drag to the control, shows no hover halo and takes a tap', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(<Slider ariaLabel="Volume" defaultValue={20} />)
+      const { inner, outer } = geometry()
+
+      expect(matchMedia('(hover: none)').matches).toBe(true)
+      expect(getComputedStyle(part('slider-control')).touchAction).toBe('pan-y')
+
+      await page.elementLocator(part('slider-thumb')).hover()
+      await frames(4)
+
+      expect(getComputedStyle(part('slider-thumb')).boxShadow).toBe('none')
+
+      await page.elementLocator(part('slider-control')).click({ position: { x: inner.left - outer.left + inner.width * 0.8, y: 20 } })
+
+      await expect.poll(value).toBe(80)
+    } finally {
+      await disableTouch()
+    }
+  })
+
+  chromiumOnly('touchEmulation')('follows a finger dragged across the track', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(<Slider ariaLabel="Volume" />)
+      const { at } = geometry()
+
+      await dragFinger([at(0.1), at(0.15), at(0.3), at(0.5), at(0.65)])
+
+      await expect.poll(value).toBe(65)
+    } finally {
+      await disableTouch()
+    }
+  })
+
+  chromiumOnly('touchEmulation')('leaves the value alone when a finger swipes up the page from the track, and the page scrolls', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(
+        <div style={{ blockSize: 3000, paddingBlockStart: 400 }}>
+          <Slider ariaLabel="Volume" defaultValue={30} />
+        </div>
+      )
+      window.scrollTo(0, 300)
+      await frames(2)
+
+      const { at } = geometry()
+      const start = at(0.7)
+
+      await dragFinger([start, { x: start.x + 2, y: start.y - 30 }, { x: start.x + 4, y: start.y - 90 }, { x: start.x + 4, y: start.y - 160 }])
+      await frames(4)
+
+      expect(value()).toBe(30)
+      expect(window.scrollY).toBeGreaterThan(300)
     } finally {
       await disableTouch()
     }

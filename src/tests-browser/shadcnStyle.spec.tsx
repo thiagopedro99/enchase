@@ -19,6 +19,7 @@ import Popover from '@components/common/Popover/index.tsx'
 import { RadioGroup } from '@components/common/RadioGroup/index.tsx'
 import { SegmentedControl } from '@components/common/SegmentedControl/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
+import { Slider } from '@components/common/Slider/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
@@ -341,6 +342,27 @@ describe('the selection controls of the shadcn style', () => {
     expect(style('segmented-control-item', 0).color).toBe('rgb(10, 10, 10)')
     expect(style('segmented-control-item', 1).borderInlineStartColor).toBe('rgb(229, 229, 229)')
     expect([px(style('segmented-control-item', 0).paddingLeft), px(style('segmented-control-item', 0).fontSize)]).toEqual([12, 14])
+  })
+
+  it('draws the slider with a 6px track, a 16px round thumb with a 1px border, 14px medium text and half opacity when disabled', () => {
+    show(
+      <>
+        <Slider label="Volume" showValue defaultValue={40} />
+        <Slider ariaLabel="Brightness" defaultValue={40} disabled />
+      </>
+    )
+
+    expect(px(style('slider-track').height)).toBe(6)
+    expect([px(style('slider-thumb').width), px(style('slider-thumb').height)]).toEqual([16, 16])
+    expect(px(style('slider-thumb').borderTopLeftRadius)).toBeGreaterThanOrEqual(8)
+    expect(style('slider-thumb').borderTopWidth).toBe('1px')
+    expect(style('slider-thumb').borderTopColor).toBe('rgb(23, 23, 23)')
+    expect(style('slider-thumb').backgroundColor).toBe('rgb(255, 255, 255)')
+    expect(style('slider-range').backgroundColor).toBe('rgb(23, 23, 23)')
+    expect(style('slider-track').backgroundColor).toBe('rgb(245, 245, 245)')
+    expect([px(style('slider-label').fontSize), style('slider-label').fontWeight, style('slider-label').color]).toEqual([14, '500', 'rgb(10, 10, 10)'])
+    expect(px(style('slider-value').fontSize)).toBe(14)
+    expect(style('slider-control', 1).opacity).toBe('0.5')
   })
 
   it('keeps the 2px ring 2px from the box of the checkbox', async () => {
