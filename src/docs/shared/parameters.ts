@@ -1,3 +1,4 @@
+import { storyDensityNames, storyDensityTitles } from './densities.ts'
 import { storyStyleNames, storyStyleTitles } from './styles.ts'
 
 import type { Preview } from '@storybook/react-vite'
@@ -24,6 +25,15 @@ export const globalTypes: NonNullable<Preview['globalTypes']> = {
       dynamicTitle: true
     }
   },
+  density: {
+    description: 'Density',
+    toolbar: {
+      title: 'Density',
+      icon: 'collapse',
+      items: storyDensityNames.map((value) => ({ value, title: storyDensityTitles[value] })),
+      dynamicTitle: true
+    }
+  },
   motion: {
     description: 'Motion mode',
     toolbar: {
@@ -38,7 +48,7 @@ export const globalTypes: NonNullable<Preview['globalTypes']> = {
   }
 }
 
-export const initialGlobals = { theme: 'light', style: 'enchase', motion: 'auto' }
+export const initialGlobals = { theme: 'light', style: 'enchase', density: 'default', motion: 'auto' }
 
 export const parameters: NonNullable<Preview['parameters']> = {
   layout: 'centered',
