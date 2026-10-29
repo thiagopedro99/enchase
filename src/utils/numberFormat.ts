@@ -1,3 +1,5 @@
+import { resolveLocale } from './resolveLocale.ts'
+
 export type NumberFormatOptions = Pick<Intl.NumberFormatOptions, 'style' | 'currency' | 'currencyDisplay' | 'minimumFractionDigits' | 'maximumFractionDigits' | 'useGrouping'>
 
 export type NumberFormatter = {
@@ -10,27 +12,19 @@ export type NumberFormatter = {
   isPartial: (text: string, allowNegative?: boolean) => boolean
 }
 
-const fallbackLocale = 'en'
 const symbolTypes = new Set(['currency', 'percentSign', 'literal'])
 const directionMarks = /[‎‏؜]/g
 const whitespace = /\s/g
 const plainNumber = /^\d*\.?\d*$/
 
-const construct = (locale: string, options: Intl.NumberFormatOptions) => {
-  try {
-    return new Intl.NumberFormat(locale, options)
-  } catch (error) {
-    if (error instanceof RangeError && locale !== fallbackLocale) return new Intl.NumberFormat(fallbackLocale, options)
-
-    throw error
-  }
-}
+const construct = (locale: string, options: Intl.NumberFormatOptions) => new Intl.NumberFormat(locale, options)
 
 const removeAll = (text: string, token: string) => (token ? text.split(token).join('') : text)
 
 const escapePattern = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-export const createNumberFormat = (locale: string, options: NumberFormatOptions = {}, precision = 0): NumberFormatter => {
+export const createNumberFormat = (requested: string, options: NumberFormatOptions = {}, precision = 0): NumberFormatter => {
+  const locale = resolveLocale(requested, Intl.NumberFormat)
   const standard = construct(locale, options).resolvedOptions()
   const formatter = construct(locale, { ...options, maximumFractionDigits: options.maximumFractionDigits ?? Math.max(standard.maximumFractionDigits ?? 0, precision) })
   const digitFormatter = construct(locale, { useGrouping: false })

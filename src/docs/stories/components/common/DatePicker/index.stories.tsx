@@ -142,7 +142,7 @@ const meta = {
       table: { type: { summary: 'number' } }
     },
     locale: {
-      description: 'BCP 47 tag, such as `en-GB`, `en-CA` or `de`, that gives this field a language of its own: the order, the separators and the digits of the text, the names of the months and of the weekdays and the first day of the week. Without it, the `locale` of the `UIProvider` applies, and an empty string counts as without it. `firstDayOfWeek` still wins when it is passed. A tag that is not valid falls back to `en`, with no error. It takes only the tag: the texts of the labels and the direction still come from the provider, so for everything different wrap the field in a `UIProvider` of its own. See the Locale story.',
+      description: 'BCP 47 tag, such as `en-GB`, `en-CA` or `de`, that gives this field a language of its own: the order, the separators and the digits of the text, the names of the months and of the weekdays and the first day of the week. Without it, the `locale` of the `UIProvider` applies, and an empty string counts as without it. `firstDayOfWeek` still wins when it is passed. A tag that is not valid, or that the environment does not know, falls back to `en`, with no error. It takes only the tag: the texts of the labels and the direction still come from the provider, so for everything different wrap the field in a `UIProvider` of its own. See the Locale story.',
       control: 'text',
       table: { type: { summary: 'string' } }
     },

@@ -47,6 +47,14 @@ describe('firstDayOfWeek', () => {
     expect(firstDayOfWeek('')).toBe(0)
   })
 
+  it('starts the week as English does for a language that the platform does not know, and for a tag that is not valid', () => {
+    expect(['xx', 'tlh', 'zz-ZZ', 'und', 'en_US', 'a', 'not a locale', ''].map(firstDayOfWeek)).toEqual([0, 0, 0, 0, 0, 0, 0, 0])
+  })
+
+  it('keeps the week that the platform gives to a known language with a region that it does not know', () => {
+    expect(['en-XX', 'pt-XX', 'es-XX'].map(firstDayOfWeek)).toEqual([1, 1, 1])
+  })
+
   it('reads the table of regions when the platform has no week information', () => {
     const original = Object.getOwnPropertyDescriptor(Intl.Locale.prototype, 'weekInfo')
 
@@ -54,7 +62,7 @@ describe('firstDayOfWeek', () => {
     Object.defineProperty(Intl.Locale.prototype, 'getWeekInfo', { configurable: true, value: undefined })
 
     try {
-      expect(['pt-BR', 'en-GB', 'ar-EG', 'de', 'en', 'dv-MV'].map(firstDayOfWeek)).toEqual([0, 1, 6, 1, 0, 5])
+      expect(['pt-BR', 'en-GB', 'ar-EG', 'de', 'en', 'en-MV'].map(firstDayOfWeek)).toEqual([0, 1, 6, 1, 0, 5])
     } finally {
       if (original) Object.defineProperty(Intl.Locale.prototype, 'weekInfo', original)
       else Reflect.deleteProperty(Intl.Locale.prototype, 'weekInfo')

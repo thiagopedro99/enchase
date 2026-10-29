@@ -1,3 +1,4 @@
+import { resolveLocale } from './resolveLocale.ts'
 import { isValidDate } from './calendarDate.ts'
 
 import type { CalendarDate } from './calendarDate.ts'
@@ -15,8 +16,6 @@ export type DateFormatter = {
   dayLabel: (date: CalendarDate) => string
   fullDate: (date: CalendarDate) => string
 }
-
-const fallbackLocale = 'en'
 
 const numberingSystems = ['arab', 'arabext', 'beng', 'deva', 'fullwide', 'gujr', 'guru', 'khmr', 'knda', 'laoo', 'latn', 'mlym', 'mong', 'mymr', 'orya', 'tamldec', 'telu', 'thai', 'tibt']
 
@@ -46,23 +45,14 @@ const instant = ({ year, month, day }: CalendarDate) => {
   return value
 }
 
-const construct = (locale: string, options: Intl.DateTimeFormatOptions) => {
-  const make = (tag: string) => new Intl.DateTimeFormat(new Intl.Locale(tag, { calendar: 'gregory' }).toString(), { ...options, timeZone: 'UTC' })
-
-  try {
-    return make(locale)
-  } catch (error) {
-    if (error instanceof RangeError && locale !== fallbackLocale) return make(fallbackLocale)
-
-    throw error
-  }
-}
+const construct = (locale: string, options: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(new Intl.Locale(locale, { calendar: 'gregory' }).toString(), { ...options, timeZone: 'UTC' })
 
 const toAsciiDigits = (text: string) => text.replace(digitPattern, (digit) => digitsOf().get(digit) ?? digit)
 
 const compactWidths: Record<DatePart, number> = { day: 2, month: 2, year: 4 }
 
-const build = (locale: string): DateFormatter => {
+const build = (requested: string): DateFormatter => {
+  const locale = resolveLocale(requested, Intl.DateTimeFormat)
   const field = construct(locale, { year: 'numeric', month: '2-digit', day: '2-digit' })
   const month = construct(locale, { month: 'long', year: 'numeric' })
   const day = construct(locale, { day: 'numeric' })
