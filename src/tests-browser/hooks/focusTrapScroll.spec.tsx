@@ -90,7 +90,7 @@ const walkAround = async (overlay: Overlay, press: () => Promise<void>) => {
   await openOverShiftedPage(overlay)
 
   const body = part(overlay.body)
-  const stops = part(overlay.panel).querySelectorAll('input, button, a[href]').length
+  const stops = part(overlay.panel).querySelectorAll('input, button, a[href], [tabindex="0"]').length
   const first = document.activeElement
   const before = pageScroll()
   const problems: string[] = []
