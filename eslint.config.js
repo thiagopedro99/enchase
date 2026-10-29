@@ -34,7 +34,7 @@ export default tseslint.config(
   },
   {
     files: ['src/tests/**/*.{ts,tsx}', 'src/tests-browser/**/*.{ts,tsx}'],
-    ignores: ['src/tests/lib/**', 'src/tests-browser/dist.d.ts'],
+    ignores: ['src/tests/lib/**', 'src/tests-browser/support/dist.d.ts'],
     rules: {
       'no-restricted-imports': ['error', { patterns: publicEntries }]
     }
