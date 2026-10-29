@@ -215,6 +215,16 @@ try {
     }
   }
 
+  const packedTheme = readFileSync(join(consumer, 'node_modules', 'enchase', 'dist-lib', 'theme.css'), 'utf8')
+  const densityRules = [
+    ":root[data-density='compact'] {",
+    ":where(:root[data-density='compact']) {"
+  ]
+
+  if (densityRules.some((rule) => packedTheme.split(rule).length !== 2)) throw new Error(`the packed theme.css must carry the compact density block once, as the rules ${densityRules.join(' and ')}`)
+
+  console.log('the packed theme.css carries the compact density block once')
+
   const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/styles': false, 'enchase/styles/theme/style': false }
   const wrong = Object.entries(expected).filter(([specifier, should]) => resolves(specifier) !== should)
 

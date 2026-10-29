@@ -47,6 +47,8 @@ const expectations = [
   ['the halo of the selection controls in the theme variables', '--enchase-halo-size-switch: 0.5rem'],
   ['the regular target size in the theme variables', '--enchase-hit-size: 40px'],
   ['the large target size in the theme variables', '--enchase-hit-size-lg: 44px'],
+  ['the tokens of the compact density in the theme variables', ":root[data-density='compact'] {"],
+  ['the hooks of the compact density in the theme variables', ":where(:root[data-density='compact']) {"],
   ['the normal line height in the theme variables', '--enchase-line-height-normal: 1.5'],
   ['the control letter spacing in the theme variables', '--enchase-letter-spacing-control: 0.01em'],
   ['the generated responsive rules', "[data-slot='layout'][data-layout='auto']"]
@@ -54,7 +56,7 @@ const expectations = [
 
 const forbidden = [
   ['the label placement of a style on the page without one', 'data-label-placement'],
-  ['a hook of a style on the page without one', '--enchase-input-height:']
+  ['a hook of a style on the page without one', '--enchase-input-height: var(--enchase-control-height-md)']
 ]
 
 const styledExpectations = [

@@ -26,11 +26,11 @@ const budgets = [
   { label: 'Menu', source: "export { Menu } from 'enchase'\n", maxBytes: 36864 },
   { label: 'Combobox', source: "export { Combobox } from 'enchase'\n", maxBytes: 43008 },
   { label: 'DatePicker', source: "export { DatePicker } from 'enchase'\n", maxBytes: 53248 },
-  { label: 'ColorModeProvider', source: "export { ColorModeProvider } from 'enchase'\n", maxBytes: 40960, styles: [] },
+  { label: 'ColorModeProvider', source: "export { ColorModeProvider } from 'enchase'\n", maxBytes: 40960, styles: [], density: true },
   { label: 'createTheme', source: "export { createTheme } from 'enchase/theme'\n", maxBytes: 32768, styles: [] },
   { label: 'enchase style', source: "export { enchase } from 'enchase/styles/enchase'\n", maxBytes: 16384, styles: ['enchase'] },
   { label: 'shadcn style', source: "export { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 34816, styles: ['shadcn'] },
-  { label: 'ColorModeProvider with shadcn', source: "export { ColorModeProvider } from 'enchase'\nexport { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 57344, styles: ['shadcn'] }
+  { label: 'ColorModeProvider with shadcn', source: "export { ColorModeProvider } from 'enchase'\nexport { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 58368, styles: ['shadcn'], density: true }
 ]
 
 const hookNames = `import { readFileSync } from 'node:fs'
@@ -38,12 +38,13 @@ const hookNames = `import { readFileSync } from 'node:fs'
 const { exports } = JSON.parse(readFileSync(new URL('./node_modules/enchase/package.json', import.meta.url), 'utf8'))
 const names = Object.keys(exports).filter((key) => key.startsWith('./styles/')).map((key) => key.slice('./styles/'.length))
 const records = (style) => [style.hooks, style.colorHooks, style.light?.hooks, style.dark?.hooks]
+const theme = new Set(readFileSync(new URL('./node_modules/enchase/dist-lib/theme.css', import.meta.url), 'utf8').match(/--enchase-[a-z0-9-]+(?=:)/g))
 const hooks = {}
 
 for (const name of names) {
   const style = (await import('enchase/styles/' + name))[name]
 
-  hooks[name] = [...new Set(records(style).flatMap((record) => Object.keys(record ?? {})))]
+  hooks[name] = [...new Set(records(style).flatMap((record) => Object.keys(record ?? {})))].filter((hook) => !theme.has(hook))
 }
 
 console.log(JSON.stringify(hooks))
@@ -96,7 +97,7 @@ try {
     if (!budgets.some(({ styles = [] }) => styles.includes(name))) failures.push(`no budget bundles the ${name} style: add one to the budgets of this script`)
   }
 
-  for (const { label, source, maxBytes, styles } of budgets) {
+  for (const { label, source, maxBytes, styles, density } of budgets) {
     const entry = join(consumer, `${label.replaceAll(' ', '-')}.js`)
 
     writeFileSync(entry, source)
@@ -108,6 +109,9 @@ try {
 
     if (bytes < 200) failures.push(`${label} bundled to ${bytes} bytes, so the import did not resolve`)
     else if (bytes > maxBytes) failures.push(`${label} is ${bytes} bytes, over the ${maxBytes} byte budget`)
+
+    if (density === true && !code.includes('data-density')) failures.push(`${label} does not carry the compact density block of the theme css, so the budget does not measure the code that writes the theme`)
+    if (density !== true && code.includes('data-density')) failures.push(`${label} carries the compact density block of the theme css, so it leaks into code that does not write the theme`)
 
     if (styles === undefined) continue
 

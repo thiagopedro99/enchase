@@ -101,6 +101,28 @@ for (const file of ['dist-lib/styles.css', 'dist-lib/styles.layer.css']) {
     if (found !== wanted) leaks.push(`${where} has ${found} [dir=rtl] selectors and the sources have ${wanted}: a right to left rule did not survive`)
     if (css.includes(':dir(')) leaks.push(`${where} has :dir() selectors: an app that builds for a browser without :dir() gets them rewritten as :lang() lists, which follow the language of the page and not its direction, so a right to left rule must read the dir attribute`)
     if (css.includes(':lang(')) leaks.push(`${where} has :lang() selectors, which the sources do not: a right to left rule was rewritten as a list of languages, and a document with dir="rtl" and lang="en" is not mirrored`)
+    if (css.includes('data-density')) leaks.push(`${where} reads data-density, which only theme.css may do: the compact density block is written with the theme, so that it follows the layer of the theme, and not with the components`)
+  }
+}
+
+const themeFile = 'dist-lib/theme.css'
+const densitySelectors = [':root[data-density=compact]', ':where(:root[data-density=compact])']
+
+const themeStylesheets = [
+  [themeFile, readFileSync(join(root, themeFile), 'utf8')],
+  [`${themeFile} after the default build of Vite`, await consumerCss(join(root, themeFile))]
+]
+
+for (const [where, css] of themeStylesheets) {
+  const selectors = [...css.matchAll(/([^{}]+)\{[^{}]*\}/g)]
+    .map((match) => match[1].trim().replace(/["']/g, ''))
+    .filter((selector) => selector.includes('data-density'))
+    .sort()
+  const mentions = css.split('data-density').length - 1
+  const exact = selectors.length === densitySelectors.length && selectors.every((selector, index) => selector === densitySelectors[index])
+
+  if (!exact || mentions !== densitySelectors.length) {
+    leaks.push(`${where} must have the compact density block once, as the rules ${densitySelectors.join(' and ')}, and read data-density nowhere else, so that the attribute does nothing on any element but the root: it has ${selectors.length} such rules and ${mentions} mentions of the attribute`)
   }
 }
 
@@ -109,4 +131,4 @@ if (leaks.length > 0) {
   process.exit(1)
 }
 
-console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches (${jsEntries.length} entries walked), and the css mirrors right to left from the dir attribute, as published and after the default build of Vite`)
+console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches (${jsEntries.length} entries walked), the css mirrors right to left from the dir attribute, as published and after the default build of Vite, and the compact density block is in theme.css once, behind the attribute on the root, and in no other stylesheet`)
