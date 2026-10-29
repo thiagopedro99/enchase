@@ -1,17 +1,31 @@
-import { describe, expect, it, vi } from 'vitest'
 import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
-import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { renderHook, screen, waitFor, within } from '@testing-library/react'
+import { renderWithProviders } from '@tests/renderWithProviders.tsx'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { renderToString } from 'react-dom/server'
 import { useEffect, useState } from 'react'
 import { axe } from '@tests/axe.ts'
 
-import { Popover } from '@components/common/Popover/index.tsx'
 import { usePopoverControl } from '@components/common/Popover/popoverControl.ts'
+import { Popover } from '@components/common/Popover/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 
 const content = <button>Dentro</button>
+
+const nearest = { block: 'nearest', inline: 'nearest' }
+
+const stubScrollIntoView = () => {
+  const scrollIntoView = vi.fn()
+  Element.prototype.scrollIntoView = scrollIntoView
+
+  return scrollIntoView
+}
+
+afterEach(() => {
+  vi.restoreAllMocks()
+  Reflect.deleteProperty(Element.prototype, 'scrollIntoView')
+})
 
 describePortalContainerContract({
   name: 'Popover',
@@ -372,6 +386,181 @@ describe('Popover', () => {
   })
 })
 
+describe('Popover bringing into view what takes the focus', () => {
+  const withNext = (
+    <div>
+      <Popover content={content}>
+        <button>Abrir</button>
+      </Popover>
+      <button>Depois</button>
+    </div>
+  )
+
+  const openByKeyboard = async (user: ReturnType<typeof userEvent.setup>) => {
+    screen.getByRole('button', { name: 'Abrir' }).focus()
+    await user.keyboard('{Enter}')
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Dentro' })).toHaveFocus())
+  }
+
+  it('brings the trigger into view, to the nearest edge, when Escape gives it the focus back', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(withNext)
+    const trigger = screen.getByRole('button', { name: 'Abrir' })
+
+    await user.click(trigger)
+    await screen.findByRole('dialog')
+
+    expect(scrollIntoView).not.toHaveBeenCalled()
+
+    await user.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+    expect(trigger).toHaveFocus()
+    expect(scrollIntoView).toHaveBeenCalledTimes(1)
+    expect(scrollIntoView).toHaveBeenCalledWith(nearest)
+    expect(scrollIntoView.mock.contexts[0]).toBe(trigger)
+  })
+
+  it('brings the trigger into view when Shift+Tab sends the focus back to it, and keeps the popover open', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(withNext)
+    const trigger = screen.getByRole('button', { name: 'Abrir' })
+
+    await openByKeyboard(user)
+    await user.tab({ shift: true })
+
+    expect(trigger).toHaveFocus()
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(scrollIntoView.mock.calls).toEqual([[nearest]])
+    expect(scrollIntoView.mock.contexts).toEqual([trigger])
+  })
+
+  it('brings the trigger into view and then the next element when Tab leaves the last element', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(withNext)
+
+    await openByKeyboard(user)
+    await user.tab()
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Depois' })).toHaveFocus())
+
+    expect(scrollIntoView.mock.calls).toEqual([[nearest], [nearest]])
+    expect(scrollIntoView.mock.contexts).toEqual([screen.getByRole('button', { name: 'Abrir' }), screen.getByRole('button', { name: 'Depois' })])
+  })
+
+  it('scrolls only the trigger when Tab leaves the content and nothing comes after the trigger', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Popover content={content}>
+        <button>Abrir</button>
+      </Popover>
+    )
+    const trigger = screen.getByRole('button', { name: 'Abrir' })
+
+    await openByKeyboard(user)
+    await user.tab()
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+    expect(trigger).toHaveFocus()
+    expect(scrollIntoView.mock.calls).toEqual([[nearest]])
+    expect(scrollIntoView.mock.contexts).toEqual([trigger])
+  })
+
+  it('takes the focus into the content without scrolling when it opens by keyboard', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const focus = vi.spyOn(HTMLElement.prototype, 'focus')
+    const user = userEvent.setup()
+    renderWithProviders(withNext)
+
+    await openByKeyboard(user)
+
+    const inside = screen.getByRole('button', { name: 'Dentro' })
+
+    expect(focus.mock.calls.filter((_call, index) => focus.mock.contexts[index] === inside)).toEqual([[{ preventScroll: true }]])
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
+  it('takes the focus into the content without scrolling when Tab on the trigger goes into the open popover', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const focus = vi.spyOn(HTMLElement.prototype, 'focus')
+    const user = userEvent.setup()
+    renderWithProviders(withNext)
+
+    await user.click(screen.getByRole('button', { name: 'Abrir' }))
+    await screen.findByRole('dialog')
+    await user.tab()
+
+    const inside = screen.getByRole('button', { name: 'Dentro' })
+
+    expect(inside).toHaveFocus()
+    expect(focus.mock.calls.filter((_call, index) => focus.mock.contexts[index] === inside)).toEqual([[{ preventScroll: true }]])
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
+  it('does not scroll nor move the focus when it opens by pointer or by default', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    const { unmount } = renderWithProviders(withNext)
+
+    await user.click(screen.getByRole('button', { name: 'Abrir' }))
+    await screen.findByRole('dialog')
+
+    expect(screen.getByRole('button', { name: 'Abrir' })).toHaveFocus()
+    unmount()
+
+    renderWithProviders(
+      <Popover defaultOpen content={content}>
+        <button>Abrir</button>
+      </Popover>
+    )
+    await screen.findByRole('dialog')
+
+    expect(document.body).toHaveFocus()
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
+  it('does not scroll nor take the focus back when it closes on a click outside', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(
+      <div>
+        <Popover content={content}>
+          <button>Abrir</button>
+        </Popover>
+        <p>Fora</p>
+      </div>
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Abrir' }))
+    await screen.findByRole('dialog')
+    await user.click(screen.getByText('Fora'))
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+    expect(screen.getByRole('button', { name: 'Abrir' })).not.toHaveFocus()
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
+  it('keeps moving the focus when the browser has no scrollIntoView', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(withNext)
+
+    expect(Element.prototype.scrollIntoView).toBeUndefined()
+
+    await openByKeyboard(user)
+    await user.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+    expect(screen.getByRole('button', { name: 'Abrir' })).toHaveFocus()
+
+    await openByKeyboard(user)
+    await user.tab()
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Depois' })).toHaveFocus())
+  })
+})
+
 describe('Popover with the menu role', () => {
   const items = (
     <>
@@ -444,6 +633,36 @@ describe('Popover with the menu role', () => {
     await waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument())
   })
 
+  it('brings the trigger into view and then the next element when Tab leaves an item', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(withNeighbours)
+    await user.click(screen.getByRole('button', { name: 'Abrir' }))
+    await screen.findByRole('menu')
+    screen.getByRole('menuitem', { name: 'Um' }).focus()
+
+    await user.tab()
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Depois' })).toHaveFocus())
+
+    expect(scrollIntoView.mock.calls).toEqual([[nearest], [nearest]])
+    expect(scrollIntoView.mock.contexts).toEqual([screen.getByRole('button', { name: 'Abrir' }), screen.getByRole('button', { name: 'Depois' })])
+  })
+
+  it('brings the trigger into view when Shift+Tab leaves an item', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(withNeighbours)
+    await user.click(screen.getByRole('button', { name: 'Abrir' }))
+    await screen.findByRole('menu')
+    screen.getByRole('menuitem', { name: 'Dois' }).focus()
+
+    await user.tab({ shift: true })
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Abrir' })).toHaveFocus())
+
+    expect(scrollIntoView.mock.calls).toEqual([[nearest]])
+    expect(scrollIntoView.mock.contexts).toEqual([screen.getByRole('button', { name: 'Abrir' })])
+  })
+
   it('keeps a dialog popover open when Shift+Tab leaves its first element, as before', async () => {
     const user = userEvent.setup()
     renderWithProviders(
@@ -484,6 +703,25 @@ describe('the control of a popover for its content', () => {
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
     expect(trigger).toHaveFocus()
+  })
+
+  it('brings the trigger into view, to the nearest edge, when it closes the popover', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(
+      <Popover label="Painel" content={<Closer />}>
+        <button>Abrir</button>
+      </Popover>
+    )
+    const trigger = screen.getByRole('button', { name: 'Abrir' })
+
+    await user.click(trigger)
+    await user.click(await screen.findByRole('button', { name: 'Terminar' }))
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+
+    expect(trigger).toHaveFocus()
+    expect(scrollIntoView.mock.calls).toEqual([[nearest]])
+    expect(scrollIntoView.mock.contexts).toEqual([trigger])
   })
 
   it('gives the content its element so it can listen to the keys of the popup', async () => {

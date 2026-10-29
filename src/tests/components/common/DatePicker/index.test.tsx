@@ -894,6 +894,56 @@ describe('DatePicker calendar bringing the focused day into view', () => {
   })
 })
 
+describe('DatePicker calendar giving the focus back to the button', () => {
+  it('brings the button into view, to the nearest edge, when a day is chosen', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(<DatePicker label="Data" defaultValue="2026-10-15" />)
+
+    await user.click(toggle())
+    await screen.findByRole('dialog')
+    await user.keyboard('{ArrowDown}')
+
+    const chosen = dayOf('2026-10-22')
+
+    await user.keyboard('{Enter}')
+    await closed()
+
+    expect(toggle()).toHaveFocus()
+    expect(scrollIntoView).toHaveBeenCalledTimes(2)
+    expect(scrollIntoView).toHaveBeenLastCalledWith({ block: 'nearest', inline: 'nearest' })
+    expect(scrollIntoView.mock.contexts).toEqual([chosen, toggle()])
+  })
+
+  it('brings the button into view when Escape gives it the focus back, and nothing when a click outside closes the calendar', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(
+      <>
+        <DatePicker label="Data" defaultValue="2026-10-15" />
+        <p>Fora</p>
+      </>
+    )
+
+    await user.click(toggle())
+    await screen.findByRole('dialog')
+    await user.keyboard('{Escape}')
+    await closed()
+
+    expect(toggle()).toHaveFocus()
+    expect(scrollIntoView.mock.calls).toEqual([[{ block: 'nearest', inline: 'nearest' }]])
+    expect(scrollIntoView.mock.contexts).toEqual([toggle()])
+
+    scrollIntoView.mockClear()
+    await user.click(toggle())
+    await screen.findByRole('dialog')
+    await user.click(screen.getByText('Fora'))
+    await closed()
+
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+})
+
 describe('DatePicker language of its own', () => {
   it('writes the date the way the tag of the prop does, whatever the language of the provider', () => {
     for (const [locale, text] of [

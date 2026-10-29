@@ -8,6 +8,7 @@ export const focusFirst = (container: HTMLElement, fallback: HTMLElement | null)
 export const focusTrigger = (trigger: HTMLElement) => {
   const target = tabbablesIn(trigger)[0] ?? trigger
   target.focus({ preventScroll: true })
+  target.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
 }
 
 export const focusNextAfter = (trigger: HTMLElement, content: HTMLElement) => {
@@ -15,5 +16,8 @@ export const focusNextAfter = (trigger: HTMLElement, content: HTMLElement) => {
   const anchor = tabbablesIn(trigger)
   const index = order.indexOf(anchor[anchor.length - 1])
   const target = index >= 0 ? order[index + 1] : undefined
-  if (target) target.focus({ preventScroll: true })
+  if (!target) return
+
+  target.focus({ preventScroll: true })
+  target.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
 }

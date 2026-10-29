@@ -1,10 +1,10 @@
 import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
-import { useState } from 'react'
+import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
+import { useState } from 'react'
 
 import { Menu } from '@components/common/Menu/index.tsx'
 
@@ -33,6 +33,19 @@ const trigger = () => screen.getByRole('button', { name: 'Open' })
 const item = (name: string) => screen.getByRole('menuitem', { name })
 
 const closed = () => waitFor(() => expect(screen.queryByRole('menu')).not.toBeInTheDocument())
+
+const nearest = { block: 'nearest', inline: 'nearest' }
+
+const stubScrollIntoView = () => {
+  const scrollIntoView = vi.fn()
+  Element.prototype.scrollIntoView = scrollIntoView
+
+  return scrollIntoView
+}
+
+afterEach(() => {
+  Reflect.deleteProperty(Element.prototype, 'scrollIntoView')
+})
 
 describePortalContainerContract({
   name: 'Menu',
@@ -250,6 +263,82 @@ describe('Menu', () => {
     await user.click(screen.getByRole('button', { name: 'Before' }))
 
     await closed()
+  })
+
+  it('does not scroll when it opens, nor when the page outside it is clicked', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(page())
+
+    await user.click(trigger())
+    await waitFor(() => expect(item('Edit')).toHaveFocus())
+
+    expect(scrollIntoView).not.toHaveBeenCalled()
+
+    await user.click(screen.getByRole('button', { name: 'Before' }))
+    await closed()
+
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
+  it('brings the trigger into view when Escape gives it the focus back', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(page())
+
+    await user.click(trigger())
+    await waitFor(() => expect(item('Edit')).toHaveFocus())
+    await user.keyboard('{Escape}')
+    await closed()
+
+    expect(trigger()).toHaveFocus()
+    expect(scrollIntoView.mock.calls).toEqual([[nearest]])
+    expect(scrollIntoView.mock.contexts).toEqual([trigger()])
+  })
+
+  it('brings the trigger into view when Enter chooses an item and the menu gives it the focus back', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(page())
+
+    await user.click(trigger())
+    await waitFor(() => expect(item('Edit')).toHaveFocus())
+    await user.keyboard('{Enter}')
+    await closed()
+
+    expect(trigger()).toHaveFocus()
+    expect(scrollIntoView.mock.calls).toEqual([[nearest]])
+    expect(scrollIntoView.mock.contexts).toEqual([trigger()])
+  })
+
+  it('brings the trigger into view when Shift+Tab gives it the focus back', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(page())
+
+    await user.click(trigger())
+    await waitFor(() => expect(item('Edit')).toHaveFocus())
+    await user.tab({ shift: true })
+    await closed()
+
+    expect(trigger()).toHaveFocus()
+    expect(scrollIntoView.mock.calls).toEqual([[nearest]])
+    expect(scrollIntoView.mock.contexts).toEqual([trigger()])
+  })
+
+  it('brings the trigger into view and then the next element when Tab takes the focus on', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(page())
+
+    await user.click(trigger())
+    await waitFor(() => expect(item('Edit')).toHaveFocus())
+    await user.tab()
+    await closed()
+
+    expect(screen.getByRole('button', { name: 'After' })).toHaveFocus()
+    expect(scrollIntoView.mock.calls).toEqual([[nearest], [nearest]])
+    expect(scrollIntoView.mock.contexts).toEqual([trigger(), screen.getByRole('button', { name: 'After' })])
   })
 
   it('keeps the handlers of the trigger and does not open when its key handler prevents the default', async () => {
