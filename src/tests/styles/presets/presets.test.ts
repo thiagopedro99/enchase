@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-import { themeCss } from '@styles/css/declarations.ts'
+import { densityRules, themeCss } from '@styles/css/declarations.ts'
 import { collectCssHooks, isToken, tokenGroups } from '../../../../scripts/cssHooks.mjs'
 import { builtInStyleEntries, builtInStyles } from '@tests/shared/fixtures/styles.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
@@ -77,7 +77,7 @@ describe('the built-in styles', () => {
     })
 
     it('writes each hook of the style in the css, on the root or in the blocks of the modes', () => {
-      const css = themeCss(theme)
+      const css = themeCss(theme).replace(densityRules('compact'), '')
       const declared = namesIn(css)
 
       for (const name of hooksOf(style)) expect(declared, name).toContain(name)

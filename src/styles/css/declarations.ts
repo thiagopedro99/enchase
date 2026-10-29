@@ -1,4 +1,4 @@
-import { defaultTheme } from '../tokens/index.ts'
+import { defaultTheme, densities } from '../tokens/index.ts'
 import { variableName } from './names.ts'
 
 import type { BaseTokens, ColorTokens, HookValues, ModeTokens, ShadowTokens, ThemeSet } from '../tokens/types.ts'
@@ -61,6 +61,13 @@ export const fontVariablesRule = (selector: string, fonts: FontTokens) => variab
 
 export const layoutVariablesRule = (selector: string, theme: LayoutTokens, hooks?: HookValues) => variablesRule(selector, { ...layoutVariables(theme), ...hooks })
 
+export const densityRules = (name: keyof typeof densities) => {
+  const selector = `:root[data-density='${name}']`
+  const { tokens, hooks } = densities[name]
+
+  return [variablesRule(selector, tokens), variablesRule(`:where(${selector})`, hooks)].join('\n\n')
+}
+
 export type ThemeCssOptions = {
   layer?: string | undefined
 }
@@ -75,6 +82,7 @@ export const themeCss = ({ base, light, dark, hooks }: ThemeSet, { layer }: Them
   const rules = [
     fontVariablesRule(':root', base.fonts),
     layoutVariablesRule(':root', base, hooks),
+    densityRules('compact'),
     cssVariablesRule(":root, [data-theme='light']", light),
     cssVariablesRule("[data-theme='dark']", dark),
     `@media (prefers-color-scheme: dark) {\n${indent(cssVariablesRule(':root:not([data-theme])', dark))}\n}`
