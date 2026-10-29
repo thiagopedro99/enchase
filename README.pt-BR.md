@@ -23,12 +23,14 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 - Alvos interativos têm pelo menos 24 x 24 px, e os componentes respeitam `prefers-reduced-motion` (o deslocamento some, o fade continua).
 - Renderização no servidor e hidratação sem erro em 6 variantes de ambiente (largura, tema salvo, sistema escuro e movimento reduzido), mais um app Next 15 mínimo (`npm run test:next`) importando os componentes num Server Component.
 - O `className` de quem usa vence o da biblioteca (provado em navegador, na variante em camada em qualquer ordem de carregamento).
+- A densidade `compact`, em Chromium, Firefox e WebKit reais e nos dois estilos: o tamanho de cada peça, alvos de 24px ou mais (menos o polegar do `Slider`, que já era menor), o visual padrão idêntico sem o atributo, nada muda com o atributo fora do `<html>` e a precedência contra a variante em camada e contra o CSS do app.
 
 **Não garantido:**
 - Conformidade total com WCAG: a lib verifica o que os tokens e os testes cobrem, e não substitui auditoria nem teste com leitores de tela (nada foi testado com NVDA, JAWS ou VoiceOver).
 - Firefox e WebKit rodam a mesma suíte de navegador do Chromium, um arquivo por vez. No Linux ficam pulados 19 testes no Firefox e 19 no WebKit, porque dependem de chamadas só do Chromium (emulação de toque, mouse cru, métricas de layout e transparência reduzida) ou de uma emulação que o navegador não tem (cores forçadas no WebKit, contraste aumentado no Firefox); a lista central com o motivo está em `src/tests-browser/support/browserSkips.ts`, e os testes que dependem de um recurso que o navegador não tem são pulados só onde ele falta. Os testes de toque rodam no WebKit com o perfil de um iPhone (toque nativo), o mais perto do Safari que dá para automatizar. Os três navegadores passam no CI em Linux (Ubuntu 24.04) e bloqueiam o workflow. A devolução do foco ao gatilho e a armadilha de Tab funcionam também no Safari, onde clicar num botão não o focaliza: a biblioteca guarda o gatilho a partir do último ponteiro ou tecla. Revisão manual em Safari de verdade e com leitores de tela continua necessária.
 - Contraste de temas personalizados em `hsl()`, `oklch()` ou `oklab()`: esses formatos não são medidos, e o aviso diz quantos pares ficaram sem checar.
-- Gestos com velocidade (arrastar para dispensar, inércia), os estilos Material 3 e Ant Design e uma opção de densidade à parte dos estilos: ainda não existem.
+- Gestos com velocidade (arrastar para dispensar, inércia) e os estilos Material 3 e Ant Design: ainda não existem.
+- A densidade `compact` fora dos dois estilos embutidos: é um conjunto de valores absolutos, escolhidos para o `enchase` e o `shadcn`. Um estilo próprio, feito com `defineStyle`, recebe o mesmo bloco e não pode declarar o compact dele, e num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
 
 ## Instalação
 
@@ -593,6 +595,7 @@ Os componentes já cuidam do que é da biblioteca:
 - Alturas com `dvh` (a barra de endereço do celular muda a altura útil), `env(safe-area-inset-*)` nos elementos fixos nas bordas (toast e gavetas) e `overscroll-behavior: contain` nas áreas rolantes internas (gavetas, corpo do modal, popover).
 - O bloqueio de rolagem da página (`Modal`, gavetas) bloqueia também o encadeamento de rolagem.
 - Textos longos quebram ou encolhem com reticências em vez de empurrar a página para o lado (nomes, e-mails sem espaços, rótulos traduzidos), e a inicial do avatar usa a letra inteira, inclusive emoji.
+- A densidade `compact` baixa o alvo de toque a 32px em qualquer ponteiro: não a use em interface pensada para o dedo (veja "Densidade").
 
 O que é do seu app, não da biblioteca: a meta `viewport` (use `viewport-fit=cover` para a área segura valer, e `interactive-widget=resizes-content` se quiser que o teclado virtual reduza o layout), a cor da barra de status (`theme-color`, uma por esquema de cor) e a fonte dos seus próprios campos.
 
@@ -716,6 +719,79 @@ return (
 
 Com `container` nulo, ou com a função devolvendo `null`, o overlay cai no `body`; a função roda só no cliente, nunca no servidor. Os overlays são `position: fixed` com as coordenadas da janela, então um ancestral do contêiner com `transform`, `filter` ou `contain` vira o bloco de contenção e desloca o overlay, e um que cria contexto de empilhamento (`z-index`, `opacity`, `isolation`) prende o `z-index` do overlay dentro dele: escolha um contêiner sem essas propriedades. O mesmo vale para o que o `data-theme` não resolve: um gancho declarado no `:root` como `var(--enchase-color-surface)` continua com as cores do documento, porque o alias é resolvido onde é declarado (veja acima).
 
+## Densidade
+
+`data-density="compact"` no `<html>` deixa o kit inteiro mais compacto: controles e barras mais baixos, alvos de toque de 32px e a escala de espaço mais apertada. É só CSS, um bloco de variáveis `--enchase-*` que vale enquanto o `<html>` tem o atributo: não há prop, hook do React nem opção nova no `createTheme`.
+
+```html
+<html lang="pt-BR" data-density="compact">
+```
+
+- **Como ligar.** No HTML que o servidor manda (no Next com App Router, é o `<html lang="pt-BR" data-density="compact" suppressHydrationWarning>` do layout raiz) ou no cliente, com `document.documentElement.dataset.density = 'compact'`; `document.documentElement.removeAttribute('data-density')` volta ao padrão. A troca em tempo de execução funciona: o indicador ativo da `Sidebar` acompanha a altura nova do item. `compact` é o único valor: sem o atributo, com `default` ou com qualquer outro valor vale o visual padrão, e não existe `spacious`.
+- **Só no `<html>`.** Ao contrário do `data-theme`, que vale em qualquer ancestral, `data-density="compact"` num `div` ou no `<body>` não faz nada (medido: nenhum retângulo muda), porque todo seletor do bloco começa com `:root`. Não há ilhas de densidade: os overlays saem no `<body>`, que só a raiz alcança.
+- **Sem volta ao padrão e sem outros eixos.** Dentro de uma árvore compact, `data-density="default"` num elemento não muda nada. A densidade não mexe na tipografia (o rótulo flutuante dos campos e o entalhe do contorno dependem dela), nos raios, nem no desenho do checkbox, do radio, da chave, dos ícones e do avatar, e deixa de fora as larguras (`Sidebar`, `Modal`, `Drawer` e `Menu`), o anel de foco, as bordas, as camadas de estado e o movimento.
+- **Não é para interface pensada para o dedo.** O alvo de toque vai a 32px em qualquer ponteiro, inclusive em tela de toque: a densidade não olha `pointer: coarse`. O piso de 24px (WCAG 2.5.8) continua valendo, porque todo alvo lê `max(24px, var(--enchase-hit-size, ...))`, e `--enchase-hit-size-lg` (os botões que abrem, fecham ou recolhem uma navegação) continua em 44px. O único alvo abaixo de 24px é o polegar do `Slider` (20px no `enchase`, 16px no `shadcn`), como já era no padrão: o controle de 32px ao redor dele é a área de arrastar. Os campos mantêm a fonte de 16px em ponteiro de toque.
+- **Valores absolutos, para os estilos embutidos.** O compact é um conjunto de valores absolutos (uma propriedade personalizada não consegue escalar o valor que ela mesma sobrescreve), escolhidos para o `enchase` e o `shadcn`. Um estilo próprio, feito com `defineStyle`, recebe o mesmo bloco e não pode declarar o compact dele, e num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
+
+### O que muda
+
+O bloco é de variáveis, em duas camadas de força (1rem são 16px). Os **tokens** ficam em `:root[data-density='compact']`, com especificidade 0,2,0: vencem o `:root` do tema em qualquer ordem de carga. Encolhem toda peça que lê o tamanho do alvo, as alturas de controle ou a escala de espaço (paddings, vãos e margens), e também o CSS seu que leia `var(--enchase-space-*)`. `--enchase-space-xs` (4px) e `--enchase-hit-size-lg` (44px) ficam fora do bloco.
+
+| Token | Padrão (`enchase`) | Padrão (`shadcn`) | `compact` |
+| --- | --- | --- | --- |
+| `--enchase-hit-size` | `40px` | `2rem` | `32px` |
+| `--enchase-control-height-sm` | `2rem` | `2rem` | `1.75rem` |
+| `--enchase-control-height-md` | `2.5rem` | `2.25rem` | `2rem` |
+| `--enchase-control-height-lg` | `3rem` | `2.5rem` | `2.5rem` |
+| `--enchase-space-sm` | `0.5rem` | `0.5rem` | `0.375rem` |
+| `--enchase-space-md` | `1rem` | `1rem` | `0.75rem` |
+| `--enchase-space-lg` | `1.5rem` | `1.5rem` | `1.125rem` |
+| `--enchase-space-xl` | `2rem` | `2rem` | `1.5rem` |
+| `--enchase-space-2xl` | `3rem` | `3rem` | `2.25rem` |
+| `--enchase-space-3xl` | `4rem` | `4rem` | `3rem` |
+
+Os **ganchos** ficam em `:where(:root[data-density='compact'])`, com especificidade 0,0,0: cobrem as alturas que o estilo `enchase` escreve no próprio componente e que nenhum token alcança (campos, abas, acordeão, sidebar e barras, mais o padding das opções do `Select` e o do `Badge`), e perdem para um gancho de um estilo, do seu CSS ou do próprio componente. No `enchase` o padrão é o que o componente escreve, como em `var(--enchase-input-height, 3.5rem)`.
+
+| Gancho | Padrão (`enchase`) | `compact` | Declarado pelo `shadcn` | `shadcn` no compact | O `shadcn` segue |
+| --- | --- | --- | --- | --- | --- |
+| `--enchase-input-height` | `3.5rem` | `2.75rem` | `var(--enchase-control-height-md)` | `2rem` | sim |
+| `--enchase-textarea-min-height` | `3.5rem` | `2.75rem` | `4rem` | `4rem` | não |
+| `--enchase-tabs-tab-min-height` | `2.75rem` | `2.25rem` | `var(--enchase-control-height-md)` | `2rem` | sim |
+| `--enchase-accordion-trigger-min-height` | `3rem` | `2.5rem` | `0px` | `0px` | não |
+| `--enchase-select-option-padding-block` | `0.75rem` | `0.5rem` | `0.375rem` | `0.375rem` | não |
+| `--enchase-badge-padding-inline-md` | `0.625rem` | `0.5rem` | `0.5rem` | `0.5rem` | não |
+| `--enchase-sidebar-item-control-height` | `52px` | `2.5rem` | `2rem` | `2rem` | não |
+| `--enchase-sidebar-header-min-height` | `72px` | `4rem` | `3.5rem` | `3.5rem` | não |
+| `--enchase-navbar-bar-height` | `64px` | `3.5rem` | `3.5rem` | `3.5rem` | não |
+| `--enchase-layout-header-height` | `64px` | `3.5rem` | `3.5rem` | `3.5rem` | não |
+
+São duas camadas porque as alturas do `enchase` estão escritas nos componentes: só com tokens, os botões ficariam com 32px dentro de campos de 56px, e com tudo na força dos tokens o `shadcn`, que fixa as próprias medidas, cresceria (o campo de 36 para 44px e o item da sidebar de 32 para 40px). Todo valor fica no nível do de cada estilo embutido ou abaixo dele, então nada cresce. A `Table` já tem uma densidade própria, `size="sm"`, que o compact não duplica: a linha pequena tem 30px nos dois estilos.
+
+### O que o `shadcn` segue
+
+O estilo `shadcn` fica meio compact de propósito: ele declara por conta própria todos os ganchos do bloco, e um gancho que o estilo declara vence os da densidade. Por isso segue os tokens e, dos ganchos, só os que declara como alias de um token que a densidade muda: `--enchase-input-height` e `--enchase-tabs-tab-min-height`, alias de `--enchase-control-height-md`, então o campo e a aba vão de 36 para 32px.
+
+- **Segue:** os botões (médio 36 → 32px e pequeno 32 → 28px), os campos, as abas, a `Pagination` e o `SegmentedControl` (36 → 32px), o `Card` (74 → 62px), o `Popover` (58 → 50px), o padding do `Modal`, do `Drawer` e das notificações e o espaço do calendário do `DatePicker` (o popup vai de 266 × 306 para 258 × 296px). `--enchase-hit-size` e `--enchase-control-height-lg` já estavam no valor do compact no estilo, então não mudam nada nele: a linha clicável do `Checkbox`, do `RadioGroup` e da `Switch`, o controle do `Slider`, os botões dentro dos campos, os dias do calendário e os botões de fechar têm 32px no `shadcn` de qualquer jeito.
+- **Não segue**, porque o estilo fixa a medida: os outros ganchos da tabela (`--enchase-textarea-min-height`, `--enchase-accordion-trigger-min-height`, `--enchase-select-option-padding-block`, `--enchase-badge-padding-inline-md`, `--enchase-sidebar-item-control-height`, `--enchase-sidebar-header-min-height`, `--enchase-navbar-bar-height` e `--enchase-layout-header-height`). Ficam como estavam o gatilho do `Accordion` (52px), a linha média da `Table` (38px), o item do `Menu` (33px), a opção do `Combobox` (33px), o item (32px) e o cabeçalho (56px) da `Sidebar`, a barra da `Navbar` e a do `Layout` (56px) e o `Alert` (83px).
+- **Um rótulo flutuante do `shadcn` fica 4px mais perto do entalhe no compact.** O rótulo flutuante não é o padrão do estilo (o rótulo dele fica acima do campo, sem entalhe) e só aparece com `labelPlacement="floating"`: o início do rótulo menos o início do texto do entalhe vai de -5px para -1px, o rótulo continua dentro do entalhe e a folga do entalhe é a mesma.
+
+A página System/Density do Storybook traz o tamanho de cada peça, no padrão e no compact, nos dois estilos, e o item Density da barra de ferramentas liga o atributo em todas as histórias.
+
+### Seus valores sobre a densidade
+
+Um **gancho** seu sempre vence: declare-o no `:root`, ou no próprio componente, e ele vence a densidade com ou sem camada. Um **token** seu é outro caso: em `enchase/styles.css`, que não tem camada, um token no `:root` perde para o bloco compact, esteja o seu CSS antes ou depois do tema, porque `:root[data-density='compact']` tem especificidade 0,2,0 contra os 0,1,0 do `:root`.
+
+```css
+:root {
+  --enchase-hit-size: 36px;
+}
+```
+
+Dois caminhos:
+
+1. **A variante em camada, que é a recomendação.** Importe `enchase/styles.layer.css` e passe `cssLayer="enchase-theme"` ao `ColorModeProvider`: o CSS seu sem camada vence qualquer camada em qualquer ordem, então a regra acima vale, e o bloco da densidade fica na mesma camada do tema.
+2. **O seletor do atributo.** `html:root[data-density='compact'] { --enchase-hit-size: 36px }` (0,2,1) vence em qualquer ordem. O `:root[data-density='compact']`, mais curto, tem a mesma força do bloco e só vence se vier depois do `<style>` do tema (o empate vai para a regra mais tardia), e o `ColorModeProvider` renderiza esse `<style>` dentro da página, normalmente depois das folhas do `<head>`. As duas regras não fazem nada sem o atributo, então o visual padrão mantém o valor dele.
+
 ## Renderização no servidor
 
 Os componentes renderizam no servidor sem erro de hidratação.
@@ -741,7 +817,7 @@ npm run build:lib && npm run pack:check && npm run test:consumer
 
 ## Estado do projeto
 
-Versão `0.x`, em desenvolvimento ativo. Há dois estilos visuais, `enchase` e `shadcn`. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band), os estilos Material 3 e Ant Design, e uma opção de densidade à parte dos estilos.
+Versão `0.x`, em desenvolvimento ativo. Há dois estilos visuais, `enchase` e `shadcn`, e a densidade `compact`. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band) e os estilos Material 3 e Ant Design.
 
 ## Contribuindo
 

@@ -176,7 +176,7 @@ Also accepts the other attributes of `<fieldset>`, passed on to the element. For
 
 ### ColorModeProvider
 
-Applies the theme: it injects the `--enchase-*` variables, sets `data-theme` and `color-scheme` on the `<html>` and saves the mode (`light`, `dark` or `system`). The components read the variables, and `useColorMode` returns `{ mode, resolvedMode, setMode, toggleMode }`.
+Applies the theme: it injects the `--enchase-*` variables, sets `data-theme` and `color-scheme` on the `<html>` and saves the mode (`light`, `dark` or `system`). The components read the variables, and `useColorMode` returns `{ mode, resolvedMode, setMode, toggleMode }`. The compact density is not a prop: put `data-density="compact"` on the `<html>` yourself (see System/Density in the Storybook). Its variables come with the theme, in the same layer when you pass `cssLayer`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -187,7 +187,7 @@ Applies the theme: it injects the `--enchase-*` variables, sets `data-theme` and
 | `onModeChange` | `(mode: ColorMode) => void` | — | Called with the new mode when `setMode` or `toggleMode` is used, including with a controlled `mode`. |
 | `storage` | `{ getItem, setItem } \| null` | `localStorage` | Where to save the choice, with `getItem` and `setItem`. The default is `localStorage`, read only after mounting. `null` turns off persistence. |
 | `storageKey` | `string` | `'enchase-color-mode'` | Key of the choice in the storage. Use the same one in the `ColorModeScript`. |
-| `cssLayer` | `string` | — | Name of an `@layer` for the theme variables. Use it with `enchase/styles.layer.css`, as in `cssLayer="enchase-theme"`. |
+| `cssLayer` | `string` | — | Name of an `@layer` for the theme variables. Use it with `enchase/styles.layer.css`, as in `cssLayer="enchase-theme"`. CSS of yours without a layer then wins over the theme in any order, tokens of the compact density included: without a layer, `:root[data-density='compact']` beats a token of yours on `:root`. |
 
 ### ColorModeScript
 
@@ -778,7 +778,7 @@ A semantic data table, built from `columns` and `rows`: a `<table>` with a capti
 | `caption` | `string` | — | Title of the table, rendered as a `<caption>` above it, which also gives the accessible name. For a name that is not shown, pass ariaLabel. |
 | `ariaLabel` | `string` | — | Name of the table for screen readers, useful when there is no caption. With both, ariaLabel is used. |
 | `empty` | `ReactNode` | — | Content shown in a cell that spans all the columns when there are no rows. Without it, only the header appears. |
-| `size` | `'sm' \| 'md'` | `'md'` | Density of the rows: sm is compact and md is the default. |
+| `size` | `'sm' \| 'md'` | `'md'` | Density of the rows: sm is compact and md is the default. The compact density of the whole kit (`data-density` on the `<html>`) keeps the sm rows at the same height. |
 | `striped` | `boolean` | `false` | Alternates the background of the rows to help follow a long row. |
 | `sort` | `TableSort` | — | How the rows are ordered now: `{ key, direction }`, where `key` is the key of a column and `direction` is `ascending` or `descending`. The table marks that column with `aria-sort`, whether it has a button or not, and shows the direction on its button. The rows themselves are yours to order. See the Sortable story. |
 | `onSortChange` | `(sort: TableSort) => void` | — | Called when a sort button is activated, with the sort that was asked for: ascending for a column that is not sorted and the opposite direction for the sorted one. It does not change anything by itself: order the rows and pass the new `sort` back. Without it the buttons do nothing. |
@@ -1028,7 +1028,7 @@ Also accepts the other attributes of `<svg>`, passed on to the element.
 
 ## CSS hooks
 
-Optional CSS variables that each component reads to change a measure, a font, a corner or a timing without writing CSS on top. The theme does not declare them: without a value, the component uses the default in the table, and a default that points to a theme token keeps following an override of that token. The name is `--enchase-<data-slot>-<property>`, with the name of the `data-slot` of the part and, when there is more than one size or variant, its suffix (`--enchase-switch-thumb-size`, `--enchase-button-padding-inline-md`). Experimental until version 1.0: a name can change in a minor version.
+Optional CSS variables that each component reads to change a measure, a font, a corner or a timing without writing CSS on top. The theme does not declare them: without a value, the component uses the default in the table, and a default that points to a theme token keeps following an override of that token. With `data-density="compact"` on the `<html>`, some of them take a lower value (see System/Density in the Storybook), and a hook of yours wins over it. The name is `--enchase-<data-slot>-<property>`, with the name of the `data-slot` of the part and, when there is more than one size or variant, its suffix (`--enchase-switch-thumb-size`, `--enchase-button-padding-inline-md`). Experimental until version 1.0: a name can change in a minor version.
 
 ### Accordion
 
