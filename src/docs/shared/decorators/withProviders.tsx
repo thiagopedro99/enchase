@@ -16,9 +16,13 @@ export const withProviders: Decorator = (Story, context) => {
     <ColorModeProvider mode={theme} theme={themes[String(context.globals.style)]}>
       <GlobalStyles />
       <UIProvider motion={{ mode: motion }}>
-        <ToastProvider>
+        {context.parameters.ownToastProvider === true ? (
           <Story />
-        </ToastProvider>
+        ) : (
+          <ToastProvider>
+            <Story />
+          </ToastProvider>
+        )}
       </UIProvider>
     </ColorModeProvider>
   )
