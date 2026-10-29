@@ -1,11 +1,11 @@
-import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import userEvent from '@testing-library/user-event'
-import { createRef, useState } from 'react'
 import { screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { axe } from '@tests/axe.ts'
+import { createRef, useState } from 'react'
 
 import { CheckboxGroup } from '@components/common/CheckboxGroup/index.tsx'
+import { renderWithProviders } from '@tests/renderWithProviders.tsx'
+import { axe } from '@tests/axe.ts'
 
 const topics = [
   { value: 'news', label: 'Novidades' },
@@ -317,6 +317,22 @@ describe('CheckboxGroup contract', () => {
 
     expect(container.querySelector('[data-slot="checkbox-group-error"]')).toBeInTheDocument()
     expect(container.querySelector('[data-slot="checkbox-group-helper"]')).not.toBeInTheDocument()
+  })
+
+  it('keeps the message on the group: the field of each checkbox has no message and the boxes have no description of their own', () => {
+    const { container } = renderWithProviders(<CheckboxGroup label="Assuntos" options={topics} helperText="Dá para mudar" error="Escolha ao menos um" />)
+    const fields = [...container.querySelectorAll('[data-slot="checkbox-field"]')]
+
+    expect(fields).toHaveLength(3)
+    expect(container.querySelector('[data-slot="checkbox-error"]')).not.toBeInTheDocument()
+    expect(container.querySelector('[data-slot="checkbox-helper"]')).not.toBeInTheDocument()
+
+    for (const field of fields) {
+      expect(field).not.toHaveAttribute('data-has-message')
+      expect(field.parentElement).toHaveAttribute('data-slot', 'checkbox-group-options')
+    }
+
+    for (const box of screen.getAllByRole('checkbox')) expect(box).not.toHaveAttribute('aria-describedby')
   })
 
   it('omits the legend part when there is no label', () => {

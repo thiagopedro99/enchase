@@ -143,14 +143,16 @@ Also accepts the other attributes of `<a>`, passed on to the element.
 
 ### Checkbox
 
-A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`. With `indeterminate` it shows the mixed state of a box that summarizes other boxes, such as a select all (see the SelectAll story). With `aria-invalid="true"` the box of an unchecked checkbox takes the color of the error on its border. To choose among several options, use the `CheckboxGroup`.
+A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`. With `indeterminate` it shows the mixed state of a box that summarizes other boxes, such as a select all (see the SelectAll story). With `aria-invalid="true"` the box of an unchecked checkbox takes the color of the error on its border. With `error` the checkbox is marked as invalid by itself and the message shows under the label, and `helperText` shows a hint in the same place. Both sit outside the `<label>`, so the accessible name stays the label text. To choose among several options, use the `CheckboxGroup`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | — | Text of the label. Clicking it also checks the box. |
+| `error` | `string` | — | Error message. Marks the checkbox as invalid (aria-invalid), so an unchecked box takes the color of the error on its border, and shows the message under the label, announced as an alert. It replaces the helperText. The message sits outside the `<label>`, in the `<span data-slot="checkbox-field">` that always wraps the label, so the input is never rebuilt when a message comes or goes. |
+| `helperText` | `string` | — | Helper text under the label, aligned with its text. It is tied to the checkbox by aria-describedby and disappears when there is an error. |
 | `indeterminate` | `boolean` | `false` | Shows the mixed state, for a box that summarizes other boxes. It sets the `indeterminate` property of the native input, so assistive technology reads it as mixed, and it does not change `checked`. A click does not clear it: do that in `onChange`. The property is set on the client, so a mixed box that is rendered on the server looks checked or unchecked until the page hydrates. |
-| `wrapperClassName` | `string` | — | Class of the root (data-slot="checkbox"). className stays on the native input (data-slot="checkbox-input"). |
-| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="checkbox"). style stays on the native input. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="checkbox"). className stays on the native input (data-slot="checkbox-input"). With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="checkbox-field">`. |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="checkbox"). style stays on the native input. With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="checkbox-field">`. |
 | `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the check mark, which grows with a short pop. false turns it off; { tuning: { duration, scale } } sets the duration in seconds and the initial scale. |
 
 Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.
@@ -755,13 +757,15 @@ Also accepts the other attributes of `<div>`, passed on to the element. Forwards
 
 ### Switch
 
-An on and off switch for a setting that takes effect at once, with a clickable label. It is an `<input type="checkbox">` with `role="switch"`, so screen readers announce it as a switch and the form sends the value only when it is on. It accepts `ref` and the attributes of the `<input>`. For a choice that only takes effect when the form is submitted, prefer the `Checkbox`.
+An on and off switch for a setting that takes effect at once, with a clickable label. It is an `<input type="checkbox">` with `role="switch"`, so screen readers announce it as a switch and the form sends the value only when it is on. It accepts `ref` and the attributes of the `<input>`. With `error` the switch is marked as invalid and the message shows under the label, and `helperText` shows a hint in the same place. Both sit outside the `<label>`, so the accessible name stays the label text. An invalid switch only exposes `aria-invalid` and the message: its track is not painted in the color of the error, unlike the box of a `Checkbox`. For a choice that only takes effect when the form is submitted, prefer the `Checkbox`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | — | Text of the label. Clicking it also turns the switch on or off. Without a visible label, pass aria-label. |
-| `wrapperClassName` | `string` | — | Class of the root (data-slot="switch"). className stays on the native input (data-slot="switch-input"). |
-| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="switch"). style stays on the native input. |
+| `error` | `string` | — | Error message. Marks the switch as invalid (aria-invalid) and shows the message under the label, announced as an alert. It replaces the helperText. The message sits outside the `<label>`, in the `<span data-slot="switch-field">` that always wraps the label, so the input is never rebuilt when a message comes or goes. |
+| `helperText` | `string` | — | Helper text under the label, aligned with its text. It is tied to the switch by aria-describedby and disappears when there is an error. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="switch"). className stays on the native input (data-slot="switch-input"). With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="switch-field">`. |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="switch"). style stays on the native input. With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="switch-field">`. |
 | `animation` | `false \| { recipe, tuning }` | `fade` | Animation of the toggle: the thumb slides and the track changes color. false turns it off; { tuning: { duration } } sets the duration in seconds. |
 
 Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.
@@ -1333,10 +1337,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-checkbox-box-border-color-invalid` | `var(--enchase-color-error)` | `border-color` |
 | `--enchase-checkbox-box-check-width` | `2px` | `border-width` |
 | `--enchase-checkbox-box-radius` | `2px` | `border-radius` |
-| `--enchase-checkbox-box-size` | `18px` | `inline-size`, `block-size`, `margin-block-start` |
+| `--enchase-checkbox-box-size` | `18px` | `inline-size`, `block-size`, `margin-block-start`, `margin-inline-start` |
 | `--enchase-checkbox-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-checkbox-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
-| `--enchase-checkbox-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-checkbox-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-checkbox-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-checkbox-field-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-checkbox-gap` | `1rem` (`--enchase-space-md`) | `gap`, `margin-inline-start` |
+| `--enchase-checkbox-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-checkbox-icon-color` | `var(--enchase-color-on-primary)` | `color` |
 | `--enchase-checkbox-label-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-checkbox-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
@@ -1530,7 +1538,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-input-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-input-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
-| `--enchase-input-error-color` | `var(--enchase-color-error)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-error-color` | `var(--enchase-color-error)` | `color` (also in Checkbox, Combobox, DatePicker, NumberInput, Select, Switch, Textarea) |
 | `--enchase-input-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-input-field-color` | `var(--enchase-color-text-primary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
@@ -1540,7 +1548,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-input-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-height` | `3.5rem` | `min-block-size`, `block-size`, `inset-block-start`, `transform` (also in Combobox, ComboboxToggle, DatePicker, NumberInput, Select) |
-| `--enchase-input-helper-color` | `var(--enchase-color-text-secondary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-helper-color` | `var(--enchase-color-text-secondary)` | `color` (also in Checkbox, Combobox, DatePicker, NumberInput, Select, Switch, Textarea) |
 | `--enchase-input-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-input-label-color` | `var(--enchase-color-text-secondary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
@@ -2082,7 +2090,11 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-switch-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-switch-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
-| `--enchase-switch-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-switch-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-switch-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-switch-field-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+| `--enchase-switch-gap` | `1rem` (`--enchase-space-md`) | `gap`, `margin-inline-start` |
+| `--enchase-switch-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-switch-label-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-switch-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-switch-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
@@ -2104,7 +2116,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-switch-track-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
 | `--enchase-switch-track-height` | `2rem` | `block-size` |
 | `--enchase-switch-track-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
-| `--enchase-switch-track-width` | `3.25rem` | `--switch-travel`, `inline-size` |
+| `--enchase-switch-track-width` | `3.25rem` | `--switch-travel`, `inline-size`, `margin-inline-start` |
 
 ### Table
 
