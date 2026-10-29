@@ -11,6 +11,7 @@ export interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputEleme
   max?: string | undefined
   isDateDisabled?: ((date: string) => boolean) | undefined
   firstDayOfWeek?: number | undefined
+  locale?: string | undefined
   label?: string | undefined
   labelPlacement?: LabelPlacement | undefined
   error?: string | undefined

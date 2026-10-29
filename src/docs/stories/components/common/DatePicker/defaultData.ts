@@ -13,3 +13,11 @@ export const isWeekend = (date: string) => {
 
   return weekday === 0 || weekday === 6
 }
+
+export const dateFormats: Record<string, string> = {
+  en: 'mm/dd/yyyy',
+  'en-GB': 'dd/mm/yyyy',
+  'en-CA': 'yyyy-mm-dd',
+  de: 'dd.mm.yyyy',
+  ja: 'yyyy/mm/dd'
+}

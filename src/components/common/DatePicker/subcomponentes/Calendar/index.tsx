@@ -14,11 +14,12 @@ import type { CalendarProps } from './types.ts'
 
 const isWeekday = (day: number | undefined): day is number => day !== undefined && Number.isInteger(day) && day >= 0 && day <= 6
 
-export const Calendar = ({ today, value, min, max, isDateDisabled, firstDayOfWeek: firstDayOverride, autoFocus = defaultAutoFocus, onSelect }: CalendarProps) => {
+export const Calendar = ({ today, value, min, max, isDateDisabled, firstDayOfWeek: firstDayOverride, locale: localeOverride, autoFocus = defaultAutoFocus, onSelect }: CalendarProps) => {
   const { locale, labels } = useUIConfig()
   const titleId = useId()
-  const format = useMemo(() => createDateFormat(locale), [locale])
-  const firstDay = isWeekday(firstDayOverride) ? firstDayOverride : firstDayOfWeek(locale)
+  const tag = localeOverride ?? locale
+  const format = useMemo(() => createDateFormat(tag), [tag])
+  const firstDay = isWeekday(firstDayOverride) ? firstDayOverride : firstDayOfWeek(tag)
   const calendar = useCalendar({ today, value, min, max, isDateDisabled, firstDay, autoFocus, onSelect })
 
   return (

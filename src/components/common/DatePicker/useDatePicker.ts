@@ -15,6 +15,7 @@ export type DatePickerOptions = {
   min: string | undefined
   max: string | undefined
   isDateDisabled: ((date: string) => boolean) | undefined
+  locale: string | undefined
   disabled: boolean | undefined
   readOnly: boolean | undefined
   open: boolean | undefined
@@ -24,9 +25,10 @@ export type DatePickerOptions = {
 
 const read = (text: string | null | undefined) => (text ? parseIsoDate(text) : null)
 
-export const useDatePicker = ({ value, defaultValue, onValueChange, min, max, isDateDisabled, disabled, readOnly, open, defaultOpen, onOpenChange }: DatePickerOptions) => {
+export const useDatePicker = ({ value, defaultValue, onValueChange, min, max, isDateDisabled, locale: localeOverride, disabled, readOnly, open, defaultOpen, onOpenChange }: DatePickerOptions) => {
   const { locale } = useUIConfig()
-  const format = useMemo(() => createDateFormat(locale), [locale])
+  const tag = localeOverride ?? locale
+  const format = useMemo(() => createDateFormat(tag), [tag])
   const [current, setCurrent] = useControllableState<string | null>(value, defaultValue, onValueChange)
   const [isOpen, setOpen] = useControllableState(open, defaultOpen, onOpenChange)
   const selected = read(current)

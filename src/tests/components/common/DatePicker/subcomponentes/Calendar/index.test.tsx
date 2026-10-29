@@ -545,6 +545,78 @@ describe('Calendar first day of the week', () => {
   })
 })
 
+describe('Calendar language of its own', () => {
+  it('names the month and the weekdays with the tag it is given, and keeps the labels of the provider', () => {
+    render({ locale: 'en-GB' })
+
+    expect(screen.getByRole('grid', { name: 'October 2026' })).toBeInTheDocument()
+    expect(screen.getAllByRole('columnheader').map((header) => header.getAttribute('abbr'))).toEqual(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    expect(screen.getByRole('button', { name: 'Mês anterior' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Próximo mês' })).toBeInTheDocument()
+  })
+
+  it('starts the week where the tag does, over the first day of the language of the provider', () => {
+    const { unmount } = render({ locale: 'en-GB' }, { locale: en })
+
+    expect(screen.getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Monday')
+    expect(cells()[0]).toHaveAttribute('data-date', '2026-09-28')
+    unmount()
+    render({ locale: 'en-CA' }, { locale: { ...en, locale: 'en-GB' } })
+
+    expect(screen.getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Sunday')
+    expect(cells()[0]).toHaveAttribute('data-date', '2026-09-27')
+  })
+
+  it('lets firstDayOfWeek win over the first day of the tag', () => {
+    render({ locale: 'en-GB', firstDayOfWeek: 0 }, { locale: en })
+
+    expect(screen.getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Sunday')
+  })
+
+  it('follows the language of the provider when it is not given a tag', () => {
+    render({ locale: undefined }, { locale: { ...en, locale: 'en-GB' } })
+
+    expect(screen.getByRole('grid', { name: 'October 2026' })).toBeInTheDocument()
+    expect(screen.getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Monday')
+  })
+
+  it('names the month and starts the week again when the tag changes while it is open', async () => {
+    const user = userEvent.setup()
+
+    const Harness = () => {
+      const [locale, setLocale] = useState('en-GB')
+
+      return (
+        <>
+          <button type="button" onClick={() => setLocale('de')}>
+            Change
+          </button>
+          <Calendar today="2026-10-28" locale={locale} onSelect={vi.fn()} />
+        </>
+      )
+    }
+
+    renderWithProviders(<Harness />, { locale: en })
+
+    expect(screen.getByRole('grid', { name: 'October 2026' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Change' }))
+
+    expect(screen.getByRole('grid', { name: 'Oktober 2026' })).toBeInTheDocument()
+    expect(screen.getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Montag')
+  })
+
+  it('falls back to English for a tag that is not valid, and does not throw', () => {
+    for (const locale of ['not a locale', '', 'en_US']) {
+      const { unmount } = render({ locale })
+
+      expect(screen.getByRole('grid', { name: 'October 2026' }), locale).toBeInTheDocument()
+      expect(screen.getAllByRole('columnheader')[0], locale).toHaveAttribute('abbr', 'Sunday')
+      unmount()
+    }
+  })
+})
+
 describe('Calendar parts', () => {
   it('marks the root and every part with a data-slot', () => {
     render({ value: '2026-10-15' })

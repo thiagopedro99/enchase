@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Button, DatePicker, Flex, UIProvider } from 'enchase'
 import { en, ptBR } from 'enchase/locales'
 import { containerArgType } from '@docs/shared/argTypes.ts'
-import { defaultFullWidth, defaultOpen, firstWeekday, isWeekend, maxDate, minDate } from './defaultData.ts'
+import { dateFormats, defaultFullWidth, defaultOpen, firstWeekday, isWeekend, maxDate, minDate } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -51,6 +51,24 @@ const LanguagesDemo = () => {
   )
 }
 
+const LocaleDemo = () => {
+  const [tag, setTag] = useState('en')
+
+  return (
+    <div style={{ display: 'grid', gap: '0.75rem', justifyItems: 'start' }}>
+      <Flex gap="0.5rem" wrap>
+        {Object.keys(dateFormats).map((key) => (
+          <Button key={key} variant={key === tag ? 'primary' : 'outline'} size="sm" onClick={() => setTag(key)}>
+            {key}
+          </Button>
+        ))}
+      </Flex>
+      <DatePicker label="Date" locale={tag} defaultValue="2026-10-28" placeholder={dateFormats[tag]} helperText={`Type it as ${dateFormats[tag]} or open the calendar`} />
+      <div style={noteStyle}>The tag of the prop decides how this field writes and reads the date, the names in its calendar and the first day of the week. The labels and the direction still come from the provider.</div>
+    </div>
+  )
+}
+
 const FormDemo = () => {
   const [submitted, setSubmitted] = useState<string | null>(null)
 
@@ -85,7 +103,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'A field for a single date. The user types it, in the order and with the separators of the language of the `UIProvider` (28/10/2026 in pt-BR, 10/28/2026 in en, and the compact 28102026 or the ISO 2026-10-28 are read too), or presses the button at the end of the field to choose it in a calendar that opens in a dialog. The value is a string in the local ISO form, `YYYY-MM-DD`, with no time and no time zone, the same text that `<input type="date">` gives, or `null` when the field is empty: no `Date` object is involved, so the day never moves with the zone of the machine. The text is read when the user leaves the field or presses Enter, and what is not a date, or is a date that `min`, `max` or `isDateDisabled` rule out, is put back as it was. The calendar is a grid: the arrow keys move by a day and by a week, Home and End go to the start and to the end of the week, Page Up and Page Down change the month and Shift with them the year, Enter and Space choose the day and Esc closes the calendar and gives the focus back to the button. It opens with the focus on the chosen day, or on today. The names of the months and of the weekdays, the first day of the week and the right-to-left mirroring follow the language of the `UIProvider`. Today is read in the browser when the calendar opens, so the server renders only the field. The calendar renders in a portal, like the `Popover`, and accepts `container`. It is six weeks tall: when neither side of the field has room for all of it, it opens on the side with more room and its body scrolls. It accepts `ref`, which goes to the input, and the attributes of the `<input>`.'
+          'A field for a single date. The user types it, in the order and with the separators of the language of the `UIProvider` (28/10/2026 in pt-BR, 10/28/2026 in en, and the compact 28102026 or the ISO 2026-10-28 are read too), or presses the button at the end of the field to choose it in a calendar that opens in a dialog. The value is a string in the local ISO form, `YYYY-MM-DD`, with no time and no time zone, the same text that `<input type="date">` gives, or `null` when the field is empty: no `Date` object is involved, so the day never moves with the zone of the machine. The text is read when the user leaves the field or presses Enter, and what is not a date, or is a date that `min`, `max` or `isDateDisabled` rule out, is put back as it was. The calendar is a grid: the arrow keys move by a day and by a week, Home and End go to the start and to the end of the week, Page Up and Page Down change the month and Shift with them the year, Enter and Space choose the day and Esc closes the calendar and gives the focus back to the button. It opens with the focus on the chosen day, or on today. The names of the months and of the weekdays, the first day of the week and the right-to-left mirroring follow the language of the `UIProvider`. The order of the text comes from the language, so it is not the same on every page: the Languages story shows it changing with the provider, and the `locale` prop gives one field a language of its own for the text, the names and the first day of the week (see the Locale story). Today is read in the browser when the calendar opens, so the server renders only the field. The calendar renders in a portal, like the `Popover`, and accepts `container`. It is six weeks tall: when neither side of the field has room for all of it, it opens on the side with more room and its body scrolls. It accepts `ref`, which goes to the input, and the attributes of the `<input>`.'
       }
     }
   },
@@ -119,9 +137,14 @@ const meta = {
       table: { type: { summary: '(date: string) => boolean' } }
     },
     firstDayOfWeek: {
-      description: 'First column of the calendar, from 0 (Sunday) to 6 (Saturday). Without it, the language of the provider decides: Sunday in pt-BR and in en, Monday in most of Europe. A number that is not a day of the week is ignored.',
+      description: 'First column of the calendar, from 0 (Sunday) to 6 (Saturday). Without it, the language of the provider, or the `locale` of the field, decides: Sunday in pt-BR and in en, Monday in most of Europe. A number that is not a day of the week is ignored.',
       control: { type: 'number', min: 0, max: 6 },
       table: { type: { summary: 'number' } }
+    },
+    locale: {
+      description: 'BCP 47 tag, such as `en-GB`, `en-CA` or `de`, that gives this field a language of its own: the order, the separators and the digits of the text, the names of the months and of the weekdays and the first day of the week. Without it, the `locale` of the `UIProvider` applies. `firstDayOfWeek` still wins when it is passed. A tag that is not valid falls back to `en`, with no error. It takes only the tag: the texts of the labels and the direction still come from the provider, so for everything different wrap the field in a `UIProvider` of its own. See the Locale story.',
+      control: 'text',
+      table: { type: { summary: 'string' } }
     },
     label: {
       description: 'Label of the field, tied to the input. Without it, give the input an `aria-label`.',
@@ -214,10 +237,12 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const Playground: Story = {}
+export const Playground: Story = {
+  args: { placeholder: 'mm/dd/yyyy', helperText: 'Type it as mm/dd/yyyy or open the calendar' }
+}
 
 export const WithDefaultValue: Story = {
-  args: { defaultValue: '2026-10-28' }
+  args: { defaultValue: '2026-10-28', placeholder: 'mm/dd/yyyy', helperText: 'Type it as mm/dd/yyyy or open the calendar' }
 }
 
 export const Controlled: Story = {
@@ -252,9 +277,17 @@ export const MondayFirst: Story = {
 export const Languages: Story = {
   parameters: {
     controls: { disable: true },
-    docs: { description: { story: 'The language of the `UIProvider` decides how the date is written and read, the names in the calendar, the first day of the week and the direction: with `dir: "rtl"` the grid and its buttons mirror. The `dir` of the page is still up to the app, as in this demo.' } }
+    docs: { description: { story: 'The language of the `UIProvider` decides how the date is written and read, the names in the calendar, the first day of the week and the direction: with `dir: "rtl"` the grid and its buttons mirror. The `dir` of the page is still up to the app, as in this demo. To change only one field, give it a `locale` (see the Locale story).' } }
   },
   render: () => <LanguagesDemo />
+}
+
+export const Locale: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: { description: { story: 'The `locale` prop is a BCP 47 tag that gives one field a language of its own, under the same provider: the order, the separators and the digits of the text, the names of the months and of the weekdays and the first day of the week follow the tag (`en-GB` writes 28/10/2026 and starts the week on Monday, `en-CA` writes 2026-10-28). The texts of the labels and the direction still come from the `UIProvider`; for everything different, wrap the field in a `UIProvider` of its own, as the Languages story does.' } }
+  },
+  render: () => <LocaleDemo />
 }
 
 export const InAForm: Story = {

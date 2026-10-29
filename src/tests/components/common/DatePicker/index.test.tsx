@@ -828,3 +828,155 @@ describe('DatePicker calendar', () => {
     expect(html).not.toContain('role="dialog"')
   })
 })
+
+describe('DatePicker language of its own', () => {
+  it('writes the date the way the tag of the prop does, whatever the language of the provider', () => {
+    for (const [locale, text] of [
+      [undefined, '10/28/2026'],
+      ['en-GB', '28/10/2026'],
+      ['en-CA', '2026-10-28'],
+      ['de', '28.10.2026'],
+      ['ja', '2026/10/28']
+    ] as const) {
+      const view = renderWithProviders(<DatePicker label="Date" locale={locale} defaultValue="2026-10-28" />, { locale: en })
+
+      expect(field(), String(locale)).toHaveValue(text)
+      view.unmount()
+    }
+  })
+
+  it('uses the tag of the provider when there is no prop, and writes the same text as the prop with that tag', () => {
+    const provider = renderWithProviders(<DatePicker label="Date" defaultValue="2026-10-28" />, { locale: { ...en, locale: 'en-GB' } })
+
+    expect(field()).toHaveValue('28/10/2026')
+    provider.unmount()
+
+    renderWithProviders(<DatePicker label="Date" locale="en-GB" defaultValue="2026-10-28" />, { locale: en })
+
+    expect(field()).toHaveValue('28/10/2026')
+  })
+
+  it('reads the typed text in the order of the tag of the prop', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+
+    for (const [locale, typed] of [
+      ['en-GB', '28/10/2026'],
+      ['en-GB', '28102026'],
+      ['en-CA', '2026-10-28'],
+      ['en-CA', '20261028']
+    ] as const) {
+      onValueChange.mockClear()
+
+      const view = renderWithProviders(<DatePicker label="Date" locale={locale} onValueChange={onValueChange} />, { locale: en })
+
+      await user.type(field(), typed)
+      await user.tab()
+
+      expect(onValueChange, `${locale} ${typed}`).toHaveBeenCalledWith('2026-10-28')
+      view.unmount()
+    }
+  })
+
+  it('puts back a date written in the order of the provider when the prop asks for another', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    renderWithProviders(<DatePicker label="Date" locale="en-GB" onValueChange={onValueChange} />, { locale: en })
+
+    await user.type(field(), '10/28/2026')
+    await user.tab()
+
+    expect(onValueChange).not.toHaveBeenCalled()
+    expect(field()).toHaveValue('')
+  })
+
+  it('starts the week of the calendar where the tag does, and lets firstDayOfWeek win over it', async () => {
+    const user = userEvent.setup()
+    const { unmount } = renderWithProviders(<DatePicker label="Date" locale="en-GB" defaultValue="2026-10-28" />, { locale: en })
+
+    await user.click(screen.getByRole('button', { name: 'Open calendar' }))
+    await screen.findByRole('dialog')
+
+    expect(within(screen.getByRole('dialog')).getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Monday')
+    unmount()
+
+    renderWithProviders(<DatePicker label="Date" locale="en-GB" firstDayOfWeek={0} defaultValue="2026-10-28" />, { locale: en })
+    await user.click(screen.getByRole('button', { name: 'Open calendar' }))
+    await screen.findByRole('dialog')
+
+    expect(within(screen.getByRole('dialog')).getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Sunday')
+  })
+
+  it('names the month and the days of the calendar with the tag of the prop', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<DatePicker label="Date" locale="de" defaultValue="2026-10-28" />, { locale: en })
+
+    await user.click(screen.getByRole('button', { name: 'Open calendar' }))
+    await screen.findByRole('dialog')
+
+    const popup = screen.getByRole('dialog', { name: 'Choose date' })
+
+    expect(within(popup).getByText('Oktober 2026')).toBeInTheDocument()
+    expect(within(popup).getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Montag')
+  })
+
+  it('keeps the labels and the direction of the provider, and does not take them from the tag', async () => {
+    const user = userEvent.setup()
+    const { unmount } = renderWithProviders(<DatePicker label="Data" locale="en-CA" defaultValue="2026-10-28" />)
+
+    expect(field()).toHaveValue('2026-10-28')
+
+    await user.click(toggle())
+    await screen.findByRole('dialog')
+
+    expect(dialog()).toHaveAttribute('dir', 'ltr')
+    unmount()
+
+    renderWithProviders(<DatePicker label="Date" locale="en-GB" defaultValue="2026-10-28" />, { locale: { ...en, locale: 'ar', dir: 'rtl' } })
+    await user.click(screen.getByRole('button', { name: 'Open calendar' }))
+    await screen.findByRole('dialog')
+
+    expect(field()).toHaveValue('28/10/2026')
+    expect(screen.getByRole('dialog', { name: 'Choose date' })).toHaveAttribute('dir', 'rtl')
+  })
+
+  it('writes the date again when the prop changes, and goes back to the provider when it is removed', () => {
+    const view = render(wrap(<DatePicker label="Date" locale="en-GB" defaultValue="2026-10-28" />, en))
+
+    expect(field()).toHaveValue('28/10/2026')
+
+    view.rerender(wrap(<DatePicker label="Date" locale="en-CA" defaultValue="2026-10-28" />, en))
+
+    expect(field()).toHaveValue('2026-10-28')
+
+    view.rerender(wrap(<DatePicker label="Date" defaultValue="2026-10-28" />, en))
+
+    expect(field()).toHaveValue('10/28/2026')
+  })
+
+  it('falls back to English for a tag that is not valid, and does not throw', () => {
+    for (const locale of ['not a locale', '', 'en_US']) {
+      const view = renderWithProviders(<DatePicker label="Data" locale={locale} defaultValue="2026-10-28" />)
+
+      expect(field(), locale).toHaveValue('10/28/2026')
+      view.unmount()
+    }
+  })
+
+  it('does not pass the prop to the input as an attribute', () => {
+    renderWithProviders(<DatePicker label="Date" locale="en-GB" />, { locale: en })
+
+    expect(field()).not.toHaveAttribute('locale')
+  })
+
+  it('writes the date of the tag of the prop on the server too', () => {
+    const html = renderToString(
+      <UIProvider locale={en}>
+        <DatePicker label="Date" locale="en-GB" defaultValue="2026-10-28" />
+      </UIProvider>
+    )
+
+    expect(html).toContain('value="28/10/2026"')
+    expect(html).not.toContain('value="10/28/2026"')
+  })
+})

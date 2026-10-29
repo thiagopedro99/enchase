@@ -78,6 +78,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Combobox that starts open', element: <Combobox label="Country" defaultOpen options={[{ value: 'br', label: 'Brazil' }]} /> },
   { name: 'DatePicker', element: <DatePicker label="Birthday" name="birthday" helperText="Type it or open the calendar" defaultValue="2026-10-28" min="2026-01-01" max="2026-12-31" /> },
   { name: 'DatePicker that starts open', element: <DatePicker label="Date" defaultOpen defaultValue="2026-10-28" error="Choose another date" /> },
+  { name: 'DatePicker with a language of its own', element: <DatePicker label="Date" locale="en-CA" defaultValue="2026-10-28" /> },
   { name: 'Checkbox', element: <Checkbox label="Accept" /> },
   { name: 'Checkbox that is indeterminate', element: <Checkbox label="Select all" indeterminate defaultChecked /> },
   { name: 'Switch', element: <Switch label="Notifications" defaultChecked /> },

@@ -22,6 +22,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
       max,
       isDateDisabled,
       firstDayOfWeek,
+      locale,
       label,
       labelPlacement,
       error,
@@ -47,7 +48,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
     const generatedId = useId()
     const { labels } = useUIConfig()
     const themeDefaults = useThemeDefaults()
-    const field = useDatePicker({ value, defaultValue: initialValue, onValueChange, min, max, isDateDisabled, disabled: props.disabled, readOnly: props.readOnly, open, defaultOpen: initiallyOpen, onOpenChange })
+    const field = useDatePicker({ value, defaultValue: initialValue, onValueChange, min, max, isDateDisabled, locale, disabled: props.disabled, readOnly: props.readOnly, open, defaultOpen: initiallyOpen, onOpenChange })
     const inputId = id ?? generatedId
     const errorId = `${inputId}-error`
     const helperId = `${inputId}-helper`
@@ -118,7 +119,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
             className={styles.anchor}
             contentClassName={popupClassName}
             contentStyle={popupStyle}
-            content={<DatePickerCalendar value={field.current} min={min} max={max} isDateDisabled={isDateDisabled} firstDayOfWeek={firstDayOfWeek} autoFocus={field.autoFocus} onSelect={field.choose} />}
+            content={<DatePickerCalendar value={field.current} min={min} max={max} isDateDisabled={isDateDisabled} firstDayOfWeek={firstDayOfWeek} locale={locale} autoFocus={field.autoFocus} onSelect={field.choose} />}
           >
             <DatePickerToggle disabled={field.inert} />
           </Popover>
