@@ -23,7 +23,7 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 - Alvos interativos têm pelo menos 24 x 24 px, e os componentes respeitam `prefers-reduced-motion` (o deslocamento some, o fade continua).
 - Renderização no servidor e hidratação sem erro em 6 variantes de ambiente (largura, tema salvo, sistema escuro e movimento reduzido), mais um app Next 15 mínimo (`npm run test:next`) importando os componentes num Server Component.
 - O `className` de quem usa vence o da biblioteca (provado em navegador, na variante em camada em qualquer ordem de carregamento).
-- A densidade `compact`, em Chromium, Firefox e WebKit reais e nos dois estilos: o tamanho de cada peça, alvos de 24px ou mais (menos o polegar do `Slider`, que já era menor), o visual padrão idêntico sem o atributo, nada muda com o atributo fora do `<html>` e a precedência contra a variante em camada e contra o CSS do app.
+- A densidade `compact`, em Chromium, Firefox e WebKit reais: o tamanho de cada peça nos dois estilos, alvos de 24px ou mais (menos o polegar do `Slider`, que já era menor), o visual padrão idêntico sem o atributo, nada muda com o atributo fora do `<html>` e a precedência contra a variante em camada e contra o CSS do app.
 
 **Não garantido:**
 - Conformidade total com WCAG: a lib verifica o que os tokens e os testes cobrem, e não substitui auditoria nem teste com leitores de tela (nada foi testado com NVDA, JAWS ou VoiceOver).

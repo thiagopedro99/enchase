@@ -108,13 +108,13 @@ You have two ways out:
 
 ## What the tests check
 
-The browser tests run in Chromium, Firefox and WebKit, in both styles:
+The browser tests run in Chromium, Firefox and WebKit, and in both styles wherever the style matters:
 
 - The size of each part in the table above, in the default density and in the compact one, with the overlays that render on the `<body>`.
 - The default look is the same with no attribute and with `default`, `spacious` or an empty value, in every part of a gallery and in every variable of the block.
 - The attribute on any element but the root changes nothing, and `data-density="default"` inside a compact root changes nothing.
 - Every target is 24 px or more in the compact density, but the thumb of the `Slider`, and no target gets taller. A target gets wider only where it fills the room that a neighbor gave back: the input of the `Combobox` and the items of the `Sidebar`.
-- The floating label of the six fields keeps its height, its alignment with the notch and the gap of the notch in `enchase`, in both text directions, and the label above the field of `shadcn` keeps its distance from it.
+- The floating label of the six fields keeps its distance from the top of the field, its alignment with the notch and the gap of the notch in `enchase`, in both text directions, and the label above the field of `shadcn` keeps its distance from it.
 - The precedence against the layered build and against the CSS of an app, as in the section above.
 
 A test in jsdom compares the tokens and the hooks of the tables above with the data of the block, with the `enchase` and `shadcn` styles and with the CSS of the components.
