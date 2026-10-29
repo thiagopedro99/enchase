@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 
 import { followedHooks, hookRows, keptHooks, tokenRows } from '@docs/stories/system/Density/defaultData.ts'
@@ -11,6 +12,8 @@ import { densities } from '@styles/tokens/index.ts'
 import type { ThemeSet } from '@styles/tokens/types.ts'
 
 const components = path.resolve(__dirname, '../../../../../components')
+
+const guide = readFileSync(path.resolve(__dirname, '../../../../../../README.pt-BR.md'), 'utf8')
 
 const compactTokens: Record<string, string> = densities.compact.tokens
 
@@ -35,6 +38,18 @@ const declaredBy = (theme: ThemeSet, name: string) => {
 const aliasOf = (value: string) => /^var\((--[a-z0-9-]+)\)$/.exec(value)?.[1]
 
 const resolved = (value: string, variables: Record<string, string>) => value.replace(/var\((--[a-z0-9-]+)\)/g, (_, name: string) => variables[name] ?? '')
+
+const guideRows = () =>
+  guide
+    .slice(guide.indexOf('## Densidade'), guide.indexOf('## Renderização no servidor'))
+    .split('\n')
+    .filter((line) => line.startsWith('| `--enchase-'))
+    .map((line) =>
+      line
+        .split('|')
+        .slice(1, -1)
+        .map((cell) => cell.trim().replace(/`/g, ''))
+    )
 
 const followsDensity = (declared: string | undefined) => {
   if (declared === undefined) return true
@@ -82,5 +97,12 @@ describe('the density tables of the docs', () => {
     expect([...followedHooks, ...keptHooks].map(({ name }) => name).sort()).toEqual(hookRows.map(({ name }) => name).sort())
     expect(followedHooks.filter(({ follows }) => !follows)).toEqual([])
     expect(keptHooks.filter(({ follows }) => follows)).toEqual([])
+  })
+
+  it('are the same in the guide in Portuguese, which is written by hand: the same tokens and hooks, with the same values and the same hooks followed by the shadcn style', () => {
+    const rows = guideRows()
+
+    expect(rows.filter((cells) => cells.length === 4)).toEqual(tokenRows.map(({ name, enchase: value, shadcn: other, compact }) => [name, value, other, compact]))
+    expect(rows.filter((cells) => cells.length === 6)).toEqual(hookRows.map(({ name, enchase: value, compact, shadcn: other, shadcnCompact, follows }) => [name, value, compact, other, shadcnCompact, follows ? 'sim' : 'não']))
   })
 })
