@@ -1,15 +1,15 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import userEvent from '@testing-library/user-event'
 import { act, screen, within } from '@testing-library/react'
-import { useState } from 'react'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
+import { useState } from 'react'
 
 import { Calendar } from '@components/common/DatePicker/subcomponentes/Calendar/index.tsx'
 import { en } from '@locales/en.ts'
 
-import type { ComponentProps } from 'react'
 import type { RenderWithProvidersOptions } from '@tests/types.ts'
+import type { ComponentProps } from 'react'
 
 type Props = Partial<ComponentProps<typeof Calendar>>
 
@@ -38,6 +38,18 @@ const stylesheet = (text: string) => {
 
   return () => element.remove()
 }
+
+const stubScrollIntoView = () => {
+  const scrollIntoView = vi.fn()
+  Element.prototype.scrollIntoView = scrollIntoView
+
+  return scrollIntoView
+}
+
+afterEach(() => {
+  vi.restoreAllMocks()
+  Reflect.deleteProperty(Element.prototype, 'scrollIntoView')
+})
 
 describe('Calendar', () => {
   it('is a grid named by the month it shows, with a column for each day of the week', () => {
@@ -457,6 +469,137 @@ describe('Calendar with the keyboard', () => {
 
     expect(cell('2026-11-01')).toHaveFocus()
     expect(cells().filter((day) => day.tabIndex === 0)).toEqual([cell('2026-11-01')])
+  })
+})
+
+describe('Calendar bringing the focused day into view', () => {
+  const navigation = [
+    ['ArrowRight', '{ArrowRight}', '2026-10-15', '2026-10-16'],
+    ['ArrowLeft', '{ArrowLeft}', '2026-10-15', '2026-10-14'],
+    ['ArrowDown', '{ArrowDown}', '2026-10-15', '2026-10-22'],
+    ['ArrowUp', '{ArrowUp}', '2026-10-15', '2026-10-08'],
+    ['Home', '{Home}', '2026-10-28', '2026-10-25'],
+    ['End', '{End}', '2026-10-28', '2026-10-31'],
+    ['PageUp', '{PageUp}', '2026-10-15', '2026-09-15'],
+    ['PageDown', '{PageDown}', '2026-10-15', '2026-11-15'],
+    ['Shift+PageUp', '{Shift>}{PageUp}{/Shift}', '2026-10-15', '2025-10-15'],
+    ['Shift+PageDown', '{Shift>}{PageDown}{/Shift}', '2026-10-15', '2027-10-15']
+  ] as const
+
+  it.each(navigation)('brings the day that %s reaches into view, to the nearest edge', async (_name, keys, from, to) => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+
+    render({ value: from })
+    focus(from)
+    await user.keyboard(keys)
+
+    expect(focused()).toBe(to)
+    expect(scrollIntoView).toHaveBeenCalledTimes(1)
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' })
+    expect(scrollIntoView.mock.contexts[0]).toBe(cell(to))
+  })
+
+  it('brings into view a day that is on the other side of a month, with the focus already on it', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+
+    render({ value: '2026-10-31' })
+    focus('2026-10-31')
+    await user.keyboard('{ArrowRight}{ArrowRight}')
+
+    expect(title()).toBe('novembro de 2026')
+    expect(scrollIntoView).toHaveBeenCalledTimes(2)
+    expect(scrollIntoView.mock.contexts).toEqual([cell('2026-11-01'), cell('2026-11-02')])
+    expect(document.activeElement).toBe(cell('2026-11-02'))
+  })
+
+  it('gives the focus to the day without scrolling the page, and only then brings the day into view', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const focusSpy = vi.spyOn(HTMLElement.prototype, 'focus')
+    const user = userEvent.setup()
+
+    render({ value: '2026-10-15' })
+    focus('2026-10-15')
+    focusSpy.mockClear()
+    await user.keyboard('{ArrowDown}')
+
+    const taken = focusSpy.mock.contexts.findIndex((context) => context === cell('2026-10-22'))
+
+    expect(focusSpy.mock.calls[taken]).toEqual([{ preventScroll: true }])
+    expect(focusSpy.mock.invocationCallOrder[taken]).toBeLessThan(scrollIntoView.mock.invocationCallOrder[0])
+  })
+
+  it('does not scroll when it takes the focus for the first time, even when it is told to take it', () => {
+    const scrollIntoView = stubScrollIntoView()
+    const focusSpy = vi.spyOn(HTMLElement.prototype, 'focus')
+
+    render({ value: '2026-10-15', autoFocus: true })
+
+    expect(cell('2026-10-15')).toHaveFocus()
+    expect(focusSpy.mock.calls).toEqual([[{ preventScroll: true }]])
+    expect(focusSpy.mock.contexts[0]).toBe(cell('2026-10-15'))
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
+  it('scrolls for the keys that follow the first focus, and for those only', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+
+    render({ value: '2026-10-15', autoFocus: true })
+
+    expect(scrollIntoView).not.toHaveBeenCalled()
+
+    await user.keyboard('{ArrowRight}')
+
+    expect(scrollIntoView).toHaveBeenCalledTimes(1)
+    expect(scrollIntoView.mock.contexts[0]).toBe(cell('2026-10-16'))
+  })
+
+  it('does not scroll for the keys it leaves alone, nor when a day is chosen with Enter or Space', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    const { onSelect } = render({ value: '2026-10-15' })
+
+    focus('2026-10-15')
+    await user.keyboard('{Control>}{ArrowRight}{/Control}')
+    await user.keyboard('{Meta>}{ArrowDown}{/Meta}')
+    await user.keyboard('{Alt>}{PageDown}{/Alt}')
+    await user.keyboard('{Shift>}{ArrowRight}{/Shift}')
+    await user.keyboard('a{Escape}')
+    await user.keyboard('{Enter}')
+    await user.keyboard(' ')
+
+    expect(onSelect).toHaveBeenCalledTimes(2)
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
+  it('does not scroll when a day is clicked, nor when the month changes with its buttons', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+
+    render({ value: '2026-10-15' })
+    await user.click(cell('2026-10-20'))
+    await user.click(screen.getByRole('button', { name: 'Próximo mês' }))
+    await user.click(screen.getByRole('button', { name: 'Mês anterior' }))
+
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
+  it('keeps moving the focus when the browser has no scrollIntoView', async () => {
+    const user = userEvent.setup()
+
+    render({ value: '2026-10-15' })
+    focus('2026-10-15')
+
+    expect(Element.prototype.scrollIntoView).toBeUndefined()
+
+    await user.keyboard('{ArrowRight}')
+    expect(focused()).toBe('2026-10-16')
+
+    await user.keyboard('{PageDown}')
+    expect(focused()).toBe('2026-11-16')
+    expect(cell('2026-11-16')).toHaveFocus()
   })
 })
 

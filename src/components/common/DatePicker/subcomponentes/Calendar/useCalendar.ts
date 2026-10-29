@@ -22,7 +22,7 @@ const read = (text: string | null | undefined) => (text ? parseIsoDate(text) : n
 
 export const useCalendar = ({ today, value, min, max, isDateDisabled, firstDay, autoFocus, onSelect }: CalendarState) => {
   const gridRef = useRef<HTMLTableElement>(null)
-  const moveFocus = useRef(autoFocus)
+  const moveFocus = useRef<'initial' | 'keyboard' | null>(autoFocus ? 'initial' : null)
   const selected = read(value)
   const earliest = read(min)
   const latest = read(max)
@@ -42,10 +42,14 @@ export const useCalendar = ({ today, value, min, max, isDateDisabled, firstDay, 
   const isDisabled = (date: CalendarDate) => !isWithin(date, earliest, latest) || isDateDisabled?.(formatIsoDate(date)) === true
 
   useLayoutEffect(() => {
-    if (!moveFocus.current) return
+    const reason = moveFocus.current
+    if (!reason) return
 
-    moveFocus.current = false
-    gridRef.current?.querySelector<HTMLElement>(`[data-date="${formatIsoDate(focused)}"]`)?.focus({ preventScroll: true })
+    moveFocus.current = null
+    const day = gridRef.current?.querySelector<HTMLElement>(`[data-date="${formatIsoDate(focused)}"]`)
+
+    day?.focus({ preventScroll: true })
+    if (reason === 'keyboard') day?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
   }, [focused])
 
   const choose = (date: CalendarDate) => {
@@ -56,7 +60,7 @@ export const useCalendar = ({ today, value, min, max, isDateDisabled, firstDay, 
   }
 
   const move = (date: CalendarDate) => {
-    moveFocus.current = true
+    moveFocus.current = 'keyboard'
     setFocused(clampDate(date, earliest, latest))
   }
 

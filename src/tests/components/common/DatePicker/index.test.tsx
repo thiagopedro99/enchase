@@ -35,6 +35,13 @@ const wrap = (node: ReactElement, locale = ptBR) => <UIProvider locale={locale}>
 
 const hiddenValues = (name: string) => [...document.querySelectorAll<HTMLInputElement>(`input[type="hidden"][name="${name}"]`)].map((input) => input.value)
 
+const stubScrollIntoView = () => {
+  const scrollIntoView = vi.fn()
+  Element.prototype.scrollIntoView = scrollIntoView
+
+  return scrollIntoView
+}
+
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] })
   vi.setSystemTime(new Date(2026, 9, 28, 12))
@@ -42,6 +49,8 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.useRealTimers()
+  vi.restoreAllMocks()
+  Reflect.deleteProperty(Element.prototype, 'scrollIntoView')
 })
 
 describeLabelPlacementContract({
@@ -826,6 +835,62 @@ describe('DatePicker calendar', () => {
     expect(html).toContain('aria-expanded="true"')
     expect(html).not.toContain('role="grid"')
     expect(html).not.toContain('role="dialog"')
+  })
+})
+
+describe('DatePicker calendar bringing the focused day into view', () => {
+  it('gives the focus to the day without scrolling when it opens from the pointer, from the keyboard and by default', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const focus = vi.spyOn(HTMLElement.prototype, 'focus')
+    const user = userEvent.setup()
+    const focusesOf = (element: Element) => focus.mock.calls.filter((_call, index) => focus.mock.contexts[index] === element)
+    const { unmount } = renderWithProviders(<DatePicker label="Data" defaultValue="2026-10-15" />)
+
+    await user.click(toggle())
+    await screen.findByRole('dialog')
+
+    expect(dayOf('2026-10-15')).toHaveFocus()
+    expect(focusesOf(dayOf('2026-10-15'))).toEqual([[{ preventScroll: true }]])
+    expect(focusesOf(within(dialog()).getByRole('button', { name: 'Mês anterior' }))).toEqual([])
+    unmount()
+    focus.mockClear()
+
+    renderWithProviders(<DatePicker label="Data" defaultValue="2026-10-15" />)
+    toggle().focus()
+    await user.keyboard('{Enter}')
+    await screen.findByRole('dialog')
+
+    expect(dayOf('2026-10-15')).toHaveFocus()
+    expect(focusesOf(dayOf('2026-10-15'))).toEqual([[{ preventScroll: true }]])
+    expect(focusesOf(within(dialog()).getByRole('button', { name: 'Mês anterior' }))).toEqual([])
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
+  it('does not scroll nor take the focus when it is open by default', async () => {
+    const scrollIntoView = stubScrollIntoView()
+
+    renderWithProviders(<DatePicker label="Data" defaultOpen defaultValue="2026-10-15" />)
+    await screen.findByRole('dialog')
+
+    expect(document.body).toHaveFocus()
+    expect(scrollIntoView).not.toHaveBeenCalled()
+  })
+
+  it('brings the day that an arrow key reaches into view once it is open', async () => {
+    const scrollIntoView = stubScrollIntoView()
+    const user = userEvent.setup()
+    renderWithProviders(<DatePicker label="Data" defaultValue="2026-10-15" />)
+
+    await user.click(toggle())
+    await screen.findByRole('dialog')
+
+    expect(scrollIntoView).not.toHaveBeenCalled()
+
+    await user.keyboard('{ArrowDown}')
+
+    expect(scrollIntoView).toHaveBeenCalledTimes(1)
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' })
+    expect(scrollIntoView.mock.contexts[0]).toBe(dayOf('2026-10-22'))
   })
 })
 
