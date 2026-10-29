@@ -9,7 +9,7 @@ export const Bars = () => (
       <Navbar logo="Enchase" sections={navigationSections} />
     </div>
     <div style={{ display: 'flex', border: '1px solid var(--enchase-color-border)' }}>
-      <Sidebar sections={navigationSections} currentHref="/docs" header={<strong>Enchase</strong>} style={{ blockSize: '20rem' }} />
+      <Sidebar ariaLabel="Sidebar navigation" sections={navigationSections} currentHref="/docs" header={<strong>Enchase</strong>} style={{ blockSize: '20rem' }} />
     </div>
   </Section>
 )

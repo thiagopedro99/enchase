@@ -31,7 +31,7 @@ export const Controls = () => (
     </div>
     <div style={row}>
       <Pagination pageCount={5} defaultPage={2} />
-      <Pagination size="sm" pageCount={5} defaultPage={2} />
+      <Pagination size="sm" ariaLabel="Small pagination" pageCount={5} defaultPage={2} />
     </div>
   </Section>
 )
