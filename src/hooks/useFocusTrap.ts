@@ -37,7 +37,9 @@ export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, active
       const start = index === -1 ? (event.shiftKey ? focusable.length - 1 : 0) : (index + step + focusable.length) % focusable.length
 
       event.preventDefault()
-      if (!focusInOrder(focusable, start, step)) container.focus({ preventScroll: true })
+      if (!focusInOrder(focusable, start, step)) return container.focus({ preventScroll: true })
+
+      document.activeElement?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
     }
 
     container.addEventListener('keydown', handleKeyDown)
