@@ -66,6 +66,22 @@ describe('createDateFormat', () => {
   it('falls back to English for a language tag that does not exist', () => {
     expect(createDateFormat('not a locale').format(date(2026, 10, 28))).toBe('10/28/2026')
   })
+
+  it('falls back to English for a language that the platform does not know, and for a tag that is not valid', () => {
+    for (const tag of ['xx', 'tlh', 'zz-ZZ', 'und', 'en_US', 'a', '']) {
+      const format = createDateFormat(tag)
+
+      expect(format.format(date(2026, 10, 28)), tag).toBe('10/28/2026')
+      expect(format.monthLabel(date(2026, 10, 28)), tag).toBe('October 2026')
+      expect(format.parse('10/28/2026'), tag).toEqual(date(2026, 10, 28))
+    }
+  })
+
+  it('keeps the language of a tag with a region that the platform does not know', () => {
+    expect(createDateFormat('pt-XX').format(date(2026, 10, 28))).toBe('28/10/2026')
+    expect(createDateFormat('en-XX').format(date(2026, 10, 28))).toBe('10/28/2026')
+    expect(createDateFormat('de-XX').monthLabel(date(2026, 10, 28))).toBe('Oktober 2026')
+  })
 })
 
 describe('parse', () => {

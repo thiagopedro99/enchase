@@ -3,10 +3,10 @@ import { page, userEvent } from 'vitest/browser'
 import { useState } from 'react'
 
 import { builtInStyleEntries } from '@tests/shared/fixtures/styles.ts'
-import { onRoot, part, style } from '../../../hookProbes.ts'
+import { onRoot, part, style } from '../../../support/hookProbes.ts'
+import { renderInBrowser } from '../../../support/harness.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { contrastRatio } from '@styles/theme/contrast.ts'
-import { renderInBrowser } from '../../../harness.tsx'
 
 import type { ReactElement } from 'react'
 

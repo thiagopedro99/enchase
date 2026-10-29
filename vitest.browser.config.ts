@@ -29,7 +29,7 @@ const browser = browsers.find((name) => name === requested)
 
 if (!browser) throw new Error(`unknown browser: ${requested}`)
 
-const touchSpec = 'src/tests-browser/touch.spec.tsx'
+const touchSpec = 'src/tests-browser/platform/touch.spec.tsx'
 
 const protocolSessions = new WeakMap<Page, Promise<CDPSession>>()
 

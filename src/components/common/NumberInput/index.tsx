@@ -15,12 +15,12 @@ import type { NumberInputProps } from './types.ts'
 
 export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   (
-    { value, defaultValue: initialValue = defaultValue, onValueChange, min, max, step = defaultStep, largeStep, formatOptions, label, labelPlacement, error, helperText, placeholder, fullWidth = defaultFullWidth, steppers = defaultSteppers, id, name, form, wrapperClassName, wrapperStyle, ...props },
+    { value, defaultValue: initialValue = defaultValue, onValueChange, min, max, step = defaultStep, largeStep, formatOptions, locale, label, labelPlacement, error, helperText, placeholder, fullWidth = defaultFullWidth, steppers = defaultSteppers, id, name, form, wrapperClassName, wrapperStyle, ...props },
     ref
   ) => {
     const generatedId = useId()
     const { labels } = useUIConfig()
-    const field = useNumberField({ value, defaultValue: initialValue, onValueChange, min, max, step, largeStep, formatOptions, disabled: props.disabled, readOnly: props.readOnly })
+    const field = useNumberField({ value, defaultValue: initialValue, onValueChange, min, max, step, largeStep, formatOptions, locale, disabled: props.disabled, readOnly: props.readOnly })
     const decrease = useRepeatPress(field.decrease, field.canDecrease)
     const increase = useRepeatPress(field.increase, field.canIncrease)
     const inputId = id ?? generatedId

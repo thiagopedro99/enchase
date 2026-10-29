@@ -1,13 +1,18 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import userEvent from '@testing-library/user-event'
 import { createRef, useState } from 'react'
-import { act, fireEvent, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
+import { renderToString } from 'react-dom/server'
 import { axe } from '@tests/axe.ts'
 
 import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPlacementContract.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
+import UIProvider from '@components/uiProvider/index.tsx'
+import { ptBR } from '@locales/ptBR.ts'
 import { en } from '@locales/en.ts'
+
+import type { ReactElement } from 'react'
 
 const field = () => screen.getByRole('spinbutton')
 
@@ -18,6 +23,8 @@ const less = () => screen.getByRole('button', { name: 'Diminuir valor' })
 const status = () => field().closest('[data-slot="number-input"]')?.querySelector<HTMLElement>('[aria-live="polite"]') ?? null
 
 const advance = (milliseconds: number) => act(() => void vi.advanceTimersByTime(milliseconds))
+
+const wrap = (node: ReactElement, locale = ptBR) => <UIProvider locale={locale}>{node}</UIProvider>
 
 describe('NumberInput structure', () => {
   it('is a spinbutton named by its label, backed by a text input that asks for a numeric keyboard', () => {
@@ -845,6 +852,166 @@ describe('NumberInput language and format', () => {
     await user.click(screen.getByRole('button', { name: /renderizar/ }))
 
     expect(field()).toHaveValue('R$ 12,00')
+  })
+})
+
+describe('NumberInput language of its own', () => {
+  it('writes the number the way the tag of the prop does, whatever the language of the provider', () => {
+    for (const [locale, text] of [
+      [undefined, '1,234,567.5'],
+      ['de', '1.234.567,5'],
+      ['pt-BR', '1.234.567,5'],
+      ['en-IN', '12,34,567.5']
+    ] as const) {
+      const view = renderWithProviders(<NumberInput label="Number" locale={locale} defaultValue={1234567.5} />, { locale: en })
+
+      expect(field(), String(locale)).toHaveValue(text)
+      view.unmount()
+    }
+  })
+
+  it('uses the tag of the provider when there is no prop, and writes the same text as the prop with that tag', () => {
+    const provider = renderWithProviders(<NumberInput label="Number" defaultValue={1234567.5} />, { locale: { ...en, locale: 'de' } })
+
+    expect(field()).toHaveValue('1.234.567,5')
+    provider.unmount()
+
+    renderWithProviders(<NumberInput label="Number" locale="de" defaultValue={1234567.5} />, { locale: en })
+
+    expect(field()).toHaveValue('1.234.567,5')
+  })
+
+  it('reads the typed text with the separators of the tag of the prop, not those of the provider', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+
+    for (const [locale, provider, typed, value] of [
+      ['de', en, '1.234', 1234],
+      ['de', en, '1,234', 1.234],
+      ['en', ptBR, '1.234', 1.234],
+      ['en', ptBR, '1,234', 1234]
+    ] as const) {
+      onValueChange.mockClear()
+
+      const view = renderWithProviders(<NumberInput label="Number" locale={locale} onValueChange={onValueChange} />, { locale: provider })
+
+      await user.type(field(), typed)
+      await user.tab()
+
+      expect(onValueChange, `${locale} ${typed}`).toHaveBeenLastCalledWith(value)
+      view.unmount()
+    }
+  })
+
+  it('spells the value in the tag of the prop for assistive technology too', async () => {
+    const user = userEvent.setup()
+
+    renderWithProviders(<NumberInput label="Number" locale="en" defaultValue={1234} step={0.5} />)
+    await user.click(more())
+
+    expect(field()).toHaveValue('1,234.5')
+    expect(field()).toHaveAttribute('aria-valuetext', '1,234.5')
+    expect(status()).toHaveTextContent('1,234.5')
+  })
+
+  it('writes a currency in the tag of the prop, and reads it back', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    const euro = { style: 'currency', currency: 'EUR' } as const
+    const german = new Intl.NumberFormat('de', euro)
+
+    expect(german.format(1234.5)).not.toBe(new Intl.NumberFormat('en', euro).format(1234.5))
+    renderWithProviders(<NumberInput label="Price" locale="de" formatOptions={euro} defaultValue={1234.5} onValueChange={onValueChange} />, { locale: en })
+
+    expect(field()).toHaveValue(german.format(1234.5))
+
+    await user.clear(field())
+    await user.type(field(), '99,9')
+    await user.tab()
+
+    expect(onValueChange).toHaveBeenLastCalledWith(99.9)
+    expect(field()).toHaveValue(german.format(99.9))
+  })
+
+  it('keeps the texts of the provider, and does not take them from the tag', () => {
+    renderWithProviders(<NumberInput label="Preço" locale="en" defaultValue={1234.5} />)
+
+    expect(field()).toHaveValue('1,234.5')
+    expect(more()).toBeInTheDocument()
+    expect(less()).toBeInTheDocument()
+  })
+
+  it('writes the number again when the prop changes, and goes back to the provider when it is removed', () => {
+    const view = render(wrap(<NumberInput label="Number" locale="de" defaultValue={1234567.5} />, en))
+
+    expect(field()).toHaveValue('1.234.567,5')
+
+    view.rerender(wrap(<NumberInput label="Number" locale="en-IN" defaultValue={1234567.5} />, en))
+
+    expect(field()).toHaveValue('12,34,567.5')
+
+    view.rerender(wrap(<NumberInput label="Number" defaultValue={1234567.5} />, en))
+
+    expect(field()).toHaveValue('1,234,567.5')
+  })
+
+  it('falls back to English for a tag that is not valid or not known, and does not throw', () => {
+    for (const locale of ['not a locale', 'en_US', 'xx']) {
+      const view = renderWithProviders(<NumberInput label="Preço" locale={locale} defaultValue={1234.5} />)
+
+      expect(field(), locale).toHaveValue('1,234.5')
+      view.unmount()
+    }
+  })
+
+  it('treats an empty tag as no tag, and uses the language of the provider', () => {
+    const { unmount } = renderWithProviders(<NumberInput label="Preço" locale="" defaultValue={1234567.5} />)
+
+    expect(field()).toHaveValue('1.234.567,5')
+    unmount()
+
+    renderWithProviders(<NumberInput label="Number" locale="" defaultValue={1234567.5} />, { locale: { ...en, locale: 'en-IN' } })
+
+    expect(field()).toHaveValue('12,34,567.5')
+  })
+
+  it('does not pass the prop to the input as an attribute', () => {
+    renderWithProviders(<NumberInput label="Number" locale="de" />, { locale: en })
+
+    expect(field()).not.toHaveAttribute('locale')
+  })
+
+  it('submits the plain number whatever the tag of the prop', async () => {
+    const user = userEvent.setup()
+    let sent: FormDataEntryValue | null = null
+
+    renderWithProviders(
+      <form
+        onSubmit={(event) => {
+          event.preventDefault()
+          sent = new FormData(event.currentTarget).get('price')
+        }}
+      >
+        <NumberInput label="Price" name="price" locale="de" defaultValue={1234.5} />
+        <button type="submit">Send</button>
+      </form>,
+      { locale: en }
+    )
+    await user.click(screen.getByRole('button', { name: 'Send' }))
+
+    expect(field()).toHaveValue('1.234,5')
+    expect(sent).toBe('1234.5')
+  })
+
+  it('writes the number of the tag of the prop on the server too', () => {
+    const html = renderToString(
+      <UIProvider locale={en}>
+        <NumberInput label="Number" locale="de" defaultValue={1234.5} />
+      </UIProvider>
+    )
+
+    expect(html).toContain('value="1.234,5"')
+    expect(html).not.toContain('value="1,234.5"')
   })
 })
 

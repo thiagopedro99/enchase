@@ -94,6 +94,7 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Pagination', element: <Pagination pageCount={12} defaultPage={6} size="sm" /> },
   { name: 'Icons', element: <div><CloseIcon /><ChevronLeftIcon title="Back" size={20} /></div> },
   { name: 'NumberInput', element: <NumberInput label="Price" name="price" defaultValue={1234.5} min={0} formatOptions={{ style: 'currency', currency: 'BRL' }} helperText="In reais" /> },
+  { name: 'NumberInput with a language of its own', element: <NumberInput label="Price" locale="de" defaultValue={1234.5} formatOptions={{ style: 'currency', currency: 'EUR' }} /> },
   { name: 'Accordion', element: <Accordion defaultValue={['b']} items={[{ value: 'a', title: 'First', content: <p>One</p> }, { value: 'b', title: 'Second', content: <p>Two</p> }, { value: 'c', title: 'Third', content: <p>Three</p>, disabled: true }]} /> },
   { name: 'Tabs', element: <Tabs ariaLabel="Sections" defaultValue="b" items={[{ value: 'a', label: 'First', content: <p>One</p> }, { value: 'b', label: 'Second', content: <p>Two</p> }, { value: 'c', label: 'Third', content: <p>Three</p>, disabled: true }]} /> },
   { name: 'RadioGroup', element: <RadioGroup label="Plan" defaultValue="pro" helperText="Billed monthly" options={[{ value: 'free', label: 'Free' }, { value: 'pro', label: 'Pro' }]} /> },

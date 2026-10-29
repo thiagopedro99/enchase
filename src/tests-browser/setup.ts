@@ -1,6 +1,6 @@
-import { setReducedMotion } from './media.ts'
+import { setReducedMotion } from './support/media.ts'
 import { cleanup } from '@testing-library/react'
-import { parkMouse } from './pointer.ts'
+import { parkMouse } from './support/pointer.ts'
 import { afterEach } from 'vitest'
 import { page } from 'vitest/browser'
 

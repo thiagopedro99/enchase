@@ -66,7 +66,7 @@ const meta = {
       table: { type: { summary: '{ mode?, preset?, recipes? }' }, defaultValue: { summary: "{ mode: 'auto', preset: 'standard' }" } }
     },
     locale: {
-      description: 'Language, in the format `{ locale, dir, messages }`, such as `ptBR` and `en` from `enchase/locales`. It sets the accessibility texts of the components and the direction (`ltr` or `rtl`) they use. The `dir` of the `<html>` is still up to the app.',
+      description: 'Language, in the format `{ locale, dir, messages }`, such as `ptBR` and `en` from `enchase/locales`. It sets the accessibility texts of the components and the direction (`ltr` or `rtl`) they use. The `locale` tag also decides how dates and numbers are written: a malformed tag, or one that the `Intl` of the environment does not know, falls back to `en` with no error. The `dir` of the `<html>` is still up to the app.',
       control: false,
       table: { defaultValue: { summary: 'en' } }
     },

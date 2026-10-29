@@ -193,6 +193,21 @@ describe('createNumberFormat edge cases', () => {
     expect(createNumberFormat('').format(1234.5)).toBe('1,234.5')
   })
 
+  it('falls back to English for a language that the platform does not know', () => {
+    for (const tag of ['xx', 'tlh', 'zz-ZZ', 'und']) {
+      const numbers = createNumberFormat(tag)
+
+      expect(numbers.format(1234.5), tag).toBe('1,234.5')
+      expect(numbers.parse('1,234.5'), tag).toBe(1234.5)
+    }
+  })
+
+  it('keeps the language of a tag with a region that the platform does not know', () => {
+    expect(createNumberFormat('pt-XX').format(1234.5)).toBe('1.234,5')
+    expect(createNumberFormat('de-XX').format(1234.5)).toBe('1.234,5')
+    expect(createNumberFormat('en-XX').format(1234.5)).toBe('1,234.5')
+  })
+
   it('still throws for options that are wrong, instead of hiding the mistake', () => {
     expect(() => createNumberFormat('en', { style: 'currency', currency: 'XX' })).toThrow(RangeError)
     expect(() => createNumberFormat('en', { style: 'currency' })).toThrow(TypeError)
