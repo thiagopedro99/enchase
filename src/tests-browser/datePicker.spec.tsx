@@ -411,3 +411,53 @@ describe('DatePicker from its hooks', () => {
   })
 
 })
+
+describe('the language of its own of the DatePicker in a real browser', () => {
+  it('writes the date in the order of the tag of the prop, and reads what is typed in that order', async () => {
+    renderInBrowser(stage(<DatePicker label="Date" locale="en" defaultValue="2026-10-28" />))
+
+    expect(field()).toHaveValue('10/28/2026')
+
+    await userEvent.click(field())
+    await userEvent.keyboard('{Control>}a{/Control}01022027')
+    await userEvent.tab()
+
+    expect(field()).toHaveValue('01/02/2027')
+
+    await open()
+    await expect.poll(() => document.activeElement).toBe(dayOf('2027-01-02'))
+  })
+
+  it('writes the date with the separators and the order of the tag of the prop', () => {
+    const { unmount } = renderInBrowser(stage(<DatePicker label="Date" locale="en-CA" defaultValue="2026-10-28" />))
+
+    expect(field()).toHaveValue('2026-10-28')
+    unmount()
+    renderInBrowser(stage(<DatePicker label="Date" locale="de" defaultValue="2026-10-28" />))
+
+    expect(field()).toHaveValue('28.10.2026')
+  })
+
+  it('names the calendar and starts its week with the tag of the prop, and keeps the labels of the provider', async () => {
+    renderInBrowser(stage(<DatePicker label="Date" locale="en-GB" defaultValue="2026-10-28" />))
+    await open()
+
+    const columns = [...(popup() as HTMLElement).querySelectorAll('[data-slot="date-picker-calendar-weekday"]')].map((header) => header.getAttribute('abbr'))
+
+    expect(columns).toEqual(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
+    expect(popup()?.querySelector('[role="grid"]')).toHaveAccessibleName('October 2026')
+    expect(popup()).toHaveAccessibleName('Escolher data')
+  })
+
+  it('starts the week on Sunday for a tag that does, and lets firstDayOfWeek decide otherwise', async () => {
+    const { unmount } = renderInBrowser(stage(<DatePicker label="Date" locale="en-CA" defaultValue="2026-10-28" />))
+    await open()
+
+    expect(popup()?.querySelector('[data-slot="date-picker-calendar-weekday"]')).toHaveAttribute('abbr', 'Sunday')
+    unmount()
+    renderInBrowser(stage(<DatePicker label="Date" locale="en-CA" firstDayOfWeek={1} defaultValue="2026-10-28" />))
+    await open()
+
+    expect(popup()?.querySelector('[data-slot="date-picker-calendar-weekday"]')).toHaveAttribute('abbr', 'Monday')
+  })
+})
