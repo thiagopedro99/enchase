@@ -383,6 +383,162 @@ A página atual é o caminho de `currentHref` ou, quando o provider não tem `cu
 - Uma âncora (`#recursos`, ou `/#recursos` estando em `/`) recebe `aria-current="location"` quando é o `activeSectionId`, nunca `page`. Use `useScrollSpy` para ele.
 - Itens `native`, externos e âncoras da página não entram na trilha dos `Breadcrumbs`, e os `native` nunca são marcados.
 
+## Formulários com react-hook-form e Zod
+
+Os campos funcionam com o `react-hook-form` e um schema do Zod, pelo `@hookform/resolvers`, sem adaptador. O código abaixo é um componente de verdade do repositório (`src/docs/components/FormRecipe/index.tsx`), o mesmo que roda ao vivo na página **System/Forms guide** do Storybook: os testes o preenchem e o conferem, e o `npm run test:consumer` o compila contra o pacote empacotado, com `exactOptionalPropertyTypes` e `skipLibCheck: false`. Ele usa a API do Zod 4 (`z.email()`, `z.iso.date()`) e o `react-hook-form` 7. As versões testadas são as fixas do `devDependencies` do `package.json`, e nenhum dos três pacotes entra no `enchase`: quem usa a receita os instala no app. Num app Next.js (App Router), ponha `'use client'` no topo do arquivo, porque ele usa hooks.
+
+```tsx
+import { Alert, Button, Checkbox, Combobox, DatePicker, Flex, Input, RadioGroup, Select } from 'enchase'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useId } from 'react'
+import { z } from 'zod'
+
+const ticketOptions = [
+  { value: 'standard', label: 'Standard' },
+  { value: 'student', label: 'Student' },
+  { value: 'team', label: 'Team' }
+]
+
+const countryOptions = [
+  { value: 'br', label: 'Brazil' },
+  { value: 'pt', label: 'Portugal' },
+  { value: 'ar', label: 'Argentina' }
+]
+
+const attendanceOptions = [
+  { value: 'in-person', label: 'In person' },
+  { value: 'online', label: 'Online' }
+]
+
+const schema = z.object({
+  email: z.email('Enter a valid email'),
+  ticket: z.string().min(1, 'Choose a ticket'),
+  country: z.string().nullable().pipe(z.string('Choose a country')),
+  date: z.string().nullable().pipe(z.iso.date('Pick a date')),
+  attendance: z.string().min(1, 'Choose how you will attend'),
+  terms: z.boolean().pipe(z.literal(true, 'Accept the terms to continue'))
+})
+
+type FormValues = z.input<typeof schema>
+
+export type Registration = z.output<typeof schema>
+
+const defaultValues: FormValues = {
+  email: '',
+  ticket: '',
+  country: null,
+  date: null,
+  attendance: '',
+  terms: false
+}
+
+export const FormRecipe = ({ onSubmit }: { onSubmit: (values: Registration) => void }) => {
+  const termsErrorId = useId()
+
+  const { register, control, handleSubmit, formState } = useForm<FormValues, unknown, Registration>({
+    resolver: zodResolver(schema),
+    defaultValues
+  })
+  const { errors } = formState
+
+  return (
+    <form noValidate onSubmit={handleSubmit(onSubmit)}>
+      <Flex direction="column" gap="1.25rem">
+        <Input
+          label="Email"
+          type="email"
+          helperText="We send the confirmation here"
+          error={errors.email?.message}
+          {...register('email')}
+        />
+
+        <Select
+          label="Ticket"
+          placeholder="Choose a ticket"
+          options={ticketOptions}
+          error={errors.ticket?.message}
+          {...register('ticket')}
+        />
+
+        <Controller
+          name="country"
+          control={control}
+          render={({ field, fieldState }) => (
+            <Combobox
+              label="Country"
+              helperText="Type to filter the list"
+              options={countryOptions}
+              value={field.value}
+              onValueChange={field.onChange}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="date"
+          control={control}
+          render={({ field, fieldState }) => (
+            <DatePicker
+              label="Session date"
+              helperText="Type it or pick it in the calendar"
+              value={field.value}
+              onValueChange={field.onChange}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="attendance"
+          control={control}
+          render={({ field, fieldState }) => (
+            <RadioGroup
+              label="Attendance"
+              orientation="horizontal"
+              options={attendanceOptions}
+              value={field.value}
+              onValueChange={field.onChange}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Checkbox
+          label="I accept the terms"
+          aria-invalid={errors.terms ? true : undefined}
+          aria-describedby={errors.terms ? termsErrorId : undefined}
+          {...register('terms')}
+        />
+
+        {errors.terms && (
+          <Alert id={termsErrorId} variant="error">
+            {errors.terms.message}
+          </Alert>
+        )}
+
+        <Button type="submit">Register</Button>
+      </Flex>
+    </form>
+  )
+}
+```
+
+Como cada campo se liga:
+
+- `Input`, `Select` e `Checkbox` aceitam `ref` e os atributos do elemento nativo, então o `register` basta: `{...register('email')}` leva `name`, `onChange`, `onBlur` e `ref`. Depois de um envio com erro, o `react-hook-form` põe o foco no primeiro campo inválido por esse `ref`.
+- `Combobox`, `DatePicker` e `RadioGroup` avisam a escolha em `onValueChange`, e não num evento `onChange`, então vão por `Controller`, com `value={field.value}` e `onValueChange={field.onChange}` escritos à mão. Não espalhe `field` neles: o compilador aceita, mas no `Combobox` e no `DatePicker` o `field.onChange` passa a rodar nos eventos de texto do campo de dentro, e o formulário recebe o texto digitado (`'Bra'`, e não `'br'`). No `RadioGroup` espalhar só parece funcionar, porque o `change` dos rádios sobe até o `<fieldset>`.
+- A mensagem entra na prop `error` (`errors.email?.message` e `fieldState.error?.message` são `string | undefined`, que as props aceitam também com `exactOptionalPropertyTypes`): o campo marca `aria-invalid`, mostra a mensagem com `role="alert"` e troca o `helperText` por ela, e o `helperText` volta quando o campo fica válido.
+- O `Checkbox` não tem `error`. A receita marca `aria-invalid`, liga a mensagem com `aria-describedby` e a mostra num `Alert`.
+- Respostas vazias: quando nada está escolhido, `Combobox` e `DatePicker` valem `null`, o `Select` e o `RadioGroup` valem `''` e o `Checkbox` vale `false`. O schema aceita `null` e `false` na entrada e os passa por `.pipe(...)` para a regra que os recusa com a mensagem, e o `''` não passa do `min(1)`. Assim `z.input` tem o que os controles guardam, e `z.output` é o resultado tipado.
+- O valor do `DatePicker` é o texto ISO local `YYYY-MM-DD`, sem hora e sem fuso. O `z.iso.date()` o confere e o resultado tipado é uma `string`: não há `Date` para converter.
+- `noValidate` no `<form>` deixa a validação para o schema, e não para o navegador.
+
 ## Tema
 
 As cores são papéis (`primary`, `surface`, `error`, `inverseSurface` e outros), nunca hex solto nos componentes, e chegam por variáveis `--enchase-*`. Trocar o modo muda só o `data-theme` do `<html>`.
