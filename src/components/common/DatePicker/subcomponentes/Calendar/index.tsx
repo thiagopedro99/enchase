@@ -17,7 +17,7 @@ const isWeekday = (day: number | undefined): day is number => day !== undefined 
 export const Calendar = ({ today, value, min, max, isDateDisabled, firstDayOfWeek: firstDayOverride, locale: localeOverride, autoFocus = defaultAutoFocus, onSelect }: CalendarProps) => {
   const { locale, labels } = useUIConfig()
   const titleId = useId()
-  const tag = localeOverride ?? locale
+  const tag = localeOverride || locale
   const format = useMemo(() => createDateFormat(tag), [tag])
   const firstDay = isWeekday(firstDayOverride) ? firstDayOverride : firstDayOfWeek(tag)
   const calendar = useCalendar({ today, value, min, max, isDateDisabled, firstDay, autoFocus, onSelect })

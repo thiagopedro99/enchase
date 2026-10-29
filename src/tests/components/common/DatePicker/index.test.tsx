@@ -955,12 +955,23 @@ describe('DatePicker language of its own', () => {
   })
 
   it('falls back to English for a tag that is not valid, and does not throw', () => {
-    for (const locale of ['not a locale', '', 'en_US']) {
+    for (const locale of ['not a locale', 'en_US']) {
       const view = renderWithProviders(<DatePicker label="Data" locale={locale} defaultValue="2026-10-28" />)
 
       expect(field(), locale).toHaveValue('10/28/2026')
       view.unmount()
     }
+  })
+
+  it('treats an empty tag as no tag, and uses the language of the provider', () => {
+    const { unmount } = renderWithProviders(<DatePicker label="Data" locale="" defaultValue="2026-10-28" />)
+
+    expect(field()).toHaveValue('28/10/2026')
+    unmount()
+
+    renderWithProviders(<DatePicker label="Date" locale="" defaultValue="2026-10-28" />, { locale: { ...en, locale: 'en-CA' } })
+
+    expect(field()).toHaveValue('2026-10-28')
   })
 
   it('does not pass the prop to the input as an attribute', () => {

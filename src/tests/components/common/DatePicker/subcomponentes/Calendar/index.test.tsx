@@ -580,6 +580,17 @@ describe('Calendar language of its own', () => {
     expect(screen.getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Monday')
   })
 
+  it('treats an empty tag as no tag, and follows the language of the provider', () => {
+    const { unmount } = render({ locale: '' })
+
+    expect(screen.getByRole('grid', { name: 'outubro de 2026' })).toBeInTheDocument()
+    unmount()
+    render({ locale: '' }, { locale: { ...en, locale: 'en-GB' } })
+
+    expect(screen.getByRole('grid', { name: 'October 2026' })).toBeInTheDocument()
+    expect(screen.getAllByRole('columnheader')[0]).toHaveAttribute('abbr', 'Monday')
+  })
+
   it('names the month and starts the week again when the tag changes while it is open', async () => {
     const user = userEvent.setup()
 
@@ -607,7 +618,7 @@ describe('Calendar language of its own', () => {
   })
 
   it('falls back to English for a tag that is not valid, and does not throw', () => {
-    for (const locale of ['not a locale', '', 'en_US']) {
+    for (const locale of ['not a locale', 'en_US']) {
       const { unmount } = render({ locale })
 
       expect(screen.getByRole('grid', { name: 'October 2026' }), locale).toBeInTheDocument()

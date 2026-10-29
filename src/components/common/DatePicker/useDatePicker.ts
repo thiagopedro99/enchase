@@ -27,7 +27,7 @@ const read = (text: string | null | undefined) => (text ? parseIsoDate(text) : n
 
 export const useDatePicker = ({ value, defaultValue, onValueChange, min, max, isDateDisabled, locale: localeOverride, disabled, readOnly, open, defaultOpen, onOpenChange }: DatePickerOptions) => {
   const { locale } = useUIConfig()
-  const tag = localeOverride ?? locale
+  const tag = localeOverride || locale
   const format = useMemo(() => createDateFormat(tag), [tag])
   const [current, setCurrent] = useControllableState<string | null>(value, defaultValue, onValueChange)
   const [isOpen, setOpen] = useControllableState(open, defaultOpen, onOpenChange)
