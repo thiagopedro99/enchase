@@ -13,6 +13,7 @@ export interface NumberInputProps extends Omit<InputHTMLAttributes<HTMLInputElem
   step?: number | undefined
   largeStep?: number | undefined
   formatOptions?: NumberInputFormat | undefined
+  locale?: string | undefined
   label?: string | undefined
   labelPlacement?: LabelPlacement | undefined
   error?: string | undefined

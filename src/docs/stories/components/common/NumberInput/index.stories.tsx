@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Button, NumberInput } from 'enchase'
-import { defaultFullWidth, defaultStep, defaultSteppers, defaultValue } from './defaultData.ts'
+import { Button, Flex, NumberInput } from 'enchase'
+import { defaultFullWidth, defaultStep, defaultSteppers, defaultValue, numberLocales } from './defaultData.ts'
 
 import type { FormEvent } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -40,6 +40,27 @@ const FormDemo = () => {
   )
 }
 
+const LocaleDemo = () => {
+  const [tag, setTag] = useState('en')
+
+  return (
+    <div style={{ display: 'grid', gap: '0.75rem', justifyItems: 'start' }}>
+      <Flex gap="0.5rem" wrap>
+        {numberLocales.map((key) => (
+          <Button key={key} variant={key === tag ? 'primary' : 'outline'} size="sm" onClick={() => setTag(key)}>
+            {key}
+          </Button>
+        ))}
+      </Flex>
+      <Flex gap="0.75rem" wrap>
+        <NumberInput label="Quantity" locale={tag} defaultValue={1234567.5} />
+        <NumberInput label="Price" locale={tag} defaultValue={1234.5} formatOptions={{ style: 'currency', currency: 'EUR' }} />
+      </Flex>
+      <span style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>The tag of the prop decides how each field writes and reads its number: the decimal separator, the grouping, the digits and the place of the currency symbol. The names of the buttons and the direction still come from the provider.</span>
+    </div>
+  )
+}
+
 const meta = {
   title: 'Components/NumberInput',
   component: NumberInput,
@@ -58,7 +79,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'A field for typing a number, with a label, an error message, helper text and buttons to decrease and increase. It is an `<input type="text">` with `role="spinbutton"` and a numeric keyboard on phones, instead of `type="number"`: the text follows the language of the `UIProvider` (a decimal comma and a period for thousands in pt-BR), it accepts currency and percent through `formatOptions`, and the value comes out as a `number`, or `null` when the field is empty. The arrow keys change the value by `step`; Shift with the arrow keys, Page Up and Page Down change it by `largeStep`; Home and End go to `min` and `max`. The value is confirmed when the user leaves the field or presses Enter, limited to the range and rounded to the decimal places of the format. With `name`, the number goes to the form in a hidden field, without the formatting shown on screen. The buttons stay out of the Tab order, because the keyboard already has the arrow keys, and their names come from `labels.increaseValue` and `labels.decreaseValue` of the `UIProvider`. It accepts `ref`, which goes to the `<input>`, and the attributes of the `<input>`.'
+          'A field for typing a number, with a label, an error message, helper text and buttons to decrease and increase. It is an `<input type="text">` with `role="spinbutton"` and a numeric keyboard on phones, instead of `type="number"`: the text follows the language of the `UIProvider`, or the `locale` prop of the field (a decimal comma and a period for thousands in pt-BR), it accepts currency and percent through `formatOptions`, and the value comes out as a `number`, or `null` when the field is empty. The arrow keys change the value by `step`; Shift with the arrow keys, Page Up and Page Down change it by `largeStep`; Home and End go to `min` and `max`. The value is confirmed when the user leaves the field or presses Enter, limited to the range and rounded to the decimal places of the format. With `name`, the number goes to the form in a hidden field, without the formatting shown on screen. The buttons stay out of the Tab order, because the keyboard already has the arrow keys, and their names come from `labels.increaseValue` and `labels.decreaseValue` of the `UIProvider`. It accepts `ref`, which goes to the `<input>`, and the attributes of the `<input>`.'
       }
     }
   },
@@ -95,9 +116,15 @@ const meta = {
     },
     formatOptions: {
       description:
-        'Format of the number, as in `Intl.NumberFormat`: `style` (`decimal`, `currency` or `percent`), `currency` (a code such as `USD`), `currencyDisplay`, `minimumFractionDigits`, `maximumFractionDigits` and `useGrouping`. The language comes from the `UIProvider`. Without `maximumFractionDigits`, the decimal places of the style apply (3 for decimal, 2 for currency, 0 for percent) or the ones the `step` calls for. For percent the value is the fraction: 0.15 shows as 15%, and the `step` is usually 0.01.',
+        'Format of the number, as in `Intl.NumberFormat`: `style` (`decimal`, `currency` or `percent`), `currency` (a code such as `USD`), `currencyDisplay`, `minimumFractionDigits`, `maximumFractionDigits` and `useGrouping`. The language comes from the `UIProvider`, or from the `locale` of the field. Without `maximumFractionDigits`, the decimal places of the style apply (3 for decimal, 2 for currency, 0 for percent) or the ones the `step` calls for. For percent the value is the fraction: 0.15 shows as 15%, and the `step` is usually 0.01.',
       control: false,
       table: { type: { summary: 'NumberInputFormat' } }
+    },
+    locale: {
+      description:
+        'BCP 47 tag, such as `de`, `en-IN` or `pt-BR`, that gives this field a language of its own: the decimal separator, the grouping, the digits and the place of the currency and percent signs, in what is shown and in what is typed. Without it, the `locale` of the `UIProvider` applies, and an empty string counts as without it. A tag that is not valid, or that the environment does not know, falls back to `en`, with no error. It takes only the tag: the names of the buttons and the direction still come from the provider, so for everything different wrap the field in a `UIProvider` of its own. See the Locale story.',
+      control: 'text',
+      table: { type: { summary: 'string' } }
     },
     label: {
       description: 'Label of the field, associated with the input for screen readers.',
@@ -204,6 +231,19 @@ export const Disabled: Story = {
 
 export const ReadOnly: Story = {
   args: { readOnly: true }
+}
+
+export const Locale: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          'The `locale` prop is a BCP 47 tag that gives one field a language of its own, under the same provider: the decimal separator, the grouping, the digits and the place of the currency symbol follow the tag (`de` writes 1.234.567,5 and 1.234,50 €, `en-IN` groups as 12,34,567.5), both in what is shown and in what the user types. The names of the buttons and the direction still come from the `UIProvider`; for everything different, wrap the field in a `UIProvider` of its own.'
+      }
+    }
+  },
+  render: () => <LocaleDemo />
 }
 
 export const Controlled: Story = {

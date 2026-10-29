@@ -17,20 +17,22 @@ export type NumberFieldOptions = {
   step: number
   largeStep?: number | undefined
   formatOptions?: NumberFormatOptions | undefined
+  locale?: string | undefined
   disabled?: boolean | undefined
   readOnly?: boolean | undefined
 }
 
 const positive = (value: number | undefined, fallback: number) => (value !== undefined && Number.isFinite(value) && value > 0 ? value : fallback)
 
-export const useNumberField = ({ value, defaultValue, onValueChange, min, max, step, largeStep, formatOptions, disabled, readOnly }: NumberFieldOptions) => {
+export const useNumberField = ({ value, defaultValue, onValueChange, min, max, step, largeStep, formatOptions, locale: localeOverride, disabled, readOnly }: NumberFieldOptions) => {
   const { locale } = useUIConfig()
+  const tag = localeOverride || locale
   const [current, setCurrent] = useControllableState<number | null>(value, defaultValue, onValueChange)
   const smallStep = positive(step, 1)
   const bigStep = positive(largeStep, smallStep * 10)
   const optionsKey = JSON.stringify(formatOptions ?? {})
   const precision = Math.max(Math.max(decimalPlaces(smallStep), decimalPlaces(bigStep)) - (formatOptions?.style === 'percent' ? 2 : 0), 0)
-  const numbers = useMemo(() => createNumberFormat(locale, JSON.parse(optionsKey) as NumberFormatOptions, precision), [locale, optionsKey, precision])
+  const numbers = useMemo(() => createNumberFormat(tag, JSON.parse(optionsKey) as NumberFormatOptions, precision), [tag, optionsKey, precision])
   const show = (amount: number | null) => (amount === null ? '' : numbers.format(amount))
   const [draft, setDraft] = useState({ value: current, numbers, text: show(current), dirty: false })
   const [announcement, setAnnouncement] = useState('')
