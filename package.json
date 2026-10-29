@@ -99,6 +99,7 @@
     "test:consumer": "node scripts/testConsumer.mjs",
     "test:next": "node scripts/testNext.mjs",
     "test:size": "node scripts/testBundleSize.mjs",
+    "test:stories-a11y": "node scripts/auditStories.mjs",
     "docs:api": "node scripts/buildApiDocs.mjs",
     "docs:api:check": "node scripts/buildApiDocs.mjs --check",
     "changelog": "node scripts/release.mjs preview",
