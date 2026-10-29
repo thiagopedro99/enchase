@@ -151,6 +151,24 @@ export const setDensity = (value: string | null) => {
 
 export const valuesOf = (element: Element, names: string[]) => names.map((name) => getComputedStyle(element).getPropertyValue(name).trim())
 
+export const lengthsOf = (parent: Element, names: string[]) => {
+  const probe = document.createElement('div')
+
+  probe.style.position = 'absolute'
+  probe.style.visibility = 'hidden'
+  parent.append(probe)
+
+  const lengths = names.map((name) => {
+    probe.style.inlineSize = `var(${name}, 0px)`
+
+    return probe.getBoundingClientRect().width
+  })
+
+  probe.remove()
+
+  return lengths
+}
+
 const rounded = (value: number) => Math.round(value * 100) / 100
 
 export const capture = (root: ParentNode, properties: string[] = []) =>
