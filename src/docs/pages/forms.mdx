@@ -14,8 +14,7 @@ The fields of Enchase work with [react-hook-form](https://react-hook-form.com) a
 
 - **`register`** for `Input`, `Select` and `Checkbox`. They forward `ref` and take the attributes of the native element, so `{...register('email')}` brings `name`, `onChange`, `onBlur` and `ref`.
 - **`Controller`** for `Combobox`, `DatePicker` and `RadioGroup`. They report the choice in `onValueChange`, not in an `onChange` event, so pass `value={field.value}` and `onValueChange={field.onChange}` by hand. Do not spread `field` into them: the compiler accepts it, but in the `Combobox` and the `DatePicker` the `onChange` of `field` then runs on the change events of the inner text input, and the form gets the typed text (`'Bra'`, not `'br'`). In the `RadioGroup` spreading only seems to work, because the `change` event of the radios bubbles up to the `<fieldset>`.
-- **The message** goes in the `error` prop. The field marks itself with `aria-invalid`, shows the message as an alert and drops the `helperText` while the error is there. Both `errors.email?.message` and `fieldState.error?.message` are `string | undefined`, which the props accept, also with `exactOptionalPropertyTypes`.
-- **The `Checkbox`** has no `error` prop, so the recipe sets `aria-invalid` and shows the message in an `Alert` that `aria-describedby` points to.
+- **The message** goes in the `error` prop, on the `Checkbox` like on the other fields. The field marks itself with `aria-invalid`, shows the message as an alert and drops the `helperText` while the error is there. Both `errors.email?.message` and `fieldState.error?.message` are `string | undefined`, which the props accept, also with `exactOptionalPropertyTypes`.
 
 ## What the schema says
 

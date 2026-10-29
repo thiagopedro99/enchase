@@ -50,7 +50,7 @@ describe('Checkbox in a real browser', () => {
         <Checkbox label={word} />
       </div>
     )
-    const container = part('checkbox').parentElement as HTMLElement
+    const container = part('checkbox-field').parentElement as HTMLElement
 
     expect(container.scrollWidth).toBeLessThanOrEqual(container.clientWidth)
     expect(part('checkbox').getBoundingClientRect().width).toBeLessThanOrEqual(140)

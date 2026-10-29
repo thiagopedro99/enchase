@@ -31,13 +31,21 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`. With `indeterminate` it shows the mixed state of a box that summarizes other boxes, such as a select all (see the SelectAll story). With `aria-invalid="true"` the box of an unchecked checkbox takes the color of the error on its border. To choose among several options, use the `CheckboxGroup`.'
+        component: 'A styled native checkbox, with a clickable label and an animated check mark. It accepts `ref` and the attributes of the `<input>`. With `indeterminate` it shows the mixed state of a box that summarizes other boxes, such as a select all (see the SelectAll story). With `aria-invalid="true"` the box of an unchecked checkbox takes the color of the error on its border. With `error` the checkbox is marked as invalid by itself and the message shows under the label, and `helperText` shows a hint in the same place. Both sit outside the `<label>`, so the accessible name stays the label text. To choose among several options, use the `CheckboxGroup`.'
       }
     }
   },
   argTypes: {
     label: {
       description: 'Text of the label. Clicking it also checks the box.',
+      control: 'text'
+    },
+    error: {
+      description: 'Error message. Marks the checkbox as invalid (aria-invalid), so an unchecked box takes the color of the error on its border, and shows the message under the label, announced as an alert. It replaces the helperText. The message sits outside the `<label>`, in the `<span data-slot="checkbox-field">` that always wraps the label, so the input is never rebuilt when a message comes or goes.',
+      control: 'text'
+    },
+    helperText: {
+      description: 'Helper text under the label, aligned with its text. It is tied to the checkbox by aria-describedby and disappears when there is an error.',
       control: 'text'
     },
     disabled: {
@@ -94,6 +102,14 @@ export const DisabledChecked: Story = {
 
 export const Invalid: Story = {
   args: { 'aria-invalid': true }
+}
+
+export const WithHelperText: Story = {
+  args: { helperText: 'You can read the terms in your account at any time' }
+}
+
+export const WithError: Story = {
+  args: { error: 'Accept the terms to continue' }
 }
 
 export const Indeterminate: Story = {

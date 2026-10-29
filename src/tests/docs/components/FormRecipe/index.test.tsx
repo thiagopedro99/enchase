@@ -1,12 +1,12 @@
-import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { readFileSync } from 'node:fs'
-import { axe } from '@tests/axe.ts'
 import path from 'node:path'
 
+import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { FormRecipe } from '@docs/components/FormRecipe/index.tsx'
+import { axe } from '@tests/axe.ts'
 import { en } from '@locales/en.ts'
 
 const root = path.resolve(__dirname, '../../../../..')
@@ -125,6 +125,35 @@ describe('FormRecipe', () => {
     await waitFor(() => expect(alerts()).not.toContain(messages[5]))
     expect(terms()).not.toHaveAttribute('aria-invalid')
     expect(terms()).not.toHaveAccessibleDescription()
+  })
+
+  it('puts the focus on the terms when they are the only invalid field, on the same input that was there before the message', async () => {
+    const { user } = renderRecipe()
+    const before = terms()
+
+    await fillInEverything(user)
+    await user.click(terms())
+    await user.click(submit())
+
+    await waitFor(() => expect(alerts()).toEqual([messages[5]]))
+    await waitFor(() => expect(terms()).toHaveFocus())
+    expect(terms()).toBe(before)
+  })
+
+  it('keeps the same input of the terms, checked and focused, from the first message to the moment it goes away', async () => {
+    const { user } = renderRecipe()
+    const before = terms()
+
+    await user.click(submit())
+    await waitFor(() => expect(alerts()).toEqual(messages))
+    expect(terms()).toBe(before)
+
+    await user.click(before)
+    await waitFor(() => expect(alerts()).not.toContain(messages[5]))
+
+    expect(terms()).toBe(before)
+    expect(before).toBeChecked()
+    expect(before).toHaveFocus()
   })
 
   it('hands the handler the typed values, with the date as the ISO text and not as a Date', async () => {

@@ -25,13 +25,21 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'An on and off switch for a setting that takes effect at once, with a clickable label. It is an `<input type="checkbox">` with `role="switch"`, so screen readers announce it as a switch and the form sends the value only when it is on. It accepts `ref` and the attributes of the `<input>`. For a choice that only takes effect when the form is submitted, prefer the `Checkbox`.'
+        component: 'An on and off switch for a setting that takes effect at once, with a clickable label. It is an `<input type="checkbox">` with `role="switch"`, so screen readers announce it as a switch and the form sends the value only when it is on. It accepts `ref` and the attributes of the `<input>`. With `error` the switch is marked as invalid and the message shows under the label, and `helperText` shows a hint in the same place. Both sit outside the `<label>`, so the accessible name stays the label text. For a choice that only takes effect when the form is submitted, prefer the `Checkbox`.'
       }
     }
   },
   argTypes: {
     label: {
       description: 'Text of the label. Clicking it also turns the switch on or off. Without a visible label, pass aria-label.',
+      control: 'text'
+    },
+    error: {
+      description: 'Error message. Marks the switch as invalid (aria-invalid) and shows the message under the label, announced as an alert. It replaces the helperText. The message sits outside the `<label>`, in the `<span data-slot="switch-field">` that always wraps the label, so the input is never rebuilt when a message comes or goes.',
+      control: 'text'
+    },
+    helperText: {
+      description: 'Helper text under the label, aligned with its text. It is tied to the switch by aria-describedby and disappears when there is an error.',
       control: 'text'
     },
     disabled: {
@@ -79,6 +87,14 @@ export const Disabled: Story = {
 
 export const DisabledChecked: Story = {
   args: { disabled: true, defaultChecked: true }
+}
+
+export const WithHelperText: Story = {
+  args: { helperText: 'One summary a day, no spam' }
+}
+
+export const WithError: Story = {
+  args: { error: 'Turn notifications on to continue' }
 }
 
 export const Controlled: Story = {

@@ -1,7 +1,6 @@
-import { Alert, Button, Checkbox, Combobox, DatePicker, Flex, Input, RadioGroup, Select } from 'enchase'
+import { Button, Checkbox, Combobox, DatePicker, Flex, Input, RadioGroup, Select } from 'enchase'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useId } from 'react'
 import { z } from 'zod'
 
 const ticketOptions = [
@@ -44,8 +43,6 @@ const defaultValues: FormValues = {
 }
 
 export const FormRecipe = ({ onSubmit }: { onSubmit: (values: Registration) => void }) => {
-  const termsErrorId = useId()
-
   const { register, control, handleSubmit, formState } = useForm<FormValues, unknown, Registration>({
     resolver: zodResolver(schema),
     defaultValues
@@ -121,16 +118,9 @@ export const FormRecipe = ({ onSubmit }: { onSubmit: (values: Registration) => v
 
         <Checkbox
           label="I accept the terms"
-          aria-invalid={errors.terms ? true : undefined}
-          aria-describedby={errors.terms ? termsErrorId : undefined}
+          error={errors.terms?.message}
           {...register('terms')}
         />
-
-        {errors.terms && (
-          <Alert id={termsErrorId} variant="error">
-            {errors.terms.message}
-          </Alert>
-        )}
 
         <Button type="submit">Register</Button>
       </Flex>
