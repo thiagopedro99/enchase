@@ -67,11 +67,11 @@ const meta = {
       control: false
     },
     wrapperClassName: {
-      description: 'Class of the root (data-slot="checkbox"). className stays on the native input (data-slot="checkbox-input").',
+      description: 'Class of the root (data-slot="checkbox"). className stays on the native input (data-slot="checkbox-input"). With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="checkbox-field">`.',
       control: 'text'
     },
     wrapperStyle: {
-      description: 'Style of the root (data-slot="checkbox"). style stays on the native input.',
+      description: 'Style of the root (data-slot="checkbox"). style stays on the native input. With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="checkbox-field">`.',
       control: false
     },
     animation: {

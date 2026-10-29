@@ -151,8 +151,8 @@ A styled native checkbox, with a clickable label and an animated check mark. It 
 | `error` | `string` | — | Error message. Marks the checkbox as invalid (aria-invalid), so an unchecked box takes the color of the error on its border, and shows the message under the label, announced as an alert. It replaces the helperText. The message sits outside the `<label>`, in the `<span data-slot="checkbox-field">` that always wraps the label, so the input is never rebuilt when a message comes or goes. |
 | `helperText` | `string` | — | Helper text under the label, aligned with its text. It is tied to the checkbox by aria-describedby and disappears when there is an error. |
 | `indeterminate` | `boolean` | `false` | Shows the mixed state, for a box that summarizes other boxes. It sets the `indeterminate` property of the native input, so assistive technology reads it as mixed, and it does not change `checked`. A click does not clear it: do that in `onChange`. The property is set on the client, so a mixed box that is rendered on the server looks checked or unchecked until the page hydrates. |
-| `wrapperClassName` | `string` | — | Class of the root (data-slot="checkbox"). className stays on the native input (data-slot="checkbox-input"). |
-| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="checkbox"). style stays on the native input. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="checkbox"). className stays on the native input (data-slot="checkbox-input"). With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="checkbox-field">`. |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="checkbox"). style stays on the native input. With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="checkbox-field">`. |
 | `animation` | `false \| { recipe, tuning }` | `pop` | Animation of the check mark, which grows with a short pop. false turns it off; { tuning: { duration, scale } } sets the duration in seconds and the initial scale. |
 
 Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.
@@ -756,15 +756,15 @@ Also accepts the other attributes of `<div>`, passed on to the element. Forwards
 
 ### Switch
 
-An on and off switch for a setting that takes effect at once, with a clickable label. It is an `<input type="checkbox">` with `role="switch"`, so screen readers announce it as a switch and the form sends the value only when it is on. It accepts `ref` and the attributes of the `<input>`. With `error` the switch is marked as invalid and the message shows under the label, and `helperText` shows a hint in the same place. Both sit outside the `<label>`, so the accessible name stays the label text. For a choice that only takes effect when the form is submitted, prefer the `Checkbox`.
+An on and off switch for a setting that takes effect at once, with a clickable label. It is an `<input type="checkbox">` with `role="switch"`, so screen readers announce it as a switch and the form sends the value only when it is on. It accepts `ref` and the attributes of the `<input>`. With `error` the switch is marked as invalid and the message shows under the label, and `helperText` shows a hint in the same place. Both sit outside the `<label>`, so the accessible name stays the label text. An invalid switch only exposes `aria-invalid` and the message: its track is not painted in the color of the error, unlike the box of a `Checkbox`. For a choice that only takes effect when the form is submitted, prefer the `Checkbox`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `label` | `string` | — | Text of the label. Clicking it also turns the switch on or off. Without a visible label, pass aria-label. |
 | `error` | `string` | — | Error message. Marks the switch as invalid (aria-invalid) and shows the message under the label, announced as an alert. It replaces the helperText. The message sits outside the `<label>`, in the `<span data-slot="switch-field">` that always wraps the label, so the input is never rebuilt when a message comes or goes. |
 | `helperText` | `string` | — | Helper text under the label, aligned with its text. It is tied to the switch by aria-describedby and disappears when there is an error. |
-| `wrapperClassName` | `string` | — | Class of the root (data-slot="switch"). className stays on the native input (data-slot="switch-input"). |
-| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="switch"). style stays on the native input. |
+| `wrapperClassName` | `string` | — | Class of the root (data-slot="switch"). className stays on the native input (data-slot="switch-input"). With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="switch-field">`. |
+| `wrapperStyle` | `CSSProperties` | — | Style of the root (data-slot="switch"). style stays on the native input. With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="switch-field">`. |
 | `animation` | `false \| { recipe, tuning }` | `fade` | Animation of the toggle: the thumb slides and the track changes color. false turns it off; { tuning: { duration } } sets the duration in seconds. |
 
 Also accepts the other attributes of `<input>`, passed on to the element. Forwards the `ref` to `<input>`.

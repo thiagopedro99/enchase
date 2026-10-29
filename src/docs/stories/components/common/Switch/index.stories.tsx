@@ -25,7 +25,7 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'An on and off switch for a setting that takes effect at once, with a clickable label. It is an `<input type="checkbox">` with `role="switch"`, so screen readers announce it as a switch and the form sends the value only when it is on. It accepts `ref` and the attributes of the `<input>`. With `error` the switch is marked as invalid and the message shows under the label, and `helperText` shows a hint in the same place. Both sit outside the `<label>`, so the accessible name stays the label text. For a choice that only takes effect when the form is submitted, prefer the `Checkbox`.'
+        component: 'An on and off switch for a setting that takes effect at once, with a clickable label. It is an `<input type="checkbox">` with `role="switch"`, so screen readers announce it as a switch and the form sends the value only when it is on. It accepts `ref` and the attributes of the `<input>`. With `error` the switch is marked as invalid and the message shows under the label, and `helperText` shows a hint in the same place. Both sit outside the `<label>`, so the accessible name stays the label text. An invalid switch only exposes `aria-invalid` and the message: its track is not painted in the color of the error, unlike the box of a `Checkbox`. For a choice that only takes effect when the form is submitted, prefer the `Checkbox`.'
       }
     }
   },
@@ -56,11 +56,11 @@ const meta = {
       control: false
     },
     wrapperClassName: {
-      description: 'Class of the root (data-slot="switch"). className stays on the native input (data-slot="switch-input").',
+      description: 'Class of the root (data-slot="switch"). className stays on the native input (data-slot="switch-input"). With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="switch-field">`.',
       control: 'text'
     },
     wrapperStyle: {
-      description: 'Style of the root (data-slot="switch"). style stays on the native input.',
+      description: 'Style of the root (data-slot="switch"). style stays on the native input. With a message, it still goes on the `<label>`, inside the column, and not on the outer `<span data-slot="switch-field">`.',
       control: false
     },
     animation: {
