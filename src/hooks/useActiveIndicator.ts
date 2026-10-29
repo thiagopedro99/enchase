@@ -38,17 +38,29 @@ export const useActiveIndicator = (containerRef: RefObject<HTMLElement | null>, 
       return
     }
 
-    const top = offsetWithin(current, container)
-    const height = current.offsetHeight
-    const changed = previous.current !== undefined && previous.current !== activeKey
+    const place = (changed: boolean) => {
+      const top = offsetWithin(current, container)
+      const height = current.offsetHeight
 
+      setBox((value) => {
+        const moved = !value.visible || value.top !== top || value.height !== height
+        const animate = changed ? true : moved ? false : value.animate
+
+        return !moved && animate === value.animate ? value : { top, height, visible: true, animate }
+      })
+    }
+
+    place(previous.current !== undefined && previous.current !== activeKey)
     previous.current = activeKey
-    setBox((value) => {
-      const moved = !value.visible || value.top !== top || value.height !== height
-      const animate = changed ? true : moved ? false : value.animate
 
-      return !moved && animate === value.animate ? value : { top, height, visible: true, animate }
-    })
+    if (typeof ResizeObserver === 'undefined') return
+
+    const observer = new ResizeObserver(() => place(false))
+
+    observer.observe(container)
+    observer.observe(current)
+
+    return () => observer.disconnect()
   }, [containerRef, activeKey, compact, items])
 
   return box
