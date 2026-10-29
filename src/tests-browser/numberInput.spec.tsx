@@ -550,3 +550,75 @@ describe('NumberInput in forced colors', () => {
     expect(icon.stroke).not.toBe('rgba(0, 0, 0, 0)')
   })
 })
+
+describe('the language of its own of the NumberInput in a real browser', () => {
+  it('writes the number with the separators and the grouping of the tag of the prop', () => {
+    for (const [locale, text] of [
+      ['en', '1,234,567.5'],
+      ['de', '1.234.567,5'],
+      ['en-IN', '12,34,567.5']
+    ] as const) {
+      const { unmount } = renderInBrowser(<NumberInput label="Number" locale={locale} defaultValue={1234567.5} />)
+
+      expect(input().value, locale).toBe(text)
+      unmount()
+    }
+  })
+
+  it('reads a typed grouping as a grouping in the language of the prop, and not as a decimal mark', async () => {
+    renderInBrowser(<NumberInput label="Number" locale="en" />)
+
+    await userEvent.click(input())
+    await userEvent.keyboard('1,234{Enter}')
+
+    expect(input().getAttribute('aria-valuenow')).toBe('1234')
+    expect(input().value).toBe('1,234')
+  })
+
+  it('formats what was typed with the decimal mark of the tag of the prop', async () => {
+    renderInBrowser(<NumberInput label="Number" locale="en" />)
+
+    await userEvent.click(input())
+    await userEvent.keyboard('1234.5')
+    expect(input().value).toBe('1234.5')
+    await userEvent.keyboard('{Enter}')
+
+    expect(input().value).toBe('1,234.5')
+    expect(input().getAttribute('aria-valuenow')).toBe('1234.5')
+  })
+
+  it('writes a currency with the symbol where the tag of the prop puts it', () => {
+    const euro = { style: 'currency', currency: 'EUR' } as const
+    const german = new Intl.NumberFormat('de', euro).format(1234.5)
+
+    renderInBrowser(<NumberInput label="Price" locale="de" formatOptions={euro} defaultValue={1234.5} />)
+
+    expect(input().value).toBe(german)
+    expect(german.endsWith('€')).toBe(true)
+    expect(german).not.toBe(new Intl.NumberFormat('en', euro).format(1234.5))
+  })
+
+  it('keeps the names of the buttons of the provider, and spells the value of the prop for assistive technology', async () => {
+    renderInBrowser(<NumberInput label="Number" locale="en" defaultValue={1234} step={0.5} />)
+
+    expect(part('increase').getAttribute('aria-label')).toBe('Aumentar valor')
+
+    await userEvent.click(part('increase'))
+
+    expect(input().value).toBe('1,234.5')
+    expect(input().getAttribute('aria-valuetext')).toBe('1,234.5')
+  })
+
+  it('falls back to English for a tag that is not valid or not known, and to the provider for an empty one', () => {
+    for (const [locale, text] of [
+      ['xx', '1,234.5'],
+      ['en_US', '1,234.5'],
+      ['', '1.234,5']
+    ] as const) {
+      const { unmount } = renderInBrowser(<NumberInput label="Number" locale={locale} defaultValue={1234.5} />)
+
+      expect(input().value, locale).toBe(text)
+      unmount()
+    }
+  })
+})
