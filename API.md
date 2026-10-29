@@ -306,7 +306,7 @@ Also accepts the other attributes of `<hr>`, passed on to the element.
 
 ### Drawer
 
-A panel that slides in from the edge of the page, rendered in a portal like the `Modal`: the focus stays trapped in the panel, the page behind it is inert and the scroll of the page is locked, and Esc or a click on the overlay closes it. It is always controlled by `open` and `onClose`. The side follows the direction of the page, so `start` is the right edge in a right-to-left page. Use it for a menu, a filter panel or a form that should not take the whole screen.
+A panel that slides in from the edge of the page, rendered in a portal like the `Modal`: the focus stays trapped in the panel, the page behind it is inert and the scroll of the page is locked, and Esc or a click on the overlay closes it. It is always controlled by `open` and `onClose`. The side follows the direction of the page, so `start` is the right edge in a right-to-left page. Use it for a menu, a filter panel or a form that should not take the whole screen. When the content is taller than the panel, the body scrolls and becomes a focusable region named by the title (or by `ariaLabel`), so a keyboard user can scroll it.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -519,7 +519,7 @@ A button that opens a list of actions. It is a `Popover` with `role="menu"`: the
 
 ### Modal
 
-A modal dialog rendered in a portal: the focus stays trapped in the panel, the page behind it is inert, and Esc or a click on the backdrop closes it. It enters and exits with animation. It is always controlled by `isOpen` and `onClose`.
+A modal dialog rendered in a portal: the focus stays trapped in the panel, the page behind it is inert, and Esc or a click on the backdrop closes it. It enters and exits with animation. It is always controlled by `isOpen` and `onClose`. When the content is taller than the panel, the body scrolls and becomes a focusable region named by the title (or by `ariaLabel`), so a keyboard user can scroll it.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |

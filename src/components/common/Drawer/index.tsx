@@ -1,11 +1,12 @@
 import { createPortal } from 'react-dom'
-import { useId } from 'react'
+import { useId, useRef } from 'react'
 
 import { defaultCloseOnEsc, defaultCloseOnOverlayClick, defaultShowCloseButton, defaultSide, defaultSize } from './defaultData.ts'
 import { usePortalContainer } from '@hooks/usePortalContainer.ts'
 import { CloseIcon } from '../Icon/icons/CloseIcon.tsx'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { useOverflow } from '@hooks/useOverflow.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { DrawerLayer } from './DrawerLayer.tsx'
@@ -15,6 +16,8 @@ import type { DrawerDialogProps, DrawerProps } from './types.ts'
 
 const DrawerDialog = ({ open, state, panelRef, motionStyle, side, size, title, ariaLabel, footer, showCloseButton, closeOnOverlayClick, closeOnEsc, onClose, className, style, children }: DrawerDialogProps) => {
   const titleId = useId()
+  const bodyRef = useRef<HTMLDivElement>(null)
+  const overflowing = useOverflow(bodyRef)
   const { labels } = useUIConfig()
 
   const panelProps = mergeProps(
@@ -58,7 +61,15 @@ const DrawerDialog = ({ open, state, panelRef, motionStyle, side, size, title, a
         </div>
       )}
 
-      <div {...slot('drawer', 'body')} className={styles.body}>
+      <div
+        ref={bodyRef}
+        {...slot('drawer', 'body')}
+        className={styles.body}
+        tabIndex={overflowing ? 0 : undefined}
+        role={overflowing && (title || ariaLabel) ? 'region' : undefined}
+        aria-labelledby={overflowing && title ? titleId : undefined}
+        aria-label={overflowing && !title ? ariaLabel : undefined}
+      >
         {children}
       </div>
 
