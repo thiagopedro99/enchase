@@ -1,18 +1,20 @@
-import { render } from '@testing-library/react'
-import { useState } from 'react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
+import { render } from '@testing-library/react'
+import { useState } from 'react'
 
+import { onRoot, part, parts, style } from '../../../support/hookProbes.ts'
+import { pressMouse, releaseMouse } from '../../../support/pointer.ts'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
+import { frames, waitForSettled } from '../../../support/settle.ts'
+import { accessibilityViolations } from '../../../support/axe.ts'
+import { renderInBrowser } from '../../../support/harness.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
+import { Button } from '@components/common/Button/index.tsx'
+import { setReducedMotion } from '../../../support/media.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
 import { GlobalStyles } from '@styles/react.tsx'
 import { ptBR } from '@locales/ptBR.ts'
-import { renderInBrowser } from '../../../support/harness.tsx'
-import { onRoot, part, parts, style } from '../../../support/hookProbes.ts'
-import { setReducedMotion } from '../../../support/media.ts'
-import { pressMouse, releaseMouse } from '../../../support/pointer.ts'
-import { frames, waitForSettled } from '../../../support/settle.ts'
 
 import type { DrawerProps } from '@components/common/Drawer/types.ts'
 import type { ReactElement } from 'react'
@@ -358,6 +360,139 @@ describe('the Drawer in a real browser: how it behaves as a dialog', () => {
     await frames(4)
 
     expect(page.getByRole('dialog').elements()).toHaveLength(1)
+  })
+})
+
+describe('the Drawer in a real browser: how its body scrolls with the keyboard', () => {
+  const longContent = <div style={{ height: 3000 }}>Muito conteúdo</div>
+
+  const save = <Button>Salvar</Button>
+
+  const bodyOf = () => part('drawer-body') as HTMLElement
+
+  const semanticsOf = (element: HTMLElement) => element.getAttributeNames().filter((name) => name === 'tabindex' || name === 'role' || name.startsWith('aria-'))
+
+  const ringOf = (element: HTMLElement) => {
+    const ring = getComputedStyle(element)
+
+    return { width: ring.outlineWidth, style: ring.outlineStyle, offset: ring.outlineOffset, color: ring.outlineColor }
+  }
+
+  it('puts the scrolling body in the tab order, between the close button and the footer, and scrolls it with the keys', async () => {
+    renderInBrowser(<DrawerPage footer={save}>{longContent}</DrawerPage>)
+    await openIt()
+
+    const body = bodyOf()
+
+    expect(body.scrollHeight).toBeGreaterThan(body.clientHeight)
+    await expect.poll(() => body.getAttribute('tabindex')).toBe('0')
+    expect(page.getByRole('region', { name: 'Filtros' }).element()).toBe(body)
+    expect(document.activeElement).toBe(part('drawer-close'))
+
+    await userEvent.tab()
+    expect(document.activeElement).toBe(body)
+
+    await userEvent.keyboard('{PageDown}')
+    await expect.poll(() => body.scrollTop).toBeGreaterThan(0)
+
+    await userEvent.keyboard('{End}')
+    await expect.poll(() => Math.round(body.scrollTop + body.clientHeight)).toBe(body.scrollHeight)
+
+    await userEvent.keyboard('{Home}')
+    await expect.poll(() => body.scrollTop).toBe(0)
+
+    await userEvent.tab()
+    expect(document.activeElement).toBe(page.getByRole('button', { name: 'Salvar' }).element())
+    await userEvent.tab()
+    expect(document.activeElement).toBe(part('drawer-close'))
+    await userEvent.tab({ shift: true })
+    expect(document.activeElement).toBe(page.getByRole('button', { name: 'Salvar' }).element())
+    await userEvent.tab({ shift: true })
+    expect(document.activeElement).toBe(body)
+  })
+
+  it('names the scrolling body with the aria label when the drawer has no title', async () => {
+    renderInBrowser(
+      <DrawerPage title={undefined} ariaLabel="Menu">
+        {longContent}
+      </DrawerPage>
+    )
+    await openIt()
+
+    await expect.poll(() => bodyOf().getAttribute('tabindex')).toBe('0')
+    expect(page.getByRole('region', { name: 'Menu' }).element()).toBe(bodyOf())
+  })
+
+  it('draws the focus ring of the library inside the body', async () => {
+    renderInBrowser(<DrawerPage>{longContent}</DrawerPage>)
+    await openIt()
+    await expect.poll(() => bodyOf().getAttribute('tabindex')).toBe('0')
+    await userEvent.tab()
+
+    expect(document.activeElement).toBe(bodyOf())
+    expect(ringOf(bodyOf())).toEqual({ width: '2px', style: 'solid', offset: '-2px', color: 'rgb(79, 70, 229)' })
+  })
+
+  it('keeps a body that fits out of the tab order, without a role or a label', async () => {
+    renderInBrowser(<DrawerPage footer={save}>Pouco conteúdo</DrawerPage>)
+    await openIt()
+
+    expect(bodyOf().scrollHeight).toBeLessThanOrEqual(bodyOf().clientHeight)
+    expect(semanticsOf(bodyOf())).toEqual([])
+
+    const stops: Array<string | null | undefined> = []
+
+    for (let round = 0; round < 4; round += 1) {
+      await userEvent.tab()
+      stops.push(document.activeElement?.getAttribute('data-slot'))
+    }
+
+    expect(stops).toEqual(['button', 'drawer-close', 'button', 'drawer-close'])
+  })
+
+  it('becomes reachable when a short screen makes the body scroll, and leaves the tab order when the screen grows back', async () => {
+    renderInBrowser(
+      <DrawerPage footer={save}>
+        <div style={{ height: 300 }}>Conteúdo médio</div>
+      </DrawerPage>
+    )
+    await openIt()
+
+    expect(semanticsOf(bodyOf())).toEqual([])
+
+    await page.viewport(1280, 300)
+    await expect.poll(() => bodyOf().getAttribute('tabindex')).toBe('0')
+    expect(page.getByRole('region', { name: 'Filtros' }).element()).toBe(bodyOf())
+
+    await page.viewport(1280, 800)
+    await expect.poll(() => semanticsOf(bodyOf())).toEqual([])
+  })
+
+  it('closes with Escape while the body has the focus and gives the focus back to the trigger', async () => {
+    renderInBrowser(<DrawerPage>{longContent}</DrawerPage>)
+    const trigger = page.getByRole('button', { name: 'Abrir' })
+
+    await openIt()
+    await expect.poll(() => bodyOf().getAttribute('tabindex')).toBe('0')
+    await userEvent.tab()
+    expect(document.activeElement).toBe(bodyOf())
+
+    await userEvent.keyboard('{Escape}')
+    await expect.element(page.getByRole('dialog')).not.toBeInTheDocument()
+    await expect.poll(() => document.activeElement).toBe(trigger.element())
+  })
+
+  it.each([
+    ['light', 'scrolls', longContent],
+    ['dark', 'scrolls', longContent],
+    ['light', 'fits', 'Pouco conteúdo'],
+    ['dark', 'fits', 'Pouco conteúdo']
+  ] as const)('has no axe violation in the %s mode when the body %s', async (mode, state, content) => {
+    renderInBrowser(<DrawerPage footer={save}>{content}</DrawerPage>, 'never', mode)
+    await openIt()
+    await expect.poll(() => bodyOf().hasAttribute('tabindex')).toBe(state === 'scrolls')
+
+    expect(await accessibilityViolations(panel())).toEqual([])
   })
 })
 

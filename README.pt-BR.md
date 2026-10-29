@@ -123,8 +123,8 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Select` | `<Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />` |
 | `Combobox` | `<Combobox label="Framework" options={[{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }]} onValueChange={setFramework} />`: campo de texto com uma lista de opções embaixo, no padrão combobox do ARIA 1.2 (o foco fica no campo e a opção ativa é anunciada por `aria-activedescendant`). Digitar filtra as opções, sem diferenciar maiúsculas nem acentos, as setas andam pela lista, Enter escolhe, Esc fecha e Tab sai. Com `multiple`, as opções escolhidas viram etiquetas antes do campo, a lista continua aberta e Backspace no campo vazio remove a última. O valor é sempre o `value` de uma opção, nunca o texto digitado: ao sair do campo, volta o rótulo da opção escolhida, e esvaziar o texto e sair limpa a escolha. `name` envia um campo oculto por valor escolhido. Para opções que vêm de um servidor, desligue o filtro (`filter={false}`), busque em `onInputChange` e mostre `loading`; o rótulo de uma opção escolhida é lembrado, então trocar `options` no meio da busca não esvazia o campo nem as etiquetas. A lista abre embaixo do campo (sobe quando falta espaço) e renderiza num portal no `<body>`, como o `Popover`; `container` muda o lugar |
 | `DatePicker` | `<DatePicker label="Data" value={data} onValueChange={setData} />`: campo para uma data que o usuário digita, na ordem e com os separadores do idioma do `UIProvider` (28/10/2026 em pt-BR e 10/28/2026 em en; ele lê também `28102026` e `2026-10-28`), ou escolhe num calendário que abre num diálogo pelo botão no fim do campo. O valor é o texto ISO local `YYYY-MM-DD`, sem hora e sem fuso (o mesmo do `<input type="date">`), ou `null` com o campo vazio: nenhum objeto `Date` entra na conta, então o dia nunca anda com o fuso da máquina. O texto é lido ao sair do campo ou com Enter, e o que não é uma data, ou é uma data que `min`, `max` ou `isDateDisabled` recusam, volta como estava. O calendário é uma grade: as setas andam um dia ou uma semana, Home e End vão ao começo e ao fim da semana, Page Up e Page Down trocam o mês e, com Shift, o ano, Enter e Espaço escolhem e Esc fecha e devolve o foco ao botão; ele abre com o foco no dia escolhido, ou em hoje. Os nomes dos meses e dos dias, o primeiro dia da semana (`firstDayOfWeek` troca o do idioma) e o espelhamento em RTL seguem o `locale` do `UIProvider`; a prop `locale`, uma tag BCP 47 (`en-GB`, `en-CA`, `de`), dá a um campo um idioma só dele para a ordem, os separadores e os dígitos do texto, os nomes e o primeiro dia da semana (o `firstDayOfWeek` continua valendo antes dela), sem mudar os textos de acessibilidade nem a direção, que seguem o provider; uma string vazia vale como sem tag e uma tag inválida, ou que o ambiente não conhece, cai em `en`. O servidor renderiza só o campo: o calendário abre depois da montagem e "hoje" é lido no navegador. `name` envia o texto ISO num campo oculto. O calendário renderiza num portal no `<body>`, como o `Popover`; `container` muda onde ele é renderizado. Ele tem seis semanas de altura: quando nem em cima nem embaixo do campo há espaço para ele inteiro, abre do lado com mais espaço e o corpo rola |
-| `Checkbox` | `<Checkbox label="Aceito os termos" />`: com `indeterminate`, mostra o estado misto de uma caixa que resume outras, como um "selecionar todos" (`<Checkbox label="Todos" checked={todos} indeterminate={algum && !todos} onChange={alternarTodos} />`). A prop liga a propriedade `indeterminate` do `<input>` nativo, então o leitor de tela lê "misto"; ela não muda `checked`, o clique não a limpa (quem usa a limpa no `onChange`) e, como não existe atributo HTML para ela, uma caixa mista renderizada no servidor aparece marcada ou desmarcada até a hidratação. |
-| `Switch` | `<Switch label="Receber notificações" defaultChecked />` |
+| `Checkbox` | `<Checkbox label="Aceito os termos" />`: com `indeterminate`, mostra o estado misto de uma caixa que resume outras, como um "selecionar todos" (`<Checkbox label="Todos" checked={todos} indeterminate={algum && !todos} onChange={alternarTodos} />`). A prop liga a propriedade `indeterminate` do `<input>` nativo, então o leitor de tela lê "misto"; ela não muda `checked`, o clique não a limpa (quem usa a limpa no `onChange`) e, como não existe atributo HTML para ela, uma caixa mista renderizada no servidor aparece marcada ou desmarcada até a hidratação. Com `error` ou `helperText`, a mensagem aparece embaixo do texto do rótulo, alinhada com ele, e fica fora do `<label>`: o nome acessível continua sendo o rótulo, e um clique na mensagem não marca a caixa. O `error` marca o `<input>` com `aria-invalid`, é lido como alerta, pinta a borda de uma caixa desmarcada e substitui o `helperText`, e a mensagem que está na tela entra no `aria-describedby`, depois do `aria-describedby` de quem usa. O `<label>` fica sempre dentro de um `<span data-slot="checkbox-field">` (a mensagem é `checkbox-error` ou `checkbox-helper`), que não gera caixa (`display: contents`) enquanto não há mensagem e vira uma coluna (`inline-flex`, com `data-has-message`) quando há: a árvore não muda, então o `<input>` nunca é recriado, e o layout sem mensagem é o de antes. `wrapperClassName`, `wrapperStyle` e o `data-slot="checkbox"` ficam no `<label>`. |
+| `Switch` | `<Switch label="Receber notificações" defaultChecked />`: aceita `error` e `helperText` como o `Checkbox`, com a mensagem embaixo do rótulo e fora do `<label>` (`data-slot` `switch-error` e `switch-helper`), e o `<label>` fica sempre dentro de um `switch-field`, que não gera caixa sem mensagem. O `error` marca o `<input>` com `aria-invalid` e é lido como alerta, mas não muda a cor da trilha |
 | `RadioGroup` | `<RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }]} defaultValue="free" />` |
 | `CheckboxGroup` | `<CheckboxGroup label="Assuntos" options={[{ value: 'novidades', label: 'Novidades' }, { value: 'ofertas', label: 'Ofertas' }]} defaultValue={['novidades']} onValueChange={setAssuntos} />`: vários itens marcáveis num `<fieldset>`; o valor é a lista dos marcados, na ordem das opções. O grupo não exige escolha sozinho: valide no formulário e passe `error` |
 | `Accordion` | `<Accordion items={[{ value: 'envio', title: 'Quanto tempo leva o envio?', content: <p>Até dois dias úteis.</p> }]} />` |
@@ -213,8 +213,8 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card`, `CardButton` e `CardLink` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
 | `size` | `Button`, `ButtonLink` e `SegmentedControl` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` e `Table` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`), `Drawer` (`sm`, `md`, `lg`) | Tamanho. |
 | `label` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup`, `Slider` | Rótulo visível, ligado ao controle. No `RadioGroup` e no `CheckboxGroup`, é o título do grupo. |
-| `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `RadioGroup`, `CheckboxGroup` | Mensagem de erro: marca o campo com `aria-invalid` (no `CheckboxGroup`, cada caixa), aparece com `role="alert"` e substitui o `helperText`. |
-| `helperText` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `RadioGroup`, `CheckboxGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
+| `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup` | Mensagem de erro: marca o campo com `aria-invalid` (no `CheckboxGroup`, cada caixa), aparece com `role="alert"` e substitui o `helperText`. No `Checkbox` e no `Switch`, fica embaixo do rótulo e fora do `<label>`. |
+| `helperText` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. No `Checkbox` e no `Switch`, fica embaixo do rótulo e fora do `<label>`. |
 | `fullWidth` | `Button`, `ButtonLink`, `SegmentedControl`, `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker` | Ocupa toda a largura disponível. |
 | `labelPlacement` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker` | Onde fica o rótulo: `floating` (dentro do campo, sobe ao focar) ou `stacked` (acima do controle). Sem a prop, vale o `style` do tema: `floating` no `enchase` e `stacked` no `shadcn`. |
 | `externalIcon` | `ButtonLink` | Com `target="_blank"`, mostra o ícone de link externo (padrão `true`). `false` tira só o ícone e mantém o texto "abre em nova aba" para leitores de tela; em um link só de ícone com `aria-label`, ponha o aviso no próprio rótulo. |
@@ -382,6 +382,151 @@ A página atual é o caminho de `currentHref` ou, quando o provider não tem `cu
 - Uma rota (`/docs`) recebe `aria-current="page"` quando `currentHref` é essa rota ou está dentro dela (`/docs/api`); `/` marca só a home.
 - Uma âncora (`#recursos`, ou `/#recursos` estando em `/`) recebe `aria-current="location"` quando é o `activeSectionId`, nunca `page`. Use `useScrollSpy` para ele.
 - Itens `native`, externos e âncoras da página não entram na trilha dos `Breadcrumbs`, e os `native` nunca são marcados.
+
+## Formulários com react-hook-form e Zod
+
+Os campos funcionam com o `react-hook-form` e um schema do Zod, pelo `@hookform/resolvers`, sem adaptador. O código abaixo é um componente de verdade do repositório (`src/docs/components/FormRecipe/index.tsx`), o mesmo que roda ao vivo na página **System/Forms guide** do Storybook: os testes o preenchem e o conferem, e o `npm run test:consumer` o compila contra o pacote empacotado, com `exactOptionalPropertyTypes` e `skipLibCheck: false`. Ele usa a API do Zod 4 (`z.email()`, `z.iso.date()`) e o `react-hook-form` 7. As versões testadas são as fixas do `devDependencies` do `package.json`, e nenhum dos três pacotes entra no `enchase`: quem usa a receita os instala no app. Num app Next.js (App Router), ponha `'use client'` no topo do arquivo, porque ele usa hooks.
+
+```tsx
+import { Button, Checkbox, Combobox, DatePicker, Flex, Input, RadioGroup, Select } from 'enchase'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+
+const ticketOptions = [
+  { value: 'standard', label: 'Standard' },
+  { value: 'student', label: 'Student' },
+  { value: 'team', label: 'Team' }
+]
+
+const countryOptions = [
+  { value: 'br', label: 'Brazil' },
+  { value: 'pt', label: 'Portugal' },
+  { value: 'ar', label: 'Argentina' }
+]
+
+const attendanceOptions = [
+  { value: 'in-person', label: 'In person' },
+  { value: 'online', label: 'Online' }
+]
+
+const schema = z.object({
+  email: z.email('Enter a valid email'),
+  ticket: z.string().min(1, 'Choose a ticket'),
+  country: z.string().nullable().pipe(z.string('Choose a country')),
+  date: z.string().nullable().pipe(z.iso.date('Pick a date')),
+  attendance: z.string().min(1, 'Choose how you will attend'),
+  terms: z.boolean().pipe(z.literal(true, 'Accept the terms to continue'))
+})
+
+type FormValues = z.input<typeof schema>
+
+export type Registration = z.output<typeof schema>
+
+const defaultValues: FormValues = {
+  email: '',
+  ticket: '',
+  country: null,
+  date: null,
+  attendance: '',
+  terms: false
+}
+
+export const FormRecipe = ({ onSubmit }: { onSubmit: (values: Registration) => void }) => {
+  const { register, control, handleSubmit, formState } = useForm<FormValues, unknown, Registration>({
+    resolver: zodResolver(schema),
+    defaultValues
+  })
+  const { errors } = formState
+
+  return (
+    <form noValidate onSubmit={handleSubmit(onSubmit)}>
+      <Flex direction="column" gap="1.25rem">
+        <Input
+          label="Email"
+          type="email"
+          helperText="We send the confirmation here"
+          error={errors.email?.message}
+          {...register('email')}
+        />
+
+        <Select
+          label="Ticket"
+          placeholder="Choose a ticket"
+          options={ticketOptions}
+          error={errors.ticket?.message}
+          {...register('ticket')}
+        />
+
+        <Controller
+          name="country"
+          control={control}
+          render={({ field, fieldState }) => (
+            <Combobox
+              label="Country"
+              helperText="Type to filter the list"
+              options={countryOptions}
+              value={field.value}
+              onValueChange={field.onChange}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="date"
+          control={control}
+          render={({ field, fieldState }) => (
+            <DatePicker
+              label="Session date"
+              helperText="Type it or pick it in the calendar"
+              value={field.value}
+              onValueChange={field.onChange}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="attendance"
+          control={control}
+          render={({ field, fieldState }) => (
+            <RadioGroup
+              label="Attendance"
+              orientation="horizontal"
+              options={attendanceOptions}
+              value={field.value}
+              onValueChange={field.onChange}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Checkbox
+          label="I accept the terms"
+          error={errors.terms?.message}
+          {...register('terms')}
+        />
+
+        <Button type="submit">Register</Button>
+      </Flex>
+    </form>
+  )
+}
+```
+
+Como cada campo se liga:
+
+- `Input`, `Select` e `Checkbox` aceitam `ref` e os atributos do elemento nativo, então o `register` basta: `{...register('email')}` leva `name`, `onChange`, `onBlur` e `ref`. Depois de um envio com erro, o `react-hook-form` põe o foco no primeiro campo inválido por esse `ref`.
+- `Combobox`, `DatePicker` e `RadioGroup` avisam a escolha em `onValueChange`, e não num evento `onChange`, então vão por `Controller`, com `value={field.value}` e `onValueChange={field.onChange}` escritos à mão. Não espalhe `field` neles: o compilador aceita, mas no `Combobox` e no `DatePicker` o `field.onChange` passa a rodar nos eventos de texto do campo de dentro, e o formulário recebe o texto digitado (`'Bra'`, e não `'br'`). No `RadioGroup` espalhar só parece funcionar, porque o `change` dos rádios sobe até o `<fieldset>`.
+- A mensagem entra na prop `error`, no `Checkbox` também (`errors.email?.message` e `fieldState.error?.message` são `string | undefined`, que as props aceitam também com `exactOptionalPropertyTypes`): o campo marca `aria-invalid`, mostra a mensagem com `role="alert"` e troca o `helperText` por ela, e o `helperText` volta quando o campo fica válido.
+- Respostas vazias: quando nada está escolhido, `Combobox` e `DatePicker` valem `null`, o `Select` e o `RadioGroup` valem `''` e o `Checkbox` vale `false`. O schema aceita `null` e `false` na entrada e os passa por `.pipe(...)` para a regra que os recusa com a mensagem, e o `''` não passa do `min(1)`. Assim `z.input` tem o que os controles guardam, e `z.output` é o resultado tipado.
+- O valor do `DatePicker` é o texto ISO local `YYYY-MM-DD`, sem hora e sem fuso. O `z.iso.date()` o confere e o resultado tipado é uma `string`: não há `Date` para converter.
+- `noValidate` no `<form>` deixa a validação para o schema, e não para o navegador.
 
 ## Tema
 
@@ -684,13 +829,13 @@ Cada componente também lê ganchos próprios, `--enchase-<data-slot>-<proprieda
 }
 ```
 
-O que depende de uma medida acompanha sozinho: o traço do checkbox, o ponto do radio e o curso da bolinha da chave seguem o tamanho de cada um; o rótulo flutuante dos campos sobe metade de `--enchase-input-height` e segue o padding do texto; e o espaço que os campos de senha e numérico reservam para os botões de dentro segue `--enchase-hit-size`. Os quatro campos (texto, número, seleção e área de texto) dividem os ganchos `--enchase-input-*`, e o canto do campo e o do contorno dele saem do mesmo gancho. A tipografia dos rótulos flutuantes fica fixa, porque o entalhe do contorno depende dela.
+O que depende de uma medida acompanha sozinho: o traço do checkbox, o ponto do radio e o curso da bolinha da chave seguem o tamanho de cada um; o recuo da mensagem do checkbox e da chave segue o tamanho da caixa ou da trilha mais o vão; o rótulo flutuante dos campos sobe metade de `--enchase-input-height` e segue o padding do texto; e o espaço que os campos de senha e numérico reservam para os botões de dentro segue `--enchase-hit-size`. Os quatro campos (texto, número, seleção e área de texto) dividem os ganchos `--enchase-input-*`, e o canto do campo e o do contorno dele saem do mesmo gancho. A tipografia dos rótulos flutuantes fica fixa, porque o entalhe do contorno depende dela.
 
 Os ganchos de cor (`--enchase-alert-background-info`, `--enchase-badge-color-success`, `--enchase-table-header-background`) caem no papel de cor do tema, então seguem o modo claro e o escuro sozinhos. Para um valor que muda por modo, declare o gancho dentro do seletor do modo, junto das cores (`:root, [data-theme='light'] { ... }` e `[data-theme='dark'] { ... }`): um gancho declarado só no `:root` e escrito como `var(--enchase-color-surface)` acompanha o modo do documento, mas numa ilha `data-theme` de outro modo (um `div` aninhado) continua com as cores do documento, porque o alias é resolvido onde é declarado.
 
 O espaço, o tamanho, a cor e a sombra das barras e da navegação (`Navbar`, a barra do topo do `Layout`, `Sidebar`, `Breadcrumbs`, `Pagination`, `Footer`, a marca e o usuário da sidebar) saem de ganchos do mesmo jeito, como `--enchase-navbar-bar-height`, `--enchase-sidebar-item-control-height` ou `--enchase-pagination-control-color-current`. O indicador deslizante da `Sidebar` pinta com `--enchase-sidebar-indicator-background`, que segue a cor do item atual (`--enchase-sidebar-item-control-background-current`), e a largura dele acompanha `--enchase-sidebar-nav-padding-inline`.
 
-Os controles seguem o mesmo padrão: `Button` tem ganchos de cor por variante e por estado (`--enchase-button-background-primary`, `--enchase-button-color-outline-hover`, `--enchase-button-shadow-primary-hover`), os quatro campos dividem os ganchos `--enchase-input-*` (`--enchase-input-outline-border-color`, `--enchase-input-label-color-focus`, `--enchase-input-error-color`), e `Checkbox`, `RadioGroup` e `Switch` expõem as cores da caixa, do ponto e do rótulo. As camadas de hover, pressionado e desabilitado são misturas das cores do tema com os tokens `--enchase-state-*`, então mudam pelos tokens, não por ganchos.
+Os controles seguem o mesmo padrão: `Button` tem ganchos de cor por variante e por estado (`--enchase-button-background-primary`, `--enchase-button-color-outline-hover`, `--enchase-button-shadow-primary-hover`), os quatro campos dividem os ganchos `--enchase-input-*` (`--enchase-input-outline-border-color`, `--enchase-input-label-color-focus`, `--enchase-input-error-color`), e `Checkbox`, `RadioGroup` e `Switch` expõem as cores da caixa, do ponto e do rótulo. As mensagens do `Checkbox` e do `Switch` leem as cores dos campos (`--enchase-input-error-color` e `--enchase-input-helper-color`), e o tamanho, o peso e o vão até o rótulo vêm de ganchos de cada um (`--enchase-checkbox-error-font-size`, `--enchase-switch-helper-font-size`, `--enchase-checkbox-field-gap`). As camadas de hover, pressionado e desabilitado são misturas das cores do tema com os tokens `--enchase-state-*`, então mudam pelos tokens, não por ganchos.
 
 O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 

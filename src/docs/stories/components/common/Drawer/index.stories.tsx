@@ -57,7 +57,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'A panel that slides in from the edge of the page, rendered in a portal like the `Modal`: the focus stays trapped in the panel, the page behind it is inert and the scroll of the page is locked, and Esc or a click on the overlay closes it. It is always controlled by `open` and `onClose`. The side follows the direction of the page, so `start` is the right edge in a right-to-left page. Use it for a menu, a filter panel or a form that should not take the whole screen.'
+          'A panel that slides in from the edge of the page, rendered in a portal like the `Modal`: the focus stays trapped in the panel, the page behind it is inert and the scroll of the page is locked, and Esc or a click on the overlay closes it. It is always controlled by `open` and `onClose`. The side follows the direction of the page, so `start` is the right edge in a right-to-left page. Use it for a menu, a filter panel or a form that should not take the whole screen. When the content is taller than the panel, the body scrolls and becomes a focusable region named by the title (or by `ariaLabel`), so a keyboard user can scroll it.'
       }
     }
   },
@@ -117,7 +117,11 @@ export const Sizes: Story = {
 export const LongContent: Story = {
   parameters: {
     controls: { disable: true },
-    docs: { description: { story: 'The header and the footer stay in place and the body scrolls when the content is taller than the screen.' } }
+    docs: {
+      description: {
+        story: 'The header and the footer stay in place and the body scrolls when the content is taller than the screen. While it scrolls, the body is a region that Tab reaches, named by the title, so a keyboard user can scroll it with the arrow keys and Page Down.'
+      }
+    }
   },
   render: (args) => (
     <DrawerDemo {...args} label="Open with long content" footer={<Button>Apply filters</Button>}>
