@@ -27,7 +27,7 @@ const CopyInstructions = () => {
 const meta = {
   title: 'System/Motion',
   tags: ['!autodocs'],
-  parameters: { layout: 'padded' },
+  parameters: { layout: 'padded', ownToastProvider: true },
   args: defaultArgs,
   argTypes: {
     preset: { description: 'Scales the duration and the distance of all the recipes.', control: 'select', options: presets },

@@ -70,7 +70,11 @@ const everything = (
     <Select label="Country" options={options} />
     <Textarea label="Notes" placeholder="Type here" />
     <Checkbox label="Accept the terms" />
+    <Checkbox label="Accept the policy" error="Accept the policy to continue" />
+    <Checkbox label="Subscribe" helperText="One email a month" />
     <Switch label="Alerts" />
+    <Switch label="Weekly report" error="Turn it on to continue" />
+    <Switch label="Daily summary" helperText="Arrives every morning" defaultChecked />
     <RadioGroup label="Plan" options={[{ value: 'a', label: 'Free' }]} helperText="Change any time" />
     <SegmentedControl ariaLabel="View" items={[{ value: 'a', label: 'List' }, { value: 'b', label: 'Board' }]} defaultValue="a" />
     <SegmentedControl multiple ariaLabel="Days" items={[{ value: 'a', label: 'Mon' }, { value: 'b', label: 'Tue' }]} defaultValue={['b']} />

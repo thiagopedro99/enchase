@@ -19,9 +19,13 @@ export const withProviders: Decorator = (Story, context) => {
       <DensityAttribute density={density} />
       <GlobalStyles />
       <UIProvider motion={{ mode: motion }}>
-        <ToastProvider>
+        {context.parameters.ownToastProvider === true ? (
           <Story />
-        </ToastProvider>
+        ) : (
+          <ToastProvider>
+            <Story />
+          </ToastProvider>
+        )}
       </UIProvider>
     </ColorModeProvider>
   )

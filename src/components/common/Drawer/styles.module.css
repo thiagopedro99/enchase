@@ -149,6 +149,11 @@
   line-height: var(--enchase-drawer-body-line-height, var(--enchase-line-height-relaxed, 1.6));
 }
 
+.body:focus-visible {
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset-inset, -2px);
+}
+
 .footer {
   padding-block: var(--enchase-drawer-footer-padding-block, 0 var(--enchase-space-lg));
   padding-inline: var(--enchase-drawer-footer-padding-inline, var(--enchase-space-lg));
