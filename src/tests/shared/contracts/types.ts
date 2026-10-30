@@ -47,6 +47,22 @@ export type FieldVariantContractAdapter = {
   render: (props?: FieldVariantContractProps) => ReactElement
 }
 
+export type RequiredContractProps = {
+  label?: string | undefined
+  required?: boolean
+  labelPlacement?: LabelPlacement
+  error?: string
+  helperText?: string
+}
+
+export type RequiredContractAdapter = {
+  name: string
+  slot: string
+  control: string
+  role: string
+  render: (props?: RequiredContractProps) => ReactElement
+}
+
 export type PortalContainerContractAdapter = {
   name: string
   slot: string

@@ -5,6 +5,7 @@ import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
+import { describeRequiredContract } from '@tests/shared/contracts/requiredContract.tsx'
 import { describeFieldVariantContract } from '@tests/shared/contracts/fieldVariantContract.tsx'
 import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPlacementContract.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
@@ -241,3 +242,5 @@ describe('Textarea contract', () => {
 describeLabelPlacementContract({ name: 'Textarea', slot: 'textarea', control: 'textarea', placeholder: 'Type', render: (placement) => <Textarea label="Name" placeholder="Type" labelPlacement={placement} /> })
 
 describeFieldVariantContract({ name: 'Textarea', slot: 'textarea', control: 'textarea', render: (props) => <Textarea label="Name" placeholder="Type" {...props} /> })
+
+describeRequiredContract({ name: 'Textarea', slot: 'textarea', control: 'textarea', role: 'textbox', render: (props) => <Textarea label="Name" placeholder="Type" {...props} /> })

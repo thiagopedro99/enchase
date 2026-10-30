@@ -15,7 +15,7 @@ import type { NumberInputProps } from './types.ts'
 
 export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   (
-    { value, defaultValue: initialValue = defaultValue, onValueChange, min, max, step = defaultStep, largeStep, formatOptions, locale, label, labelPlacement, variant = defaultVariant, error, helperText, placeholder, fullWidth = defaultFullWidth, steppers = defaultSteppers, id, name, form, wrapperClassName, wrapperStyle, ...props },
+    { value, defaultValue: initialValue = defaultValue, onValueChange, min, max, step = defaultStep, largeStep, formatOptions, locale, label, labelPlacement, variant = defaultVariant, error, helperText, required, placeholder, fullWidth = defaultFullWidth, steppers = defaultSteppers, id, name, form, wrapperClassName, wrapperStyle, ...props },
     ref
   ) => {
     const generatedId = useId()
@@ -69,6 +69,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     const labelElement = hasLabel && (
       <label htmlFor={inputId} className={styles.label} data-has-error={hasError ? '' : undefined} {...slot('number-input', 'label')}>
         {label}
+        {required && <span aria-hidden="true" className={styles.required} {...slot('number-input', 'required')} />}
       </label>
     )
 
@@ -77,13 +78,16 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         {placement !== 'floating' && labelElement}
 
         <div className={styles.field} {...slot('number-input', 'control')}>
-          <input {...input} ref={ref} id={inputId} type="text" role="spinbutton" placeholder={floating ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
+          <input {...input} ref={ref} id={inputId} type="text" role="spinbutton" required={required} placeholder={floating ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
 
           {placement === 'floating' && labelElement}
 
           <fieldset aria-hidden="true" className={styles.outline} data-has-label={floating ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('number-input', 'outline')}>
             <legend>
-              <span>{(floating ? label : undefined) ?? '​'}</span>
+              <span>
+                {(floating ? label : undefined) ?? '​'}
+                {floating && required && <span className={styles.required} />}
+              </span>
             </legend>
           </fieldset>
 

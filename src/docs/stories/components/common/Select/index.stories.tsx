@@ -1,5 +1,5 @@
 import { Select } from 'enchase'
-import { fieldVariants, variantArgType, variantLabels, variantsStoryDescription } from '@docs/shared/fields.ts'
+import { fieldVariants, labelPlacements, requiredArgType, requiredStoryDescription, variantArgType, variantLabels, variantsStoryDescription } from '@docs/shared/fields.ts'
 import { countryOptions, defaultFullWidth } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -34,6 +34,7 @@ const meta = {
       table: { defaultValue: { summary: "'floating'" } }
     },
     variant: variantArgType,
+    required: requiredArgType,
     options: {
       description: 'List of options. Each one has value, label and, optionally, disabled.',
       control: 'object',
@@ -115,4 +116,15 @@ export const Variants: Story = {
 
 export const LabelStart: Story = {
   args: { labelPlacement: 'start' }
+}
+
+export const Required: Story = {
+  parameters: { controls: { disable: true }, docs: { description: { story: requiredStoryDescription } } },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '1.5rem' }}>
+      {labelPlacements.map((labelPlacement) => (
+        <Select key={labelPlacement} {...args} required labelPlacement={labelPlacement} label={`Label ${labelPlacement}`} />
+      ))}
+    </div>
+  )
 }

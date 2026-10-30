@@ -18,6 +18,7 @@ export interface ComboboxBaseProps extends Omit<InputHTMLAttributes<HTMLInputEle
   variant?: FieldVariant | undefined
   error?: string | undefined
   helperText?: string | undefined
+  required?: boolean | undefined
   fullWidth?: boolean | undefined
   filter?: ComboboxFilter | false | undefined
   onInputChange?: ((text: string) => void) | undefined

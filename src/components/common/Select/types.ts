@@ -13,6 +13,7 @@ export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   variant?: FieldVariant | undefined
   error?: string | undefined
   helperText?: string | undefined
+  required?: boolean | undefined
   options: SelectOption[]
   placeholder?: string | undefined
   fullWidth?: boolean | undefined

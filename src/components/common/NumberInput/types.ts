@@ -19,6 +19,7 @@ export interface NumberInputProps extends Omit<InputHTMLAttributes<HTMLInputElem
   variant?: FieldVariant | undefined
   error?: string | undefined
   helperText?: string | undefined
+  required?: boolean | undefined
   fullWidth?: boolean | undefined
   steppers?: boolean | undefined
   wrapperClassName?: string | undefined

@@ -1,5 +1,5 @@
 import { Textarea } from 'enchase'
-import { fieldVariants, variantArgType, variantLabels, variantsStoryDescription } from '@docs/shared/fields.ts'
+import { fieldVariants, labelPlacements, requiredArgType, requiredStoryDescription, variantArgType, variantLabels, variantsStoryDescription } from '@docs/shared/fields.ts'
 import { defaultFullWidth, defaultResize, defaultRows } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -34,6 +34,7 @@ const meta = {
       table: { defaultValue: { summary: "'floating'" } }
     },
     variant: variantArgType,
+    required: requiredArgType,
     helperText: {
       description: 'Helper text. It is tied to the field by aria-describedby and disappears when there is an error.',
       control: 'text'
@@ -117,4 +118,15 @@ export const Variants: Story = {
 
 export const LabelStart: Story = {
   args: { labelPlacement: 'start' }
+}
+
+export const Required: Story = {
+  parameters: { controls: { disable: true }, docs: { description: { story: requiredStoryDescription } } },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '1.5rem' }}>
+      {labelPlacements.map((labelPlacement) => (
+        <Textarea key={labelPlacement} {...args} required labelPlacement={labelPlacement} label={`Label ${labelPlacement}`} />
+      ))}
+    </div>
+  )
 }

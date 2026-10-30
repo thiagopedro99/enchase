@@ -80,16 +80,18 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'DatePicker that starts open', element: <DatePicker label="Date" defaultOpen defaultValue="2026-10-28" error="Choose another date" /> },
   { name: 'DatePicker with a language of its own', element: <DatePicker label="Date" locale="en-CA" defaultValue="2026-10-28" /> },
   {
-    name: 'Fields with the label at the start of the control and the variants',
+    name: 'Fields with the label at the start of the control, the variants and the required mark',
     element: (
       <>
-        <Input label="Name" labelPlacement="start" />
-        <Textarea label="Notes" labelPlacement="start" variant="underlined" error="Too short" />
+        <Input label="Name" labelPlacement="start" required />
+        <Textarea label="Notes" labelPlacement="start" variant="underlined" error="Too short" required />
         <NumberInput label="Amount" labelPlacement="start" variant="filled" defaultValue={3} />
-        <Select label="Country" labelPlacement="start" variant="borderless" options={[{ value: 'br', label: 'Brazil' }]} />
+        <Select label="Country" labelPlacement="start" variant="borderless" options={[{ value: 'br', label: 'Brazil' }]} required />
         <DatePicker label="Date" labelPlacement="start" variant="filled" helperText="Type it or open the calendar" />
-        <Combobox label="Fruit" labelPlacement="start" variant="underlined" options={[{ value: 'a', label: 'Alpha' }]} defaultValue="a" />
-        <Input label="Filled, floating asked for" variant="filled" />
+        <Combobox label="Fruit" labelPlacement="start" variant="underlined" options={[{ value: 'a', label: 'Alpha' }]} defaultValue="a" required />
+        <Input label="Filled, floating asked for" variant="filled" required />
+        <Input label="Floating and required" required />
+        <Input label="Stacked and required" labelPlacement="stacked" required />
       </>
     )
   },

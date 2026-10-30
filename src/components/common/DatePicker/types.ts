@@ -17,6 +17,7 @@ export interface DatePickerProps extends Omit<InputHTMLAttributes<HTMLInputEleme
   variant?: FieldVariant | undefined
   error?: string | undefined
   helperText?: string | undefined
+  required?: boolean | undefined
   fullWidth?: boolean | undefined
   open?: boolean | undefined
   defaultOpen?: boolean | undefined

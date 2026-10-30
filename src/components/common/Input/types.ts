@@ -7,6 +7,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   variant?: FieldVariant | undefined
   error?: string | undefined
   helperText?: string | undefined
+  required?: boolean | undefined
   fullWidth?: boolean | undefined
   passwordToggle?: boolean | undefined
   wrapperClassName?: string | undefined

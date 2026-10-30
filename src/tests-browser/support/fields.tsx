@@ -12,6 +12,7 @@ export type FieldTestProps = {
   label?: string
   error?: string
   helperText?: string
+  required?: boolean
   disabled?: boolean
   variant?: FieldVariant
   labelPlacement?: LabelPlacement

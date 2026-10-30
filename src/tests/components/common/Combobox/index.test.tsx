@@ -1,3 +1,4 @@
+import { describeRequiredContract } from '@tests/shared/contracts/requiredContract.tsx'
 import { describeFieldVariantContract } from '@tests/shared/contracts/fieldVariantContract.tsx'
 import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPlacementContract.tsx'
 import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
@@ -46,6 +47,14 @@ describeFieldVariantContract({
   name: 'Combobox',
   slot: 'combobox',
   control: '[data-slot="combobox-input"]',
+  render: (props) => <Combobox label="Name" placeholder="Pick one" options={fruits} {...props} />
+})
+
+describeRequiredContract({
+  name: 'Combobox',
+  slot: 'combobox',
+  control: '[data-slot="combobox-input"]',
+  role: 'combobox',
   render: (props) => <Combobox label="Name" placeholder="Pick one" options={fruits} {...props} />
 })
 

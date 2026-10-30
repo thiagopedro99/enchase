@@ -1,5 +1,5 @@
 import { Input } from 'enchase'
-import { fieldVariants, variantArgType, variantLabels, variantsStoryDescription } from '@docs/shared/fields.ts'
+import { fieldVariants, labelPlacements, requiredArgType, requiredStoryDescription, variantArgType, variantLabels, variantsStoryDescription } from '@docs/shared/fields.ts'
 import { defaultFullWidth, defaultPasswordToggle } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -34,6 +34,7 @@ const meta = {
       table: { defaultValue: { summary: "'floating'" } }
     },
     variant: variantArgType,
+    required: requiredArgType,
     helperText: {
       description: 'Helper text. It is tied to the field by aria-describedby and disappears when there is an error.',
       control: 'text'
@@ -172,6 +173,35 @@ export const LabelStart: Story = {
       <Input {...args} labelPlacement="start" label="Name" placeholder="Ada Lovelace" />
       <Input {...args} labelPlacement="start" label="Email address" helperText="We never share your email" />
       <Input {...args} labelPlacement="start" label="A longer label that wraps" error="This field is required" />
+    </div>
+  )
+}
+
+export const Required: Story = {
+  parameters: { controls: { disable: true }, docs: { description: { story: requiredStoryDescription } } },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '1.5rem' }}>
+      {labelPlacements.map((labelPlacement) => (
+        <Input key={labelPlacement} {...args} required labelPlacement={labelPlacement} label={`Label ${labelPlacement}`} />
+      ))}
+    </div>
+  )
+}
+
+export const RequiredMark: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          'The mark has three hooks: `--enchase-input-required-color`, `--enchase-input-required-gap` and `--enchase-input-required-display`. The first field takes a new color and a wider gap from its container, and the second hides the mark with `none` on its own wrapper. Both are still required for the browser and for assistive technologies, because the mark is only visual.'
+      }
+    }
+  },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '1.5rem', '--enchase-input-required-color': 'var(--enchase-color-primary)', '--enchase-input-required-gap': '0.5rem' } as CSSProperties}>
+      <Input {...args} required label="Colored and spaced by the hooks" />
+      <Input {...args} required label="Without the mark" wrapperStyle={{ '--enchase-input-required-display': 'none' } as CSSProperties} />
     </div>
   )
 }

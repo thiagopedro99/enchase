@@ -9,6 +9,7 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
   variant?: FieldVariant | undefined
   error?: string | undefined
   helperText?: string | undefined
+  required?: boolean | undefined
   fullWidth?: boolean | undefined
   resize?: TextareaResize | undefined
   rows?: number | undefined

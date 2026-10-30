@@ -1,3 +1,4 @@
+import { describeRequiredContract } from '@tests/shared/contracts/requiredContract.tsx'
 import { describeFieldVariantContract } from '@tests/shared/contracts/fieldVariantContract.tsx'
 import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPlacementContract.tsx'
 import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
@@ -66,6 +67,14 @@ describeFieldVariantContract({
   name: 'DatePicker',
   slot: 'date-picker',
   control: '[data-slot="date-picker-input"]',
+  render: (props) => <DatePicker label="Name" placeholder="dd/mm/aaaa" {...props} />
+})
+
+describeRequiredContract({
+  name: 'DatePicker',
+  slot: 'date-picker',
+  control: '[data-slot="date-picker-input"]',
+  role: 'textbox',
   render: (props) => <DatePicker label="Name" placeholder="dd/mm/aaaa" {...props} />
 })
 

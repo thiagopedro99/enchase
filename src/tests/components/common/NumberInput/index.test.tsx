@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import { axe } from '@tests/axe.ts'
 
+import { describeRequiredContract } from '@tests/shared/contracts/requiredContract.tsx'
 import { describeFieldVariantContract } from '@tests/shared/contracts/fieldVariantContract.tsx'
 import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPlacementContract.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
@@ -1159,3 +1160,5 @@ describe('NumberInput accessibility', () => {
 describeLabelPlacementContract({ name: 'NumberInput', slot: 'number-input', control: 'input', placeholder: '0', render: (placement) => <NumberInput label="Name" placeholder="0" labelPlacement={placement} /> })
 
 describeFieldVariantContract({ name: 'NumberInput', slot: 'number-input', control: 'input', render: (props) => <NumberInput label="Name" placeholder="0" {...props} /> })
+
+describeRequiredContract({ name: 'NumberInput', slot: 'number-input', control: 'input', role: 'spinbutton', render: (props) => <NumberInput label="Name" placeholder="0" {...props} /> })

@@ -168,7 +168,7 @@
   transition: max-inline-size var(--enchase-combobox-duration, var(--enchase-motion-duration-fast)) var(--enchase-combobox-ease, var(--enchase-motion-ease-out));
 }
 
-.outline legend span {
+.outline legend > span {
   display: inline-block;
   box-sizing: border-box;
   max-inline-size: 100%;
@@ -179,7 +179,7 @@
   visibility: visible;
 }
 
-.outline[data-has-label] legend span {
+.outline[data-has-label] legend > span {
   padding-block: 0;
   padding-inline: var(--enchase-space-sm);
 }
@@ -241,6 +241,16 @@
 .helper {
   font-size: var(--enchase-combobox-helper-font-size, var(--enchase-font-size-xs));
   color: var(--enchase-input-helper-color, var(--enchase-color-text-secondary));
+}
+
+.required {
+  display: var(--enchase-input-required-display, inline);
+  margin-inline-start: var(--enchase-input-required-gap, 0.25rem);
+  color: var(--enchase-input-required-color, var(--enchase-color-error));
+}
+
+.required::after {
+  content: '*';
 }
 
 @media (prefers-reduced-motion: reduce) {

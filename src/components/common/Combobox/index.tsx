@@ -30,6 +30,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       variant = defaultVariant,
       error,
       helperText,
+      required,
       placeholder,
       fullWidth = defaultFullWidth,
       filter,
@@ -123,6 +124,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     const labelElement = hasLabel && (
       <label id={labelId} htmlFor={inputId} className={styles.label} data-has-error={hasError ? '' : undefined} {...slot('combobox', 'label')}>
         {label}
+        {required && <span aria-hidden="true" className={styles.required} {...slot('combobox', 'required')} />}
       </label>
     )
 
@@ -152,6 +154,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
             id={inputId}
             type="text"
             role="combobox"
+            required={required}
             placeholder={placeholder}
             aria-expanded={combobox.shown}
             aria-controls={controls}
@@ -165,7 +168,10 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
 
           <fieldset aria-hidden="true" className={styles.outline} data-has-label={floating ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('combobox', 'outline')}>
             <legend>
-              <span>{(floating ? label : undefined) ?? '​'}</span>
+              <span>
+                {(floating ? label : undefined) ?? '​'}
+                {floating && required && <span className={styles.required} />}
+              </span>
             </legend>
           </fieldset>
 

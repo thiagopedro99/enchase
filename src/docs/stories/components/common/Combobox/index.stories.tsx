@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, Combobox, Flex } from 'enchase'
-import { fieldVariants, variantArgType, variantLabels, variantsStoryDescription } from '@docs/shared/fields.ts'
+import { fieldVariants, labelPlacements, requiredArgType, requiredStoryDescription, variantArgType, variantLabels, variantsStoryDescription } from '@docs/shared/fields.ts'
 import { containerArgType } from '@docs/shared/argTypes.ts'
 import { countries, defaultFullWidth, defaultLoading, defaultMultiple, defaultOpen, frameworks, searchCountries, searchDelay } from './defaultData.ts'
 
@@ -145,6 +145,7 @@ const meta = {
       table: { defaultValue: { summary: "'floating'" } }
     },
     variant: variantArgType,
+    required: requiredArgType,
     placeholder: {
       description: 'Text shown in the empty input. With a floating label it appears only while the field has the focus.',
       control: 'text'
@@ -349,4 +350,15 @@ export const Variants: Story = {
 
 export const LabelStart: Story = {
   args: { labelPlacement: 'start' }
+}
+
+export const Required: Story = {
+  parameters: { controls: { disable: true }, docs: { description: { story: requiredStoryDescription } } },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '1.5rem' }}>
+      {labelPlacements.map((labelPlacement) => (
+        <Combobox key={labelPlacement} {...args} required labelPlacement={labelPlacement} label={`Label ${labelPlacement}`} />
+      ))}
+    </div>
+  )
 }

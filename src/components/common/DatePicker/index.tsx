@@ -28,6 +28,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
       variant = defaultVariant,
       error,
       helperText,
+      required,
       placeholder,
       fullWidth = defaultFullWidth,
       open,
@@ -90,6 +91,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
     const labelElement = hasLabel && (
       <label htmlFor={inputId} className={styles.label} data-has-error={hasError ? '' : undefined} {...slot('date-picker', 'label')}>
         {label}
+        {required && <span aria-hidden="true" className={styles.required} {...slot('date-picker', 'required')} />}
       </label>
     )
 
@@ -98,13 +100,16 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
         {placement !== 'floating' && labelElement}
 
         <div className={styles.field} {...slot('date-picker', 'control')}>
-          <input {...input} ref={ref} id={inputId} type="text" placeholder={floating ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
+          <input {...input} ref={ref} id={inputId} type="text" required={required} placeholder={floating ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
 
           {placement === 'floating' && labelElement}
 
           <fieldset aria-hidden="true" className={styles.outline} data-has-label={floating ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('date-picker', 'outline')}>
             <legend>
-              <span>{(floating ? label : undefined) ?? '​'}</span>
+              <span>
+                {(floating ? label : undefined) ?? '​'}
+                {floating && required && <span className={styles.required} />}
+              </span>
             </legend>
           </fieldset>
 

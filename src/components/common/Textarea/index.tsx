@@ -8,7 +8,7 @@ import styles from './styles.module.css'
 import type { TextareaProps } from './types.ts'
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, labelPlacement, variant = defaultVariant, error, helperText, placeholder, fullWidth = defaultFullWidth, resize = defaultResize, rows = defaultRows, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
+  ({ label, labelPlacement, variant = defaultVariant, error, helperText, required, placeholder, fullWidth = defaultFullWidth, resize = defaultResize, rows = defaultRows, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
     const generatedId = useId()
     const textareaId = id ?? generatedId
     const errorId = `${textareaId}-error`
@@ -43,6 +43,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     const labelElement = hasLabel && (
       <label htmlFor={textareaId} className={styles.label} data-has-error={hasError ? '' : undefined} {...slot('textarea', 'label')}>
         {label}
+        {required && <span aria-hidden="true" className={styles.required} {...slot('textarea', 'required')} />}
       </label>
     )
 
@@ -51,13 +52,16 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         {placement !== 'floating' && labelElement}
 
         <div className={styles.field} {...slot('textarea', 'control')}>
-          <textarea {...field} ref={ref} id={textareaId} rows={rows} placeholder={floating ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
+          <textarea {...field} ref={ref} id={textareaId} rows={rows} required={required} placeholder={floating ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
 
           {placement === 'floating' && labelElement}
 
           <fieldset aria-hidden="true" className={styles.outline} data-has-label={floating ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('textarea', 'outline')}>
             <legend>
-              <span>{(floating ? label : undefined) ?? '​'}</span>
+              <span>
+                {(floating ? label : undefined) ?? '​'}
+                {floating && required && <span className={styles.required} />}
+              </span>
             </legend>
           </fieldset>
         </div>

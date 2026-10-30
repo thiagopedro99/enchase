@@ -8,7 +8,7 @@ import styles from './styles.module.css'
 import type { SelectProps } from './types.ts'
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, labelPlacement, variant = defaultVariant, error, helperText, options, placeholder, fullWidth = defaultFullWidth, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
+  ({ label, labelPlacement, variant = defaultVariant, error, helperText, required, options, placeholder, fullWidth = defaultFullWidth, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
     const generatedId = useId()
     const selectId = id ?? generatedId
     const errorId = `${selectId}-error`
@@ -35,6 +35,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     const labelElement = hasLabel && (
       <label htmlFor={selectId} className={styles.label} data-has-error={hasError ? '' : undefined} {...slot('select', 'label')}>
         {label}
+        {required && <span aria-hidden="true" className={styles.required} {...slot('select', 'required')} />}
       </label>
     )
 
@@ -43,7 +44,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         {placement !== 'floating' && labelElement}
 
         <div className={styles.field} {...slot('select', 'control')}>
-          <select {...field} ref={ref} id={selectId} aria-invalid={hasError || undefined} aria-describedby={describedBy}>
+          <select {...field} ref={ref} id={selectId} required={required} aria-invalid={hasError || undefined} aria-describedby={describedBy}>
             {placeholder && (
               <option value="" disabled data-placeholder="">
                 {placeholder}
@@ -61,7 +62,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
 
           <fieldset aria-hidden="true" className={styles.outline} data-has-label={floating ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('select', 'outline')}>
             <legend>
-              <span>{(floating ? label : undefined) ?? '​'}</span>
+              <span>
+                {(floating ? label : undefined) ?? '​'}
+                {floating && required && <span className={styles.required} />}
+              </span>
             </legend>
           </fieldset>
 

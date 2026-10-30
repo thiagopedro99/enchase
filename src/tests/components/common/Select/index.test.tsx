@@ -4,6 +4,7 @@ import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
+import { describeRequiredContract } from '@tests/shared/contracts/requiredContract.tsx'
 import { describeFieldVariantContract } from '@tests/shared/contracts/fieldVariantContract.tsx'
 import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPlacementContract.tsx'
 import { Select } from '@components/common/Select/index.tsx'
@@ -73,3 +74,5 @@ describe('Select contract', () => {
 describeLabelPlacementContract({ name: 'Select', slot: 'select', control: 'select', render: (placement) => <Select label="Name" options={options} labelPlacement={placement} /> })
 
 describeFieldVariantContract({ name: 'Select', slot: 'select', control: 'select', render: (props) => <Select label="Name" options={options} {...props} /> })
+
+describeRequiredContract({ name: 'Select', slot: 'select', control: 'select', role: 'combobox', render: (props) => <Select label="Name" options={options} {...props} /> })
