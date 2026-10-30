@@ -38,7 +38,7 @@ const hookNames = `import { readFileSync } from 'node:fs'
 
 const { exports } = JSON.parse(readFileSync(new URL('./node_modules/enchase/package.json', import.meta.url), 'utf8'))
 const names = Object.keys(exports).filter((key) => key.startsWith('./styles/')).map((key) => key.slice('./styles/'.length))
-const records = (style) => [style.hooks, style.colorHooks, style.light?.hooks, style.dark?.hooks]
+const records = (style) => [style.hooks, style.colorHooks, style.light?.hooks, style.dark?.hooks, style.density?.compact?.hooks]
 const theme = new Set(readFileSync(new URL('./node_modules/enchase/dist-lib/theme.css', import.meta.url), 'utf8').match(/--enchase-[a-z0-9-]+(?=:)/g))
 const hooks = {}
 
