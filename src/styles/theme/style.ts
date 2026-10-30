@@ -11,7 +11,8 @@ import { labelPlacements, themeModes } from '../tokens/types.ts'
 
 import type { BrandRole } from './brandRoles.ts'
 import type { RadiusOverrides } from './shape.ts'
-import type { BaseTokens, ColorTokens, HookValues, ShadowTokens, ThemeDefaults } from '../tokens/types.ts'
+import type { BaseTokens, ColorTokens, HookValues, ShadowTokens, ThemeDefaults, ThemeDensity } from '../tokens/types.ts'
+import type { Validate } from './merge.ts'
 
 type Partial2<Tokens> = { [Key in keyof Tokens]?: Tokens[Key] extends string | number ? Tokens[Key] : Partial2<Tokens[Key]> }
 
@@ -30,10 +31,11 @@ export type ThemeStyle = {
   brand?: ReadonlyArray<BrandRole> | undefined
   light?: ThemeStyleMode | undefined
   dark?: ThemeStyleMode | undefined
+  density?: ThemeDensity | undefined
   defaults?: Partial<ThemeDefaults> | undefined
 }
 
-const styleSections = ['base', 'fonts', 'radius', 'hooks', 'colorHooks', 'brand', ...themeModes, 'defaults']
+const styleSections = ['base', 'fonts', 'radius', 'hooks', 'colorHooks', 'brand', ...themeModes, 'density', 'defaults']
 
 const modeSections = ['colors', 'shadows', 'hooks']
 
@@ -49,6 +51,18 @@ const fontValidators = {
 const overridableRadius = Object.fromEntries(Object.entries(shapePresets.pill).filter(([key]) => key !== 'none'))
 
 const overridableShadows = Object.fromEntries(Object.entries(lightTheme.shadows).filter(([key]) => key !== 'none'))
+
+const densityGroups = [
+  ['hit', baseTokens.hit, assertSafeCssValue],
+  ['control-height', baseTokens.control.height, assertSafeCssValue],
+  ['space', baseTokens.spacing, assertSafeCssValue],
+  ['font-size', baseTokens.fonts.sizes, assertValidFontSize],
+  ['line-height', baseTokens.fonts.lineHeights, assertValidLineHeight]
+] as const
+
+const densityTokens: Record<string, Validate> = Object.fromEntries(
+  densityGroups.flatMap(([group, tokens, validate]) => Object.keys(tokens).map((key) => [`--enchase-${group}-${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`, validate]))
+)
 
 const hookName = /^--enchase-[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/
 
@@ -130,6 +144,12 @@ const checkMode = (mode: unknown, path: string) => {
   checkHooks(mode.hooks, `${path}.hooks`, true)
 }
 
+const densityValidators = { compact: { tokens: densityTokens, hooks: (path: string, hooks: unknown) => checkHooks(hooks, path, false) } }
+
+const checkDensity = (density: unknown) => {
+  if (density !== undefined) mergeTokens(densityValidators, density, 'style.density', densityValidators, 'density')
+}
+
 const checkDefaults = (defaults: unknown) => {
   if (defaults === undefined) return
 
@@ -160,6 +180,7 @@ export const assertStyle = (style: unknown): ThemeStyle => {
   checkBrand(style.brand)
   checkMode(style.light, 'style.light')
   checkMode(style.dark, 'style.dark')
+  checkDensity(style.density)
   checkDefaults(style.defaults)
 
   return style as ThemeStyle

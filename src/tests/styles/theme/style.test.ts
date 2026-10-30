@@ -21,8 +21,43 @@ const full = {
   brand: ['primary', 'onPrimary'],
   light: { colors: { background: '#FAFAFA', text: { primary: '#111111' } }, shadows: { sm: '0 1px 2px rgb(0 0 0 / 0.2)' }, hooks: { '--enchase-badge-background-neutral': '#EEEEEE' } },
   dark: { colors: { background: '#101010' }, shadows: { md: '0 2px 4px rgb(0 0 0 / 0.6)' }, hooks: { '--enchase-badge-background-neutral': '#202020' } },
+  density: {
+    compact: {
+      tokens: { '--enchase-hit-size': '28px', '--enchase-space-md': '0.625rem', '--enchase-font-size-base': '0.9375rem', '--enchase-line-height-normal': 1.4 },
+      hooks: { '--enchase-input-height': '2.25rem' }
+    }
+  },
   defaults: { labelPlacement: 'stacked' }
 } as const satisfies ThemeStyle
+
+const densityTokens = {
+  '--enchase-hit-size': '28px',
+  '--enchase-hit-size-lg': '44px',
+  '--enchase-control-height-sm': '1.5rem',
+  '--enchase-control-height-md': '1.75rem',
+  '--enchase-control-height-lg': '2.25rem',
+  '--enchase-space-xs': '0.125rem',
+  '--enchase-space-sm': '0.25rem',
+  '--enchase-space-md': '0.5rem',
+  '--enchase-space-lg': '0.75rem',
+  '--enchase-space-xl': '1rem',
+  '--enchase-space-2xl': '1.5rem',
+  '--enchase-space-3xl': '2rem',
+  '--enchase-font-size-xs': '0.6875rem',
+  '--enchase-font-size-sm': '0.8125rem',
+  '--enchase-font-size-base': '0.9375rem',
+  '--enchase-font-size-lg': '1rem',
+  '--enchase-font-size-xl': '1.25rem',
+  '--enchase-font-size-2xl': '1.5rem',
+  '--enchase-font-size-3xl': '1.75rem',
+  '--enchase-font-size-4xl': '2.25rem',
+  '--enchase-font-size-5xl': '3rem',
+  '--enchase-line-height-none': 1,
+  '--enchase-line-height-tight': 1.1,
+  '--enchase-line-height-snug': 1.3,
+  '--enchase-line-height-normal': 1.4,
+  '--enchase-line-height-relaxed': 1.5
+} as const satisfies NonNullable<NonNullable<ThemeStyle['density']>['compact']>['tokens']
 
 describe('defineStyle', () => {
   it('accepts the empty style and a style that sets every section', () => {
@@ -65,6 +100,40 @@ describe('defineStyle', () => {
     expect(() => assertStyle({ base: { spacing } })).not.toThrow()
     expect(() => defineStyle({ base: { spacing } })).not.toThrow()
     expect(createTheme({ style: defineStyle({ base: { spacing } }) }).base.spacing).toEqual(spacing)
+  })
+
+  it('accepts the 26 tokens of the compact density, each with a value of its own kind, and a hook next to them', () => {
+    const style = { density: { compact: { tokens: densityTokens, hooks: { '--enchase-input-height': '2rem', '--enchase-sidebar-item-control-height': 'var(--enchase-control-height-md)' } } } } satisfies ThemeStyle
+
+    expect(Object.keys(densityTokens)).toHaveLength(26)
+    expect(() => assertStyle(style)).not.toThrow()
+    expect(() => defineStyle(style)).not.toThrow()
+  })
+
+  it('takes a density, a compact density, tokens or hooks that are undefined as if they were not there', () => {
+    expect(() => defineStyle({ density: undefined })).not.toThrow()
+    expect(() => defineStyle({ density: {} })).not.toThrow()
+    expect(() => defineStyle({ density: { compact: undefined } })).not.toThrow()
+    expect(() => defineStyle({ density: { compact: {} } })).not.toThrow()
+    expect(() => defineStyle({ density: { compact: { tokens: undefined, hooks: undefined } } })).not.toThrow()
+    expect(() => defineStyle({ density: { compact: { tokens: {}, hooks: {} } } })).not.toThrow()
+  })
+
+  it('freezes the density down to its tokens and hooks, and leaves the object it was given alone', () => {
+    const input = { density: { compact: { tokens: { '--enchase-space-md': '0.5rem' }, hooks: { '--enchase-input-height': '2rem' } } } } as ThemeStyle
+    const defined = defineStyle(input)
+
+    expect(defined).not.toBe(input)
+    expect(defined).toEqual(input)
+    expect(Object.isFrozen(defined.density)).toBe(true)
+    expect(Object.isFrozen(defined.density?.compact)).toBe(true)
+    expect(Object.isFrozen(defined.density?.compact?.tokens)).toBe(true)
+    expect(Object.isFrozen(defined.density?.compact?.hooks)).toBe(true)
+    expect(Object.isFrozen(input.density)).toBe(false)
+    expect(Object.isFrozen(input.density?.compact?.tokens)).toBe(false)
+    expect(() => {
+      ;(defined.density?.compact?.tokens as Record<string, string>)['--enchase-space-md'] = '1rem'
+    }).toThrow(TypeError)
   })
 })
 
@@ -191,6 +260,16 @@ describe('createTheme with a style', () => {
     expect(() => createTheme({ style: raw })).toThrow('Invalid hook name "button-font-weight"')
   })
 
+  it('checks again the density of an object that was not made by defineStyle, so a change made after the first use is caught', () => {
+    const raw = { density: { compact: { tokens: { '--enchase-space-md': '0.5rem' } } } } as ThemeStyle
+
+    expect(() => createTheme({ style: raw })).not.toThrow()
+
+    raw.density = { compact: { tokens: { '--enchase-radius-md': '0.25rem' } } } as never
+
+    expect(() => createTheme({ style: raw })).toThrow('Unknown density token "style.density.compact.tokens.--enchase-radius-md"')
+  })
+
   it('does not check again a style made by defineStyle', () => {
     const defined = defineStyle(full)
 
@@ -275,6 +354,30 @@ describe('the checks of a style', () => {
     ['a shadow none', { light: { shadows: { none: '1px' } } }, 'Unknown shadow token "style.light.shadows.none"'],
     ['a shadow that ends the declaration', { dark: { shadows: { sm: '0 0 0 1px red;' } } }, 'Invalid CSS value for "style.dark.shadows.sm"'],
     ['a hook of a mode that is a token', { light: { hooks: { '--enchase-shadow-sm': 'none' } } }, '"--enchase-shadow-sm" in "style.light.hooks" is a token of the theme'],
+    ['a density that is not an object', { density: 'compact' }, 'Expected an object for "style.density"'],
+    ['a density that is a list', { density: [] }, 'Expected an object for "style.density"'],
+    ['a density that does not exist', { density: { spacious: {} } }, 'Unknown density token "style.density.spacious"'],
+    ['a density that is the default one', { density: { default: {} } }, 'Unknown density token "style.density.default"'],
+    ['a compact density that is not an object', { density: { compact: 'tight' } }, 'Expected an object for "style.density.compact"'],
+    ['a section of the compact density that does not exist', { density: { compact: { colors: {} } } }, 'Unknown density token "style.density.compact.colors"'],
+    ['density tokens that are not an object', { density: { compact: { tokens: '0.5rem' } } }, 'Expected an object for "style.density.compact.tokens"'],
+    ['a density token that does not exist', { density: { compact: { tokens: { '--enchase-radius-md': '0.25rem' } } } }, 'Unknown density token "style.density.compact.tokens.--enchase-radius-md"'],
+    ['a density token without the prefix', { density: { compact: { tokens: { 'space-md': '0.5rem' } } } }, 'Unknown density token "style.density.compact.tokens.space-md"'],
+    ['a density token that is a hook', { density: { compact: { tokens: { '--enchase-input-height': '2rem' } } } }, 'Unknown density token "style.density.compact.tokens.--enchase-input-height"'],
+    ['a step of the spacing scale that does not exist', { density: { compact: { tokens: { '--enchase-space-xxl': '5rem' } } } }, 'Unknown density token "style.density.compact.tokens.--enchase-space-xxl"'],
+    ['a density token value that closes the rule', { density: { compact: { tokens: { '--enchase-space-md': '0.5rem; color: red' } } } }, 'Invalid CSS value for "style.density.compact.tokens.--enchase-space-md"'],
+    ['a density token value that is not a string', { density: { compact: { tokens: { '--enchase-hit-size': 32 } } } }, 'Invalid CSS value for "style.density.compact.tokens.--enchase-hit-size"'],
+    ['a density token value that loads an address', { density: { compact: { tokens: { '--enchase-control-height-md': 'url(https://example.com/a.png)' } } } }, 'Invalid CSS value for "style.density.compact.tokens.--enchase-control-height-md"'],
+    ['a density font size without a unit', { density: { compact: { tokens: { '--enchase-font-size-base': '15' } } } }, 'Invalid font size for "style.density.compact.tokens.--enchase-font-size-base"'],
+    ['a density font size that is a number', { density: { compact: { tokens: { '--enchase-font-size-sm': 14 } } } }, 'Invalid font size for "style.density.compact.tokens.--enchase-font-size-sm"'],
+    ['a density line height below one', { density: { compact: { tokens: { '--enchase-line-height-normal': 0.5 } } } }, 'Invalid line height for "style.density.compact.tokens.--enchase-line-height-normal"'],
+    ['a density line height written as a string', { density: { compact: { tokens: { '--enchase-line-height-tight': '1.2' } } } }, 'Invalid line height for "style.density.compact.tokens.--enchase-line-height-tight"'],
+    ['density hooks that are not an object', { density: { compact: { hooks: '2rem' } } }, 'Expected an object for "style.density.compact.hooks"'],
+    ['a density hook without the prefix', { density: { compact: { hooks: { '--input-height': '2rem' } } } }, 'Invalid hook name "--input-height" in "style.density.compact.hooks"'],
+    ['a density hook that is a token of the theme', { density: { compact: { hooks: { '--enchase-space-md': '0.5rem' } } } }, '"--enchase-space-md" in "style.density.compact.hooks" is a token of the theme'],
+    ['a density hook that is not a string', { density: { compact: { hooks: { '--enchase-input-height': 32 } } } }, 'Invalid CSS value for "style.density.compact.hooks.--enchase-input-height"'],
+    ['a density hook value that ends the declaration', { density: { compact: { hooks: { '--enchase-input-height': '2rem; color: red' } } } }, 'Invalid CSS value for "style.density.compact.hooks.--enchase-input-height"'],
+    ['a density hook that reads a color of the theme', { density: { compact: { hooks: { '--enchase-button-color-outline': 'var(--enchase-color-text-primary)' } } } }, '"style.density.compact.hooks.--enchase-button-color-outline" reads a color or a shadow of the theme'],
     ['a default that does not exist', { defaults: { density: 'compact' } }, 'Unknown default "style.defaults.density"'],
     ['a label placement that does not exist', { defaults: { labelPlacement: 'left' } }, 'Invalid label placement for "style.defaults.labelPlacement"']
   ]
@@ -282,6 +385,35 @@ describe('the checks of a style', () => {
   it.each(rejected)('rejects %s', (_, style, message) => {
     expect(() => defineStyle(asStyle(style))).toThrow(message)
     expect(() => createTheme({ style: asStyle(style) })).toThrow(message)
+  })
+
+  const outsideTheList = [
+    '--enchase-space-4xl',
+    '--enchase-hit-size-md',
+    '--enchase-control-height-xl',
+    '--enchase-font-size-6xl',
+    '--enchase-line-height-loose',
+    '--enchase-font-weight-bold',
+    '--enchase-letter-spacing-control',
+    '--enchase-radius-md',
+    '--enchase-focus-width',
+    '--enchase-border-width',
+    '--enchase-halo-size',
+    '--enchase-state-hover',
+    '--enchase-color-primary',
+    '--enchase-shadow-sm',
+    '--enchase-transition-fast',
+    '--enchase-motion-duration-fast',
+    '--enchase-z-modal',
+    '--enchase-font-primary'
+  ]
+
+  it.each(outsideTheList)('rejects %s as a token of the compact density, which only has the 26 tokens of the closed list', (name) => {
+    const style = asStyle({ density: { compact: { tokens: { [name]: '1rem' } } } })
+    const message = `Unknown density token "style.density.compact.tokens.${name}"`
+
+    expect(() => defineStyle(style)).toThrow(message)
+    expect(() => createTheme({ style })).toThrow(message)
   })
 
   it('accepts the optional variable of the focus color as a color hook, which is read like a hook and is not a token', () => {

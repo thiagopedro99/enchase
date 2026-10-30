@@ -48,6 +48,25 @@ export type LabelPlacement = (typeof labelPlacements)[number]
 
 export type ThemeDefaults = { labelPlacement: LabelPlacement }
 
+type DensityToken =
+  | '--enchase-hit-size'
+  | '--enchase-hit-size-lg'
+  | `--enchase-control-height-${keyof BaseTokens['control']['height']}`
+  | `--enchase-space-${keyof BaseTokens['spacing']}`
+  | `--enchase-font-size-${keyof BaseTokens['fonts']['sizes']}`
+  | `--enchase-line-height-${keyof BaseTokens['fonts']['lineHeights']}`
+
+type DensityTokens = { [Name in DensityToken]?: Name extends `--enchase-line-height-${string}` ? number : string }
+
+export type ThemeDensity = {
+  compact?:
+    | {
+        tokens?: DensityTokens | undefined
+        hooks?: HookValues | undefined
+      }
+    | undefined
+}
+
 export type ModeTokens = {
   colors: ColorTokens
   shadows: ShadowTokens

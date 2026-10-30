@@ -1,8 +1,8 @@
-export type Validate = (name: string, value: unknown) => string | number
+export type Validate = (name: string, value: unknown) => unknown
 
 export type Validators = Validate | { [key: string]: Validators }
 
-export type TokenKind = 'base' | 'color' | 'font' | 'radius' | 'shadow'
+export type TokenKind = 'base' | 'color' | 'density' | 'font' | 'radius' | 'shadow'
 
 export const hasOwn = (target: object, key: string) => Object.prototype.hasOwnProperty.call(target, key)
 

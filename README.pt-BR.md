@@ -680,6 +680,7 @@ export const dense = defineStyle({
 | `colorHooks` | Ganchos cujo valor cita uma cor ou uma sombra do tema (`var(--enchase-color-…)`, `var(--enchase-shadow-…)`). Vão para o bloco de cada modo, onde essas variáveis existem. |
 | `light` e `dark` | O que vale só em um modo: `colors` (qualquer papel de cor), `shadows` (menos `none`) e `hooks`. |
 | `brand` | Quais papéis da paleta vêm da cor da marca quando quem usa passa `brand`. Sem a lista, a marca tinge a paleta inteira. |
+| `density` | O compacto do estilo (`compact`, a única densidade): `tokens`, com a área de toque, as alturas de controle, o espaço, o tamanho de fonte e a entrelinha pelo nome da variável (`--enchase-space-md`), e `hooks`, com ganchos de CSS como em `hooks`. |
 | `defaults` | Hoje só `labelPlacement`. |
 
 - O `defineStyle` lança erro, com o caminho da parte que falhou, para uma seção ou um token que não existe, para um valor de CSS inseguro (com `;`, `{`, `}`, `<`, `>`, `\`, um comentário, `url()`, `@import`, parêntese ou aspas sem fechar, ou com mais de 400 caracteres), para um nome de gancho fora do formato `--enchase-<palavras-em-minúsculas-com-hífen>`, para um "gancho" que na verdade é um token do tema (`--enchase-space-md`) e para um gancho da raiz que cita uma cor ou uma sombra do tema (esse vai em `colorHooks`).
