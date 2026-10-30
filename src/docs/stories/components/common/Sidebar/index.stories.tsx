@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, Icon, Sidebar } from 'enchase'
 
-import type { ComponentProps } from 'react'
+import type { ComponentProps, CSSProperties } from 'react'
 import type { SidebarSection } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -138,4 +138,19 @@ export const Permanent: Story = {
 
 export const Drawer: Story = {
   render: (args) => <DrawerDemo {...args} />
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story: 'The padding of an item is one hook for both sides, `--enchase-sidebar-item-control-padding-inline`. `--enchase-sidebar-item-control-padding-inline-end` sets only the side at the end (the right in left to right text) and falls back to the hook of both sides. Here the items have 1.5 rem at the start and 0.75 rem at the end, which leaves more room for long labels and badges. The items of a collapsed sidebar keep no padding.'
+      }
+    }
+  },
+  render: (args) => (
+    <div style={{ display: 'flex', minHeight: 360, '--enchase-sidebar-item-control-padding-inline': '1.5rem', '--enchase-sidebar-item-control-padding-inline-end': '0.75rem' } as CSSProperties}>
+      <Sidebar {...args} variant="permanent" header={<strong>Enchase</strong>} />
+    </div>
+  )
 }

@@ -3,7 +3,7 @@
   margin-block: auto 0;
   margin-inline: 0;
   padding-block: var(--enchase-footer-padding-block, var(--enchase-space-xl));
-  padding-inline: 0;
+  padding-inline: var(--enchase-footer-padding-inline, 0);
   background-color: var(--enchase-footer-background, var(--enchase-color-surface-container));
   color: var(--enchase-footer-color, var(--enchase-color-text-secondary));
 }

@@ -363,7 +363,7 @@ Also accepts the other HTML attributes of the root element.
 
 ### GlobalStyles
 
-Reset and typographic base of the library in a `<style>`: `box-sizing`, zeroed margins, font, color and background of the `body` from the theme, size of the headings and responsive images. The CSS lives in the `enchase-base` layer. Render it once, at the root of the app.
+Reset and typographic base of the library in a `<style>`: `box-sizing`, zeroed margins, font, color and background of the `body` from the theme, size and weight of the headings and responsive images. The weight of `h1` to `h6` reads the CSS variable `--enchase-heading-font-weight`, which falls back to `var(--enchase-font-weight-medium)`. The CSS lives in the `enchase-base` layer. Render it once, at the root of the app.
 
 No props of its own.
 
@@ -1060,6 +1060,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-accordion-item-border-color` | `var(--enchase-color-border)` | `border-block-start` |
 | `--enchase-accordion-panel-font-size` | `inherit` | `font-size` |
 | `--enchase-accordion-panel-padding-block-end` | `1rem` (`--enchase-space-md`) | `padding-block-end` |
+| `--enchase-accordion-panel-padding-block-start` | `0` | `padding-block-start` |
 | `--enchase-accordion-panel-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-accordion-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-accordion-trigger-background` | `transparent` | `background-color` |
@@ -1496,6 +1497,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | Hook | Default | Property |
 | --- | --- | --- |
 | `--enchase-divider-border-color` | `var(--enchase-color-border)` | `border-block-start`, `border-inline-start` |
+| `--enchase-divider-margin-block` | `0` | `margin-block` |
+| `--enchase-divider-margin-inline` | `0` | `margin-inline` |
 | `--enchase-divider-min-height` | `1rem` | `min-block-size` |
 
 ### Drawer
@@ -1516,8 +1519,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-drawer-dx` | `0` | `transform` |
 | `--enchase-drawer-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-drawer-exit-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition-duration` |
+| `--enchase-drawer-footer-border-color-start` | `currentColor` | `border-block-start` |
+| `--enchase-drawer-footer-border-style-start` | `none` | `border-block-start` |
+| `--enchase-drawer-footer-border-width-start` | `0` | `border-block-start` |
 | `--enchase-drawer-footer-padding-block` | `0 var(--enchase-space-lg)` | `padding-block` |
 | `--enchase-drawer-footer-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
+| `--enchase-drawer-header-border-color-end` | `currentColor` | `border-block-end` |
+| `--enchase-drawer-header-border-style-end` | `none` | `border-block-end` |
+| `--enchase-drawer-header-border-width-end` | `0` | `border-block-end` |
 | `--enchase-drawer-header-gap` | `1rem` (`--enchase-space-md`) | `gap` |
 | `--enchase-drawer-header-padding-block` | `var(--enchase-space-lg) 0` | `padding-block` |
 | `--enchase-drawer-header-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
@@ -1558,6 +1567,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-footer-link-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-footer-links-gap` | `1.5rem` | `gap` |
 | `--enchase-footer-padding-block` | `2rem` (`--enchase-space-xl`) | `padding-block` |
+| `--enchase-footer-padding-inline` | `0` | `padding-inline` |
 
 ### Grid
 
@@ -1826,6 +1836,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-navbar-menu-link-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-navbar-menu-link-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-navbar-menu-link-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-navbar-menu-link-height` | `max(24px, var(--enchase-hit-size, 40px))` | `block-size` |
 | `--enchase-navbar-menu-link-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-navbar-menu-link-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-navbar-mobile-menu-link-min-height` | `52px` | `min-block-size` |
@@ -1861,6 +1872,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-pagination-control-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-pagination-control-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-pagination-control-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-pagination-control-font-weight-current` | `var(--enchase-pagination-control-font-weight, var(--enchase-font-weight-medium))` | `font-weight` |
 | `--enchase-pagination-control-line-height` | `1` (`--enchase-line-height-none`) | `line-height` |
 | `--enchase-pagination-control-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
 | `--enchase-pagination-control-padding-inline-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
@@ -2061,7 +2073,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-sidebar-item-control-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 | `--enchase-sidebar-item-control-gap` | `1rem` (`--enchase-space-md`) | `gap` |
 | `--enchase-sidebar-item-control-height` | `52px` | `block-size` |
-| `--enchase-sidebar-item-control-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-sidebar-item-control-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline`, `padding-inline-end` |
+| `--enchase-sidebar-item-control-padding-inline-end` | `var(--enchase-sidebar-item-control-padding-inline, var(--enchase-space-md))` | `padding-inline-end` |
 | `--enchase-sidebar-item-control-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-sidebar-item-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-sidebar-item-icon-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
@@ -2240,6 +2253,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-tabs-indicator-color` | `var(--enchase-color-primary)` | `border-block-end` |
 | `--enchase-tabs-indicator-width` | `2px` (`--enchase-border-width-strong`) | `border-block-end`, `block-size` |
 | `--enchase-tabs-list-border-color` | `var(--enchase-color-border)` | `box-shadow` |
+| `--enchase-tabs-list-gap` | `normal` | `gap` |
 | `--enchase-tabs-panel-padding-block-start` | `1rem` (`--enchase-space-md`) | `padding-block-start` |
 | `--enchase-tabs-tab-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-tabs-tab-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |

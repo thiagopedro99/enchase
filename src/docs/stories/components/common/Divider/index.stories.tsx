@@ -2,6 +2,7 @@ import { Button, Divider, Flex } from 'enchase'
 import { defaultDecorative, defaultOrientation } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const meta = {
   title: 'Components/Divider',
@@ -78,5 +79,32 @@ export const InAToolbar: Story = {
         Link
       </Button>
     </Flex>
+  )
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'A divider has no margin of its own: the space around it comes from its container, such as a `gap`. `--enchase-divider-margin-block` sets the space above and below a horizontal divider and `--enchase-divider-margin-inline` the space at the sides of a vertical one, both 0 by default. Here the horizontal divider has 1.5 rem above and below, and the vertical one 0.5 rem at each side.'
+      }
+    }
+  },
+  decorators: [(Story) => <div style={{ inlineSize: 'min(28rem, 100%)' }}><Story /></div>],
+  render: () => (
+    <div style={{ display: 'grid', '--enchase-divider-margin-block': '1.5rem', '--enchase-divider-margin-inline': '0.5rem' } as CSSProperties}>
+      <p style={{ margin: 0 }}>We ship within two business days.</p>
+      <Divider />
+      <Flex align="center" style={{ blockSize: '2.5rem' }}>
+        <Button size="sm" variant="ghost">
+          Bold
+        </Button>
+        <Divider orientation="vertical" />
+        <Button size="sm" variant="ghost">
+          Italic
+        </Button>
+      </Flex>
+    </div>
   )
 }

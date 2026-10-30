@@ -12,6 +12,7 @@
 
 :where(.divider[data-orientation='horizontal']) {
   inline-size: 100%;
+  margin-block: var(--enchase-divider-margin-block, 0);
   border-block-start: var(--enchase-border-width, 1px) solid var(--enchase-divider-border-color, var(--enchase-color-border));
 }
 
@@ -19,5 +20,6 @@
   align-self: stretch;
   inline-size: 0;
   min-block-size: var(--enchase-divider-min-height, 1rem);
+  margin-inline: var(--enchase-divider-margin-inline, 0);
   border-inline-start: var(--enchase-border-width, 1px) solid var(--enchase-divider-border-color, var(--enchase-color-border));
 }

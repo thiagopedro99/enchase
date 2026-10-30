@@ -1,6 +1,7 @@
 import { Footer } from 'enchase'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { FooterProps } from 'enchase'
 
 const meta = {
   title: 'Components/Footer',
@@ -47,4 +48,21 @@ export const WithLinks: Story = {
 
 export const OnlyTheYear: Story = {
   args: { companyName: undefined, notice: undefined }
+}
+
+export const CustomHooks: Story = {
+  args: {
+    links: [
+      { label: 'Documentation', href: '/docs' },
+      { label: 'Repository', href: 'https://github.com/thiagopedro99/enchase' }
+    ],
+    style: { '--enchase-footer-padding-inline': '3rem' } as FooterProps['style']
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: 'The footer has padding above and below, `--enchase-footer-padding-block`, and none at the sides, because the content sits in a container that already gives the side. `--enchase-footer-padding-inline` adds the space at the sides, 0 by default. Here it is 3 rem, set in the `style` of the footer.'
+      }
+    }
+  }
 }

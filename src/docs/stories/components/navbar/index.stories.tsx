@@ -126,3 +126,14 @@ export const CustomTranslucent: Story = {
   parameters: { docs: { description: { story: 'The background color and the blur radius are set with the variables `--enchase-navbar-background` and `--enchase-navbar-blur`, here in the `style` of the bar.' } } },
   render: (args) => <BehindTheBar {...args} />
 }
+
+export const CustomHooks: Story = {
+  args: { style: { '--enchase-navbar-menu-link-height': '46px' } as NavbarProps['style'] },
+  parameters: {
+    docs: {
+      description: {
+        story: 'The links of the horizontal menu are as tall as the hit target of the theme (`--enchase-hit-size`, 40 px by default), and never below 24 px. `--enchase-navbar-menu-link-height` sets their height on its own, without changing the target of the other controls or the height of the bar (`--enchase-navbar-bar-height`), and it is kept at 24 px or more as well. Here the links are 46 px tall, set in the `style` of the bar.'
+      }
+    }
+  }
+}

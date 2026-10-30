@@ -3,6 +3,7 @@ import { Pagination } from 'enchase'
 import { defaultBoundaryCount, defaultPage, defaultSiblingCount, defaultSize } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const ControlledDemo = () => {
   const [page, setPage] = useState(7)
@@ -104,4 +105,20 @@ export const SinglePage: Story = {
 export const Controlled: Story = {
   parameters: { controls: { disable: true } },
   render: () => <ControlledDemo />
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The weight of the numbers is one hook for all the pages, `--enchase-pagination-control-font-weight` (medium by default), and the current page follows it until `--enchase-pagination-control-font-weight-current` says otherwise. Here the pages are regular and the current one is semibold.'
+      }
+    }
+  },
+  render: () => (
+    <div style={{ '--enchase-pagination-control-font-weight': 'var(--enchase-font-weight-regular)', '--enchase-pagination-control-font-weight-current': 'var(--enchase-font-weight-semibold)' } as CSSProperties}>
+      <Pagination ariaLabel="Results" pageCount={20} defaultPage={7} />
+    </div>
+  )
 }

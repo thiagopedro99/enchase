@@ -111,7 +111,7 @@
 }
 
 :where(.menuLink) {
-  block-size: max(24px, var(--enchase-hit-size, 40px));
+  block-size: max(24px, var(--enchase-navbar-menu-link-height, max(24px, var(--enchase-hit-size, 40px))));
   min-block-size: 24px;
   font-size: var(--enchase-navbar-menu-link-font-size, var(--enchase-font-size-sm));
 }

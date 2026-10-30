@@ -35,7 +35,7 @@ export const globalStylesCss = `
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-weight: ${vars.font.weight.medium};
+    font-weight: var(--enchase-heading-font-weight, ${vars.font.weight.medium});
     line-height: var(--enchase-line-height-tight, 1.2);
     letter-spacing: var(--enchase-letter-spacing-tight, -0.01em);
     margin-bottom: ${vars.space.md};

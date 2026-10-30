@@ -109,6 +109,7 @@
 }
 
 :where(.panel) {
+  padding-block-start: var(--enchase-accordion-panel-padding-block-start, 0);
   padding-block-end: var(--enchase-accordion-panel-padding-block-end, var(--enchase-space-md));
   padding-inline: var(--enchase-accordion-panel-padding-inline, var(--enchase-space-md));
   font-size: var(--enchase-accordion-panel-font-size, inherit);

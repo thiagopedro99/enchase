@@ -8,7 +8,7 @@ export const apiNotes = {
     }
   },
   GlobalStyles: {
-    description: 'Reset and typographic base of the library in a `<style>`: `box-sizing`, zeroed margins, font, color and background of the `body` from the theme, size of the headings and responsive images. The CSS lives in the `enchase-base` layer. Render it once, at the root of the app.',
+    description: 'Reset and typographic base of the library in a `<style>`: `box-sizing`, zeroed margins, font, color and background of the `body` from the theme, size and weight of the headings and responsive images. The weight of `h1` to `h6` reads the CSS variable `--enchase-heading-font-weight`, which falls back to `var(--enchase-font-weight-medium)`. The CSS lives in the `enchase-base` layer. Render it once, at the root of the app.',
     argTypes: {}
   },
   ThemeVariables: {

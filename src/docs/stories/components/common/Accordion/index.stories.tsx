@@ -148,12 +148,12 @@ export const CustomHooks: Story = {
     controls: { disable: true },
     docs: {
       description: {
-        story: 'The trigger has a background, `--enchase-accordion-trigger-background`, transparent by default. Here it is a surface tone, so the triggers stand out from the panels.'
+        story: 'The trigger has a background, `--enchase-accordion-trigger-background`, transparent by default. Here it is a surface tone, so the triggers stand out from the panels. The panel has padding at the bottom and at the sides but none at the top, so its content starts right under the trigger: `--enchase-accordion-panel-padding-block-start` adds the space at the top, here the same as the sides.'
       }
     }
   },
   render: () => (
-    <div style={{ '--enchase-accordion-trigger-background': 'var(--enchase-color-surface-container-low)' } as CSSProperties}>
+    <div style={{ '--enchase-accordion-trigger-background': 'var(--enchase-color-surface-container-low)', '--enchase-accordion-panel-padding-block-start': 'var(--enchase-space-md)' } as CSSProperties}>
       <Accordion items={items} defaultValue={[faq[0].value]} />
     </div>
   )

@@ -359,6 +359,37 @@ describe('the accordion from the hooks', () => {
 
     expect(style('accordion-trigger').backgroundColor).toBe('rgb(1, 2, 3)')
   })
+
+  it('keeps the panel without padding at the top when no hook is set', () => {
+    renderInBrowser(<Accordion items={[{ value: 'a', title: 'A', content: 'First' }]} defaultValue={['a']} />)
+
+    expect(paddings('accordion-panel')).toEqual(['0px', '16px', '16px', '16px'])
+  })
+
+  it('takes the padding at the top of every panel from its hook, and keeps the bottom and the sides', () => {
+    renderInBrowser(
+      scoped(
+        { '--enchase-accordion-panel-padding-block-start': '17px' },
+        <Accordion
+          multiple
+          items={[
+            { value: 'a', title: 'A', content: 'First' },
+            { value: 'b', title: 'B', content: 'Second' }
+          ]}
+          defaultValue={['a', 'b']}
+        />
+      )
+    )
+
+    expect(parts('accordion-panel').map((panel) => getComputedStyle(panel).paddingTop)).toEqual(['17px', '17px'])
+    expect(paddings('accordion-panel', 1)).toEqual(['17px', '16px', '16px', '16px'])
+  })
+
+  it('lets the hook of the bottom padding of the panel move on its own', () => {
+    renderInBrowser(scoped({ '--enchase-accordion-panel-padding-block-start': '17px', '--enchase-accordion-panel-padding-block-end': '9px' }, <Accordion items={[{ value: 'a', title: 'A', content: 'First' }]} defaultValue={['a']} />))
+
+    expect(paddings('accordion-panel')).toEqual(['17px', '16px', '9px', '16px'])
+  })
 })
 
 describe('the day of the calendar from the hooks', () => {
@@ -582,6 +613,44 @@ describe('the tabs from the hooks', () => {
     const indicator = style('tabs-indicator').borderBottomColor
 
     expect([underline, indicator]).toEqual(['rgb(1, 2, 3)', 'rgb(1, 2, 3)'])
+  })
+
+  it('keeps the tabs touching each other when no hook is set', () => {
+    renderInBrowser(<Tabs ariaLabel="Account" items={items} defaultValue="one" />)
+
+    const [first, second] = parts('tabs-tab').map((tab) => tab.getBoundingClientRect())
+
+    expect([style('tabs-list').columnGap, style('tabs-list').rowGap]).toEqual(['normal', 'normal'])
+    expect(second.left).toBeCloseTo(first.right, 1)
+  })
+
+  it('takes the space between the tabs from its hook, and keeps the padding and the width of each tab', () => {
+    renderInBrowser(
+      <>
+        <Tabs ariaLabel="Plain" items={items} defaultValue="one" />
+        {scoped({ '--enchase-tabs-list-gap': '12px' }, <Tabs ariaLabel="Spaced" items={items} defaultValue="one" />)}
+      </>
+    )
+
+    const [plainFirst, plainSecond, spacedFirst, spacedSecond] = parts('tabs-tab').map((tab) => tab.getBoundingClientRect())
+
+    expect(style('tabs-list', 1).columnGap).toBe('12px')
+    expect(spacedSecond.left - spacedFirst.right).toBeCloseTo(12, 1)
+    expect(plainSecond.left - plainFirst.right).toBeCloseTo(0, 1)
+    expect([spacedFirst.width, spacedSecond.width]).toEqual([plainFirst.width, plainSecond.width])
+    expect(style('tabs-tab', 2).paddingLeft).toBe(style('tabs-tab', 0).paddingLeft)
+  })
+
+  it('keeps the sliding indicator under the selected tab when the tabs are spaced', () => {
+    renderInBrowser(scoped({ '--enchase-tabs-list-gap': '12px' }, <Tabs ariaLabel="Account" items={items} defaultValue="two" />))
+
+    const [first, second] = parts('tabs-tab').map((tab) => tab.getBoundingClientRect())
+    const bar = part('tabs-indicator').getBoundingClientRect()
+
+    expect(second.left - first.right).toBeCloseTo(12, 1)
+    expect(part('tabs-indicator').hasAttribute('data-visible')).toBe(true)
+    expect(bar.left).toBeCloseTo(second.left, 0)
+    expect(bar.width).toBeCloseTo(second.width, 0)
   })
 })
 

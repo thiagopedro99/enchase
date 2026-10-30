@@ -627,4 +627,75 @@ describe('the drawer from the hooks', () => {
 
     expect(style('drawer-close').color).toBe('rgb(4, 5, 6)')
   })
+
+  it('keeps the header and the footer without a border when no hook is set', async () => {
+    renderInBrowser(<DrawerPage footer={<button>Salvar</button>}>Corpo</DrawerPage>)
+    await openIt()
+
+    const sides = ['top', 'right', 'bottom', 'left']
+
+    for (const name of ['drawer-header', 'drawer-footer']) {
+      const computed = style(name)
+
+      expect(sides.map((side) => [computed.getPropertyValue(`border-${side}-width`), computed.getPropertyValue(`border-${side}-style`), computed.getPropertyValue(`border-${side}-color`)])).toEqual(sides.map(() => ['0px', 'none', computed.color]))
+    }
+  })
+
+  it.each(['ltr', 'rtl'] as const)('draws a border at the end of the header and at the start of the footer from their hooks in %s, and leaves the other sides alone', async (direction) => {
+    const mount: (ui: ReactElement) => unknown = direction === 'rtl' ? renderRtl : renderInBrowser
+
+    onRoot({
+      '--enchase-drawer-header-border-width-end': '3px',
+      '--enchase-drawer-header-border-style-end': 'solid',
+      '--enchase-drawer-header-border-color-end': 'rgb(1, 2, 3)',
+      '--enchase-drawer-footer-border-width-start': '5px',
+      '--enchase-drawer-footer-border-style-start': 'dashed',
+      '--enchase-drawer-footer-border-color-start': 'rgb(4, 5, 6)'
+    })
+    document.documentElement.dir = direction
+    mount(<DrawerPage footer={<button>Salvar</button>}>Corpo</DrawerPage>)
+    await openIt()
+
+    const header = style('drawer-header')
+    const footer = style('drawer-footer')
+
+    expect([header.borderBottomWidth, header.borderBottomStyle, header.borderBottomColor]).toEqual(['3px', 'solid', 'rgb(1, 2, 3)'])
+    expect([header.borderTopWidth, header.borderRightWidth, header.borderLeftWidth]).toEqual(['0px', '0px', '0px'])
+    expect([footer.borderTopWidth, footer.borderTopStyle, footer.borderTopColor]).toEqual(['5px', 'dashed', 'rgb(4, 5, 6)'])
+    expect([footer.borderBottomWidth, footer.borderRightWidth, footer.borderLeftWidth]).toEqual(['0px', '0px', '0px'])
+  })
+
+  it('draws nothing from the width and the color of the borders alone, until the style is set', async () => {
+    onRoot({
+      '--enchase-drawer-header-border-width-end': '3px',
+      '--enchase-drawer-header-border-color-end': 'rgb(1, 2, 3)',
+      '--enchase-drawer-footer-border-width-start': '5px',
+      '--enchase-drawer-footer-border-color-start': 'rgb(4, 5, 6)'
+    })
+    renderInBrowser(<DrawerPage footer={<button>Salvar</button>}>Corpo</DrawerPage>)
+    await openIt()
+
+    expect([style('drawer-header').borderBottomStyle, style('drawer-header').borderBottomWidth, style('drawer-footer').borderTopStyle, style('drawer-footer').borderTopWidth]).toEqual(['none', '0px', 'none', '0px'])
+  })
+
+  it('keeps the width of the borders at zero when only the style is set', async () => {
+    onRoot({ '--enchase-drawer-header-border-style-end': 'solid', '--enchase-drawer-footer-border-style-start': 'solid' })
+    renderInBrowser(<DrawerPage footer={<button>Salvar</button>}>Corpo</DrawerPage>)
+    await openIt()
+
+    expect([style('drawer-header').borderBottomWidth, style('drawer-footer').borderTopWidth]).toEqual(['0px', '0px'])
+  })
+
+  it('draws the border of the header without drawing the one of the footer, and the other way round', async () => {
+    onRoot({ '--enchase-drawer-header-border-width-end': '3px', '--enchase-drawer-header-border-style-end': 'solid' })
+    renderInBrowser(<DrawerPage footer={<button>Salvar</button>}>Corpo</DrawerPage>)
+    await openIt()
+
+    expect([style('drawer-header').borderBottomWidth, style('drawer-footer').borderTopWidth]).toEqual(['3px', '0px'])
+
+    document.documentElement.removeAttribute('style')
+    onRoot({ '--enchase-drawer-footer-border-width-start': '5px', '--enchase-drawer-footer-border-style-start': 'solid' })
+
+    expect([style('drawer-header').borderBottomWidth, style('drawer-footer').borderTopWidth]).toEqual(['0px', '5px'])
+  })
 })

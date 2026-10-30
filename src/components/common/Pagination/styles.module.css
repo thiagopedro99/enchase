@@ -79,6 +79,10 @@
   border-width: var(--enchase-border-width-strong, 2px);
 }
 
+.control:where([aria-current='page']) {
+  font-weight: var(--enchase-pagination-control-font-weight-current, var(--enchase-pagination-control-font-weight, var(--enchase-font-weight-medium)));
+}
+
 .control[aria-disabled='true'] {
   color: var(--enchase-pagination-control-color-disabled, var(--enchase-color-text-disabled));
   cursor: not-allowed;

@@ -3,6 +3,7 @@ import { Badge, Button, Input, Tabs } from 'enchase'
 import { defaultActivation, manySections, sections } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const items = sections.map(({ value, label, text }) => ({ value, label, content: <p style={{ margin: 0 }}>{text}</p> }))
 
@@ -153,6 +154,22 @@ export const WithNodesInLabel: Story = {
           }
         ]}
       />
+    </div>
+  )
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The tabs touch each other and each one carries its own inline padding, so the hover layer and the underline of a tab are as wide as its label plus that padding. `--enchase-tabs-list-gap` (`normal` by default, which is no space) spaces the tabs apart without making them wider. Here the padding of each tab is 0 and the gap is 2 rem, so the underline is as wide as the text and the labels are still 2 rem apart.'
+      }
+    }
+  },
+  render: () => (
+    <div style={{ inlineSize: 'min(32rem, 100%)', '--enchase-tabs-list-gap': '2rem', '--enchase-tabs-tab-padding-inline': '0' } as CSSProperties}>
+      <Tabs ariaLabel="Account sections" items={items} />
     </div>
   )
 }

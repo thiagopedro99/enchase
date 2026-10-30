@@ -216,6 +216,7 @@
   margin: 0;
   padding-block: 0;
   padding-inline: var(--enchase-sidebar-item-control-padding-inline, var(--enchase-space-md));
+  padding-inline-end: var(--enchase-sidebar-item-control-padding-inline-end, var(--enchase-sidebar-item-control-padding-inline, var(--enchase-space-md)));
   border: 0;
   background-color: transparent;
   font-family: inherit;

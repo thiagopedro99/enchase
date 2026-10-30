@@ -105,6 +105,45 @@ describe('the pagination from the hooks', () => {
   it('takes the padding of the small size from its own hook', () => {
     hooked([['--enchase-pagination-control-padding-inline-sm', '5px', at('pagination-page', 1), 'padding-left']], <Pagination pageCount={10} page={1} size="sm" />)
   })
+
+  it('keeps the weight of the current page as the one of the other pages when no hook is set', () => {
+    renderInBrowser(<Pagination pageCount={10} page={1} />)
+
+    expect([style('pagination-page', 0).fontWeight, style('pagination-page', 1).fontWeight]).toEqual(['500', '500'])
+  })
+
+  it('follows the weight of all the pages in the current page when its own hook is not set', () => {
+    onRoot({ '--enchase-pagination-control-font-weight': '300' })
+    renderInBrowser(<Pagination pageCount={10} page={1} />)
+
+    expect([style('pagination-page', 0).fontWeight, style('pagination-page', 1).fontWeight]).toEqual(['300', '300'])
+  })
+
+  it('takes the weight of the current page from its own hook, and lets the other pages keep theirs', () => {
+    onRoot({ '--enchase-pagination-control-font-weight': '300', '--enchase-pagination-control-font-weight-current': '700' })
+    renderInBrowser(<Pagination pageCount={10} page={1} />)
+
+    expect([style('pagination-page', 0).fontWeight, style('pagination-page', 1).fontWeight]).toEqual(['700', '300'])
+  })
+
+  it('takes the weight of the current page from its own hook in the small size too', () => {
+    hooked([['--enchase-pagination-control-font-weight-current', '650', at('pagination-page', 0), 'font-weight']], <Pagination pageCount={10} page={1} size="sm" />)
+  })
+
+  it('lets a rule of the page on the weight of the pages win in the current page too, as it does without the hook', () => {
+    const rule = document.createElement('style')
+
+    rule.textContent = '[data-slot="pagination-page"] { font-weight: 800; }'
+    document.head.append(rule)
+
+    try {
+      renderInBrowser(<Pagination pageCount={10} page={1} />)
+
+      expect([style('pagination-page', 0).fontWeight, style('pagination-page', 1).fontWeight]).toEqual(['800', '800'])
+    } finally {
+      rule.remove()
+    }
+  })
 })
 
 const sections = [
@@ -166,6 +205,53 @@ describe('the sidebar from the hooks', () => {
       ],
       sidebar
     )
+  })
+
+  it('keeps the padding at the end of an item as the one at the start when no hook is set', () => {
+    renderInBrowser(sidebar)
+
+    const link = getComputedStyle(sidebarLink(1)() as Element)
+
+    expect([link.paddingLeft, link.paddingRight]).toEqual(['16px', '16px'])
+  })
+
+  it('follows the hook of both sides at the end of an item when its own hook is not set', () => {
+    hooked(
+      [
+        ['--enchase-sidebar-item-control-padding-inline', '19px', sidebarLink(1), 'padding-left'],
+        ['--enchase-sidebar-item-control-padding-inline', '19px', sidebarLink(1), 'padding-right']
+      ],
+      sidebar
+    )
+  })
+
+  it('takes the padding at the end of an item from its own hook, and keeps the one at the start', () => {
+    hooked(
+      [
+        ['--enchase-sidebar-item-control-padding-inline', '19px', sidebarLink(1), 'padding-left'],
+        ['--enchase-sidebar-item-control-padding-inline-end', '23px', sidebarLink(1), 'padding-right']
+      ],
+      sidebar
+    )
+  })
+
+  it('puts the padding at the end of an item on the left in a right to left page', () => {
+    onRoot({ '--enchase-sidebar-item-control-padding-inline': '19px', '--enchase-sidebar-item-control-padding-inline-end': '23px' })
+    document.documentElement.dir = 'rtl'
+    renderInBrowser(sidebar)
+
+    const link = getComputedStyle(sidebarLink(1)() as Element)
+
+    expect([link.paddingLeft, link.paddingRight]).toEqual(['23px', '19px'])
+  })
+
+  it('keeps the items of a collapsed sidebar without padding when the hook of the end is set', () => {
+    onRoot({ '--enchase-sidebar-item-control-padding-inline': '19px', '--enchase-sidebar-item-control-padding-inline-end': '23px' })
+    renderInBrowser(<Sidebar variant="permanent" collapsed currentHref="/" sections={sections} />)
+
+    const link = getComputedStyle(sidebarLink(1)() as Element)
+
+    expect([link.paddingLeft, link.paddingRight]).toEqual(['0px', '0px'])
   })
 
   it('paints the sliding indicator with the current color of the item until its own hook says otherwise', () => {
@@ -269,6 +355,42 @@ describe('the navbar from the hooks', () => {
       ],
       navbar
     )
+  })
+
+  it('keeps the link of the horizontal menu at the size of the hit target when no hook is set', () => {
+    renderInBrowser(navbar)
+
+    expect(getComputedStyle(menuLink(0)() as Element).height).toBe('40px')
+  })
+
+  it('follows the hit size of the theme in the link of the horizontal menu when no hook is set, down to the floor of 24px', () => {
+    onRoot({ '--enchase-hit-size': '32px' })
+    renderInBrowser(navbar)
+
+    expect(getComputedStyle(menuLink(0)() as Element).height).toBe('32px')
+
+    document.documentElement.style.setProperty('--enchase-hit-size', '10px')
+
+    expect(getComputedStyle(menuLink(0)() as Element).height).toBe('24px')
+  })
+
+  it('takes the height of the link of the horizontal menu from its hook, over the hit size', () => {
+    onRoot({ '--enchase-hit-size': '32px' })
+    hooked(
+      [
+        ['--enchase-navbar-menu-link-height', '46px', menuLink(0), 'height'],
+        ['--enchase-navbar-menu-link-height', '46px', menuLink(1), 'height']
+      ],
+      navbar
+    )
+  })
+
+  it('keeps the floor of 24px under a hook of the height of the link that is lower', () => {
+    hooked([['--enchase-navbar-menu-link-height', '10px', menuLink(1), 'height', '24px']], navbar)
+  })
+
+  it('leaves the height of the bar alone when the height of the link is set', () => {
+    hooked([['--enchase-navbar-menu-link-height', '46px', at('navbar-bar'), 'height', '64px']], navbar)
   })
 
   it('takes the color of the logo and of the links while hovered and while pressed from their hooks', async () => {
@@ -430,6 +552,23 @@ describe('the footer from the hooks', () => {
         ['--enchase-footer-color', 'rgb(4, 5, 6)', at('footer'), 'color'],
         ['--enchase-footer-link-color', 'rgb(7, 8, 9)', at('footer-link'), 'color'],
         ['--enchase-footer-copyright-color', 'rgb(10, 11, 12)', at('footer-copyright'), 'color']
+      ],
+      <Footer links={links} />
+    )
+  })
+
+  it('keeps the footer without padding at the sides when no hook is set', () => {
+    renderInBrowser(<Footer links={links} />)
+
+    expect([style('footer').paddingLeft, style('footer').paddingRight]).toEqual(['0px', '0px'])
+  })
+
+  it('takes the padding at the sides of the footer from its hook, and keeps the one above and below', () => {
+    hooked(
+      [
+        ['--enchase-footer-padding-inline', '23px', at('footer'), 'padding-left'],
+        ['--enchase-footer-padding-inline', '23px', at('footer'), 'padding-right'],
+        ['--enchase-footer-padding-block', '21px', at('footer'), 'padding-top']
       ],
       <Footer links={links} />
     )

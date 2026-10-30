@@ -3,7 +3,7 @@ import { Button, Drawer, Flex } from 'enchase'
 import { containerArgType } from '@docs/shared/argTypes.ts'
 import { defaultCloseOnEsc, defaultCloseOnOverlayClick, defaultShowCloseButton, defaultSide, defaultSize, filters, sides, sizes } from './defaultData.ts'
 
-import type { ComponentProps } from 'react'
+import type { ComponentProps, CSSProperties } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 type DrawerDemoProps = ComponentProps<typeof Drawer> & { label: string }
@@ -136,4 +136,34 @@ export const LongContent: Story = {
 
 export const WithoutMotion: Story = {
   render: (args) => <DrawerDemo {...args} label="Open without animation" animation={false} />
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The header and the footer have no border by default. Each one has three hooks, like the separator of the header of the `Table`: width, style and color. `--enchase-drawer-header-border-width-end`, `-style-end` and `-color-end` draw the line under the header, and `--enchase-drawer-footer-border-width-start`, `-style-start` and `-color-start` the line above the footer. Nothing is drawn unless the style is set. The hooks go on the `style` of the drawer, which is its panel; here the paddings are adjusted too, so the lines have room.'
+      }
+    }
+  },
+  render: (args) => (
+    <DrawerDemo
+      {...args}
+      label="Open with borders"
+      footer={<Button>Apply filters</Button>}
+      style={
+        {
+          '--enchase-drawer-header-border-width-end': '1px',
+          '--enchase-drawer-header-border-style-end': 'solid',
+          '--enchase-drawer-header-border-color-end': 'var(--enchase-color-border)',
+          '--enchase-drawer-header-padding-block': 'var(--enchase-space-lg)',
+          '--enchase-drawer-footer-border-width-start': '1px',
+          '--enchase-drawer-footer-border-style-start': 'solid',
+          '--enchase-drawer-footer-border-color-start': 'var(--enchase-color-border)',
+          '--enchase-drawer-footer-padding-block': 'var(--enchase-space-md)'
+        } as CSSProperties
+      }
+    />
+  )
 }

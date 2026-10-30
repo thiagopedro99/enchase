@@ -93,6 +93,51 @@ describe('Divider in a real browser', () => {
     expect(style('divider').borderBlockStartWidth).toBe('3px')
   })
 
+  it('keeps the margin of the divider at zero when no hook is set', () => {
+    renderInBrowser(
+      <>
+        <Divider />
+        <Divider orientation="vertical" />
+      </>
+    )
+
+    for (const index of [0, 1]) {
+      const computed = style('divider', index)
+
+      expect([computed.marginTop, computed.marginRight, computed.marginBottom, computed.marginLeft]).toEqual(['0px', '0px', '0px', '0px'])
+    }
+  })
+
+  it('takes the margin above and below a horizontal divider, and at the sides of a vertical one, from their own hooks', () => {
+    hooked(
+      [
+        ['--enchase-divider-margin-block', '24px', at('divider'), 'margin-top'],
+        ['--enchase-divider-margin-block', '24px', at('divider'), 'margin-bottom'],
+        ['--enchase-divider-margin-inline', '8px', at('divider', 1), 'margin-left'],
+        ['--enchase-divider-margin-inline', '8px', at('divider', 1), 'margin-right']
+      ],
+      <>
+        <Divider />
+        <Divider orientation="vertical" />
+      </>
+    )
+
+    expect([style('divider').marginLeft, style('divider').marginRight, style('divider', 1).marginTop, style('divider', 1).marginBottom]).toEqual(['0px', '0px', '0px', '0px'])
+  })
+
+  it('lets the caller class win over the hooks of the margin', () => {
+    addStyle('.mine { margin-block: 9px; margin-inline: 7px; }')
+    onRoot({ '--enchase-divider-margin-block': '24px', '--enchase-divider-margin-inline': '8px' })
+    renderInBrowser(
+      <>
+        <Divider className="mine" />
+        <Divider orientation="vertical" className="mine" />
+      </>
+    )
+
+    expect([style('divider').marginTop, style('divider').marginLeft, style('divider', 1).marginTop, style('divider', 1).marginLeft]).toEqual(['9px', '7px', '9px', '7px'])
+  })
+
   it('lets the caller class win on the line and the margin even when its css loads before the library', () => {
     addStyle('.mine { margin-block: 9px; border-block-start-width: 5px; border-block-start-color: rgb(0, 128, 0); }')
     renderInBrowser(<Divider className="mine" />)

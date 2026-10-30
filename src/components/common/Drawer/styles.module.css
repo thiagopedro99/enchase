@@ -90,6 +90,7 @@
   gap: var(--enchase-drawer-header-gap, var(--enchase-space-md));
   padding-block: var(--enchase-drawer-header-padding-block, var(--enchase-space-lg) 0);
   padding-inline: var(--enchase-drawer-header-padding-inline, var(--enchase-space-lg));
+  border-block-end: var(--enchase-drawer-header-border-width-end, 0) var(--enchase-drawer-header-border-style-end, none) var(--enchase-drawer-header-border-color-end, currentColor);
 }
 
 .title {
@@ -157,4 +158,5 @@
 .footer {
   padding-block: var(--enchase-drawer-footer-padding-block, 0 var(--enchase-space-lg));
   padding-inline: var(--enchase-drawer-footer-padding-inline, var(--enchase-space-lg));
+  border-block-start: var(--enchase-drawer-footer-border-width-start, 0) var(--enchase-drawer-footer-border-style-start, none) var(--enchase-drawer-footer-border-color-start, currentColor);
 }
