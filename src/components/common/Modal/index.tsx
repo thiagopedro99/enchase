@@ -7,6 +7,7 @@ import { CloseIcon } from '../Icon/icons/CloseIcon.tsx'
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
+import { useOverflow } from '@hooks/useOverflow.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -37,6 +38,8 @@ const ModalDialog = ({
   motionStyle
 }: ModalDialogProps & { open: boolean; state: PresenceState; panelRef: RefObject<HTMLDivElement | null>; motionStyle: CSSProperties }) => {
   const rootRef = useRef<HTMLDivElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
+  const overflowing = useOverflow(bodyRef)
   const titleId = useId()
   const bodyId = useId()
   const { labels } = useUIConfig()
@@ -82,7 +85,16 @@ const ModalDialog = ({
           </div>
         )}
 
-        <div {...slot('modal', 'body')} id={bodyId} className={styles.body}>
+        <div
+          ref={bodyRef}
+          {...slot('modal', 'body')}
+          id={bodyId}
+          className={styles.body}
+          tabIndex={overflowing ? 0 : undefined}
+          role={overflowing && (title || ariaLabel) ? 'region' : undefined}
+          aria-labelledby={overflowing && title ? titleId : undefined}
+          aria-label={overflowing && !title ? ariaLabel : undefined}
+        >
           {children}
         </div>
 

@@ -23,12 +23,14 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 - Alvos interativos têm pelo menos 24 x 24 px, e os componentes respeitam `prefers-reduced-motion` (o deslocamento some, o fade continua).
 - Renderização no servidor e hidratação sem erro em 6 variantes de ambiente (largura, tema salvo, sistema escuro e movimento reduzido), mais um app Next 15 mínimo (`npm run test:next`) importando os componentes num Server Component.
 - O `className` de quem usa vence o da biblioteca (provado em navegador, na variante em camada em qualquer ordem de carregamento).
+- A densidade `compact`, em Chromium, Firefox e WebKit reais: o tamanho de cada peça nos dois estilos, alvos de 24px ou mais (menos o polegar do `Slider`, que já era menor), o visual padrão idêntico sem o atributo, nada muda com o atributo fora do `<html>` e a precedência contra a variante em camada e contra o CSS do app.
 
 **Não garantido:**
 - Conformidade total com WCAG: a lib verifica o que os tokens e os testes cobrem, e não substitui auditoria nem teste com leitores de tela (nada foi testado com NVDA, JAWS ou VoiceOver).
 - Firefox e WebKit rodam a mesma suíte de navegador do Chromium, um arquivo por vez. No Linux ficam pulados 19 testes no Firefox e 19 no WebKit, porque dependem de chamadas só do Chromium (emulação de toque, mouse cru, métricas de layout e transparência reduzida) ou de uma emulação que o navegador não tem (cores forçadas no WebKit, contraste aumentado no Firefox); a lista central com o motivo está em `src/tests-browser/support/browserSkips.ts`, e os testes que dependem de um recurso que o navegador não tem são pulados só onde ele falta. Os testes de toque rodam no WebKit com o perfil de um iPhone (toque nativo), o mais perto do Safari que dá para automatizar. Os três navegadores passam no CI em Linux (Ubuntu 24.04) e bloqueiam o workflow. A devolução do foco ao gatilho e a armadilha de Tab funcionam também no Safari, onde clicar num botão não o focaliza: a biblioteca guarda o gatilho a partir do último ponteiro ou tecla. Revisão manual em Safari de verdade e com leitores de tela continua necessária.
 - Contraste de temas personalizados em `hsl()`, `oklch()` ou `oklab()`: esses formatos não são medidos, e o aviso diz quantos pares ficaram sem checar.
-- Gestos com velocidade (arrastar para dispensar, inércia), os estilos Material 3 e Ant Design e uma opção de densidade à parte dos estilos: ainda não existem.
+- Gestos com velocidade (arrastar para dispensar, inércia) e os estilos Material 3 e Ant Design: ainda não existem.
+- A densidade `compact` fora dos dois estilos embutidos: é um conjunto de valores absolutos, escolhidos para o `enchase` e o `shadcn`. Um estilo próprio, feito com `defineStyle`, recebe o mesmo bloco e não pode declarar o compact dele, e num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
 
 ## Instalação
 
@@ -123,8 +125,8 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Select` | `<Select label="País" options={[{ value: 'br', label: 'Brasil' }]} />` |
 | `Combobox` | `<Combobox label="Framework" options={[{ value: 'react', label: 'React' }, { value: 'vue', label: 'Vue' }]} onValueChange={setFramework} />`: campo de texto com uma lista de opções embaixo, no padrão combobox do ARIA 1.2 (o foco fica no campo e a opção ativa é anunciada por `aria-activedescendant`). Digitar filtra as opções, sem diferenciar maiúsculas nem acentos, as setas andam pela lista, Enter escolhe, Esc fecha e Tab sai. Com `multiple`, as opções escolhidas viram etiquetas antes do campo, a lista continua aberta e Backspace no campo vazio remove a última. O valor é sempre o `value` de uma opção, nunca o texto digitado: ao sair do campo, volta o rótulo da opção escolhida, e esvaziar o texto e sair limpa a escolha. `name` envia um campo oculto por valor escolhido. Para opções que vêm de um servidor, desligue o filtro (`filter={false}`), busque em `onInputChange` e mostre `loading`; o rótulo de uma opção escolhida é lembrado, então trocar `options` no meio da busca não esvazia o campo nem as etiquetas. A lista abre embaixo do campo (sobe quando falta espaço) e renderiza num portal no `<body>`, como o `Popover`; `container` muda o lugar |
 | `DatePicker` | `<DatePicker label="Data" value={data} onValueChange={setData} />`: campo para uma data que o usuário digita, na ordem e com os separadores do idioma do `UIProvider` (28/10/2026 em pt-BR e 10/28/2026 em en; ele lê também `28102026` e `2026-10-28`), ou escolhe num calendário que abre num diálogo pelo botão no fim do campo. O valor é o texto ISO local `YYYY-MM-DD`, sem hora e sem fuso (o mesmo do `<input type="date">`), ou `null` com o campo vazio: nenhum objeto `Date` entra na conta, então o dia nunca anda com o fuso da máquina. O texto é lido ao sair do campo ou com Enter, e o que não é uma data, ou é uma data que `min`, `max` ou `isDateDisabled` recusam, volta como estava. O calendário é uma grade: as setas andam um dia ou uma semana, Home e End vão ao começo e ao fim da semana, Page Up e Page Down trocam o mês e, com Shift, o ano, Enter e Espaço escolhem e Esc fecha e devolve o foco ao botão; ele abre com o foco no dia escolhido, ou em hoje. Os nomes dos meses e dos dias, o primeiro dia da semana (`firstDayOfWeek` troca o do idioma) e o espelhamento em RTL seguem o `locale` do `UIProvider`; a prop `locale`, uma tag BCP 47 (`en-GB`, `en-CA`, `de`), dá a um campo um idioma só dele para a ordem, os separadores e os dígitos do texto, os nomes e o primeiro dia da semana (o `firstDayOfWeek` continua valendo antes dela), sem mudar os textos de acessibilidade nem a direção, que seguem o provider; uma string vazia vale como sem tag e uma tag inválida, ou que o ambiente não conhece, cai em `en`. O servidor renderiza só o campo: o calendário abre depois da montagem e "hoje" é lido no navegador. `name` envia o texto ISO num campo oculto. O calendário renderiza num portal no `<body>`, como o `Popover`; `container` muda onde ele é renderizado. Ele tem seis semanas de altura: quando nem em cima nem embaixo do campo há espaço para ele inteiro, abre do lado com mais espaço e o corpo rola. As teclas que movem o foco (as setas, Home, End, Page Up e Page Down) levam à vista o dia que recebe o foco, mas o foco que o calendário toma ao abrir não rola, então numa tela muito baixa o dia em que ele abre pode ficar fora de vista até uma tecla mover o foco |
-| `Checkbox` | `<Checkbox label="Aceito os termos" />`: com `indeterminate`, mostra o estado misto de uma caixa que resume outras, como um "selecionar todos" (`<Checkbox label="Todos" checked={todos} indeterminate={algum && !todos} onChange={alternarTodos} />`). A prop liga a propriedade `indeterminate` do `<input>` nativo, então o leitor de tela lê "misto"; ela não muda `checked`, o clique não a limpa (quem usa a limpa no `onChange`) e, como não existe atributo HTML para ela, uma caixa mista renderizada no servidor aparece marcada ou desmarcada até a hidratação. |
-| `Switch` | `<Switch label="Receber notificações" defaultChecked />` |
+| `Checkbox` | `<Checkbox label="Aceito os termos" />`: com `indeterminate`, mostra o estado misto de uma caixa que resume outras, como um "selecionar todos" (`<Checkbox label="Todos" checked={todos} indeterminate={algum && !todos} onChange={alternarTodos} />`). A prop liga a propriedade `indeterminate` do `<input>` nativo, então o leitor de tela lê "misto"; ela não muda `checked`, o clique não a limpa (quem usa a limpa no `onChange`) e, como não existe atributo HTML para ela, uma caixa mista renderizada no servidor aparece marcada ou desmarcada até a hidratação. Com `error` ou `helperText`, a mensagem aparece embaixo do texto do rótulo, alinhada com ele, e fica fora do `<label>`: o nome acessível continua sendo o rótulo, e um clique na mensagem não marca a caixa. O `error` marca o `<input>` com `aria-invalid`, é lido como alerta, pinta a borda de uma caixa desmarcada e substitui o `helperText`, e a mensagem que está na tela entra no `aria-describedby`, depois do `aria-describedby` de quem usa. O `<label>` fica sempre dentro de um `<span data-slot="checkbox-field">` (a mensagem é `checkbox-error` ou `checkbox-helper`), que não gera caixa (`display: contents`) enquanto não há mensagem e vira uma coluna (`inline-flex`, com `data-has-message`) quando há: a árvore não muda, então o `<input>` nunca é recriado, e o layout sem mensagem é o de antes. `wrapperClassName`, `wrapperStyle` e o `data-slot="checkbox"` ficam no `<label>`. |
+| `Switch` | `<Switch label="Receber notificações" defaultChecked />`: aceita `error` e `helperText` como o `Checkbox`, com a mensagem embaixo do rótulo e fora do `<label>` (`data-slot` `switch-error` e `switch-helper`), e o `<label>` fica sempre dentro de um `switch-field`, que não gera caixa sem mensagem. O `error` marca o `<input>` com `aria-invalid` e é lido como alerta, mas não muda a cor da trilha |
 | `RadioGroup` | `<RadioGroup label="Plano" options={[{ value: 'free', label: 'Grátis' }, { value: 'pro', label: 'Pro' }]} defaultValue="free" />` |
 | `CheckboxGroup` | `<CheckboxGroup label="Assuntos" options={[{ value: 'novidades', label: 'Novidades' }, { value: 'ofertas', label: 'Ofertas' }]} defaultValue={['novidades']} onValueChange={setAssuntos} />`: vários itens marcáveis num `<fieldset>`; o valor é a lista dos marcados, na ordem das opções. O grupo não exige escolha sozinho: valide no formulário e passe `error` |
 | `Accordion` | `<Accordion items={[{ value: 'envio', title: 'Quanto tempo leva o envio?', content: <p>Até dois dias úteis.</p> }]} />` |
@@ -213,8 +215,8 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card`, `CardButton` e `CardLink` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, e o de `Alert`, `info`. |
 | `size` | `Button`, `ButtonLink` e `SegmentedControl` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` e `Table` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`), `Drawer` (`sm`, `md`, `lg`) | Tamanho. |
 | `label` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup`, `Slider` | Rótulo visível, ligado ao controle. No `RadioGroup` e no `CheckboxGroup`, é o título do grupo. |
-| `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `RadioGroup`, `CheckboxGroup` | Mensagem de erro: marca o campo com `aria-invalid` (no `CheckboxGroup`, cada caixa), aparece com `role="alert"` e substitui o `helperText`. |
-| `helperText` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `RadioGroup`, `CheckboxGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. |
+| `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup` | Mensagem de erro: marca o campo com `aria-invalid` (no `CheckboxGroup`, cada caixa), aparece com `role="alert"` e substitui o `helperText`. No `Checkbox` e no `Switch`, fica embaixo do rótulo e fora do `<label>`. |
+| `helperText` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. No `Checkbox` e no `Switch`, fica embaixo do rótulo e fora do `<label>`. |
 | `fullWidth` | `Button`, `ButtonLink`, `SegmentedControl`, `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker` | Ocupa toda a largura disponível. |
 | `labelPlacement` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker` | Onde fica o rótulo: `floating` (dentro do campo, sobe ao focar) ou `stacked` (acima do controle). Sem a prop, vale o `style` do tema: `floating` no `enchase` e `stacked` no `shadcn`. |
 | `externalIcon` | `ButtonLink` | Com `target="_blank"`, mostra o ícone de link externo (padrão `true`). `false` tira só o ícone e mantém o texto "abre em nova aba" para leitores de tela; em um link só de ícone com `aria-label`, ponha o aviso no próprio rótulo. |
@@ -383,6 +385,151 @@ A página atual é o caminho de `currentHref` ou, quando o provider não tem `cu
 - Uma âncora (`#recursos`, ou `/#recursos` estando em `/`) recebe `aria-current="location"` quando é o `activeSectionId`, nunca `page`. Use `useScrollSpy` para ele.
 - Itens `native`, externos e âncoras da página não entram na trilha dos `Breadcrumbs`, e os `native` nunca são marcados.
 
+## Formulários com react-hook-form e Zod
+
+Os campos funcionam com o `react-hook-form` e um schema do Zod, pelo `@hookform/resolvers`, sem adaptador. O código abaixo é um componente de verdade do repositório (`src/docs/components/FormRecipe/index.tsx`), o mesmo que roda ao vivo na página **System/Forms guide** do Storybook: os testes o preenchem e o conferem, e o `npm run test:consumer` o compila contra o pacote empacotado, com `exactOptionalPropertyTypes` e `skipLibCheck: false`. Ele usa a API do Zod 4 (`z.email()`, `z.iso.date()`) e o `react-hook-form` 7. As versões testadas são as fixas do `devDependencies` do `package.json`, e nenhum dos três pacotes entra no `enchase`: quem usa a receita os instala no app. Num app Next.js (App Router), ponha `'use client'` no topo do arquivo, porque ele usa hooks.
+
+```tsx
+import { Button, Checkbox, Combobox, DatePicker, Flex, Input, RadioGroup, Select } from 'enchase'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+
+const ticketOptions = [
+  { value: 'standard', label: 'Standard' },
+  { value: 'student', label: 'Student' },
+  { value: 'team', label: 'Team' }
+]
+
+const countryOptions = [
+  { value: 'br', label: 'Brazil' },
+  { value: 'pt', label: 'Portugal' },
+  { value: 'ar', label: 'Argentina' }
+]
+
+const attendanceOptions = [
+  { value: 'in-person', label: 'In person' },
+  { value: 'online', label: 'Online' }
+]
+
+const schema = z.object({
+  email: z.email('Enter a valid email'),
+  ticket: z.string().min(1, 'Choose a ticket'),
+  country: z.string().nullable().pipe(z.string('Choose a country')),
+  date: z.string().nullable().pipe(z.iso.date('Pick a date')),
+  attendance: z.string().min(1, 'Choose how you will attend'),
+  terms: z.boolean().pipe(z.literal(true, 'Accept the terms to continue'))
+})
+
+type FormValues = z.input<typeof schema>
+
+export type Registration = z.output<typeof schema>
+
+const defaultValues: FormValues = {
+  email: '',
+  ticket: '',
+  country: null,
+  date: null,
+  attendance: '',
+  terms: false
+}
+
+export const FormRecipe = ({ onSubmit }: { onSubmit: (values: Registration) => void }) => {
+  const { register, control, handleSubmit, formState } = useForm<FormValues, unknown, Registration>({
+    resolver: zodResolver(schema),
+    defaultValues
+  })
+  const { errors } = formState
+
+  return (
+    <form noValidate onSubmit={handleSubmit(onSubmit)}>
+      <Flex direction="column" gap="1.25rem">
+        <Input
+          label="Email"
+          type="email"
+          helperText="We send the confirmation here"
+          error={errors.email?.message}
+          {...register('email')}
+        />
+
+        <Select
+          label="Ticket"
+          placeholder="Choose a ticket"
+          options={ticketOptions}
+          error={errors.ticket?.message}
+          {...register('ticket')}
+        />
+
+        <Controller
+          name="country"
+          control={control}
+          render={({ field, fieldState }) => (
+            <Combobox
+              label="Country"
+              helperText="Type to filter the list"
+              options={countryOptions}
+              value={field.value}
+              onValueChange={field.onChange}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="date"
+          control={control}
+          render={({ field, fieldState }) => (
+            <DatePicker
+              label="Session date"
+              helperText="Type it or pick it in the calendar"
+              value={field.value}
+              onValueChange={field.onChange}
+              onBlur={field.onBlur}
+              ref={field.ref}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Controller
+          name="attendance"
+          control={control}
+          render={({ field, fieldState }) => (
+            <RadioGroup
+              label="Attendance"
+              orientation="horizontal"
+              options={attendanceOptions}
+              value={field.value}
+              onValueChange={field.onChange}
+              error={fieldState.error?.message}
+            />
+          )}
+        />
+
+        <Checkbox
+          label="I accept the terms"
+          error={errors.terms?.message}
+          {...register('terms')}
+        />
+
+        <Button type="submit">Register</Button>
+      </Flex>
+    </form>
+  )
+}
+```
+
+Como cada campo se liga:
+
+- `Input`, `Select` e `Checkbox` aceitam `ref` e os atributos do elemento nativo, então o `register` basta: `{...register('email')}` leva `name`, `onChange`, `onBlur` e `ref`. Depois de um envio com erro, o `react-hook-form` põe o foco no primeiro campo inválido por esse `ref`.
+- `Combobox`, `DatePicker` e `RadioGroup` avisam a escolha em `onValueChange`, e não num evento `onChange`, então vão por `Controller`, com `value={field.value}` e `onValueChange={field.onChange}` escritos à mão. Não espalhe `field` neles: o compilador aceita, mas no `Combobox` e no `DatePicker` o `field.onChange` passa a rodar nos eventos de texto do campo de dentro, e o formulário recebe o texto digitado (`'Bra'`, e não `'br'`). No `RadioGroup` espalhar só parece funcionar, porque o `change` dos rádios sobe até o `<fieldset>`.
+- A mensagem entra na prop `error`, no `Checkbox` também (`errors.email?.message` e `fieldState.error?.message` são `string | undefined`, que as props aceitam também com `exactOptionalPropertyTypes`): o campo marca `aria-invalid`, mostra a mensagem com `role="alert"` e troca o `helperText` por ela, e o `helperText` volta quando o campo fica válido.
+- Respostas vazias: quando nada está escolhido, `Combobox` e `DatePicker` valem `null`, o `Select` e o `RadioGroup` valem `''` e o `Checkbox` vale `false`. O schema aceita `null` e `false` na entrada e os passa por `.pipe(...)` para a regra que os recusa com a mensagem, e o `''` não passa do `min(1)`. Assim `z.input` tem o que os controles guardam, e `z.output` é o resultado tipado.
+- O valor do `DatePicker` é o texto ISO local `YYYY-MM-DD`, sem hora e sem fuso. O `z.iso.date()` o confere e o resultado tipado é uma `string`: não há `Date` para converter.
+- `noValidate` no `<form>` deixa a validação para o schema, e não para o navegador.
+
 ## Tema
 
 As cores são papéis (`primary`, `surface`, `error`, `inverseSurface` e outros), nunca hex solto nos componentes, e chegam por variáveis `--enchase-*`. Trocar o modo muda só o `data-theme` do `<html>`.
@@ -507,7 +654,7 @@ Um estilo é um objeto de dados. O `defineStyle`, de `enchase/theme`, confere o 
 ```tsx
 import { defineStyle } from 'enchase/theme'
 
-export const compact = defineStyle({
+export const dense = defineStyle({
   base: { control: { height: { sm: '1.75rem', md: '2rem', lg: '2.25rem' } }, hit: { size: '1.5rem' } },
   fonts: { weights: { medium: 500 } },
   radius: { button: '0.375rem', control: '0.375rem' },
@@ -519,7 +666,7 @@ export const compact = defineStyle({
   defaults: { labelPlacement: 'stacked' }
 })
 
-<ColorModeProvider theme={{ style: compact }}>
+<ColorModeProvider theme={{ style: dense }}>
   <App />
 </ColorModeProvider>
 ```
@@ -537,7 +684,7 @@ export const compact = defineStyle({
 
 - O `defineStyle` lança erro, com o caminho da parte que falhou, para uma seção ou um token que não existe, para um valor de CSS inseguro (com `;`, `{`, `}`, `<`, `>`, `\`, um comentário, `url()`, `@import`, parêntese ou aspas sem fechar, ou com mais de 400 caracteres), para um nome de gancho fora do formato `--enchase-<palavras-em-minúsculas-com-hífen>`, para um "gancho" que na verdade é um token do tema (`--enchase-space-md`) e para um gancho da raiz que cita uma cor ou uma sombra do tema (esse vai em `colorHooks`).
 - O `createTheme` confere de novo todo estilo que não saiu do `defineStyle`, porque um estilo pode chegar de um JSON ou atravessar a fronteira de um Server Component sem a marca de que já foi conferido. O que saiu do `defineStyle` é congelado e não é conferido outra vez.
-- O contraste das cores depende da paleta final e não é conferido pelo `defineStyle`: rode `validateTheme(createTheme({ style: compact }))`, também com `brand`, no teste do seu estilo.
+- O contraste das cores depende da paleta final e não é conferido pelo `defineStyle`: rode `validateTheme(createTheme({ style: dense }))`, também com `brand`, no teste do seu estilo.
 - O estilo é a base: o que quem usa passa ao `createTheme` (`shape`, `radius`, `fonts`, `motion`, `brand`, `light` e `dark`) vence o estilo, e o CSS da aplicação vence os dois.
 - Para partir de um estilo pronto, espalhe-o: `defineStyle({ ...shadcn, defaults: { labelPlacement: 'floating' } })`.
 
@@ -593,6 +740,7 @@ Os componentes já cuidam do que é da biblioteca:
 - Alturas com `dvh` (a barra de endereço do celular muda a altura útil), `env(safe-area-inset-*)` nos elementos fixos nas bordas (toast e gavetas) e `overscroll-behavior: contain` nas áreas rolantes internas (gavetas, corpo do modal, popover).
 - O bloqueio de rolagem da página (`Modal`, gavetas) bloqueia também o encadeamento de rolagem.
 - Textos longos quebram ou encolhem com reticências em vez de empurrar a página para o lado (nomes, e-mails sem espaços, rótulos traduzidos), e a inicial do avatar usa a letra inteira, inclusive emoji.
+- A densidade `compact` baixa o alvo de toque a 32px em qualquer ponteiro: não a use em interface pensada para o dedo (veja "Densidade").
 
 O que é do seu app, não da biblioteca: a meta `viewport` (use `viewport-fit=cover` para a área segura valer, e `interactive-widget=resizes-content` se quiser que o teclado virtual reduza o layout), a cor da barra de status (`theme-color`, uma por esquema de cor) e a fonte dos seus próprios campos.
 
@@ -684,13 +832,13 @@ Cada componente também lê ganchos próprios, `--enchase-<data-slot>-<proprieda
 }
 ```
 
-O que depende de uma medida acompanha sozinho: o traço do checkbox, o ponto do radio e o curso da bolinha da chave seguem o tamanho de cada um; o rótulo flutuante dos campos sobe metade de `--enchase-input-height` e segue o padding do texto; e o espaço que os campos de senha e numérico reservam para os botões de dentro segue `--enchase-hit-size`. Os quatro campos (texto, número, seleção e área de texto) dividem os ganchos `--enchase-input-*`, e o canto do campo e o do contorno dele saem do mesmo gancho. A tipografia dos rótulos flutuantes fica fixa, porque o entalhe do contorno depende dela.
+O que depende de uma medida acompanha sozinho: o traço do checkbox, o ponto do radio e o curso da bolinha da chave seguem o tamanho de cada um; o recuo da mensagem do checkbox e da chave segue o tamanho da caixa ou da trilha mais o vão; o rótulo flutuante dos campos sobe metade de `--enchase-input-height` e segue o padding do texto; e o espaço que os campos de senha e numérico reservam para os botões de dentro segue `--enchase-hit-size`. Os quatro campos (texto, número, seleção e área de texto) dividem os ganchos `--enchase-input-*`, e o canto do campo e o do contorno dele saem do mesmo gancho. A tipografia dos rótulos flutuantes fica fixa, porque o entalhe do contorno depende dela.
 
 Os ganchos de cor (`--enchase-alert-background-info`, `--enchase-badge-color-success`, `--enchase-table-header-background`) caem no papel de cor do tema, então seguem o modo claro e o escuro sozinhos. Para um valor que muda por modo, declare o gancho dentro do seletor do modo, junto das cores (`:root, [data-theme='light'] { ... }` e `[data-theme='dark'] { ... }`): um gancho declarado só no `:root` e escrito como `var(--enchase-color-surface)` acompanha o modo do documento, mas numa ilha `data-theme` de outro modo (um `div` aninhado) continua com as cores do documento, porque o alias é resolvido onde é declarado.
 
 O espaço, o tamanho, a cor e a sombra das barras e da navegação (`Navbar`, a barra do topo do `Layout`, `Sidebar`, `Breadcrumbs`, `Pagination`, `Footer`, a marca e o usuário da sidebar) saem de ganchos do mesmo jeito, como `--enchase-navbar-bar-height`, `--enchase-sidebar-item-control-height` ou `--enchase-pagination-control-color-current`. O indicador deslizante da `Sidebar` pinta com `--enchase-sidebar-indicator-background`, que segue a cor do item atual (`--enchase-sidebar-item-control-background-current`), e a largura dele acompanha `--enchase-sidebar-nav-padding-inline`.
 
-Os controles seguem o mesmo padrão: `Button` tem ganchos de cor por variante e por estado (`--enchase-button-background-primary`, `--enchase-button-color-outline-hover`, `--enchase-button-shadow-primary-hover`), os quatro campos dividem os ganchos `--enchase-input-*` (`--enchase-input-outline-border-color`, `--enchase-input-label-color-focus`, `--enchase-input-error-color`), e `Checkbox`, `RadioGroup` e `Switch` expõem as cores da caixa, do ponto e do rótulo. As camadas de hover, pressionado e desabilitado são misturas das cores do tema com os tokens `--enchase-state-*`, então mudam pelos tokens, não por ganchos.
+Os controles seguem o mesmo padrão: `Button` tem ganchos de cor por variante e por estado (`--enchase-button-background-primary`, `--enchase-button-color-outline-hover`, `--enchase-button-shadow-primary-hover`), os quatro campos dividem os ganchos `--enchase-input-*` (`--enchase-input-outline-border-color`, `--enchase-input-label-color-focus`, `--enchase-input-error-color`), e `Checkbox`, `RadioGroup` e `Switch` expõem as cores da caixa, do ponto e do rótulo. As mensagens do `Checkbox` e do `Switch` leem as cores dos campos (`--enchase-input-error-color` e `--enchase-input-helper-color`), e o tamanho, o peso e o vão até o rótulo vêm de ganchos de cada um (`--enchase-checkbox-error-font-size`, `--enchase-switch-helper-font-size`, `--enchase-checkbox-field-gap`). As camadas de hover, pressionado e desabilitado são misturas das cores do tema com os tokens `--enchase-state-*`, então mudam pelos tokens, não por ganchos.
 
 O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 
@@ -715,6 +863,79 @@ return (
 ```
 
 Com `container` nulo, ou com a função devolvendo `null`, o overlay cai no `body`; a função roda só no cliente, nunca no servidor. Os overlays são `position: fixed` com as coordenadas da janela, então um ancestral do contêiner com `transform`, `filter` ou `contain` vira o bloco de contenção e desloca o overlay, e um que cria contexto de empilhamento (`z-index`, `opacity`, `isolation`) prende o `z-index` do overlay dentro dele: escolha um contêiner sem essas propriedades. O mesmo vale para o que o `data-theme` não resolve: um gancho declarado no `:root` como `var(--enchase-color-surface)` continua com as cores do documento, porque o alias é resolvido onde é declarado (veja acima).
+
+## Densidade
+
+`data-density="compact"` no `<html>` deixa o kit inteiro mais compacto: controles e barras mais baixos, alvos de toque de 32px e a escala de espaço mais apertada. É só CSS, um bloco de variáveis `--enchase-*` que vale enquanto o `<html>` tem o atributo: não há prop, hook do React nem opção nova no `createTheme`.
+
+```html
+<html lang="pt-BR" data-density="compact">
+```
+
+- **Como ligar.** No HTML que o servidor manda (no Next com App Router, é o `<html lang="pt-BR" data-density="compact" suppressHydrationWarning>` do layout raiz) ou no cliente, com `document.documentElement.dataset.density = 'compact'`; `document.documentElement.removeAttribute('data-density')` volta ao padrão. A troca em tempo de execução funciona: o indicador ativo da `Sidebar` acompanha a altura nova do item. `compact` é o único valor: sem o atributo, com `default` ou com qualquer outro valor vale o visual padrão, e não existe `spacious`.
+- **Só no `<html>`.** Ao contrário do `data-theme`, que vale em qualquer ancestral, `data-density="compact"` num `div` ou no `<body>` não faz nada (medido: nenhum retângulo muda), porque todo seletor do bloco começa com `:root`. Não há ilhas de densidade: os overlays saem no `<body>`, que só a raiz alcança.
+- **Sem volta ao padrão e sem outros eixos.** Dentro de uma árvore compact, `data-density="default"` num elemento não muda nada. A densidade não mexe na tipografia (o rótulo flutuante dos campos e o entalhe do contorno dependem dela), nos raios, nem no desenho do checkbox, do radio, da chave, dos ícones e do avatar, e deixa de fora as larguras (`Sidebar`, `Modal`, `Drawer` e `Menu`), o anel de foco, as bordas, as camadas de estado e o movimento.
+- **Não é para interface pensada para o dedo.** O alvo de toque vai a 32px em qualquer ponteiro, inclusive em tela de toque: a densidade não olha `pointer: coarse`. O piso de 24px (WCAG 2.5.8) continua valendo, porque todo alvo lê `max(24px, var(--enchase-hit-size, ...))`, e `--enchase-hit-size-lg` (os botões que abrem, fecham ou recolhem uma navegação) continua em 44px. O único alvo abaixo de 24px é o polegar do `Slider` (20px no `enchase`, 16px no `shadcn`), como já era no padrão: o controle de 32px ao redor dele é a área de arrastar. Os campos mantêm a fonte de 16px em ponteiro de toque.
+- **Valores absolutos, para os estilos embutidos.** O compact é um conjunto de valores absolutos (uma propriedade personalizada não consegue escalar o valor que ela mesma sobrescreve), escolhidos para o `enchase` e o `shadcn`. Um estilo próprio, feito com `defineStyle`, recebe o mesmo bloco e não pode declarar o compact dele, e num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
+
+### O que muda
+
+O bloco é de variáveis, em duas camadas de força (1rem são 16px). Os **tokens** ficam em `:root[data-density='compact']`, com especificidade 0,2,0: vencem o `:root` do tema em qualquer ordem de carga. Encolhem toda peça que lê o tamanho do alvo, as alturas de controle ou a escala de espaço (paddings, vãos e margens), e também o CSS seu que leia `var(--enchase-space-*)`. `--enchase-space-xs` (4px) e `--enchase-hit-size-lg` (44px) ficam fora do bloco.
+
+| Token | Padrão (`enchase`) | Padrão (`shadcn`) | `compact` |
+| --- | --- | --- | --- |
+| `--enchase-hit-size` | `40px` | `2rem` | `32px` |
+| `--enchase-control-height-sm` | `2rem` | `2rem` | `1.75rem` |
+| `--enchase-control-height-md` | `2.5rem` | `2.25rem` | `2rem` |
+| `--enchase-control-height-lg` | `3rem` | `2.5rem` | `2.5rem` |
+| `--enchase-space-sm` | `0.5rem` | `0.5rem` | `0.375rem` |
+| `--enchase-space-md` | `1rem` | `1rem` | `0.75rem` |
+| `--enchase-space-lg` | `1.5rem` | `1.5rem` | `1.125rem` |
+| `--enchase-space-xl` | `2rem` | `2rem` | `1.5rem` |
+| `--enchase-space-2xl` | `3rem` | `3rem` | `2.25rem` |
+| `--enchase-space-3xl` | `4rem` | `4rem` | `3rem` |
+
+Os **ganchos** ficam em `:where(:root[data-density='compact'])`, com especificidade 0,0,0: cobrem as alturas que o estilo `enchase` escreve no próprio componente e que nenhum token alcança (campos, abas, acordeão, sidebar e barras, mais o padding das opções do `Select` e o do `Badge`), e perdem para um gancho de um estilo, do seu CSS ou do próprio componente. No `enchase` o padrão é o que o componente escreve, como em `var(--enchase-input-height, 3.5rem)`.
+
+| Gancho | Padrão (`enchase`) | `compact` | Declarado pelo `shadcn` | `shadcn` no compact | O `shadcn` segue |
+| --- | --- | --- | --- | --- | --- |
+| `--enchase-input-height` | `3.5rem` | `2.75rem` | `var(--enchase-control-height-md)` | `2rem` | sim |
+| `--enchase-textarea-min-height` | `3.5rem` | `2.75rem` | `4rem` | `4rem` | não |
+| `--enchase-tabs-tab-min-height` | `2.75rem` | `2.25rem` | `var(--enchase-control-height-md)` | `2rem` | sim |
+| `--enchase-accordion-trigger-min-height` | `3rem` | `2.5rem` | `0px` | `0px` | não |
+| `--enchase-select-option-padding-block` | `0.75rem` | `0.5rem` | `0.375rem` | `0.375rem` | não |
+| `--enchase-badge-padding-inline-md` | `0.625rem` | `0.5rem` | `0.5rem` | `0.5rem` | não |
+| `--enchase-sidebar-item-control-height` | `52px` | `2.5rem` | `2rem` | `2rem` | não |
+| `--enchase-sidebar-header-min-height` | `72px` | `4rem` | `3.5rem` | `3.5rem` | não |
+| `--enchase-navbar-bar-height` | `64px` | `3.5rem` | `3.5rem` | `3.5rem` | não |
+| `--enchase-layout-header-height` | `64px` | `3.5rem` | `3.5rem` | `3.5rem` | não |
+
+São duas camadas porque as alturas do `enchase` estão escritas nos componentes: só com tokens, os botões ficariam com 32px dentro de campos de 56px, e com tudo na força dos tokens o `shadcn`, que fixa as próprias medidas, cresceria (o campo de 36 para 44px e o item da sidebar de 32 para 40px). Todo valor fica no nível do de cada estilo embutido ou abaixo dele, então nada cresce. A `Table` já tem uma densidade própria, `size="sm"`, que o compact não duplica: a linha pequena tem 30px nos dois estilos.
+
+### O que o `shadcn` segue
+
+O estilo `shadcn` fica meio compact de propósito: ele declara por conta própria todos os ganchos do bloco, e um gancho que o estilo declara vence os da densidade. Por isso segue os tokens e, dos ganchos, só os que declara como alias de um token que a densidade muda: `--enchase-input-height` e `--enchase-tabs-tab-min-height`, alias de `--enchase-control-height-md`, então o campo e a aba vão de 36 para 32px.
+
+- **Segue:** os botões (médio 36 → 32px e pequeno 32 → 28px), os campos, as abas, a `Pagination` e o `SegmentedControl` (36 → 32px), o `Card` (74 → 62px), o `Popover` (58 → 50px), o padding do `Modal`, do `Drawer` e das notificações e o espaço do calendário do `DatePicker` (o popup vai de 266 × 306 para 258 × 296px). `--enchase-hit-size` e `--enchase-control-height-lg` já estavam no valor do compact no estilo, então não mudam nada nele: a linha clicável do `Checkbox`, do `RadioGroup` e da `Switch`, o controle do `Slider`, os botões dentro dos campos, os dias do calendário e os botões de fechar têm 32px no `shadcn` de qualquer jeito.
+- **Não segue**, porque o estilo fixa a medida: os outros ganchos da tabela (`--enchase-textarea-min-height`, `--enchase-accordion-trigger-min-height`, `--enchase-select-option-padding-block`, `--enchase-badge-padding-inline-md`, `--enchase-sidebar-item-control-height`, `--enchase-sidebar-header-min-height`, `--enchase-navbar-bar-height` e `--enchase-layout-header-height`). Ficam como estavam o gatilho do `Accordion` (52px), a linha média da `Table` (38px), o item do `Menu` (33px), a opção do `Combobox` (33px), o item (32px) e o cabeçalho (56px) da `Sidebar`, a barra da `Navbar` e a do `Layout` (56px) e o `Alert` (83px).
+- **Um rótulo flutuante do `shadcn` fica 4px mais perto do entalhe no compact.** O rótulo flutuante não é o padrão do estilo (o rótulo dele fica acima do campo, sem entalhe) e só aparece com `labelPlacement="floating"`: o início do rótulo menos o início do texto do entalhe vai de -5px para -1px, o rótulo continua dentro do entalhe e a folga do entalhe é a mesma.
+
+A página System/Density do Storybook traz o tamanho de cada peça, no padrão e no compact, nos dois estilos, e o item Density da barra de ferramentas liga o atributo em todas as histórias.
+
+### Seus valores sobre a densidade
+
+Um **gancho** seu sempre vence: declare-o no `:root`, ou no próprio componente, e ele vence a densidade com ou sem camada. Um **token** seu é outro caso: em `enchase/styles.css`, que não tem camada, um token no `:root` perde para o bloco compact, esteja o seu CSS antes ou depois do tema, porque `:root[data-density='compact']` tem especificidade 0,2,0 contra os 0,1,0 do `:root`.
+
+```css
+:root {
+  --enchase-hit-size: 36px;
+}
+```
+
+Dois caminhos:
+
+1. **A variante em camada, que é a recomendação.** Importe `enchase/styles.layer.css` e passe `cssLayer="enchase-theme"` ao `ColorModeProvider`: o CSS seu sem camada vence qualquer camada em qualquer ordem, então a regra acima vale, e o bloco da densidade fica na mesma camada do tema.
+2. **O seletor do atributo.** `html:root[data-density='compact'] { --enchase-hit-size: 36px }` (0,2,1) vence em qualquer ordem. O `:root[data-density='compact']`, mais curto, tem a mesma força do bloco e só vence se vier depois do `<style>` do tema (o empate vai para a regra mais tardia), e o `ColorModeProvider` renderiza esse `<style>` dentro da página, normalmente depois das folhas do `<head>`. As duas regras não fazem nada sem o atributo, então o visual padrão mantém o valor dele.
 
 ## Renderização no servidor
 
@@ -741,7 +962,7 @@ npm run build:lib && npm run pack:check && npm run test:consumer
 
 ## Estado do projeto
 
-Versão `0.x`, em desenvolvimento ativo. Há dois estilos visuais, `enchase` e `shadcn`. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band), os estilos Material 3 e Ant Design, e uma opção de densidade à parte dos estilos.
+Versão `0.x`, em desenvolvimento ativo. Há dois estilos visuais, `enchase` e `shadcn`, e a densidade `compact`. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band) e os estilos Material 3 e Ant Design.
 
 ## Contribuindo
 

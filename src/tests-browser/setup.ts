@@ -8,6 +8,7 @@ afterEach(async () => {
   cleanup()
   document.documentElement.removeAttribute('dir')
   document.documentElement.removeAttribute('data-theme')
+  document.documentElement.removeAttribute('data-density')
   document.body.removeAttribute('style')
   window.localStorage.clear()
   window.scrollTo(0, 0)

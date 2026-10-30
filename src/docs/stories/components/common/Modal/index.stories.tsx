@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button, Modal } from 'enchase'
 import { containerArgType } from '@docs/shared/argTypes.ts'
+import { clauses } from './defaultData.ts'
 
 import type { ComponentProps } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -34,7 +35,8 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'A modal dialog rendered in a portal: the focus stays trapped in the panel, the page behind it is inert, and Esc or a click on the backdrop closes it. It enters and exits with animation. It is always controlled by `isOpen` and `onClose`.'
+        component:
+          'A modal dialog rendered in a portal: the focus stays trapped in the panel, the page behind it is inert, and Esc or a click on the backdrop closes it. It enters and exits with animation. It is always controlled by `isOpen` and `onClose`. When the content is taller than the panel, the body scrolls and becomes a focusable region named by the title (or by `ariaLabel`), so a keyboard user can scroll it.'
       }
     }
   },
@@ -79,6 +81,27 @@ type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {
   render: (args) => <ModalDemo {...args} label="Open modal" footer={<Button>Save</Button>} />
+}
+
+export const LongContent: Story = {
+  args: { title: 'Terms of service' },
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The header and the footer stay in place and the body scrolls when the content is taller than the screen. While it scrolls, the body is a region that Tab reaches, named by the title, so a keyboard user can scroll it with the arrow keys and Page Down.'
+      }
+    }
+  },
+  render: (args) => (
+    <ModalDemo {...args} label="Open with long content" footer={<Button>Accept</Button>}>
+      <ol style={{ margin: 0, paddingInlineStart: '1.25rem' }}>
+        {[...clauses, ...clauses, ...clauses].map((clause, index) => (
+          <li key={`${clause}-${index}`}>{clause}</li>
+        ))}
+      </ol>
+    </ModalDemo>
+  )
 }
 
 export const WithoutMotion: Story = {

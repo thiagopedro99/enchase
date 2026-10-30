@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import { colorVariables, cssVariablesRule, fontVariables, fontVariablesRule, layoutVariables, layoutVariablesRule, shadowVariables, themeVariables } from '@styles/css/declarations.ts'
+import { colorVariables, cssVariablesRule, densityRules, fontVariables, fontVariablesRule, layoutVariables, layoutVariablesRule, shadowVariables, themeVariables } from '@styles/css/declarations.ts'
+import { baseTokens, darkTheme, densities, lightTheme } from '@styles/tokens/index.ts'
 import { variableName } from '@styles/css/names.ts'
-import { baseTokens, darkTheme, lightTheme } from '@styles/tokens/index.ts'
 
 const leafPaths = (tree: Record<string, unknown>, path: string[] = []): string[] =>
   Object.entries(tree).flatMap(([key, value]) => (typeof value === 'string' ? [[...path, key].join('.')] : leafPaths(value as Record<string, unknown>, [...path, key])))
@@ -205,5 +205,18 @@ describe('cssVariablesRule', () => {
     expect(rule.startsWith("[data-theme='dark'] {\n")).toBe(true)
     expect(rule).toContain(`  --enchase-color-background: ${darkTheme.colors.background};`)
     expect(rule).toContain(`  --enchase-shadow-md: ${darkTheme.shadows.md};`)
+  })
+})
+
+describe('densityRules', () => {
+  it('writes the tokens on the root that has the attribute and the hooks inside :where() on the same selector, one declaration per entry', () => {
+    const [tokens, hooks] = densityRules('compact').split('\n\n')
+    const declared = (rule: string) => rule.split('\n').filter((line) => line.startsWith('  --'))
+    const written = (record: Record<string, string>) => Object.entries(record).map(([name, value]) => `  ${name}: ${value};`)
+
+    expect(tokens.startsWith(":root[data-density='compact'] {\n")).toBe(true)
+    expect(hooks.startsWith(":where(:root[data-density='compact']) {\n")).toBe(true)
+    expect(declared(tokens)).toEqual(written(densities.compact.tokens))
+    expect(declared(hooks)).toEqual(written(densities.compact.hooks))
   })
 })

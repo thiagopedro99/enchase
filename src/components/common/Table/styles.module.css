@@ -126,7 +126,7 @@
   text-align: center;
 }
 
-.select > [data-slot='checkbox'] {
+.select [data-slot='checkbox'] {
   display: flex;
   justify-content: center;
 }

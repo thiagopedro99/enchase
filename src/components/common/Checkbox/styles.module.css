@@ -132,3 +132,40 @@
   cursor: not-allowed;
   opacity: var(--enchase-checkbox-opacity-disabled, 1);
 }
+
+.field {
+  display: contents;
+}
+
+.field[data-has-message] {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+:where(.field[data-has-message]) {
+  gap: var(--enchase-checkbox-field-gap, var(--enchase-space-xs));
+}
+
+:where(.error, .helper) {
+  margin-inline-start: calc(var(--enchase-checkbox-box-size, 18px) + var(--enchase-checkbox-gap, var(--enchase-space-md)));
+}
+
+.error {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-checkbox-error-font-size, var(--enchase-font-size-xs));
+  font-weight: var(--enchase-checkbox-error-font-weight, var(--enchase-font-weight-medium));
+  color: var(--enchase-input-error-color, var(--enchase-color-error));
+}
+
+.helper {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-checkbox-helper-font-size, var(--enchase-font-size-xs));
+  color: var(--enchase-input-helper-color, var(--enchase-color-text-secondary));
+}

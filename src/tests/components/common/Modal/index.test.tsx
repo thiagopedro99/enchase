@@ -1,10 +1,11 @@
 import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
 import { describeDialogContract } from '@tests/shared/contracts/dialogContract.tsx'
 import { ControlledDialog } from '@tests/shared/contracts/dialogHarness.tsx'
-import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
 import { act, render, screen, waitFor } from '@testing-library/react'
+import { renderWithProviders } from '@tests/renderWithProviders.tsx'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import userEvent from '@testing-library/user-event'
+import { axe } from '@tests/axe.ts'
 import { useState } from 'react'
 
 import { ConfirmModal, Modal } from '@components/common/Modal/index.tsx'
@@ -277,5 +278,206 @@ describe('ConfirmModal', () => {
 
     expect(onConfirm).toHaveBeenCalledTimes(1)
     expect(onClose).toHaveBeenCalledTimes(1)
+  })
+})
+
+const size = { scroll: 300, client: 300 }
+
+const observers: Array<() => void> = []
+
+class FakeResizeObserver {
+  constructor(callback: () => void) {
+    observers.push(callback)
+  }
+
+  observe() {
+    return undefined
+  }
+
+  disconnect() {
+    return undefined
+  }
+}
+
+const mockOverflow = (scroll: number, client: number) => {
+  size.scroll = scroll
+  size.client = client
+  vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockImplementation(() => size.scroll)
+  vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(() => size.client)
+}
+
+const bodyOf = () => document.querySelector('[data-slot="modal-body"]') as HTMLElement
+
+const semanticsOf = (element: HTMLElement) => element.getAttributeNames().filter((name) => name === 'tabindex' || name === 'role' || name.startsWith('aria-'))
+
+describe('Modal body scrolling', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
+    observers.length = 0
+  })
+
+  it('has no tab stop, role or label while the content fits', async () => {
+    mockOverflow(300, 300)
+    renderWithProviders(
+      <Modal isOpen onClose={vi.fn()} title="Terms">
+        <p>content</p>
+      </Modal>
+    )
+    await screen.findByRole('dialog')
+
+    expect(semanticsOf(bodyOf())).toEqual([])
+  })
+
+  it('becomes a focusable region named by the title when the content is taller than the panel', async () => {
+    mockOverflow(900, 300)
+    renderWithProviders(
+      <Modal isOpen onClose={vi.fn()} title="Terms">
+        <p>content</p>
+      </Modal>
+    )
+
+    const region = await screen.findByRole('region', { name: 'Terms' })
+
+    expect(region).toBe(bodyOf())
+    expect(region).toHaveAttribute('tabindex', '0')
+    expect(region).toHaveAttribute('aria-labelledby', screen.getByRole('heading', { name: 'Terms' }).id)
+    expect(region).not.toHaveAttribute('aria-label')
+  })
+
+  it('names the region with the aria label of the modal when there is no title', async () => {
+    mockOverflow(900, 300)
+    renderWithProviders(
+      <Modal isOpen onClose={vi.fn()} ariaLabel="Image preview">
+        <p>content</p>
+      </Modal>
+    )
+
+    const region = await screen.findByRole('region', { name: 'Image preview' })
+
+    expect(region).toBe(bodyOf())
+    expect(region).toHaveAttribute('tabindex', '0')
+    expect(region).toHaveAttribute('aria-label', 'Image preview')
+    expect(region).not.toHaveAttribute('aria-labelledby')
+  })
+
+  it('is only focusable, without a role or a name, when the modal has neither a title nor an aria label', async () => {
+    mockOverflow(900, 300)
+    renderWithProviders(
+      <Modal isOpen onClose={vi.fn()}>
+        <p>content</p>
+      </Modal>
+    )
+    await screen.findByRole('dialog')
+
+    expect(semanticsOf(bodyOf())).toEqual(['tabindex'])
+    expect(bodyOf()).toHaveAttribute('tabindex', '0')
+  })
+
+  it('follows the content as it grows and shrinks', async () => {
+    vi.stubGlobal('ResizeObserver', FakeResizeObserver)
+    mockOverflow(300, 300)
+    renderWithProviders(
+      <Modal isOpen onClose={vi.fn()} title="Terms">
+        <p>content</p>
+      </Modal>
+    )
+    await screen.findByRole('dialog')
+
+    expect(semanticsOf(bodyOf())).toEqual([])
+
+    size.scroll = 900
+    act(() => observers.forEach((measure) => measure()))
+
+    expect(screen.getByRole('region', { name: 'Terms' })).toBe(bodyOf())
+    expect(bodyOf()).toHaveAttribute('tabindex', '0')
+
+    size.scroll = 300
+    act(() => observers.forEach((measure) => measure()))
+
+    expect(semanticsOf(bodyOf())).toEqual([])
+  })
+
+  it('puts the body between the close button and the footer in the focus order only while it scrolls', async () => {
+    const user = userEvent.setup()
+    mockOverflow(900, 300)
+    const { unmount } = renderWithProviders(
+      <Modal isOpen onClose={vi.fn()} title="Terms" footer={<button>Accept</button>}>
+        <p>content</p>
+      </Modal>
+    )
+    const closeButton = await screen.findByRole('button', { name: 'Fechar modal' })
+
+    expect(closeButton).toHaveFocus()
+
+    await user.tab()
+    expect(bodyOf()).toHaveFocus()
+    await user.tab()
+    expect(screen.getByRole('button', { name: 'Accept' })).toHaveFocus()
+    await user.tab()
+    expect(closeButton).toHaveFocus()
+    await user.tab({ shift: true })
+    expect(screen.getByRole('button', { name: 'Accept' })).toHaveFocus()
+    await user.tab({ shift: true })
+    expect(bodyOf()).toHaveFocus()
+    await user.tab({ shift: true })
+    expect(closeButton).toHaveFocus()
+    unmount()
+
+    mockOverflow(300, 300)
+    renderWithProviders(
+      <Modal isOpen onClose={vi.fn()} title="Terms" footer={<button>Accept</button>}>
+        <p>content</p>
+      </Modal>
+    )
+    await screen.findByRole('dialog')
+    await user.tab()
+    expect(screen.getByRole('button', { name: 'Accept' })).toHaveFocus()
+    await user.tab()
+    expect(screen.getByRole('button', { name: 'Fechar modal' })).toHaveFocus()
+    expect(bodyOf()).not.toHaveFocus()
+  })
+
+  it('still closes on Escape while the body has the focus', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    mockOverflow(900, 300)
+    renderWithProviders(
+      <Modal isOpen onClose={onClose} title="Terms">
+        <p>content</p>
+      </Modal>
+    )
+    await screen.findByRole('dialog')
+    await user.tab()
+
+    expect(bodyOf()).toHaveFocus()
+
+    await user.keyboard('{Escape}')
+
+    expect(onClose).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps the message as the description of an alertdialog whose body scrolls', async () => {
+    mockOverflow(900, 300)
+    renderWithProviders(<ConfirmModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" />)
+
+    const dialog = await screen.findByRole('alertdialog', { name: 'Confirmar ação' })
+
+    expect(screen.getByRole('region', { name: 'Confirmar ação' })).toBe(bodyOf())
+    expect(dialog).toHaveAccessibleDescription('Delete this item?')
+  })
+
+  it.each([
+    ['fits', 300],
+    ['scrolls', 900]
+  ] as const)('has no axe violations when the content %s', async (_, scroll) => {
+    mockOverflow(scroll, 300)
+    renderWithProviders(
+      <Modal isOpen onClose={vi.fn()} title="Terms" footer={<button>Accept</button>}>
+        <p>content</p>
+      </Modal>
+    )
+
+    expect(await axe(await screen.findByRole('dialog'))).toHaveNoViolations()
   })
 })

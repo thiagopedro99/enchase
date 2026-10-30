@@ -65,14 +65,14 @@ const meta = {
       table: { defaultValue: { summary: 'enchase-color-mode' } }
     },
     cssLayer: {
-      description: 'Name of an `@layer` for the theme variables. Use it with `enchase/styles.layer.css`, as in `cssLayer="enchase-theme"`.',
+      description: 'Name of an `@layer` for the theme variables. Use it with `enchase/styles.layer.css`, as in `cssLayer="enchase-theme"`. CSS of yours without a layer then wins over the theme in any order, tokens of the compact density included: without a layer, `:root[data-density=\'compact\']` beats a token of yours on `:root`.',
       control: 'text'
     }
   },
   parameters: {
     docs: {
       description: {
-        component: 'Applies the theme: it injects the `--enchase-*` variables, sets `data-theme` and `color-scheme` on the `<html>` and saves the mode (`light`, `dark` or `system`). The components read the variables, and `useColorMode` returns `{ mode, resolvedMode, setMode, toggleMode }`.'
+        component: 'Applies the theme: it injects the `--enchase-*` variables, sets `data-theme` and `color-scheme` on the `<html>` and saves the mode (`light`, `dark` or `system`). The components read the variables, and `useColorMode` returns `{ mode, resolvedMode, setMode, toggleMode }`. The compact density is not a prop: put `data-density="compact"` on the `<html>` yourself (see System/Density in the Storybook). Its variables come with the theme, in the same layer when you pass `cssLayer`.'
       }
     }
   },

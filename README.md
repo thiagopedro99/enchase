@@ -144,11 +144,28 @@ export const Providers = ({ children }: { children: React.ReactNode }) => (
 
 What you pass overrides the style, and your own CSS overrides both: every part has a `data-slot` and reads variables named `--enchase-<slot>-<property>`, and the full list, generated from the CSS, is in [API.md](API.md). In development the provider warns in the console about color pairs below the minimum contrast. Outside React (build, server, CI), run `validateTheme(createTheme(theme))` from `enchase/theme`.
 
+## Density
+
+`data-density="compact"` on `<html>` tightens the whole kit: shorter controls and bars, 32 px targets and a tighter space scale. It is plain CSS, with no prop and no API of its own.
+
+```html
+<html lang="en" data-density="compact">
+```
+
+In Next.js (App Router) that is the `<html>` of the root layout. From the client, set `document.documentElement.dataset.density = 'compact'` and go back with `document.documentElement.removeAttribute('data-density')`; switching at run time works. The attribute goes on `<html>` and only there, unlike `data-theme`: on a `div` or on `<body>` it does nothing, so there are no density islands. There is no `spacious` and no way back to the default inside a compact tree, and the type, the radius and the drawing of the checkbox, the radio, the switch, the icons and the avatar do not change.
+
+- **Not for touch-first interfaces.** The target size goes down to 32 px with any pointer. The floor of 24 px (WCAG 2.5.8) still holds, and `--enchase-hit-size-lg`, for the buttons that open, close or collapse a navigation, stays at 44 px.
+- **The `shadcn` style is half compact.** It declares its own measures, so it follows the tokens (buttons, fields, tabs and paddings) and keeps the heights that it fixes itself: the accordion, the table rows, the menu items, the sidebar and the bars.
+- **Your own tokens.** In `enchase/styles.css`, which has no layer, a token of yours on `:root` loses to the compact block. Use `enchase/styles.layer.css` with `cssLayer="enchase-theme"`, where your CSS without a layer always wins, or write `html:root[data-density='compact'] { ... }`. A hook of yours wins in both.
+
+The Storybook has a Density item in the toolbar and a System/Density page with the tokens, the hooks and the size of each part in both styles, and what `shadcn` follows and what it does not.
+
 ## Good to know
 
 - **No router needed.** `Link`, `ButtonLink`, the items of `Sidebar` and `Navbar`, `Breadcrumbs` and the links of `Footer` are real `<a href>`. Give `UIProvider` a `navigate` function and a plain click on a route of your app goes through it; without one, the links reload the page. `currentHref` marks the active item.
 - **Languages and RTL.** The accessibility texts come from the `locale` of `UIProvider`: English by default, and `ptBR` ships in `enchase/locales`. A custom locale with `dir: 'rtl'` covers right-to-left languages. The `DatePicker` and the `NumberInput` also take their own `locale` prop, a BCP 47 tag such as `en-GB` or `de`, to write, read and name their dates and numbers in another language than the provider's, while their texts and their direction still come from the provider. The CSS uses logical properties, and what has to be mirrored (the directional icons, the thumb of the switch, the notch of the floating labels) follows the `dir` attribute of the document or of an ancestor, whatever its `lang`, through plain attribute selectors that no build step rewrites. Setting `dir="rtl"` on `<html>` is up to your app, and a `dir="ltr"` island inside a right-to-left page is not un-mirrored. The tag also decides how dates and numbers are written, and a malformed tag (`en_US`, an empty string) or one that the `Intl` of the environment does not know (`xx`, or any language but English on a Node built with `small-icu`) falls back to `en` with no error: the server and the browser write the same date or number only if both know the tag, so run the server on a Node with full ICU (the official builds, since Node 13) and use standard BCP 47 tags such as `en-GB` (WebKit does not normalize `en-UK`).
 - **Server rendering.** The components render on the server without hydration errors. The package is marked `'use client'`, so server pages and layouts import the components directly.
+- **Forms.** The fields work with react-hook-form and a Zod schema, with no adapter, and the [forms guide](https://enchase.othiagosilva.com.br/docs/?path=/docs/system-forms-guide--docs) in the Storybook has a complete form to copy. A validation message goes in the `error` prop of the field, which marks it with `aria-invalid` and announces the message as an alert.
 - **Overlays and local themes.** `Modal`, `ConfirmModal`, `Drawer`, `Popover`, `Menu`, the list of the `Combobox`, the calendar of the `DatePicker`, `Tooltip`, the `Loading` overlay and the notification region of `ToastProvider` render in a portal on `<body>`. The theme reaches them, because its variables live on `:root` and `[data-theme]`, but a variable that you override on an element of your app does not, because inheritance follows the DOM tree. Pass `container`, an element or a function that returns one, to render the overlay inside that element so it inherits your overrides; a notification region inside the page stays reachable when a modal makes the rest of the page inert. The overlays are `position: fixed`, so an ancestor of the container with `transform`, `filter` or `contain` moves them, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines their `z-index` to it: pick a container without those.
 - **Two stylesheets.** `enchase/styles.css` is the one in the quick start. `enchase/styles.layer.css` is the same CSS inside `@layer enchase`, so any unlayered CSS of yours wins in any order. Import one of them, never both.
 
@@ -176,18 +193,20 @@ Verified by automated tests:
 - Interactive targets are at least 24 × 24 px, and the components respect `prefers-reduced-motion` (the movement goes away, the fade stays).
 - Server rendering and hydration run without errors in 6 environment variants (width, saved theme, dark system and reduced motion), plus a minimal Next 15 app (`npm run test:next`) that imports the components in a Server Component.
 - Your `className` wins over the library's, proved in browsers (for the layered stylesheet, in any load order).
+- The compact density, in real Chromium, Firefox and WebKit: the size of each part in both styles, targets of 24 px or more (but the thumb of the `Slider`), the same default look with no attribute, nothing changing when the attribute is on an element other than `<html>`, and the precedence against the layered stylesheet and against your CSS.
 
 Not guaranteed:
 
 - Full WCAG conformance. The library checks what its tokens and tests cover, and it does not replace an audit or testing with screen readers: nothing was tested with NVDA, JAWS or VoiceOver, and manual review in real Safari is still needed.
 - The contrast of custom themes written in `hsl()`, `oklch()` or `oklab()`. Those formats are not measured, and the warning says how many pairs went unchecked.
-- Velocity gestures (swipe to dismiss, inertia), Material 3 and Ant Design styles, and a density option apart from the styles. They don't exist yet.
+- Velocity gestures (swipe to dismiss, inertia) and Material 3 and Ant Design styles. They don't exist yet.
+- The compact density outside the two built-in styles. It is a set of absolute values chosen for `enchase` and `shadcn`: a style of your own, made with `defineStyle`, receives the same block and cannot declare its own compact, and in a style whose default is already denser, some parts may not compact, or may even grow (the floor of 24 px still holds).
 
 ## Documentation
 
-- [Storybook](https://enchase.othiagosilva.com.br/docs/): every component, interactive, plus the pages about the theme, the shape, the styles and the motion.
+- [Storybook](https://enchase.othiagosilva.com.br/docs/): every component, interactive, plus the pages about the theme, the shape, the styles, the density and the motion.
 - [API.md](API.md): props, types, defaults, hooks and CSS hooks of every component. It ships inside the package, in `node_modules/enchase/API.md`.
-- [README.pt-BR.md](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md): the full guide, with routing and how each `href` is handled, the theme in depth, how to create a style, motion, customization by CSS, server rendering and tests.
+- [README.pt-BR.md](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md): the full guide, with routing and how each `href` is handled, the theme in depth, how to create a style, motion, customization by CSS, the density, server rendering and tests.
 
 The Storybook, `API.md` and `CONTRIBUTING.md` are in English. The full guide is `README.pt-BR.md`, in Portuguese.
 

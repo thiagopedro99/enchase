@@ -166,7 +166,7 @@ const meta = {
       control: 'text'
     },
     size: {
-      description: 'Density of the rows: sm is compact and md is the default.',
+      description: 'Density of the rows: sm is compact and md is the default. The compact density of the whole kit (`data-density` on the `<html>`) keeps the sm rows at the same height.',
       control: 'inline-radio',
       options: ['sm', 'md'],
       table: { defaultValue: { summary: `'${defaultSize}'` } }

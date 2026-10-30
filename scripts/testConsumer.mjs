@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -9,6 +9,11 @@ const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
 const readmeSnippets = [...readFileSync(join(root, 'README.md'), 'utf8').matchAll(/```tsx\n([\s\S]*?)```/g)].map((match) => match[1])
+const recipe = readFileSync(join(root, 'src', 'docs', 'components', 'FormRecipe', 'index.tsx'), 'utf8')
+const formPackages = ['react-hook-form', 'zod', '@hookform/resolvers']
+const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+const formVersions = Object.fromEntries(formPackages.map((name) => [name, manifest.devDependencies?.[name]]))
+const unpinned = formPackages.filter((name) => !/^\d+\.\d+\.\d+$/.test(formVersions[name] ?? ''))
 
 const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Card, CardButton, CardLink, ColorModeProvider, Container, Flex, Grid, Input, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Select, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
 import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, CardButtonProps, CardLinkProps, CardProps, ContainerProps, FlexProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
@@ -166,6 +171,14 @@ export const ownedHeight: string = owned.base.control.height.md
 export const mixed: ThemeInput = { style: shadcn, brand: '#0f766e' }
 `
 
+const recipeUsage = `import { FormRecipe } from './FormRecipe.tsx'
+import type { Registration } from './FormRecipe.tsx'
+
+export const date = (values: Registration): string => values.date
+export const accepted = (values: Registration): true => values.terms
+export const Page = () => <FormRecipe onSubmit={(values) => void date(values)} />
+`
+
 const consumerPackage = { name: 'enchase-consumer', private: true, type: 'module', version: '0.0.0' }
 
 const consumerConfig = {
@@ -182,7 +195,7 @@ const consumerConfig = {
     noEmit: true,
     types: []
   },
-  include: ['index.tsx', 'css.d.ts', 'readme/*.tsx']
+  include: ['index.tsx', 'css.d.ts', 'readme/*.tsx', 'recipe/*.tsx']
 }
 
 try {
@@ -197,12 +210,16 @@ try {
   writeFileSync(join(consumer, 'index.tsx'), entry)
 
   if (readmeSnippets.length === 0) throw new Error('README.md has no tsx block to compile')
+  if (unpinned.length > 0) throw new Error(`${unpinned.join(', ')} must be devDependencies with an exact version (no ^ or ~), because the consumer compiles the forms recipe against the versions the repository tests`)
 
   mkdirSync(join(consumer, 'readme'))
   writeFileSync(join(consumer, 'readme', 'App.tsx'), 'export default function App() {\n  return null\n}\n')
   readmeSnippets.forEach((code, index) => writeFileSync(join(consumer, 'readme', `snippet${index}.tsx`), code))
+  mkdirSync(join(consumer, 'recipe'))
+  writeFileSync(join(consumer, 'recipe', 'FormRecipe.tsx'), recipe)
+  writeFileSync(join(consumer, 'recipe', 'usage.tsx'), recipeUsage)
 
-  run(npm, ['install', '--no-audit', '--no-fund', tarball, 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', 'typescript@5.8'], consumer)
+  run(npm, ['install', '--no-audit', '--no-fund', tarball, 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', 'typescript@5.8', ...formPackages.map((name) => `${name}@${formVersions[name]}`)], consumer)
   run(process.execPath, [join(consumer, 'node_modules', 'typescript', 'bin', 'tsc'), '-p', 'tsconfig.json'], consumer)
 
   const resolves = (specifier) => {
@@ -215,13 +232,33 @@ try {
     }
   }
 
+  const packedTheme = readFileSync(join(consumer, 'node_modules', 'enchase', 'dist-lib', 'theme.css'), 'utf8')
+  const densityRules = [
+    ":root[data-density='compact'] {",
+    ":where(:root[data-density='compact']) {"
+  ]
+
+  if (densityRules.some((rule) => packedTheme.split(rule).length !== 2)) throw new Error(`the packed theme.css must carry the compact density block once, as the rules ${densityRules.join(' and ')}`)
+
+  console.log('the packed theme.css carries the compact density block once')
+
   const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/styles': false, 'enchase/styles/theme/style': false }
   const wrong = Object.entries(expected).filter(([specifier, should]) => resolves(specifier) !== should)
 
   if (wrong.length > 0) throw new Error(`the installed package resolves the wrong entries:\n${wrong.map(([specifier, should]) => `  - ${specifier} should ${should ? 'resolve' : 'fail, so forgetting the .css of enchase/styles.css is an error and not an import that does nothing'}`).join('\n')}`)
 
-  const installed = JSON.parse(readFileSync(join(consumer, 'node_modules', 'enchase', 'package.json'), 'utf8'))
-  console.log(`consumer and the ${readmeSnippets.length} tsx blocks of the README compiled against enchase@${installed.version} with skipLibCheck: false and exactOptionalPropertyTypes, and enchase/styles alone does not resolve`)
+  const installedRoot = join(consumer, 'node_modules', 'enchase')
+  const installed = JSON.parse(readFileSync(join(installedRoot, 'package.json'), 'utf8'))
+  const importsFormPackage = (code) => formPackages.some((name) => new RegExp(`['"]${name}(/[^'"]*)?['"]`).test(code))
+
+  const leaks = [
+    ...formPackages.filter((name) => ['dependencies', 'peerDependencies', 'optionalDependencies'].some((field) => installed[field]?.[name] !== undefined)).map((name) => `${name} is in the package.json of the packed enchase`),
+    ...readdirSync(join(installedRoot, 'dist-lib'), { recursive: true }).filter((file) => /\.(js|ts)$/.test(file) && importsFormPackage(readFileSync(join(installedRoot, 'dist-lib', file), 'utf8'))).map((file) => `dist-lib/${file} imports one of them`)
+  ]
+
+  if (leaks.length > 0) throw new Error(`the packed enchase must not depend on the packages of the forms recipe, which are only devDependencies:\n${leaks.map((leak) => `  - ${leak}`).join('\n')}`)
+
+  console.log(`consumer, the ${readmeSnippets.length} tsx blocks of the README and the forms recipe (${formPackages.map((name) => `${name}@${formVersions[name]}`).join(', ')}) compiled against enchase@${installed.version} with skipLibCheck: false and exactOptionalPropertyTypes, enchase does not depend on those packages, and enchase/styles alone does not resolve`)
 } finally {
   rmSync(workdir, { recursive: true, force: true })
 }

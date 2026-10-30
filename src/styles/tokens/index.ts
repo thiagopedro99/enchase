@@ -10,6 +10,8 @@ export const breakpoints = baseTokens.breakpoints
 
 export { baseTokens, lightTheme, darkTheme }
 
+export { densities } from './density.ts'
+
 export { colorRoles, themeModes } from './types.ts'
 
 export { spring, springPosition, springSettleTime, timedSpring } from './spring.ts'

@@ -38,6 +38,7 @@ const meta = {
     style: { description: 'Style of the notification region.', control: false }
   },
   parameters: {
+    ownToastProvider: true,
     docs: {
       description: {
         component: 'Holds the queue of notifications and the region where they appear (`role="region"`, named by `labels.notifications`, not a live region). Two hidden announcers, which exist before the first notification, read the text of each one aloud: `role="status"` for success, info and warning, and `role="alert"` for error. The countdown of all the notifications stops while the pointer or the keyboard focus is anywhere in the region. The `success`, `error`, `warning` and `info` methods of `useToast` open the notifications, and the message can be text or nodes.'
