@@ -5,6 +5,8 @@ import type { HookValues } from '../tokens/types.ts'
 
 const popupShadow = '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)'
 
+const thumbShadow = '0 2px 4px 0 rgba(0, 35, 11, 0.2)'
+
 const buttons: HookValues = {
   '--enchase-button-font-weight': 'var(--enchase-font-weight-regular)',
   '--enchase-button-font-size-lg': 'var(--enchase-font-size-lg)',
@@ -44,6 +46,43 @@ const fields: HookValues = {
   '--enchase-date-picker-calendar-header-border-style': 'solid'
 }
 
+const selection: HookValues = {
+  '--enchase-checkbox-box-size': '1rem',
+  '--enchase-checkbox-box-radius': 'var(--enchase-radius-sm)',
+  '--enchase-checkbox-gap': '0.5rem',
+  '--enchase-radio-group-control-size': '1rem',
+  '--enchase-radio-group-control-dot-size': '0.375rem',
+  '--enchase-radio-group-option-gap': '0.5rem',
+  '--enchase-switch-track-width': '2.75rem',
+  '--enchase-switch-track-height': '1.375rem',
+  '--enchase-switch-thumb-size': '1.125rem',
+  '--enchase-switch-thumb-inset': '0.0625rem',
+  '--enchase-switch-thumb-scale-off': '1',
+  '--enchase-switch-thumb-shadow': thumbShadow,
+  '--enchase-switch-thumb-shadow-hover': thumbShadow,
+  '--enchase-switch-thumb-shadow-active': thumbShadow,
+  '--enchase-switch-thumb-shadow-checked-hover': thumbShadow,
+  '--enchase-switch-thumb-shadow-checked-active': thumbShadow,
+  '--enchase-switch-track-border-color': 'transparent',
+  '--enchase-switch-track-border-color-disabled': 'transparent',
+  '--enchase-switch-opacity-disabled': 'var(--enchase-state-disabled-content)',
+  '--enchase-slider-thumb-size': '0.875rem',
+  '--enchase-slider-thumb-border-width': '2px',
+  '--enchase-segmented-control-padding': '0.125rem',
+  '--enchase-segmented-control-border-width': '0',
+  '--enchase-segmented-control-item-border-width': '0',
+  '--enchase-segmented-control-item-radius': 'var(--enchase-radius-sm)',
+  '--enchase-segmented-control-item-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-segmented-control-item-font-size-lg': 'var(--enchase-font-size-lg)',
+  '--enchase-segmented-control-item-line-height': '1.7143',
+  '--enchase-segmented-control-item-padding-block-sm': '0',
+  '--enchase-segmented-control-item-padding-block-md': '0',
+  '--enchase-segmented-control-item-padding-block-lg': '0',
+  '--enchase-segmented-control-item-padding-inline-sm': '0.4375rem',
+  '--enchase-segmented-control-item-padding-inline-md': '0.6875rem',
+  '--enchase-segmented-control-item-padding-inline-lg': '0.6875rem'
+}
+
 const colorHooks: HookValues = {
   '--enchase-button-background-outline': 'var(--enchase-color-surface)',
   '--enchase-input-outline-border-color-hover': 'var(--enchase-color-primary)',
@@ -51,7 +90,19 @@ const colorHooks: HookValues = {
   '--enchase-input-field-background-filled-focus': 'var(--enchase-color-surface)',
   '--enchase-select-option-background-checked': 'var(--enchase-color-primary-container)',
   '--enchase-select-option-color-checked': 'var(--enchase-color-text-primary)',
-  '--enchase-date-picker-calendar-header-border-color': 'var(--enchase-color-border)'
+  '--enchase-date-picker-calendar-header-border-color': 'var(--enchase-color-border)',
+  '--enchase-checkbox-box-border-color-hover': 'var(--enchase-color-primary)',
+  '--enchase-radio-group-control-background-checked': 'var(--enchase-color-primary)',
+  '--enchase-radio-group-dot-border-color': 'var(--enchase-color-on-primary)',
+  '--enchase-switch-track-background': 'var(--enchase-color-border-strong)',
+  '--enchase-switch-thumb-background': 'var(--enchase-color-surface)',
+  '--enchase-switch-thumb-background-disabled': 'var(--enchase-color-surface)',
+  '--enchase-switch-track-background-checked-disabled': 'var(--enchase-color-primary)',
+  '--enchase-switch-label-color-disabled': 'var(--enchase-color-text-primary)',
+  '--enchase-slider-thumb-background': 'var(--enchase-color-surface)',
+  '--enchase-segmented-control-background': 'var(--enchase-color-secondary-container)',
+  '--enchase-segmented-control-item-background-selected': 'var(--enchase-color-surface)',
+  '--enchase-segmented-control-item-shadow-selected': 'var(--enchase-shadow-sm)'
 }
 
 const light: ThemeStyleMode = {
@@ -208,7 +259,7 @@ export const workbench = defineStyle({
     lineHeights: { normal: 1.5714 }
   },
   radius: { xs: '0.125rem', sm: '0.25rem', md: '0.375rem', lg: '0.5rem', xl: '0.5rem', '2xl': '0.5rem', control: '0.375rem', button: '0.375rem' },
-  hooks: { ...buttons, ...fields },
+  hooks: { ...buttons, ...fields, ...selection },
   colorHooks,
   brand: ['primary', 'onPrimary', 'primaryHover'],
   light,
