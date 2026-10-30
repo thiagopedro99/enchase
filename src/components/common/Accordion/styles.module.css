@@ -34,7 +34,7 @@
   line-height: var(--enchase-accordion-trigger-line-height, var(--enchase-line-height-snug, 1.4));
   color: var(--enchase-accordion-trigger-color, var(--enchase-color-text-primary));
   text-align: start;
-  background-color: transparent;
+  background-color: var(--enchase-accordion-trigger-background, transparent);
   border: 0;
   cursor: pointer;
   user-select: none;

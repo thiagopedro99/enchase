@@ -69,6 +69,10 @@
   background-color: var(--enchase-table-header-background, var(--enchase-color-surface-container-low));
 }
 
+.header:not(:last-child) {
+  border-inline-end: var(--enchase-table-header-border-width-end, 0) var(--enchase-table-header-border-style-end, none) var(--enchase-table-header-border-color-end, currentColor);
+}
+
 .header[data-sortable] {
   position: relative;
 }
@@ -180,7 +184,7 @@
   }
 
   .row[data-selected]:not([data-placeholder]):hover {
-    background-color: var(--enchase-table-row-background-selected, var(--enchase-color-surface-container-high));
+    background-color: var(--enchase-table-row-background-selected-hover, var(--enchase-table-row-background-selected, var(--enchase-color-surface-container-high)));
     background-image: linear-gradient(color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-row-hover, 0.06) * 100%), transparent), color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-row-hover, 0.06) * 100%), transparent));
   }
 }

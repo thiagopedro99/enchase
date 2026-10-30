@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Alert, Button, Icon } from 'enchase'
 import { defaultVariant, variantTexts, variants } from './defaultData.ts'
 
-import type { ComponentProps } from 'react'
+import type { ComponentProps, CSSProperties } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
 const DismissibleDemo = (args: ComponentProps<typeof Alert>) => {
@@ -119,4 +119,36 @@ export const CustomIcon: Story = {
 
 export const WithoutIcon: Story = {
   args: { icon: null }
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The border has a color for each type, `--enchase-alert-border-color-info`, `-success`, `-warning` and `-error`, which fall back to the shared `--enchase-alert-border-color` (transparent) when they are not set. The width is `--enchase-alert-border-width`, zero by default. Here every type has a 1 px border in the color of its role.'
+      }
+    }
+  },
+  render: () => (
+    <div
+      style={
+        {
+          display: 'grid',
+          gap: '0.75rem',
+          '--enchase-alert-border-width': '1px',
+          '--enchase-alert-border-color-info': 'var(--enchase-color-info)',
+          '--enchase-alert-border-color-success': 'var(--enchase-color-success)',
+          '--enchase-alert-border-color-warning': 'var(--enchase-color-warning)',
+          '--enchase-alert-border-color-error': 'var(--enchase-color-error)'
+        } as CSSProperties
+      }
+    >
+      {variants.map((variant) => (
+        <Alert key={variant} variant={variant} title={variantTexts[variant].title}>
+          {variantTexts[variant].message}
+        </Alert>
+      ))}
+    </div>
+  )
 }

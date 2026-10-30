@@ -2,6 +2,7 @@ import { Badge, Button } from 'enchase'
 import { defaultSize, defaultVariant, variantLabels, variants } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const meta = {
   title: 'Components/Badge',
@@ -77,5 +78,42 @@ export const WithAButton: Story = {
     <Button variant="outline">
       Inbox <Badge variant="primary">3</Badge>
     </Button>
+  )
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'A badge has no border. `--enchase-badge-border-style`, `--enchase-badge-border-width` and one color for each variant, such as `--enchase-badge-border-color-primary`, draw one all around it: nothing is drawn unless the style is set, and the color is the one of the text of the variant when it is not set. Here every variant has a 1 px border in the color of its role.'
+      }
+    }
+  },
+  render: (args) => (
+    <div
+      style={
+        {
+          display: 'flex',
+          gap: '0.75rem',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          '--enchase-badge-border-style': 'solid',
+          '--enchase-badge-border-width': '1px',
+          '--enchase-badge-border-color-neutral': 'var(--enchase-color-border-strong)',
+          '--enchase-badge-border-color-primary': 'var(--enchase-color-primary)',
+          '--enchase-badge-border-color-success': 'var(--enchase-color-success)',
+          '--enchase-badge-border-color-warning': 'var(--enchase-color-warning)',
+          '--enchase-badge-border-color-error': 'var(--enchase-color-error)',
+          '--enchase-badge-border-color-info': 'var(--enchase-color-info)'
+        } as CSSProperties
+      }
+    >
+      {variants.map((variant) => (
+        <Badge key={variant} {...args} variant={variant}>
+          {variantLabels[variant]}
+        </Badge>
+      ))}
+    </div>
   )
 }

@@ -20,21 +20,25 @@
 :where(.alert[data-variant='info']) {
   background-color: var(--enchase-alert-background-info, var(--enchase-color-info-container));
   color: var(--enchase-alert-color-info, var(--enchase-color-on-info-container));
+  border-color: var(--enchase-alert-border-color-info, var(--enchase-alert-border-color, transparent));
 }
 
 :where(.alert[data-variant='success']) {
   background-color: var(--enchase-alert-background-success, var(--enchase-color-success-container));
   color: var(--enchase-alert-color-success, var(--enchase-color-on-success-container));
+  border-color: var(--enchase-alert-border-color-success, var(--enchase-alert-border-color, transparent));
 }
 
 :where(.alert[data-variant='warning']) {
   background-color: var(--enchase-alert-background-warning, var(--enchase-color-warning-container));
   color: var(--enchase-alert-color-warning, var(--enchase-color-on-warning-container));
+  border-color: var(--enchase-alert-border-color-warning, var(--enchase-alert-border-color, transparent));
 }
 
 :where(.alert[data-variant='error']) {
   background-color: var(--enchase-alert-background-error, var(--enchase-color-error-container));
   color: var(--enchase-alert-color-error, var(--enchase-color-on-error-container));
+  border-color: var(--enchase-alert-border-color-error, var(--enchase-alert-border-color, transparent));
 }
 
 .icon {

@@ -5,6 +5,7 @@ import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Alert } from '@components/common/Alert/index.tsx'
 import { Badge } from '@components/common/Badge/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
+import { DatePicker } from '@components/common/DatePicker/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
 import { Tabs } from '@components/common/Tabs/index.tsx'
@@ -98,6 +99,57 @@ describe('the alert from the hooks', () => {
     renderInBrowser(scoped({ '--enchase-space-md': '1.25rem' }, <Alert>Saved</Alert>))
 
     expect(style('alert').paddingLeft).toBe('20px')
+  })
+
+  it('takes the color of the border of each variant from its own hook', () => {
+    renderInBrowser(
+      scoped(
+        { '--enchase-alert-border-width': '2px', ...Object.fromEntries(variants.map((variant, index) => [`--enchase-alert-border-color-${variant}`, swatch(index)])) },
+        <>
+          {variants.map((variant) => (
+            <Alert key={variant} variant={variant}>
+              {variant}
+            </Alert>
+          ))}
+        </>
+      )
+    )
+
+    expect(parts('alert').map((alert) => getComputedStyle(alert).borderTopColor)).toEqual(variants.map((_, index) => swatch(index)))
+  })
+
+  it('falls back to the shared hook of the border color in every variant', () => {
+    renderInBrowser(
+      scoped(
+        { '--enchase-alert-border-width': '2px', '--enchase-alert-border-color': 'rgb(9, 9, 9)' },
+        <>
+          {variants.map((variant) => (
+            <Alert key={variant} variant={variant}>
+              {variant}
+            </Alert>
+          ))}
+        </>
+      )
+    )
+
+    expect(parts('alert').map((alert) => getComputedStyle(alert).borderTopColor)).toEqual(variants.map(() => 'rgb(9, 9, 9)'))
+  })
+
+  it('lets the hook of a variant win over the shared hook of the border color', () => {
+    renderInBrowser(
+      scoped(
+        { '--enchase-alert-border-width': '2px', '--enchase-alert-border-color': 'rgb(9, 9, 9)', '--enchase-alert-border-color-success': 'rgb(1, 2, 3)' },
+        <>
+          {variants.map((variant) => (
+            <Alert key={variant} variant={variant}>
+              {variant}
+            </Alert>
+          ))}
+        </>
+      )
+    )
+
+    expect(parts('alert').map((alert) => getComputedStyle(alert).borderTopColor)).toEqual(['rgb(9, 9, 9)', 'rgb(1, 2, 3)', 'rgb(9, 9, 9)', 'rgb(9, 9, 9)'])
   })
 })
 
@@ -239,6 +291,34 @@ describe('the table from the hooks', () => {
     expect([style('table-sort-icon').width, style('table-sort-icon').height]).toEqual(['21px', '19px'])
     expect(getComputedStyle(part('table-sort-icon').querySelector('path') as SVGPathElement).opacity).toBe('0.7')
   })
+
+  it('lays the hover layer over the background of a selected row under the pointer, which is the background of the selected row when no hook says otherwise', async () => {
+    renderInBrowser(scoped({ '--enchase-table-row-background-selected': 'rgb(4, 5, 6)' }, <Table columns={columns} rows={rows} selectedKeys={[0]} onSelectedKeysChange={() => undefined} />))
+    const selected = () => parts('table-row')[0]
+
+    await userEvent.hover(selected())
+    await waitForSettled(selected)
+
+    expect(getComputedStyle(selected()).backgroundColor).toBe('rgb(4, 5, 6)')
+    expect(getComputedStyle(selected()).backgroundImage).toContain('linear-gradient')
+  })
+
+  it('takes the background of a selected row under the pointer from its hook, with the hover layer still over it', async () => {
+    renderInBrowser(scoped({ '--enchase-table-row-background-selected': 'rgb(4, 5, 6)', '--enchase-table-row-background-selected-hover': 'rgb(1, 2, 3)' }, <Table columns={columns} rows={rows} selectedKeys={[0]} onSelectedKeysChange={() => undefined} />))
+    const selected = () => parts('table-row')[0]
+
+    await userEvent.hover(selected())
+    await waitForSettled(selected)
+
+    expect(getComputedStyle(selected()).backgroundColor).toBe('rgb(1, 2, 3)')
+    expect(getComputedStyle(selected()).backgroundImage).toContain('linear-gradient')
+  })
+
+  it('keeps the background of a selected row at rest from the hook of the selected row, whatever the hover hook says', () => {
+    renderInBrowser(scoped({ '--enchase-table-row-background-selected': 'rgb(4, 5, 6)', '--enchase-table-row-background-selected-hover': 'rgb(1, 2, 3)' }, <Table columns={columns} rows={rows} selectedKeys={[0]} onSelectedKeysChange={() => undefined} />))
+
+    expect(getComputedStyle(parts('table-row')[0]).backgroundColor).toBe('rgb(4, 5, 6)')
+  })
 })
 
 describe('the accordion from the hooks', () => {
@@ -266,6 +346,76 @@ describe('the accordion from the hooks', () => {
     expect([style('accordion-trigger').paddingTop, style('accordion-trigger').paddingLeft, style('accordion-trigger').columnGap]).toEqual(['9px', '11px', '13px'])
     expect([style('accordion-trigger').color, style('accordion-icon').color]).toEqual(['rgb(7, 8, 9)', 'rgb(10, 11, 12)'])
     expect(style('accordion-panel').paddingLeft).toBe('15px')
+  })
+
+  it('keeps the background of the trigger transparent when no hook is set', () => {
+    renderInBrowser(<Accordion items={[{ value: 'a', title: 'A', content: 'First' }]} />)
+
+    expect(style('accordion-trigger').backgroundColor).toBe('rgba(0, 0, 0, 0)')
+  })
+
+  it('takes the background of the trigger from its hook', () => {
+    renderInBrowser(scoped({ '--enchase-accordion-trigger-background': 'rgb(1, 2, 3)' }, <Accordion items={[{ value: 'a', title: 'A', content: 'First' }]} />))
+
+    expect(style('accordion-trigger').backgroundColor).toBe('rgb(1, 2, 3)')
+  })
+})
+
+describe('the day of the calendar from the hooks', () => {
+  const opened = () => expect.poll(() => parts('date-picker-calendar-day').length).toBeGreaterThan(0)
+
+  const measures = () => ({
+    day: style('date-picker-calendar-day').height,
+    number: [style('date-picker-calendar-day-number').width, style('date-picker-calendar-day-number').height],
+    grid: style('date-picker-calendar-grid').width,
+    nav: style('date-picker-calendar-nav').width
+  })
+
+  it('is as large as the hit size of the page when no hook is set', async () => {
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(measures()).toEqual({ day: '40px', number: ['40px', '40px'], grid: '280px', nav: '40px' })
+  })
+
+  it('follows the hit size of the page when no hook is set', async () => {
+    onRoot({ '--enchase-hit-size': '48px' })
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(measures()).toEqual({ day: '48px', number: ['48px', '48px'], grid: '336px', nav: '48px' })
+  })
+
+  it('takes the size of the day, the width of the grid that holds seven of them, from its hook, and leaves the buttons of the header at the hit size', async () => {
+    onRoot({ '--enchase-date-picker-calendar-day-size': '36px' })
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(measures()).toEqual({ day: '36px', number: ['36px', '36px'], grid: '252px', nav: '40px' })
+  })
+
+  it('lets the hook win over the hit size of the page', async () => {
+    onRoot({ '--enchase-hit-size': '48px', '--enchase-date-picker-calendar-day-size': '36px' })
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(measures()).toEqual({ day: '36px', number: ['36px', '36px'], grid: '252px', nav: '48px' })
+  })
+
+  it('keeps the floor of 24px under a hook that is lower, as it does under a lower hit size', async () => {
+    onRoot({ '--enchase-date-picker-calendar-day-size': '10px' })
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(measures()).toEqual({ day: '24px', number: ['24px', '24px'], grid: '168px', nav: '40px' })
+  })
+
+  it('keeps the floor of 24px under a lower hit size', async () => {
+    onRoot({ '--enchase-hit-size': '10px' })
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(measures()).toEqual({ day: '24px', number: ['24px', '24px'], grid: '168px', nav: '24px' })
   })
 })
 

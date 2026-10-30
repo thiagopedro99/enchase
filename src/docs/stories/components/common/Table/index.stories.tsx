@@ -5,6 +5,7 @@ import { compareOrders, defaultSize, defaultStickyHeader, defaultStriped, orders
 import type { TableColumn, TableSort } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { Order } from './defaultData.ts'
+import type { CSSProperties } from 'react'
 
 const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
 
@@ -52,6 +53,26 @@ const SortableDemo = () => {
       <div style={{ fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }}>
         Sorted by {sort.key}, {sort.direction}
       </div>
+    </div>
+  )
+}
+
+const HooksDemo = () => {
+  const [selected, setSelected] = useState<(string | number)[]>(['#1041'])
+
+  return (
+    <div
+      style={
+        {
+          inlineSize: 'min(48rem, 100%)',
+          '--enchase-table-header-border-width-end': '1px',
+          '--enchase-table-header-border-style-end': 'solid',
+          '--enchase-table-header-border-color-end': 'var(--enchase-color-border-strong)',
+          '--enchase-table-row-background-selected-hover': 'var(--enchase-color-primary-container)'
+        } as CSSProperties
+      }
+    >
+      <Table caption="Orders" columns={columns} rows={orders.slice(0, 6)} getRowKey={(row) => row.id} selectedKeys={selected} onSelectedKeysChange={setSelected} />
     </div>
   )
 }
@@ -275,4 +296,16 @@ export const Selectable: Story = {
     docs: { description: { story: 'Passing `selectedKeys` adds a column of checkboxes. The select all box in the header is checked when every row is selected and mixed when only some are, and the selected rows are marked with `data-selected`. The app owns the list: `onSelectedKeysChange` gets the whole new list and the table shows what is passed back. The selection follows the record by its key, so it survives sorting, as here.' } }
   },
   render: () => <SelectableDemo />
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The header cells draw a separator at the end, except the last one, with `--enchase-table-header-border-width-end`, `-style-end` and `-color-end`: nothing is drawn unless the style is set. A selected row under the pointer takes its background from `--enchase-table-row-background-selected-hover`, which is the background of the selected row without it, and the hover layer stays over it. Select a row and move the pointer over it.'
+      }
+    }
+  },
+  render: () => <HooksDemo />
 }

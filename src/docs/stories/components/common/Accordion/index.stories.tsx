@@ -3,6 +3,7 @@ import { Accordion, Badge, Button } from 'enchase'
 import { defaultHeadingLevel, defaultMultiple, faq } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const items = faq.map(({ value, title, text }) => ({ value, title, content: <p style={{ margin: 0 }}>{text}</p> }))
 
@@ -140,4 +141,20 @@ export const WithNodesInTitle: Story = {
       }
     }
   }
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The trigger has a background, `--enchase-accordion-trigger-background`, transparent by default. Here it is a surface tone, so the triggers stand out from the panels.'
+      }
+    }
+  },
+  render: () => (
+    <div style={{ '--enchase-accordion-trigger-background': 'var(--enchase-color-surface-container-low)' } as CSSProperties}>
+      <Accordion items={items} defaultValue={[faq[0].value]} />
+    </div>
+  )
 }

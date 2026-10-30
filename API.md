@@ -1062,6 +1062,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-accordion-panel-padding-block-end` | `1rem` (`--enchase-space-md`) | `padding-block-end` |
 | `--enchase-accordion-panel-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-accordion-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-accordion-trigger-background` | `transparent` | `background-color` |
 | `--enchase-accordion-trigger-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-accordion-trigger-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-accordion-trigger-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
@@ -1080,7 +1081,11 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-alert-background-info` | `var(--enchase-color-info-container)` | `background-color` |
 | `--enchase-alert-background-success` | `var(--enchase-color-success-container)` | `background-color` |
 | `--enchase-alert-background-warning` | `var(--enchase-color-warning-container)` | `background-color` |
-| `--enchase-alert-border-color` | `transparent` | `border` |
+| `--enchase-alert-border-color` | `transparent` | `border`, `border-color` |
+| `--enchase-alert-border-color-error` | `transparent` (`--enchase-alert-border-color`) | `border-color` |
+| `--enchase-alert-border-color-info` | `transparent` (`--enchase-alert-border-color`) | `border-color` |
+| `--enchase-alert-border-color-success` | `transparent` (`--enchase-alert-border-color`) | `border-color` |
+| `--enchase-alert-border-color-warning` | `transparent` (`--enchase-alert-border-color`) | `border-color` |
 | `--enchase-alert-border-width` | `0` | `border` |
 | `--enchase-alert-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-alert-color-error` | `var(--enchase-color-on-error-container)` | `color` |
@@ -1152,6 +1157,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-badge-background-primary` | `var(--enchase-color-primary-container)` | `background-color` |
 | `--enchase-badge-background-success` | `var(--enchase-color-success-container)` | `background-color` |
 | `--enchase-badge-background-warning` | `var(--enchase-color-warning-container)` | `background-color` |
+| `--enchase-badge-border-color-error` | `currentColor` | `border-color` |
+| `--enchase-badge-border-color-info` | `currentColor` | `border-color` |
+| `--enchase-badge-border-color-neutral` | `currentColor` | `border-color` |
+| `--enchase-badge-border-color-primary` | `currentColor` | `border-color` |
+| `--enchase-badge-border-color-success` | `currentColor` | `border-color` |
+| `--enchase-badge-border-color-warning` | `currentColor` | `border-color` |
+| `--enchase-badge-border-style` | `none` | `border-style` |
+| `--enchase-badge-border-width` | `0` | `border-width` |
 | `--enchase-badge-color-error` | `var(--enchase-color-on-error-container)` | `color` |
 | `--enchase-badge-color-info` | `var(--enchase-color-on-info-container)` | `color` |
 | `--enchase-badge-color-neutral` | `var(--enchase-color-text-primary)` | `color` |
@@ -1306,6 +1319,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-date-picker-calendar-day-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-date-picker-calendar-day-font-weight` | `400` (`--enchase-font-weight-regular`) | `font-weight` |
 | `--enchase-date-picker-calendar-day-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-date-picker-calendar-day-size` | `max(24px, var(--enchase-hit-size, 40px))` | `inline-size`, `block-size` |
 | `--enchase-date-picker-calendar-weekday-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-date-picker-calendar-weekday-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-date-picker-calendar-weekday-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
@@ -1314,6 +1328,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 
 | Hook | Default | Property |
 | --- | --- | --- |
+| `--enchase-date-picker-calendar-header-border-color` | `currentColor` | `border-block-end` |
+| `--enchase-date-picker-calendar-header-border-style` | `none` | `border-block-end` |
+| `--enchase-date-picker-calendar-header-border-width` | `0` | `border-block-end` |
 | `--enchase-date-picker-calendar-header-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-date-picker-calendar-nav-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-date-picker-calendar-nav-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
@@ -2183,10 +2200,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-table-empty-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-table-empty-padding` | `1.5rem` (`--enchase-space-lg`) | `padding` |
 | `--enchase-table-header-background` | `var(--enchase-color-surface-container-low)` | `background-color` |
+| `--enchase-table-header-border-color-end` | `currentColor` | `border-inline-end` |
+| `--enchase-table-header-border-style-end` | `none` | `border-inline-end` |
+| `--enchase-table-header-border-width-end` | `0` | `border-inline-end` |
 | `--enchase-table-header-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-table-header-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 | `--enchase-table-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-table-row-background-selected` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-table-row-background-selected-hover` | `var(--enchase-table-row-background-selected, var(--enchase-color-surface-container-high))` | `background-color` |
 | `--enchase-table-row-background-striped` | `var(--enchase-color-surface-container-low)` | `background-color` |
 | `--enchase-table-row-header-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-table-sort-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
