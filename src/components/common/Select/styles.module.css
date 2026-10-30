@@ -27,7 +27,7 @@
   margin: 0;
   font-family: inherit;
   color: var(--enchase-input-field-color, var(--enchase-color-text-primary));
-  background-color: transparent;
+  background-color: var(--enchase-input-field-background, transparent);
   border: none;
   cursor: pointer;
   appearance: none;
@@ -54,6 +54,11 @@
 
 .select:focus {
   outline: none;
+  background-color: var(--enchase-input-field-background-focus, transparent);
+}
+
+.select:open {
+  background-color: var(--enchase-input-field-background-focus, transparent);
 }
 
 .select[data-has-label]:not(:focus):not(:has(option:checked:not([data-placeholder]))) {
@@ -62,6 +67,7 @@
 
 .select:disabled {
   color: var(--enchase-input-field-color-disabled, var(--enchase-color-text-disabled));
+  background-color: var(--enchase-input-field-background-disabled, transparent);
   opacity: var(--enchase-input-opacity-disabled, 1);
   cursor: not-allowed;
 }
@@ -262,6 +268,10 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .select:hover:not(:disabled):not(:focus):not(:open) {
+    background-color: var(--enchase-input-field-background-hover, transparent);
+  }
+
   .select:hover:not(:disabled):not(:focus) ~ .outline {
     border-color: var(--enchase-input-outline-border-color-hover, var(--enchase-color-text-primary));
   }

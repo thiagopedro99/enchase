@@ -2,6 +2,7 @@ import { Input } from 'enchase'
 import { defaultFullWidth, defaultPasswordToggle } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const meta = {
   title: 'Components/Input',
@@ -99,4 +100,25 @@ export const Disabled: Story = {
 
 export const LabelAbove: Story = {
   args: { labelPlacement: 'stacked', helperText: 'We never share your email' }
+}
+
+export const WithBackground: Story = {
+  parameters: { controls: { disable: true } },
+  render: (args) => (
+    <div
+      style={
+        {
+          display: 'grid',
+          gap: '1rem',
+          '--enchase-input-field-background': 'var(--enchase-color-surface-container-low)',
+          '--enchase-input-field-background-hover': 'var(--enchase-color-surface-container)',
+          '--enchase-input-field-background-focus': 'var(--enchase-color-surface)',
+          '--enchase-input-field-background-disabled': 'var(--enchase-color-surface-container-high)'
+        } as CSSProperties
+      }
+    >
+      <Input {...args} labelPlacement="stacked" />
+      <Input {...args} labelPlacement="stacked" label="Disabled" disabled />
+    </div>
+  )
 }

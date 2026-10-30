@@ -24,6 +24,7 @@
   align-items: center;
   box-sizing: border-box;
   margin: 0;
+  background-color: var(--enchase-input-field-background, transparent);
 }
 
 :where(.field) {
@@ -189,6 +190,10 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .wrapper:not([data-disabled]) .field:hover:not(:focus-within) {
+    background-color: var(--enchase-input-field-background-hover, transparent);
+  }
+
   .wrapper:not([data-disabled]) .field:hover:not(:focus-within) > .outline {
     border-color: var(--enchase-input-outline-border-color-hover, var(--enchase-color-text-primary));
   }
@@ -196,6 +201,10 @@
   .wrapper:not([data-disabled]) .field:hover:not(:focus-within) > .outline[data-has-error] {
     border-color: var(--enchase-input-outline-border-color-error-hover, var(--enchase-color-error));
   }
+}
+
+.field:focus-within {
+  background-color: var(--enchase-input-field-background-focus, transparent);
 }
 
 .field:focus-within > .outline {
@@ -212,6 +221,10 @@
   .field:focus-within > .outline {
     border-width: max(var(--enchase-border-width-strong, 2px), 2px);
   }
+}
+
+.field:has(.input:disabled) {
+  background-color: var(--enchase-input-field-background-disabled, transparent);
 }
 
 .input:disabled ~ .outline {

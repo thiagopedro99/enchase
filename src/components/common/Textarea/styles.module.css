@@ -28,7 +28,7 @@
   font-family: inherit;
   line-height: var(--enchase-textarea-field-line-height, var(--enchase-line-height-normal, 1.5));
   color: var(--enchase-input-field-color, var(--enchase-color-text-primary));
-  background-color: transparent;
+  background-color: var(--enchase-input-field-background, transparent);
   border: none;
 }
 
@@ -65,6 +65,7 @@
 
 .textarea:focus {
   outline: none;
+  background-color: var(--enchase-input-field-background-focus, transparent);
 }
 
 .textarea::placeholder {
@@ -83,6 +84,7 @@
 
 .textarea:disabled {
   color: var(--enchase-input-field-color-disabled, var(--enchase-color-text-disabled));
+  background-color: var(--enchase-input-field-background-disabled, transparent);
   opacity: var(--enchase-input-opacity-disabled, 1);
   cursor: not-allowed;
 }
@@ -192,6 +194,10 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .textarea:hover:not(:disabled):not(:focus) {
+    background-color: var(--enchase-input-field-background-hover, transparent);
+  }
+
   .textarea:hover:not(:disabled):not(:focus) ~ .outline {
     border-color: var(--enchase-input-outline-border-color-hover, var(--enchase-color-text-primary));
   }

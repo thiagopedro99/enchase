@@ -1541,6 +1541,10 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-input-error-color` | `var(--enchase-color-error)` | `color` (also in Checkbox, Combobox, DatePicker, NumberInput, Select, Switch, Textarea) |
 | `--enchase-input-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-input-field-background` | `transparent` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-field-background-disabled` | `transparent` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-field-background-focus` | `transparent` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-field-background-hover` | `transparent` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-color` | `var(--enchase-color-text-primary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-color-placeholder` | `var(--enchase-color-text-placeholder)` | `color` (also in Combobox, DatePicker, NumberInput, Textarea) |
