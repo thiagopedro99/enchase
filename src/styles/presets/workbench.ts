@@ -88,6 +88,7 @@ const navigation: HookValues = {
   '--enchase-tabs-tab-padding-block': '0.75rem',
   '--enchase-tabs-tab-font-weight': 'var(--enchase-font-weight-regular)',
   '--enchase-tabs-indicator-width': '2px',
+  '--enchase-sidebar-width': '12.5rem',
   '--enchase-sidebar-nav-padding-inline': '0.25rem',
   '--enchase-sidebar-item-control-height': '2.5rem',
   '--enchase-sidebar-item-control-padding-inline': '1.5rem',
@@ -149,6 +150,7 @@ const containers: HookValues = {
   '--enchase-drawer-close-radius': 'var(--enchase-radius-sm)',
   '--enchase-popover-content-padding-block': '0.75rem',
   '--enchase-popover-content-padding-inline': '0.75rem',
+  '--enchase-layout-header-padding-inline': '3.125rem',
   '--enchase-footer-padding-block': '1.5rem'
 }
 
@@ -185,10 +187,12 @@ const feedback: HookValues = {
   '--enchase-toast-icon-margin-inline-end': '0.5rem',
   '--enchase-progress-size-sm': '3.75rem',
   '--enchase-progress-size-md': '7.5rem',
+  '--enchase-progress-size-lg': '9rem',
   '--enchase-progress-thickness': '3',
   '--enchase-avatar-size-sm': '1.5rem',
   '--enchase-avatar-size-md': '2rem',
   '--enchase-avatar-size-lg': '2.5rem',
+  '--enchase-avatar-font-size-lg': '0.875rem',
   '--enchase-avatar-font-weight': 'var(--enchase-font-weight-regular)',
   '--enchase-divider-min-height': '0.9em',
   '--enchase-loading-spinner-width-xs': '0.75rem',
@@ -214,6 +218,7 @@ const compactHooks: HookValues = {
   '--enchase-accordion-panel-padding-inline': '1rem',
   '--enchase-select-option-padding-block': '0.25rem',
   '--enchase-combobox-option-padding-block': '0.25rem',
+  '--enchase-menu-item-padding-block': '0.25rem',
   '--enchase-sidebar-item-control-height': '2.1875rem',
   '--enchase-button-padding-inline-md': '0.6875rem',
   '--enchase-button-padding-inline-lg': '0.6875rem',
@@ -224,7 +229,14 @@ const compactHooks: HookValues = {
   '--enchase-table-cell-padding-block-sm': '0.25rem',
   '--enchase-modal-header-padding-block': '1rem 0',
   '--enchase-modal-body-padding-block': '0.25rem 0.5rem',
-  '--enchase-modal-footer-padding-block': '0 1rem'
+  '--enchase-modal-footer-padding-block': '0 1rem',
+  '--enchase-drawer-header-padding-block': '0.5rem',
+  '--enchase-drawer-body-padding-block': '1rem',
+  '--enchase-drawer-footer-padding-block': '0.25rem',
+  '--enchase-drawer-footer-padding-inline': '0.5rem',
+  '--enchase-badge-min-height-md': '1.25rem',
+  '--enchase-tag-min-height-md': '1.25rem',
+  '--enchase-tooltip-bubble-padding': '0.25rem'
 }
 
 const colorHooks: HookValues = {

@@ -323,6 +323,20 @@ describe('the progress of the workbench style', () => {
     expect(px(style('progress-indicator', 0).strokeWidth)).toBe(3)
   })
 
+  it('draws the large circle at 144px, where the original has no large size, so the style continues the scale of its 60px and 120px circles with the same 6% stroke', () => {
+    show(
+      <>
+        <Progress value={30} variant="circular" size="sm" />
+        <Progress value={30} variant="circular" />
+        <Progress value={30} variant="circular" size="lg" />
+      </>
+    )
+
+    expect([0, 1, 2].map((index) => part('progress', index).getBoundingClientRect().width)).toEqual([60, 120, 144])
+    expect([0, 1, 2].map((index) => part('progress', index).getBoundingClientRect().height)).toEqual([60, 120, 144])
+    expect(px(style('progress-indicator', 2).strokeWidth)).toBe(3)
+  })
+
   it('paints the bar in the light blue in the dark mode', async () => {
     await showDark(<Progress value={30} />)
 
@@ -342,6 +356,18 @@ describe('the avatar of the workbench style', () => {
 
     expect([0, 1, 2].map((index) => part('avatar', index).getBoundingClientRect().width)).toEqual([24, 32, 40])
     expect([0, 1, 2].map((index) => part('avatar', index).getBoundingClientRect().height)).toEqual([24, 32, 40])
+  })
+
+  it('writes the letters in 14px in the three sizes, as the original does, where the default style grows the large one to 20px', () => {
+    show(
+      <>
+        <Avatar name="Ana Souza" size="sm" />
+        <Avatar name="Ana Souza" />
+        <Avatar name="Ana Souza" size="lg" />
+      </>
+    )
+
+    expect([0, 1, 2].map((index) => px(style('avatar', index).fontSize))).toEqual([14, 14, 14])
   })
 
   it('fills the avatar with the secondary color, #595959, with white letters in 14px regular type, which hold 7.00:1 where the 25% black of the original holds 1.84:1', () => {
@@ -436,6 +462,16 @@ describe('the layout and the footer of the workbench style', () => {
 
     expect(part('layout-header').getBoundingClientRect().height).toBe(64)
     expect(style('layout-header').backgroundColor).not.toBe('rgb(0, 21, 41)')
+  })
+
+  it('pads the bar of the layout by 50px at the sides, as the original does', () => {
+    show(
+      <Layout pageTitle="Teste" navigationSections={demoSections}>
+        <p>Content</p>
+      </Layout>
+    )
+
+    expect([px(style('layout-header').paddingLeft), px(style('layout-header').paddingRight)]).toEqual([50, 50])
   })
 
   it('pads the footer by 24px above and below and paints it in the page color, #F5F5F5, as the original does, with no hook for the 50px at the sides', () => {

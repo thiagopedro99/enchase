@@ -39,6 +39,7 @@ const compactHooks = [
   ['--enchase-accordion-panel-padding-inline', '1rem'],
   ['--enchase-select-option-padding-block', '0.25rem'],
   ['--enchase-combobox-option-padding-block', '0.25rem'],
+  ['--enchase-menu-item-padding-block', '0.25rem'],
   ['--enchase-sidebar-item-control-height', '2.1875rem'],
   ['--enchase-button-padding-inline-md', '0.6875rem'],
   ['--enchase-button-padding-inline-lg', '0.6875rem'],
@@ -49,7 +50,14 @@ const compactHooks = [
   ['--enchase-table-cell-padding-block-sm', '0.25rem'],
   ['--enchase-modal-header-padding-block', '1rem 0'],
   ['--enchase-modal-body-padding-block', '0.25rem 0.5rem'],
-  ['--enchase-modal-footer-padding-block', '0 1rem']
+  ['--enchase-modal-footer-padding-block', '0 1rem'],
+  ['--enchase-drawer-header-padding-block', '0.5rem'],
+  ['--enchase-drawer-body-padding-block', '1rem'],
+  ['--enchase-drawer-footer-padding-block', '0.25rem'],
+  ['--enchase-drawer-footer-padding-inline', '0.5rem'],
+  ['--enchase-badge-min-height-md', '1.25rem'],
+  ['--enchase-tag-min-height-md', '1.25rem'],
+  ['--enchase-tooltip-bubble-padding', '0.25rem']
 ] as const
 
 const redeclaredHooks = ['--enchase-tabs-tab-min-height', '--enchase-accordion-trigger-min-height', '--enchase-select-option-padding-block', '--enchase-sidebar-item-control-height'] as const

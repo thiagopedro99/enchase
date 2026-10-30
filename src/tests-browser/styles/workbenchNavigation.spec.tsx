@@ -160,6 +160,14 @@ describe('the tabs of the workbench style', () => {
 })
 
 describe('the inline menu of the sidebar in the workbench style', () => {
+  it('makes the sidebar 200px wide, as the original sider does, where the default style makes it 280px, which leaves 192px for the item between its 4px margins', () => {
+    show(sidebar)
+
+    expect(part('sidebar').getBoundingClientRect().width).toBe(200)
+    expect(part('sidebar-nav').getBoundingClientRect().width).toBe(200)
+    expect(sidebarLink(0)().getBoundingClientRect().width).toBe(192)
+  })
+
   it('makes the item 40px high, 4px from the next one and 4px from the edge of the list, which is the 4px margin of the original', () => {
     show(sidebar)
     const first = sidebarLink(0)().getBoundingClientRect()
