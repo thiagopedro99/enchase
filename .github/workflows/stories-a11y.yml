@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'src/components/**'
+      - 'src/hooks/**'
+      - 'src/utils/**'
       - 'src/styles/**'
       - 'src/docs/**'
       - 'lib/**'
@@ -13,6 +15,8 @@ on:
     branches: [dev]
     paths:
       - 'src/components/**'
+      - 'src/hooks/**'
+      - 'src/utils/**'
       - 'src/styles/**'
       - 'src/docs/**'
       - 'lib/**'
