@@ -28,8 +28,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     const helperId = `${inputId}-helper`
     const hasLabel = !!label
     const placement = useLabelPlacement(labelPlacement, variant)
-    const stacked = placement === 'stacked'
-    const floating = hasLabel && !stacked
+    const floating = hasLabel && placement === 'floating'
     const hasError = !!error
     const describedBy = [props['aria-describedby'], error ? errorId : helperText ? helperId : undefined].filter(Boolean).join(' ') || undefined
     const wrapper = mergeProps(
@@ -37,7 +36,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         ...slot('number-input'),
         className: styles.wrapper,
         'data-full-width': fullWidth ? '' : undefined,
-        'data-label-placement': stacked ? 'stacked' : undefined,
+        'data-label-placement': placement === 'floating' ? undefined : placement,
         'data-variant': variant === defaultVariant ? undefined : variant,
         'data-invalid': hasError ? '' : undefined,
         'data-disabled': props.disabled ? '' : undefined
@@ -75,12 +74,12 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 
     return (
       <div {...wrapper}>
-        {stacked && labelElement}
+        {placement !== 'floating' && labelElement}
 
         <div className={styles.field} {...slot('number-input', 'control')}>
           <input {...input} ref={ref} id={inputId} type="text" role="spinbutton" placeholder={floating ? (placeholder ?? ' ') : placeholder} aria-invalid={hasError || undefined} aria-describedby={describedBy} />
 
-          {!stacked && labelElement}
+          {placement === 'floating' && labelElement}
 
           <fieldset aria-hidden="true" className={styles.outline} data-has-label={floating ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('number-input', 'outline')}>
             <legend>

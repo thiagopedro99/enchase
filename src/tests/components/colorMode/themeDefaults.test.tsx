@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { useLabelPlacement, useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
 import { enchase } from '@styles/presets/enchase.ts'
+import { startStyle } from '@tests/shared/fixtures/styles.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
 
 import type { FieldVariant, LabelPlacement } from '@styles/tokens/types.ts'
@@ -54,6 +55,16 @@ describe('the defaults that the theme gives to the components', () => {
     )
 
     expect(screen.getByTestId('placement')).toHaveTextContent('stacked')
+  })
+
+  it('takes the start label from a style that asks for it', () => {
+    render(
+      <ColorModeProvider storage={null} theme={{ style: startStyle }}>
+        <Probe />
+      </ColorModeProvider>
+    )
+
+    expect(screen.getByTestId('placement')).toHaveTextContent('start')
   })
 
   it('gives the same default on the server as in the browser', () => {
@@ -146,6 +157,12 @@ describe('the placement of the label that a field really uses', () => {
     render(<Effective variant={variant} labelPlacement="floating" />)
 
     expect(screen.getByTestId('effective')).toHaveTextContent('stacked')
+  })
+
+  it.each(variants)('keeps the label at the start as it is in the %s variant', (variant) => {
+    render(<Effective variant={variant} labelPlacement="start" />)
+
+    expect(screen.getByTestId('effective')).toHaveTextContent('start')
   })
 
   it.each(variants)('keeps the stacked label as it is in the %s variant', (variant) => {

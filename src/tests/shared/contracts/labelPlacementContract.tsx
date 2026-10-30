@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
+import { startStyle } from '@tests/shared/fixtures/styles.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
 
 import type { LabelPlacementContractAdapter } from './types.ts'
@@ -38,6 +39,29 @@ export const describeLabelPlacementContract = ({ name, slot, control, placeholde
       if (placeholder !== undefined) expect(field).toHaveAttribute('placeholder', placeholder)
     })
 
+    it('puts the label before the control, on the same line, when it is at the start, with no notch, the placeholder visible and the order of the markup the visual one', () => {
+      render(ui('start'))
+
+      const field = document.querySelector(control) as HTMLElement
+      const label = screen.getByText('Name', { selector: 'label' })
+
+      expect(wrapper()).toHaveAttribute('data-label-placement', 'start')
+      expect(wrapper().firstElementChild).toBe(label)
+      expect(label.nextElementSibling).toBe(field.closest('[data-slot$="-control"]'))
+      expect(field).not.toHaveAttribute('data-has-label')
+      expect(wrapper().querySelector('fieldset')).not.toHaveAttribute('data-has-label')
+      expect(wrapper().querySelector('legend span')).not.toHaveTextContent('Name')
+
+      if (placeholder !== undefined) expect(field).toHaveAttribute('placeholder', placeholder)
+    })
+
+    it('keeps the label tied to the field and draws one label only when it is at the start', () => {
+      const { container } = render(ui('start'))
+
+      expect(screen.getByLabelText('Name')).toBe(document.querySelector(control))
+      expect(container.querySelectorAll('label')).toHaveLength(1)
+    })
+
     it('keeps the label tied to the field in both placements', () => {
       const { unmount } = render(ui())
 
@@ -64,6 +88,42 @@ export const describeLabelPlacementContract = ({ name, slot, control, placeholde
       )
 
       expect(wrapper()).not.toHaveAttribute('data-label-placement')
+    })
+
+    it('takes the start label from a style of the theme and lets the prop win in both directions', () => {
+      const { unmount } = render(
+        <ColorModeProvider storage={null} theme={{ style: startStyle }}>
+          {ui()}
+        </ColorModeProvider>
+      )
+
+      expect(wrapper()).toHaveAttribute('data-label-placement', 'start')
+      unmount()
+
+      const floating = render(
+        <ColorModeProvider storage={null} theme={{ style: startStyle }}>
+          {ui('floating')}
+        </ColorModeProvider>
+      )
+
+      expect(wrapper()).not.toHaveAttribute('data-label-placement')
+      floating.unmount()
+
+      const stacked = render(
+        <ColorModeProvider storage={null} theme={{ style: startStyle }}>
+          {ui('stacked')}
+        </ColorModeProvider>
+      )
+
+      expect(wrapper()).toHaveAttribute('data-label-placement', 'stacked')
+      stacked.unmount()
+      render(
+        <ColorModeProvider storage={null} theme={{ style: shadcn }}>
+          {ui('start')}
+        </ColorModeProvider>
+      )
+
+      expect(wrapper()).toHaveAttribute('data-label-placement', 'start')
     })
 
     it('draws one label only, whichever the placement', () => {

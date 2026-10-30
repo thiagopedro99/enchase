@@ -8,6 +8,8 @@ export const builtInStyles: Record<string, ThemeStyle> = { enchase, shadcn }
 
 export const builtInStyleEntries = Object.entries(builtInStyles)
 
+export const startStyle = defineStyle({ defaults: { labelPlacement: 'start' } })
+
 export const denseStyle = defineStyle({
   base: {
     control: { height: { sm: '1.875rem', md: '2.25rem', lg: '2.75rem' } },

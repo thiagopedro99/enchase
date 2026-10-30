@@ -9,7 +9,9 @@ import type { FieldVariant, LabelPlacement } from '@styles/tokens/types.ts'
 import type { CSSProperties, ReactElement } from 'react'
 
 export type FieldTestProps = {
+  label?: string
   error?: string
+  helperText?: string
   disabled?: boolean
   variant?: FieldVariant
   labelPlacement?: LabelPlacement

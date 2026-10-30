@@ -42,7 +42,7 @@ export type HookName = `--enchase-${string}`
 
 export type HookValues = Record<HookName, string>
 
-export const labelPlacements = ['floating', 'stacked'] as const
+export const labelPlacements = ['floating', 'stacked', 'start'] as const
 
 export type LabelPlacement = (typeof labelPlacements)[number]
 

@@ -28,9 +28,9 @@ const meta = {
       control: 'text'
     },
     labelPlacement: {
-      description: 'Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn.',
+      description: 'Where the label sits: floating (inside the field, moves up to the outline on focus or when filled), stacked (above the control, with no notch in the outline) or start (before the control, on the same line: the column of the label is as wide as `--enchase-input-label-width`, 7.5rem by default, and the error and the helper text go under the control). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. With a variant other than outlined, a floating label is drawn above the field.',
       control: 'inline-radio',
-      options: ['floating', 'stacked'],
+      options: ['floating', 'stacked', 'start'],
       table: { defaultValue: { summary: "'floating'" } }
     },
     variant: variantArgType,
@@ -113,4 +113,8 @@ export const Variants: Story = {
       ))}
     </div>
   )
+}
+
+export const LabelStart: Story = {
+  args: { labelPlacement: 'start' }
 }

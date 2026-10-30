@@ -79,6 +79,20 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'DatePicker', element: <DatePicker label="Birthday" name="birthday" helperText="Type it or open the calendar" defaultValue="2026-10-28" min="2026-01-01" max="2026-12-31" /> },
   { name: 'DatePicker that starts open', element: <DatePicker label="Date" defaultOpen defaultValue="2026-10-28" error="Choose another date" /> },
   { name: 'DatePicker with a language of its own', element: <DatePicker label="Date" locale="en-CA" defaultValue="2026-10-28" /> },
+  {
+    name: 'Fields with the label at the start of the control and the variants',
+    element: (
+      <>
+        <Input label="Name" labelPlacement="start" />
+        <Textarea label="Notes" labelPlacement="start" variant="underlined" error="Too short" />
+        <NumberInput label="Amount" labelPlacement="start" variant="filled" defaultValue={3} />
+        <Select label="Country" labelPlacement="start" variant="borderless" options={[{ value: 'br', label: 'Brazil' }]} />
+        <DatePicker label="Date" labelPlacement="start" variant="filled" helperText="Type it or open the calendar" />
+        <Combobox label="Fruit" labelPlacement="start" variant="underlined" options={[{ value: 'a', label: 'Alpha' }]} defaultValue="a" />
+        <Input label="Filled, floating asked for" variant="filled" />
+      </>
+    )
+  },
   { name: 'Checkbox', element: <Checkbox label="Accept" /> },
   { name: 'Checkbox that is indeterminate', element: <Checkbox label="Select all" indeterminate defaultChecked /> },
   { name: 'Checkbox with an error', element: <Checkbox label="Accept" error="Accept the terms to continue" /> },

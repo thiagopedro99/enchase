@@ -10,7 +10,7 @@ import { shadcn } from '@styles/presets/shadcn.ts'
 import { shapePresets } from '@styles/theme/shape.ts'
 import { validateTheme } from '@styles/theme/validateTheme.ts'
 import { variableGroups } from '@styles/tokens/groups.ts'
-import { assertStyle } from '@styles/theme/style.ts'
+import { assertStyle, defineStyle } from '@styles/theme/style.ts'
 import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
 
 import type { ThemeSet } from '@styles/tokens/types.ts'
@@ -164,6 +164,10 @@ describe('the shadcn style', () => {
   it('puts the label above the field by default', () => {
     expect(theme.defaults).toEqual({ labelPlacement: 'stacked' })
     expect(createTheme().defaults).toBeUndefined()
+  })
+
+  it('lets a style built on this one put the label at the start of the control', () => {
+    expect(createTheme({ style: defineStyle({ ...shadcn, defaults: { labelPlacement: 'start' } }) }).defaults).toEqual({ labelPlacement: 'start' })
   })
 
   it('lets the caller override a color of the palette in one mode', () => {

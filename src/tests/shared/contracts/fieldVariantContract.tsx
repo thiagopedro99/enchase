@@ -61,6 +61,14 @@ export const describeFieldVariantContract = ({ name, slot, control, render: ui }
       expect(wrapper().firstElementChild).toBe(screen.getByText('Name', { selector: 'label' }))
     })
 
+    it.each(variants)('keeps the label at the start of the control in the %s variant', (variant) => {
+      render(ui({ variant, labelPlacement: 'start' }))
+
+      expect(wrapper()).toHaveAttribute('data-label-placement', 'start')
+      expect(wrapper()).toHaveAttribute('data-variant', variant)
+      expect(wrapper().firstElementChild).toBe(screen.getByText('Name', { selector: 'label' }))
+    })
+
     it.each(variants)('keeps the error, the helper text and the disabled state working in the %s variant', (variant) => {
       const { unmount } = render(ui({ variant, error: 'Wrong', disabled: true }))
       const field = screen.getByLabelText('Name')

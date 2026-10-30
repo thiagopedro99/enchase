@@ -64,8 +64,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     const inert = !!(props.disabled || props.readOnly)
     const hasLabel = !!label
     const placement = useLabelPlacement(labelPlacement, variant)
-    const stacked = placement === 'stacked'
-    const floating = hasLabel && !stacked
+    const floating = hasLabel && placement === 'floating'
     const hasError = !!error
 
     const combobox = useCombobox({ options, multiple, value, defaultValue, onValueChange, filter, onInputChange, loading, open, defaultOpen: initiallyOpen, onOpenChange, disabled: inert })
@@ -79,7 +78,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
         ...slot('combobox'),
         className: styles.wrapper,
         'data-full-width': fullWidth ? '' : undefined,
-        'data-label-placement': stacked ? 'stacked' : undefined,
+        'data-label-placement': placement === 'floating' ? undefined : placement,
         'data-variant': variant === defaultVariant ? undefined : variant,
         'data-invalid': hasError ? '' : undefined,
         'data-disabled': props.disabled ? '' : undefined
@@ -129,7 +128,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
 
     return (
       <div {...wrapper}>
-        {stacked && labelElement}
+        {placement !== 'floating' && labelElement}
 
         <div
           ref={controlRef}
@@ -162,7 +161,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
             aria-describedby={describedBy}
           />
 
-          {!stacked && labelElement}
+          {placement === 'floating' && labelElement}
 
           <fieldset aria-hidden="true" className={styles.outline} data-has-label={floating ? '' : undefined} data-has-error={hasError ? '' : undefined} {...slot('combobox', 'outline')}>
             <legend>

@@ -78,6 +78,10 @@ describe('the public styles entry feeds createTheme', () => {
     expect(createTheme({ style: shadcn }).base.control.height.md).toBe('2.25rem')
   })
 
+  it('takes the start label placement from a style of the caller', () => {
+    expect(createTheme({ style: defineStyle({ defaults: { labelPlacement: 'start' } }) }).defaults).toEqual({ labelPlacement: 'start' })
+  })
+
   it('keeps the contrast contract with a style, with and without a brand color', () => {
     expect(validateTheme(createTheme({ style: shadcn }))).toEqual([])
     expect(validateTheme(createTheme({ style: shadcn, brand: '#0B6BCB' }))).toEqual([])

@@ -366,7 +366,8 @@
   }
 }
 
-.wrapper[data-label-placement='stacked'] > .label {
+.wrapper[data-label-placement='stacked'] > .label,
+.wrapper[data-label-placement='start'] > .label {
   position: static;
   inset: auto;
   max-inline-size: 100%;
@@ -380,13 +381,37 @@
   pointer-events: auto;
 }
 
-.wrapper[data-label-placement='stacked'] > .label[data-has-error] {
+.wrapper[data-label-placement='stacked'] > .label[data-has-error],
+.wrapper[data-label-placement='start'] > .label[data-has-error] {
   color: var(--enchase-input-label-color-stacked-error, var(--enchase-color-error));
 }
 
-.wrapper[data-label-placement='stacked'][data-disabled] > .label {
+.wrapper[data-label-placement='stacked'][data-disabled] > .label,
+.wrapper[data-label-placement='start'][data-disabled] > .label {
   color: var(--enchase-input-label-color-stacked-disabled, var(--enchase-color-text-disabled));
   opacity: var(--enchase-input-opacity-disabled, 1);
+}
+
+.wrapper[data-label-placement='start'] {
+  display: grid;
+  grid-template-columns: var(--enchase-input-label-width, 7.5rem) minmax(0, 1fr);
+  column-gap: calc(var(--enchase-input-gap, var(--enchase-space-xs)) * 2);
+  align-items: start;
+}
+
+.wrapper[data-label-placement='start'] > .label {
+  grid-area: 1 / 1;
+  align-self: center;
+  text-align: end;
+}
+
+.wrapper[data-label-placement='start'] > .field {
+  grid-area: 1 / 2;
+}
+
+.wrapper[data-label-placement='start'] > .error,
+.wrapper[data-label-placement='start'] > .helper {
+  grid-area: 2 / 2;
 }
 
 .wrapper[data-variant='filled'] .outline,

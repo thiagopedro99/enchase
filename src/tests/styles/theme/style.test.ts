@@ -448,6 +448,12 @@ describe('the examples of the documentation', () => {
     expect(theme.defaults).toEqual({ labelPlacement: 'stacked' })
   })
 
+  it.each(['floating', 'stacked', 'start'] as const)('accepts the %s label placement as the default of a style', (labelPlacement) => {
+    const theme = createTheme({ style: defineStyle({ defaults: { labelPlacement } }) })
+
+    expect(theme.defaults).toEqual({ labelPlacement })
+  })
+
   it('starts from a ready style by spreading it', () => {
     const floating = defineStyle({ ...shadcn, defaults: { labelPlacement: 'floating' } })
     const theme = createTheme({ style: floating })
