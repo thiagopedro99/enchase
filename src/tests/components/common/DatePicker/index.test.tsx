@@ -2,7 +2,7 @@ import { describeLabelPlacementContract } from '@tests/shared/contracts/labelPla
 import { describePortalContainerContract } from '@tests/shared/contracts/portalContainerContract.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import userEvent from '@testing-library/user-event'
-import { screen, waitFor, within } from '@testing-library/react'
+import { act, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { renderToString } from 'react-dom/server'
 import { createRef, useState } from 'react'
@@ -734,24 +734,22 @@ describe('DatePicker calendar', () => {
   })
 
   it('moves the calendar to the month of the value when the app changes it while it is open', async () => {
+    let setValueOutside: (value: string | null) => void = () => undefined
     const Harness = () => {
       const [value, setValue] = useState<string | null>('2026-10-15')
+      setValueOutside = setValue
 
-      return (
-        <>
-          <DatePicker label="Data" value={value} onValueChange={setValue} defaultOpen />
-          <button onClick={() => setValue('2027-05-20')}>Mudar</button>
-        </>
-      )
+      return <DatePicker label="Data" value={value} onValueChange={setValue} defaultOpen />
     }
 
-    const user = userEvent.setup()
     renderWithProviders(<Harness />)
     await screen.findByRole('dialog')
 
     expect(within(dialog()).getByText('outubro de 2026')).toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Mudar' }))
+    act(() => setValueOutside('2027-05-20'))
 
+    expect(dialog()).toHaveAttribute('data-state', 'open')
+    expect(toggle()).toHaveAttribute('aria-expanded', 'true')
     expect(within(dialog()).getByText('maio de 2027')).toBeInTheDocument()
     expect(field()).toHaveValue('20/05/2027')
   })
