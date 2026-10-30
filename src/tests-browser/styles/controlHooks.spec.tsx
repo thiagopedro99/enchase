@@ -1,14 +1,18 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { userEvent } from 'vitest/browser'
 
+import Badge from '@components/common/Badge/index.tsx'
 import Button from '@components/common/Button/index.tsx'
+import ButtonLink from '@components/common/ButtonLink/index.tsx'
 import Input from '@components/common/Input/index.tsx'
 import Link from '@components/common/Link/index.tsx'
 import Loading from '@components/common/Loading/index.tsx'
 import { ConfirmModal } from '@components/common/Modal/index.tsx'
 import NumberInput from '@components/common/NumberInput/index.tsx'
+import Pagination from '@components/common/Pagination/index.tsx'
 import Popover from '@components/common/Popover/index.tsx'
 import Select from '@components/common/Select/index.tsx'
+import Tag from '@components/common/Tag/index.tsx'
 import Textarea from '@components/common/Textarea/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import Tooltip from '@components/common/Tooltip/index.tsx'
@@ -16,6 +20,7 @@ import { renderInBrowser } from '../support/harness.tsx'
 import { at, becomes, expectHooks, hooked, onRoot, part, parts, setHooks } from '../support/hookProbes.ts'
 import { pressMouse, releaseMouse } from '../support/pointer.ts'
 
+import type { Probe } from '../support/hookProbes.ts'
 import type { ReactElement } from 'react'
 
 afterEach(async () => {
@@ -59,6 +64,134 @@ describe('the button from the hooks', () => {
 
       if (shadow) await becomes(button, 'box-shadow', new RegExp(shadow.replace(/[()]/g, '\\$&')))
     }
+  })
+})
+
+const buttonSizes = ['sm', 'md', 'lg'] as const
+
+const cornerOf = (name: string, index = 0) => parseFloat(getComputedStyle(part(name, index)).borderTopLeftRadius)
+
+describe('the corners of the button from the hooks', () => {
+  const buttons = (
+    <>
+      {buttonSizes.map((size) => (
+        <Button key={size} size={size}>
+          {size}
+        </Button>
+      ))}
+    </>
+  )
+
+  it('takes the corners of each size from its own hook', () => {
+    hooked(
+      buttonSizes.map((size, index) => [`--enchase-button-radius-${size}`, `${3 + index * 2}px`, at('button', index), 'border-top-left-radius'] satisfies Probe),
+      buttons
+    )
+  })
+
+  it('leaves the other sizes alone when only one size hook is set', () => {
+    onRoot({ '--enchase-button-radius-md': '7px' })
+    renderInBrowser(buttons)
+
+    expect(cornerOf('button', 0)).toBeGreaterThanOrEqual(1000)
+    expect(cornerOf('button', 1)).toBe(7)
+    expect(cornerOf('button', 2)).toBeGreaterThanOrEqual(1000)
+  })
+
+  it('keeps the corners the theme gives to the button in every size when no hook is set', () => {
+    renderInBrowser(buttons)
+
+    expect(buttonSizes.map((_, index) => cornerOf('button', index) >= 1000)).toEqual([true, true, true])
+  })
+
+  it('keeps the corners of a shape preset in every size, and a size hook wins over it', () => {
+    onRoot({ '--enchase-button-radius-sm': '5px' })
+    renderInBrowser(buttons, 'never', 'light', { shape: 'square' })
+
+    expect(buttonSizes.map((_, index) => cornerOf('button', index))).toEqual([5, 4, 4])
+  })
+
+  it('falls back to the hook of the button in every size', () => {
+    onRoot({ '--enchase-button-radius': '9px' })
+    renderInBrowser(buttons)
+
+    expect(buttonSizes.map((_, index) => cornerOf('button', index))).toEqual([9, 9, 9])
+  })
+
+  it('lets the hook of a size win over the hook of the button', () => {
+    onRoot({ '--enchase-button-radius': '9px', '--enchase-button-radius-md': '2px' })
+    renderInBrowser(buttons)
+
+    expect(buttonSizes.map((_, index) => cornerOf('button', index))).toEqual([9, 2, 9])
+  })
+
+  it('reaches the buttons of a confirmation and a link that looks like a button, which share the markup', async () => {
+    onRoot({ '--enchase-button-radius-md': '6px' })
+    renderInBrowser(
+      <>
+        <ButtonLink href="/docs">Docs</ButtonLink>
+        <ConfirmModal isOpen onClose={() => undefined} onConfirm={() => undefined} message="Sure?" />
+      </>
+    )
+    await expect.poll(() => parts('modal-footer').length).toBe(1)
+
+    expect(parts('button').length).toBe(2)
+    expect([cornerOf('button-link'), cornerOf('button', 0), cornerOf('button', 1)]).toEqual([6, 6, 6])
+  })
+
+  it('does not move the other parts that read the button role of the theme', () => {
+    onRoot({ '--enchase-button-radius-sm': '1px', '--enchase-button-radius-md': '1px', '--enchase-button-radius-lg': '1px' })
+    renderInBrowser(
+      <>
+        <Button>Button</Button>
+        <Badge>Badge</Badge>
+        <Tag>Tag</Tag>
+        <Pagination pageCount={3} />
+      </>
+    )
+
+    expect(cornerOf('button')).toBe(1)
+    expect(['badge', 'tag'].map((name) => cornerOf(name) >= 1000)).toEqual([true, true])
+    expect(cornerOf('pagination-page')).toBe(8)
+  })
+})
+
+describe('the background of the outline button from the hook', () => {
+  const variants = ['primary', 'secondary', 'outline', 'ghost'] as const
+
+  const backgroundOf = (index: number) => getComputedStyle(part('button', index)).backgroundColor
+
+  const buttons = (disabled = false) => (
+    <>
+      {variants.map((variant) => (
+        <Button key={variant} variant={variant} disabled={disabled}>
+          {variant}
+        </Button>
+      ))}
+    </>
+  )
+
+  it('takes the background of the outline variant from its hook and leaves the other variants alone', () => {
+    onRoot({ '--enchase-button-background-outline': 'rgb(1, 2, 3)' })
+    renderInBrowser(buttons())
+
+    const backgrounds = variants.map((_, index) => backgroundOf(index))
+
+    expect(backgrounds[2]).toBe('rgb(1, 2, 3)')
+    expect(backgrounds.filter((_, index) => index !== 2)).not.toContain('rgb(1, 2, 3)')
+  })
+
+  it('keeps the outline and the ghost variants transparent when the hook is not set', () => {
+    renderInBrowser(buttons())
+
+    expect([backgroundOf(2), backgroundOf(3)]).toEqual(['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0)'])
+  })
+
+  it('keeps a disabled outline button transparent, whatever the hook of the outline variant says', () => {
+    onRoot({ '--enchase-button-background-outline': 'rgb(1, 2, 3)' })
+    renderInBrowser(buttons(true))
+
+    expect(backgroundOf(2)).toBe('rgba(0, 0, 0, 0)')
   })
 })
 

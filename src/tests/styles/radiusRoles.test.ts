@@ -69,4 +69,10 @@ describe('the radius of the pills', () => {
 
     expect(css).toContain('var(--enchase-button-radius, var(--enchase-radius-button))')
   })
+
+  it('gives each size of the Button its own radius hook, which falls back to the radius hook of the Button', () => {
+    const css = files.find(([name]) => name === 'common/Button/styles.module.css')?.[1] ?? ''
+
+    for (const size of ['sm', 'md', 'lg']) expect(css, size).toContain(`var(--enchase-button-radius-${size}, var(--enchase-button-radius, var(--enchase-radius-button)))`)
+  })
 })

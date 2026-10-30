@@ -1223,6 +1223,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | Hook | Default | Property |
 | --- | --- | --- |
 | `--enchase-button-background-ghost-disabled` | `transparent` | `background-color` |
+| `--enchase-button-background-outline` | `transparent` | `background-color` |
 | `--enchase-button-background-outline-disabled` | `transparent` | `background-color` |
 | `--enchase-button-background-primary` | `var(--enchase-color-primary)` | `background-color` |
 | `--enchase-button-background-primary-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
@@ -1264,6 +1265,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-padding-inline-md` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
 | `--enchase-button-padding-inline-sm` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-button-radius-lg` | `var(--enchase-button-radius, var(--enchase-radius-button))` | `border-radius` |
+| `--enchase-button-radius-md` | `var(--enchase-button-radius, var(--enchase-radius-button))` | `border-radius` |
+| `--enchase-button-radius-sm` | `var(--enchase-button-radius, var(--enchase-radius-button))` | `border-radius` |
 | `--enchase-button-scale` | `0.97` | `transform` (also in ThemeToggle) |
 | `--enchase-button-shadow-ghost` | `none` | `box-shadow` |
 | `--enchase-button-shadow-outline` | `none` | `box-shadow` |

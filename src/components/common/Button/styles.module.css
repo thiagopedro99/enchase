@@ -46,6 +46,7 @@
 }
 
 :where(.button[data-size='sm']) {
+  border-radius: var(--enchase-button-radius-sm, var(--enchase-button-radius, var(--enchase-radius-button)));
   min-block-size: var(--enchase-control-height-sm, 2rem);
   padding-block: var(--enchase-button-padding-block-sm, var(--enchase-space-xs));
   padding-inline: var(--enchase-button-padding-inline-sm, var(--enchase-space-md));
@@ -53,6 +54,7 @@
 }
 
 :where(.button[data-size='md']) {
+  border-radius: var(--enchase-button-radius-md, var(--enchase-button-radius, var(--enchase-radius-button)));
   min-block-size: var(--enchase-control-height-md, 2.5rem);
   padding-block: var(--enchase-button-padding-block-md, var(--enchase-space-xs));
   padding-inline: var(--enchase-button-padding-inline-md, var(--enchase-space-lg));
@@ -60,6 +62,7 @@
 }
 
 :where(.button[data-size='lg']) {
+  border-radius: var(--enchase-button-radius-lg, var(--enchase-button-radius, var(--enchase-radius-button)));
   min-block-size: var(--enchase-control-height-lg, 3rem);
   padding-block: var(--enchase-button-padding-block-lg, var(--enchase-space-xs));
   padding-inline: var(--enchase-button-padding-inline-lg, var(--enchase-space-xl));
@@ -83,7 +86,7 @@
 }
 
 .button:where([data-variant='outline']) {
-  background-color: transparent;
+  background-color: var(--enchase-button-background-outline, transparent);
   border-color: var(--enchase-button-border-color-outline, var(--enchase-color-border-strong));
   color: var(--enchase-button-color-outline, var(--enchase-color-primary));
   box-shadow: var(--enchase-button-shadow-outline, none);

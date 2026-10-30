@@ -3,6 +3,7 @@ import { defaultDisabled, defaultFullWidth, defaultRecipe, defaultSize, defaultV
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ButtonStoryArgs } from './types.ts'
+import type { CSSProperties } from 'react'
 
 const meta = {
   title: 'Components/Button',
@@ -94,3 +95,43 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The corner of each size has its own hook, `--enchase-button-radius-sm`, `-md` and `-lg`, which falls back to `--enchase-button-radius` and then to the button role of the theme. The outline variant paints its background with `--enchase-button-background-outline`, transparent by default. Here the hooks are set in the `style` of a wrapper: corners of 4, 6 and 8 px and a surface background.'
+      }
+    }
+  },
+  render: () => (
+    <div
+      style={
+        {
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          alignItems: 'center',
+          padding: '1rem',
+          backgroundColor: 'var(--enchase-color-surface-container)',
+          '--enchase-button-radius-sm': '4px',
+          '--enchase-button-radius-md': '6px',
+          '--enchase-button-radius-lg': '8px',
+          '--enchase-button-background-outline': 'var(--enchase-color-surface)'
+        } as CSSProperties
+      }
+    >
+      <Button variant="outline" size="sm">
+        Small
+      </Button>
+      <Button variant="outline" size="md">
+        Medium
+      </Button>
+      <Button variant="outline" size="lg">
+        Large
+      </Button>
+      <Button size="lg">Filled</Button>
+    </div>
+  )
+}
