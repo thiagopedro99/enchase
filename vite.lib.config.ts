@@ -52,7 +52,8 @@ export default defineConfig({
         locales: resolve(root, 'lib/locales.ts'),
         icons: resolve(root, 'lib/icons.ts'),
         'styles/enchase': resolve(root, 'lib/styles/enchase.ts'),
-        'styles/shadcn': resolve(root, 'lib/styles/shadcn.ts')
+        'styles/shadcn': resolve(root, 'lib/styles/shadcn.ts'),
+        'styles/workbench': resolve(root, 'lib/styles/workbench.ts')
       },
       formats: ['es'],
       cssFileName: 'styles'

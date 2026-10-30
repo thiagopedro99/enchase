@@ -1,10 +1,11 @@
+import { workbench } from '@styles/presets/workbench.ts'
 import { enchase } from '@styles/presets/enchase.ts'
 import { defineStyle } from '@styles/theme/style.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
 
 import type { ThemeStyle } from '@styles/theme/style.ts'
 
-export const builtInStyles: Record<string, ThemeStyle> = { enchase, shadcn }
+export const builtInStyles: Record<string, ThemeStyle> = { enchase, shadcn, workbench }
 
 export const builtInStyleEntries = Object.entries(builtInStyles)
 

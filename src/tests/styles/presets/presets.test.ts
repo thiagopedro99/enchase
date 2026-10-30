@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { densityRules, themeCss } from '@styles/css/declarations.ts'
 import { collectCssHooks, isToken, tokenGroups } from '../../../../scripts/cssHooks.mjs'
 import { builtInStyleEntries, builtInStyles } from '@tests/shared/fixtures/styles.ts'
+import { workbench } from '@styles/presets/workbench.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 import { enchase } from '@styles/presets/enchase.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
@@ -28,10 +29,11 @@ const pixels = (value: string) => (value.endsWith('rem') ? Number.parseFloat(val
 const hooksOf = (style: (typeof builtInStyles)[string]) => [style.hooks, style.colorHooks, style.light?.hooks, style.dark?.hooks].flatMap((record) => Object.keys(record ?? {}))
 
 describe('the built-in styles', () => {
-  it('exports the same two styles that the contract below runs on', () => {
-    expect(Object.keys(builtInStyles)).toEqual(['enchase', 'shadcn'])
+  it('exports the same three styles that the contract below runs on', () => {
+    expect(Object.keys(builtInStyles)).toEqual(['enchase', 'shadcn', 'workbench'])
     expect(builtInStyles.enchase).toBe(enchase)
     expect(builtInStyles.shadcn).toBe(shadcn)
+    expect(builtInStyles.workbench).toBe(workbench)
   })
 
   it('keeps the list of token groups of the checks in step with the list of the css variables', () => {

@@ -72,6 +72,11 @@
       "import": "./dist-lib/styles/shadcn.js",
       "default": "./dist-lib/styles/shadcn.js"
     },
+    "./styles/workbench": {
+      "types": "./dist-lib/types/lib/styles/workbench.d.ts",
+      "import": "./dist-lib/styles/workbench.js",
+      "default": "./dist-lib/styles/workbench.js"
+    },
     "./styles.css": "./dist-lib/styles.css",
     "./styles.layer.css": "./dist-lib/styles.layer.css",
     "./theme.css": "./dist-lib/theme.css",
