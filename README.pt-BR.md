@@ -509,7 +509,7 @@ Um estilo é um objeto de dados. O `defineStyle`, de `enchase/theme`, confere o 
 ```tsx
 import { defineStyle } from 'enchase/theme'
 
-export const compact = defineStyle({
+export const dense = defineStyle({
   base: { control: { height: { sm: '1.75rem', md: '2rem', lg: '2.25rem' } }, hit: { size: '1.5rem' } },
   fonts: { weights: { medium: 500 } },
   radius: { button: '0.375rem', control: '0.375rem' },
@@ -521,7 +521,7 @@ export const compact = defineStyle({
   defaults: { labelPlacement: 'stacked' }
 })
 
-<ColorModeProvider theme={{ style: compact }}>
+<ColorModeProvider theme={{ style: dense }}>
   <App />
 </ColorModeProvider>
 ```
@@ -539,7 +539,7 @@ export const compact = defineStyle({
 
 - O `defineStyle` lança erro, com o caminho da parte que falhou, para uma seção ou um token que não existe, para um valor de CSS inseguro (com `;`, `{`, `}`, `<`, `>`, `\`, um comentário, `url()`, `@import`, parêntese ou aspas sem fechar, ou com mais de 400 caracteres), para um nome de gancho fora do formato `--enchase-<palavras-em-minúsculas-com-hífen>`, para um "gancho" que na verdade é um token do tema (`--enchase-space-md`) e para um gancho da raiz que cita uma cor ou uma sombra do tema (esse vai em `colorHooks`).
 - O `createTheme` confere de novo todo estilo que não saiu do `defineStyle`, porque um estilo pode chegar de um JSON ou atravessar a fronteira de um Server Component sem a marca de que já foi conferido. O que saiu do `defineStyle` é congelado e não é conferido outra vez.
-- O contraste das cores depende da paleta final e não é conferido pelo `defineStyle`: rode `validateTheme(createTheme({ style: compact }))`, também com `brand`, no teste do seu estilo.
+- O contraste das cores depende da paleta final e não é conferido pelo `defineStyle`: rode `validateTheme(createTheme({ style: dense }))`, também com `brand`, no teste do seu estilo.
 - O estilo é a base: o que quem usa passa ao `createTheme` (`shape`, `radius`, `fonts`, `motion`, `brand`, `light` e `dark`) vence o estilo, e o CSS da aplicação vence os dois.
 - Para partir de um estilo pronto, espalhe-o: `defineStyle({ ...shadcn, defaults: { labelPlacement: 'floating' } })`.
 
