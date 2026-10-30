@@ -45,6 +45,7 @@
 
 :where(.day) {
   block-size: max(24px, var(--enchase-hit-size, 40px));
+  scroll-margin: calc(var(--enchase-focus-width, 2px) + var(--enchase-focus-offset, 2px));
 }
 
 .number {
