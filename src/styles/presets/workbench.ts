@@ -205,6 +205,28 @@ const feedback: HookValues = {
   '--enchase-skeleton-radius-rectangular': 'var(--enchase-radius-sm)'
 }
 
+const compactHooks: HookValues = {
+  '--enchase-tabs-tab-min-height': '2.25rem',
+  '--enchase-tabs-tab-padding-block': '0.5rem',
+  '--enchase-tabs-tab-padding-inline': '1rem',
+  '--enchase-accordion-trigger-min-height': '2.25rem',
+  '--enchase-accordion-trigger-padding-block': '0.5rem',
+  '--enchase-accordion-panel-padding-inline': '1rem',
+  '--enchase-select-option-padding-block': '0.25rem',
+  '--enchase-combobox-option-padding-block': '0.25rem',
+  '--enchase-sidebar-item-control-height': '2.1875rem',
+  '--enchase-button-padding-inline-md': '0.6875rem',
+  '--enchase-button-padding-inline-lg': '0.6875rem',
+  '--enchase-button-padding-inline-ghost': '0.6875rem',
+  '--enchase-input-padding-inline': '0.5rem',
+  '--enchase-textarea-padding-block': '0.25rem',
+  '--enchase-table-cell-padding-block': '0.5rem',
+  '--enchase-table-cell-padding-block-sm': '0.25rem',
+  '--enchase-modal-header-padding-block': '1rem 0',
+  '--enchase-modal-body-padding-block': '0.25rem 0.5rem',
+  '--enchase-modal-footer-padding-block': '0 1rem'
+}
+
 const colorHooks: HookValues = {
   '--enchase-button-background-outline': 'var(--enchase-color-surface)',
   '--enchase-input-outline-border-color-hover': 'var(--enchase-color-primary)',
@@ -442,7 +464,8 @@ export const workbench = defineStyle({
         '--enchase-space-lg': '1rem',
         '--enchase-space-xl': '2rem',
         '--enchase-space-2xl': '3rem'
-      }
+      },
+      hooks: compactHooks
     }
   },
   defaults: { labelPlacement: 'stacked' }
