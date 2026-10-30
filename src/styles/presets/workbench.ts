@@ -83,6 +83,39 @@ const selection: HookValues = {
   '--enchase-segmented-control-item-padding-inline-lg': '0.6875rem'
 }
 
+const navigation: HookValues = {
+  '--enchase-tabs-tab-min-height': '2.875rem',
+  '--enchase-tabs-tab-padding-block': '0.75rem',
+  '--enchase-tabs-tab-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-tabs-indicator-width': '2px',
+  '--enchase-sidebar-nav-padding-inline': '0.25rem',
+  '--enchase-sidebar-item-control-height': '2.5rem',
+  '--enchase-sidebar-item-control-padding-inline': '1.5rem',
+  '--enchase-sidebar-item-control-gap': '0.625rem',
+  '--enchase-sidebar-item-control-radius': 'var(--enchase-radius-lg)',
+  '--enchase-sidebar-item-control-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-sidebar-indicator-radius': 'var(--enchase-radius-lg)',
+  '--enchase-navbar-menu-link-radius': 'var(--enchase-radius-lg)',
+  '--enchase-navbar-menu-link-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-menu-item-padding-block': '0.3125rem',
+  '--enchase-menu-item-padding-inline': '0.75rem',
+  '--enchase-menu-item-radius': 'var(--enchase-radius-sm)',
+  '--enchase-menu-item-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-pagination-list-gap': '0.5rem',
+  '--enchase-pagination-control-padding-inline': '0.375rem',
+  '--enchase-pagination-control-padding-inline-sm': '0.375rem',
+  '--enchase-pagination-control-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-pagination-control-background-current': 'transparent',
+  '--enchase-breadcrumbs-link-min-height': '1.5rem',
+  '--enchase-breadcrumbs-link-padding-inline': '0.25rem',
+  '--enchase-breadcrumbs-link-radius': 'var(--enchase-radius-sm)',
+  '--enchase-breadcrumbs-link-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-breadcrumbs-text-padding-inline': '0.25rem',
+  '--enchase-breadcrumbs-text-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-breadcrumbs-current-padding-inline': '0.25rem',
+  '--enchase-breadcrumbs-current-font-weight': 'var(--enchase-font-weight-regular)'
+}
+
 const colorHooks: HookValues = {
   '--enchase-button-background-outline': 'var(--enchase-color-surface)',
   '--enchase-input-outline-border-color-hover': 'var(--enchase-color-primary)',
@@ -102,7 +135,12 @@ const colorHooks: HookValues = {
   '--enchase-slider-thumb-background': 'var(--enchase-color-surface)',
   '--enchase-segmented-control-background': 'var(--enchase-color-secondary-container)',
   '--enchase-segmented-control-item-background-selected': 'var(--enchase-color-surface)',
-  '--enchase-segmented-control-item-shadow-selected': 'var(--enchase-shadow-sm)'
+  '--enchase-segmented-control-item-shadow-selected': 'var(--enchase-shadow-sm)',
+  '--enchase-tabs-tab-color': 'var(--enchase-color-text-primary)',
+  '--enchase-sidebar-item-control-color': 'var(--enchase-color-text-primary)',
+  '--enchase-navbar-menu-link-color': 'var(--enchase-color-text-primary)',
+  '--enchase-pagination-control-color-current': 'var(--enchase-color-primary)',
+  '--enchase-pagination-control-border-color-current': 'var(--enchase-color-primary)'
 }
 
 const light: ThemeStyleMode = {
@@ -174,7 +212,8 @@ const light: ThemeStyleMode = {
     '--enchase-button-shadow-primary-hover': '0 2px 0 rgba(5, 145, 255, 0.1)',
     '--enchase-button-shadow-outline': '0 2px 0 rgba(0, 0, 0, 0.02)',
     '--enchase-input-outline-shadow-focus': '0 0 0 2px color-mix(in srgb, var(--enchase-color-primary) 10%, transparent)',
-    '--enchase-select-picker-background': 'var(--enchase-color-surface)'
+    '--enchase-select-picker-background': 'var(--enchase-color-surface)',
+    '--enchase-popover-content-background': 'var(--enchase-color-surface)'
   }
 }
 
@@ -241,7 +280,8 @@ const dark: ThemeStyleMode = {
     '--enchase-button-shadow-primary-hover': 'var(--enchase-shadow-sm)',
     '--enchase-button-shadow-outline': 'none',
     '--enchase-input-outline-shadow-focus': '0 0 0 2px color-mix(in srgb, var(--enchase-color-primary) 31%, transparent)',
-    '--enchase-select-picker-background': 'var(--enchase-color-surface-container-low)'
+    '--enchase-select-picker-background': 'var(--enchase-color-surface-container-low)',
+    '--enchase-popover-content-background': 'var(--enchase-color-surface-container-low)'
   }
 }
 
@@ -259,7 +299,7 @@ export const workbench = defineStyle({
     lineHeights: { normal: 1.5714 }
   },
   radius: { xs: '0.125rem', sm: '0.25rem', md: '0.375rem', lg: '0.5rem', xl: '0.5rem', '2xl': '0.5rem', control: '0.375rem', button: '0.375rem' },
-  hooks: { ...buttons, ...fields, ...selection },
+  hooks: { ...buttons, ...fields, ...selection, ...navigation },
   colorHooks,
   brand: ['primary', 'onPrimary', 'primaryHover'],
   light,
