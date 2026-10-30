@@ -2,8 +2,8 @@ import { forwardRef, useId, useState } from 'react'
 
 import { EyeOffIcon } from '../Icon/icons/EyeOffIcon.tsx'
 import { EyeIcon } from '../Icon/icons/EyeIcon.tsx'
-import { defaultFullWidth, defaultPasswordToggle } from './defaultData.ts'
-import { useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
+import { defaultFullWidth, defaultPasswordToggle, defaultVariant } from './defaultData.ts'
+import { useLabelPlacement } from '@components/colorMode/themeDefaults.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import styles from './styles.module.css'
@@ -11,7 +11,7 @@ import styles from './styles.module.css'
 import type { InputProps } from './types.ts'
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, labelPlacement, error, helperText, placeholder, type, passwordToggle = defaultPasswordToggle, fullWidth = defaultFullWidth, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
+  ({ label, labelPlacement, variant = defaultVariant, error, helperText, placeholder, type, passwordToggle = defaultPasswordToggle, fullWidth = defaultFullWidth, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
     const generatedId = useId()
     const { labels } = useUIConfig()
     const [passwordVisible, setPasswordVisible] = useState(false)
@@ -19,8 +19,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     const errorId = `${inputId}-error`
     const helperId = `${inputId}-helper`
     const hasLabel = !!label
-    const themeDefaults = useThemeDefaults()
-    const stacked = (labelPlacement ?? themeDefaults.labelPlacement) === 'stacked'
+    const placement = useLabelPlacement(labelPlacement, variant)
+    const stacked = placement === 'stacked'
     const floating = hasLabel && !stacked
     const hasError = !!error
     const hasToggle = type === 'password' && passwordToggle
@@ -32,6 +32,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         className: styles.wrapper,
         'data-full-width': fullWidth ? '' : undefined,
         'data-label-placement': stacked ? 'stacked' : undefined,
+        'data-variant': variant === defaultVariant ? undefined : variant,
         'data-invalid': hasError ? '' : undefined,
         'data-disabled': props.disabled ? '' : undefined
       },

@@ -46,6 +46,8 @@ export const labelPlacements = ['floating', 'stacked'] as const
 
 export type LabelPlacement = (typeof labelPlacements)[number]
 
+export type FieldVariant = 'outlined' | 'filled' | 'borderless' | 'underlined'
+
 export type ThemeDefaults = { labelPlacement: LabelPlacement }
 
 type DensityToken =

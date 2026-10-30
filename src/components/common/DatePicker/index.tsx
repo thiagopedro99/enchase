@@ -1,9 +1,9 @@
 import { forwardRef, useId } from 'react'
 
-import { defaultFullWidth, defaultOpen, defaultValue, popupOffset, popupPlacement } from './defaultData.ts'
+import { defaultFullWidth, defaultOpen, defaultValue, defaultVariant, popupOffset, popupPlacement } from './defaultData.ts'
 import { DatePickerCalendar } from './subcomponentes/DatePickerCalendar/index.tsx'
 import { DatePickerToggle } from './subcomponentes/DatePickerToggle/index.tsx'
-import { useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
+import { useLabelPlacement } from '@components/colorMode/themeDefaults.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useDatePicker } from './useDatePicker.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -25,6 +25,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
       locale,
       label,
       labelPlacement,
+      variant = defaultVariant,
       error,
       helperText,
       placeholder,
@@ -47,13 +48,13 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
   ) => {
     const generatedId = useId()
     const { labels } = useUIConfig()
-    const themeDefaults = useThemeDefaults()
     const field = useDatePicker({ value, defaultValue: initialValue, onValueChange, min, max, isDateDisabled, locale, disabled: props.disabled, readOnly: props.readOnly, open, defaultOpen: initiallyOpen, onOpenChange })
     const inputId = id ?? generatedId
     const errorId = `${inputId}-error`
     const helperId = `${inputId}-helper`
     const hasLabel = !!label
-    const stacked = (labelPlacement ?? themeDefaults.labelPlacement) === 'stacked'
+    const placement = useLabelPlacement(labelPlacement, variant)
+    const stacked = placement === 'stacked'
     const floating = hasLabel && !stacked
     const hasError = !!error
     const describedBy = [props['aria-describedby'], error ? errorId : helperText ? helperId : undefined].filter(Boolean).join(' ') || undefined
@@ -64,6 +65,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
         className: styles.wrapper,
         'data-full-width': fullWidth ? '' : undefined,
         'data-label-placement': stacked ? 'stacked' : undefined,
+        'data-variant': variant === defaultVariant ? undefined : variant,
         'data-invalid': hasError ? '' : undefined,
         'data-disabled': props.disabled ? '' : undefined
       },

@@ -1,4 +1,5 @@
 import { Input } from 'enchase'
+import { fieldVariants, variantArgType, variantLabels, variantsStoryDescription } from '@docs/shared/fields.ts'
 import { defaultFullWidth, defaultPasswordToggle } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -32,6 +33,7 @@ const meta = {
       options: ['floating', 'stacked'],
       table: { defaultValue: { summary: "'floating'" } }
     },
+    variant: variantArgType,
     helperText: {
       description: 'Helper text. It is tied to the field by aria-describedby and disappears when there is an error.',
       control: 'text'
@@ -119,6 +121,46 @@ export const WithBackground: Story = {
     >
       <Input {...args} labelPlacement="stacked" />
       <Input {...args} labelPlacement="stacked" label="Disabled" disabled />
+    </div>
+  )
+}
+
+export const FilledBackground: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story:
+          'The fill of the `filled` variant comes from four hooks of its own, `--enchase-input-field-background-filled` and the same with `-hover`, `-focus` and `-disabled`, set here on a container. The plain background hooks of the fields do not reach this variant. The line at the base of the field keeps the color of the border and has to stay at 3:1 or more against the fill (WCAG 1.4.11).'
+      }
+    }
+  },
+  render: (args) => (
+    <div
+      style={
+        {
+          display: 'grid',
+          gap: '1rem',
+          '--enchase-input-field-background-filled': 'var(--enchase-color-surface-container-low)',
+          '--enchase-input-field-background-filled-hover': 'var(--enchase-color-surface-container)',
+          '--enchase-input-field-background-filled-focus': 'var(--enchase-color-surface)',
+          '--enchase-input-field-background-filled-disabled': 'var(--enchase-color-surface-container-high)'
+        } as CSSProperties
+      }
+    >
+      <Input {...args} variant="filled" />
+      <Input {...args} variant="filled" label="Disabled" disabled />
+    </div>
+  )
+}
+
+export const Variants: Story = {
+  parameters: { controls: { disable: true }, docs: { description: { story: variantsStoryDescription } } },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '1.5rem' }}>
+      {fieldVariants.map((variant) => (
+        <Input key={variant} {...args} variant={variant} label={variantLabels[variant]} />
+      ))}
     </div>
   )
 }

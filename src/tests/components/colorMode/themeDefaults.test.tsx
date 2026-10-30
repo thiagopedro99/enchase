@@ -3,11 +3,15 @@ import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
-import { useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
+import { useLabelPlacement, useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
 import { enchase } from '@styles/presets/enchase.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
 
+import type { FieldVariant, LabelPlacement } from '@styles/tokens/types.ts'
+
 const Probe = () => <p data-testid="placement">{useThemeDefaults().labelPlacement}</p>
+
+const Effective = ({ labelPlacement, variant }: { labelPlacement?: LabelPlacement; variant: FieldVariant }) => <p data-testid="effective">{useLabelPlacement(labelPlacement, variant)}</p>
 
 const seen: ReturnType<typeof useThemeDefaults>[] = []
 
@@ -109,5 +113,44 @@ describe('the defaults that the theme gives to the components', () => {
 
     expect(new Set(seen).size).toBe(2)
     expect(seen.at(-1)?.labelPlacement).toBe('stacked')
+  })
+})
+
+describe('the placement of the label that a field really uses', () => {
+  const variants = ['filled', 'borderless', 'underlined'] as const
+
+  it('is the one asked for, or the one of the style, in the outlined variant', () => {
+    const { unmount } = render(<Effective variant="outlined" />)
+
+    expect(screen.getByTestId('effective')).toHaveTextContent('floating')
+    unmount()
+
+    const { unmount: second } = render(<Effective variant="outlined" labelPlacement="stacked" />)
+
+    expect(screen.getByTestId('effective')).toHaveTextContent('stacked')
+    second()
+    render(
+      <ColorModeProvider storage={null} theme={{ style: shadcn }}>
+        <Effective variant="outlined" />
+      </ColorModeProvider>
+    )
+
+    expect(screen.getByTestId('effective')).toHaveTextContent('stacked')
+  })
+
+  it.each(variants)('turns the floating label, asked for or taken from the style, into a stacked one in the %s variant', (variant) => {
+    const { unmount } = render(<Effective variant={variant} />)
+
+    expect(screen.getByTestId('effective')).toHaveTextContent('stacked')
+    unmount()
+    render(<Effective variant={variant} labelPlacement="floating" />)
+
+    expect(screen.getByTestId('effective')).toHaveTextContent('stacked')
+  })
+
+  it.each(variants)('keeps the stacked label as it is in the %s variant', (variant) => {
+    render(<Effective variant={variant} labelPlacement="stacked" />)
+
+    expect(screen.getByTestId('effective')).toHaveTextContent('stacked')
   })
 })

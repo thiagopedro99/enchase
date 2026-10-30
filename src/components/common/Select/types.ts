@@ -1,4 +1,4 @@
-import type { LabelPlacement } from '@styles/tokens/types.ts'
+import type { FieldVariant, LabelPlacement } from '@styles/tokens/types.ts'
 import type { CSSProperties, SelectHTMLAttributes } from 'react'
 
 export interface SelectOption {
@@ -10,6 +10,7 @@ export interface SelectOption {
 export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string | undefined
   labelPlacement?: LabelPlacement | undefined
+  variant?: FieldVariant | undefined
   error?: string | undefined
   helperText?: string | undefined
   options: SelectOption[]

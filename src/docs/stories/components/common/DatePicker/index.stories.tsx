@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Button, DatePicker, Flex, UIProvider } from 'enchase'
+import { fieldVariants, variantArgType, variantLabels, variantsStoryDescription } from '@docs/shared/fields.ts'
 import { en, ptBR } from 'enchase/locales'
 import { containerArgType } from '@docs/shared/argTypes.ts'
 import { dateFormats, defaultFullWidth, defaultOpen, firstWeekday, isWeekend, maxDate, minDate } from './defaultData.ts'
@@ -156,6 +157,7 @@ const meta = {
       options: ['floating', 'stacked'],
       table: { defaultValue: { summary: "'floating'" } }
     },
+    variant: variantArgType,
     placeholder: {
       description: 'Text shown in the empty input, for example the format the language expects. With a floating label it appears only while the field has the focus.',
       control: 'text'
@@ -320,4 +322,15 @@ export const LabelAbove: Story = {
 
 export const WithoutMotion: Story = {
   args: { animation: false }
+}
+
+export const Variants: Story = {
+  parameters: { controls: { disable: true }, docs: { description: { story: variantsStoryDescription } } },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '1.5rem' }}>
+      {fieldVariants.map((variant) => (
+        <DatePicker key={variant} {...args} variant={variant} label={variantLabels[variant]} />
+      ))}
+    </div>
+  )
 }

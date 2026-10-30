@@ -277,3 +277,61 @@
   color: var(--enchase-input-label-color-stacked-disabled, var(--enchase-color-text-disabled));
   opacity: var(--enchase-input-opacity-disabled, 1);
 }
+
+.wrapper[data-variant='filled'] .outline,
+.wrapper[data-variant='underlined'] .outline {
+  border-width: 0;
+  border-block-end-width: var(--enchase-border-width, 1px);
+  border-radius: 0;
+}
+
+.wrapper[data-variant='borderless'] .outline {
+  border-width: 0;
+}
+
+.wrapper[data-variant='filled'] .field {
+  background-color: var(--enchase-input-field-background-filled, var(--enchase-color-surface-container));
+  border-start-start-radius: var(--enchase-combobox-control-radius, var(--enchase-radius-control));
+  border-start-end-radius: var(--enchase-combobox-control-radius, var(--enchase-radius-control));
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+  transition: background-color var(--enchase-combobox-duration, var(--enchase-motion-duration-fast)) var(--enchase-combobox-ease, var(--enchase-motion-ease-out));
+}
+
+.wrapper[data-variant='filled'] .field:focus-within {
+  background-color: var(--enchase-input-field-background-filled-focus, var(--enchase-input-field-background-filled, var(--enchase-color-surface-container)));
+}
+
+.wrapper[data-variant='filled'] .field:has(.input:disabled) {
+  background-color: var(--enchase-input-field-background-filled-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wrapper[data-variant='filled']:not([data-disabled]) .field:hover:not(:focus-within) {
+    background-color: var(--enchase-input-field-background-filled-hover, var(--enchase-color-surface-container-high));
+  }
+}
+
+.wrapper[data-variant='filled'] .field:focus-within > .outline,
+.wrapper[data-variant='underlined'] .field:focus-within > .outline {
+  border-width: 0;
+  border-block-end-width: var(--enchase-border-width-strong, 2px);
+}
+
+.wrapper[data-variant='borderless'] .field:focus-within > .outline {
+  border-width: 0;
+}
+
+.wrapper[data-variant='borderless'] .field:focus-within {
+  outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset, 2px);
+}
+
+@media (forced-colors: active) {
+  .wrapper[data-variant='filled'] .field:focus-within > .outline,
+  .wrapper[data-variant='underlined'] .field:focus-within > .outline {
+    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+    border-block-start-width: 0;
+    border-inline-width: 0;
+  }
+}

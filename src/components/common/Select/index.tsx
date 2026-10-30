@@ -1,21 +1,21 @@
 import { forwardRef, useId } from 'react'
 
-import { defaultFullWidth } from './defaultData.ts'
-import { useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
+import { defaultFullWidth, defaultVariant } from './defaultData.ts'
+import { useLabelPlacement } from '@components/colorMode/themeDefaults.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import styles from './styles.module.css'
 
 import type { SelectProps } from './types.ts'
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, labelPlacement, error, helperText, options, placeholder, fullWidth = defaultFullWidth, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
+  ({ label, labelPlacement, variant = defaultVariant, error, helperText, options, placeholder, fullWidth = defaultFullWidth, id, wrapperClassName, wrapperStyle, ...props }, ref) => {
     const generatedId = useId()
     const selectId = id ?? generatedId
     const errorId = `${selectId}-error`
     const helperId = `${selectId}-helper`
     const hasLabel = !!label
-    const themeDefaults = useThemeDefaults()
-    const stacked = (labelPlacement ?? themeDefaults.labelPlacement) === 'stacked'
+    const placement = useLabelPlacement(labelPlacement, variant)
+    const stacked = placement === 'stacked'
     const floating = hasLabel && !stacked
     const hasError = !!error
     const describedBy = [props['aria-describedby'], error ? errorId : helperText ? helperId : undefined].filter(Boolean).join(' ') || undefined
@@ -25,6 +25,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
         className: styles.wrapper,
         'data-full-width': fullWidth ? '' : undefined,
         'data-label-placement': stacked ? 'stacked' : undefined,
+        'data-variant': variant === defaultVariant ? undefined : variant,
         'data-invalid': hasError ? '' : undefined,
         'data-disabled': props.disabled ? '' : undefined
       },

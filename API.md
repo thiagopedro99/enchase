@@ -214,6 +214,7 @@ A text field with a list of options under it. Typing filters the options, the ar
 | `options` | `ComboboxOption[]` | *required* | The options, in order. Each one has `value` (unique), `label` (the text that is shown, filtered and read) and, optionally, `disabled`: a disabled option stays in the list, is skipped by the arrow keys and cannot be chosen. The label of a chosen option is remembered, so a list that the app replaces while the user searches does not blank the field or the tags. |
 | `label` | `string` | — | Label of the field, tied to the input and used as the name of the list. Without it, give the input an `aria-label`. |
 | `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `variant` | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` | Look of the field: `outlined` (the default, a border around the field), `filled` (a filled background with a line at its base), `borderless` (no border: the focus is a ring and the limit of the field is up to you, see WCAG 1.4.11) or `underlined` (only a line at its base). Only `outlined` has a floating label: with any other variant, a floating label is drawn above the field, like `stacked`. |
 | `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
 | `helperText` | `string` | — | Helper text. It is tied to the input by aria-describedby and disappears when there is an error. |
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
@@ -280,6 +281,7 @@ A field for a single date. The user types it, in the order and with the separato
 | `locale` | `string` | — | BCP 47 tag, such as `en-GB`, `en-CA` or `de`, that gives this field a language of its own: the order, the separators and the digits of the text, the names of the months and of the weekdays and the first day of the week. Without it, the `locale` of the `UIProvider` applies, and an empty string counts as without it. `firstDayOfWeek` still wins when it is passed. A tag that is not valid, or that the environment does not know, falls back to `en`, with no error. It takes only the tag: the texts of the labels and the direction still come from the provider, so for everything different wrap the field in a `UIProvider` of its own. See the Locale story. |
 | `label` | `string` | — | Label of the field, tied to the input. Without it, give the input an `aria-label`. |
 | `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `variant` | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` | Look of the field: `outlined` (the default, a border around the field), `filled` (a filled background with a line at its base), `borderless` (no border: the focus is a ring and the limit of the field is up to you, see WCAG 1.4.11) or `underlined` (only a line at its base). Only `outlined` has a floating label: with any other variant, a floating label is drawn above the field, like `stacked`. |
 | `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
 | `helperText` | `string` | — | Helper text. It is tied to the input by aria-describedby and disappears when there is an error. |
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
@@ -429,6 +431,7 @@ A text field with a label, an error message, helper text and a button to reveal 
 | --- | --- | --- | --- |
 | `label` | `string` | — | Label of the field, associated with the input for screen readers. |
 | `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `variant` | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` | Look of the field: `outlined` (the default, a border around the field), `filled` (a filled background with a line at its base), `borderless` (no border: the focus is a ring and the limit of the field is up to you, see WCAG 1.4.11) or `underlined` (only a line at its base). Only `outlined` has a floating label: with any other variant, a floating label is drawn above the field, like `stacked`. |
 | `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
 | `helperText` | `string` | — | Helper text. It is tied to the field by aria-describedby and disappears when there is an error. |
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
@@ -574,6 +577,7 @@ A field for typing a number, with a label, an error message, helper text and but
 | `locale` | `string` | — | BCP 47 tag, such as `de`, `en-IN` or `pt-BR`, that gives this field a language of its own: the decimal separator, the grouping, the digits and the place of the currency and percent signs, in what is shown and in what is typed. Without it, the `locale` of the `UIProvider` applies, and an empty string counts as without it. A tag that is not valid, or that the environment does not know, falls back to `en`, with no error. It takes only the tag: the names of the buttons and the direction still come from the provider, so for everything different wrap the field in a `UIProvider` of its own. See the Locale story. |
 | `label` | `string` | — | Label of the field, associated with the input for screen readers. |
 | `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `variant` | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` | Look of the field: `outlined` (the default, a border around the field), `filled` (a filled background with a line at its base), `borderless` (no border: the focus is a ring and the limit of the field is up to you, see WCAG 1.4.11) or `underlined` (only a line at its base). Only `outlined` has a floating label: with any other variant, a floating label is drawn above the field, like `stacked`. |
 | `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
 | `helperText` | `string` | — | Helper text. It is tied to the field by aria-describedby and disappears when there is an error. |
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
@@ -688,6 +692,7 @@ A styled native select, with a label, an error message, helper text and a `place
 | --- | --- | --- | --- |
 | `label` | `string` | — | Label of the field, associated with the select for screen readers. |
 | `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `variant` | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` | Look of the field: `outlined` (the default, a border around the field), `filled` (a filled background with a line at its base), `borderless` (no border: the focus is a ring and the limit of the field is up to you, see WCAG 1.4.11) or `underlined` (only a line at its base). Only `outlined` has a floating label: with any other variant, a floating label is drawn above the field, like `stacked`. |
 | `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
 | `helperText` | `string` | — | Helper text. It is tied to the field by aria-describedby and disappears when there is an error. |
 | `options` | `SelectOption[]` | *required* | List of options. Each one has value, label and, optionally, disabled. |
@@ -829,6 +834,7 @@ A multi-line text field, with a label, an error message and helper text, like th
 | --- | --- | --- | --- |
 | `label` | `string` | — | Label of the field, associated with the textarea for screen readers. |
 | `labelPlacement` | `'floating' \| 'stacked'` | `'floating'` | Where the label sits: floating (inside the field, moves up to the outline on focus or when filled) or stacked (above the control, with no notch in the outline). Without the prop, the style of the theme (createTheme) applies: floating in the default style and stacked in shadcn. |
+| `variant` | `'outlined' \| 'filled' \| 'borderless' \| 'underlined'` | `'outlined'` | Look of the field: `outlined` (the default, a border around the field), `filled` (a filled background with a line at its base), `borderless` (no border: the focus is a ring and the limit of the field is up to you, see WCAG 1.4.11) or `underlined` (only a line at its base). Only `outlined` has a floating label: with any other variant, a floating label is drawn above the field, like `stacked`. |
 | `error` | `string` | — | Error message. Marks the field as invalid (aria-invalid) and is announced as an alert. |
 | `helperText` | `string` | — | Helper text. It is tied to the field by aria-describedby and disappears when there is an error. |
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
@@ -1377,7 +1383,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-combobox-control-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-combobox-control-padding-block-multiple` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
-| `--enchase-combobox-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-combobox-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-combobox-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition`, `transition-duration` (also in ComboboxToggle, ListboxPopup) |
 | `--enchase-combobox-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition`, `transition-timing-function` (also in ComboboxToggle, ListboxPopup) |
 | `--enchase-combobox-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
@@ -1425,7 +1431,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 
 | Hook | Default | Property |
 | --- | --- | --- |
-| `--enchase-date-picker-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-date-picker-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-date-picker-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` (also in CalendarGrid, CalendarHeader, DatePickerToggle) |
 | `--enchase-date-picker-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` (also in CalendarGrid, CalendarHeader, DatePickerToggle) |
 | `--enchase-date-picker-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
@@ -1543,12 +1549,16 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-input-field-background` | `transparent` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-background-disabled` | `transparent` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-field-background-filled` | `var(--enchase-color-surface-container)` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-field-background-filled-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-field-background-filled-focus` | `var(--enchase-input-field-background-filled, var(--enchase-color-surface-container))` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-field-background-filled-hover` | `var(--enchase-color-surface-container-high)` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-background-focus` | `transparent` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-background-hover` | `transparent` | `background-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-color` | `var(--enchase-color-text-primary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-color-placeholder` | `var(--enchase-color-text-placeholder)` | `color` (also in Combobox, DatePicker, NumberInput, Textarea) |
-| `--enchase-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-input-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-height` | `3.5rem` | `min-block-size`, `block-size`, `inset-block-start`, `transform` (also in Combobox, ComboboxToggle, DatePicker, NumberInput, Select) |
@@ -1782,7 +1792,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-number-input-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-number-input-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-number-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
-| `--enchase-number-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-number-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-number-input-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-number-input-stepper-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-number-input-stepper-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
@@ -1929,7 +1939,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-select-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-select-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-select-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
-| `--enchase-select-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-select-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-select-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-select-icon-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-select-option-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
@@ -2202,7 +2212,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-textarea-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-textarea-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-textarea-field-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
-| `--enchase-textarea-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-textarea-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-textarea-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-textarea-min-height` | `3.5rem` | `min-block-size` |
 | `--enchase-textarea-padding-block` | `1rem` (`--enchase-space-md`) | `padding-block`, `transform` |

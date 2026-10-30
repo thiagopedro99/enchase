@@ -1,9 +1,9 @@
 import { forwardRef, useId, useMemo, useRef } from 'react'
 
-import { defaultFullWidth, defaultLoading, defaultMultiple, defaultOpen } from './defaultData.ts'
+import { defaultFullWidth, defaultLoading, defaultMultiple, defaultOpen, defaultVariant } from './defaultData.ts'
 import { ComboboxOptions } from './subcomponentes/ComboboxOptions/index.tsx'
 import { ComboboxToggle } from './subcomponentes/ComboboxToggle/index.tsx'
-import { useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
+import { useLabelPlacement } from '@components/colorMode/themeDefaults.ts'
 import { ComboboxTags } from './subcomponentes/ComboboxTags/index.tsx'
 import { ListboxPopup } from './subcomponentes/ListboxPopup/index.tsx'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
@@ -27,6 +27,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
       onValueChange,
       label,
       labelPlacement,
+      variant = defaultVariant,
       error,
       helperText,
       placeholder,
@@ -52,7 +53,6 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
   ) => {
     const generatedId = useId()
     const { labels } = useUIConfig()
-    const themeDefaults = useThemeDefaults()
     const controlRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
     const mergedRef = useMemo(() => mergeRefs(inputRef, ref), [ref])
@@ -63,7 +63,8 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
     const helperId = `${inputId}-helper`
     const inert = !!(props.disabled || props.readOnly)
     const hasLabel = !!label
-    const stacked = (labelPlacement ?? themeDefaults.labelPlacement) === 'stacked'
+    const placement = useLabelPlacement(labelPlacement, variant)
+    const stacked = placement === 'stacked'
     const floating = hasLabel && !stacked
     const hasError = !!error
 
@@ -79,6 +80,7 @@ export const Combobox = forwardRef<HTMLInputElement, ComboboxProps>(
         className: styles.wrapper,
         'data-full-width': fullWidth ? '' : undefined,
         'data-label-placement': stacked ? 'stacked' : undefined,
+        'data-variant': variant === defaultVariant ? undefined : variant,
         'data-invalid': hasError ? '' : undefined,
         'data-disabled': props.disabled ? '' : undefined
       },

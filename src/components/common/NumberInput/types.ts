@@ -1,4 +1,4 @@
-import type { LabelPlacement } from '@styles/tokens/types.ts'
+import type { FieldVariant, LabelPlacement } from '@styles/tokens/types.ts'
 import type { CSSProperties, InputHTMLAttributes } from 'react'
 import type { NumberFormatOptions } from '@utils/numberFormat.ts'
 
@@ -16,6 +16,7 @@ export interface NumberInputProps extends Omit<InputHTMLAttributes<HTMLInputElem
   locale?: string | undefined
   label?: string | undefined
   labelPlacement?: LabelPlacement | undefined
+  variant?: FieldVariant | undefined
   error?: string | undefined
   helperText?: string | undefined
   fullWidth?: boolean | undefined

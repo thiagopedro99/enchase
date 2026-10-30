@@ -1,8 +1,8 @@
 import { forwardRef, useId } from 'react'
 
-import { defaultFullWidth, defaultStep, defaultSteppers, defaultValue } from './defaultData.ts'
+import { defaultFullWidth, defaultStep, defaultSteppers, defaultValue, defaultVariant } from './defaultData.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
-import { useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
+import { useLabelPlacement } from '@components/colorMode/themeDefaults.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useRepeatPress } from '@hooks/useRepeatPress.ts'
 import { useNumberField } from '@hooks/useNumberField.ts'
@@ -15,7 +15,7 @@ import type { NumberInputProps } from './types.ts'
 
 export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   (
-    { value, defaultValue: initialValue = defaultValue, onValueChange, min, max, step = defaultStep, largeStep, formatOptions, locale, label, labelPlacement, error, helperText, placeholder, fullWidth = defaultFullWidth, steppers = defaultSteppers, id, name, form, wrapperClassName, wrapperStyle, ...props },
+    { value, defaultValue: initialValue = defaultValue, onValueChange, min, max, step = defaultStep, largeStep, formatOptions, locale, label, labelPlacement, variant = defaultVariant, error, helperText, placeholder, fullWidth = defaultFullWidth, steppers = defaultSteppers, id, name, form, wrapperClassName, wrapperStyle, ...props },
     ref
   ) => {
     const generatedId = useId()
@@ -27,8 +27,8 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     const errorId = `${inputId}-error`
     const helperId = `${inputId}-helper`
     const hasLabel = !!label
-    const themeDefaults = useThemeDefaults()
-    const stacked = (labelPlacement ?? themeDefaults.labelPlacement) === 'stacked'
+    const placement = useLabelPlacement(labelPlacement, variant)
+    const stacked = placement === 'stacked'
     const floating = hasLabel && !stacked
     const hasError = !!error
     const describedBy = [props['aria-describedby'], error ? errorId : helperText ? helperId : undefined].filter(Boolean).join(' ') || undefined
@@ -38,6 +38,7 @@ export const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         className: styles.wrapper,
         'data-full-width': fullWidth ? '' : undefined,
         'data-label-placement': stacked ? 'stacked' : undefined,
+        'data-variant': variant === defaultVariant ? undefined : variant,
         'data-invalid': hasError ? '' : undefined,
         'data-disabled': props.disabled ? '' : undefined
       },

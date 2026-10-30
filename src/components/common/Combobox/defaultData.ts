@@ -1,3 +1,5 @@
+import type { FieldVariant } from '@styles/tokens/types.ts'
+
 export const defaultMultiple = false
 
 export const defaultFullWidth = false
@@ -13,3 +15,5 @@ export const listboxOffset = 4
 export const listboxPadding = 8
 
 export const listboxBase = { spring: 'snappy' } as const
+
+export const defaultVariant: FieldVariant = 'outlined'

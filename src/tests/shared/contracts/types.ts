@@ -1,4 +1,4 @@
-import type { LabelPlacement } from '@styles/tokens/types.ts'
+import type { FieldVariant, LabelPlacement } from '@styles/tokens/types.ts'
 import type { RenderWithProvidersOptions } from '@tests/types.ts'
 import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { ReactElement, ReactNode } from 'react'
@@ -30,6 +30,21 @@ export type LabelPlacementContractAdapter = {
   control: string
   placeholder?: string
   render: (placement?: LabelPlacement) => ReactElement
+}
+
+export type FieldVariantContractProps = {
+  variant?: FieldVariant
+  labelPlacement?: LabelPlacement
+  error?: string
+  helperText?: string
+  disabled?: boolean
+}
+
+export type FieldVariantContractAdapter = {
+  name: string
+  slot: string
+  control: string
+  render: (props?: FieldVariantContractProps) => ReactElement
 }
 
 export type PortalContainerContractAdapter = {

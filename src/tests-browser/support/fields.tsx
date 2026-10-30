@@ -5,11 +5,14 @@ import { Textarea } from '@components/common/Textarea/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 
+import type { FieldVariant, LabelPlacement } from '@styles/tokens/types.ts'
 import type { CSSProperties, ReactElement } from 'react'
 
 export type FieldTestProps = {
   error?: string
   disabled?: boolean
+  variant?: FieldVariant
+  labelPlacement?: LabelPlacement
   wrapperStyle?: CSSProperties
 }
 
