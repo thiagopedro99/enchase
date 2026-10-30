@@ -469,11 +469,13 @@ const smallest = { enchase: 'slider-thumb 20x20', shadcn: 'slider-thumb 16x16' }
 
 const fill = ['combobox-input', 'sidebar-item link']
 
+const inline = ['page link']
+
 describe.each(styles)('the compact density on the root, in every target of the gallery in the %s style', (styleName) => {
-  it('keeps the target at 24px or more in the compact density, but for the thumb of the slider, which was already smaller in the default one', async () => {
+  it('keeps the target at 24px or more in the compact density, but for the thumb of the slider, which was already smaller in the default one, and a link inside the text counts by its height only', async () => {
     const initial = await survey(styleName, null)
     const compact = await survey(styleName, 'compact')
-    const below = (targets: typeof initial) => targets.filter(({ width, height }) => Math.min(width, height) < 24).map(({ name, width, height }) => `${name} ${width}x${height}`)
+    const below = (targets: typeof initial) => targets.filter(({ name, width, height }) => (inline.includes(name) ? height : Math.min(width, height)) < 24).map(({ name, width, height }) => `${name} ${width}x${height}`)
 
     expect(initial.length).toBeGreaterThan(60)
     expect(compact.map(({ name }) => name)).toEqual(initial.map(({ name }) => name))
