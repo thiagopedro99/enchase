@@ -229,6 +229,80 @@ describe('the background of the outline button from the hook', () => {
   })
 })
 
+describe('the inline padding of the ghost button from the hooks', () => {
+  const sizes = ['sm', 'md', 'lg'] as const
+
+  const paddingOf = (index: number) => {
+    const computed = getComputedStyle(part('button', index))
+
+    return [computed.paddingLeft, computed.paddingRight]
+  }
+
+  const spaceOf = (name: string) => {
+    const probe = document.createElement('span')
+
+    probe.style.paddingLeft = `var(--enchase-space-${name})`
+    document.body.append(probe)
+
+    const space = getComputedStyle(probe).paddingLeft
+
+    probe.remove()
+
+    return space
+  }
+
+  const buttons = (variant: 'ghost' | 'primary', iconOnly = false) => (
+    <>
+      {sizes.map((size) => (
+        <Button key={size} size={size} variant={variant} iconOnly={iconOnly} aria-label={iconOnly ? size : undefined}>
+          {iconOnly ? '+' : size}
+        </Button>
+      ))}
+    </>
+  )
+
+  it('keeps the inline padding of a ghost button at the medium space of the theme in every size when no hook is set', () => {
+    renderInBrowser(buttons('ghost'))
+    const space = spaceOf('md')
+
+    expect([0, 1, 2].map(paddingOf)).toEqual([
+      [space, space],
+      [space, space],
+      [space, space]
+    ])
+  })
+
+  it('takes the inline padding of each size of the ghost button from its own hook', () => {
+    hooked(
+      sizes.flatMap((size, index) => [
+        [`--enchase-button-padding-inline-ghost-${size}`, `${5 + index * 2}px`, at('button', index), 'padding-left'] satisfies Probe,
+        [`--enchase-button-padding-inline-ghost-${size}`, `${5 + index * 2}px`, at('button', index), 'padding-right'] satisfies Probe
+      ]),
+      buttons('ghost')
+    )
+  })
+
+  it('leaves the other variants and the ghost button that holds only an icon alone when the hooks of the ghost sizes are set', () => {
+    onRoot({ '--enchase-button-padding-inline-ghost-sm': '5px', '--enchase-button-padding-inline-ghost-md': '7px', '--enchase-button-padding-inline-ghost-lg': '9px' })
+
+    const { unmount } = renderInBrowser(buttons('primary'))
+    const filled = [0, 1, 2].map(paddingOf)
+
+    unmount()
+    renderInBrowser(buttons('ghost', true))
+
+    expect(filled).toEqual([spaceOf('md'), spaceOf('lg'), spaceOf('xl')].map((space) => [space, space]))
+    expect([0, 1, 2].map(paddingOf)).toEqual([0, 1, 2].map(() => [spaceOf('xs'), spaceOf('xs')]))
+  })
+
+  it('falls back to the hook of the ghost button without a size in every size, and lets the hook of a size win over it', () => {
+    onRoot({ '--enchase-button-padding-inline-ghost': '11px', '--enchase-button-padding-inline-ghost-md': '3px' })
+    renderInBrowser(buttons('ghost'))
+
+    expect([0, 1, 2].map((index) => paddingOf(index)[0])).toEqual(['11px', '3px', '11px'])
+  })
+})
+
 const options = [
   { value: 'a', label: 'A' },
   { value: 'b', label: 'B' }

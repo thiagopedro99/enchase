@@ -60,8 +60,8 @@
 }
 
 :where(.number) {
-  inline-size: max(24px, var(--enchase-date-picker-calendar-day-size, max(24px, var(--enchase-hit-size, 40px))));
-  block-size: max(24px, var(--enchase-date-picker-calendar-day-size, max(24px, var(--enchase-hit-size, 40px))));
+  inline-size: max(24px, var(--enchase-date-picker-calendar-day-inner-size, var(--enchase-date-picker-calendar-day-size, max(24px, var(--enchase-hit-size, 40px)))));
+  block-size: max(24px, var(--enchase-date-picker-calendar-day-inner-size, var(--enchase-date-picker-calendar-day-size, max(24px, var(--enchase-hit-size, 40px)))));
   border-radius: var(--enchase-date-picker-calendar-day-radius, var(--enchase-radius-button));
   font-size: var(--enchase-date-picker-calendar-day-font-size, var(--enchase-font-size-base));
   font-weight: var(--enchase-date-picker-calendar-day-font-weight, var(--enchase-font-weight-regular));

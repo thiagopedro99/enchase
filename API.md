@@ -1281,6 +1281,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-padding-block-md` | `0.25rem` (`--enchase-space-xs`) | `padding-block`, `padding-inline` |
 | `--enchase-button-padding-block-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-block`, `padding-inline` |
 | `--enchase-button-padding-inline-ghost` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-button-padding-inline-ghost-lg` | `var(--enchase-button-padding-inline-ghost, var(--enchase-space-md))` | `padding-inline` |
+| `--enchase-button-padding-inline-ghost-md` | `var(--enchase-button-padding-inline-ghost, var(--enchase-space-md))` | `padding-inline` |
+| `--enchase-button-padding-inline-ghost-sm` | `var(--enchase-button-padding-inline-ghost, var(--enchase-space-md))` | `padding-inline` |
 | `--enchase-button-padding-inline-lg` | `2rem` (`--enchase-space-xl`) | `padding-inline` |
 | `--enchase-button-padding-inline-md` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
 | `--enchase-button-padding-inline-sm` | `1rem` (`--enchase-space-md`) | `padding-inline` |
@@ -1318,6 +1321,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-date-picker-calendar-day-color-selected` | `var(--enchase-color-on-primary)` | `color` |
 | `--enchase-date-picker-calendar-day-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-date-picker-calendar-day-font-weight` | `400` (`--enchase-font-weight-regular`) | `font-weight` |
+| `--enchase-date-picker-calendar-day-inner-size` | `var(--enchase-date-picker-calendar-day-size, max(24px, var(--enchase-hit-size, 40px)))` | `inline-size`, `block-size` |
 | `--enchase-date-picker-calendar-day-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-date-picker-calendar-day-size` | `max(24px, var(--enchase-hit-size, 40px))` | `inline-size`, `block-size` |
 | `--enchase-date-picker-calendar-weekday-color` | `var(--enchase-color-text-secondary)` | `color` |
@@ -1332,6 +1336,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-date-picker-calendar-header-border-style` | `none` | `border-block-end` |
 | `--enchase-date-picker-calendar-header-border-width` | `0` | `border-block-end` |
 | `--enchase-date-picker-calendar-header-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-date-picker-calendar-header-height` | `auto` | `block-size` |
 | `--enchase-date-picker-calendar-nav-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-date-picker-calendar-nav-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-date-picker-calendar-nav-color-hover` | `var(--enchase-color-text-primary)` | `color` |
@@ -1438,6 +1443,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-combobox-message-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-combobox-message-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
 | `--enchase-combobox-message-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-combobox-option-background-selected` | `transparent` | `background-color` |
 | `--enchase-combobox-option-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-combobox-option-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-combobox-option-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
@@ -1975,9 +1981,13 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-segmented-control-item-padding-inline-md` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-segmented-control-item-padding-inline-sm` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-segmented-control-item-radius` | `0` | `border-radius` |
+| `--enchase-segmented-control-item-radius-lg` | `0` (`--enchase-segmented-control-item-radius`) | `border-radius` |
+| `--enchase-segmented-control-item-radius-sm` | `0` (`--enchase-segmented-control-item-radius`) | `border-radius` |
 | `--enchase-segmented-control-item-shadow-selected` | `none` | `box-shadow` |
 | `--enchase-segmented-control-padding` | `0` | `padding` |
 | `--enchase-segmented-control-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-segmented-control-radius-lg` | `var(--enchase-segmented-control-radius, var(--enchase-radius-button))` | `border-radius` |
+| `--enchase-segmented-control-radius-sm` | `var(--enchase-segmented-control-radius, var(--enchase-radius-button))` | `border-radius` |
 
 ### Select
 

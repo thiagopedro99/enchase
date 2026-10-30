@@ -417,6 +417,60 @@ describe('the day of the calendar from the hooks', () => {
 
     expect(measures()).toEqual({ day: '24px', number: ['24px', '24px'], grid: '168px', nav: '24px' })
   })
+
+  it('takes the size of the core of the day from its hook, and leaves the cell, the grid and the buttons of the header alone', async () => {
+    onRoot({ '--enchase-date-picker-calendar-day-inner-size': '28px' })
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(measures()).toEqual({ day: '40px', number: ['28px', '28px'], grid: '280px', nav: '40px' })
+  })
+
+  it('lets the hook of the core win over the hook of the cell, which keeps the cell and the grid', async () => {
+    onRoot({ '--enchase-date-picker-calendar-day-size': '36px', '--enchase-date-picker-calendar-day-inner-size': '26px' })
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(measures()).toEqual({ day: '36px', number: ['26px', '26px'], grid: '252px', nav: '40px' })
+  })
+
+  it('keeps the floor of 24px under a hook of the core that is lower', async () => {
+    onRoot({ '--enchase-date-picker-calendar-day-inner-size': '10px' })
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(measures()).toEqual({ day: '40px', number: ['24px', '24px'], grid: '280px', nav: '40px' })
+  })
+})
+
+describe('the header of the calendar from the hook', () => {
+  const opened = () => expect.poll(() => parts('date-picker-calendar-header').length).toBe(1)
+
+  const heights = () => [style('date-picker-calendar-header').height, style('date-picker-calendar-nav').height]
+
+  it('is as tall as the buttons of the header when no hook is set', async () => {
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(heights()).toEqual(['40px', '40px'])
+  })
+
+  it('follows the hit size of the page and the border of the header when no hook is set', async () => {
+    onRoot({ '--enchase-hit-size': '48px', '--enchase-date-picker-calendar-header-border-style': 'solid', '--enchase-date-picker-calendar-header-border-width': '3px' })
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(heights()).toEqual(['51px', '48px'])
+  })
+
+  it('takes the height of the header from its hook, border included, and leaves the buttons at the hit size', async () => {
+    onRoot({ '--enchase-date-picker-calendar-header-height': '52px', '--enchase-date-picker-calendar-header-border-style': 'solid', '--enchase-date-picker-calendar-header-border-width': '3px' })
+    renderInBrowser(<DatePicker label="Date" defaultOpen />)
+    await opened()
+
+    expect(heights()).toEqual(['52px', '40px'])
+    expect(style('date-picker-calendar-header').borderBottomWidth).toBe('3px')
+  })
 })
 
 describe('the modal from the hooks', () => {

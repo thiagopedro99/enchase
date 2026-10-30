@@ -6,8 +6,19 @@ import { countries, defaultFullWidth, defaultLoading, defaultMultiple, defaultOp
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ComboboxOption } from 'enchase'
+import type { CSSProperties } from 'react'
 
 const noteStyle = { fontSize: '0.875rem', color: 'var(--enchase-color-text-secondary)' }
+
+const HooksDemo = () => {
+  const [host, setHost] = useState<HTMLElement | null>(null)
+
+  return (
+    <div ref={setHost} style={{ minBlockSize: '16rem', '--enchase-combobox-option-background-selected': 'var(--enchase-color-secondary-container)' } as CSSProperties}>
+      <Combobox label="Framework" options={frameworks} defaultValue="react" defaultOpen container={host} />
+    </div>
+  )
+}
 
 const ControlledDemo = () => {
   const [value, setValue] = useState<string | null>('react')
@@ -361,4 +372,16 @@ export const Required: Story = {
       ))}
     </div>
   )
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The selected option of the list has no background of its own: it takes its weight from `--enchase-combobox-option-font-weight-selected` and its background from `--enchase-combobox-option-background-selected`, transparent when it is not set. The layer of an option under the pointer or reached by the keyboard stays over it, as it does over the checked option of the `Select`. The list opens in a portal, so the hook reaches it through the `container` prop: here the wrapper that holds the hook is the container, and the selected option is filled with the container of the secondary role.'
+      }
+    }
+  },
+  render: () => <HooksDemo />
 }

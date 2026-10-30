@@ -130,7 +130,7 @@ export const CustomHooks: Story = {
     controls: { disable: true },
     docs: {
       description: {
-        story: 'The corner of each size has its own hook, `--enchase-button-radius-sm`, `-md` and `-lg`, which falls back to `--enchase-button-radius` and then to the button role of the theme. The outline variant paints its background with `--enchase-button-background-outline`, transparent by default. Here the hooks are set in the `style` of a wrapper: corners of 4, 6 and 8 px and a surface background.'
+        story: 'The corner of each size has its own hook, `--enchase-button-radius-sm`, `-md` and `-lg`, which falls back to `--enchase-button-radius` and then to the button role of the theme. The outline variant paints its background with `--enchase-button-background-outline`, transparent by default. The inline padding of the ghost variant has a hook for each size too, `--enchase-button-padding-inline-ghost-sm`, `-md` and `-lg`, which falls back to `--enchase-button-padding-inline-ghost` and then to the medium space of the theme. Here the hooks are set in the `style` of a wrapper: corners of 4, 6 and 8 px, a surface background and ghost buttons with a padding of 0.5, 1 and 1.5 rem.'
       }
     }
   },
@@ -147,7 +147,10 @@ export const CustomHooks: Story = {
           '--enchase-button-radius-sm': '4px',
           '--enchase-button-radius-md': '6px',
           '--enchase-button-radius-lg': '8px',
-          '--enchase-button-background-outline': 'var(--enchase-color-surface)'
+          '--enchase-button-background-outline': 'var(--enchase-color-surface)',
+          '--enchase-button-padding-inline-ghost-sm': '0.5rem',
+          '--enchase-button-padding-inline-ghost-md': '1rem',
+          '--enchase-button-padding-inline-ghost-lg': '1.5rem'
         } as CSSProperties
       }
     >
@@ -161,6 +164,15 @@ export const CustomHooks: Story = {
         Large
       </Button>
       <Button size="lg">Filled</Button>
+      <Button variant="ghost" size="sm">
+        Small ghost
+      </Button>
+      <Button variant="ghost" size="md">
+        Medium ghost
+      </Button>
+      <Button variant="ghost" size="lg">
+        Large ghost
+      </Button>
     </div>
   )
 }

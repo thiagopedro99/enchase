@@ -104,8 +104,16 @@
   box-shadow: var(--enchase-button-shadow-danger, none);
 }
 
-:where(.button[data-size][data-variant='ghost']) {
-  padding-inline: var(--enchase-button-padding-inline-ghost, var(--enchase-space-md));
+:where(.button[data-size='sm'][data-variant='ghost']) {
+  padding-inline: var(--enchase-button-padding-inline-ghost-sm, var(--enchase-button-padding-inline-ghost, var(--enchase-space-md)));
+}
+
+:where(.button[data-size='md'][data-variant='ghost']) {
+  padding-inline: var(--enchase-button-padding-inline-ghost-md, var(--enchase-button-padding-inline-ghost, var(--enchase-space-md)));
+}
+
+:where(.button[data-size='lg'][data-variant='ghost']) {
+  padding-inline: var(--enchase-button-padding-inline-ghost-lg, var(--enchase-button-padding-inline-ghost, var(--enchase-space-md)));
 }
 
 :where(.button[data-size='sm'][data-icon-only]) {

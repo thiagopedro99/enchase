@@ -593,3 +593,104 @@ describe('the thumb and the range of the slider under the pointer from the hooks
     expect(look()).toEqual(rest)
   })
 })
+
+describe('the corners of the segmented control from the hooks of each size', () => {
+  const choices = [
+    { value: 'a', label: 'List' },
+    { value: 'b', label: 'Board' }
+  ]
+
+  const sizes = ['sm', 'md', 'lg'] as const
+
+  const groups = (
+    <>
+      {sizes.map((size) => (
+        <SegmentedControl key={size} size={size} ariaLabel={`View ${size}`} items={choices} defaultValue="a" />
+      ))}
+    </>
+  )
+
+  const cornerOf = (index: number) => parseFloat(getComputedStyle(part('segmented-control', index)).borderTopLeftRadius)
+
+  it('keeps the corners the theme gives to the track in every size when no hook is set', () => {
+    renderInBrowser(groups)
+
+    expect(sizes.map((_, index) => cornerOf(index) >= 1000)).toEqual([true, true, true])
+  })
+
+  it('takes the corners of the small and of the large track from their own hooks, and leaves the medium one the corners of the theme', () => {
+    hooked(
+      [
+        ['--enchase-segmented-control-radius-sm', '3px', at('segmented-control', 0), 'border-top-left-radius'],
+        ['--enchase-segmented-control-radius-lg', '5px', at('segmented-control', 2), 'border-top-left-radius']
+      ],
+      groups
+    )
+
+    expect(cornerOf(1)).toBeGreaterThanOrEqual(1000)
+  })
+
+  it('has no hook for the medium size, which keeps the hook of the track', () => {
+    onRoot({ '--enchase-segmented-control-radius-md': '7px', '--enchase-segmented-control-radius': '9px' })
+    renderInBrowser(groups)
+
+    expect(sizes.map((_, index) => cornerOf(index))).toEqual([9, 9, 9])
+  })
+
+  it('falls back to the hook of the track in every size, and lets the hook of a size win over it', () => {
+    onRoot({ '--enchase-segmented-control-radius': '9px', '--enchase-segmented-control-radius-lg': '2px' })
+    renderInBrowser(groups)
+
+    expect(sizes.map((_, index) => cornerOf(index))).toEqual([9, 9, 2])
+  })
+
+  it('keeps the corners of a shape preset in every size, and a size hook wins over it', () => {
+    onRoot({ '--enchase-segmented-control-radius-sm': '5px' })
+    renderInBrowser(groups, 'never', 'light', { shape: 'square' })
+
+    expect(sizes.map((_, index) => cornerOf(index))).toEqual([5, 4, 4])
+  })
+
+  describe('the items', () => {
+    const itemCornerOf = (group: number) => parseFloat(getComputedStyle(parts('segmented-control-item')[group * choices.length]).borderTopLeftRadius)
+
+    it('keeps the items of every size without corners when no hook is set', () => {
+      renderInBrowser(groups)
+
+      expect(sizes.map((_, index) => itemCornerOf(index))).toEqual([0, 0, 0])
+    })
+
+    it('takes the corners of the items of the small and of the large size from their own hooks, and leaves the medium ones without corners', () => {
+      hooked(
+        [
+          ['--enchase-segmented-control-item-radius-sm', '3px', at('segmented-control-item', 0), 'border-top-left-radius'],
+          ['--enchase-segmented-control-item-radius-lg', '5px', at('segmented-control-item', 2 * choices.length), 'border-top-left-radius']
+        ],
+        groups
+      )
+
+      expect(itemCornerOf(1)).toBe(0)
+    })
+
+    it('has no hook for the items of the medium size, which keep the hook of the items', () => {
+      onRoot({ '--enchase-segmented-control-item-radius-md': '7px', '--enchase-segmented-control-item-radius': '9px' })
+      renderInBrowser(groups)
+
+      expect(sizes.map((_, index) => itemCornerOf(index))).toEqual([9, 9, 9])
+    })
+
+    it('falls back to the hook of the items in every size, and lets the hook of a size win over it', () => {
+      onRoot({ '--enchase-segmented-control-item-radius': '6px', '--enchase-segmented-control-item-radius-lg': '2px' })
+      renderInBrowser(groups)
+
+      expect(sizes.map((_, index) => itemCornerOf(index))).toEqual([6, 6, 2])
+    })
+
+    it('does not move the corners of the track', () => {
+      onRoot({ '--enchase-segmented-control-item-radius-sm': '3px', '--enchase-segmented-control-item-radius-lg': '5px' })
+      renderInBrowser(groups)
+
+      expect(sizes.map((_, index) => cornerOf(index) >= 1000)).toEqual([true, true, true])
+    })
+  })
+})

@@ -362,6 +362,8 @@ const HooksDemo = () => {
         {
           minBlockSize: '28rem',
           '--enchase-date-picker-calendar-day-size': '2.25rem',
+          '--enchase-date-picker-calendar-day-inner-size': '1.5rem',
+          '--enchase-date-picker-calendar-header-height': '2.75rem',
           '--enchase-date-picker-calendar-header-border-style': 'solid',
           '--enchase-date-picker-calendar-header-border-width': '1px',
           '--enchase-date-picker-calendar-header-border-color': 'var(--enchase-color-border)'
@@ -378,7 +380,7 @@ export const CustomHooks: Story = {
     controls: { disable: true },
     docs: {
       description: {
-        story: 'The day of the calendar has its own size, `--enchase-date-picker-calendar-day-size`, which is the hit size of the page with the 24 px floor when it is not set, and the header of the calendar can have a line under it with `--enchase-date-picker-calendar-header-border-style`, `-width` and `-color`: nothing is drawn unless the style is set. The calendar opens in a portal, so the hooks reach it through the `container` prop: here the wrapper that holds the hooks is the container.'
+        story: 'The day of the calendar has its own size, `--enchase-date-picker-calendar-day-size`, which is the hit size of the page with the 24 px floor when it is not set, and the header of the calendar can have a line under it with `--enchase-date-picker-calendar-header-border-style`, `-width` and `-color`: nothing is drawn unless the style is set. The core of the day, which is filled when the day is selected, has its own size, `--enchase-date-picker-calendar-day-inner-size`, which is the size of the cell when it is not set, and the header has its own height, `--enchase-date-picker-calendar-header-height`, which is `auto` when it is not set: the height of its buttons, which follow the hit size, plus the line. Here the cell is 2.25 rem, its core 1.5 rem and the header 2.75 rem. The calendar opens in a portal, so the hooks reach it through the `container` prop: here the wrapper that holds the hooks is the container.'
       }
     }
   },

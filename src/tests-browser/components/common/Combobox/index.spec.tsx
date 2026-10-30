@@ -601,6 +601,54 @@ describe('Combobox from its hooks', () => {
     expect(disabled.color).toBe('rgb(4, 5, 6)')
   })
 
+  describe('the background of the selected option from the hook', () => {
+    const background = (index: number) => getComputedStyle(options()[index]).backgroundColor
+
+    const activate = async (index: number) => {
+      await userEvent.hover(options()[index])
+      await expect.poll(() => options()[index].hasAttribute('data-active')).toBe(true)
+    }
+
+    const layer = () => {
+      const probe = document.createElement('span')
+
+      probe.style.backgroundColor = 'color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)'
+      document.body.append(probe)
+
+      const color = getComputedStyle(probe).backgroundColor
+
+      probe.remove()
+
+      return color
+    }
+
+    it('leaves the selected option as transparent as the others when no hook is set, until the pointer or the keyboard is on it', async () => {
+      renderInBrowser(<Combobox label="Fruta" options={fruits} defaultValue="banana" defaultOpen />)
+      await opened()
+      await activate(0)
+
+      expect([0, 1, 3].map(background)).toEqual([layer(), transparent, transparent])
+    })
+
+    it('takes the background of the selected options from its hook, and leaves the others transparent', async () => {
+      onRoot({ '--enchase-combobox-option-background-selected': 'rgb(1, 2, 3)' })
+      renderInBrowser(<Combobox label="Frutas" multiple options={fruits} defaultValue={['apple', 'banana']} defaultOpen />)
+      await opened()
+      await activate(3)
+
+      expect([0, 1, 2, 3].map(background)).toEqual(['rgb(1, 2, 3)', 'rgb(1, 2, 3)', transparent, layer()])
+    })
+
+    it('keeps the layer of the pointer and of the keyboard over the selected option, as over the others', async () => {
+      onRoot({ '--enchase-combobox-option-background-selected': 'rgb(1, 2, 3)' })
+      renderInBrowser(<Combobox label="Fruta" options={fruits} defaultValue="banana" defaultOpen />)
+      await opened()
+      await activate(1)
+
+      expect(background(1)).toBe(layer())
+    })
+  })
+
   it('takes the look of the messages from their hooks', async () => {
     onRoot({ '--enchase-combobox-message-padding-block': '7px', '--enchase-combobox-message-padding-inline': '9px', '--enchase-combobox-message-font-size': '13px', '--enchase-combobox-message-color': 'rgb(7, 8, 9)' })
     renderInBrowser(<Combobox label="Fruta" options={[]} defaultOpen />)

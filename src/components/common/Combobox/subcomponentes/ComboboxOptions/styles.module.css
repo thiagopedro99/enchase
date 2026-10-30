@@ -29,6 +29,11 @@
   overflow-wrap: anywhere;
 }
 
+.option[aria-selected='true'] {
+  background-color: var(--enchase-combobox-option-background-selected, transparent);
+  font-weight: var(--enchase-combobox-option-font-weight-selected, var(--enchase-font-weight-semibold));
+}
+
 .option[data-active] {
   background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
 }
@@ -41,10 +46,6 @@
 
 .option:where(:not([aria-disabled='true'])):active {
   background-color: color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
-}
-
-.option[aria-selected='true'] {
-  font-weight: var(--enchase-combobox-option-font-weight-selected, var(--enchase-font-weight-semibold));
 }
 
 .option[aria-disabled='true'] {

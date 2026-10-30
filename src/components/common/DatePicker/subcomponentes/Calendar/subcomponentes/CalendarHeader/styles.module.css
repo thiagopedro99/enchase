@@ -10,6 +10,7 @@
 
 :where(.header) {
   gap: var(--enchase-date-picker-calendar-header-gap, var(--enchase-space-sm));
+  block-size: var(--enchase-date-picker-calendar-header-height, auto);
 }
 
 .title {

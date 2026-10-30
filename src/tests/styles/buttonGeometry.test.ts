@@ -16,6 +16,9 @@ const hooks: Record<string, string> = {
   '--enchase-button-padding-inline-md': 'var(--enchase-space-lg)',
   '--enchase-button-padding-inline-lg': 'var(--enchase-space-xl)',
   '--enchase-button-padding-inline-ghost': 'var(--enchase-space-md)',
+  '--enchase-button-padding-inline-ghost-sm': 'var(--enchase-button-padding-inline-ghost, var(--enchase-space-md))',
+  '--enchase-button-padding-inline-ghost-md': 'var(--enchase-button-padding-inline-ghost, var(--enchase-space-md))',
+  '--enchase-button-padding-inline-ghost-lg': 'var(--enchase-button-padding-inline-ghost, var(--enchase-space-md))',
   '--enchase-button-font-size-sm': 'var(--enchase-font-size-sm)',
   '--enchase-button-font-size-md': 'var(--enchase-font-size-sm)',
   '--enchase-button-font-size-lg': 'var(--enchase-font-size-base)'

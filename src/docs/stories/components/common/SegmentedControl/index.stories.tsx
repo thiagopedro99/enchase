@@ -192,7 +192,7 @@ export const CustomHooks: Story = {
     controls: { disable: true },
     docs: {
       description: {
-        story: 'The track has a padding, `--enchase-segmented-control-padding`, the items a corner, `--enchase-segmented-control-item-radius`, and the selected item a shadow, `--enchase-segmented-control-item-shadow-selected`, all absent by default. Here they make a track of 2 px of padding with rounded items, in which the selected one is raised.'
+        story: 'The track has a padding, `--enchase-segmented-control-padding`, the items a corner, `--enchase-segmented-control-item-radius`, and the selected item a shadow, `--enchase-segmented-control-item-shadow-selected`, all absent by default. Here they make a track of 2 px of padding with rounded items, in which the selected one is raised. The corner of the track and the corner of the items of the small and of the large size have their own hooks, `--enchase-segmented-control-radius-sm` and `-lg` and `--enchase-segmented-control-item-radius-sm` and `-lg`, which fall back to the hooks without a size (the track then to the button role of the theme, the items to no corner), and the medium size keeps the hooks without a size: here the three sizes have track corners of 4, 6 and 8 px and item corners of 2, 4 and 6 px.'
       }
     }
   },
@@ -200,9 +200,17 @@ export const CustomHooks: Story = {
     <div
       style={
         {
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          alignItems: 'center',
           '--enchase-segmented-control-padding': '2px',
-          '--enchase-segmented-control-radius': 'var(--enchase-radius-md)',
-          '--enchase-segmented-control-item-radius': 'var(--enchase-radius-sm)',
+          '--enchase-segmented-control-radius': '6px',
+          '--enchase-segmented-control-radius-sm': '4px',
+          '--enchase-segmented-control-radius-lg': '8px',
+          '--enchase-segmented-control-item-radius': '4px',
+          '--enchase-segmented-control-item-radius-sm': '2px',
+          '--enchase-segmented-control-item-radius-lg': '6px',
           '--enchase-segmented-control-border-width': '0px',
           '--enchase-segmented-control-item-border-width': '0px',
           '--enchase-segmented-control-background': 'var(--enchase-color-surface-container)',
@@ -212,7 +220,9 @@ export const CustomHooks: Story = {
         } as CSSProperties
       }
     >
+      <SegmentedControl size="sm" ariaLabel="View, small" items={views} defaultValue="board" />
       <SegmentedControl ariaLabel="View" items={views} defaultValue="board" />
+      <SegmentedControl size="lg" ariaLabel="View, large" items={views} defaultValue="board" />
     </div>
   )
 }
