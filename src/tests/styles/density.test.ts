@@ -74,7 +74,9 @@ const withoutDensity = ({ base, light, dark, hooks }: ThemeSet) =>
 
 const themes: Array<[string, ThemeSet]> = [
   ['the default theme', defaultTheme],
-  ...builtInStyleEntries.map(([name, style]): [string, ThemeSet] => [`the ${name} style`, createTheme({ style })]),
+  ...builtInStyleEntries
+    .filter(([, style]) => style.density === undefined)
+    .map(([name, style]): [string, ThemeSet] => [`the ${name} style`, createTheme({ style })]),
   [
     'a theme with a brand, a shape and a font',
     createTheme({ brand: '#0B6BCB', shape: 'soft', fonts: { primary: 'Arial' } })
@@ -170,13 +172,15 @@ describe('the compact density in the css of the theme', () => {
     expect(hooks.filter(({ name }) => !read.has(name))).toEqual([])
   })
 
-  it('never goes above the value of a built-in style: the tokens against the enchase and the shadcn styles, the hooks against the fallback of the component', () => {
+  it('never goes above the value of a built-in style: the tokens that the style writes, from the default block or from its own compact density merged with it, and the hooks against the fallback of the component', () => {
     const fallbacks = Object.fromEntries(collectCssHooks(components).map(({ name, fallback }) => [name, fallback]))
 
     for (const [style, definition] of builtInStyleEntries) {
-      const variables = layoutVariables(createTheme({ style: definition }).base)
+      const theme = createTheme({ style: definition })
+      const variables = layoutVariables(theme.base)
+      const written = declaredBy(themeCss(theme), tokensSelector).filter(({ name }) => isToken(name))
 
-      for (const { name, value } of tokens) expect(pixels(value), `${name} against the ${style} style`).toBeLessThanOrEqual(pixels(variables[name] ?? ''))
+      for (const { name, value } of written) expect(pixels(value), `${name} against the ${style} style`).toBeLessThanOrEqual(pixels(variables[name] ?? ''))
     }
 
     for (const { name, value } of hooks) expect(pixels(value), `${name} against the fallback of the component`).toBeLessThanOrEqual(pixels(fallbacks[name] ?? ''))

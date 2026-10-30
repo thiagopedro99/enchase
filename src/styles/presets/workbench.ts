@@ -131,7 +131,36 @@ const dark: ThemeStyleMode = {
 }
 
 export const workbench = defineStyle({
+  base: {
+    control: { height: { sm: '1.5rem', md: '2rem', lg: '2.5rem' } },
+    focus: { width: '3px', offset: '1px', offsetSelector: '1px', offsetInset: '-3px' },
+    border: { width: '1px', widthStrong: '1px' },
+    halo: { size: '0px', sizeSwitch: '0px' },
+    hit: { size: '2rem' },
+    state: { hover: '0.06', focus: '0.1', pressed: '0.1', rowHover: '0.02', disabledContainer: '0.04', disabledContent: '0.38' }
+  },
+  fonts: {
+    sizes: { xs: '0.75rem', sm: '0.875rem', base: '0.875rem', lg: '1rem', xl: '1.25rem', '2xl': '1.5rem', '3xl': '1.875rem', '4xl': '2.375rem', '5xl': '3.5rem' },
+    lineHeights: { normal: 1.5714 }
+  },
+  radius: { xs: '0.125rem', sm: '0.25rem', md: '0.375rem', lg: '0.5rem', xl: '0.5rem', '2xl': '0.5rem', control: '0.375rem', button: '0.375rem' },
   brand: ['primary', 'onPrimary', 'primaryHover'],
   light,
-  dark
+  dark,
+  density: {
+    compact: {
+      tokens: {
+        '--enchase-hit-size': '1.5rem',
+        '--enchase-control-height-sm': '1.5rem',
+        '--enchase-control-height-md': '1.75rem',
+        '--enchase-control-height-lg': '2.1875rem',
+        '--enchase-space-sm': '0.25rem',
+        '--enchase-space-md': '0.5rem',
+        '--enchase-space-lg': '1rem',
+        '--enchase-space-xl': '2rem',
+        '--enchase-space-2xl': '3rem'
+      }
+    }
+  },
+  defaults: { labelPlacement: 'stacked' }
 })
