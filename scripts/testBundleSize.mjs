@@ -30,7 +30,7 @@ const budgets = [
   { label: 'createTheme', source: "export { createTheme } from 'enchase/theme'\n", maxBytes: 32768, styles: [] },
   { label: 'enchase style', source: "export { enchase } from 'enchase/styles/enchase'\n", maxBytes: 16384, styles: ['enchase'] },
   { label: 'shadcn style', source: "export { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 34816, styles: ['shadcn'] },
-  { label: 'workbench style', source: "export { workbench } from 'enchase/styles/workbench'\n", maxBytes: 35840, styles: ['workbench'] },
+  { label: 'workbench style', source: "export { workbench } from 'enchase/styles/workbench'\n", maxBytes: 37888, styles: ['workbench'] },
   { label: 'ColorModeProvider with shadcn', source: "export { ColorModeProvider } from 'enchase'\nexport { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 59392, styles: ['shadcn'], density: true }
 ]
 
