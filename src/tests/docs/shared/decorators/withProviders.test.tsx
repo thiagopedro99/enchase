@@ -8,7 +8,7 @@ const attribute = () => document.documentElement.getAttribute('data-density')
 
 const story = () => <p>Story</p>
 
-const decorated = (density?: string) => withProviders(story, { globals: { theme: 'light', style: 'enchase', density, motion: 'never' } } as never)
+const decorated = (density?: string) => withProviders(story, { globals: { theme: 'light', style: 'enchase', density, motion: 'never' }, parameters: {} } as never)
 
 afterEach(() => {
   document.documentElement.removeAttribute('data-density')
