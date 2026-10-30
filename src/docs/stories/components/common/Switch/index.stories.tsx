@@ -128,7 +128,7 @@ export const CustomHooks: Story = {
     controls: { disable: true },
     docs: {
       description: {
-        story: 'The thumb has a shadow at rest, `--enchase-switch-thumb-shadow`, and one for each state under the pointer: `--enchase-switch-thumb-shadow-hover` and `-active` when it is off, `-checked-hover` and `-checked-active` when it is on. Without them the thumb has no shadow at rest and shows the halo of the state. Here a style without the halo gives the thumb the same small shadow in every state, so it does not lose it under the pointer.'
+        story: 'The thumb has a shadow at rest, `--enchase-switch-thumb-shadow`, and one for each state under the pointer: `--enchase-switch-thumb-shadow-hover` and `-active` when it is off, `-checked-hover` and `-checked-active` when it is on. Without them the thumb has no shadow at rest and shows the halo of the state. Here a style without the halo gives the thumb the same small shadow in every state, so it does not lose it under the pointer. The track of an enabled switch also has a hook for each state under the pointer, `--enchase-switch-track-background-hover` when it is off and `--enchase-switch-track-background-checked-hover` when it is on, which fall back to the track at rest: here they are the feedback that the halo no longer gives.'
       }
     }
   },
@@ -144,7 +144,9 @@ export const CustomHooks: Story = {
           '--enchase-switch-thumb-shadow-hover': 'var(--enchase-shadow-sm)',
           '--enchase-switch-thumb-shadow-active': 'var(--enchase-shadow-sm)',
           '--enchase-switch-thumb-shadow-checked-hover': 'var(--enchase-shadow-sm)',
-          '--enchase-switch-thumb-shadow-checked-active': 'var(--enchase-shadow-sm)'
+          '--enchase-switch-thumb-shadow-checked-active': 'var(--enchase-shadow-sm)',
+          '--enchase-switch-track-background-hover': 'var(--enchase-color-border)',
+          '--enchase-switch-track-background-checked-hover': 'var(--enchase-color-primary-hover)'
         } as CSSProperties
       }
     >

@@ -105,6 +105,14 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .wrapper:hover .hidden:not(:disabled) + .track {
+    background-color: var(--enchase-switch-track-background-hover, var(--enchase-switch-track-background, var(--enchase-color-surface-container-high)));
+  }
+
+  .wrapper:hover .hidden:not(:disabled):checked + .track {
+    background-color: var(--enchase-switch-track-background-checked-hover, var(--enchase-switch-track-background-checked, var(--enchase-color-primary)));
+  }
+
   .wrapper:hover .hidden:not(:disabled) + .track .thumb {
     box-shadow: var(--enchase-switch-thumb-shadow-hover, 0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent));
   }

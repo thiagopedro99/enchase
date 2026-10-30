@@ -121,12 +121,18 @@
 
 @media (hover: hover) and (pointer: fine) {
   .control:hover .thumb:where(:not([aria-disabled='true'])) {
+    border-width: var(--enchase-slider-thumb-border-width-hover, var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px)));
     box-shadow: 0 0 0 var(--enchase-halo-size, 10px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
+  }
+
+  :where(.slider:not([data-disabled]) .control:hover) .range {
+    background-color: var(--enchase-slider-range-background-hover, var(--enchase-slider-range-background, var(--enchase-color-primary)));
   }
 }
 
 .slider:not([data-disabled]) .control:active .thumb,
 .slider[data-dragging] .thumb {
+  border-width: var(--enchase-slider-thumb-border-width-active, var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px)));
   box-shadow: 0 0 0 var(--enchase-halo-size, 10px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
 }
 

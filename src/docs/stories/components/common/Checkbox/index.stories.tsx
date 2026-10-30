@@ -126,12 +126,12 @@ export const CustomHooks: Story = {
     controls: { disable: true },
     docs: {
       description: {
-        story: 'The border of an unchecked box under the pointer takes its color from `--enchase-checkbox-box-border-color-hover`, which is the color at rest when the hook is not set. Here it turns to the primary color. A checked box, a box with an error and a disabled one keep their own colors.'
+        story: 'The border of an unchecked box under the pointer takes its color from `--enchase-checkbox-box-border-color-hover`, which is the color at rest when the hook is not set. Here it turns to the primary color. A checked box, a box with an error and a disabled one keep their own colors. The fill of a checked or mixed box under the pointer takes `--enchase-checkbox-box-background-checked-hover`, which is the fill at rest when the hook is not set: here it turns to the hover color of the primary role.'
       }
     }
   },
   render: () => (
-    <div style={{ display: 'grid', gap: '0.25rem', '--enchase-checkbox-box-border-color-hover': 'var(--enchase-color-primary)' } as CSSProperties}>
+    <div style={{ display: 'grid', gap: '0.25rem', '--enchase-checkbox-box-border-color-hover': 'var(--enchase-color-primary)', '--enchase-checkbox-box-background-checked-hover': 'var(--enchase-color-primary-hover)' } as CSSProperties}>
       <Checkbox label="Receive the newsletter" />
       <Checkbox label="Accept the terms" defaultChecked />
     </div>

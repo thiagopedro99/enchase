@@ -138,6 +138,14 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .group:not([data-invalid]) .option:hover .hidden:not(:checked, :disabled) + .control {
+    border-color: var(--enchase-radio-group-control-border-color-hover, var(--enchase-radio-group-control-border-color, var(--enchase-color-border-strong)));
+  }
+
+  .option:hover .hidden:checked:not(:disabled) + .control {
+    background-color: var(--enchase-radio-group-control-background-checked-hover, var(--enchase-radio-group-control-background-checked, transparent));
+  }
+
   .option:hover .hidden:not(:disabled) + .control {
     box-shadow: 0 0 0 var(--enchase-halo-size, 10px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }

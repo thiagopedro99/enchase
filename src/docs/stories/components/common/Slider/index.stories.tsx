@@ -3,6 +3,7 @@ import { Flex, Slider } from 'enchase'
 import { defaultDisabled, defaultMax, defaultMin, defaultShowValue, defaultStep, formatPercent, formatPrice, formatTemperature } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const ControlledDemo = () => {
   const [volume, setVolume] = useState(30)
@@ -157,4 +158,31 @@ export const Disabled: Story = {
 export const Controlled: Story = {
   parameters: { controls: { disable: true } },
   render: () => <ControlledDemo />
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'Under the pointer the border of the thumb can get wider with `--enchase-slider-thumb-border-width-hover`, and while it is dragged with `--enchase-slider-thumb-border-width-active`, which wins over the hover one. The filled part of the track can change color under the pointer with `--enchase-slider-range-background-hover`. All of them fall back to what the slider has at rest, so without them only the halo changes, and a disabled slider has no hover at all. Here the border of the thumb goes from 2 px to 4 px, and the filled part takes the hover color of the primary role.'
+      }
+    }
+  },
+  render: () => (
+    <div
+      style={
+        {
+          display: 'grid',
+          gap: '1rem',
+          '--enchase-slider-thumb-border-width-hover': '4px',
+          '--enchase-slider-thumb-border-width-active': '4px',
+          '--enchase-slider-range-background-hover': 'var(--enchase-color-primary-hover)'
+        } as CSSProperties
+      }
+    >
+      <Slider label="Volume" showValue defaultValue={40} />
+      <Slider label="Locked" showValue defaultValue={40} disabled />
+    </div>
+  )
 }

@@ -131,12 +131,12 @@ export const CustomHooks: Story = {
     controls: { disable: true },
     docs: {
       description: {
-        story: 'The circle of the checked option is filled with `--enchase-radio-group-control-background-checked`, transparent by default, and a disabled option keeps it transparent. Here it is filled with the primary color and the dot is drawn in the on-primary color, with `--enchase-radio-group-dot-border-color`.'
+        story: 'The circle of the checked option is filled with `--enchase-radio-group-control-background-checked`, transparent by default, and a disabled option keeps it transparent. Here it is filled with the primary color and the dot is drawn in the on-primary color, with `--enchase-radio-group-dot-border-color`. Under the pointer, the border of an unchecked circle takes `--enchase-radio-group-control-border-color-hover` and the fill of a checked one `--enchase-radio-group-control-background-checked-hover`, and both fall back to what the circle has at rest: here the border turns to the primary color and the fill to its hover color. An option of an invalid group and a disabled one keep their own colors.'
       }
     }
   },
   render: () => (
-    <div style={{ '--enchase-radio-group-control-background-checked': 'var(--enchase-color-primary)', '--enchase-radio-group-dot-border-color': 'var(--enchase-color-on-primary)' } as CSSProperties}>
+    <div style={{ '--enchase-radio-group-control-background-checked': 'var(--enchase-color-primary)', '--enchase-radio-group-dot-border-color': 'var(--enchase-color-on-primary)', '--enchase-radio-group-control-border-color-hover': 'var(--enchase-color-primary)', '--enchase-radio-group-control-background-checked-hover': 'var(--enchase-color-primary-hover)' } as CSSProperties}>
       <RadioGroup label="Plan" options={plans} defaultValue="pro" />
     </div>
   )

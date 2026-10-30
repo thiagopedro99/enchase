@@ -1372,6 +1372,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-checkbox-box-background-checked` | `var(--enchase-color-primary)` | `background-color` |
 | `--enchase-checkbox-box-background-checked-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `background-color` |
+| `--enchase-checkbox-box-background-checked-hover` | `var(--enchase-checkbox-box-background-checked, var(--enchase-color-primary))` | `background-color` |
 | `--enchase-checkbox-box-border-color` | `var(--enchase-color-border-strong)` | `border`, `border-color` |
 | `--enchase-checkbox-box-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-checkbox-box-border-color-checked-disabled` | `transparent` | `border-color` |
@@ -1911,9 +1912,11 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | Hook | Default | Property |
 | --- | --- | --- |
 | `--enchase-radio-group-control-background-checked` | `transparent` | `background-color` |
-| `--enchase-radio-group-control-border-color` | `var(--enchase-color-border-strong)` | `border` |
+| `--enchase-radio-group-control-background-checked-hover` | `transparent` (`--enchase-radio-group-control-background-checked`) | `background-color` |
+| `--enchase-radio-group-control-border-color` | `var(--enchase-color-border-strong)` | `border`, `border-color` |
 | `--enchase-radio-group-control-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-radio-group-control-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
+| `--enchase-radio-group-control-border-color-hover` | `var(--enchase-radio-group-control-border-color, var(--enchase-color-border-strong))` | `border-color` |
 | `--enchase-radio-group-control-border-color-invalid` | `var(--enchase-color-error)` | `border-color` |
 | `--enchase-radio-group-control-dot-size` | `calc(var(--enchase-radio-group-control-size, 1.25rem) / 2)` | `--radio-dot-size` |
 | `--enchase-radio-group-control-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
@@ -2125,9 +2128,12 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-slider-label-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-slider-opacity-disabled` | `0.38` (`--enchase-state-disabled-content`) | `opacity` |
 | `--enchase-slider-range-background` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-slider-range-background-hover` | `var(--enchase-slider-range-background, var(--enchase-color-primary))` | `background-color` |
 | `--enchase-slider-thumb-background` | `var(--enchase-color-primary)` | `background-color` |
 | `--enchase-slider-thumb-border-color` | `var(--enchase-color-primary)` | `border` |
-| `--enchase-slider-thumb-border-width` | `2px` (`--enchase-border-width-strong`) | `border` |
+| `--enchase-slider-thumb-border-width` | `2px` (`--enchase-border-width-strong`) | `border`, `border-width` |
+| `--enchase-slider-thumb-border-width-active` | `var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px))` | `border-width` |
+| `--enchase-slider-thumb-border-width-hover` | `var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px))` | `border-width` |
 | `--enchase-slider-thumb-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-slider-thumb-size` | `1.25rem` | `padding-inline`, `inline-size`, `block-size` |
 | `--enchase-slider-track-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
@@ -2175,6 +2181,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-switch-track-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-switch-track-background-checked` | `var(--enchase-color-primary)` | `background-color` |
 | `--enchase-switch-track-background-checked-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `background-color` |
+| `--enchase-switch-track-background-checked-hover` | `var(--enchase-switch-track-background-checked, var(--enchase-color-primary))` | `background-color` |
+| `--enchase-switch-track-background-hover` | `var(--enchase-switch-track-background, var(--enchase-color-surface-container-high))` | `background-color` |
 | `--enchase-switch-track-border-color` | `var(--enchase-color-border-strong)` | `border` |
 | `--enchase-switch-track-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-switch-track-border-color-checked-disabled` | `transparent` | `border-color` |
