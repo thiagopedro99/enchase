@@ -1,8 +1,58 @@
 import { defineStyle } from '../theme/style.ts'
 
 import type { ThemeStyleMode } from '../theme/style.ts'
+import type { HookValues } from '../tokens/types.ts'
 
 const popupShadow = '0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)'
+
+const buttons: HookValues = {
+  '--enchase-button-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-button-font-size-lg': 'var(--enchase-font-size-lg)',
+  '--enchase-button-padding-block-sm': '0',
+  '--enchase-button-padding-block-md': '0',
+  '--enchase-button-padding-block-lg': '0',
+  '--enchase-button-padding-inline-sm': '0.4375rem',
+  '--enchase-button-padding-inline-md': '0.9375rem',
+  '--enchase-button-padding-inline-lg': '0.9375rem',
+  '--enchase-button-padding-inline-ghost': '0.9375rem',
+  '--enchase-button-radius-sm': 'var(--enchase-radius-sm)',
+  '--enchase-button-radius-md': 'var(--enchase-radius-md)',
+  '--enchase-button-radius-lg': 'var(--enchase-radius-lg)'
+}
+
+const fields: HookValues = {
+  '--enchase-input-height': 'var(--enchase-control-height-md)',
+  '--enchase-input-padding-inline': '0.75rem',
+  '--enchase-input-gap': '0.5rem',
+  '--enchase-input-label-width': '8rem',
+  '--enchase-input-label-font-weight-stacked': 'var(--enchase-font-weight-regular)',
+  '--enchase-textarea-min-height': 'var(--enchase-control-height-md)',
+  '--enchase-textarea-padding-block': '0.3125rem',
+  '--enchase-select-picker-radius': 'var(--enchase-radius-lg)',
+  '--enchase-select-option-padding-block': '0.3125rem',
+  '--enchase-select-option-padding-inline': '0.75rem',
+  '--enchase-select-option-radius': 'var(--enchase-radius-sm)',
+  '--enchase-select-option-font-weight-checked': 'var(--enchase-font-weight-semibold)',
+  '--enchase-combobox-option-padding-block': '0.3125rem',
+  '--enchase-combobox-option-padding-inline': '0.75rem',
+  '--enchase-combobox-option-radius': 'var(--enchase-radius-sm)',
+  '--enchase-date-picker-calendar-day-size': '2.25rem',
+  '--enchase-date-picker-calendar-day-radius': 'var(--enchase-radius-sm)',
+  '--enchase-date-picker-calendar-title-font-weight': 'var(--enchase-font-weight-semibold)',
+  '--enchase-date-picker-calendar-weekday-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-date-picker-calendar-header-border-width': 'var(--enchase-border-width)',
+  '--enchase-date-picker-calendar-header-border-style': 'solid'
+}
+
+const colorHooks: HookValues = {
+  '--enchase-button-background-outline': 'var(--enchase-color-surface)',
+  '--enchase-input-outline-border-color-hover': 'var(--enchase-color-primary)',
+  '--enchase-input-field-background-disabled': 'color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)',
+  '--enchase-input-field-background-filled-focus': 'var(--enchase-color-surface)',
+  '--enchase-select-option-background-checked': 'var(--enchase-color-primary-container)',
+  '--enchase-select-option-color-checked': 'var(--enchase-color-text-primary)',
+  '--enchase-date-picker-calendar-header-border-color': 'var(--enchase-color-border)'
+}
 
 const light: ThemeStyleMode = {
   colors: {
@@ -67,6 +117,13 @@ const light: ThemeStyleMode = {
     md: popupShadow,
     lg: popupShadow,
     xl: popupShadow
+  },
+  hooks: {
+    '--enchase-button-shadow-primary': '0 2px 0 rgba(5, 145, 255, 0.1)',
+    '--enchase-button-shadow-primary-hover': '0 2px 0 rgba(5, 145, 255, 0.1)',
+    '--enchase-button-shadow-outline': '0 2px 0 rgba(0, 0, 0, 0.02)',
+    '--enchase-input-outline-shadow-focus': '0 0 0 2px color-mix(in srgb, var(--enchase-color-primary) 10%, transparent)',
+    '--enchase-select-picker-background': 'var(--enchase-color-surface)'
   }
 }
 
@@ -127,6 +184,13 @@ const dark: ThemeStyleMode = {
 
     overlay: 'rgba(0, 0, 0, 0.45)',
     codeBackground: '#0D0D0D'
+  },
+  hooks: {
+    '--enchase-button-shadow-primary': 'none',
+    '--enchase-button-shadow-primary-hover': 'var(--enchase-shadow-sm)',
+    '--enchase-button-shadow-outline': 'none',
+    '--enchase-input-outline-shadow-focus': '0 0 0 2px color-mix(in srgb, var(--enchase-color-primary) 31%, transparent)',
+    '--enchase-select-picker-background': 'var(--enchase-color-surface-container-low)'
   }
 }
 
@@ -144,6 +208,8 @@ export const workbench = defineStyle({
     lineHeights: { normal: 1.5714 }
   },
   radius: { xs: '0.125rem', sm: '0.25rem', md: '0.375rem', lg: '0.5rem', xl: '0.5rem', '2xl': '0.5rem', control: '0.375rem', button: '0.375rem' },
+  hooks: { ...buttons, ...fields },
+  colorHooks,
   brand: ['primary', 'onPrimary', 'primaryHover'],
   light,
   dark,

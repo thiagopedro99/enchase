@@ -79,7 +79,7 @@ describe('the built-in styles', () => {
     })
 
     it('writes each hook of the style in the css, on the root or in the blocks of the modes', () => {
-      const css = themeCss(theme).replace(densityRules('compact'), '')
+      const css = themeCss(theme).replace(densityRules('compact', theme.density?.compact), '')
       const declared = namesIn(css)
 
       for (const name of hooksOf(style)) expect(declared, name).toContain(name)
