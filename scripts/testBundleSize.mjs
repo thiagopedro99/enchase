@@ -116,10 +116,14 @@ try {
 
     if (styles === undefined) continue
 
-    for (const [name, hooks] of Object.entries(styleHooks)) {
-      const carried = hooks.filter((hook) => code.includes(hook))
+    const asked = new Set(styles.flatMap((name) => styleHooks[name]))
+    const present = new Set(code.match(/--enchase-[a-z0-9-]+/g))
 
-      if (!styles.includes(name) && carried.length > 0) failures.push(`${label} carries ${carried.length} hooks of the ${name} style, so its data leaks into code that did not ask for it`)
+    for (const [name, hooks] of Object.entries(styleHooks)) {
+      const carried = hooks.filter((hook) => present.has(hook))
+      const leaked = carried.filter((hook) => !asked.has(hook))
+
+      if (!styles.includes(name) && leaked.length > 0) failures.push(`${label} carries ${leaked.length} hooks of the ${name} style, so its data leaks into code that did not ask for it`)
       if (styles.includes(name) && carried.length < hooks.length * 0.9) failures.push(`${label} carries ${carried.length} of the ${hooks.length} hooks of the ${name} style, so the check for a leak cannot be trusted`)
     }
   }
