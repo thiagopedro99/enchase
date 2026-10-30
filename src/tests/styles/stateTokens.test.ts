@@ -65,7 +65,7 @@ describe('the state layers of the components', () => {
   })
 
   it('draws the halo of the selection controls from the halo tokens', () => {
-    const halos = files.flatMap(([name, css]) => [...css.matchAll(/^\s*box-shadow:\s*0 0 0 ([^ ]+(?: [^ ]+)?) color-mix/gm)].map(([, size]) => ({ name, size })))
+    const halos = files.flatMap(([name, css]) => [...css.matchAll(/^\s*box-shadow:\s*(?:var\(--enchase-[a-z-]+, )?0 0 0 ([^ ]+(?: [^ ]+)?) color-mix/gm)].map(([, size]) => ({ name, size })))
     const sizes = [`var(--enchase-halo-size, ${defaults['--enchase-halo-size']})`, `var(--enchase-halo-size-switch, ${defaults['--enchase-halo-size-switch']})`]
 
     expect(halos.length).toBeGreaterThan(0)

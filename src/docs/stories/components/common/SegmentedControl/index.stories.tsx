@@ -4,6 +4,7 @@ import { MoonIcon, SunIcon } from 'enchase/icons'
 import { days, defaultFullWidth, defaultSize, sizes, views, viewsWithLockedBoard } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const ControlledDemo = () => {
   const [view, setView] = useState('board')
@@ -184,4 +185,34 @@ export const Disabled: Story = {
 export const Controlled: Story = {
   parameters: { controls: { disable: true } },
   render: () => <ControlledDemo />
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The track has a padding, `--enchase-segmented-control-padding`, the items a corner, `--enchase-segmented-control-item-radius`, and the selected item a shadow, `--enchase-segmented-control-item-shadow-selected`, all absent by default. Here they make a track of 2 px of padding with rounded items, in which the selected one is raised.'
+      }
+    }
+  },
+  render: () => (
+    <div
+      style={
+        {
+          '--enchase-segmented-control-padding': '2px',
+          '--enchase-segmented-control-radius': 'var(--enchase-radius-md)',
+          '--enchase-segmented-control-item-radius': 'var(--enchase-radius-sm)',
+          '--enchase-segmented-control-border-width': '0px',
+          '--enchase-segmented-control-item-border-width': '0px',
+          '--enchase-segmented-control-background': 'var(--enchase-color-surface-container)',
+          '--enchase-segmented-control-item-background-selected': 'var(--enchase-color-surface)',
+          '--enchase-segmented-control-item-color-selected': 'var(--enchase-color-text-primary)',
+          '--enchase-segmented-control-item-shadow-selected': 'var(--enchase-shadow-sm)'
+        } as CSSProperties
+      }
+    >
+      <SegmentedControl ariaLabel="View" items={views} defaultValue="board" />
+    </div>
+  )
 }

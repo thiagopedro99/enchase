@@ -115,6 +115,10 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
+  .wrapper:hover .hidden:not(:disabled, :checked, :indeterminate, [aria-invalid='true']) + .box {
+    border-color: var(--enchase-checkbox-box-border-color-hover, var(--enchase-checkbox-box-border-color, var(--enchase-color-border-strong)));
+  }
+
   .wrapper:hover .hidden:not(:disabled) + .box {
     box-shadow: 0 0 0 var(--enchase-halo-size, 10px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }

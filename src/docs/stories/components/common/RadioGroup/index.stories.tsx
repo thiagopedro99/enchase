@@ -3,6 +3,7 @@ import { RadioGroup } from 'enchase'
 import { defaultOrientation, plans, plansWithLockedTeam } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const ControlledDemo = () => {
   const [plan, setPlan] = useState('pro')
@@ -123,4 +124,20 @@ export const Disabled: Story = {
 export const Controlled: Story = {
   parameters: { controls: { disable: true } },
   render: () => <ControlledDemo />
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The circle of the checked option is filled with `--enchase-radio-group-control-background-checked`, transparent by default, and a disabled option keeps it transparent. Here it is filled with the primary color and the dot is drawn in the on-primary color, with `--enchase-radio-group-dot-border-color`.'
+      }
+    }
+  },
+  render: () => (
+    <div style={{ '--enchase-radio-group-control-background-checked': 'var(--enchase-color-primary)', '--enchase-radio-group-dot-border-color': 'var(--enchase-color-on-primary)' } as CSSProperties}>
+      <RadioGroup label="Plan" options={plans} defaultValue="pro" />
+    </div>
+  )
 }

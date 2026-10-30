@@ -3,6 +3,7 @@ import { Switch } from 'enchase'
 import { settings } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const ControlledDemo = () => {
   const [enabled, setEnabled] = useState(false)
@@ -118,6 +119,37 @@ export const Preferences: Story = {
           </div>
         </div>
       ))}
+    </div>
+  )
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The thumb has a shadow at rest, `--enchase-switch-thumb-shadow`, and one for each state under the pointer: `--enchase-switch-thumb-shadow-hover` and `-active` when it is off, `-checked-hover` and `-checked-active` when it is on. Without them the thumb has no shadow at rest and shows the halo of the state. Here a style without the halo gives the thumb the same small shadow in every state, so it does not lose it under the pointer.'
+      }
+    }
+  },
+  render: () => (
+    <div
+      style={
+        {
+          display: 'grid',
+          gap: '0.5rem',
+          justifyItems: 'start',
+          '--enchase-halo-size-switch': '0px',
+          '--enchase-switch-thumb-shadow': 'var(--enchase-shadow-sm)',
+          '--enchase-switch-thumb-shadow-hover': 'var(--enchase-shadow-sm)',
+          '--enchase-switch-thumb-shadow-active': 'var(--enchase-shadow-sm)',
+          '--enchase-switch-thumb-shadow-checked-hover': 'var(--enchase-shadow-sm)',
+          '--enchase-switch-thumb-shadow-checked-active': 'var(--enchase-shadow-sm)'
+        } as CSSProperties
+      }
+    >
+      <Switch label="Receive notifications" />
+      <Switch label="Weekly report" defaultChecked />
     </div>
   )
 }

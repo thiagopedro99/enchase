@@ -3,6 +3,7 @@ import { Checkbox } from 'enchase'
 import { channels, defaultDisabled, defaultIndeterminate } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const SelectAllDemo = () => {
   const [selected, setSelected] = useState([channels[0]])
@@ -118,4 +119,21 @@ export const Indeterminate: Story = {
 
 export const SelectAll: Story = {
   render: () => <SelectAllDemo />
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The border of an unchecked box under the pointer takes its color from `--enchase-checkbox-box-border-color-hover`, which is the color at rest when the hook is not set. Here it turns to the primary color. A checked box, a box with an error and a disabled one keep their own colors.'
+      }
+    }
+  },
+  render: () => (
+    <div style={{ display: 'grid', gap: '0.25rem', '--enchase-checkbox-box-border-color-hover': 'var(--enchase-color-primary)' } as CSSProperties}>
+      <Checkbox label="Receive the newsletter" />
+      <Checkbox label="Accept the terms" defaultChecked />
+    </div>
+  )
 }

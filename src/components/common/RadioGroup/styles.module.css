@@ -109,6 +109,10 @@
   border-color: var(--enchase-radio-group-control-border-color-checked, var(--enchase-color-primary));
 }
 
+.hidden:checked:not(:disabled) + .control {
+  background-color: var(--enchase-radio-group-control-background-checked, transparent);
+}
+
 .hidden:checked + .control .dot {
   opacity: 1;
   transform: none;

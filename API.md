@@ -1355,10 +1355,11 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-checkbox-box-background-checked` | `var(--enchase-color-primary)` | `background-color` |
 | `--enchase-checkbox-box-background-checked-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `background-color` |
-| `--enchase-checkbox-box-border-color` | `var(--enchase-color-border-strong)` | `border` |
+| `--enchase-checkbox-box-border-color` | `var(--enchase-color-border-strong)` | `border`, `border-color` |
 | `--enchase-checkbox-box-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-checkbox-box-border-color-checked-disabled` | `transparent` | `border-color` |
 | `--enchase-checkbox-box-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
+| `--enchase-checkbox-box-border-color-hover` | `var(--enchase-checkbox-box-border-color, var(--enchase-color-border-strong))` | `border-color` |
 | `--enchase-checkbox-box-border-color-invalid` | `var(--enchase-color-error)` | `border-color` |
 | `--enchase-checkbox-box-check-width` | `2px` | `border-width` |
 | `--enchase-checkbox-box-radius` | `2px` | `border-radius` |
@@ -1891,6 +1892,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 
 | Hook | Default | Property |
 | --- | --- | --- |
+| `--enchase-radio-group-control-background-checked` | `transparent` | `background-color` |
 | `--enchase-radio-group-control-border-color` | `var(--enchase-color-border-strong)` | `border` |
 | `--enchase-radio-group-control-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-radio-group-control-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
@@ -1951,6 +1953,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-segmented-control-item-padding-inline-lg` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
 | `--enchase-segmented-control-item-padding-inline-md` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-segmented-control-item-padding-inline-sm` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-segmented-control-item-radius` | `0` | `border-radius` |
+| `--enchase-segmented-control-item-shadow-selected` | `none` | `box-shadow` |
+| `--enchase-segmented-control-padding` | `0` | `padding` |
 | `--enchase-segmented-control-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 
 ### Select
@@ -2143,6 +2148,11 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-switch-thumb-inset` | `0.125rem` | `--switch-travel`, `inset-inline-start` |
 | `--enchase-switch-thumb-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-switch-thumb-scale-off` | `0.667` | `transform` |
+| `--enchase-switch-thumb-shadow` | `none` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-active` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-checked-active` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-checked-hover` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-hover` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)` | `box-shadow` |
 | `--enchase-switch-thumb-size` | `1.5rem` | `--switch-travel`, `inline-size`, `block-size` |
 | `--enchase-switch-track-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-switch-track-background-checked` | `var(--enchase-color-primary)` | `background-color` |

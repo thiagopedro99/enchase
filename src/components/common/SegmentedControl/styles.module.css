@@ -7,6 +7,7 @@
   max-inline-size: 100%;
   margin: 0;
   overflow: hidden;
+  padding: var(--enchase-segmented-control-padding, 0);
   border: var(--enchase-segmented-control-border-width, var(--enchase-border-width, 1px)) solid var(--enchase-segmented-control-border-color, var(--enchase-color-border-strong));
   border-radius: var(--enchase-segmented-control-radius, var(--enchase-radius-button));
   background-color: var(--enchase-segmented-control-background, transparent);
@@ -38,6 +39,7 @@
   min-inline-size: 24px;
   margin: 0;
   border: 0;
+  border-radius: var(--enchase-segmented-control-item-radius, 0);
   background-color: transparent;
   color: var(--enchase-segmented-control-item-color, var(--enchase-color-text-primary));
   font-family: inherit;
@@ -88,6 +90,7 @@
 .item:where([aria-checked='true'], [aria-pressed='true']) {
   background-color: var(--enchase-segmented-control-item-background-selected, var(--enchase-color-secondary-container));
   color: var(--enchase-segmented-control-item-color-selected, var(--enchase-color-on-secondary-container));
+  box-shadow: var(--enchase-segmented-control-item-shadow-selected, none);
 }
 
 @media (hover: hover) and (pointer: fine) {
