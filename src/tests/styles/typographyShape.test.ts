@@ -67,15 +67,17 @@ describe('the typography and the shape of the components', () => {
     expect(bare).toEqual(fixed)
   })
 
-  it('falls back to the scale token the property read before, to the radius hook it is a variant of (which falls back to a scale token or to 0), or to the default of a line height or a letter spacing token, or to a plain value', () => {
+  it('falls back to the scale token the property read before, to the radius hook it is a variant of (which falls back to a scale token or to 0), to the font weight hook it is a variant of (which falls back to a scale token), or to the default of a line height or a letter spacing token, or to a plain value', () => {
     const wrong = uses.filter(({ name, fallback }) => {
       const scale = /^var\((--enchase-(?:font-size|font-weight|radius)-[a-z0-9]+)\)$/.exec(fallback)
       const shaped = /^var\((--enchase-(?:line-height|letter-spacing)-[a-z]+), ([^)]+)\)$/.exec(fallback)
       const based = /^var\((--enchase-[a-z0-9-]+-radius), (?:var\(--enchase-radius-[a-z0-9]+\)|0)\)$/.exec(fallback)
+      const weighted = /^var\((--enchase-[a-z0-9-]+-font-weight), var\((--enchase-font-weight-[a-z0-9]+)\)\)$/.exec(fallback)
 
       if (scale) return tokens[scale[1]] === undefined
       if (shaped) return tokens[shaped[1]] !== shaped[2]
       if (based) return !name.startsWith(`${based[1]}-`)
+      if (weighted) return !name.startsWith(`${weighted[1]}-`) || tokens[weighted[2]] === undefined
 
       return /^var\(/.test(fallback)
     })
