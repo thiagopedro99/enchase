@@ -12,7 +12,7 @@ import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import { Checkbox } from '@components/common/Checkbox/index.tsx'
 import { Combobox } from '@components/common/Combobox/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
-import { builtInStyles } from '@tests/shared/fixtures/styles.ts'
+import { builtInStyles, denseStyle } from '@tests/shared/fixtures/styles.ts'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import { frames, waitForSettled } from '../support/settle.ts'
@@ -33,15 +33,19 @@ import { renderInBrowser } from '../support/harness.tsx'
 import { Tag } from '@components/common/Tag/index.tsx'
 import { useToast } from '@components/toast/index.ts'
 import { densities } from '@styles/tokens/index.ts'
+import { defineStyle } from '@styles/theme/style.ts'
 import Layout from '@components/layout/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 
 import type { LabelPlacement } from '@styles/tokens/types.ts'
+import type { ThemeStyle } from '@styles/theme/style.ts'
 import type { ReactElement } from 'react'
 
 const styles = ['enchase', 'shadcn'] as const
 
 type StyleName = (typeof styles)[number]
+
+type Style = StyleName | ThemeStyle
 
 type Part = {
   name: string
@@ -108,7 +112,7 @@ const Notifier = () => {
   return null
 }
 
-const show = (ui: ReactElement, styleName: StyleName) => renderInBrowser(ui, 'never', 'light', { style: builtInStyles[styleName] })
+const show = (ui: ReactElement, style: Style) => renderInBrowser(ui, 'never', 'light', { style: typeof style === 'string' ? builtInStyles[style] : style })
 
 const settle = async (read: () => Element | null | undefined) => {
   await waitForSettled(read)
@@ -122,9 +126,9 @@ const sizesOf = (text: string) =>
     return { block, inline }
   })
 
-const measure = async ({ ui, target, index = 0 }: Part, styleName: StyleName, density: string | null) => {
+const measure = async ({ ui, target, index = 0 }: Part, style: Style, density: string | null) => {
   setDensity(density)
-  const view = show(ui, styleName)
+  const view = show(ui, style)
 
   await expect.poll(() => document.querySelectorAll(target)[index], { timeout: 4000 }).toBeDefined()
   await settle(() => document.querySelectorAll(target)[index])
@@ -265,9 +269,9 @@ const hooks = [
   ['--enchase-layout-header-height', '', '3.5rem', '3.5rem', '3.5rem']
 ]
 
-const onRoot = (names: string[], styleName: StyleName, density: string | null) => {
+const onRoot = (names: string[], style: Style, density: string | null) => {
   setDensity(density)
-  const view = show(<span />, styleName)
+  const view = show(<span />, style)
   const values = valuesOf(document.documentElement, names)
 
   view.unmount()
@@ -452,9 +456,9 @@ const targetsOf = (root: ParentNode) => {
   })
 }
 
-const survey = async (styleName: StyleName, density: string | null) => {
+const survey = async (style: Style, density: string | null) => {
   setDensity(density)
-  const view = show(gallery, styleName)
+  const view = show(gallery, style)
 
   await settle(() => view.container)
 
@@ -471,11 +475,13 @@ const fill = ['combobox-input', 'sidebar-item link']
 
 const inline = ['page link', 'footer-link']
 
+const below = (targets: Array<{ name: string; width: number; height: number }>) =>
+  targets.filter(({ name, width, height }) => (inline.includes(name) ? height : Math.min(width, height)) < 24).map(({ name, width, height }) => `${name} ${width}x${height}`)
+
 describe.each(styles)('the compact density on the root, in every target of the gallery in the %s style', (styleName) => {
   it('keeps the target at 24px or more in the compact density, but for the thumb of the slider, which was already smaller in the default one, and a link as wide as its text counts by its height only', async () => {
     const initial = await survey(styleName, null)
     const compact = await survey(styleName, 'compact')
-    const below = (targets: typeof initial) => targets.filter(({ name, width, height }) => (inline.includes(name) ? height : Math.min(width, height)) < 24).map(({ name, width, height }) => `${name} ${width}x${height}`)
 
     expect(initial.length).toBeGreaterThan(60)
     expect(compact.map(({ name }) => name)).toEqual(initial.map(({ name }) => name))
@@ -579,5 +585,118 @@ describe.each(styles)('the active indicator of the sidebar in the %s style', (st
     expect(tops[1]).not.toBe(tops[0])
     expect(tops[2]).toBe(tops[0])
     expect(tops[3]).toBe(tops[1])
+  })
+})
+
+const denseSizes = [
+  { name: 'the medium button', sizes: '36 > 28' },
+  { name: 'the small button', sizes: '30 > 28' },
+  { name: 'the large button', sizes: '44 > 40' },
+  { name: 'the field of the input', sizes: '36 > 32' },
+  { name: 'the field of the select', sizes: '36 > 32' },
+  { name: 'the tab', sizes: '44 > 36' },
+  { name: 'the item of the sidebar', sizes: '52 > 40' },
+  { name: 'the header of the sidebar', sizes: '72 > 64' },
+  { name: 'the bar of the navbar', sizes: '48 > 48' }
+]
+
+const denseTokens = [
+  ['--enchase-hit-size', '28px', '24px'],
+  ['--enchase-control-height-sm', '1.875rem', '1.75rem'],
+  ['--enchase-control-height-md', '2.25rem', '1.75rem'],
+  ['--enchase-control-height-lg', '2.75rem', '2.5rem'],
+  ['--enchase-space-sm', '0.5rem', '0.25rem'],
+  ['--enchase-space-md', '1rem', '0.5rem'],
+  ['--enchase-space-lg', '1.5rem', '1.125rem'],
+  ['--enchase-space-3xl', '4rem', '3rem'],
+  ['--enchase-font-size-base', '1rem', '0.9375rem'],
+  ['--enchase-font-size-xl', '1.375rem', '1.25rem'],
+  ['--enchase-line-height-normal', '1.5', '1.6'],
+  ['--enchase-space-xs', '0.25rem', '0.25rem'],
+  ['--enchase-hit-size-lg', '44px', '44px'],
+  ['--enchase-font-size-sm', '0.875rem', '0.875rem']
+]
+
+const denseHooks = [
+  ['--enchase-input-height', '2.25rem', '2rem'],
+  ['--enchase-navbar-bar-height', '3rem', '3rem'],
+  ['--enchase-input-padding-inline', '0.75rem', '0.75rem'],
+  ['--enchase-tabs-tab-min-height', '', '2.25rem'],
+  ['--enchase-sidebar-item-control-height', '', '2.5rem']
+]
+
+const textOf = (density: string | null) => {
+  setDensity(density)
+  const view = show(
+    <>
+      <Navbar sections={sections} />
+      <Input label="Name" />
+    </>,
+    denseStyle
+  )
+  const page = getComputedStyle(document.body)
+  const logo = getComputedStyle(document.querySelector('[data-slot=navbar-logo]') as Element)
+  const field = getComputedStyle(document.querySelector('[data-slot=input-field]') as Element)
+  const text = [page.fontSize, page.lineHeight, logo.fontSize, field.fontSize]
+
+  view.unmount()
+
+  return text
+}
+
+describe('the compact density of a style that carries its own, as the browser computes it', () => {
+  it.each(denseSizes)('sizes $name as the style says, without and with the attribute on the root', async ({ name, sizes }) => {
+    const part = parts.find((item) => item.name === name) as Part
+    const [initial, compact] = sizesOf(sizes)
+
+    expectSize(await measure(part, denseStyle, null), initial, 'without the attribute')
+    expectSize(await measure(part, denseStyle, 'compact'), compact, 'with the attribute')
+  })
+
+  it('gives the tokens the values that the style says in the compact density, the values of the default compact density for the tokens it says nothing about, and leaves the other tokens alone', () => {
+    const names = denseTokens.map(([name]) => name)
+
+    expect(onRoot(names, denseStyle, null)).toEqual(denseTokens.map((token) => token[1]))
+    expect(onRoot(names, denseStyle, 'compact')).toEqual(denseTokens.map((token) => token[2]))
+  })
+
+  it('gives the hooks the value that the style redeclares, keeps the hook that it declares on the root and does not redeclare, and takes the value of the default compact density for the hooks it does not declare', () => {
+    const names = denseHooks.map(([name]) => name)
+
+    expect(onRoot(names, denseStyle, null)).toEqual(denseHooks.map((hook) => hook[1]))
+    expect(onRoot(names, denseStyle, 'compact')).toEqual(denseHooks.map((hook) => hook[2]))
+  })
+
+  it('reads the font size and the line height from the tokens that the style changes: 15px with a leading of 1.6 is the 24px line of 16px with 1.5', () => {
+    expect(textOf(null)).toEqual(['16px', '24px', '22px', '16px'])
+    expect(textOf('compact')).toEqual(['15px', '24px', '20px', '15px'])
+  })
+})
+
+describe('the compact density on the root, in every target of the gallery in a style that carries its own', () => {
+  it('keeps the target at 24px or more in the compact density, but for the thumb of the slider, which the style leaves as the enchase style has it', async () => {
+    const initial = await survey(denseStyle, null)
+    const compact = await survey(denseStyle, 'compact')
+
+    expect(initial.length).toBeGreaterThan(60)
+    expect(compact.map(({ name }) => name)).toEqual(initial.map(({ name }) => name))
+    expect(below(initial)).toEqual([smallest.enchase])
+    expect(below(compact)).toEqual([smallest.enchase])
+  })
+
+  it('never makes a target taller in the compact density', async () => {
+    const initial = await survey(denseStyle, null)
+    const compact = await survey(denseStyle, 'compact')
+
+    expect(compact.filter(({ height }, index) => height > initial[index].height + 0.5).map(({ name }) => name)).toEqual([])
+    expect(compact.filter(({ height }, index) => height < initial[index].height - 0.5).length).toBeGreaterThan(30)
+  })
+
+  it('makes targets taller when the same style does not carry its own compact density, because the default one is absolute, which shows that the contract above is not met by chance', async () => {
+    const plain = defineStyle({ ...denseStyle, density: undefined })
+    const initial = await survey(plain, null)
+    const compact = await survey(plain, 'compact')
+
+    expect(compact.filter(({ height }, index) => height > initial[index].height + 0.5).length).toBeGreaterThan(0)
   })
 })

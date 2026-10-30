@@ -23,14 +23,14 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 - Alvos interativos têm pelo menos 24 x 24 px, e os componentes respeitam `prefers-reduced-motion` (o deslocamento some, o fade continua).
 - Renderização no servidor e hidratação sem erro em 6 variantes de ambiente (largura, tema salvo, sistema escuro e movimento reduzido), mais um app Next 15 mínimo (`npm run test:next`) importando os componentes num Server Component.
 - O `className` de quem usa vence o da biblioteca (provado em navegador, na variante em camada em qualquer ordem de carregamento).
-- A densidade `compact`, em Chromium, Firefox e WebKit reais: o tamanho de cada peça nos dois estilos, alvos de 24px ou mais (menos o polegar do `Slider`, que já era menor), o visual padrão idêntico sem o atributo, nada muda com o atributo fora do `<html>` e a precedência contra a variante em camada e contra o CSS do app.
+- A densidade `compact`, em Chromium, Firefox e WebKit reais: o tamanho de cada peça nos dois estilos, alvos de 24px ou mais (menos o polegar do `Slider`, que já era menor), o visual padrão idêntico sem o atributo, nada muda com o atributo fora do `<html>` e a precedência contra a variante em camada e contra o CSS do app. O compacto que um estilo declara em `density` tem o mesmo tratamento num estilo de teste: o tamanho das peças, nenhum alvo mais alto nem abaixo de 24px (menos o polegar do `Slider`) e a precedência dos ganchos dele.
 
 **Não garantido:**
 - Conformidade total com WCAG: a lib verifica o que os tokens e os testes cobrem, e não substitui auditoria nem teste com leitores de tela (nada foi testado com NVDA, JAWS ou VoiceOver).
 - Firefox e WebKit rodam a mesma suíte de navegador do Chromium, um arquivo por vez. No Linux ficam pulados 19 testes no Firefox e 19 no WebKit, porque dependem de chamadas só do Chromium (emulação de toque, mouse cru, métricas de layout e transparência reduzida) ou de uma emulação que o navegador não tem (cores forçadas no WebKit, contraste aumentado no Firefox); a lista central com o motivo está em `src/tests-browser/support/browserSkips.ts`, e os testes que dependem de um recurso que o navegador não tem são pulados só onde ele falta. Os testes de toque rodam no WebKit com o perfil de um iPhone (toque nativo), o mais perto do Safari que dá para automatizar. Os três navegadores passam no CI em Linux (Ubuntu 24.04) e bloqueiam o workflow. A devolução do foco ao gatilho e a armadilha de Tab funcionam também no Safari, onde clicar num botão não o focaliza: a biblioteca guarda o gatilho a partir do último ponteiro ou tecla. Revisão manual em Safari de verdade e com leitores de tela continua necessária.
 - Contraste de temas personalizados em `hsl()`, `oklch()` ou `oklab()`: esses formatos não são medidos, e o aviso diz quantos pares ficaram sem checar.
 - Gestos com velocidade (arrastar para dispensar, inércia) e os estilos Material 3 e Ant Design: ainda não existem.
-- A densidade `compact` fora dos dois estilos embutidos: é um conjunto de valores absolutos, escolhidos para o `enchase` e o `shadcn`. Um estilo próprio, feito com `defineStyle`, recebe o mesmo bloco e não pode declarar o compact dele, e num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
+- A densidade `compact` fora dos dois estilos embutidos: o bloco padrão é um conjunto de valores absolutos, escolhidos para o `enchase` e o `shadcn`. Um estilo próprio, feito com `defineStyle`, recebe esse bloco e pode trocá-lo pelo compacto dele (`density`), mas os valores que ele declara são dele e a biblioteca não os confere contra o tamanho padrão do estilo: o que ele não declara fica com o bloco padrão, e num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
 
 ## Instalação
 
@@ -642,7 +642,7 @@ import { shadcn } from 'enchase/styles/shadcn'
 - O estilo é "inspirado em", não uma cópia: o contrato de acessibilidade da biblioteca vale mais que a fidelidade. Onde o original fica abaixo dele, o estilo ajusta. A borda dos campos e a trilha da chave desligada são `#808080` (3:1 contra o fundo; a do original tem 1,26:1). O anel de foco é sólido, de 2px, na cor `primary` e com 2px de folga (o original usa um anel translúcido, que não chega a 3:1). O texto secundário sobre as superfícies cinza e o vermelho de erro usado como texto têm 4,5:1. Em cores forçadas (o modo de alto contraste do Windows), a borda do campo em foco engrossa para 2px, porque a sombra do anel some. O desenho do checkbox e do radio é de 16px, mas a área de toque continua com 24px ou mais.
 - Além das cores e dos raios, o estilo muda: botões de 32, 36 e 40px, campos de 36px e texto de 14px nos controles, uma sombra pequena nos botões e nos campos, alertas neutros com o ícone e o título coloridos, badges tingidos (sólidos só o `primary` e o de erro), abas só com o sublinhado, acordeão sem contorno e com linhas entre os itens, diálogo, popover e notificação com borda, e o rótulo acima do controle.
 - A precedência, do mais fraco ao mais forte, é: o padrão da biblioteca, o `style` e o que você passa (`shape`, `radius`, `fonts`, `motion`, `brand`, `light` e `dark`). `shape: 'pill'` com o `shadcn` devolve os botões em pílula, e `radius: { button: '1rem' }` muda só o raio dos botões. Com `brand`, só o acento muda (o `primary` e o que deriva dele): os neutros continuam os do estilo, e o `validateTheme` confere o contraste do resultado como em qualquer tema.
-- Por baixo, um estilo é um conjunto de tokens e de ganchos de CSS (veja "Customização por CSS"). O `createTheme` os junta ao tema e o `ColorModeProvider` os escreve no `:root` e nos blocos de cada modo, então o CSS da sua aplicação vence o estilo: `:root { --enchase-button-font-size-md: 16px; }` muda só esse valor. O `ThemeSet` que o `createTheme` devolve ganha `hooks` e `defaults`, que são opcionais, então um `ThemeSet` montado à mão continua valendo.
+- Por baixo, um estilo é um conjunto de tokens e de ganchos de CSS (veja "Customização por CSS"). O `createTheme` os junta ao tema e o `ColorModeProvider` os escreve no `:root` e nos blocos de cada modo, então o CSS da sua aplicação vence o estilo: `:root { --enchase-button-font-size-md: 16px; }` muda só esse valor. O `ThemeSet` que o `createTheme` devolve ganha `hooks`, `density` e `defaults`, que são opcionais, então um `ThemeSet` montado à mão continua valendo.
 - A página System/Styles do Storybook mostra os estilos no kit inteiro, e a barra de ferramentas do Storybook troca o estilo de todas as stories.
 
 O lugar do rótulo dos campos é a prop `labelPlacement` do `Input`, do `Textarea`, do `NumberInput` e do `Select`: `floating` (o padrão do estilo `enchase`) deixa o rótulo dentro do campo, e ele sobe para o contorno ao focar ou preencher; `stacked` (o padrão do `shadcn`) põe o rótulo acima do controle, sem entalhe no contorno, com a ajuda e o erro abaixo. A prop vence o estilo, nos dois sentidos, e sem `ColorModeProvider` o rótulo é flutuante. A ordem no HTML é a visual (o `<label>` vem antes do controle), igual no servidor e no cliente.
@@ -867,7 +867,7 @@ Com `container` nulo, ou com a função devolvendo `null`, o overlay cai no `bod
 
 ## Densidade
 
-`data-density="compact"` no `<html>` deixa o kit inteiro mais compacto: controles e barras mais baixos, alvos de toque de 32px e a escala de espaço mais apertada. É só CSS, um bloco de variáveis `--enchase-*` que vale enquanto o `<html>` tem o atributo: não há prop, hook do React nem opção nova no `createTheme`.
+`data-density="compact"` no `<html>` deixa o kit inteiro mais compacto: controles e barras mais baixos, alvos de toque de 32px e a escala de espaço mais apertada. É só CSS, um bloco de variáveis `--enchase-*` que vale enquanto o `<html>` tem o atributo: não há prop, hook do React nem opção nova no `createTheme`. Os valores são os do bloco padrão da biblioteca, e um estilo próprio pode trazer o compacto dele (veja "O compacto de um estilo").
 
 ```html
 <html lang="pt-BR" data-density="compact">
@@ -877,7 +877,7 @@ Com `container` nulo, ou com a função devolvendo `null`, o overlay cai no `bod
 - **Só no `<html>`.** Ao contrário do `data-theme`, que vale em qualquer ancestral, `data-density="compact"` num `div` ou no `<body>` não faz nada (medido: nenhum retângulo muda), porque todo seletor do bloco começa com `:root`. Não há ilhas de densidade: os overlays saem no `<body>`, que só a raiz alcança.
 - **Sem volta ao padrão e sem outros eixos.** Dentro de uma árvore compact, `data-density="default"` num elemento não muda nada. A densidade não mexe na tipografia (o rótulo flutuante dos campos e o entalhe do contorno dependem dela), nos raios, nem no desenho do checkbox, do radio, da chave, dos ícones e do avatar, e deixa de fora as larguras (`Sidebar`, `Modal`, `Drawer` e `Menu`), o anel de foco, as bordas, as camadas de estado e o movimento.
 - **Não é para interface pensada para o dedo.** O alvo de toque vai a 32px em qualquer ponteiro, inclusive em tela de toque: a densidade não olha `pointer: coarse`. O piso de 24px (WCAG 2.5.8) continua valendo, porque todo alvo lê `max(24px, var(--enchase-hit-size, ...))`, e `--enchase-hit-size-lg` (os botões que abrem, fecham ou recolhem uma navegação) continua em 44px. O único alvo abaixo de 24px é o polegar do `Slider` (20px no `enchase`, 16px no `shadcn`), como já era no padrão: o controle de 32px ao redor dele é a área de arrastar. Os campos mantêm a fonte de 16px em ponteiro de toque.
-- **Valores absolutos, para os estilos embutidos.** O compact é um conjunto de valores absolutos (uma propriedade personalizada não consegue escalar o valor que ela mesma sobrescreve), escolhidos para o `enchase` e o `shadcn`. Um estilo próprio, feito com `defineStyle`, recebe o mesmo bloco e não pode declarar o compact dele, e num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
+- **Valores absolutos, para os estilos embutidos.** O bloco padrão do compact é um conjunto de valores absolutos (uma propriedade personalizada não consegue escalar o valor que ela mesma sobrescreve), escolhidos para o `enchase` e o `shadcn`. Um estilo próprio, feito com `defineStyle`, recebe esse bloco e pode declarar o compact dele (veja "O compacto de um estilo"); sem declará-lo, num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
 
 ### O que muda
 
@@ -923,9 +923,32 @@ O estilo `shadcn` fica meio compact de propósito: ele declara por conta própri
 
 A página System/Density do Storybook traz o tamanho de cada peça, no padrão e no compact, nos dois estilos, e o item Density da barra de ferramentas liga o atributo em todas as histórias.
 
+### O compacto de um estilo
+
+Um estilo próprio declara o compacto dele na seção `density` do `defineStyle`, que só tem `compact` (não existe outra densidade): `tokens`, pelo nome da variável, e `hooks`, ganchos de CSS com a mesma regra dos `hooks` do estilo. Os tokens aceitos são `--enchase-hit-size` e `--enchase-hit-size-lg`, `--enchase-control-height-sm|md|lg`, `--enchase-space-xs` a `--enchase-space-3xl`, `--enchase-font-size-*` e `--enchase-line-height-*`; qualquer outro nome lança erro dizendo qual.
+
+```tsx
+import { defineStyle } from 'enchase/theme'
+
+export const tight = defineStyle({
+  base: { hit: { size: '28px' }, control: { height: { sm: '1.75rem', md: '2rem', lg: '2.5rem' } } },
+  hooks: { '--enchase-input-height': '2.25rem' },
+  density: {
+    compact: {
+      tokens: { '--enchase-hit-size': '24px', '--enchase-control-height-md': '1.75rem' },
+      hooks: { '--enchase-input-height': '2rem' }
+    }
+  }
+})
+```
+
+- **Substitui o bloco padrão chave por chave.** O token que o estilo declara vence o do bloco padrão, e o que ele não declara herda o valor do bloco padrão. Num estilo que já é mais denso que o do `enchase`, declare os tokens que o bloco padrão faria crescer: no exemplo, o `--enchase-hit-size` do estilo é 28px e o do bloco padrão é 32px, então o estilo declara 24px.
+- **Os ganchos do compacto do estilo têm a força dos tokens.** Saem na mesma regra dos tokens, `:root[data-density='compact']` (0,2,0), e por isso vencem o gancho que o próprio estilo declara em `hooks` no `:root` (0,1,0), coisa que o bloco padrão (0,0,0) não faz: no exemplo, o campo tem 36px e vai a 32px no compact. Os ganchos do bloco padrão que o estilo não redeclara continuam em `:where(:root[data-density='compact'])` (0,0,0) e perdem para um gancho do estilo, como no `shadcn`; se o estilo redeclara todos, essa regra não é escrita.
+- **`enchase` e `shadcn` não têm `density`.** O CSS que eles geram é o de antes, com o bloco padrão.
+
 ### Seus valores sobre a densidade
 
-Um **gancho** seu sempre vence: declare-o no `:root`, ou no próprio componente, e ele vence a densidade com ou sem camada. Um **token** seu é outro caso: em `enchase/styles.css`, que não tem camada, um token no `:root` perde para o bloco compact, esteja o seu CSS antes ou depois do tema, porque `:root[data-density='compact']` tem especificidade 0,2,0 contra os 0,1,0 do `:root`.
+Um **gancho** seu vence o bloco padrão (0,0,0): declare-o no `:root`, ou no próprio componente, e ele vence a densidade com ou sem camada. A exceção são os ganchos que o compacto de um estilo com `density` declara, que ficam na força dos tokens (0,2,0): sem camada, um gancho seu no `:root` (0,1,0) **perde** para eles, esteja o seu CSS antes ou depois do tema; com `cssLayer`, o seu CSS sem camada vence qualquer camada, então o gancho seu vence; e um gancho declarado no próprio componente (o `wrapperStyle` do `Input`, por exemplo) vence nos dois builds, porque a declaração mais próxima ganha. Um gancho seu que o compacto do estilo não declara continua vencendo como antes. Um **token** seu é outro caso: em `enchase/styles.css`, que não tem camada, um token no `:root` perde para o bloco compact, esteja o seu CSS antes ou depois do tema, porque `:root[data-density='compact']` tem especificidade 0,2,0 contra os 0,1,0 do `:root`.
 
 ```css
 :root {
@@ -933,7 +956,7 @@ Um **gancho** seu sempre vence: declare-o no `:root`, ou no próprio componente,
 }
 ```
 
-Dois caminhos:
+Dois caminhos, que valem também para um gancho do compacto de um estilo:
 
 1. **A variante em camada, que é a recomendação.** Importe `enchase/styles.layer.css` e passe `cssLayer="enchase-theme"` ao `ColorModeProvider`: o CSS seu sem camada vence qualquer camada em qualquer ordem, então a regra acima vale, e o bloco da densidade fica na mesma camada do tema.
 2. **O seletor do atributo.** `html:root[data-density='compact'] { --enchase-hit-size: 36px }` (0,2,1) vence em qualquer ordem. O `:root[data-density='compact']`, mais curto, tem a mesma força do bloco e só vence se vier depois do `<style>` do tema (o empate vai para a regra mais tardia), e o `ColorModeProvider` renderiza esse `<style>` dentro da página, normalmente depois das folhas do `<head>`. As duas regras não fazem nada sem o atributo, então o visual padrão mantém o valor dele.
