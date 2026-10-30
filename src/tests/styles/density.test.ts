@@ -7,7 +7,9 @@ import { collectCssHooks, isToken } from '../../../scripts/cssHooks.mjs'
 import { builtInStyleEntries } from '@tests/shared/fixtures/styles.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 import { variableGroups } from '@styles/tokens/groups.ts'
+import { defineStyle } from '@styles/theme/style.ts'
 
+import type { ThemeStyle } from '@styles/theme/style.ts'
 import type { ThemeSet } from '@styles/tokens/types.ts'
 
 const tokensSelector = ":root[data-density='compact']"
@@ -55,6 +57,11 @@ const specificity = (selector: string) => {
     count(/::[\w-]+|(?:^|[\s>+~])[a-z][\w-]*/g)
   ]
 }
+
+const ruleOf = (selector: string, record: Record<string, string>) =>
+  `${selector} {\n${Object.entries(record)
+    .map(([name, value]) => `  ${name}: ${value};`)
+    .join('\n')}\n}`
 
 const withoutDensity = ({ base, light, dark, hooks }: ThemeSet) =>
   [
@@ -217,7 +224,7 @@ describe('the compact density in the css of the theme', () => {
     expect(defaultThemeCss.split(densityRules('compact'))).toHaveLength(2)
   })
 
-  it('is only css: createTheme takes no density and a theme set carries none', () => {
+  it('is only css: createTheme takes no density, and the theme set of a style that has none carries none', () => {
     expect(() => createTheme({ density: 'compact' } as never)).toThrow('Unknown theme mode "density"')
     expect(Object.keys(createTheme())).toEqual(['base', 'light', 'dark'])
     expect(themes.filter(([, theme]) => JSON.stringify(theme).includes('density'))).toEqual([])
@@ -233,5 +240,154 @@ describe('the compact density in the css of the theme', () => {
       expect(themeCss(theme).replace(`${densityRules('compact')}\n\n`, '')).toBe(withoutDensity(theme))
       expect(themeCss(theme, { layer: 'app' }).replace(`${indent(densityRules('compact'))}\n\n`, '')).toBe(`@layer app {\n${indent(withoutDensity(theme))}\n}`)
     })
+  })
+})
+
+describe('the compact density that a style carries, in the css of the theme', () => {
+  const dense = defineStyle({
+    hooks: { '--enchase-input-height': '2.25rem', '--enchase-navbar-bar-height': '3rem' },
+    density: {
+      compact: {
+        tokens: { '--enchase-hit-size': '24px', '--enchase-space-md': '0.5rem', '--enchase-font-size-base': '0.9375rem', '--enchase-line-height-normal': 1.4 },
+        hooks: { '--enchase-input-height': '2rem', '--enchase-tabs-tab-min-height': '1.75rem' }
+      }
+    }
+  })
+  const theme = createTheme({ style: dense })
+  const css = themeCss(theme)
+  const tokens = declaredBy(css, tokensSelector)
+  const hooks = declaredBy(css, hooksSelector)
+  const said = ['--enchase-hit-size', '--enchase-space-md']
+  const redeclared = ['--enchase-input-height', '--enchase-tabs-tab-min-height']
+  const without = (record: Record<string, string>, names: string[]) => Object.fromEntries(Object.entries(record).filter(([name]) => !names.includes(name)))
+  const entries = (record: Record<string, string>) => Object.entries(record).map(([name, value]) => ({ name, value }))
+  const merged = {
+    ...densities.compact.tokens,
+    '--enchase-hit-size': '24px',
+    '--enchase-space-md': '0.5rem',
+    '--enchase-font-size-base': '0.9375rem',
+    '--enchase-line-height-normal': '1.4',
+    '--enchase-input-height': '2rem',
+    '--enchase-tabs-tab-min-height': '1.75rem'
+  }
+  const kept = without(densities.compact.hooks, redeclared)
+  const written = (style: ThemeStyle) => densityRules('compact', createTheme({ style: defineStyle(style) }).density?.compact)
+
+  it('writes the block of the default theme, rule by rule, from the data, when it is given no density of a style', () => {
+    const block = [ruleOf(tokensSelector, densities.compact.tokens), ruleOf(hooksSelector, densities.compact.hooks)].join('\n\n')
+
+    expect(densityRules('compact')).toBe(block)
+    expect(densityRules('compact', undefined)).toBe(block)
+    expect(densityRules('compact', {})).toBe(block)
+    expect(densityRules('compact', { tokens: {}, hooks: {} })).toBe(block)
+  })
+
+  it.each([
+    ['no density', {}],
+    ['an empty density', { density: {} }],
+    ['an empty compact density', { density: { compact: {} } }],
+    ['empty tokens and hooks', { density: { compact: { tokens: {}, hooks: {} } } }]
+  ])('writes the same block and the same theme as without a style for a style with %s', (_, style) => {
+    expect(written(style)).toBe(densityRules('compact'))
+    expect(themeCss(createTheme({ style: defineStyle(style) }))).toBe(themeCss(defaultTheme))
+  })
+
+  it('writes the tokens of the style over the tokens of the default, key by key, then its own tokens and its hooks, all in one rule', () => {
+    expect(tokens).toEqual(entries(merged))
+    expect(tokens.slice(0, 10).map(({ name }) => name)).toEqual(Object.keys(densities.compact.tokens))
+    expect(tokens.slice(10).map(({ name }) => name)).toEqual(['--enchase-font-size-base', '--enchase-line-height-normal', '--enchase-input-height', '--enchase-tabs-tab-min-height'])
+    expect(densityRules('compact', theme.density?.compact)).toBe([ruleOf(tokensSelector, merged), ruleOf(hooksSelector, kept)].join('\n\n'))
+  })
+
+  it('keeps the value of the default for a token that the style does not say, and writes a line height as the number it is', () => {
+    for (const [name, value] of Object.entries(without(densities.compact.tokens, said))) expect(tokens.find((token) => token.name === name)?.value, name).toBe(value)
+
+    expect(tokens.find(({ name }) => name === '--enchase-line-height-normal')?.value).toBe('1.4')
+  })
+
+  it('writes in the rule at 0,0,0 only the hooks of the default that the style does not redeclare, and no variable twice', () => {
+    const names = blockOf(css).flatMap(({ declarations }) => declarations.map(({ name }) => name))
+
+    expect(hooks).toEqual(entries(kept))
+    expect(hooks.map(({ name }) => name).filter((name) => redeclared.includes(name))).toEqual([])
+    expect(hooks).toHaveLength(Object.keys(densities.compact.hooks).length - redeclared.length)
+    expect(new Set(names).size).toBe(names.length)
+  })
+
+  it('writes the hooks of the style at 0,2,0, which beats the 0,1,0 of the hooks that the style declares on the root, and leaves the hooks of the default at 0,0,0', () => {
+    const rootHooks = rulesOf(css)
+      .filter(({ selector }) => selector === ':root')
+      .flatMap(({ declarations }) => declarations)
+
+    expect(rootHooks).toEqual(expect.arrayContaining(entries({ '--enchase-input-height': '2.25rem', '--enchase-navbar-bar-height': '3rem' })))
+    expect(specificity(':root')).toEqual([0, 1, 0])
+    expect(blockOf(css).map(({ selector }) => selector)).toEqual([tokensSelector, hooksSelector])
+    expect(blockOf(css).map(({ selector }) => specificity(selector))).toEqual([
+      [0, 2, 0],
+      [0, 0, 0]
+    ])
+    expect(tokens.filter(({ name }) => redeclared.includes(name))).toEqual(entries({ '--enchase-input-height': '2rem', '--enchase-tabs-tab-min-height': '1.75rem' }))
+  })
+
+  it('writes the block in the same place, after the layout variables and before the colors, and leaves the rest of the css as it was', () => {
+    expect(tokens).toContainEqual({ name: '--enchase-hit-size', value: '24px' })
+    expect(rulesOf(css).map(({ selector }) => selector)).toEqual([':root', ':root', tokensSelector, hooksSelector, ":root, [data-theme='light']", "[data-theme='dark']", ':root:not([data-theme])'])
+    expect(css.replace(`${densityRules('compact', theme.density?.compact)}\n\n`, '')).toBe(withoutDensity(theme))
+  })
+
+  it('starts every selector of the block with the root and the attribute, and declares only css variables', () => {
+    const names = blockOf(css).flatMap(({ declarations }) => declarations.map(({ name }) => name))
+
+    for (const { selector } of blockOf(css)) expect(selector).toMatch(/^(?::where\()?:root\[data-density=/)
+
+    expect(names).toContain('--enchase-line-height-normal')
+    expect(names).toHaveLength(tokens.length + hooks.length)
+    expect(names.filter((name) => !/^--enchase-[a-z0-9-]+$/.test(name))).toEqual([])
+  })
+
+  it('goes inside the same layer as the rest of the theme', () => {
+    const layered = themeCss(theme, { layer: 'app' })
+
+    expect(layered).toBe(`@layer app {\n${indent(css)}\n}`)
+    expect(blockOf(layered).map(({ selector }) => selector)).toEqual([tokensSelector, hooksSelector])
+    expect(declaredBy(layered, tokensSelector)).toContainEqual({ name: '--enchase-hit-size', value: '24px' })
+    expect(declaredBy(layered, tokensSelector)).toEqual(tokens)
+    expect(declaredBy(layered, hooksSelector)).toEqual(hooks)
+  })
+
+  it('writes the same block with a brand, a shape and fonts, which have nothing to do with the density', () => {
+    const other = createTheme({ style: dense, brand: '#0B6BCB', shape: 'soft', fonts: { primary: 'Arial' } })
+
+    expect(declaredBy(themeCss(other), tokensSelector)).toContainEqual({ name: '--enchase-hit-size', value: '24px' })
+    expect(blockOf(themeCss(other))).toEqual(blockOf(css))
+  })
+
+  it('writes only the hooks of the style next to the tokens of the default when the style has no tokens', () => {
+    const block = written({ density: { compact: { hooks: { '--enchase-input-height': '2rem' } } } })
+    const unsaid = without(densities.compact.hooks, ['--enchase-input-height'])
+
+    expect(block).toBe([ruleOf(tokensSelector, { ...densities.compact.tokens, '--enchase-input-height': '2rem' }), ruleOf(hooksSelector, unsaid)].join('\n\n'))
+  })
+
+  it('writes the tokens of the style next to all the hooks of the default when the style has no hooks', () => {
+    const block = written({ density: { compact: { tokens: { '--enchase-space-sm': '0.25rem', '--enchase-space-md': '0.5rem' } } } })
+
+    expect(block).toBe([ruleOf(tokensSelector, { ...densities.compact.tokens, '--enchase-space-sm': '0.25rem', '--enchase-space-md': '0.5rem' }), ruleOf(hooksSelector, densities.compact.hooks)].join('\n\n'))
+  })
+
+  it('leaves the rule at 0,0,0 out when the style redeclares every hook of the default, instead of writing a rule with nothing in it', () => {
+    const every = Object.fromEntries(Object.keys(densities.compact.hooks).map((name) => [name, '1rem']))
+    const block = written({ density: { compact: { hooks: every } } })
+
+    expect(block).toBe(ruleOf(tokensSelector, { ...densities.compact.tokens, ...every }))
+    expect(blockOf(block).map(({ selector }) => selector)).toEqual([tokensSelector])
+    expect(block).not.toContain(':where(')
+  })
+
+  it('writes a token that is undefined as if it was not there, so the token of the default stays', () => {
+    const block = written({ density: { compact: { tokens: { '--enchase-space-md': undefined, '--enchase-hit-size': '24px' } } } } as ThemeStyle)
+
+    expect(block).toBe([ruleOf(tokensSelector, { ...densities.compact.tokens, '--enchase-hit-size': '24px' }), ruleOf(hooksSelector, densities.compact.hooks)].join('\n\n'))
+    expect(block).not.toContain('undefined')
   })
 })

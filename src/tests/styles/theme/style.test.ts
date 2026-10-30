@@ -181,6 +181,18 @@ describe('createTheme with a style', () => {
     expect(theme.defaults).toEqual({ labelPlacement: 'stacked' })
   })
 
+  it('takes the density from the style as it is, and carries it to the theme set only when the style has one', () => {
+    const defined = defineStyle(full)
+    const theme = createTheme({ style: defined })
+
+    expect(theme.density).toBe(defined.density)
+    expect(theme.density).toEqual(full.density)
+    expect('density' in createTheme()).toBe(false)
+    expect('density' in createTheme({ style: defineStyle({}) })).toBe(false)
+    expect('density' in createTheme({ style: defineStyle({ hooks: { '--enchase-button-font-weight': '500' } }) })).toBe(false)
+    expect('density' in createTheme({ style: shadcn })).toBe(false)
+  })
+
   it('writes the hooks on the root and the color hooks in the blocks of each mode', () => {
     const css = themeCss(createTheme({ style: defineStyle(full) }))
     const rootRules = (css.match(/:root \{[^}]*\}/g) ?? []).join('\n')

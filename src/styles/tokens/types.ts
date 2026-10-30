@@ -80,5 +80,6 @@ export type ThemeSet = {
   light: ModeTokens
   dark: ModeTokens
   hooks?: HookValues | undefined
+  density?: ThemeDensity | undefined
   defaults?: Partial<ThemeDefaults> | undefined
 }

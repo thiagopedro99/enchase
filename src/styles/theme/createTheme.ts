@@ -133,6 +133,7 @@ export const createTheme = (input: ThemeInput = {}): ThemeSet => {
     light: mergeMode(withBrand(withStyle(lightTheme, definition.light, definition.colorHooks), brandOf(palette?.light, definition.brand), 'light'), input.light, 'light'),
     dark: mergeMode(withBrand(withStyle(darkTheme, definition.dark, definition.colorHooks), brandOf(palette?.dark, definition.brand), 'dark'), input.dark, 'dark'),
     ...(definition.hooks === undefined ? {} : { hooks: definition.hooks }),
+    ...(definition.density === undefined ? {} : { density: definition.density }),
     ...(definition.defaults === undefined ? {} : { defaults: definition.defaults })
   }
 }

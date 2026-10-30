@@ -1,7 +1,7 @@
 import { defaultTheme, densities } from '../tokens/index.ts'
 import { variableName } from './names.ts'
 
-import type { BaseTokens, ColorTokens, HookValues, ModeTokens, ShadowTokens, ThemeSet } from '../tokens/types.ts'
+import type { BaseTokens, ColorTokens, HookValues, ModeTokens, ShadowTokens, ThemeDensity, ThemeSet } from '../tokens/types.ts'
 import type { VariableGroup } from './names.ts'
 
 type FontTokens = BaseTokens['fonts']
@@ -49,7 +49,7 @@ export const layoutVariables = (theme: LayoutTokens): Record<string, string> => 
 
 export const themeVariables = (theme: ThemeTokens): Record<string, string> => ({ ...colorVariables(theme.colors), ...shadowVariables(theme.shadows), ...theme.hooks })
 
-const variablesRule = (selector: string, variables: Record<string, string>) => {
+const variablesRule = (selector: string, variables: Record<string, string | number>) => {
   const declarations = Object.entries(variables).map(([name, value]) => `  ${name}: ${value};`)
 
   return `${selector} {\n${declarations.join('\n')}\n}`
@@ -61,11 +61,17 @@ export const fontVariablesRule = (selector: string, fonts: FontTokens) => variab
 
 export const layoutVariablesRule = (selector: string, theme: LayoutTokens, hooks?: HookValues) => variablesRule(selector, { ...layoutVariables(theme), ...hooks })
 
-export const densityRules = (name: keyof typeof densities) => {
+export const densityRules = (name: keyof typeof densities, own?: ThemeDensity['compact']) => {
   const selector = `:root[data-density='${name}']`
   const { tokens, hooks } = densities[name]
+  const redeclared = { ...own?.hooks }
+  const styled = Object.fromEntries(Object.entries({ ...own?.tokens }).filter(([, value]) => value !== undefined))
+  const kept = Object.fromEntries(Object.entries(hooks).filter(([hook]) => !(hook in redeclared)))
+  const rule = variablesRule(selector, { ...tokens, ...styled, ...redeclared })
 
-  return [variablesRule(selector, tokens), variablesRule(`:where(${selector})`, hooks)].join('\n\n')
+  if (Object.keys(kept).length === 0) return rule
+
+  return [rule, variablesRule(`:where(${selector})`, kept)].join('\n\n')
 }
 
 export type ThemeCssOptions = {
@@ -78,11 +84,11 @@ const indent = (css: string) =>
     .map((line) => (line ? `  ${line}` : line))
     .join('\n')
 
-export const themeCss = ({ base, light, dark, hooks }: ThemeSet, { layer }: ThemeCssOptions = {}) => {
+export const themeCss = ({ base, light, dark, hooks, density }: ThemeSet, { layer }: ThemeCssOptions = {}) => {
   const rules = [
     fontVariablesRule(':root', base.fonts),
     layoutVariablesRule(':root', base, hooks),
-    densityRules('compact'),
+    densityRules('compact', density?.compact),
     cssVariablesRule(":root, [data-theme='light']", light),
     cssVariablesRule("[data-theme='dark']", dark),
     `@media (prefers-color-scheme: dark) {\n${indent(cssVariablesRule(':root:not([data-theme])', dark))}\n}`
