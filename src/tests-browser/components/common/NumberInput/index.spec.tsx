@@ -7,7 +7,7 @@ import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { renderInBrowser } from '../../../support/harness.tsx'
 import { setForcedColors } from '../../../support/media.ts'
 import { unlessWebkit } from '../../../support/browserSkips.ts'
-import { waitForSettled } from '../../../support/settle.ts'
+import { frames, waitForSettled } from '../../../support/settle.ts'
 
 const surfaces = ['surface', 'background', 'surface-container-high'] as const
 
@@ -36,6 +36,12 @@ const rect = (element: Element) => element.getBoundingClientRect()
 const wait = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds))
 
 const press = (button: Element, type: string, extra: PointerEventInit = {}) => button.dispatchEvent(new PointerEvent(type, { bubbles: true, cancelable: true, button: 0, pointerType: 'mouse', isPrimary: true, ...extra }))
+
+const repeatDelay = 400
+
+const repeatInterval = 60
+
+const highestAfter = (elapsed: number) => 1 + Math.max(0, Math.ceil((elapsed - repeatDelay) / repeatInterval))
 
 const caret = () => [input().selectionStart, input().selectionEnd]
 
@@ -261,27 +267,31 @@ describe('NumberInput buttons in a real browser', () => {
 
   it('repeat while held, stop on release, and stop at the limit', async () => {
     renderInBrowser(<NumberInput label="Quantidade" defaultValue={0} min={0} max={30} />)
+    const value = () => Number(input().value)
+    const started = performance.now()
 
     press(part('increase'), 'pointerdown')
     await wait(50)
-    expect(input().value).toBe('1')
+    expect(value()).toBeGreaterThanOrEqual(1)
+    expect(value()).toBeLessThanOrEqual(highestAfter(performance.now() - started))
     await wait(250)
-    expect(input().value).toBe('1')
-    await wait(1100)
+    expect(value()).toBeLessThanOrEqual(highestAfter(performance.now() - started))
+    await expect.poll(value, { timeout: 5000 }).toBeGreaterThan(8)
     press(part('increase'), 'pointerup')
 
-    const released = Number(input().value)
+    const heldFor = performance.now() - started
+
+    await frames()
+
+    const released = value()
 
     expect(released).toBeGreaterThan(8)
-    expect(released).toBeLessThanOrEqual(20)
+    expect(released).toBeLessThanOrEqual(highestAfter(heldFor))
     await wait(500)
-    expect(Number(input().value)).toBe(released)
+    expect(value()).toBe(released)
 
     press(part('increase'), 'pointerdown')
-    await wait(400 + 60 * 40)
-
-    expect(input().value).toBe('30')
-    expect((part('increase') as HTMLButtonElement).disabled).toBe(true)
+    await expect.poll(() => [input().value, (part('increase') as HTMLButtonElement).disabled], { timeout: 8000 }).toEqual(['30', true])
     press(part('increase'), 'pointerup')
   })
 
