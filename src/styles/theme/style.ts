@@ -22,7 +22,7 @@ export type ThemeStyleMode = {
 }
 
 export type ThemeStyle = {
-  base?: Partial2<Pick<BaseTokens, 'control' | 'focus' | 'border' | 'halo' | 'hit' | 'state'>> | undefined
+  base?: Partial2<Pick<BaseTokens, 'spacing' | 'control' | 'focus' | 'border' | 'halo' | 'hit' | 'state'>> | undefined
   fonts?: Partial2<Pick<BaseTokens['fonts'], 'sizes' | 'weights' | 'lineHeights' | 'letterSpacings'>> | undefined
   radius?: RadiusOverrides | undefined
   hooks?: HookValues | undefined
@@ -37,7 +37,7 @@ const styleSections = ['base', 'fonts', 'radius', 'hooks', 'colorHooks', 'brand'
 
 const modeSections = ['colors', 'shadows', 'hooks']
 
-const baseGroups = ['control', 'focus', 'border', 'halo', 'hit', 'state'] as const
+const baseGroups = ['spacing', 'control', 'focus', 'border', 'halo', 'hit', 'state'] as const
 
 const fontValidators = {
   sizes: assertValidFontSize,

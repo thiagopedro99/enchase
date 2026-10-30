@@ -13,7 +13,7 @@ import type { ThemeStyle } from '@styles/theme/style.ts'
 const asStyle = (value: unknown) => value as ThemeStyle
 
 const full = {
-  base: { control: { height: { md: '3rem' } }, focus: { width: '3px', offsetSelector: '4px' }, hit: { size: '36px' } },
+  base: { spacing: { sm: '0.375rem', md: '0.75rem' }, control: { height: { md: '3rem' } }, focus: { width: '3px', offsetSelector: '4px' }, hit: { size: '36px' } },
   fonts: { sizes: { base: '0.9375rem' }, weights: { medium: 550 }, lineHeights: { normal: 1.6 }, letterSpacings: { control: '0.02em' } },
   radius: { button: '0.25rem', md: '0.375rem' },
   hooks: { '--enchase-button-font-weight': '550', '--enchase-input-height': 'var(--enchase-control-height-md)' },
@@ -58,6 +58,14 @@ describe('defineStyle', () => {
     expect(createTheme({ style: defineStyle(stored) }).base.control.height.md).toBe('3rem')
     expect(() => defineStyle(JSON.parse('{"hooks":{"__proto__":"x"}}'))).toThrow('Invalid hook name "__proto__"')
   })
+
+  it('accepts a value for each of the seven steps of the spacing scale', () => {
+    const spacing = { xs: '2px', sm: '4px', md: '8px', lg: '12px', xl: '16px', '2xl': '24px', '3xl': '32px' }
+
+    expect(() => assertStyle({ base: { spacing } })).not.toThrow()
+    expect(() => defineStyle({ base: { spacing } })).not.toThrow()
+    expect(createTheme({ style: defineStyle({ base: { spacing } }) }).base.spacing).toEqual(spacing)
+  })
 })
 
 describe('createTheme with a style', () => {
@@ -82,6 +90,7 @@ describe('createTheme with a style', () => {
   it('takes the tokens, the corners, the type, the colors, the shadows, the hooks and the defaults from the style', () => {
     const theme = createTheme({ style: defineStyle(full) })
 
+    expect(theme.base.spacing).toEqual({ ...baseTokens.spacing, sm: '0.375rem', md: '0.75rem' })
     expect(theme.base.control.height).toEqual({ ...baseTokens.control.height, md: '3rem' })
     expect(theme.base.focus).toEqual({ ...baseTokens.focus, width: '3px', offsetSelector: '4px' })
     expect(theme.base.hit.size).toBe('36px')
@@ -113,6 +122,30 @@ describe('createTheme with a style', () => {
     expect(css.match(/--enchase-card-background-default: var\(--enchase-color-surface\);/g)).toHaveLength(3)
     expect(css).toContain('--enchase-badge-background-neutral: #202020;')
     expect(css).toContain('--enchase-badge-background-neutral: #EEEEEE;')
+  })
+
+  it('takes a step of the spacing scale from the style, keeps the other steps and writes it on the root', () => {
+    const theme = createTheme({ style: defineStyle({ base: { spacing: { md: '0.75rem' } } }) })
+    const rootRules = (themeCss(theme).match(/:root \{[^}]*\}/g) ?? []).join('\n')
+    const defaultRootRules = (themeCss(defaultTheme).match(/:root \{[^}]*\}/g) ?? []).join('\n')
+
+    expect(theme.base.spacing).toEqual({ ...baseTokens.spacing, md: '0.75rem' })
+    expect({ ...theme.base, spacing: baseTokens.spacing }).toEqual(baseTokens)
+    expect(rootRules).toContain('--enchase-space-md: 0.75rem;')
+    expect(rootRules).not.toContain('--enchase-space-md: 1rem;')
+    expect(rootRules).toBe(defaultRootRules.replace('--enchase-space-md: 1rem;', '--enchase-space-md: 0.75rem;'))
+  })
+
+  it('leaves the default theme and the base tokens as they are when a style sets the spacing', () => {
+    const style = defineStyle({ base: { spacing: { xs: '0.125rem', md: '0.75rem', '3xl': '5rem' } } })
+    const before = JSON.stringify([baseTokens, defaultTheme])
+    const theme = createTheme({ style })
+
+    expect(theme.base.spacing).toEqual({ ...baseTokens.spacing, xs: '0.125rem', md: '0.75rem', '3xl': '5rem' })
+    expect(theme.base.spacing).not.toBe(baseTokens.spacing)
+    expect(JSON.stringify([baseTokens, defaultTheme])).toBe(before)
+    expect(createTheme().base).toBe(baseTokens)
+    expect(themeCss(createTheme())).toBe(themeCss(defaultTheme))
   })
 
   it('lets what the caller passes win over the style', () => {
@@ -209,6 +242,8 @@ describe('the checks of a style', () => {
     ['a base token that does not exist', { base: { focus: { color: '#FFFFFF' } } }, 'Unknown base token "style.base.focus.color"'],
     ['a base group that is not an object', { base: { focus: '2px' } }, 'Expected an object for "style.base.focus"'],
     ['a base value that closes the rule', { base: { focus: { width: '2px; color: red' } } }, 'Invalid CSS value for "style.base.focus.width"'],
+    ['a spacing step that does not exist', { base: { spacing: { xxl: '5rem' } } }, 'Unknown base token "style.base.spacing.xxl"'],
+    ['a spacing value that closes the rule', { base: { spacing: { md: '1rem; color: red' } } }, 'Invalid CSS value for "style.base.spacing.md"'],
     ['a font family, which only the caller picks', { fonts: { primary: 'Inter' } }, 'Unknown font token "style.fonts.primary"'],
     ['a font size without a unit', { fonts: { sizes: { base: '16' } } }, 'Invalid font size for "style.fonts.sizes.base"'],
     ['a font weight that is not a number', { fonts: { weights: { medium: 'bold' } } }, 'Invalid font weight for "style.fonts.weights.medium"'],

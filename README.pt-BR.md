@@ -673,7 +673,7 @@ export const dense = defineStyle({
 
 | Seção | O que vai nela |
 | --- | --- |
-| `base` | Os tokens `control`, `focus`, `border`, `halo`, `hit` e `state` que mudam, no mesmo formato do tema padrão. |
+| `base` | Os tokens `spacing`, `control`, `focus`, `border`, `halo`, `hit` e `state` que mudam, no mesmo formato do tema padrão. |
 | `fonts` | `sizes`, `weights`, `lineHeights` e `letterSpacings`. As famílias (`primary` e `mono`) são de quem usa o estilo, pela seção `fonts` do `createTheme`. |
 | `radius` | Os raios (`xs` a `full`, menos `none`), como na seção `radius` do `createTheme`. |
 | `hooks` | Ganchos de CSS (`--enchase-<data-slot>-<propriedade>`) cujo valor não cita uma cor nem uma sombra do tema. Vão para o `:root`. |
