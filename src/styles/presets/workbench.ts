@@ -116,6 +116,95 @@ const navigation: HookValues = {
   '--enchase-breadcrumbs-current-font-weight': 'var(--enchase-font-weight-regular)'
 }
 
+const containers: HookValues = {
+  '--enchase-accordion-radius': '0px',
+  '--enchase-accordion-border-color': 'transparent',
+  '--enchase-accordion-trigger-min-height': '2.875rem',
+  '--enchase-accordion-trigger-padding-block': '0.75rem',
+  '--enchase-accordion-trigger-gap': '0.75rem',
+  '--enchase-accordion-trigger-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-card-border-width-default': 'var(--enchase-border-width)',
+  '--enchase-table-radius': 'var(--enchase-radius-lg)',
+  '--enchase-table-border-color': 'transparent',
+  '--enchase-table-cell-padding-block': '1rem',
+  '--enchase-table-cell-padding-block-sm': '0.5rem',
+  '--enchase-table-header-border-width-end': 'var(--enchase-border-width)',
+  '--enchase-table-header-border-style-end': 'solid',
+  '--enchase-table-row-header-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-modal-panel-max-width-md': '32.5rem',
+  '--enchase-modal-header-padding-block': '1.25rem 0',
+  '--enchase-modal-body-padding-block': '0.5rem 0.75rem',
+  '--enchase-modal-footer-padding-block': '0 1.25rem',
+  '--enchase-modal-title-font-size': 'var(--enchase-font-size-lg)',
+  '--enchase-modal-title-font-weight': 'var(--enchase-font-weight-semibold)',
+  '--enchase-modal-close-radius': 'var(--enchase-radius-sm)',
+  '--enchase-drawer-panel-width-md': '23.625rem',
+  '--enchase-drawer-panel-radius': '0px',
+  '--enchase-drawer-header-padding-block': '1rem',
+  '--enchase-drawer-title-font-size': 'var(--enchase-font-size-lg)',
+  '--enchase-drawer-title-font-weight': 'var(--enchase-font-weight-semibold)',
+  '--enchase-drawer-body-padding-block': '1.5rem',
+  '--enchase-drawer-footer-padding-block': '0.5rem',
+  '--enchase-drawer-footer-padding-inline': '1rem',
+  '--enchase-drawer-close-radius': 'var(--enchase-radius-sm)',
+  '--enchase-popover-content-padding-block': '0.75rem',
+  '--enchase-popover-content-padding-inline': '0.75rem',
+  '--enchase-footer-padding-block': '1.5rem'
+}
+
+const feedback: HookValues = {
+  '--enchase-alert-padding-inline': '0.75rem',
+  '--enchase-alert-radius': 'var(--enchase-radius-lg)',
+  '--enchase-alert-border-width': 'var(--enchase-border-width)',
+  '--enchase-alert-row-height': '1.5rem',
+  '--enchase-alert-content-gap': '0.5rem',
+  '--enchase-badge-min-height-md': '1.375rem',
+  '--enchase-badge-padding-inline-md': '0.4375rem',
+  '--enchase-badge-radius': 'var(--enchase-radius-sm)',
+  '--enchase-badge-font-size-md': 'var(--enchase-font-size-xs)',
+  '--enchase-badge-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-badge-border-style': 'solid',
+  '--enchase-badge-border-width': 'var(--enchase-border-width)',
+  '--enchase-tag-min-height-md': '1.375rem',
+  '--enchase-tag-min-height-sm': '1.25rem',
+  '--enchase-tag-padding-inline-md': '0.4375rem',
+  '--enchase-tag-padding-inline-sm': '0.4375rem',
+  '--enchase-tag-radius': 'var(--enchase-radius-sm)',
+  '--enchase-tag-remove-radius': 'var(--enchase-radius-sm)',
+  '--enchase-tag-font-size-md': 'var(--enchase-font-size-xs)',
+  '--enchase-tag-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-tag-gap': '0.1875rem',
+  '--enchase-tooltip-bubble-padding': '0.375rem 0.5rem',
+  '--enchase-tooltip-bubble-radius': 'var(--enchase-radius-md)',
+  '--enchase-tooltip-bubble-font-size': 'var(--enchase-font-size-sm)',
+  '--enchase-tooltip-bubble-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-toast-min-height': '2.5rem',
+  '--enchase-toast-padding-inline': '0.75rem',
+  '--enchase-toast-radius': 'var(--enchase-radius-lg)',
+  '--enchase-toast-icon-width': '1rem',
+  '--enchase-toast-icon-margin-inline-end': '0.5rem',
+  '--enchase-progress-size-sm': '3.75rem',
+  '--enchase-progress-size-md': '7.5rem',
+  '--enchase-progress-thickness': '3',
+  '--enchase-avatar-size-sm': '1.5rem',
+  '--enchase-avatar-size-md': '2rem',
+  '--enchase-avatar-size-lg': '2.5rem',
+  '--enchase-avatar-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-divider-min-height': '0.9em',
+  '--enchase-loading-spinner-width-xs': '0.75rem',
+  '--enchase-loading-spinner-height-xs': '0.75rem',
+  '--enchase-loading-spinner-width-sm': '0.875rem',
+  '--enchase-loading-spinner-height-sm': '0.875rem',
+  '--enchase-loading-spinner-border-width-sm': '2px',
+  '--enchase-loading-spinner-width-md': '1.25rem',
+  '--enchase-loading-spinner-height-md': '1.25rem',
+  '--enchase-loading-spinner-border-width-md': '3px',
+  '--enchase-loading-spinner-width-lg': '2rem',
+  '--enchase-loading-spinner-height-lg': '2rem',
+  '--enchase-loading-spinner-border-width-lg': '4px',
+  '--enchase-skeleton-radius-rectangular': 'var(--enchase-radius-sm)'
+}
+
 const colorHooks: HookValues = {
   '--enchase-button-background-outline': 'var(--enchase-color-surface)',
   '--enchase-input-outline-border-color-hover': 'var(--enchase-color-primary)',
@@ -140,7 +229,38 @@ const colorHooks: HookValues = {
   '--enchase-sidebar-item-control-color': 'var(--enchase-color-text-primary)',
   '--enchase-navbar-menu-link-color': 'var(--enchase-color-text-primary)',
   '--enchase-pagination-control-color-current': 'var(--enchase-color-primary)',
-  '--enchase-pagination-control-border-color-current': 'var(--enchase-color-primary)'
+  '--enchase-pagination-control-border-color-current': 'var(--enchase-color-primary)',
+  '--enchase-accordion-trigger-background': 'var(--enchase-color-surface-container-low)',
+  '--enchase-card-background-default': 'var(--enchase-color-surface)',
+  '--enchase-card-background-elevated': 'var(--enchase-color-surface)',
+  '--enchase-card-border-color-default': 'var(--enchase-color-border)',
+  '--enchase-table-header-color': 'var(--enchase-color-text-primary)',
+  '--enchase-table-header-border-color-end': 'var(--enchase-color-border)',
+  '--enchase-table-row-background-selected': 'var(--enchase-color-primary-container)',
+  '--enchase-table-row-background-selected-hover': 'color-mix(in srgb, var(--enchase-color-primary) 12%, var(--enchase-color-primary-container))',
+  '--enchase-modal-body-color': 'var(--enchase-color-text-primary)',
+  '--enchase-drawer-body-color': 'var(--enchase-color-text-primary)',
+  '--enchase-footer-background': 'var(--enchase-color-background)',
+  '--enchase-alert-color-info': 'var(--enchase-color-text-primary)',
+  '--enchase-alert-color-success': 'var(--enchase-color-text-primary)',
+  '--enchase-alert-color-warning': 'var(--enchase-color-text-primary)',
+  '--enchase-alert-color-error': 'var(--enchase-color-text-primary)',
+  '--enchase-alert-icon-color-info': 'var(--enchase-color-info)',
+  '--enchase-alert-icon-color-success': 'var(--enchase-color-success)',
+  '--enchase-alert-icon-color-warning': 'var(--enchase-color-warning)',
+  '--enchase-alert-icon-color-error': 'var(--enchase-color-error)',
+  '--enchase-alert-border-color-info': 'var(--enchase-color-info)',
+  '--enchase-alert-border-color-success': 'var(--enchase-color-success)',
+  '--enchase-alert-border-color-warning': 'var(--enchase-color-warning)',
+  '--enchase-alert-border-color-error': 'var(--enchase-color-error)',
+  '--enchase-badge-border-color-neutral': 'var(--enchase-color-border-strong)',
+  '--enchase-badge-border-color-primary': 'var(--enchase-color-primary)',
+  '--enchase-badge-border-color-success': 'var(--enchase-color-success)',
+  '--enchase-badge-border-color-warning': 'var(--enchase-color-warning)',
+  '--enchase-badge-border-color-error': 'var(--enchase-color-error)',
+  '--enchase-badge-border-color-info': 'var(--enchase-color-info)',
+  '--enchase-avatar-background': 'var(--enchase-color-secondary)',
+  '--enchase-avatar-color': 'var(--enchase-color-on-secondary)'
 }
 
 const light: ThemeStyleMode = {
@@ -213,7 +333,10 @@ const light: ThemeStyleMode = {
     '--enchase-button-shadow-outline': '0 2px 0 rgba(0, 0, 0, 0.02)',
     '--enchase-input-outline-shadow-focus': '0 0 0 2px color-mix(in srgb, var(--enchase-color-primary) 10%, transparent)',
     '--enchase-select-picker-background': 'var(--enchase-color-surface)',
-    '--enchase-popover-content-background': 'var(--enchase-color-surface)'
+    '--enchase-popover-content-background': 'var(--enchase-color-surface)',
+    '--enchase-modal-panel-background': 'var(--enchase-color-surface)',
+    '--enchase-drawer-panel-background': 'var(--enchase-color-surface)',
+    '--enchase-card-shadow-elevated-hover': '0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12), 0 5px 12px 4px rgba(0, 0, 0, 0.09)'
   }
 }
 
@@ -281,7 +404,10 @@ const dark: ThemeStyleMode = {
     '--enchase-button-shadow-outline': 'none',
     '--enchase-input-outline-shadow-focus': '0 0 0 2px color-mix(in srgb, var(--enchase-color-primary) 31%, transparent)',
     '--enchase-select-picker-background': 'var(--enchase-color-surface-container-low)',
-    '--enchase-popover-content-background': 'var(--enchase-color-surface-container-low)'
+    '--enchase-popover-content-background': 'var(--enchase-color-surface-container-low)',
+    '--enchase-modal-panel-background': 'var(--enchase-color-surface-container-low)',
+    '--enchase-drawer-panel-background': 'var(--enchase-color-surface-container-low)',
+    '--enchase-card-shadow-elevated-hover': 'var(--enchase-shadow-md)'
   }
 }
 
@@ -299,7 +425,7 @@ export const workbench = defineStyle({
     lineHeights: { normal: 1.5714 }
   },
   radius: { xs: '0.125rem', sm: '0.25rem', md: '0.375rem', lg: '0.5rem', xl: '0.5rem', '2xl': '0.5rem', control: '0.375rem', button: '0.375rem' },
-  hooks: { ...buttons, ...fields, ...selection, ...navigation },
+  hooks: { ...buttons, ...fields, ...selection, ...navigation, ...containers, ...feedback },
   colorHooks,
   brand: ['primary', 'onPrimary', 'primaryHover'],
   light,
