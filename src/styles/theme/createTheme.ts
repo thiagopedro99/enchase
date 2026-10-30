@@ -57,6 +57,8 @@ const overlay = <Tokens extends object>(base: Tokens, partial: unknown): Tokens 
   const result: Record<string, unknown> = { ...(base as Record<string, unknown>) }
 
   for (const [key, value] of Object.entries(partial)) {
+    if (value === undefined) continue
+
     const current = result[key]
 
     result[key] = isRecord(current) && isRecord(value) ? overlay(current, value) : value
@@ -76,7 +78,7 @@ const withBrand = (theme: ModeTokens, palette: BrandColors | undefined, mode: st
 const withStyle = (theme: ModeTokens, definition: ThemeStyleMode | undefined, shared: HookValues | undefined): ModeTokens => {
   const hooks = { ...shared, ...definition?.hooks }
   const colors = overlay(theme.colors, definition?.colors)
-  const shadows = definition?.shadows === undefined ? theme.shadows : { ...theme.shadows, ...definition.shadows }
+  const shadows = overlay(theme.shadows, definition?.shadows)
 
   if (colors === theme.colors && shadows === theme.shadows && Object.keys(hooks).length === 0) return theme
 
@@ -92,7 +94,7 @@ const base = (fonts: BaseTokens['fonts'], motion: BaseTokens['motion'], borderRa
 }
 
 const resolveRadius = (shape: ShapePreset | undefined, overrides: RadiusOverrides | undefined, styled: RadiusOverrides | undefined): RadiusTokens => {
-  const preset = shape === undefined ? (styled === undefined ? shapePresets.pill : { ...shapePresets.pill, ...styled }) : shapePresets[assertShapePreset(shape)]
+  const preset = shape === undefined ? overlay(shapePresets.pill, styled) : shapePresets[assertShapePreset(shape)]
 
   if (overrides === undefined) return preset
 
@@ -134,6 +136,6 @@ export const createTheme = (input: ThemeInput = {}): ThemeSet => {
     dark: mergeMode(withBrand(withStyle(darkTheme, definition.dark, definition.colorHooks), brandOf(palette?.dark, definition.brand), 'dark'), input.dark, 'dark'),
     ...(definition.hooks === undefined ? {} : { hooks: definition.hooks }),
     ...(definition.density === undefined ? {} : { density: definition.density }),
-    ...(definition.defaults === undefined ? {} : { defaults: definition.defaults })
+    ...(definition.defaults === undefined ? {} : { defaults: overlay({}, definition.defaults) })
   }
 }

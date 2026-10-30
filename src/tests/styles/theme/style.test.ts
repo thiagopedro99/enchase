@@ -9,6 +9,7 @@ import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/tokens/
 
 import type { ThemeInput } from '@styles/theme/createTheme.ts'
 import type { ThemeStyle } from '@styles/theme/style.ts'
+import type { ThemeSet } from '@styles/tokens/types.ts'
 
 const asStyle = (value: unknown) => value as ThemeStyle
 
@@ -287,6 +288,138 @@ describe('createTheme with a style', () => {
 
     expect(assertStyle(defined)).toBe(defined)
     expect(createTheme({ style: defined }).hooks).toBe(defined.hooks)
+  })
+})
+
+const makers: [string, (style: ThemeStyle) => ThemeStyle][] = [
+  ['defineStyle', defineStyle],
+  ['a raw object', (style) => style]
+]
+
+describe.each(makers)('createTheme with a style from %s that leaves a section undefined', (_, make) => {
+  const defaultCss = themeCss(createTheme())
+  const themeOf = (style: ThemeStyle) => createTheme({ style: make(style) })
+  const cssOf = (style: ThemeStyle) => themeCss(themeOf(style))
+
+  const required: [string, ThemeStyle, (theme: ThemeSet) => unknown, unknown][] = [
+    ['a token of base', { base: { hit: { size: undefined } } }, (theme) => theme.base.hit.size, baseTokens.hit.size],
+    ['a group of base', { base: { hit: undefined } }, (theme) => theme.base.hit, baseTokens.hit],
+    ['a token of fonts', { fonts: { sizes: { base: undefined } } }, (theme) => theme.base.fonts.sizes.base, baseTokens.fonts.sizes.base],
+    ['a group of fonts', { fonts: { sizes: undefined } }, (theme) => theme.base.fonts.sizes, baseTokens.fonts.sizes],
+    ['fonts', { fonts: undefined }, (theme) => theme.base.fonts, baseTokens.fonts]
+  ]
+
+  const left: [string, ThemeStyle][] = [
+    ['a token of base', { base: { hit: { size: undefined } } }],
+    ['a token of a group inside a group of base', { base: { control: { height: { md: undefined } } } }],
+    ['a step of the spacing scale', { base: { spacing: { md: undefined } } }],
+    ['a group of base', { base: { hit: undefined } }],
+    ['base', { base: undefined }],
+    ['a token of fonts', { fonts: { sizes: { base: undefined } } }],
+    ['a group of fonts', { fonts: { sizes: undefined } }],
+    ['fonts', { fonts: undefined }],
+    ['a radius', { radius: { md: undefined } }],
+    ['radius', { radius: undefined }],
+    ['hooks', { hooks: undefined }],
+    ['color hooks', { colorHooks: undefined }],
+    ['a color of the light mode', { light: { colors: { background: undefined } } }],
+    ['a color of a group of the dark mode', { dark: { colors: { text: { primary: undefined } } } }],
+    ['a group of colors', { light: { colors: { text: undefined } } }],
+    ['colors', { dark: { colors: undefined } }],
+    ['a shadow of the light mode', { light: { shadows: { sm: undefined } } }],
+    ['a shadow of the dark mode', { dark: { shadows: { md: undefined } } }],
+    ['shadows', { light: { shadows: undefined } }],
+    ['the hooks of a mode', { dark: { hooks: undefined } }],
+    ['the modes', { light: undefined, dark: undefined }],
+    ['a density token', { density: { compact: { tokens: { '--enchase-hit-size': undefined } } } }],
+    ['density tokens', { density: { compact: { tokens: undefined } } }],
+    ['density hooks', { density: { compact: { hooks: undefined } } }],
+    ['the compact density', { density: { compact: undefined } }],
+    ['density', { density: undefined }],
+    ['brand', { brand: undefined }],
+    ['a default', { defaults: { labelPlacement: undefined } }],
+    ['defaults', { defaults: undefined }],
+    [
+      'every section at once',
+      {
+        base: { hit: { size: undefined }, spacing: { md: undefined } },
+        fonts: { sizes: { base: undefined }, weights: undefined },
+        radius: { md: undefined },
+        hooks: undefined,
+        colorHooks: undefined,
+        light: { colors: { background: undefined }, shadows: { sm: undefined }, hooks: undefined },
+        dark: { colors: { text: { primary: undefined } }, shadows: { md: undefined } },
+        density: { compact: { tokens: { '--enchase-space-md': undefined }, hooks: undefined } },
+        defaults: { labelPlacement: undefined }
+      }
+    ]
+  ]
+
+  it.each(required)('keeps the value of the default when %s is undefined', (_, style, read, expected) => {
+    expect(() => themeOf(style)).not.toThrow()
+    expect(read(themeOf(style))).toStrictEqual(expected)
+    expect(cssOf(style)).not.toContain('undefined')
+    expect(cssOf(style)).toBe(defaultCss)
+  })
+
+  it.each(left)('keeps the tokens of the default and writes the css of the default theme when %s is undefined', (_, style) => {
+    const theme = themeOf(style)
+
+    expect(theme.base).toStrictEqual(baseTokens)
+    expect(theme.light).toStrictEqual(lightTheme)
+    expect(theme.dark).toStrictEqual(darkTheme)
+    expect(cssOf(style)).not.toContain('undefined')
+    expect(cssOf(style)).toBe(defaultCss)
+  })
+
+  it('takes the real value that comes next to an undefined one in the same section, and keeps the default for the undefined one', () => {
+    const said = {
+      base: { hit: { size: undefined, sizeLg: '48px' }, focus: { width: '3px', offset: undefined } },
+      fonts: { sizes: { base: undefined, lg: '1.25rem' }, weights: { medium: 550, bold: undefined } },
+      radius: { md: undefined, button: '0.25rem' },
+      hooks: { '--enchase-button-font-weight': '550' },
+      colorHooks: undefined,
+      light: { colors: { background: undefined, text: { primary: '#111111', secondary: undefined } }, shadows: { sm: undefined, md: '0 2px 4px rgb(0 0 0 / 0.2)' } },
+      dark: { colors: { background: '#101010', text: undefined }, shadows: { md: undefined, sm: '0 1px 2px rgb(0 0 0 / 0.6)' } },
+      density: { compact: { tokens: { '--enchase-hit-size': undefined, '--enchase-space-md': '0.625rem' } } }
+    }
+    const without = {
+      base: { hit: { sizeLg: '48px' }, focus: { width: '3px' } },
+      fonts: { sizes: { lg: '1.25rem' }, weights: { medium: 550 } },
+      radius: { button: '0.25rem' },
+      hooks: { '--enchase-button-font-weight': '550' },
+      light: { colors: { text: { primary: '#111111' } }, shadows: { md: '0 2px 4px rgb(0 0 0 / 0.2)' } },
+      dark: { colors: { background: '#101010' }, shadows: { sm: '0 1px 2px rgb(0 0 0 / 0.6)' } },
+      density: { compact: { tokens: { '--enchase-space-md': '0.625rem' } } }
+    }
+    const theme = themeOf(said)
+    const expected = themeOf(without)
+
+    expect(theme.base.hit).toStrictEqual({ size: baseTokens.hit.size, sizeLg: '48px' })
+    expect(theme.base.focus).toStrictEqual({ ...baseTokens.focus, width: '3px' })
+    expect(theme.base.fonts.sizes).toStrictEqual({ ...baseTokens.fonts.sizes, lg: '1.25rem' })
+    expect(theme.base.fonts.weights).toStrictEqual({ ...baseTokens.fonts.weights, medium: 550 })
+    expect(theme.base.borderRadius).toStrictEqual({ ...shapePresets.pill, button: '0.25rem' })
+    expect(theme.light.colors.background).toBe(lightTheme.colors.background)
+    expect(theme.light.colors.text).toStrictEqual({ ...lightTheme.colors.text, primary: '#111111' })
+    expect(theme.light.shadows).toStrictEqual({ ...lightTheme.shadows, md: '0 2px 4px rgb(0 0 0 / 0.2)' })
+    expect(theme.dark.colors.background).toBe('#101010')
+    expect(theme.dark.colors.text).toStrictEqual(darkTheme.colors.text)
+    expect(theme.dark.shadows).toStrictEqual({ ...darkTheme.shadows, sm: '0 1px 2px rgb(0 0 0 / 0.6)' })
+    expect(theme.base).toStrictEqual(expected.base)
+    expect(theme.light).toStrictEqual(expected.light)
+    expect(theme.dark).toStrictEqual(expected.dark)
+    expect(cssOf(said)).not.toContain('undefined')
+    expect(cssOf(said)).toBe(cssOf(without))
+    expect(cssOf(said)).not.toBe(defaultCss)
+  })
+
+  it('leaves the label placement to the default when the style leaves it undefined', () => {
+    expect(themeOf({ defaults: { labelPlacement: undefined } }).defaults).toStrictEqual({})
+  })
+
+  it('takes every role of a brand when the style leaves its list of roles undefined', () => {
+    expect(createTheme({ style: make({ brand: undefined }), brand: '#0B6BCB' })).toStrictEqual(createTheme({ brand: '#0B6BCB' }))
   })
 })
 
