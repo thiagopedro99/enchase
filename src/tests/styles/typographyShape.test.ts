@@ -67,11 +67,11 @@ describe('the typography and the shape of the components', () => {
     expect(bare).toEqual(fixed)
   })
 
-  it('falls back to the scale token the property read before, to the radius hook it is a variant of (which falls back to a scale token), or to the default of a line height or a letter spacing token, or to a plain value', () => {
+  it('falls back to the scale token the property read before, to the radius hook it is a variant of (which falls back to a scale token or to 0), or to the default of a line height or a letter spacing token, or to a plain value', () => {
     const wrong = uses.filter(({ name, fallback }) => {
       const scale = /^var\((--enchase-(?:font-size|font-weight|radius)-[a-z0-9]+)\)$/.exec(fallback)
       const shaped = /^var\((--enchase-(?:line-height|letter-spacing)-[a-z]+), ([^)]+)\)$/.exec(fallback)
-      const based = /^var\((--enchase-[a-z0-9-]+-radius), var\(--enchase-radius-[a-z0-9]+\)\)$/.exec(fallback)
+      const based = /^var\((--enchase-[a-z0-9-]+-radius), (?:var\(--enchase-radius-[a-z0-9]+\)|0)\)$/.exec(fallback)
 
       if (scale) return tokens[scale[1]] === undefined
       if (shaped) return tokens[shaped[1]] !== shaped[2]
