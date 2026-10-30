@@ -41,6 +41,16 @@ describe('ButtonLink', () => {
     expect(custom).not.toHaveAttribute('variant')
   })
 
+  it('accepts the danger variant through the same attribute', () => {
+    renderWithProviders(
+      <ButtonLink href="/delete" variant="danger">
+        Delete
+      </ButtonLink>
+    )
+
+    expect(screen.getByRole('link', { name: 'Delete' })).toHaveAttribute('data-variant', 'danger')
+  })
+
   it('is reached with the keyboard', async () => {
     const user = userEvent.setup()
     renderWithProviders(<ButtonLink href="/docs/">Começar</ButtonLink>)

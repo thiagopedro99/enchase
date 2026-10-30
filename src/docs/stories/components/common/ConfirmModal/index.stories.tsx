@@ -62,7 +62,7 @@ const meta = {
     confirmVariant: {
       description: 'Style of the confirm button, the same as in the Button.',
       control: 'select',
-      options: ['primary', 'secondary', 'outline', 'ghost'],
+      options: ['primary', 'secondary', 'outline', 'ghost', 'danger'],
       table: { defaultValue: { summary: 'primary' } }
     },
     container: containerArgType,

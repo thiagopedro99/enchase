@@ -169,7 +169,7 @@ import { Button, Icon } from 'enchase'
 import { ChevronRightIcon, CloseIcon } from 'enchase/icons'
 import { Rocket } from 'lucide-react'
 
-<Button variant="ghost" aria-label="Fechar">
+<Button variant="ghost" iconOnly aria-label="Fechar">
   <CloseIcon size={20} />
 </Button>
 
@@ -212,12 +212,13 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 
 | Prop | Onde | O que faz |
 | --- | --- | --- |
-| `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`), `Card`, `CardButton` e `CardLink` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`), `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox` e `DatePicker` (`outlined`, `filled`, `borderless`, `underlined`) | Aparência. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, o de `Alert`, `info`, e o dos campos, `outlined` (veja [Estilo visual](#estilo-visual)). |
+| `variant` | `Button`, `ButtonLink` (`primary`, `secondary`, `outline`, `ghost`, `danger`), `Card`, `CardButton` e `CardLink` (`default`, `elevated`, `outlined`), `Badge` (`neutral`, `primary`, `success`, `warning`, `error`, `info`), `Alert` (`info`, `success`, `warning`, `error`), `Skeleton` (`text`, `circular`, `rectangular`), `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox` e `DatePicker` (`outlined`, `filled`, `borderless`, `underlined`) | Aparência. O `danger` é o botão preenchido na cor de erro do tema, para uma ação que apaga ou não se desfaz, e o `confirmVariant` do `ConfirmModal` aceita os mesmos valores. O padrão de `Button` e `ButtonLink` é `primary`, o de `Badge`, `neutral`, o de `Alert`, `info`, e o dos campos, `outlined` (veja [Estilo visual](#estilo-visual)). |
 | `size` | `Button`, `ButtonLink` e `SegmentedControl` (`sm`, `md`, `lg`), `Badge` (`sm`, `md`), `Pagination` e `Table` (`sm`, `md`), `Loading` (`xs` a `xl`), `InlineLoading` (`xs`, `sm`, `md`), `Modal` (`sm` a `xl` e `full`), `Drawer` (`sm`, `md`, `lg`) | Tamanho. |
 | `label` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup`, `Slider` | Rótulo visível, ligado ao controle. No `RadioGroup` e no `CheckboxGroup`, é o título do grupo. |
 | `error` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup` | Mensagem de erro: marca o campo com `aria-invalid` (no `CheckboxGroup`, cada caixa), aparece com `role="alert"` e substitui o `helperText`. No `Checkbox` e no `Switch`, fica embaixo do rótulo e fora do `<label>`. |
 | `helperText` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker`, `Checkbox`, `Switch`, `RadioGroup`, `CheckboxGroup` | Texto de apoio sob o campo, ligado ao controle por `aria-describedby`. No `Checkbox` e no `Switch`, fica embaixo do rótulo e fora do `<label>`. |
 | `fullWidth` | `Button`, `ButtonLink`, `SegmentedControl`, `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker` | Ocupa toda a largura disponível. |
+| `iconOnly` | `Button` | Botão só de ícone: quadrado, com a largura igual à altura do tamanho (a densidade `compact` e `--enchase-control-height-*` mexem nela), o mesmo preenchimento nos quatro lados e o ícone no centro, em qualquer variante. Não há texto para dar nome ao botão, então passe `aria-label`. |
 | `labelPlacement` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker` | Onde fica o rótulo: `floating` (dentro do campo, sobe ao focar), `stacked` (acima do controle) ou `start` (antes do controle, na mesma linha, com a largura da coluna em `--enchase-input-label-width`). Sem a prop, vale o `style` do tema: `floating` no `enchase` e `stacked` no `shadcn`. Com uma `variant` diferente de `outlined`, o `floating` vira `stacked`. |
 | `required` | `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox`, `DatePicker` | Campo obrigatório: o atributo nativo `required` vai ao elemento (é ele que a tecnologia assistiva e a validação do navegador leem) e, com `label`, um `*` depois do texto do rótulo, na cor `error` do tema, mostra isso a quem vê. O `*` é só visual (`aria-hidden`) e não entra no nome acessível. |
 | `externalIcon` | `ButtonLink` | Com `target="_blank"`, mostra o ícone de link externo (padrão `true`). `false` tira só o ícone e mantém o texto "abre em nova aba" para leitores de tela; em um link só de ícone com `aria-label`, ponha o aviso no próprio rótulo. |

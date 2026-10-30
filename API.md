@@ -75,13 +75,14 @@ Also accepts the other HTML attributes of the root element.
 
 ### Button
 
-A button with four variants and three sizes, and press feedback made with CSS only. It is a real `<button>` and accepts its attributes.
+A button with five variants and three sizes, and press feedback made with CSS only. It is a real `<button>` and accepts its attributes.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Visual style of the button. |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger'` | `'primary'` | Visual style of the button. `danger` is filled with the error color of the theme, for an action that deletes something or cannot be undone. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the button. |
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
+| `iconOnly` | `boolean` | `false` | Makes the button a square for a single icon: as wide as it is tall in every size, with the same padding on the four sides and the icon in the middle. There is no text to name it, so pass `aria-label`; without it a screen reader announces an empty button. |
 | `animation` | `false \| { recipe, from, tuning }` | `press` | Motion recipe of the button, made with CSS only. Use false to turn the animation off, or { recipe, tuning } with press (scales on press) or lift (rises on hover); other recipes are ignored. The duration, the scale and the distance become the variables --enchase-button-duration, --enchase-button-scale and --enchase-button-distance. Use the controls of the Motion group to experiment. The root element accepts className and style, and exposes data-slot="button". |
 
 Also accepts the other attributes of `<button>`, passed on to the element.
@@ -96,7 +97,7 @@ A link that looks like a `Button`. It is a real `<a href>`, and goes through the
 | `native` | `boolean` | `false` | Leaves the click to the browser even on an app route. |
 | `externalIcon` | `boolean` | `true` | With `target="_blank"`, shows the external link icon after the content. `false` removes only the icon (useful in an icon-only button) and keeps the "opens in a new tab" text for screen readers; in an icon-only link with `aria-label`, put the warning in the label itself. |
 | `animation` | `false \| { recipe, from, tuning }` | `press` | Motion recipe of the `Button`. Use false to turn it off, or { recipe, tuning } with press or lift. |
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Visual style, the same as the `Button`. |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger'` | `'primary'` | Visual style, the same as the `Button`. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size, the same as the `Button`. |
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
 
@@ -247,7 +248,7 @@ A ready-made confirmation modal: an alertdialog with the question and the cancel
 | `message` | `string` | *required* | Text of the question, in the body of the modal. The dialog is an alertdialog and the body becomes the accessible description. |
 | `confirmText` | `string` | — | Text of the confirm button. Without it, it uses labels.confirm from the UIProvider. |
 | `cancelText` | `string` | — | Text of the cancel button, which receives the initial focus. Without it, it uses labels.cancel from the UIProvider. |
-| `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost'` | `'primary'` | Style of the confirm button, the same as in the Button. |
+| `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger'` | `'primary'` | Style of the confirm button, the same as in the Button. |
 | `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
 | `animation` | `MotionOverride` | — | false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale, as in the Modal. |
 | `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
@@ -1222,6 +1223,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 
 | Hook | Default | Property |
 | --- | --- | --- |
+| `--enchase-button-background-danger` | `var(--enchase-color-error)` | `background-color` |
+| `--enchase-button-background-danger-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
 | `--enchase-button-background-ghost-disabled` | `transparent` | `background-color` |
 | `--enchase-button-background-outline` | `transparent` | `background-color` |
 | `--enchase-button-background-outline-disabled` | `transparent` | `background-color` |
@@ -1229,11 +1232,15 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-background-primary-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
 | `--enchase-button-background-secondary` | `var(--enchase-color-primary-container)` | `background-color` |
 | `--enchase-button-background-secondary-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
+| `--enchase-button-border-color-danger-disabled` | `transparent` | `border-color` |
 | `--enchase-button-border-color-ghost-disabled` | `transparent` | `border-color` |
 | `--enchase-button-border-color-outline` | `var(--enchase-color-border-strong)` | `border-color` |
 | `--enchase-button-border-color-outline-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `border-color` |
 | `--enchase-button-border-color-primary-disabled` | `transparent` | `border-color` |
 | `--enchase-button-border-color-secondary-disabled` | `transparent` | `border-color` |
+| `--enchase-button-color-danger` | `var(--enchase-color-on-error)` | `color` |
+| `--enchase-button-color-danger-disabled` | `var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))` | `color` |
+| `--enchase-button-color-danger-hover` | `var(--enchase-color-on-error)` | `color` |
 | `--enchase-button-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-button-color-ghost` | `var(--enchase-color-primary)` | `color` |
 | `--enchase-button-color-ghost-disabled` | `var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))` | `color` |
@@ -1257,9 +1264,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-letter-spacing` | `0.01em` (`--enchase-letter-spacing-control`) | `letter-spacing` |
 | `--enchase-button-line-height` | `1.2` (`--enchase-line-height-tight`) | `line-height` |
 | `--enchase-button-opacity-disabled` | `1` | `opacity` |
-| `--enchase-button-padding-block-lg` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
-| `--enchase-button-padding-block-md` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
-| `--enchase-button-padding-block-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-button-padding-block-lg` | `0.25rem` (`--enchase-space-xs`) | `padding-block`, `padding-inline` |
+| `--enchase-button-padding-block-md` | `0.25rem` (`--enchase-space-xs`) | `padding-block`, `padding-inline` |
+| `--enchase-button-padding-block-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-block`, `padding-inline` |
 | `--enchase-button-padding-inline-ghost` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-button-padding-inline-lg` | `2rem` (`--enchase-space-xl`) | `padding-inline` |
 | `--enchase-button-padding-inline-md` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
@@ -1269,6 +1276,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-radius-md` | `var(--enchase-button-radius, var(--enchase-radius-button))` | `border-radius` |
 | `--enchase-button-radius-sm` | `var(--enchase-button-radius, var(--enchase-radius-button))` | `border-radius` |
 | `--enchase-button-scale` | `0.97` | `transform` (also in ThemeToggle) |
+| `--enchase-button-shadow-danger` | `none` | `box-shadow` |
+| `--enchase-button-shadow-danger-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
 | `--enchase-button-shadow-ghost` | `none` | `box-shadow` |
 | `--enchase-button-shadow-outline` | `none` | `box-shadow` |
 | `--enchase-button-shadow-primary` | `none` | `box-shadow` |

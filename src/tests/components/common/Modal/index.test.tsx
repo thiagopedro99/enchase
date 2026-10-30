@@ -279,6 +279,19 @@ describe('ConfirmModal', () => {
     expect(onConfirm).toHaveBeenCalledTimes(1)
     expect(onClose).toHaveBeenCalledTimes(1)
   })
+
+  it('gives the confirm button the variant it receives, the danger one included, and keeps the cancel button as an outline', async () => {
+    renderWithProviders(<ConfirmModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" confirmVariant="danger" />)
+
+    expect(await screen.findByRole('button', { name: 'Confirmar' })).toHaveAttribute('data-variant', 'danger')
+    expect(screen.getByRole('button', { name: 'Cancelar' })).toHaveAttribute('data-variant', 'outline')
+  })
+
+  it('confirms with the primary variant when none is given', async () => {
+    renderWithProviders(<ConfirmModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" />)
+
+    expect(await screen.findByRole('button', { name: 'Confirmar' })).toHaveAttribute('data-variant', 'primary')
+  })
 })
 
 const size = { scroll: 300, client: 300 }

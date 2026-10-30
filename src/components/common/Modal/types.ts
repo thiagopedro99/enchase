@@ -1,4 +1,5 @@
 import type { PortalContainer } from '@utils/portalContainer.ts'
+import type { ButtonVariant } from '../Button/types.ts'
 import type { MotionOverride } from '@motion/types.ts'
 import type { CSSProperties, ReactNode } from 'react'
 
@@ -35,7 +36,7 @@ export interface ConfirmModalProps {
   message: string
   confirmText?: string | undefined
   cancelText?: string | undefined
-  confirmVariant?: 'primary' | 'secondary' | 'outline' | 'ghost' | undefined
+  confirmVariant?: ButtonVariant | undefined
   container?: PortalContainer | undefined
   animation?: MotionOverride | undefined
   className?: string | undefined

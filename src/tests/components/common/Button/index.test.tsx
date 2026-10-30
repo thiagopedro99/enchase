@@ -72,6 +72,39 @@ describe('Button', () => {
     expect(button).toHaveAttribute('data-full-width')
   })
 
+  it('reflects the danger variant', () => {
+    renderWithProviders(<Button variant="danger">Delete</Button>)
+
+    expect(screen.getByRole('button', { name: 'Delete' })).toHaveAttribute('data-variant', 'danger')
+  })
+
+  it('marks an icon-only button with an attribute, and leaves a button with text without it', () => {
+    renderWithProviders(
+      <>
+        <Button>Send</Button>
+        <Button iconOnly aria-label="Add">
+          +
+        </Button>
+      </>
+    )
+
+    expect(screen.getByRole('button', { name: 'Send' })).not.toHaveAttribute('data-icon-only')
+    expect(screen.getByRole('button', { name: 'Add' })).toHaveAttribute('data-icon-only')
+  })
+
+  it('does not pass the icon-only prop to the element', () => {
+    renderWithProviders(
+      <Button iconOnly aria-label="Add">
+        +
+      </Button>
+    )
+
+    const button = screen.getByRole('button', { name: 'Add' })
+
+    expect(button).not.toHaveAttribute('icononly')
+    expect(button).not.toHaveAttribute('iconOnly')
+  })
+
   it('does not pass its style props to the element', () => {
     renderWithProviders(
       <Button variant="ghost" size="sm" fullWidth>
@@ -112,6 +145,34 @@ describe('Button', () => {
     )
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('has no axe violations for the danger variant and for an icon-only button that has a name', async () => {
+    const { container } = renderWithProviders(
+      <>
+        <Button variant="danger">Delete</Button>
+        <Button variant="danger" disabled>
+          Delete
+        </Button>
+        <Button variant="ghost" iconOnly aria-label="Add">
+          <svg aria-hidden="true" focusable="false" />
+        </Button>
+      </>
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('needs a name from the caller when it has only an icon: without aria-label, axe reports a button with no discernible text', async () => {
+    const { container } = renderWithProviders(
+      <Button iconOnly>
+        <svg aria-hidden="true" focusable="false" />
+      </Button>
+    )
+
+    const results = await axe(container)
+
+    expect(results.violations.map((violation) => violation.id)).toEqual(['button-name'])
   })
 })
 

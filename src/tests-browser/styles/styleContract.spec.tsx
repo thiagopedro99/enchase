@@ -62,6 +62,10 @@ const everything = (
       <Button variant="secondary">Secondary</Button>
       <Button variant="outline">Outline</Button>
       <Button variant="ghost">Ghost</Button>
+      <Button variant="danger">Danger</Button>
+      <Button variant="ghost" iconOnly aria-label="Add">
+        <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" />
+      </Button>
     </div>
     <Input label="Email" helperText="Never shared" />
     <Input label="Email" defaultValue="ana@" error="Invalid email" />

@@ -1,5 +1,6 @@
 import { Button } from 'enchase'
-import { defaultDisabled, defaultFullWidth, defaultRecipe, defaultSize, defaultVariant, motionLabels, toAnimation } from './defaultData.ts'
+import { PlusIcon } from 'enchase/icons'
+import { defaultDisabled, defaultFullWidth, defaultIconOnly, defaultRecipe, defaultSize, defaultVariant, motionLabels, toAnimation } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { ButtonStoryArgs } from './types.ts'
@@ -13,21 +14,22 @@ const meta = {
     variant: defaultVariant,
     size: defaultSize,
     fullWidth: defaultFullWidth,
+    iconOnly: defaultIconOnly,
     disabled: defaultDisabled,
     motionRecipe: 'default'
   },
   parameters: {
     docs: {
       description: {
-        component: 'A button with four variants and three sizes, and press feedback made with CSS only. It is a real `<button>` and accepts its attributes.'
+        component: 'A button with five variants and three sizes, and press feedback made with CSS only. It is a real `<button>` and accepts its attributes.'
       }
     }
   },
   argTypes: {
     variant: {
-      description: 'Visual style of the button.',
+      description: 'Visual style of the button. `danger` is filled with the error color of the theme, for an action that deletes something or cannot be undone.',
       control: 'select',
-      options: ['primary', 'secondary', 'outline', 'ghost'],
+      options: ['primary', 'secondary', 'outline', 'ghost', 'danger'],
       table: { defaultValue: { summary: defaultVariant } }
     },
     size: {
@@ -40,6 +42,11 @@ const meta = {
       description: 'Takes up the full available width.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultFullWidth) } }
+    },
+    iconOnly: {
+      description: 'Makes the button a square for a single icon: as wide as it is tall in every size, with the same padding on the four sides and the icon in the middle. There is no text to name it, so pass `aria-label`; without it a screen reader announces an empty button.',
+      control: 'boolean',
+      table: { defaultValue: { summary: String(defaultIconOnly) } }
     },
     disabled: {
       description: 'Disables the button and blocks the click.',
@@ -95,6 +102,28 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+export const Danger: Story = {
+  args: { variant: 'danger', children: 'Delete project' },
+  parameters: {
+    docs: {
+      description: {
+        story: 'Filled with the error color of the theme and the text color made for it, for an action that deletes something or cannot be undone. It has the same hooks by state as the primary variant, and the `confirmVariant` of the `ConfirmModal` accepts it.'
+      }
+    }
+  }
+}
+
+export const IconOnly: Story = {
+  args: { iconOnly: true, variant: 'ghost', 'aria-label': 'Add item', children: <PlusIcon /> },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A square for a single icon, in every size and variant. The icon is decorative and there is no text, so the button needs an `aria-label`.'
+      }
+    }
+  }
+}
 
 export const CustomHooks: Story = {
   parameters: {

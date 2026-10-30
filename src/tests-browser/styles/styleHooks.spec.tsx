@@ -96,7 +96,7 @@ describe('the disabled opacity of the selection controls from the hooks', () => 
 })
 
 describe('the disabled button from the hooks', () => {
-  const variants = ['primary', 'secondary', 'outline', 'ghost'] as const
+  const variants = ['primary', 'secondary', 'outline', 'ghost', 'danger'] as const
 
   const buttons = (
     <>

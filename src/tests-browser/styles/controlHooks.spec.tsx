@@ -34,7 +34,8 @@ const buttons = [
   ['primary', 'rgb(1, 2, 3)', 'rgb(4, 5, 6)'],
   ['secondary', 'rgb(7, 8, 9)', 'rgb(10, 11, 12)'],
   ['outline', 'rgb(13, 14, 15)', undefined],
-  ['ghost', 'rgb(13, 14, 15)', undefined]
+  ['ghost', 'rgb(13, 14, 15)', undefined],
+  ['danger', 'rgb(16, 17, 18)', 'rgb(19, 20, 21)']
 ] as const
 
 describe('the button from the hooks', () => {
@@ -44,7 +45,9 @@ describe('the button from the hooks', () => {
       '--enchase-button-shadow-primary-hover': '0 0 0 3px rgb(4, 5, 6)',
       '--enchase-button-color-secondary-hover': 'rgb(7, 8, 9)',
       '--enchase-button-shadow-secondary-hover': '0 0 0 3px rgb(10, 11, 12)',
-      '--enchase-button-color-outline-hover': 'rgb(13, 14, 15)'
+      '--enchase-button-color-outline-hover': 'rgb(13, 14, 15)',
+      '--enchase-button-color-danger-hover': 'rgb(16, 17, 18)',
+      '--enchase-button-shadow-danger-hover': '0 0 0 3px rgb(19, 20, 21)'
     })
     renderInBrowser(
       <>
@@ -64,6 +67,31 @@ describe('the button from the hooks', () => {
 
       if (shadow) await becomes(button, 'box-shadow', new RegExp(shadow.replace(/[()]/g, '\\$&')))
     }
+  })
+})
+
+describe('the danger button from the hooks', () => {
+  it('takes the background, the color and the shadow of a resting danger button from their hooks', () => {
+    hooked(
+      [
+        ['--enchase-button-background-danger', 'rgb(1, 2, 3)', at('button'), 'background-color'],
+        ['--enchase-button-color-danger', 'rgb(4, 5, 6)', at('button'), 'color'],
+        ['--enchase-button-shadow-danger', '0 0 0 3px rgb(7, 8, 9)', at('button'), 'box-shadow', /rgb\(7, 8, 9\)/]
+      ],
+      <Button variant="danger">Delete</Button>
+    )
+  })
+
+  it('leaves the other variants alone when the hooks of the danger variant are set', () => {
+    onRoot({ '--enchase-button-background-danger': 'rgb(1, 2, 3)', '--enchase-button-color-danger': 'rgb(4, 5, 6)' })
+    renderInBrowser(
+      <>
+        <Button variant="primary">Save</Button>
+        <Button variant="secondary">Later</Button>
+      </>
+    )
+
+    expect(parts('button').map((button) => [getComputedStyle(button).backgroundColor, getComputedStyle(button).color])).not.toContainEqual(['rgb(1, 2, 3)', 'rgb(4, 5, 6)'])
   })
 })
 

@@ -8,6 +8,8 @@ export const defaultSize: ButtonSize = 'md'
 
 export const defaultFullWidth = false
 
+export const defaultIconOnly = false
+
 export const defaultDisabled = false
 
 export const defaultRecipe: RecipeName = 'press'

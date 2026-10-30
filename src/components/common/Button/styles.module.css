@@ -98,8 +98,32 @@
   box-shadow: var(--enchase-button-shadow-ghost, none);
 }
 
+.button:where([data-variant='danger']) {
+  background-color: var(--enchase-button-background-danger, var(--enchase-color-error));
+  color: var(--enchase-button-color-danger, var(--enchase-color-on-error));
+  box-shadow: var(--enchase-button-shadow-danger, none);
+}
+
 :where(.button[data-size][data-variant='ghost']) {
   padding-inline: var(--enchase-button-padding-inline-ghost, var(--enchase-space-md));
+}
+
+:where(.button[data-size='sm'][data-icon-only]) {
+  min-block-size: max(24px, var(--enchase-control-height-sm, 2rem));
+  min-inline-size: max(24px, var(--enchase-control-height-sm, 2rem));
+  padding-inline: var(--enchase-button-padding-block-sm, var(--enchase-space-xs));
+}
+
+:where(.button[data-size='md'][data-icon-only]) {
+  min-block-size: max(24px, var(--enchase-control-height-md, 2.5rem));
+  min-inline-size: max(24px, var(--enchase-control-height-md, 2.5rem));
+  padding-inline: var(--enchase-button-padding-block-md, var(--enchase-space-xs));
+}
+
+:where(.button[data-size='lg'][data-icon-only]) {
+  min-block-size: max(24px, var(--enchase-control-height-lg, 3rem));
+  min-inline-size: max(24px, var(--enchase-control-height-lg, 3rem));
+  padding-inline: var(--enchase-button-padding-block-lg, var(--enchase-space-xs));
 }
 
 .button:where(:disabled) {
@@ -139,6 +163,12 @@
   border-color: var(--enchase-button-border-color-ghost-disabled, transparent);
 }
 
+.button:where([data-variant='danger']:disabled) {
+  color: var(--enchase-button-color-danger-disabled, var(--enchase-button-color-disabled, var(--enchase-color-text-disabled)));
+  background-color: var(--enchase-button-background-danger-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent));
+  border-color: var(--enchase-button-border-color-danger-disabled, transparent);
+}
+
 .button:focus-visible {
   outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
   outline-offset: var(--enchase-focus-offset, 2px);
@@ -166,6 +196,11 @@
   .button[data-variant='outline']:hover:not(:disabled),
   .button[data-variant='ghost']:hover:not(:disabled) {
     color: var(--enchase-button-color-outline-hover, var(--enchase-color-primary));
+  }
+
+  .button[data-variant='danger']:hover:not(:disabled) {
+    color: var(--enchase-button-color-danger-hover, var(--enchase-color-on-error));
+    box-shadow: var(--enchase-button-shadow-danger-hover, var(--enchase-shadow-sm));
   }
 
   @media (prefers-reduced-motion: no-preference) {
