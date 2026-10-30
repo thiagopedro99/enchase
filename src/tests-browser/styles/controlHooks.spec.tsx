@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest'
 import { userEvent } from 'vitest/browser'
 
 import Badge from '@components/common/Badge/index.tsx'
+import Breadcrumbs from '@components/common/Breadcrumbs/index.tsx'
 import Button from '@components/common/Button/index.tsx'
 import ButtonLink from '@components/common/ButtonLink/index.tsx'
 import Input from '@components/common/Input/index.tsx'
@@ -12,16 +13,21 @@ import NumberInput from '@components/common/NumberInput/index.tsx'
 import Pagination from '@components/common/Pagination/index.tsx'
 import Popover from '@components/common/Popover/index.tsx'
 import Select from '@components/common/Select/index.tsx'
+import Sidebar from '@components/common/Sidebar/index.tsx'
 import Tag from '@components/common/Tag/index.tsx'
 import Textarea from '@components/common/Textarea/index.tsx'
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 import Tooltip from '@components/common/Tooltip/index.tsx'
+import Footer from '@components/footer/index.tsx'
+import Brand from '@components/layout/subcomponentes/Brand/index.tsx'
+import Navbar from '@components/navbar/index.tsx'
+import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { renderInBrowser } from '../support/harness.tsx'
 import { at, becomes, expectHooks, hooked, onRoot, part, parts, setHooks } from '../support/hookProbes.ts'
 import { pressMouse, releaseMouse } from '../support/pointer.ts'
 
 import type { Probe } from '../support/hookProbes.ts'
-import type { ReactElement } from 'react'
+import type { CSSProperties, ReactElement, ReactNode } from 'react'
 
 afterEach(async () => {
   await releaseMouse()
@@ -321,6 +327,126 @@ describe('the link and the theme toggle from the hooks', () => {
     await userEvent.hover(document.querySelector('button') as HTMLButtonElement)
 
     await becomes(() => document.querySelector('button'), 'color', 'rgb(1, 2, 3)')
+  })
+})
+
+describe('the line height of the link from the hook', () => {
+  const stage = (children: ReactNode, lineHeight = 'normal') => (
+    <div style={{ display: 'flex', alignItems: 'flex-start', fontSize: '14px', lineHeight }}>{children}</div>
+  )
+
+  const anchors = () => [...document.body.querySelectorAll<HTMLAnchorElement>('a')]
+
+  const heightOf = (element: Element) => element.getBoundingClientRect().height
+
+  const lineHeightOf = (element: Element) => getComputedStyle(element).lineHeight
+
+  const ratioOf = (element: Element) => Math.round((parseFloat(lineHeightOf(element)) / parseFloat(getComputedStyle(element).fontSize)) * 100) / 100
+
+  const inheritedBy = (element: HTMLElement) => {
+    const probe = document.createElement('span')
+
+    probe.style.fontSize = getComputedStyle(element).fontSize
+    element.parentElement?.append(probe)
+
+    const inherited = lineHeightOf(probe)
+
+    probe.remove()
+
+    return inherited
+  }
+
+  const crumbs = [
+    { id: 'home', label: 'Home', href: '/' },
+    { id: 'docs', label: 'Docs', href: '/docs' },
+    { id: 'guides', label: 'Guides', href: '/guides' },
+    { id: 'page', label: 'Page' }
+  ]
+
+  const contexts: [string, ReactElement, string][] = [
+    ['the footer', <Footer companyName="Enchase" notice="MIT" links={[{ label: 'Docs', href: '/docs' }]} />, '[data-slot="footer-link"]'],
+    ['the navbar', <Navbar sections={demoSections} />, '[data-slot="navbar-logo"], [data-slot="link"]'],
+    ['the sidebar', <Sidebar sections={demoSections} currentHref="/" />, '[data-slot="link"]'],
+    ['the brand of the layout', <Brand name="Enchase" />, '[data-slot="brand"]'],
+    ['the breadcrumbs next to the current page', <Breadcrumbs items={crumbs} />, '[data-slot="breadcrumbs-item"]:not([data-priority="low"]) [data-slot="breadcrumbs-link"]']
+  ]
+
+  const lowCrumbs = () => [...document.body.querySelectorAll<HTMLElement>('[data-slot="breadcrumbs-item"][data-priority="low"] [data-slot="breadcrumbs-link"]')]
+
+  it.each(['normal', '30px', '1.25'])('inherits the line height of its context when no hook is set, as a bare anchor does (%s)', (lineHeight) => {
+    renderInBrowser(
+      stage(
+        <>
+          <Link href="/docs">Docs</Link>
+          <a href="/bare">Bare</a>
+        </>,
+        lineHeight
+      )
+    )
+    const [link, bare] = anchors()
+
+    expect(lineHeightOf(link)).toBe(lineHeightOf(bare))
+    expect(heightOf(link)).toBe(heightOf(bare))
+  })
+
+  it('leaves a standalone link of 14px below the 24px floor of the target when no hook is set', () => {
+    renderInBrowser(stage(<Link href="/docs">Docs</Link>))
+
+    expect(heightOf(anchors()[0])).toBeLessThan(24)
+  })
+
+  it('takes the line height from its hook, which lifts a standalone link of 14px to the 24px floor of the target with 1.7143', () => {
+    onRoot({ '--enchase-link-line-height': '1.7143' })
+    renderInBrowser(stage(<Link href="/docs">Docs</Link>))
+    const [link] = anchors()
+
+    expect(parseFloat(lineHeightOf(link))).toBeCloseTo(24, 1)
+    expect(heightOf(link)).toBeGreaterThanOrEqual(24)
+    expect(heightOf(link)).toBeLessThan(24.1)
+  })
+
+  it('takes the hook from a wrapper of the page and from the style of the link itself', () => {
+    renderInBrowser(
+      <div style={{ '--enchase-link-line-height': '2' } as CSSProperties}>
+        <Link href="/first">First</Link>
+        <Link href="/second" style={{ '--enchase-link-line-height': '3' } as CSSProperties}>
+          Second
+        </Link>
+      </div>
+    )
+
+    expect(anchors().map(ratioOf)).toEqual([2, 3])
+  })
+
+  it.each(contexts)('keeps the line height of the links of %s as they inherit it when no hook is set', (_name, ui, selector) => {
+    renderInBrowser(<div style={{ lineHeight: '2.5' }}>{ui}</div>)
+    const links = [...document.body.querySelectorAll<HTMLElement>(selector)]
+
+    expect(links.length).toBeGreaterThan(0)
+    expect(links.map(lineHeightOf)).toEqual(links.map(inheritedBy))
+  })
+
+  it.each(contexts)('lets the hook reach the links of %s', (_name, ui, selector) => {
+    onRoot({ '--enchase-link-line-height': '2' })
+    renderInBrowser(ui)
+    const links = [...document.body.querySelectorAll<HTMLElement>(selector)]
+
+    expect(links.length).toBeGreaterThan(0)
+    expect(links.map(ratioOf)).toEqual(links.map(() => 2))
+  })
+
+  it('keeps the line height the low priority crumbs of the breadcrumbs set for themselves, with and without the hook', () => {
+    const { unmount } = renderInBrowser(<Breadcrumbs items={crumbs} />)
+    const without = lowCrumbs().map(lineHeightOf)
+
+    unmount()
+    onRoot({ '--enchase-link-line-height': '2' })
+    renderInBrowser(<Breadcrumbs items={crumbs} />)
+
+    expect([without, lowCrumbs().map(lineHeightOf)]).toEqual([
+      ['28px', '28px'],
+      ['28px', '28px']
+    ])
   })
 })
 

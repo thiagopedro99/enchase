@@ -4,6 +4,7 @@ import { ClickProbe } from '@docs/shared/components/ClickProbe.tsx'
 import { hrefCases } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { CSSProperties } from 'react'
 
 const meta = {
   title: 'Components/Link',
@@ -79,5 +80,26 @@ export const WhoHandlesEachHref: Story = {
         ))}
       </ul>
     </ClickProbe>
+  )
+}
+
+export const CustomHooks: Story = {
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      description: {
+        story: 'The line height of a link is the one of the text around it until `--enchase-link-line-height` is set. A link that stands alone in a flex or grid container is as tall as its line, so a style can give a link of 14 px a line height of 1.7143 to make it 24 px tall, the floor of a target. The shadows draw the box of each link.'
+      }
+    }
+  },
+  render: () => (
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.5rem', fontSize: '0.875rem' }}>
+      <Link href="/about" style={{ boxShadow: '0 0 0 1px var(--enchase-color-border-strong)' }}>
+        Inherited line height
+      </Link>
+      <Link href="/about" style={{ boxShadow: '0 0 0 1px var(--enchase-color-border-strong)', '--enchase-link-line-height': '1.7143' } as CSSProperties}>
+        Line height of 1.7143
+      </Link>
+    </div>
   )
 }

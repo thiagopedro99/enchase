@@ -1655,6 +1655,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-link-color-hover` | `var(--enchase-color-primary-hover)` | `color` |
 | `--enchase-link-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-link-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-link-line-height` | `inherit` | `line-height` |
 | `--enchase-link-radius` | `0.5rem` (`--enchase-radius-sm`) | `border-radius` |
 | `--enchase-link-underline-offset` | `0.2em` | `text-underline-offset` |
 

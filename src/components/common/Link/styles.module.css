@@ -2,6 +2,7 @@
   color: var(--enchase-link-color, var(--enchase-color-primary));
   text-decoration: underline;
   text-underline-offset: var(--enchase-link-underline-offset, 0.2em);
+  line-height: var(--enchase-link-line-height, inherit);
   border-radius: var(--enchase-link-radius, var(--enchase-radius-sm));
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
