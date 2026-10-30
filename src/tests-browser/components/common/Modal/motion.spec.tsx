@@ -5,7 +5,7 @@ import { page, userEvent } from 'vitest/browser'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { renderInBrowser } from '../../../support/harness.tsx'
 import { setReducedMotion } from '../../../support/media.ts'
-import { waitForSettled } from '../../../support/settle.ts'
+import { nextExit, waitForSettled } from '../../../support/settle.ts'
 
 import type { MotionOverride } from '@motion/types.ts'
 
@@ -59,25 +59,27 @@ describe('Modal motion in a real browser', () => {
     renderInBrowser(<Page animation={slow} />, 'auto')
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.element(page.getByRole('dialog')).toBeVisible()
+    await expect.poll(() => panel()?.getAttribute('data-state')).toBe('open')
     await waitForSettled(panel)
 
+    const exiting = nextExit(panel)
+
     await userEvent.keyboard('{Escape}')
-    await expect.poll(() => panel()?.getAttribute('data-state')).toBe('exiting')
-
-    expect(panel()).not.toBeNull()
-
-    await expect.poll(() => panel(), { timeout: 2000 }).toBeNull()
+    await expect(exiting).resolves.toBeUndefined()
+    await expect.poll(() => panel(), { timeout: 4000 }).toBeNull()
   })
 
   it('reopens in the middle of the exit and ends fully open', async () => {
     renderInBrowser(<Page animation={slow} />, 'auto')
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
     await expect.element(page.getByRole('dialog')).toBeVisible()
+    await expect.poll(() => panel()?.getAttribute('data-state')).toBe('open')
     await waitForSettled(panel)
 
+    const reopened = nextExit(panel).then(() => (document.querySelector('button') as HTMLButtonElement).click())
+
     await userEvent.keyboard('{Escape}')
-    await expect.poll(() => panel()?.getAttribute('data-state')).toBe('exiting')
-    ;(document.querySelector('button') as HTMLButtonElement).click()
+    await expect(reopened).resolves.toBeUndefined()
     await expect.poll(() => panel()?.getAttribute('data-state')).toBe('open')
     await waitForSettled(panel)
 

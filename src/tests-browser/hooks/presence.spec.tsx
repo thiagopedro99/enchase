@@ -4,7 +4,7 @@ import { page } from 'vitest/browser'
 
 import { usePresence } from '@hooks/usePresence.ts'
 import { renderInBrowser } from '../support/harness.tsx'
-import { soak } from '../support/settle.ts'
+import { nextExit, soak } from '../support/settle.ts'
 
 const duration = 400
 
@@ -73,11 +73,12 @@ describe('usePresence in a real browser', () => {
 
     await toggle.click()
     await expect.poll(() => panel()?.dataset.state).toBe('open')
+    await expect.poll(() => Number(getComputedStyle(panel() as HTMLElement).opacity)).toBe(1)
+
+    const reopened = nextExit(panel).then(() => (document.querySelector('button') as HTMLButtonElement).click())
 
     await toggle.click()
-    await expect.poll(() => panel()?.dataset.state).toBe('exiting')
-    await toggle.click()
-
+    await expect(reopened).resolves.toBeUndefined()
     await expect.poll(() => panel()?.dataset.state).toBe('open')
     await soak(duration * 2)
     expect(panel()).not.toBeNull()

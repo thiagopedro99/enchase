@@ -18,6 +18,23 @@ export const nextEvent = (target: EventTarget, type: string, timeout = 4000) =>
     target.addEventListener(type, handler, { once: true })
   })
 
+export const nextExit = (read: () => Element | null | undefined, timeout = 4000) =>
+  new Promise<void>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      observer.disconnect()
+      reject(new Error(`no exit started in ${timeout}ms`))
+    }, timeout)
+    const observer = new MutationObserver(() => {
+      if (read()?.getAttribute('data-state') !== 'exiting') return
+
+      clearTimeout(timer)
+      observer.disconnect()
+      resolve()
+    })
+
+    observer.observe(document.body, { attributes: true, childList: true, subtree: true })
+  })
+
 export const soak = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
 export const frames = async (count = 2) => {
