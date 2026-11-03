@@ -8,6 +8,9 @@ export interface AccordionItem {
   disabled?: boolean | undefined
 }
 
+export type AccordionVariant = 'outlined' | 'borderless' | 'ghost'
+export type AccordionIconPosition = 'start' | 'end'
+
 export interface AccordionProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue' | 'children'> {
   items: AccordionItem[]
   multiple?: boolean | undefined
@@ -15,5 +18,7 @@ export interface AccordionProps extends Omit<HTMLAttributes<HTMLDivElement>, 'on
   defaultValue?: string[] | undefined
   onValueChange?: ((value: string[]) => void) | undefined
   headingLevel?: 2 | 3 | 4 | 5 | 6 | undefined
+  variant?: AccordionVariant | undefined
+  iconPosition?: AccordionIconPosition | undefined
   animation?: MotionOverride | undefined
 }

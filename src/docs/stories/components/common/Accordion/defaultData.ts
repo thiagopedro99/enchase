@@ -2,6 +2,10 @@ export const defaultMultiple = false
 
 export const defaultHeadingLevel = 3
 
+export const defaultVariant = 'outlined'
+
+export const defaultIconPosition = 'end'
+
 export const faq = [
   { value: 'shipping', title: 'How long does shipping take?', text: 'We ship within two business days, and you get the tracking code by email.' },
   { value: 'returns', title: 'Can I return a product?', text: 'We accept returns within thirty days, no questions asked, as long as the packaging is intact.' },

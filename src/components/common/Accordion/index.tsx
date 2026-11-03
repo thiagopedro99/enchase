@@ -1,6 +1,6 @@
 import { forwardRef, useId, useRef } from 'react'
 
-import { defaultHeadingLevel, defaultMultiple, accordionBase } from './defaultData.ts'
+import { defaultHeadingLevel, defaultIconPosition, defaultMultiple, defaultVariant, accordionBase } from './defaultData.ts'
 import { ChevronDownIcon } from '../Icon/icons/ChevronDownIcon.tsx'
 import { useControllableState } from '@hooks/useControllableState.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
@@ -20,13 +20,22 @@ const targetPosition = (key: string, position: number, count: number) => {
 }
 
 export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
-  ({ items, multiple = defaultMultiple, value, defaultValue, onValueChange, headingLevel = defaultHeadingLevel, animation, ...props }, ref) => {
+  ({ items, multiple = defaultMultiple, value, defaultValue, onValueChange, headingLevel = defaultHeadingLevel, variant = defaultVariant, iconPosition = defaultIconPosition, animation, ...props }, ref) => {
     const baseId = useId()
     const triggerRefs = useRef<(HTMLButtonElement | null)[]>([])
     const [openValues, setOpenValues] = useControllableState<string[]>(value, defaultValue ?? [], onValueChange)
     const expanded = multiple ? openValues : openValues.slice(0, 1)
     const motionStyle = useMotionStyle('pop', 'accordion', animation, undefined, accordionBase)
-    const root = mergeProps({ ...slot('accordion'), className: styles.accordion, style: motionStyle }, props)
+    const root = mergeProps(
+      {
+        ...slot('accordion'),
+        className: styles.accordion,
+        style: motionStyle,
+        'data-variant': variant === defaultVariant ? undefined : variant,
+        'data-icon-position': iconPosition === defaultIconPosition ? undefined : iconPosition
+      },
+      props
+    )
     const Heading = `h${headingLevel}` as const
 
     const toggle = (itemValue: string) => {

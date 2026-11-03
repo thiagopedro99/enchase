@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Accordion, Badge, Button } from 'enchase'
-import { defaultHeadingLevel, defaultMultiple, faq } from './defaultData.ts'
+import { defaultHeadingLevel, defaultIconPosition, defaultMultiple, defaultVariant, faq } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { CSSProperties } from 'react'
@@ -54,7 +54,9 @@ const meta = {
   args: {
     items,
     multiple: defaultMultiple,
-    headingLevel: defaultHeadingLevel
+    headingLevel: defaultHeadingLevel,
+    variant: defaultVariant,
+    iconPosition: defaultIconPosition
   },
   parameters: {
     layout: 'padded',
@@ -101,6 +103,18 @@ const meta = {
       options: [2, 3, 4, 5, 6],
       table: { defaultValue: { summary: String(defaultHeadingLevel) } }
     },
+    variant: {
+      description: 'How the list is outlined. `outlined` draws a frame around the list and a line between the items. `borderless` takes the frame away and keeps the lines between the items. `ghost` takes the frame and the lines away.',
+      control: 'inline-radio',
+      options: ['outlined', 'borderless', 'ghost'],
+      table: { defaultValue: { summary: `'${defaultVariant}'` } }
+    },
+    iconPosition: {
+      description: 'Where the arrow is. `end` puts it after the title, pointing down and turning up when the item opens. `start` puts it before the title, pointing to the side where the text goes on when the item is closed and turning down when it opens. The reading order and the focus order do not change.',
+      control: 'inline-radio',
+      options: ['start', 'end'],
+      table: { defaultValue: { summary: `'${defaultIconPosition}'` } }
+    },
     animation: {
       description: 'Animation of the panel, which appears with a fade and a small slide, and of the arrow, which rotates. The height does not animate. false turns it off; { tuning: { duration, distance } } sets the duration in seconds and the slide in pixels.',
       control: false,
@@ -121,6 +135,18 @@ export const WithDefaultValue: Story = {
 
 export const Multiple: Story = {
   args: { multiple: true, defaultValue: ['shipping', 'payment'] }
+}
+
+export const Borderless: Story = {
+  args: { variant: 'borderless' }
+}
+
+export const Ghost: Story = {
+  args: { variant: 'ghost' }
+}
+
+export const IconAtStart: Story = {
+  args: { iconPosition: 'start', defaultValue: ['returns'] }
 }
 
 export const DisabledItem: Story = {

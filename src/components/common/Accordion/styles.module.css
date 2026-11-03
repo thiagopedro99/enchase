@@ -16,6 +16,14 @@
   border-block-start: var(--enchase-border-width, 1px) solid var(--enchase-accordion-item-border-color, var(--enchase-color-border));
 }
 
+.accordion:where([data-variant='borderless'], [data-variant='ghost']) {
+  border-width: 0;
+}
+
+.accordion:where([data-variant='ghost']) .item + .item {
+  border-block-start-width: 0;
+}
+
 .heading {
   margin: 0;
   font: inherit;
@@ -98,6 +106,27 @@
 
 .trigger:disabled .icon {
   color: var(--enchase-accordion-icon-color-disabled, var(--enchase-color-text-disabled));
+}
+
+.accordion:where([data-icon-position='start']) .trigger {
+  justify-content: flex-start;
+}
+
+.accordion:where([data-icon-position='start']) .icon {
+  order: -1;
+  transform: rotate(-90deg);
+}
+
+.accordion:where([data-icon-position='start']) .trigger[aria-expanded='true'] .icon {
+  transform: none;
+}
+
+[dir='rtl'] .accordion:where([data-icon-position='start']) .icon {
+  transform: rotate(90deg);
+}
+
+[dir='rtl'] .accordion:where([data-icon-position='start']) .trigger[aria-expanded='true'] .icon {
+  transform: none;
 }
 
 .panel {

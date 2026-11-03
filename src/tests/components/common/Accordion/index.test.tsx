@@ -260,11 +260,37 @@ describe('Accordion', () => {
     expect(ref.current).toBe(container.querySelector('[data-slot="accordion"]'))
   })
 
+  it('adds no attribute to the root for the outline and the arrow it has by default, and one for each of the others', () => {
+    const { container, unmount } = renderWithProviders(<Accordion items={items} variant="outlined" iconPosition="end" />)
+    const root = () => container.querySelector('[data-slot="accordion"]') as HTMLElement
+
+    expect(root()).not.toHaveAttribute('data-variant')
+    expect(root()).not.toHaveAttribute('data-icon-position')
+    unmount()
+
+    const other = renderWithProviders(<Accordion items={items} variant="ghost" iconPosition="start" />)
+
+    expect(other.container.querySelector('[data-slot="accordion"]')).toHaveAttribute('data-variant', 'ghost')
+    expect(other.container.querySelector('[data-slot="accordion"]')).toHaveAttribute('data-icon-position', 'start')
+  })
+
+  it('keeps the arrow out of the reading and the focus order wherever it is', async () => {
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<Accordion items={items} iconPosition="start" />)
+    const triggers = [...container.querySelectorAll<HTMLElement>('[data-slot="accordion-trigger"]')]
+
+    expect(triggers[0].children[0]).toHaveAttribute('data-slot', 'accordion-title')
+    expect(triggers[0].children[1]).toHaveAttribute('data-slot', 'accordion-icon')
+
+    await user.tab()
+    expect(triggers[0]).toHaveFocus()
+  })
+
   it('does not pass its own props to the page', () => {
-    const { container } = renderWithProviders(<Accordion items={items} multiple defaultValue={['shipping']} onValueChange={() => undefined} headingLevel={4} animation={false} />)
+    const { container } = renderWithProviders(<Accordion items={items} multiple defaultValue={['shipping']} onValueChange={() => undefined} headingLevel={4} variant="ghost" iconPosition="start" animation={false} />)
     const root = container.querySelector('[data-slot="accordion"]') as HTMLElement
 
-    for (const name of ['items', 'multiple', 'value', 'defaultvalue', 'onvaluechange', 'headinglevel', 'animation']) {
+    for (const name of ['items', 'multiple', 'value', 'defaultvalue', 'onvaluechange', 'headinglevel', 'variant', 'iconposition', 'animation']) {
       expect(root, name).not.toHaveAttribute(name)
     }
   })
