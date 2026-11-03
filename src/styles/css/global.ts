@@ -85,6 +85,7 @@ export const globalStylesCss = `
   *:focus-visible {
     outline: ${vars.focus.width} solid var(--enchase-focus-color, ${vars.color.primary});
     outline-offset: ${vars.focus.offset};
+    scroll-margin: calc(${vars.focus.width} + ${vars.focus.offset});
   }
 
   @media (prefers-reduced-motion: reduce) {

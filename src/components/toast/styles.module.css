@@ -189,6 +189,7 @@
 .action:focus-visible {
   outline: var(--enchase-focus-width, 2px) solid currentColor;
   outline-offset: 0;
+  scroll-margin: var(--enchase-focus-width, 2px);
 }
 
 .item:where([data-dismissible='false']) {

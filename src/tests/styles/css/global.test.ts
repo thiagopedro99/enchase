@@ -14,5 +14,6 @@ describe('global styles', () => {
   it('draws the focus ring from the focus tokens, in the color of the theme unless the caller sets one', () => {
     expect(globalStylesCss).toContain('outline: var(--enchase-focus-width) solid var(--enchase-focus-color, var(--enchase-color-primary));')
     expect(globalStylesCss).toContain('outline-offset: var(--enchase-focus-offset);')
+    expect(globalStylesCss).toContain('scroll-margin: calc(var(--enchase-focus-width) + var(--enchase-focus-offset));')
   })
 })

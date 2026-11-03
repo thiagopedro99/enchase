@@ -1,12 +1,17 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
+import { render } from '@testing-library/react'
 import { useEffect } from 'react'
 
 import { usePopoverControl } from '@components/common/Popover/popoverControl.ts'
+import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { renderInBrowser } from '../../../support/harness.tsx'
+import UIProvider from '@components/uiProvider/index.tsx'
+import { Button } from '@components/common/Button/index.tsx'
 import { Menu } from '@components/common/Menu/index.tsx'
 import { frames } from '../../../support/settle.ts'
+import { ptBR } from '@locales/ptBR.ts'
 
 import type { ReactElement } from 'react'
 
@@ -88,7 +93,11 @@ const pageScroll = () => [window.scrollX, window.scrollY]
 
 const openByKeyboard = async () => {
   window.scrollTo(0, 2800)
-  trigger().focus({ preventScroll: true })
+  await userEvent.tab()
+  await userEvent.tab()
+
+  expect(document.activeElement).toBe(trigger())
+
   await userEvent.keyboard('{Enter}')
   await opened()
   await frames(2)
@@ -102,18 +111,27 @@ const showOnly = async (edge: Edge, visible: number) => {
   await frames(3)
 }
 
-const outsideViewport = (element: Element) => {
+const outsideViewport = (element: Element, reach = 0) => {
   const box = element.getBoundingClientRect()
 
-  return Math.max(-box.top, box.bottom - window.innerHeight, -box.left, box.right - window.innerWidth, 0)
+  return Math.max(reach - box.top, box.bottom + reach - window.innerHeight, reach - box.left, box.right + reach - window.innerWidth, 0)
 }
 
 const distanceToEdge = (element: Element, edge: Edge) => Math.abs(edge === 'above' ? element.getBoundingClientRect().top : element.getBoundingClientRect().bottom - window.innerHeight)
 
+const ringReach = (element: Element) => {
+  const ring = getComputedStyle(element)
+
+  return ring.outlineStyle === 'none' ? 0 : parseFloat(ring.outlineOffset) + parseFloat(ring.outlineWidth)
+}
+
 const expectFocusAtTheEdge = (element: Element, edge: Edge) => {
+  const reach = ringReach(element)
+
   expect(document.activeElement).toBe(element)
-  expect(outsideViewport(element)).toBeLessThanOrEqual(1)
-  expect(distanceToEdge(element, edge)).toBeLessThanOrEqual(1)
+  expect(reach).toBeGreaterThan(0)
+  expect(outsideViewport(element, reach)).toBeLessThanOrEqual(1)
+  expect(Math.abs(distanceToEdge(element, edge) - reach)).toBeLessThanOrEqual(1)
 }
 
 afterEach(() => {
@@ -190,6 +208,62 @@ describe.each(kinds)('the $name when it gives the focus back to the page in a re
 
     expect(document.activeElement).toBe(control('Elsewhere'))
     expect(pageScroll()).toEqual(before)
+  })
+})
+
+const renderWithoutGlobalStyles = (ui: ReactElement) =>
+  render(
+    <ColorModeProvider defaultMode="light" storage={null}>
+      <UIProvider locale={ptBR} motion={{ mode: 'never' }} navigate={() => undefined} currentHref="/">
+        {ui}
+      </UIProvider>
+    </ColorModeProvider>
+  )
+
+describe('the Button of the library as the trigger of the Popover, without the GlobalStyles, in a real browser', () => {
+  const buttonPopover = (
+    <Popover
+      content={
+        <>
+          <Button>First</Button>
+          <Button>Last</Button>
+        </>
+      }
+    >
+      <Button>Open</Button>
+    </Popover>
+  )
+
+  it.each(edges)('shows the whole ring of the trigger when Shift+Tab sends the focus back to it, with the trigger cut by the edge %s the viewport', async (edge) => {
+    renderWithoutGlobalStyles(scene(buttonPopover))
+    await openByKeyboard()
+    await showOnly(edge, 6)
+
+    expect(outsideViewport(trigger())).toBeGreaterThan(5)
+
+    await userEvent.keyboard('{Shift>}{Tab}{/Shift}')
+
+    expectFocusAtTheEdge(trigger(), edge)
+    expect(getComputedStyle(trigger()).outlineStyle).toBe('solid')
+  })
+
+  it.each(edges)('shows the whole ring of the control that Tab reaches after the trigger, when it is far %s the viewport', async (edge) => {
+    renderWithoutGlobalStyles(
+      <div style={{ position: 'relative', height: 6000 }}>
+        <Button style={{ position: 'fixed', top: 300, left: 20 }}>Elsewhere</Button>
+        <div style={{ position: 'absolute', top: 3000, left: 300 }}>{buttonPopover}</div>
+        <Button style={{ position: 'absolute', top: afterTops[edge], left: 300 }}>After</Button>
+      </div>
+    )
+    await openByKeyboard()
+    inside().at(-1)?.focus({ preventScroll: true })
+
+    expect(outsideViewport(control('After'))).toBeGreaterThan(1000)
+
+    await userEvent.tab()
+    await closed()
+
+    expectFocusAtTheEdge(control('After'), edge)
   })
 })
 

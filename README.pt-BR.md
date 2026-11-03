@@ -91,7 +91,7 @@ createRoot(document.getElementById('root')!).render(
 
 A fonte padrão é Figtree: carregue-a no app (por exemplo com `@fontsource-variable/figtree`) ou troque a família pelo tema.
 
-O `GlobalStyles` é opcional. Ele acrescenta uma folha pequena, em `@layer enchase-base`: um reset de `box-sizing`, margem e padding, a fonte, a cor e o fundo do tema no `<body>`, o tamanho e o peso dos títulos (o peso lê `--enchase-heading-font-weight`, que cai no peso `medium` do tema), barras de rolagem finas, o anel de foco, a cor da seleção e animações encurtadas sob `prefers-reduced-motion`. Deixe-o de fora se o app já tem a base dele: os componentes se estilizam sozinhos. Nesse caso, dê ao `<body>` as cores do tema (`background-color: var(--enchase-color-background)` e `color: var(--enchase-color-text-primary)`) e ponha `scrollbar-gutter: stable` no `<html>`, para a página não deslocar para o lado quando um modal trava a rolagem.
+O `GlobalStyles` é opcional. Ele acrescenta uma folha pequena, em `@layer enchase-base`: um reset de `box-sizing`, margem e padding, a fonte, a cor e o fundo do tema no `<body>`, o tamanho e o peso dos títulos (o peso lê `--enchase-heading-font-weight`, que cai no peso `medium` do tema), barras de rolagem finas, o anel de foco (com a margem de rolagem que o mantém à vista), a cor da seleção e animações encurtadas sob `prefers-reduced-motion`. Deixe-o de fora se o app já tem a base dele: os componentes se estilizam sozinhos. Nesse caso, dê ao `<body>` as cores do tema (`background-color: var(--enchase-color-background)` e `color: var(--enchase-color-text-primary)`) e ponha `scrollbar-gutter: stable` no `<html>`, para a página não deslocar para o lado quando um modal trava a rolagem.
 
 ## Entradas do pacote
 

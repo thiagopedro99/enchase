@@ -73,4 +73,5 @@
 .logout:focus-visible {
   outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
   outline-offset: var(--enchase-focus-offset, 2px);
+  scroll-margin: calc(var(--enchase-focus-width, 2px) + var(--enchase-focus-offset, 2px));
 }
