@@ -14,6 +14,8 @@ const root = path.resolve(__dirname, '../../components')
 
 const iconsDirectory = path.join(root, 'common/Icon/icons')
 
+const forApps = ['LogOutIcon']
+
 const directional = ['ChevronLeftIcon', 'ChevronRightIcon', 'ChevronsLeftIcon', 'ChevronsRightIcon', 'ExternalLinkIcon', 'LogOutIcon', 'MenuOpenIcon']
 
 const names = Object.keys(icons).sort()
@@ -43,8 +45,19 @@ describe('enchase/icons', () => {
         .flatMap((file) => [...readFileSync(file, 'utf8').matchAll(/Icon\/icons\/(\w+Icon)\.tsx/g)].map((match) => match[1]))
     )
 
-    expect(names).toEqual([...used].sort())
+    expect(names).toEqual([...used, ...forApps].sort())
     expect(names).toHaveLength(20)
+  })
+
+  it('keeps for the apps only the icons that no component draws, and lists each of them by name', () => {
+    const used = new Set(
+      sourceFiles(root)
+        .filter((file) => !file.startsWith(iconsDirectory))
+        .flatMap((file) => [...readFileSync(file, 'utf8').matchAll(/Icon\/icons\/(\w+Icon)\.tsx/g)].map((match) => match[1]))
+    )
+
+    expect(forApps.filter((name) => used.has(name))).toEqual([])
+    expect(forApps.filter((name) => !names.includes(name))).toEqual([])
   })
 
   it('has a source file for every icon it exports and exports every source file', () => {
