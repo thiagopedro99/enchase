@@ -8,6 +8,7 @@ import * as icons from 'enchase/icons'
 import * as locales from 'enchase/locales'
 import * as enchaseStyle from 'enchase/styles/enchase'
 import * as shadcnStyle from 'enchase/styles/shadcn'
+import * as workbenchStyle from 'enchase/styles/workbench'
 import * as theme from 'enchase/theme'
 
 const typeExportsOf = (file: string) => {
@@ -37,11 +38,13 @@ describe('public entries', () => {
   it('exports each style from an entry of its own, with that style and nothing else', () => {
     expect(Object.keys(enchaseStyle)).toEqual(['enchase'])
     expect(Object.keys(shadcnStyle)).toEqual(['shadcn'])
+    expect(Object.keys(workbenchStyle)).toEqual(['workbench'])
   })
 
   it('keeps the data of the styles out of every other entry', () => {
     for (const entry of [main, theme, icons, locales]) {
       expect(entry).not.toHaveProperty('shadcn')
+      expect(entry).not.toHaveProperty('workbench')
       expect(entry).not.toHaveProperty('enchase')
     }
   })

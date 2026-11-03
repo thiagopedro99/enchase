@@ -7,6 +7,7 @@ import { useLabelPlacement, useThemeDefaults } from '@components/colorMode/theme
 import { enchase } from '@styles/presets/enchase.ts'
 import { startStyle } from '@tests/shared/fixtures/styles.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
+import { workbench } from '@styles/presets/workbench.ts'
 
 import type { FieldVariant, LabelPlacement } from '@styles/tokens/types.ts'
 
@@ -50,6 +51,16 @@ describe('the defaults that the theme gives to the components', () => {
   it('takes the stacked label from the shadcn style', () => {
     render(
       <ColorModeProvider storage={null} theme={{ style: shadcn }}>
+        <Probe />
+      </ColorModeProvider>
+    )
+
+    expect(screen.getByTestId('placement')).toHaveTextContent('stacked')
+  })
+
+  it('takes the stacked label from the workbench style', () => {
+    render(
+      <ColorModeProvider storage={null} theme={{ style: workbench }}>
         <Probe />
       </ColorModeProvider>
     )

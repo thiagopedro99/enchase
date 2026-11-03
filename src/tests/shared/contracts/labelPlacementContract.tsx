@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { startStyle } from '@tests/shared/fixtures/styles.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
+import { workbench } from '@styles/presets/workbench.ts'
 
 import type { LabelPlacementContractAdapter } from './types.ts'
 
@@ -83,6 +84,24 @@ export const describeLabelPlacementContract = ({ name, slot, control, placeholde
       unmount()
       render(
         <ColorModeProvider storage={null} theme={{ style: shadcn }}>
+          {ui('floating')}
+        </ColorModeProvider>
+      )
+
+      expect(wrapper()).not.toHaveAttribute('data-label-placement')
+    })
+
+    it('takes the stacked label from the workbench style and lets the prop win', () => {
+      const { unmount } = render(
+        <ColorModeProvider storage={null} theme={{ style: workbench }}>
+          {ui()}
+        </ColorModeProvider>
+      )
+
+      expect(wrapper()).toHaveAttribute('data-label-placement', 'stacked')
+      unmount()
+      render(
+        <ColorModeProvider storage={null} theme={{ style: workbench }}>
           {ui('floating')}
         </ColorModeProvider>
       )

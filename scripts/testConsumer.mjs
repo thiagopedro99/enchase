@@ -21,6 +21,7 @@ import { ChevronDownIcon, CloseIcon } from 'enchase/icons'
 import type { IconProps } from 'enchase/icons'
 import { enchase as enchaseStyle } from 'enchase/styles/enchase'
 import { shadcn } from 'enchase/styles/shadcn'
+import { workbench } from 'enchase/styles/workbench'
 import { createTheme, defineStyle, validateTheme } from 'enchase/theme'
 import type { RadiusOverrides, ShapePreset, ThemeInput, ThemeStyle, ThemeStyleMode } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
@@ -160,6 +161,7 @@ export const normalLineHeight: number = theme.base.fonts.lineHeights.normal
 export const controlSpacing: string = theme.base.fonts.letterSpacings.control
 export const problems = validateTheme(theme)
 export const chosen: ThemeStyle = shadcn
+export const dense: ThemeStyle = workbench
 export const styled = createTheme({ style: chosen })
 export const labelPlacement: 'floating' | 'stacked' | 'start' | undefined = styled.defaults?.labelPlacement
 export const styledProblems = validateTheme(styled)
@@ -242,7 +244,7 @@ try {
 
   console.log('the packed theme.css carries the compact density block once')
 
-  const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/styles': false, 'enchase/styles/theme/style': false }
+  const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/workbench': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/styles': false, 'enchase/styles/theme/style': false }
   const wrong = Object.entries(expected).filter(([specifier, should]) => resolves(specifier) !== should)
 
   if (wrong.length > 0) throw new Error(`the installed package resolves the wrong entries:\n${wrong.map(([specifier, should]) => `  - ${specifier} should ${should ? 'resolve' : 'fail, so forgetting the .css of enchase/styles.css is an error and not an import that does nothing'}`).join('\n')}`)

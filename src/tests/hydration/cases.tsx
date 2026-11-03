@@ -1,6 +1,7 @@
 import { HomeIcon } from '@tests/shared/fixtures/exampleIcons.tsx'
 
 import { shadcn } from '@styles/presets/shadcn.ts'
+import { workbench } from '@styles/presets/workbench.ts'
 
 import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.tsx'
@@ -167,6 +168,19 @@ export const hydrationCases: HydrationCase[] = [
     name: 'ColorModeProvider with the shadcn style and its stacked labels',
     element: (
       <ColorModeProvider theme={{ style: shadcn }}>
+        <Input label="Email" helperText="Never shared" />
+        <NumberInput label="Amount" defaultValue={3} />
+        <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} />
+        <Textarea label="Message" error="Too short" />
+        <Input label="Floating" labelPlacement="floating" />
+      </ColorModeProvider>
+    ),
+    bare: true
+  },
+  {
+    name: 'ColorModeProvider with the workbench style and its stacked labels',
+    element: (
+      <ColorModeProvider theme={{ style: workbench }}>
         <Input label="Email" helperText="Never shared" />
         <NumberInput label="Amount" defaultValue={3} />
         <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} />
