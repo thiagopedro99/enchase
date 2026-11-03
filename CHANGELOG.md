@@ -1,5 +1,41 @@
 # Changelog
 
+## v0.14.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.13.0...v0.14.0)
+
+### Enhancements
+
+- Let a style set its own spacing scale in base ([7489664](https://github.com/thiagopedro99/enchase/commit/7489664))
+- Let a style carry its own compact density ([9eb4709](https://github.com/thiagopedro99/enchase/commit/9eb4709))
+- Emit the compact density of a style in the theme css ([69fa49e](https://github.com/thiagopedro99/enchase/commit/69fa49e))
+- Add background hooks to the fields ([ccf1239](https://github.com/thiagopedro99/enchase/commit/ccf1239))
+- Add the variant prop to the fields ([aa32cbd](https://github.com/thiagopedro99/enchase/commit/aa32cbd))
+- Add the start label placement to the fields ([93f281f](https://github.com/thiagopedro99/enchase/commit/93f281f))
+- Mark the required fields next to the label ([9f93bdc](https://github.com/thiagopedro99/enchase/commit/9f93bdc))
+- Add per-size radius and an outline background to the button ([515e3df](https://github.com/thiagopedro99/enchase/commit/515e3df))
+- Add the danger variant and the icon-only button ([ad8c1bb](https://github.com/thiagopedro99/enchase/commit/ad8c1bb))
+- Add hooks to the switch, the checkbox, the radio and the segmented control ([0859e2d](https://github.com/thiagopedro99/enchase/commit/0859e2d))
+- Add hooks to the table, the accordion, the alert, the badge and the date picker calendar ([cb374aa](https://github.com/thiagopedro99/enchase/commit/cb374aa))
+- Add the workbench style ([be5cba2](https://github.com/thiagopedro99/enchase/commit/be5cba2))
+- Add the geometry and the compact density of the workbench style ([019f6e0](https://github.com/thiagopedro99/enchase/commit/019f6e0))
+- Add the button and field hooks of the workbench style ([7a38cc6](https://github.com/thiagopedro99/enchase/commit/7a38cc6))
+- Add the selection control hooks of the workbench style ([505d6a5](https://github.com/thiagopedro99/enchase/commit/505d6a5))
+- Add the navigation hooks of the workbench style ([a2659d4](https://github.com/thiagopedro99/enchase/commit/a2659d4))
+- Add the container and feedback hooks of the workbench style ([fb92aa6](https://github.com/thiagopedro99/enchase/commit/fb92aa6))
+- Add the compact hooks of the workbench style ([30848f2](https://github.com/thiagopedro99/enchase/commit/30848f2))
+- Finish the container and compact hooks of the workbench style ([b071a85](https://github.com/thiagopedro99/enchase/commit/b071a85))
+- Add a line height hook to the link ([6a3585f](https://github.com/thiagopedro99/enchase/commit/6a3585f))
+- Add the hover hooks to the switch, the checkbox, the radio and the slider ([825179f](https://github.com/thiagopedro99/enchase/commit/825179f))
+- Add the finishing hooks to the segmented control, the ghost button, the calendar and the combobox ([67a2575](https://github.com/thiagopedro99/enchase/commit/67a2575))
+- Add hooks to the tabs, navbar, sidebar, pagination, accordion, drawer, divider, footer and headings ([4cc0a48](https://github.com/thiagopedro99/enchase/commit/4cc0a48))
+- Declare the hover, finishing and navigation hooks of the workbench style ([d1989dc](https://github.com/thiagopedro99/enchase/commit/d1989dc))
+- Add the workbench style to the Storybook toolbar and the stories audit ([198f5f8](https://github.com/thiagopedro99/enchase/commit/198f5f8))
+
+### Fixes
+
+- Ignore undefined values in the sections of a style ([98b7d4d](https://github.com/thiagopedro99/enchase/commit/98b7d4d))
+
 ## v0.13.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.12.0...v0.13.0)
