@@ -44,8 +44,11 @@ export const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
 
       if (target === undefined) return
 
+      const trigger = triggerRefs.current[enabled[(target + enabled.length) % enabled.length]]
+
       event.preventDefault()
-      triggerRefs.current[enabled[(target + enabled.length) % enabled.length]]?.focus()
+      trigger?.focus({ preventScroll: true })
+      trigger?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
     }
 
     return (

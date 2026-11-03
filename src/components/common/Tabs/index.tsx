@@ -47,7 +47,8 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(({ items, value, defau
     const index = enabled[(target + enabled.length) % enabled.length]
 
     event.preventDefault()
-    tabRefs.current[index]?.focus()
+    tabRefs.current[index]?.focus({ preventScroll: true })
+    tabRefs.current[index]?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
     if (activation === 'automatic') setSelected(items[index].value)
   }
 
