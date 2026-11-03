@@ -37,6 +37,40 @@ const sampleTimed = (read: () => number, ms: number) =>
     tick()
   })
 
+const frozenTransition = (selector: string, property: string) =>
+  new Promise<CSSTransition>((resolve) => {
+    const listener = (event: Event) => {
+      const { target, propertyName } = event as TransitionEvent
+
+      if (!(target instanceof HTMLElement) || !target.matches(selector) || propertyName !== property) return
+
+      const found = target.getAnimations().find((item) => item instanceof CSSTransition && item.transitionProperty === property)
+
+      if (!found) return
+
+      found.pause()
+      document.removeEventListener('transitionrun', listener, true)
+      resolve(found as CSSTransition)
+    }
+
+    document.addEventListener('transitionrun', listener, true)
+  })
+
+const stepsOf = (animation: Animation, read: () => number) => {
+  const end = Number(animation.effect?.getComputedTiming().endTime ?? 0)
+  const values: number[] = []
+
+  for (let time = 0; time <= end; time += 4) {
+    animation.currentTime = time
+    values.push(read())
+  }
+
+  animation.currentTime = end
+  values.push(read())
+
+  return values
+}
+
 const seconds = (value: string) => value.split(',').map((part) => (part.trim().endsWith('ms') ? Number.parseFloat(part) / 1000 : Number.parseFloat(part)))
 
 const scaleOf = (element: HTMLElement) => {
@@ -115,10 +149,9 @@ describe('springs in a real browser', () => {
 
   it('lets a bouncier spring overshoot the final scale', async () => {
     renderInBrowser(<ModalPage bouncy />, 'auto')
-    const sampling = sample(() => (panel() ? scaleOf(panel() as HTMLElement) : 1), 1500)
+    const frozen = frozenTransition('[data-slot="modal-panel"]', 'transform')
     await userEvent.click(page.getByRole('button', { name: 'Abrir' }))
-    await expect.element(page.getByRole('dialog')).toBeVisible()
-    const values = await sampling
+    const values = stepsOf(await frozen, () => scaleOf(panel() as HTMLElement))
 
     expect(Math.max(...values)).toBeGreaterThan(1.001)
     expect(values[values.length - 1]).toBeCloseTo(1, 3)

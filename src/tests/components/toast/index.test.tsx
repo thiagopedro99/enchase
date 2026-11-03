@@ -392,13 +392,13 @@ describe('Toast', () => {
   it('auto dismisses after the duration', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    renderWithToasts(<Probe duration={1000} />)
+    renderWithToasts(<Probe duration={60000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     await expectCount(1)
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1100)
+      await vi.advanceTimersByTimeAsync(61000)
     })
 
     await expectCount(0)
@@ -408,20 +408,20 @@ describe('Toast', () => {
   it('pauses the timer while hovered', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    renderWithToasts(<Probe duration={1000} />)
+    renderWithToasts(<Probe duration={60000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     const toastItem = (await screen.findByText('Saved', { selector: '[data-slot="toast-title"]' })).closest('div[class]') as HTMLElement
     await user.hover(toastItem)
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(3000)
+      await vi.advanceTimersByTimeAsync(180000)
     })
     expect(toastCount()).toBe(1)
 
     await user.unhover(toastItem)
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1500)
+      await vi.advanceTimersByTimeAsync(90000)
     })
     await expectCount(0)
     vi.useRealTimers()
@@ -430,20 +430,20 @@ describe('Toast', () => {
   it('pauses the timer while focus is inside the toast', async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true })
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
-    renderWithToasts(<Probe duration={1000} />)
+    renderWithToasts(<Probe duration={60000} />)
 
     await user.click(screen.getByRole('button', { name: 'success' }))
     const close = await screen.findByRole('button', { name: 'Fechar notificação' })
     act(() => close.focus())
 
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(3000)
+      await vi.advanceTimersByTimeAsync(180000)
     })
     expect(toastCount()).toBe(1)
 
     act(() => close.blur())
     await act(async () => {
-      await vi.advanceTimersByTimeAsync(1500)
+      await vi.advanceTimersByTimeAsync(90000)
     })
     await expectCount(0)
     vi.useRealTimers()

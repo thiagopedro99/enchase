@@ -190,7 +190,7 @@ describe('dir="rtl" in a real browser', () => {
   it('places the toasts at the inline end: right in LTR and left in RTL', async () => {
     renderInBrowser(<ToastButton />)
     await userEvent.click(page.getByRole('button', { name: 'Notificar' }))
-    const toast = () => page.getByText('Salvo com sucesso').element().closest('[role]') as HTMLElement
+    const toast = () => document.querySelector('[data-slot="toast"]') as HTMLElement
     await expect.poll(() => toast()?.getBoundingClientRect().width).toBeGreaterThan(0)
     const width = document.documentElement.clientWidth
 
@@ -201,7 +201,7 @@ describe('dir="rtl" in a real browser', () => {
     document.documentElement.dir = 'rtl'
     renderInBrowser(<ToastButton />)
     await userEvent.click(page.getByRole('button', { name: 'Notificar' }))
-    const toast = () => page.getByText('Salvo com sucesso').element().closest('[role]') as HTMLElement
+    const toast = () => document.querySelector('[data-slot="toast"]') as HTMLElement
     await expect.poll(() => toast()?.getBoundingClientRect().width).toBeGreaterThan(0)
     const width = document.documentElement.clientWidth
 

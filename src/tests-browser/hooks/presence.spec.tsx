@@ -44,11 +44,15 @@ describe('usePresence in a real browser', () => {
 
     const element = panel() as HTMLElement
     let transitionEnded = false
+    let transitionEndedAt = 0
     let endedBeforeRemoval = false
     let removedAt = 0
 
     element.addEventListener('transitionend', (event) => {
-      if (event.target === element && event.propertyName === 'opacity') transitionEnded = true
+      if (event.target !== element || event.propertyName !== 'opacity') return
+
+      transitionEnded = true
+      transitionEndedAt = performance.now()
     })
     new MutationObserver((_, observer) => {
       if (element.isConnected) return
@@ -57,14 +61,12 @@ describe('usePresence in a real browser', () => {
       observer.disconnect()
     }).observe(document.body, { childList: true, subtree: true })
 
-    const exitStartedAt = performance.now()
-
     await toggle.click()
     expect(element.dataset.state).toBe('exiting')
     await expect.poll(() => panel(), { timeout: 2000 }).toBeNull()
 
     expect(endedBeforeRemoval).toBe(true)
-    expect(removedAt - exitStartedAt).toBeLessThan(900)
+    expect(removedAt - transitionEndedAt).toBeLessThan(500)
   })
 
   it('can be reopened in the middle of the exit and ends up open', async () => {
