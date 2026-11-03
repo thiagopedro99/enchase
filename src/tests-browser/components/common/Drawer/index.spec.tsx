@@ -266,7 +266,7 @@ describe('the Drawer in a real browser: how it slides', () => {
     expect(Math.round(entering.samples[0])).toBe(-width)
     expect(coarse(entering.samples, width) || entering.samples.some((value) => value < -5 && value > 5 - width)).toBe(true)
     expect(entering.samples.every((value, index) => index === 0 || value >= entering.samples[index - 1] - 0.5)).toBe(true)
-    expect(Math.round(entering.samples[entering.samples.length - 1])).toBe(0)
+    expect(entering.samples[entering.samples.length - 1]).toBeCloseTo(0, 0)
 
     const leaving = travelOf(() => part('drawer-panel'))
 
@@ -274,7 +274,7 @@ describe('the Drawer in a real browser: how it slides', () => {
     await expect.poll(() => parts('drawer-panel').length).toBe(0)
     leaving.stop()
 
-    expect(Math.round(leaving.samples[0])).toBe(0)
+    expect(leaving.samples[0]).toBeCloseTo(0, 0)
     expect(coarse(leaving.samples, width) || Math.min(...leaving.samples) <= -width * 0.8).toBe(true)
     expect(leaving.samples.every((value, index) => index === 0 || value <= leaving.samples[index - 1] + 0.5)).toBe(true)
   })
