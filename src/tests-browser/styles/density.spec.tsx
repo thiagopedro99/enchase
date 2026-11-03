@@ -41,7 +41,7 @@ import type { LabelPlacement } from '@styles/tokens/types.ts'
 import type { ThemeStyle } from '@styles/theme/style.ts'
 import type { ReactElement } from 'react'
 
-const styles = ['enchase', 'shadcn'] as const
+const styles = ['enchase', 'shadcn', 'workbench'] as const
 
 type StyleName = (typeof styles)[number]
 
@@ -54,6 +54,7 @@ type Part = {
   index?: number
   enchase: string
   shadcn: string
+  workbench: string
 }
 
 const noop = () => undefined
@@ -148,68 +149,68 @@ const expectSize = (actual: { width: number; height: number }, wanted: { block: 
 }
 
 const parts: Part[] = [
-  { name: 'the medium button', ui: <Button>Save</Button>, target: '[data-slot=button]', enchase: '40 > 32', shadcn: '36 > 32' },
-  { name: 'the small button', ui: <Button size="sm">Save</Button>, target: '[data-slot=button]', enchase: '32 > 28', shadcn: '32 > 28' },
-  { name: 'the large button', ui: <Button size="lg">Save</Button>, target: '[data-slot=button]', enchase: '48 > 40', shadcn: '40 > 40' },
-  { name: 'the field of the input', ui: <Input label="Name" />, target: '[data-slot=input-field]', enchase: '56 > 44', shadcn: '36 > 32' },
-  { name: 'the button of the password', ui: <Input label="Password" type="password" />, target: '[data-slot=input-toggle]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32' },
-  { name: 'the field of the textarea', ui: <Textarea label="Notes" />, target: '[data-slot=textarea-field]', enchase: '104 > 96', shadcn: '95 > 87' },
-  { name: 'the field of the select', ui: <Select label="Plan" options={options} />, target: '[data-slot=select-field]', enchase: '56 > 44', shadcn: '36 > 32' },
-  { name: 'the field of the number input', ui: <NumberInput label="Amount" defaultValue={1} />, target: '[data-slot=number-input-field]', enchase: '56 > 44', shadcn: '36 > 32' },
-  { name: 'the stepper of the number input', ui: <NumberInput label="Amount" defaultValue={1} />, target: '[data-slot=number-input-increase]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32' },
-  { name: 'the steppers of the number input', ui: <NumberInput label="Amount" defaultValue={1} />, target: '[data-slot=number-input-steppers]', enchase: '84x56 > 68x44', shadcn: '68x36 > 68x32' },
-  { name: 'the field of the date picker', ui: <DatePicker label="Date" />, target: '[data-slot=date-picker-input]', enchase: '56 > 44', shadcn: '36 > 32' },
-  { name: 'the button of the date picker', ui: <DatePicker label="Date" />, target: '[data-slot=date-picker-toggle]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32' },
-  { name: 'the field of the combobox', ui: <Combobox label="Fruit" options={fruits} />, target: '[data-slot=combobox-input]', enchase: '56 > 44', shadcn: '36 > 32' },
-  { name: 'the button of the combobox', ui: <Combobox label="Fruit" options={fruits} />, target: '[data-slot=combobox-toggle]', enchase: '40x56 > 32x44', shadcn: '32x36 > 32x32' },
-  { name: 'the checkbox', ui: <Checkbox label="Terms" />, target: '[data-slot=checkbox]', enchase: '40 > 32', shadcn: '32 > 32' },
-  { name: 'the radio', ui: <RadioGroup label="Plan" options={options} />, target: '[data-slot=radio-group-option]', enchase: '40 > 32', shadcn: '32 > 32' },
-  { name: 'the switch', ui: <Switch label="Alerts" />, target: '[data-slot=switch]', enchase: '40 > 32', shadcn: '32 > 32' },
-  { name: 'the control of the slider', ui: <Slider label="Volume" defaultValue={40} />, target: '[data-slot=slider-control]', enchase: '40 > 32', shadcn: '32 > 32' },
-  { name: 'the thumb of the slider', ui: <Slider label="Volume" defaultValue={40} />, target: '[data-slot=slider-thumb]', enchase: '20x20 > 20x20', shadcn: '16x16 > 16x16' },
-  { name: 'the small segmented control', ui: <SegmentedControl size="sm" ariaLabel="View" items={segments} defaultValue="a" />, target: '[data-slot=segmented-control]', enchase: '32 > 28', shadcn: '32 > 28' },
-  { name: 'the medium segmented control', ui: <SegmentedControl ariaLabel="View" items={segments} defaultValue="a" />, target: '[data-slot=segmented-control]', enchase: '40 > 32', shadcn: '36 > 32' },
-  { name: 'the large segmented control', ui: <SegmentedControl size="lg" ariaLabel="View" items={segments} defaultValue="a" />, target: '[data-slot=segmented-control]', enchase: '48 > 40', shadcn: '40 > 40' },
-  { name: 'the list of the tabs', ui: <Tabs items={tabs} />, target: '[data-slot=tabs-list]', enchase: '44 > 36', shadcn: '36 > 32' },
-  { name: 'the tab', ui: <Tabs items={tabs} />, target: '[data-slot=tabs-tab]', enchase: '44 > 36', shadcn: '36 > 32' },
-  { name: 'the trigger of the accordion', ui: <Accordion items={[{ value: 'a', title: 'Question', content: 'Answer' }]} />, target: '[data-slot=accordion-trigger]', enchase: '48 > 40', shadcn: '52 > 52' },
-  { name: 'the row of the medium table', ui: <Table caption="Orders" columns={columns} rows={rows} />, target: '[data-slot=table-row]', enchase: '41 > 37', shadcn: '38 > 38' },
-  { name: 'the row of the small table', ui: <Table size="sm" caption="Orders" columns={columns} rows={rows} />, target: '[data-slot=table-row]', enchase: '30 > 30', shadcn: '30 > 30' },
-  { name: 'the page of the medium pagination', ui: <Pagination pageCount={5} defaultPage={2} />, target: '[data-slot=pagination-page]', enchase: '40x40 > 32x32', shadcn: '36x36 > 32x32' },
-  { name: 'the page of the small pagination', ui: <Pagination size="sm" pageCount={5} defaultPage={2} />, target: '[data-slot=pagination-page]', enchase: '32x32 > 28x28', shadcn: '32x32 > 28x28' },
-  { name: 'the item of the sidebar', ui: <Sidebar sections={sections} currentHref="/docs" header={<span>Brand</span>} />, target: '[data-slot=sidebar-item] a', enchase: '52 > 40', shadcn: '32 > 32' },
-  { name: 'the header of the sidebar', ui: <Sidebar sections={sections} currentHref="/docs" header={<span>Brand</span>} />, target: '[data-slot=sidebar-header]', enchase: '72 > 64', shadcn: '56 > 56' },
-  { name: 'the collapse button of the sidebar', ui: <Sidebar sections={sections} onToggleCollapsed={noop} />, target: '[data-slot=sidebar-collapse-button]', enchase: '44x44 > 44x44', shadcn: '44x44 > 44x44' },
-  { name: 'the bar of the navbar', ui: <Navbar sections={sections} />, target: '[data-slot=navbar-bar]', enchase: '64 > 56', shadcn: '56 > 56' },
-  { name: 'the bar of the layout', ui: <Layout pageTitle="Page" navigationSections={sections}><p>Body</p></Layout>, target: 'header', enchase: '64 > 56', shadcn: '56 > 56' },
-  { name: 'the theme toggle', ui: <ThemeToggle />, target: '[data-slot=theme-toggle]', enchase: '44x44 > 44x44', shadcn: '44x44 > 44x44' },
-  { name: 'the card', ui: <Card>Card text</Card>, target: '[data-slot=card]', enchase: '72 > 60', shadcn: '74 > 62' },
-  { name: 'the alert', ui: <Alert variant="info" title="Title">Message</Alert>, target: '[data-slot=alert]', enchase: '73 > 69', shadcn: '83 > 83' },
-  { name: 'the badge', ui: <Badge>New</Badge>, target: '[data-slot=badge]', enchase: '24 > 24', shadcn: '20 > 20' },
-  { name: 'the tag', ui: <Tag>Tag</Tag>, target: '[data-slot=tag]', enchase: '32 > 32', shadcn: '32 > 32' }
+  { name: 'the medium button', ui: <Button>Save</Button>, target: '[data-slot=button]', enchase: '40 > 32', shadcn: '36 > 32', workbench: '32 > 28' },
+  { name: 'the small button', ui: <Button size="sm">Save</Button>, target: '[data-slot=button]', enchase: '32 > 28', shadcn: '32 > 28', workbench: '24 > 24' },
+  { name: 'the large button', ui: <Button size="lg">Save</Button>, target: '[data-slot=button]', enchase: '48 > 40', shadcn: '40 > 40', workbench: '40 > 35' },
+  { name: 'the field of the input', ui: <Input label="Name" />, target: '[data-slot=input-field]', enchase: '56 > 44', shadcn: '36 > 32', workbench: '32 > 28' },
+  { name: 'the button of the password', ui: <Input label="Password" type="password" />, target: '[data-slot=input-toggle]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32', workbench: '32x32 > 24x24' },
+  { name: 'the field of the textarea', ui: <Textarea label="Notes" />, target: '[data-slot=textarea-field]', enchase: '104 > 96', shadcn: '95 > 87', workbench: '76 > 74' },
+  { name: 'the field of the select', ui: <Select label="Plan" options={options} />, target: '[data-slot=select-field]', enchase: '56 > 44', shadcn: '36 > 32', workbench: '32 > 28' },
+  { name: 'the field of the number input', ui: <NumberInput label="Amount" defaultValue={1} />, target: '[data-slot=number-input-field]', enchase: '56 > 44', shadcn: '36 > 32', workbench: '32 > 28' },
+  { name: 'the stepper of the number input', ui: <NumberInput label="Amount" defaultValue={1} />, target: '[data-slot=number-input-increase]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32', workbench: '32x32 > 24x24' },
+  { name: 'the steppers of the number input', ui: <NumberInput label="Amount" defaultValue={1} />, target: '[data-slot=number-input-steppers]', enchase: '84x56 > 68x44', shadcn: '68x36 > 68x32', workbench: '68x32 > 52x28' },
+  { name: 'the field of the date picker', ui: <DatePicker label="Date" />, target: '[data-slot=date-picker-input]', enchase: '56 > 44', shadcn: '36 > 32', workbench: '32 > 28' },
+  { name: 'the button of the date picker', ui: <DatePicker label="Date" />, target: '[data-slot=date-picker-toggle]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32', workbench: '32x32 > 24x24' },
+  { name: 'the field of the combobox', ui: <Combobox label="Fruit" options={fruits} />, target: '[data-slot=combobox-input]', enchase: '56 > 44', shadcn: '36 > 32', workbench: '32 > 28' },
+  { name: 'the button of the combobox', ui: <Combobox label="Fruit" options={fruits} />, target: '[data-slot=combobox-toggle]', enchase: '40x56 > 32x44', shadcn: '32x36 > 32x32', workbench: '32x32 > 24x28' },
+  { name: 'the checkbox', ui: <Checkbox label="Terms" />, target: '[data-slot=checkbox]', enchase: '40 > 32', shadcn: '32 > 32', workbench: '32 > 24' },
+  { name: 'the radio', ui: <RadioGroup label="Plan" options={options} />, target: '[data-slot=radio-group-option]', enchase: '40 > 32', shadcn: '32 > 32', workbench: '32 > 24' },
+  { name: 'the switch', ui: <Switch label="Alerts" />, target: '[data-slot=switch]', enchase: '40 > 32', shadcn: '32 > 32', workbench: '32 > 24' },
+  { name: 'the control of the slider', ui: <Slider label="Volume" defaultValue={40} />, target: '[data-slot=slider-control]', enchase: '40 > 32', shadcn: '32 > 32', workbench: '32 > 24' },
+  { name: 'the thumb of the slider', ui: <Slider label="Volume" defaultValue={40} />, target: '[data-slot=slider-thumb]', enchase: '20x20 > 20x20', shadcn: '16x16 > 16x16', workbench: '14x14 > 14x14' },
+  { name: 'the small segmented control', ui: <SegmentedControl size="sm" ariaLabel="View" items={segments} defaultValue="a" />, target: '[data-slot=segmented-control]', enchase: '32 > 28', shadcn: '32 > 28', workbench: '28 > 28' },
+  { name: 'the medium segmented control', ui: <SegmentedControl ariaLabel="View" items={segments} defaultValue="a" />, target: '[data-slot=segmented-control]', enchase: '40 > 32', shadcn: '36 > 32', workbench: '32 > 28' },
+  { name: 'the large segmented control', ui: <SegmentedControl size="lg" ariaLabel="View" items={segments} defaultValue="a" />, target: '[data-slot=segmented-control]', enchase: '48 > 40', shadcn: '40 > 40', workbench: '40 > 35' },
+  { name: 'the list of the tabs', ui: <Tabs items={tabs} />, target: '[data-slot=tabs-list]', enchase: '44 > 36', shadcn: '36 > 32', workbench: '46 > 36' },
+  { name: 'the tab', ui: <Tabs items={tabs} />, target: '[data-slot=tabs-tab]', enchase: '44 > 36', shadcn: '36 > 32', workbench: '46 > 36' },
+  { name: 'the trigger of the accordion', ui: <Accordion items={[{ value: 'a', title: 'Question', content: 'Answer' }]} />, target: '[data-slot=accordion-trigger]', enchase: '48 > 40', shadcn: '52 > 52', workbench: '46 > 36' },
+  { name: 'the row of the medium table', ui: <Table caption="Orders" columns={columns} rows={rows} />, target: '[data-slot=table-row]', enchase: '41 > 37', shadcn: '38 > 38', workbench: '55 > 39' },
+  { name: 'the row of the small table', ui: <Table size="sm" caption="Orders" columns={columns} rows={rows} />, target: '[data-slot=table-row]', enchase: '30 > 30', shadcn: '30 > 30', workbench: '39 > 31' },
+  { name: 'the page of the medium pagination', ui: <Pagination pageCount={5} defaultPage={2} />, target: '[data-slot=pagination-page]', enchase: '40x40 > 32x32', shadcn: '36x36 > 32x32', workbench: '32x32 > 28x28' },
+  { name: 'the page of the small pagination', ui: <Pagination size="sm" pageCount={5} defaultPage={2} />, target: '[data-slot=pagination-page]', enchase: '32x32 > 28x28', shadcn: '32x32 > 28x28', workbench: '24x24 > 24x24' },
+  { name: 'the item of the sidebar', ui: <Sidebar sections={sections} currentHref="/docs" header={<span>Brand</span>} />, target: '[data-slot=sidebar-item] a', enchase: '52 > 40', shadcn: '32 > 32', workbench: '40 > 35' },
+  { name: 'the header of the sidebar', ui: <Sidebar sections={sections} currentHref="/docs" header={<span>Brand</span>} />, target: '[data-slot=sidebar-header]', enchase: '72 > 64', shadcn: '56 > 56', workbench: '72 > 64' },
+  { name: 'the collapse button of the sidebar', ui: <Sidebar sections={sections} onToggleCollapsed={noop} />, target: '[data-slot=sidebar-collapse-button]', enchase: '44x44 > 44x44', shadcn: '44x44 > 44x44', workbench: '44x44 > 44x44' },
+  { name: 'the bar of the navbar', ui: <Navbar sections={sections} />, target: '[data-slot=navbar-bar]', enchase: '64 > 56', shadcn: '56 > 56', workbench: '64 > 56' },
+  { name: 'the bar of the layout', ui: <Layout pageTitle="Page" navigationSections={sections}><p>Body</p></Layout>, target: 'header', enchase: '64 > 56', shadcn: '56 > 56', workbench: '64 > 56' },
+  { name: 'the theme toggle', ui: <ThemeToggle />, target: '[data-slot=theme-toggle]', enchase: '44x44 > 44x44', shadcn: '44x44 > 44x44', workbench: '44x44 > 44x44' },
+  { name: 'the card', ui: <Card>Card text</Card>, target: '[data-slot=card]', enchase: '72 > 60', shadcn: '74 > 62', workbench: '72 > 56' },
+  { name: 'the alert', ui: <Alert variant="info" title="Title">Message</Alert>, target: '[data-slot=alert]', enchase: '73 > 69', shadcn: '83 > 83', workbench: '73 > 65' },
+  { name: 'the badge', ui: <Badge>New</Badge>, target: '[data-slot=badge]', enchase: '24 > 24', shadcn: '20 > 20', workbench: '22 > 20' },
+  { name: 'the tag', ui: <Tag>Tag</Tag>, target: '[data-slot=tag]', enchase: '32 > 32', shadcn: '32 > 32', workbench: '22 > 20' }
 ]
 
 const overlays: Part[] = [
-  { name: 'the item of the menu', ui: <Menu defaultOpen label="Actions" items={menuEntries}><Button>Open</Button></Menu>, target: '[data-slot=menu-item]', enchase: '40 > 32', shadcn: '33 > 33' },
-  { name: 'the popup of the menu', ui: <Menu defaultOpen label="Actions" items={menuEntries}><Button>Open</Button></Menu>, target: '[data-slot=popover-content]', enchase: '137 > 113', shadcn: '118 > 118' },
-  { name: 'the list of the combobox', ui: <Combobox defaultOpen label="Fruit" options={fruits} />, target: '[data-slot=combobox-listbox]', enchase: '128 > 104', shadcn: '109 > 109' },
-  { name: 'the option of the combobox', ui: <Combobox defaultOpen label="Fruit" options={fruits} />, target: '[data-slot=combobox-option]', enchase: '40 > 32', shadcn: '33 > 33' },
-  { name: 'the popup of the date picker', ui: <DatePicker defaultOpen label="Date" />, target: '[data-slot=popover-content]', enchase: '320x368 > 256x294', shadcn: '266x306 > 258x296' },
-  { name: 'the day of the date picker', ui: <DatePicker defaultOpen label="Date" />, target: '[data-slot=date-picker-calendar-day]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32' },
-  { name: 'the popover', ui: <Popover defaultOpen content={<p>Hello there</p>}><Button>Open</Button></Popover>, target: '[data-slot=popover-content]', enchase: '56 > 48', shadcn: '58 > 50' },
-  { name: 'the close button of the modal', ui: <Modal isOpen onClose={noop} title="Title">Body</Modal>, target: '[data-slot=modal-close]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32' },
-  { name: 'the close button of the drawer', ui: <Drawer open onClose={noop} title="Title">Body</Drawer>, target: '[data-slot=drawer-close]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32' },
-  { name: 'the close button of the toast', ui: <Notifier />, target: '[data-slot=toast-close]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32' }
+  { name: 'the item of the menu', ui: <Menu defaultOpen label="Actions" items={menuEntries}><Button>Open</Button></Menu>, target: '[data-slot=menu-item]', enchase: '40 > 32', shadcn: '33 > 33', workbench: '32 > 30' },
+  { name: 'the popup of the menu', ui: <Menu defaultOpen label="Actions" items={menuEntries}><Button>Open</Button></Menu>, target: '[data-slot=popover-content]', enchase: '137 > 113', shadcn: '118 > 118', workbench: '113 > 107' },
+  { name: 'the list of the combobox', ui: <Combobox defaultOpen label="Fruit" options={fruits} />, target: '[data-slot=combobox-listbox]', enchase: '128 > 104', shadcn: '109 > 109', workbench: '104 > 98' },
+  { name: 'the option of the combobox', ui: <Combobox defaultOpen label="Fruit" options={fruits} />, target: '[data-slot=combobox-option]', enchase: '40 > 32', shadcn: '33 > 33', workbench: '32 > 30' },
+  { name: 'the popup of the date picker', ui: <DatePicker defaultOpen label="Date" />, target: '[data-slot=popover-content]', enchase: '320x368 > 256x294', shadcn: '266x306 > 258x296', workbench: '284x329 > 284x312' },
+  { name: 'the day of the date picker', ui: <DatePicker defaultOpen label="Date" />, target: '[data-slot=date-picker-calendar-day]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32', workbench: '36x36 > 36x36' },
+  { name: 'the popover', ui: <Popover defaultOpen content={<p>Hello there</p>}><Button>Open</Button></Popover>, target: '[data-slot=popover-content]', enchase: '56 > 48', shadcn: '58 > 50', workbench: '46 > 46' },
+  { name: 'the close button of the modal', ui: <Modal isOpen onClose={noop} title="Title">Body</Modal>, target: '[data-slot=modal-close]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32', workbench: '32x32 > 24x24' },
+  { name: 'the close button of the drawer', ui: <Drawer open onClose={noop} title="Title">Body</Drawer>, target: '[data-slot=drawer-close]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32', workbench: '32x32 > 24x24' },
+  { name: 'the close button of the toast', ui: <Notifier />, target: '[data-slot=toast-close]', enchase: '40x40 > 32x32', shadcn: '32x32 > 32x32', workbench: '32x32 > 24x24' }
 ]
 
 const shifts: Part[] = [
-  { name: 'the medium button', ui: <Button>Save</Button>, target: '[data-slot=button]', enchase: '-12', shadcn: '0' },
-  { name: 'the small button', ui: <Button size="sm">Save</Button>, target: '[data-slot=button]', enchase: '-8', shadcn: '0' },
-  { name: 'the large button', ui: <Button size="lg">Save</Button>, target: '[data-slot=button]', enchase: '-16', shadcn: '0' },
-  { name: 'the badge', ui: <Badge>New</Badge>, target: '[data-slot=badge]', enchase: '-4', shadcn: '0' },
-  { name: 'the tag', ui: <Tag>Tag</Tag>, target: '[data-slot=tag]', enchase: '-8', shadcn: '-8' },
-  { name: 'the checkbox', ui: <Checkbox label="Terms" />, target: '[data-slot=checkbox]', enchase: '-4', shadcn: '0' },
-  { name: 'the tab', ui: <Tabs items={tabs} />, target: '[data-slot=tabs-tab]', enchase: '-8', shadcn: '-8' }
+  { name: 'the medium button', ui: <Button>Save</Button>, target: '[data-slot=button]', enchase: '-12', shadcn: '0', workbench: '-8' },
+  { name: 'the small button', ui: <Button size="sm">Save</Button>, target: '[data-slot=button]', enchase: '-8', shadcn: '0', workbench: '0' },
+  { name: 'the large button', ui: <Button size="lg">Save</Button>, target: '[data-slot=button]', enchase: '-16', shadcn: '0', workbench: '-8' },
+  { name: 'the badge', ui: <Badge>New</Badge>, target: '[data-slot=badge]', enchase: '-4', shadcn: '0', workbench: '0' },
+  { name: 'the tag', ui: <Tag>Tag</Tag>, target: '[data-slot=tag]', enchase: '-8', shadcn: '-8', workbench: '0' },
+  { name: 'the checkbox', ui: <Checkbox label="Terms" />, target: '[data-slot=checkbox]', enchase: '-4', shadcn: '0', workbench: '0' },
+  { name: 'the tab', ui: <Tabs items={tabs} />, target: '[data-slot=tabs-tab]', enchase: '-8', shadcn: '-8', workbench: '0' }
 ]
 
 describe.each(styles)('the compact density on the root, in the sizes of the parts in the %s style', (styleName) => {
@@ -242,18 +243,18 @@ describe.each(styles)('the compact density on the root, in the overlays that go 
 })
 
 const tokens = [
-  ['--enchase-hit-size', '40px', '32px', '2rem', '32px'],
-  ['--enchase-control-height-sm', '2rem', '1.75rem', '2rem', '1.75rem'],
-  ['--enchase-control-height-md', '2.5rem', '2rem', '2.25rem', '2rem'],
-  ['--enchase-control-height-lg', '3rem', '2.5rem', '2.5rem', '2.5rem'],
-  ['--enchase-space-sm', '0.5rem', '0.375rem', '0.5rem', '0.375rem'],
-  ['--enchase-space-md', '1rem', '0.75rem', '1rem', '0.75rem'],
-  ['--enchase-space-lg', '1.5rem', '1.125rem', '1.5rem', '1.125rem'],
-  ['--enchase-space-xl', '2rem', '1.5rem', '2rem', '1.5rem'],
-  ['--enchase-space-2xl', '3rem', '2.25rem', '3rem', '2.25rem'],
-  ['--enchase-space-3xl', '4rem', '3rem', '4rem', '3rem'],
-  ['--enchase-hit-size-lg', '44px', '44px', '44px', '44px'],
-  ['--enchase-space-xs', '0.25rem', '0.25rem', '0.25rem', '0.25rem']
+  ['--enchase-hit-size', '40px', '32px', '2rem', '32px', '2rem', '1.5rem'],
+  ['--enchase-control-height-sm', '2rem', '1.75rem', '2rem', '1.75rem', '1.5rem', '1.5rem'],
+  ['--enchase-control-height-md', '2.5rem', '2rem', '2.25rem', '2rem', '2rem', '1.75rem'],
+  ['--enchase-control-height-lg', '3rem', '2.5rem', '2.5rem', '2.5rem', '2.5rem', '2.1875rem'],
+  ['--enchase-space-sm', '0.5rem', '0.375rem', '0.5rem', '0.375rem', '0.5rem', '0.25rem'],
+  ['--enchase-space-md', '1rem', '0.75rem', '1rem', '0.75rem', '1rem', '0.5rem'],
+  ['--enchase-space-lg', '1.5rem', '1.125rem', '1.5rem', '1.125rem', '1.5rem', '1rem'],
+  ['--enchase-space-xl', '2rem', '1.5rem', '2rem', '1.5rem', '2rem', '2rem'],
+  ['--enchase-space-2xl', '3rem', '2.25rem', '3rem', '2.25rem', '3rem', '3rem'],
+  ['--enchase-space-3xl', '4rem', '3rem', '4rem', '3rem', '4rem', '3rem'],
+  ['--enchase-hit-size-lg', '44px', '44px', '44px', '44px', '44px', '44px'],
+  ['--enchase-space-xs', '0.25rem', '0.25rem', '0.25rem', '0.25rem', '0.25rem', '0.25rem']
 ]
 
 const hooks = [
@@ -280,7 +281,7 @@ const onRoot = (names: string[], style: Style, density: string | null) => {
 }
 
 describe('the variables of the compact density on the root, as the browser computes them', () => {
-  it('gives the tokens the compact values in the two styles, and leaves the large target and the extra small space alone', () => {
+  it('gives the tokens the compact values in the three styles, and leaves the large target and the extra small space alone', () => {
     const names = tokens.map(([name]) => name)
 
     expect(names).toEqual([...Object.keys(densities.compact.tokens), '--enchase-hit-size-lg', '--enchase-space-xs'])
@@ -469,9 +470,9 @@ const survey = async (style: Style, density: string | null) => {
   return found
 }
 
-const smallest = { enchase: 'slider-thumb 20x20', shadcn: 'slider-thumb 16x16' }
+const smallest = { enchase: 'slider-thumb 20x20', shadcn: 'slider-thumb 16x16', workbench: 'slider-thumb 14x14' }
 
-const fill = ['combobox-input', 'sidebar-item link']
+const fill = { enchase: ['combobox-input', 'sidebar-item link'], shadcn: ['combobox-input', 'sidebar-item link'], workbench: ['combobox-input'] }
 
 const inline = ['page link', 'footer-link']
 
@@ -497,12 +498,12 @@ describe.each(styles)('the compact density on the root, in every target of the g
     expect(compact.filter(({ height }, index) => height < initial[index].height - 0.5).length).toBeGreaterThan(30)
   })
 
-  it('makes a target wider in the compact density only where it fills the room that a neighbor gave back: the input of the combobox and the items of the sidebar', async () => {
+  it('makes a target wider in the compact density only where it fills the room that a neighbor gave back: the input of the combobox and, where the items follow the space tokens, the items of the sidebar', async () => {
     const initial = await survey(styleName, null)
     const compact = await survey(styleName, 'compact')
     const wider = compact.filter(({ width }, index) => width > initial[index].width + 0.5).map(({ name }) => name)
 
-    expect([...new Set(wider)]).toEqual(fill)
+    expect([...new Set(wider)]).toEqual(fill[styleName])
   })
 })
 
@@ -568,7 +569,7 @@ describe.each(styles)('the active indicator of the sidebar in the %s style', (st
 
       return Math.max(Math.abs(marker.top - current.top), Math.abs(marker.height - current.height))
     }
-    const heights = { enchase: [40, 52, 40], shadcn: [32, 32, 32] }[styleName]
+    const heights = { enchase: [40, 52, 40], shadcn: [32, 32, 32], workbench: [35, 40, 35] }[styleName]
     const tops: number[] = []
 
     await expect.poll(misfit, { timeout: 4000 }).toBeLessThanOrEqual(0.5)

@@ -16,7 +16,7 @@ import { densities } from '@styles/tokens/index.ts'
 
 import type { ReactElement } from 'react'
 
-const styles = ['enchase', 'shadcn'] as const
+const styles = ['enchase', 'shadcn', 'workbench'] as const
 
 const places = ['wrapper', 'body'] as const
 

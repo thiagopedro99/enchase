@@ -143,7 +143,7 @@ describe('a hook of the app, against the hooks of the compact density', () => {
     expect(readings()).toMatchObject({ token: '32px', checkbox: 32, field: 48 })
   })
 
-  it.each(['enchase', 'shadcn'] as const)('wins when it is set on the component, because the nearest declaration wins, in the %s style', (style) => {
+  it.each(['enchase', 'shadcn', 'workbench'] as const)('wins when it is set on the component, because the nearest declaration wins, in the %s style', (style) => {
     setDensity('compact')
     show(
       <>
@@ -157,7 +157,7 @@ describe('a hook of the app, against the hooks of the compact density', () => {
     const [own, other] = [...document.querySelectorAll<HTMLElement>('[data-slot=input-field]')].map((field) => field.getBoundingClientRect().height)
 
     expect(own).toBe(48)
-    expect(other).toBe(style === 'enchase' ? 44 : 32)
+    expect(other).toBe({ enchase: 44, shadcn: 32, workbench: 28 }[style])
   })
 })
 
