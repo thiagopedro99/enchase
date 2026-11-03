@@ -104,6 +104,23 @@
   box-shadow: var(--enchase-button-shadow-danger, none);
 }
 
+.button:where([data-variant='dashed']) {
+  background-color: var(--enchase-button-background-dashed, var(--enchase-button-background-outline, transparent));
+  border-style: var(--enchase-button-border-style-dashed, dashed);
+  border-color: var(--enchase-button-border-color-dashed, var(--enchase-button-border-color-outline, var(--enchase-color-border-strong)));
+  color: var(--enchase-button-color-dashed, var(--enchase-button-color-outline, var(--enchase-color-primary)));
+  box-shadow: var(--enchase-button-shadow-dashed, var(--enchase-button-shadow-outline, none));
+}
+
+.button:where([data-variant='link']) {
+  background-color: transparent;
+  color: var(--enchase-button-color-link, var(--enchase-link-color, var(--enchase-color-primary)));
+}
+
+.button[data-variant='link']::after {
+  display: none;
+}
+
 :where(.button[data-size='sm'][data-variant='ghost']) {
   padding-inline: var(--enchase-button-padding-inline-ghost-sm, var(--enchase-button-padding-inline-ghost, var(--enchase-space-md)));
 }
@@ -177,6 +194,17 @@
   border-color: var(--enchase-button-border-color-danger-disabled, transparent);
 }
 
+.button:where([data-variant='dashed']:disabled) {
+  color: var(--enchase-button-color-dashed-disabled, var(--enchase-button-color-outline-disabled, var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))));
+  background-color: var(--enchase-button-background-dashed-disabled, var(--enchase-button-background-outline-disabled, transparent));
+  border-color: var(--enchase-button-border-color-dashed-disabled, var(--enchase-button-border-color-outline-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)));
+}
+
+.button:where([data-variant='link']:disabled) {
+  background-color: transparent;
+  color: var(--enchase-button-color-link-disabled, var(--enchase-button-color-disabled, var(--enchase-color-text-disabled)));
+}
+
 .button:focus-visible {
   outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
   outline-offset: var(--enchase-focus-offset, 2px);
@@ -209,6 +237,15 @@
   .button[data-variant='danger']:hover:not(:disabled) {
     color: var(--enchase-button-color-danger-hover, var(--enchase-color-on-error));
     box-shadow: var(--enchase-button-shadow-danger-hover, var(--enchase-shadow-sm));
+  }
+
+  .button[data-variant='dashed']:hover:not(:disabled) {
+    color: var(--enchase-button-color-dashed-hover, var(--enchase-button-color-outline-hover, var(--enchase-color-primary)));
+  }
+
+  .button[data-variant='link']:hover:not(:disabled) {
+    color: var(--enchase-button-color-link-hover, var(--enchase-link-color-hover, var(--enchase-color-primary-hover)));
+    text-decoration: var(--enchase-button-text-decoration-link-hover, underline);
   }
 
   @media (prefers-reduced-motion: no-preference) {

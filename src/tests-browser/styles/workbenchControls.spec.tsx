@@ -133,6 +133,35 @@ describe('the buttons of the workbench style', () => {
     expect(button.borderTopWidth).toBe('1px')
   })
 
+  it('draws the dashed button like the outline one, with the dashed line', () => {
+    show(
+      <>
+        <Button variant="outline">Outline</Button>
+        <Button variant="dashed">Dashed</Button>
+      </>
+    )
+
+    expect([style('button', 1).backgroundColor, style('button', 1).borderTopColor, style('button', 1).boxShadow]).toEqual([style('button', 0).backgroundColor, style('button', 0).borderTopColor, style('button', 0).boxShadow])
+    expect([style('button', 0).borderTopStyle, style('button', 1).borderTopStyle]).toEqual(['solid', 'dashed'])
+  })
+
+  it('keeps the link button without the underline under the pointer, and with the hover color of the theme', async () => {
+    show(<Button variant="link">Link</Button>)
+    const probe = document.createElement('span')
+
+    probe.style.color = 'var(--enchase-color-primary-hover)'
+    document.body.append(probe)
+
+    const hover = getComputedStyle(probe).color
+
+    probe.remove()
+    await userEvent.hover(part('button'))
+    await waitForSettled(() => part('button'))
+
+    expect(style('button').color).toBe(hover)
+    expect(style('button').textDecorationLine).toBe('none')
+  })
+
   it('puts the decorative 2px shadow under the primary and the outline buttons in the light mode, and none under the others', () => {
     show(
       <>

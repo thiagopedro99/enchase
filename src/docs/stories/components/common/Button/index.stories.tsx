@@ -21,15 +21,15 @@ const meta = {
   parameters: {
     docs: {
       description: {
-        component: 'A button with five variants and three sizes, and press feedback made with CSS only. It is a real `<button>` and accepts its attributes.'
+        component: 'A button with seven variants and three sizes, and press feedback made with CSS only. It is a real `<button>` and accepts its attributes.'
       }
     }
   },
   argTypes: {
     variant: {
-      description: 'Visual style of the button. `danger` is filled with the error color of the theme, for an action that deletes something or cannot be undone.',
+      description: 'Visual style of the button. `danger` is filled with the error color of the theme, for an action that deletes something or cannot be undone. `dashed` is the outline button with a dashed border, and `link` reads as a link, with no fill and no border.',
       control: 'select',
-      options: ['primary', 'secondary', 'outline', 'ghost', 'danger'],
+      options: ['primary', 'secondary', 'outline', 'ghost', 'danger', 'dashed', 'link'],
       table: { defaultValue: { summary: defaultVariant } }
     },
     size: {
@@ -109,6 +109,30 @@ export const Danger: Story = {
     docs: {
       description: {
         story: 'Filled with the error color of the theme and the text color made for it, for an action that deletes something or cannot be undone. It has the same hooks by state as the primary variant, and the `confirmVariant` of the `ConfirmModal` accepts it.'
+      }
+    }
+  }
+}
+
+export const Dashed: Story = {
+  args: { variant: 'dashed', children: 'Add item' },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'The outline button with a dashed border, for an action that adds something to the page. It starts from the hooks of the outline variant (background, border color, text color, shadow, and the text color on hover and when disabled) and has a hook of its own for each one, such as `--enchase-button-background-dashed` and `--enchase-button-border-color-dashed`, plus `--enchase-button-border-style-dashed` for the line itself.'
+      }
+    }
+  }
+}
+
+export const LinkVariant: Story = {
+  args: { variant: 'link', children: 'Learn more' },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A button that reads as a link: no fill, no border, the color of the links of the theme and no state layer. The text is underlined under the pointer, and `--enchase-button-text-decoration-link-hover` takes that away. The colors have their own hooks, `--enchase-button-color-link`, `--enchase-button-color-link-hover` and `--enchase-button-color-link-disabled`, which start from the hooks of the `Link`. It keeps the padding and the height of the other variants, so it lines up in a row of buttons.'
       }
     }
   }

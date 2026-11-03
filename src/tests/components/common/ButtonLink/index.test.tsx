@@ -51,6 +51,16 @@ describe('ButtonLink', () => {
     expect(screen.getByRole('link', { name: 'Delete' })).toHaveAttribute('data-variant', 'danger')
   })
 
+  it.each(['dashed', 'link'] as const)('accepts the %s variant through the same attribute', (variant) => {
+    renderWithProviders(
+      <ButtonLink href="/more" variant={variant}>
+        More
+      </ButtonLink>
+    )
+
+    expect(screen.getByRole('link', { name: 'More' })).toHaveAttribute('data-variant', variant)
+  })
+
   it('is reached with the keyboard', async () => {
     const user = userEvent.setup()
     renderWithProviders(<ButtonLink href="/docs/">Começar</ButtonLink>)

@@ -23,7 +23,7 @@ const meta = {
     variant: {
       description: 'Visual style, the same as the `Button`.',
       control: 'select',
-      options: ['primary', 'secondary', 'outline', 'ghost', 'danger'],
+      options: ['primary', 'secondary', 'outline', 'ghost', 'danger', 'dashed', 'link'],
       table: { defaultValue: { summary: 'primary' } }
     },
     size: {

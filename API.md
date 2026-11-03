@@ -75,11 +75,11 @@ Also accepts the other HTML attributes of the root element.
 
 ### Button
 
-A button with five variants and three sizes, and press feedback made with CSS only. It is a real `<button>` and accepts its attributes.
+A button with seven variants and three sizes, and press feedback made with CSS only. It is a real `<button>` and accepts its attributes.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger'` | `'primary'` | Visual style of the button. `danger` is filled with the error color of the theme, for an action that deletes something or cannot be undone. |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger' \| 'dashed' \| 'link'` | `'primary'` | Visual style of the button. `danger` is filled with the error color of the theme, for an action that deletes something or cannot be undone. `dashed` is the outline button with a dashed border, and `link` reads as a link, with no fill and no border. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the button. |
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
 | `iconOnly` | `boolean` | `false` | Makes the button a square for a single icon: as wide as it is tall in every size, with the same padding on the four sides and the icon in the middle. There is no text to name it, so pass `aria-label`; without it a screen reader announces an empty button. |
@@ -97,7 +97,7 @@ A link that looks like a `Button`. It is a real `<a href>`, and goes through the
 | `native` | `boolean` | `false` | Leaves the click to the browser even on an app route. |
 | `externalIcon` | `boolean` | `true` | With `target="_blank"`, shows the external link icon after the content. `false` removes only the icon (useful in an icon-only button) and keeps the "opens in a new tab" text for screen readers; in an icon-only link with `aria-label`, put the warning in the label itself. |
 | `animation` | `false \| { recipe, from, tuning }` | `press` | Motion recipe of the `Button`. Use false to turn it off, or { recipe, tuning } with press or lift. |
-| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger'` | `'primary'` | Visual style, the same as the `Button`. |
+| `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger' \| 'dashed' \| 'link'` | `'primary'` | Visual style, the same as the `Button`. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size, the same as the `Button`. |
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
 
@@ -248,7 +248,7 @@ A ready-made confirmation modal: an alertdialog with the question and the cancel
 | `message` | `string` | *required* | Text of the question, in the body of the modal. The dialog is an alertdialog and the body becomes the accessible description. |
 | `confirmText` | `string` | — | Text of the confirm button. Without it, it uses labels.confirm from the UIProvider. |
 | `cancelText` | `string` | — | Text of the cancel button, which receives the initial focus. Without it, it uses labels.cancel from the UIProvider. |
-| `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger'` | `'primary'` | Style of the confirm button, the same as in the Button. |
+| `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger' \| 'dashed' \| 'link'` | `'primary'` | Style of the confirm button, the same as in the Button. |
 | `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
 | `animation` | `MotionOverride` | — | false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale, as in the Modal. |
 | `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
@@ -1239,6 +1239,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-button-background-danger` | `var(--enchase-color-error)` | `background-color` |
 | `--enchase-button-background-danger-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
+| `--enchase-button-background-dashed` | `transparent` (`--enchase-button-background-outline`) | `background-color` |
+| `--enchase-button-background-dashed-disabled` | `transparent` (`--enchase-button-background-outline-disabled`) | `background-color` |
 | `--enchase-button-background-ghost-disabled` | `transparent` | `background-color` |
 | `--enchase-button-background-outline` | `transparent` | `background-color` |
 | `--enchase-button-background-outline-disabled` | `transparent` | `background-color` |
@@ -1247,17 +1249,26 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-background-secondary` | `var(--enchase-color-primary-container)` | `background-color` |
 | `--enchase-button-background-secondary-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
 | `--enchase-button-border-color-danger-disabled` | `transparent` | `border-color` |
+| `--enchase-button-border-color-dashed` | `var(--enchase-button-border-color-outline, var(--enchase-color-border-strong))` | `border-color` |
+| `--enchase-button-border-color-dashed-disabled` | `var(--enchase-button-border-color-outline-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent))` | `border-color` |
 | `--enchase-button-border-color-ghost-disabled` | `transparent` | `border-color` |
 | `--enchase-button-border-color-outline` | `var(--enchase-color-border-strong)` | `border-color` |
 | `--enchase-button-border-color-outline-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `border-color` |
 | `--enchase-button-border-color-primary-disabled` | `transparent` | `border-color` |
 | `--enchase-button-border-color-secondary-disabled` | `transparent` | `border-color` |
+| `--enchase-button-border-style-dashed` | `dashed` | `border-style` |
 | `--enchase-button-color-danger` | `var(--enchase-color-on-error)` | `color` |
 | `--enchase-button-color-danger-disabled` | `var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))` | `color` |
 | `--enchase-button-color-danger-hover` | `var(--enchase-color-on-error)` | `color` |
+| `--enchase-button-color-dashed` | `var(--enchase-button-color-outline, var(--enchase-color-primary))` | `color` |
+| `--enchase-button-color-dashed-disabled` | `var(--enchase-button-color-outline-disabled, var(--enchase-button-color-disabled, var(--enchase-color-text-disabled)))` | `color` |
+| `--enchase-button-color-dashed-hover` | `var(--enchase-button-color-outline-hover, var(--enchase-color-primary))` | `color` |
 | `--enchase-button-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-button-color-ghost` | `var(--enchase-color-primary)` | `color` |
 | `--enchase-button-color-ghost-disabled` | `var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))` | `color` |
+| `--enchase-button-color-link` | `var(--enchase-link-color, var(--enchase-color-primary))` | `color` |
+| `--enchase-button-color-link-disabled` | `var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))` | `color` |
+| `--enchase-button-color-link-hover` | `var(--enchase-link-color-hover, var(--enchase-color-primary-hover))` | `color` |
 | `--enchase-button-color-outline` | `var(--enchase-color-primary)` | `color` |
 | `--enchase-button-color-outline-disabled` | `var(--enchase-button-color-disabled, var(--enchase-color-text-disabled))` | `color` |
 | `--enchase-button-color-outline-hover` | `var(--enchase-color-primary)` | `color` |
@@ -1295,12 +1306,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-scale` | `0.97` | `transform` (also in ThemeToggle) |
 | `--enchase-button-shadow-danger` | `none` | `box-shadow` |
 | `--enchase-button-shadow-danger-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
+| `--enchase-button-shadow-dashed` | `none` (`--enchase-button-shadow-outline`) | `box-shadow` |
 | `--enchase-button-shadow-ghost` | `none` | `box-shadow` |
 | `--enchase-button-shadow-outline` | `none` | `box-shadow` |
 | `--enchase-button-shadow-primary` | `none` | `box-shadow` |
 | `--enchase-button-shadow-primary-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
 | `--enchase-button-shadow-secondary` | `none` | `box-shadow` |
 | `--enchase-button-shadow-secondary-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
+| `--enchase-button-text-decoration-link-hover` | `underline` | `text-decoration` |
 
 ### Calendar
 
@@ -1667,9 +1680,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 
 | Hook | Default | Property |
 | --- | --- | --- |
-| `--enchase-link-color` | `var(--enchase-color-primary)` | `color` |
+| `--enchase-link-color` | `var(--enchase-color-primary)` | `color` (also in Button) |
 | `--enchase-link-color-active` | `var(--enchase-color-primary-hover)` | `color` |
-| `--enchase-link-color-hover` | `var(--enchase-color-primary-hover)` | `color` |
+| `--enchase-link-color-hover` | `var(--enchase-color-primary-hover)` | `color` (also in Button) |
 | `--enchase-link-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-link-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-link-line-height` | `inherit` | `line-height` |

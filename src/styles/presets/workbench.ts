@@ -21,6 +21,7 @@ const buttons: HookValues = {
   '--enchase-button-padding-inline-ghost': '0.9375rem',
   '--enchase-button-padding-inline-ghost-sm': '0.4375rem',
   '--enchase-link-line-height': '1.7143',
+  '--enchase-button-text-decoration-link-hover': 'none',
   '--enchase-button-radius-sm': 'var(--enchase-radius-sm)',
   '--enchase-button-radius-md': 'var(--enchase-radius-md)',
   '--enchase-button-radius-lg': 'var(--enchase-radius-lg)'

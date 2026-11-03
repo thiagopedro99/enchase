@@ -78,6 +78,12 @@ describe('Button', () => {
     expect(screen.getByRole('button', { name: 'Delete' })).toHaveAttribute('data-variant', 'danger')
   })
 
+  it.each(['dashed', 'link'] as const)('reflects the %s variant', (variant) => {
+    renderWithProviders(<Button variant={variant}>Action</Button>)
+
+    expect(screen.getByRole('button', { name: 'Action' })).toHaveAttribute('data-variant', variant)
+  })
+
   it('marks an icon-only button with an attribute, and leaves a button with text without it', () => {
     renderWithProviders(
       <>
@@ -156,6 +162,23 @@ describe('Button', () => {
         </Button>
         <Button variant="ghost" iconOnly aria-label="Add">
           <svg aria-hidden="true" focusable="false" />
+        </Button>
+      </>
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+
+  it('has no axe violations for the dashed and the link variants, enabled and disabled', async () => {
+    const { container } = renderWithProviders(
+      <>
+        <Button variant="dashed">Add</Button>
+        <Button variant="dashed" disabled>
+          Add
+        </Button>
+        <Button variant="link">More</Button>
+        <Button variant="link" disabled>
+          More
         </Button>
       </>
     )
