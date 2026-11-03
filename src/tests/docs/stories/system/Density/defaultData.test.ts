@@ -23,9 +23,15 @@ const enchase = createTheme({ style: builtInStyles.enchase })
 
 const shadcn = createTheme({ style: builtInStyles.shadcn })
 
+const workbenchTheme = createTheme({ style: builtInStyles.workbench })
+
 const enchaseVariables = layoutVariables(enchase.base)
 
 const shadcnVariables = layoutVariables(shadcn.base)
+
+const workbenchVariables = layoutVariables(workbenchTheme.base)
+
+const workbenchCompactTokens: Record<string, string> = Object.fromEntries(Object.entries({ ...compactTokens, ...workbenchTheme.density?.compact?.tokens }).map(([name, value]) => [name, String(value)]))
 
 const fallbacks = Object.fromEntries(collectCssHooks(components).map(({ name, fallback }) => [name, fallback]))
 
@@ -85,6 +91,11 @@ describe('the density tables of the docs', () => {
     const variables = { ...shadcnVariables, ...compactTokens }
 
     expect(hookRows.map(({ shadcnCompact }) => shadcnCompact)).toEqual(hookRows.map(({ name }) => resolved(declaredBy(shadcn, name) ?? compactHooks[name], variables)))
+  })
+
+  it('write the workbench style as it is: the value of the token, and in compact the token that the style declares or else the one of the block', () => {
+    expect(tokenRows.map(({ workbench: value }) => value)).toEqual(tokenRows.map(({ name }) => workbenchVariables[name]))
+    expect(tokenRows.map(({ workbenchCompact }) => workbenchCompact)).toEqual(tokenRows.map(({ name }) => workbenchCompactTokens[name]))
   })
 
   it('say that the shadcn style follows exactly the hooks that it declares as an alias of a token of the block', () => {

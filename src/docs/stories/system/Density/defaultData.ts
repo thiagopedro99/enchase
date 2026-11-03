@@ -1,17 +1,17 @@
-import type { HookRow, SizeGroup, TokenRow } from './types.ts'
+import type { HookRow, SizeGroup, StyleTokenRow } from './types.ts'
 import type { SidebarSection } from 'enchase'
 
-export const tokenRows: TokenRow[] = [
-  { name: '--enchase-hit-size', enchase: '40px', shadcn: '2rem', compact: '32px' },
-  { name: '--enchase-control-height-sm', enchase: '2rem', shadcn: '2rem', compact: '1.75rem' },
-  { name: '--enchase-control-height-md', enchase: '2.5rem', shadcn: '2.25rem', compact: '2rem' },
-  { name: '--enchase-control-height-lg', enchase: '3rem', shadcn: '2.5rem', compact: '2.5rem' },
-  { name: '--enchase-space-sm', enchase: '0.5rem', shadcn: '0.5rem', compact: '0.375rem' },
-  { name: '--enchase-space-md', enchase: '1rem', shadcn: '1rem', compact: '0.75rem' },
-  { name: '--enchase-space-lg', enchase: '1.5rem', shadcn: '1.5rem', compact: '1.125rem' },
-  { name: '--enchase-space-xl', enchase: '2rem', shadcn: '2rem', compact: '1.5rem' },
-  { name: '--enchase-space-2xl', enchase: '3rem', shadcn: '3rem', compact: '2.25rem' },
-  { name: '--enchase-space-3xl', enchase: '4rem', shadcn: '4rem', compact: '3rem' }
+export const tokenRows: StyleTokenRow[] = [
+  { name: '--enchase-hit-size', enchase: '40px', shadcn: '2rem', compact: '32px', workbench: '2rem', workbenchCompact: '1.5rem' },
+  { name: '--enchase-control-height-sm', enchase: '2rem', shadcn: '2rem', compact: '1.75rem', workbench: '1.5rem', workbenchCompact: '1.5rem' },
+  { name: '--enchase-control-height-md', enchase: '2.5rem', shadcn: '2.25rem', compact: '2rem', workbench: '2rem', workbenchCompact: '1.75rem' },
+  { name: '--enchase-control-height-lg', enchase: '3rem', shadcn: '2.5rem', compact: '2.5rem', workbench: '2.5rem', workbenchCompact: '2.1875rem' },
+  { name: '--enchase-space-sm', enchase: '0.5rem', shadcn: '0.5rem', compact: '0.375rem', workbench: '0.5rem', workbenchCompact: '0.25rem' },
+  { name: '--enchase-space-md', enchase: '1rem', shadcn: '1rem', compact: '0.75rem', workbench: '1rem', workbenchCompact: '0.5rem' },
+  { name: '--enchase-space-lg', enchase: '1.5rem', shadcn: '1.5rem', compact: '1.125rem', workbench: '1.5rem', workbenchCompact: '1rem' },
+  { name: '--enchase-space-xl', enchase: '2rem', shadcn: '2rem', compact: '1.5rem', workbench: '2rem', workbenchCompact: '2rem' },
+  { name: '--enchase-space-2xl', enchase: '3rem', shadcn: '3rem', compact: '2.25rem', workbench: '3rem', workbenchCompact: '3rem' },
+  { name: '--enchase-space-3xl', enchase: '4rem', shadcn: '4rem', compact: '3rem', workbench: '4rem', workbenchCompact: '3rem' }
 ]
 
 export const hookRows: HookRow[] = [
@@ -35,68 +35,68 @@ export const sizeGroups: SizeGroup[] = [
   {
     title: 'Buttons and controls',
     rows: [
-      { part: 'Button, small', enchase: '32 → 28', shadcn: '32 → 28' },
-      { part: 'Button, medium', enchase: '40 → 32', shadcn: '36 → 32' },
-      { part: 'Button, large', enchase: '48 → 40', shadcn: '40 → 40' },
-      { part: 'SegmentedControl, small', enchase: '32 → 28', shadcn: '32 → 28' },
-      { part: 'SegmentedControl, medium', enchase: '40 → 32', shadcn: '36 → 32' },
-      { part: 'SegmentedControl, large', enchase: '48 → 40', shadcn: '40 → 40' },
-      { part: 'Pagination page, small', enchase: '32 × 32 → 28 × 28', shadcn: '32 × 32 → 28 × 28' },
-      { part: 'Pagination page, medium', enchase: '40 × 40 → 32 × 32', shadcn: '36 × 36 → 32 × 32' },
-      { part: 'Tabs, the list and each tab', enchase: '44 → 36', shadcn: '36 → 32' }
+      { part: 'Button, small', enchase: '32 → 28', shadcn: '32 → 28', workbench: '24 → 24' },
+      { part: 'Button, medium', enchase: '40 → 32', shadcn: '36 → 32', workbench: '32 → 28' },
+      { part: 'Button, large', enchase: '48 → 40', shadcn: '40 → 40', workbench: '40 → 35' },
+      { part: 'SegmentedControl, small', enchase: '32 → 28', shadcn: '32 → 28', workbench: '28 → 28' },
+      { part: 'SegmentedControl, medium', enchase: '40 → 32', shadcn: '36 → 32', workbench: '32 → 28' },
+      { part: 'SegmentedControl, large', enchase: '48 → 40', shadcn: '40 → 40', workbench: '40 → 35' },
+      { part: 'Pagination page, small', enchase: '32 × 32 → 28 × 28', shadcn: '32 × 32 → 28 × 28', workbench: '24 × 24 → 24 × 24' },
+      { part: 'Pagination page, medium', enchase: '40 × 40 → 32 × 32', shadcn: '36 × 36 → 32 × 32', workbench: '32 × 32 → 28 × 28' },
+      { part: 'Tabs, the list and each tab', enchase: '44 → 36', shadcn: '36 → 32', workbench: '46 → 36' }
     ]
   },
   {
     title: 'Fields',
     rows: [
-      { part: 'Input, Select, NumberInput, DatePicker and Combobox field', enchase: '56 → 44', shadcn: '36 → 32' },
-      { part: 'Textarea field', enchase: '104 → 96', shadcn: '95 → 87' },
-      { part: 'Button inside a field: password, stepper, calendar', enchase: '40 × 40 → 32 × 32', shadcn: '32 × 32 → 32 × 32' },
-      { part: 'Button of the Combobox', enchase: '40 × 56 → 32 × 44', shadcn: '32 × 36 → 32 × 32' },
-      { part: 'Both steppers of the NumberInput', enchase: '84 × 56 → 68 × 44', shadcn: '68 × 36 → 68 × 32' }
+      { part: 'Input, Select, NumberInput, DatePicker and Combobox field', enchase: '56 → 44', shadcn: '36 → 32', workbench: '32 → 28' },
+      { part: 'Textarea field', enchase: '104 → 96', shadcn: '95 → 87', workbench: '76 → 74' },
+      { part: 'Button inside a field: password, stepper, calendar', enchase: '40 × 40 → 32 × 32', shadcn: '32 × 32 → 32 × 32', workbench: '32 × 32 → 24 × 24' },
+      { part: 'Button of the Combobox', enchase: '40 × 56 → 32 × 44', shadcn: '32 × 36 → 32 × 32', workbench: '32 × 32 → 24 × 28' },
+      { part: 'Both steppers of the NumberInput', enchase: '84 × 56 → 68 × 44', shadcn: '68 × 36 → 68 × 32', workbench: '68 × 32 → 52 × 28' }
     ]
   },
   {
     title: 'Selection controls',
     rows: [
-      { part: 'Checkbox, RadioGroup option and Switch, the clickable row', enchase: '40 → 32', shadcn: '32 → 32' },
-      { part: 'Slider, the control around the thumb', enchase: '40 → 32', shadcn: '32 → 32' },
-      { part: 'Slider, the thumb', enchase: '20 × 20 → 20 × 20', shadcn: '16 × 16 → 16 × 16' }
+      { part: 'Checkbox, RadioGroup option and Switch, the clickable row', enchase: '40 → 32', shadcn: '32 → 32', workbench: '32 → 24' },
+      { part: 'Slider, the control around the thumb', enchase: '40 → 32', shadcn: '32 → 32', workbench: '32 → 24' },
+      { part: 'Slider, the thumb', enchase: '20 × 20 → 20 × 20', shadcn: '16 × 16 → 16 × 16', workbench: '14 × 14 → 14 × 14' }
     ]
   },
   {
     title: 'Content',
     rows: [
-      { part: 'Accordion trigger', enchase: '48 → 40', shadcn: '52 → 52' },
-      { part: 'Table row, medium', enchase: '41 → 37', shadcn: '38 → 38' },
-      { part: 'Table row, small', enchase: '30 → 30', shadcn: '30 → 30' },
-      { part: 'Card with one line of text', enchase: '72 → 60', shadcn: '74 → 62' },
-      { part: 'Alert with a title and a line of text', enchase: '73 → 69', shadcn: '83 → 83' },
-      { part: 'Badge', enchase: '24 → 24', shadcn: '20 → 20' },
-      { part: 'Tag', enchase: '32 → 32', shadcn: '32 → 32' }
+      { part: 'Accordion trigger', enchase: '48 → 40', shadcn: '52 → 52', workbench: '46 → 36' },
+      { part: 'Table row, medium', enchase: '41 → 37', shadcn: '38 → 38', workbench: '55 → 39' },
+      { part: 'Table row, small', enchase: '30 → 30', shadcn: '30 → 30', workbench: '39 → 31' },
+      { part: 'Card with one line of text', enchase: '72 → 60', shadcn: '74 → 62', workbench: '72 → 56' },
+      { part: 'Alert with a title and a line of text', enchase: '73 → 69', shadcn: '83 → 83', workbench: '73 → 65' },
+      { part: 'Badge', enchase: '24 → 24', shadcn: '20 → 20', workbench: '22 → 20' },
+      { part: 'Tag', enchase: '32 → 32', shadcn: '32 → 32', workbench: '22 → 20' }
     ]
   },
   {
     title: 'Navigation and bars',
     rows: [
-      { part: 'Sidebar item', enchase: '52 → 40', shadcn: '32 → 32' },
-      { part: 'Sidebar header', enchase: '72 → 64', shadcn: '56 → 56' },
-      { part: 'Navbar bar', enchase: '64 → 56', shadcn: '56 → 56' },
-      { part: 'Layout top bar', enchase: '64 → 56', shadcn: '56 → 56' },
-      { part: 'Collapse button of the Sidebar and ThemeToggle', enchase: '44 × 44 → 44 × 44', shadcn: '44 × 44 → 44 × 44' }
+      { part: 'Sidebar item', enchase: '52 → 40', shadcn: '32 → 32', workbench: '40 → 35' },
+      { part: 'Sidebar header', enchase: '72 → 64', shadcn: '56 → 56', workbench: '72 → 64' },
+      { part: 'Navbar bar', enchase: '64 → 56', shadcn: '56 → 56', workbench: '64 → 56' },
+      { part: 'Layout top bar', enchase: '64 → 56', shadcn: '56 → 56', workbench: '64 → 56' },
+      { part: 'Collapse button of the Sidebar and ThemeToggle', enchase: '44 × 44 → 44 × 44', shadcn: '44 × 44 → 44 × 44', workbench: '44 × 44 → 44 × 44' }
     ]
   },
   {
     title: 'Overlays, which render on the body and still follow the attribute on the root',
     rows: [
-      { part: 'Menu item', enchase: '40 → 32', shadcn: '33 → 33' },
-      { part: 'Menu popup with three items and a separator', enchase: '137 → 113', shadcn: '118 → 118' },
-      { part: 'Combobox option', enchase: '40 → 32', shadcn: '33 → 33' },
-      { part: 'Combobox list with three options', enchase: '128 → 104', shadcn: '109 → 109' },
-      { part: 'DatePicker day', enchase: '40 × 40 → 32 × 32', shadcn: '32 × 32 → 32 × 32' },
-      { part: 'DatePicker popup', enchase: '320 × 368 → 256 × 294', shadcn: '266 × 306 → 258 × 296' },
-      { part: 'Popover with one line of text', enchase: '56 → 48', shadcn: '58 → 50' },
-      { part: 'Close button of Modal, Drawer and toast', enchase: '40 × 40 → 32 × 32', shadcn: '32 × 32 → 32 × 32' }
+      { part: 'Menu item', enchase: '40 → 32', shadcn: '33 → 33', workbench: '32 → 30' },
+      { part: 'Menu popup with three items and a separator', enchase: '137 → 113', shadcn: '118 → 118', workbench: '113 → 107' },
+      { part: 'Combobox option', enchase: '40 → 32', shadcn: '33 → 33', workbench: '32 → 30' },
+      { part: 'Combobox list with three options', enchase: '128 → 104', shadcn: '109 → 109', workbench: '104 → 98' },
+      { part: 'DatePicker day', enchase: '40 × 40 → 32 × 32', shadcn: '32 × 32 → 32 × 32', workbench: '36 × 36 → 36 × 36' },
+      { part: 'DatePicker popup', enchase: '320 × 368 → 256 × 294', shadcn: '266 × 306 → 258 × 296', workbench: '284 × 329 → 284 × 312' },
+      { part: 'Popover with one line of text', enchase: '56 → 48', shadcn: '58 → 50', workbench: '46 → 46' },
+      { part: 'Close button of Modal, Drawer and toast', enchase: '40 × 40 → 32 × 32', shadcn: '32 × 32 → 32 × 32', workbench: '32 × 32 → 24 × 24' }
     ]
   }
 ]

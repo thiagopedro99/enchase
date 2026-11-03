@@ -18,6 +18,12 @@ export const TokenTable = () => (
           Default in <code>shadcn</code>
         </th>
         <th>Compact</th>
+        <th>
+          Default in <code>workbench</code>
+        </th>
+        <th>
+          Compact in <code>workbench</code>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -27,6 +33,8 @@ export const TokenTable = () => (
           <CodeCell value={row.enchase} />
           <CodeCell value={row.shadcn} />
           <CodeCell value={row.compact} />
+          <CodeCell value={row.workbench} />
+          <CodeCell value={row.workbenchCompact} />
         </tr>
       ))}
     </tbody>
@@ -95,6 +103,9 @@ export const SizeTables = () => (
             <th>
               <code>shadcn</code>
             </th>
+            <th>
+              <code>workbench</code>
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -103,6 +114,7 @@ export const SizeTables = () => (
               <td>{row.part}</td>
               <td>{row.enchase}</td>
               <td>{row.shadcn}</td>
+              <td>{row.workbench}</td>
             </tr>
           ))}
         </tbody>

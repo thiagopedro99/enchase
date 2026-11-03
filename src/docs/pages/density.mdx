@@ -9,7 +9,7 @@ import { followedHooks, hookRows, keptHooks, tokenRows } from '../stories/system
 
 The compact density tightens the whole kit in one step: shorter controls and bars, smaller touch targets and a tighter space scale. It is plain CSS. There is no prop, no React hook and nothing new in `createTheme`: a block of `--enchase-*` variables applies while `<html>` has `data-density="compact"`.
 
-Switch it with the **Density** item of the toolbar, and switch **Style** to see the same page in the other style. These are the real components:
+Switch it with the **Density** item of the toolbar, and switch **Style** to see the same page in the other styles. These are the real components:
 
 <Story of={GalleryStories.Gallery} />
 
@@ -48,6 +48,8 @@ They live in `:root[data-density='compact']`, with specificity 0,2,0, so they be
 
 <TokenTable />
 
+The last two columns are the `workbench` style, which carries a compact of its own (see the section below): its default values and the ones it gets in compact, next to the block of the library.
+
 ### Hooks
 
 They live in `:where(:root[data-density='compact'])`, with specificity 0,0,0. They cover the heights that the `enchase` style writes in the component itself, which no token reaches: the fields, the tabs, the accordion, the sidebar and the bars, plus the padding of the options of the `Select` and of the `Badge`. A hook that your CSS or a style declares wins over them, on `:root` or on the component. In `enchase` the default is the one written in the component, as in `var(--enchase-input-height, 3.5rem)`; the `shadcn` style declares all of them itself.
@@ -81,12 +83,16 @@ The `shadcn` style is half compact, on purpose. It declares all {hookRows.length
 
 A floating label of the shadcn style sits 4px closer to the notch in compact. That is not the default of the style, whose label is above the field with no notch: it shows only when you force `labelPlacement="floating"`. The start of the label minus the start of the text of the notch goes from -5 px to -1 px, the label stays inside the notch and the gap of the notch is the same.
 
+## The compact of the workbench style
+
+The `workbench` style declares its own compact, in the `density` section of `defineStyle`, so it does not take the default block above: it brings its own values for 9 of the tokens (the last two columns of the token table; `--enchase-space-3xl` it leaves out, and takes the value of the block) and 30 hooks, measured for it. It does not shrink the type, it keeps every target at 24 px or more, and it leaves the 50 px padding of the bar of the `Layout` as it is. The hooks of its compact live in `:root[data-density='compact']`, with the strength of the tokens (0,2,0), so a hook of yours on `:root` loses to them in the build without a layer, as with any style that declares a compact. The size of each part in the three styles is in the part-by-part tables above.
+
 ## Limits
 
 - **Only on `<html>`.** Unlike `data-theme`, which works on any ancestor, `data-density="compact"` on a `div` or on the `<body>` does nothing: every selector of the block starts with `:root`, and not one rectangle changes (measured). There are no density islands. The overlays render on the `<body>`, which only the root reaches.
 - **No way back, no other values.** Inside a compact tree there is no way back to the default: `data-density="default"` on an element changes nothing. There is no `spacious`. The type does not change (font sizes and line heights), nor the radius, nor the drawing of the checkbox, the radio, the switch, the icons and the avatar.
 - **Not for an interface made for fingers.** The touch target goes down to 32 px with any pointer, a touch screen included: the density does not look at `pointer: coarse`. The floor of 24 px (WCAG 2.5.8) still holds, because every target reads `max(24px, var(--enchase-hit-size, ...))`, and `--enchase-hit-size-lg` stays at 44 px. The only target under 24 px is the thumb of the `Slider` (20 px in `enchase`, 16 px in `shadcn`), as it already was in the default density: the control around it is 32 px. The fields keep their 16 px font on a touch pointer.
-- **Calibrated for the two built-in styles.** The compact density is a set of absolute values, chosen for `enchase` and `shadcn`. A style of your own, made with `defineStyle`, receives the same block and cannot declare its own compact. In a style whose default is already denser than the one of `enchase`, some parts may not compact, or may even grow: the floor of 24 px still holds.
+- **Calibrated for `enchase` and `shadcn`.** The default block is a set of absolute values, chosen for those two styles. A style of your own, made with `defineStyle`, receives the same block and can replace it with its own compact (`density`), as `workbench` does, but the values it declares are its own and the library does not check them against the default size of the style. In a style whose default is already denser than the one of `enchase`, some parts may not compact, or may even grow: the floor of 24 px still holds.
 - **What stays out of it.** The widths (sidebar, modal, drawer and menu), the focus ring, the borders, the state layers and the motion.
 
 ## Your own values
@@ -108,13 +114,13 @@ You have two ways out:
 
 ## What the tests check
 
-The browser tests run in Chromium, Firefox and WebKit, and in both styles wherever the style matters:
+The browser tests run in Chromium, Firefox and WebKit, and in the three styles wherever the style matters:
 
 - The size of each part in the table above, in the default density and in the compact one, with the overlays that render on the `<body>`.
 - The default look is the same with no attribute and with `default`, `spacious` or an empty value, in every part of a gallery and in every variable of the block.
 - The attribute on any element but the root changes nothing, and `data-density="default"` inside a compact root changes nothing.
-- Every target is 24 px or more in the compact density, but the thumb of the `Slider`, and no target gets taller. A target gets wider only where it fills the room that a neighbor gave back: the input of the `Combobox` and the items of the `Sidebar`.
+- Every target is 24 px or more in the compact density, but the thumb of the `Slider`, and no target gets taller. A target gets wider only where it fills the room that a neighbor gave back: the input of the `Combobox` and, where the items follow the space tokens, the items of the `Sidebar`.
 - The floating label of the six fields keeps its distance from the top of the field, its alignment with the notch and the gap of the notch in `enchase`, in both text directions, and the label above the field of `shadcn` keeps its distance from it.
 - The precedence against the layered build and against the CSS of an app, as in the section above.
 
-A test in jsdom compares the tokens and the hooks of the tables above with the data of the block, with the `enchase` and `shadcn` styles and with the CSS of the components.
+A test in jsdom compares the tokens and the hooks of the tables above with the data of the block, with the `enchase`, `shadcn` and `workbench` styles and with the CSS of the components.
