@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
 
@@ -18,7 +19,11 @@ import type { ThemeSet } from '@styles/tokens/types.ts'
 
 const components = path.resolve(__dirname, '../../../components')
 
-const hookNames = new Set(collectCssHooks(components).map((hook: { name: string }) => hook.name))
+const globalCss = readFileSync(path.resolve(__dirname, '../../../styles/css/global.ts'), 'utf8')
+
+const globalHooks = [...globalCss.matchAll(/var\((--enchase-[a-z0-9-]+)/g)].map((match) => match[1] as string)
+
+const hookNames = new Set([...collectCssHooks(components).map((hook: { name: string }) => hook.name), ...globalHooks])
 
 const namesIn = (css: string) => new Set([...css.matchAll(/(--enchase-[a-z0-9-]+):/g)].map((match) => match[1] as string))
 
@@ -71,7 +76,7 @@ describe('the built-in styles', () => {
       for (const height of Object.values(theme.base.control.height)) expect(pixels(height)).toBeGreaterThanOrEqual(24)
     })
 
-    it('only sets hooks that exist in the components and that are not tokens of the theme', () => {
+    it('only sets hooks that exist in the components or in the global styles and that are not tokens of the theme', () => {
       const named = hooksOf(style)
 
       expect(named.filter((name) => !hookNames.has(name))).toEqual([])
