@@ -11,14 +11,14 @@ const meta = {
     layout: 'padded',
     docs: {
       description: {
-        component: 'The `style` of `createTheme` (and of the `theme` prop of the `ColorModeProvider`) changes the look of the whole kit: the palette, the radii, the heights, the font weights, the borders, the shadows and the placement of the field label. Each style is an object that you import from its own entry, `enchase/styles/<name>` (`import { shadcn } from \'enchase/styles/shadcn\'`), and pass in `createTheme({ style: shadcn })`: only whoever imports a style gets its data. `enchase` is the usual look; `shadcn` brings the kit closer to shadcn/ui, without giving up the contrast of the library. What you pass in `brand`, `shape`, `radius`, `fonts`, `motion`, `light` and `dark` wins over the style. The Style item of the Storybook toolbar switches the style of all the stories.'
+        component: 'The `style` of `createTheme` (and of the `theme` prop of the `ColorModeProvider`) changes the look of the whole kit: the palette, the radii, the heights, the font weights, the borders, the shadows and the placement of the field label. Each style is an object that you import from its own entry, `enchase/styles/<name>` (`import { shadcn } from \'enchase/styles/shadcn\'`), and pass in `createTheme({ style: shadcn })`: only whoever imports a style gets its data. `enchase` is the usual look; `shadcn` brings the kit closer to shadcn/ui, without giving up the contrast of the library; `workbench` is a neutral, dense look for work screens, with a blue primary, light shadows and a compact density of its own, with the same contrast. What you pass in `brand`, `shape`, `radius`, `fonts`, `motion`, `light` and `dark` wins over the style. The Style item of the Storybook toolbar switches the style of all the stories.'
       }
     }
   },
   args: { style: defaultStyle, brand: '', shape: '', labelPlacement: '' },
   argTypes: {
     style: {
-      description: 'Visual style, imported from `enchase/styles/<name>` and passed in `createTheme({ style })`: `enchase` (the default look, with no overrides) or `shadcn` (neutral palette, borders instead of shadows, 36px controls, 0.5rem corners, label above the field).',
+      description: 'Visual style, imported from `enchase/styles/<name>` and passed in `createTheme({ style })`: `enchase` (the default look, with no overrides) `shadcn` (neutral palette, borders instead of shadows, 36px controls, 0.5rem corners, label above the field) or `workbench` (neutral and dense: controls of 24, 32 and 40px, a blue primary, borders of 1px, label above the field).',
       control: 'inline-radio',
       options: styles
     },
@@ -32,7 +32,7 @@ const meta = {
       options: shapes
     },
     labelPlacement: {
-      description: 'Where the field label goes (`labelPlacement` prop of the `Input`, the `NumberInput`, the `Select` and the `Textarea`), on top of the style. Empty uses the one of the style: `floating` in `enchase` and `stacked` in `shadcn`.',
+      description: 'Where the field label goes (`labelPlacement` prop of the `Input`, the `NumberInput`, the `Select` and the `Textarea`), on top of the style. Empty uses the one of the style: `floating` in `enchase` and `stacked` in `shadcn` and `workbench`.',
       control: { type: 'inline-radio', labels: placementLabels },
       options: placements
     }
@@ -56,6 +56,10 @@ export const ShadcnWithBrand: Story = {
 
 export const ShadcnWithPillButtons: Story = {
   args: { style: 'shadcn', shape: 'pill' }
+}
+
+export const Workbench: Story = {
+  args: { style: 'workbench' }
 }
 
 export const LabelAbove: Story = {

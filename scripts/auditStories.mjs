@@ -25,7 +25,9 @@ const combinations = [
   { name: 'light:enchase', theme: 'light', style: 'enchase' },
   { name: 'dark:enchase', theme: 'dark', style: 'enchase' },
   { name: 'light:shadcn', theme: 'light', style: 'shadcn' },
-  { name: 'dark:shadcn', theme: 'dark', style: 'shadcn' }
+  { name: 'dark:shadcn', theme: 'dark', style: 'shadcn' },
+  { name: 'light:workbench', theme: 'light', style: 'workbench' },
+  { name: 'dark:workbench', theme: 'dark', style: 'workbench' }
 ]
 
 const axeTags = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice']
@@ -383,7 +385,8 @@ const lookProblems = async (context, origin) => {
   return [
     ...looks.filter(({ combination, look }) => look.theme !== combination.theme).map(({ combination, look }) => `${combination.name} rendered as ${look.theme}`),
     ...(lookOf('light:enchase').background === lookOf('dark:enchase').background ? ['the light and the dark themes have the same background'] : []),
-    ...(lookOf('light:enchase').radius === lookOf('light:shadcn').radius ? ['the enchase and the shadcn styles have the same radius'] : [])
+    ...(lookOf('light:enchase').radius === lookOf('light:shadcn').radius ? ['the enchase and the shadcn styles have the same radius'] : []),
+    ...(lookOf('light:enchase').radius === lookOf('light:workbench').radius ? ['the enchase and the workbench styles have the same radius'] : [])
   ]
 }
 
