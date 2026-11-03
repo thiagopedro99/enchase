@@ -29,6 +29,7 @@ export const useCalendar = ({ today, value, min, max, isDateDisabled, firstDay, 
   const todayDate = read(today) ?? fallbackDate
   const [focused, setFocused] = useState(() => clampDate(selected ?? todayDate, earliest, latest))
   const [synced, setSynced] = useState(value)
+  const [keyboard, setKeyboard] = useState(false)
 
   if (value !== synced) {
     setSynced(value)
@@ -61,6 +62,7 @@ export const useCalendar = ({ today, value, min, max, isDateDisabled, firstDay, 
 
   const move = (date: CalendarDate) => {
     moveFocus.current = 'keyboard'
+    setKeyboard(true)
     setFocused(clampDate(date, earliest, latest))
   }
 
@@ -99,6 +101,7 @@ export const useCalendar = ({ today, value, min, max, isDateDisabled, firstDay, 
   return {
     gridRef,
     focused,
+    keyboard,
     weeks,
     weekdays: Array.from({ length: 7 }, (_, index) => (firstDay + index) % 7),
     todayDate,
@@ -109,6 +112,7 @@ export const useCalendar = ({ today, value, min, max, isDateDisabled, firstDay, 
     goPrevious: () => step(-1),
     goNext: () => step(1),
     choose,
-    handleKeyDown
+    handleKeyDown,
+    handlePointerDown: () => setKeyboard(false)
   }
 }

@@ -53,7 +53,8 @@ export const SegmentedControl = forwardRef<HTMLDivElement, SegmentedControlProps
       if (target === undefined) return
 
       event.preventDefault()
-      itemRefs.current[target]?.focus()
+      itemRefs.current[target]?.focus({ preventScroll: true })
+      itemRefs.current[target]?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
       choose(items[target].value)
     }
 

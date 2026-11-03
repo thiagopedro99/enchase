@@ -368,6 +368,17 @@ describe('the Drawer in a real browser: how it behaves as a dialog', () => {
   })
 })
 
+const GrowingContent = ({ content }: { content: ReactElement }) => {
+  const [tall, setTall] = useState(false)
+
+  return (
+    <>
+      <Button onClick={() => setTall(true)}>Crescer</Button>
+      {tall ? content : null}
+    </>
+  )
+}
+
 describe('the Drawer in a real browser: how its body scrolls with the keyboard', () => {
   const longContent = <div style={{ height: 3000 }}>Muito conteúdo</div>
 
@@ -426,6 +437,19 @@ describe('the Drawer in a real browser: how its body scrolls with the keyboard',
 
     await expect.poll(() => bodyOf().getAttribute('tabindex')).toBe('0')
     expect(page.getByRole('region', { name: 'Menu' }).element()).toBe(bodyOf())
+  })
+
+  it('puts the body in the tab order when the content grows after the drawer opened', async () => {
+    renderInBrowser(
+      <DrawerPage footer={save}>
+        <GrowingContent content={longContent} />
+      </DrawerPage>
+    )
+    await openIt()
+
+    expect(bodyOf().hasAttribute('tabindex')).toBe(false)
+    await userEvent.click(page.getByRole('button', { name: 'Crescer' }))
+    await expect.poll(() => bodyOf().getAttribute('tabindex')).toBe('0')
   })
 
   it('draws the focus ring of the library inside the body', async () => {

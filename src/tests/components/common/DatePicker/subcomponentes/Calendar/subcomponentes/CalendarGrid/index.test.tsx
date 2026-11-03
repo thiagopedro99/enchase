@@ -21,6 +21,7 @@ const grid = (props: Props = {}) => (
     weeks={monthWeeks(date('2026-10-14'), 0)}
     weekdays={[0, 1, 2, 3, 4, 5, 6]}
     focused={date('2026-10-14')}
+    keyboard={false}
     today={date('2026-10-28')}
     format={createDateFormat('pt-BR')}
     labelledBy="title"
@@ -29,6 +30,7 @@ const grid = (props: Props = {}) => (
     isDisabled={() => false}
     onChoose={vi.fn()}
     onKeyDown={vi.fn()}
+    onPointerDown={vi.fn()}
     {...props}
   />
 )
@@ -120,6 +122,20 @@ describe('CalendarGrid', () => {
     expect(formatIsoDate(onChoose.mock.calls[0][0])).toBe('2026-10-09')
     expect(onKeyDown).toHaveBeenCalledTimes(1)
     expect(onKeyDown.mock.calls[0][0].key).toBe('ArrowRight')
+  })
+
+  it('marks the table while the focus is the keyboard\'s, and tells when a pointer goes down on it', () => {
+    const onPointerDown = vi.fn()
+
+    const { rerender } = render({ onPointerDown })
+
+    expect(screen.getByRole('grid')).not.toHaveAttribute('data-keyboard-focus')
+
+    fireEvent.pointerDown(cell('2026-10-09'))
+    expect(onPointerDown).toHaveBeenCalledTimes(1)
+
+    rerender(grid({ onPointerDown, keyboard: true }))
+    expect(screen.getByRole('grid')).toHaveAttribute('data-keyboard-focus', '')
   })
 
   it('gives the table to the ref it is given', () => {

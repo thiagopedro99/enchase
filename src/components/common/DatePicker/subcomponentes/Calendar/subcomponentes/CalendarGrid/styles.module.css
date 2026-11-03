@@ -90,7 +90,8 @@
   color: var(--enchase-date-picker-calendar-day-color-disabled, var(--enchase-color-text-disabled));
 }
 
-.day:focus-visible .number {
+.day:focus-visible .number,
+.grid[data-keyboard-focus] .day:focus .number {
   outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
   outline-offset: var(--enchase-focus-offset, 2px);
 }

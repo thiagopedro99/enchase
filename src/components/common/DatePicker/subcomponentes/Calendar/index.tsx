@@ -39,6 +39,7 @@ export const Calendar = ({ today, value, min, max, isDateDisabled, firstDayOfWee
         weeks={calendar.weeks}
         weekdays={calendar.weekdays}
         focused={calendar.focused}
+        keyboard={calendar.keyboard}
         today={calendar.todayDate}
         format={format}
         labelledBy={titleId}
@@ -47,6 +48,7 @@ export const Calendar = ({ today, value, min, max, isDateDisabled, firstDayOfWee
         isDisabled={calendar.isDisabled}
         onChoose={calendar.choose}
         onKeyDown={calendar.handleKeyDown}
+        onPointerDown={calendar.handlePointerDown}
       />
     </div>
   )

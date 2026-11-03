@@ -4,8 +4,17 @@ import styles from './styles.module.css'
 
 import type { CalendarGridProps } from './types.ts'
 
-export const CalendarGrid = ({ weeks, weekdays, focused, today, format, labelledBy, gridRef, isSelected, isDisabled, onChoose, onKeyDown }: CalendarGridProps) => (
-  <table ref={gridRef} role="grid" aria-labelledby={labelledBy} className={styles.grid} onKeyDown={onKeyDown} {...slot('date-picker', 'calendar-grid')}>
+export const CalendarGrid = ({ weeks, weekdays, focused, keyboard, today, format, labelledBy, gridRef, isSelected, isDisabled, onChoose, onKeyDown, onPointerDown }: CalendarGridProps) => (
+  <table
+    ref={gridRef}
+    role="grid"
+    aria-labelledby={labelledBy}
+    className={styles.grid}
+    data-keyboard-focus={keyboard ? '' : undefined}
+    onKeyDown={onKeyDown}
+    onPointerDown={onPointerDown}
+    {...slot('date-picker', 'calendar-grid')}
+  >
     <thead>
       <tr>
         {weekdays.map((weekday) => (

@@ -1748,7 +1748,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-menu-item-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-menu-item-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-menu-min-width` | `10rem` | `min-inline-size` |
-| `--enchase-menu-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
+| `--enchase-menu-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block`, `scroll-margin-block` |
 | `--enchase-menu-padding-inline` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
 | `--enchase-menu-separator-background` | `var(--enchase-color-border)` | `background-color` |
 | `--enchase-menu-separator-margin-block` | `0.25rem` (`--enchase-space-xs`) | `margin-block` |

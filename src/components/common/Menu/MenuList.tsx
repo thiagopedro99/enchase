@@ -39,7 +39,8 @@ export const MenuList = ({ items, entry, animation }: MenuListProps) => {
       if (target === undefined) return
 
       event.preventDefault()
-      itemRefs.current[target]?.focus()
+      itemRefs.current[target]?.focus({ preventScroll: true })
+      itemRefs.current[target]?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
     }
 
     menu.addEventListener('keydown', handleKeyDown)

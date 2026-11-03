@@ -81,7 +81,7 @@ createRoot(document.getElementById('root')!).render(
 
 The default font is Figtree: load it in your app (for example with `@fontsource-variable/figtree`) or set another family in the theme.
 
-`GlobalStyles` is optional. It adds a small stylesheet, in `@layer enchase-base`: a reset of `box-sizing`, margin and padding, the theme's font, color and background on `<body>`, the size of the headings, thin scrollbars, the focus ring, the selection color and shortened animations under `prefers-reduced-motion`. Leave it out if your app already has its own base styles: the components style themselves. In that case, give `<body>` the theme's colors (`background-color: var(--enchase-color-background)` and `color: var(--enchase-color-text-primary)`) and set `scrollbar-gutter: stable` on `<html>`, so the page doesn't shift sideways when a modal locks the scroll.
+`GlobalStyles` is optional. It adds a small stylesheet, in `@layer enchase-base`: a reset of `box-sizing`, margin and padding, the theme's font, color and background on `<body>`, the size of the headings, thin scrollbars, the focus ring (with the scroll margin that keeps it in view), the selection color and shortened animations under `prefers-reduced-motion`. Leave it out if your app already has its own base styles: the components style themselves. In that case, give `<body>` the theme's colors (`background-color: var(--enchase-color-background)` and `color: var(--enchase-color-text-primary)`) and set `scrollbar-gutter: stable` on `<html>`, so the page doesn't shift sideways when a modal locks the scroll.
 
 ### Your first screen
 
