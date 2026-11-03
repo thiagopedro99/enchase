@@ -3,7 +3,6 @@ import { HomeIcon } from '@tests/shared/fixtures/exampleIcons.tsx'
 import { shadcn } from '@styles/presets/shadcn.ts'
 import { workbench } from '@styles/presets/workbench.ts'
 
-import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.tsx'
 import { ChevronLeftIcon } from '@components/common/Icon/icons/ChevronLeftIcon.tsx'
 import { InlineLoading, Loading } from '@components/common/Loading/index.tsx'
@@ -153,7 +152,6 @@ export const hydrationCases: HydrationCase[] = [
   { name: 'Breadcrumbs', element: <Breadcrumbs items={[{ id: 'home', label: 'Home', href: '/' }, { id: 'page', label: 'Page' }]} /> },
   { name: 'Sidebar permanent', element: <Sidebar sections={sections} /> },
   { name: 'Sidebar modal open', element: <Sidebar variant="modal" open onClose={noop} sections={sections} /> },
-  { name: 'SidebarUser', element: <SidebarUser name="Pedro Lima" collapsed={false} onLogout={noop} /> },
   { name: 'Navbar', element: <Navbar logo="Logo" /> },
   { name: 'Navbar translucent', element: <Navbar logo="Logo" translucent /> },
   { name: 'Footer', element: <Footer /> },

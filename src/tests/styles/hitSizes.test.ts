@@ -51,7 +51,6 @@ describe('the target sizes of the components', () => {
       'common/Sidebar/styles.module.css',
       'common/ThemeToggle/styles.module.css',
       'layout/subcomponentes/AppBar/styles.module.css',
-      'layout/subcomponentes/SidebarUser/styles.module.css',
       'navbar/styles.module.css'
     ])
   })

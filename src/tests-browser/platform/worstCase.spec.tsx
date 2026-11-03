@@ -25,7 +25,6 @@ import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import { ToastProvider, useToast } from '@components/toast/index.ts'
 import Footer from '@components/footer/index.tsx'
 import Layout from '@components/layout/index.tsx'
-import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 import { worstCase, worstLabels } from '@tests/shared/fixtures/worstCase.ts'
 import { renderInBrowser } from '../support/harness.tsx'
@@ -49,8 +48,6 @@ const longSections: SidebarSection[] = [
     ]
   }
 ]
-
-const lonelySurrogate = /[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?<![\uD800-\uDBFF])[\uDC00-\uDFFF]/
 
 const isHidden = (element: Element) => element.closest('[data-slot="visually-hidden"], [hidden], [inert], [aria-hidden="true"]') !== null
 
@@ -354,20 +351,6 @@ describe.each(widths)('worst case data at %ipx', (width) => {
     await expect.poll(() => document.querySelector('[data-slot="popover-content"]')).toBeTruthy()
 
     insideViewport(document.querySelector('[data-slot="popover-content"]'), 'popover content')
-  })
-
-  it('keeps the sidebar user readable with a long name and a reachable logout', async () => {
-    await setup(
-      <div style={{ inlineSize: 280 }}>
-        {[worstCase.longName, worstCase.emojiName, worstCase.zwjName, worstCase.arabicName, worstCase.shortName, worstCase.spacedName].map((name) => (
-          <SidebarUser key={name} name={name} collapsed={false} onLogout={() => undefined} />
-        ))}
-      </div>
-    )
-
-    for (const logout of document.querySelectorAll('[data-slot="sidebar-user-logout"]')) insideViewport(logout, 'logout')
-    for (const avatar of document.querySelectorAll('[data-slot="sidebar-user-avatar"]')) expect(lonelySurrogate.test(avatar.textContent ?? ''), `avatar initial ${avatar.textContent}`).toBe(false)
-    expect(audit(`sidebar-user@${width}`).join(' | ')).toBe('')
   })
 
   it('keeps a long footer inside the page', async () => {

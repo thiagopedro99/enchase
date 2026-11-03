@@ -7,8 +7,7 @@ const circles: Record<string, number> = {
   'common/Progress/styles.module.css': 1,
   'common/Slider/styles.module.css': 2,
   'common/Switch/styles.module.css': 2,
-  'common/RadioGroup/styles.module.css': 2,
-  'layout/subcomponentes/SidebarUser/styles.module.css': 1
+  'common/RadioGroup/styles.module.css': 2
 }
 
 const buttons = [
@@ -31,7 +30,6 @@ const buttons = [
   'common/Sidebar/styles.module.css',
   'common/ThemeToggle/styles.module.css',
   'layout/subcomponentes/AppBar/styles.module.css',
-  'layout/subcomponentes/SidebarUser/styles.module.css',
   'navbar/styles.module.css',
   'toast/styles.module.css'
 ]

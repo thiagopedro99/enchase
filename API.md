@@ -2159,25 +2159,6 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-sidebar-width` | `280px` | `inline-size` |
 | `--enchase-sidebar-width-collapsed` | `80px` | `inline-size` |
 
-### SidebarUser
-
-| Hook | Default | Property |
-| --- | --- | --- |
-| `--enchase-sidebar-user-avatar-background` | `var(--enchase-color-primary)` | `background-color` |
-| `--enchase-sidebar-user-avatar-color` | `var(--enchase-color-on-primary)` | `color` |
-| `--enchase-sidebar-user-avatar-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
-| `--enchase-sidebar-user-avatar-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
-| `--enchase-sidebar-user-avatar-height` | `40px` | `block-size` |
-| `--enchase-sidebar-user-avatar-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
-| `--enchase-sidebar-user-avatar-width` | `40px` | `inline-size` |
-| `--enchase-sidebar-user-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
-| `--enchase-sidebar-user-info-gap` | `1rem` (`--enchase-space-md`) | `gap` |
-| `--enchase-sidebar-user-logout-color` | `var(--enchase-color-primary)` | `color` |
-| `--enchase-sidebar-user-logout-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
-| `--enchase-sidebar-user-name-color` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-sidebar-user-name-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
-| `--enchase-sidebar-user-name-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
-
 ### Skeleton
 
 | Hook | Default | Property |

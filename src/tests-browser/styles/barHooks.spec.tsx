@@ -8,7 +8,6 @@ import Footer from '@components/footer/index.tsx'
 import Layout from '@components/layout/index.tsx'
 import Brand from '@components/layout/subcomponentes/Brand/index.tsx'
 import MenuToggleIcon from '@components/layout/subcomponentes/MenuToggleIcon/index.tsx'
-import SidebarUser from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
 import { unlessFirefox } from '../support/browserSkips.ts'
@@ -612,22 +611,6 @@ describe('the brand, the user of the sidebar and the menu icon from the hooks', 
     renderInBrowser(<Brand name="Enchase" />)
     await userEvent.hover(part('brand'))
     await becomes(() => part('brand'), 'color', 'rgb(1, 2, 3)')
-  })
-
-  it('takes the gaps, the avatar and the colors of the user from their hooks', () => {
-    hooked(
-      [
-        ['--enchase-sidebar-user-gap', '9px', at('sidebar-user'), 'column-gap'],
-        ['--enchase-sidebar-user-info-gap', '11px', at('sidebar-user-info'), 'column-gap'],
-        ['--enchase-sidebar-user-avatar-width', '43px', at('sidebar-user-avatar'), 'width'],
-        ['--enchase-sidebar-user-avatar-height', '45px', at('sidebar-user-avatar'), 'height'],
-        ['--enchase-sidebar-user-avatar-background', 'rgb(1, 2, 3)', at('sidebar-user-avatar'), 'background-color'],
-        ['--enchase-sidebar-user-avatar-color', 'rgb(4, 5, 6)', at('sidebar-user-avatar'), 'color'],
-        ['--enchase-sidebar-user-name-color', 'rgb(7, 8, 9)', at('sidebar-user-name'), 'color'],
-        ['--enchase-sidebar-user-logout-color', 'rgb(10, 11, 12)', at('sidebar-user-logout'), 'color']
-      ],
-      <SidebarUser name="Ana Silva" collapsed={false} onLogout={() => undefined} />
-    )
   })
 
   it('takes the size of the menu icon from its hooks', () => {

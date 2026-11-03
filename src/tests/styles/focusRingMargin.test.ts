@@ -49,7 +49,7 @@ describe('scroll margin of the focus ring', () => {
   })
 
   it('gives every ring that the focused element draws outside itself a margin as wide as the ring', () => {
-    expect(own.length).toBeGreaterThan(20)
+    expect(own.length).toBeGreaterThan(15)
     expect(own.filter((ring) => ring.margin !== marginOf(ring.offset)).map((ring) => `${ring.file} | ${ring.selector}`)).toEqual([])
   })
 

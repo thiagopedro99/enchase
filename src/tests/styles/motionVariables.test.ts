@@ -46,8 +46,6 @@ const prefixes: Record<string, string> = {
   'toast/styles.module.css': 'toast'
 }
 
-const exempt = ['layout/subcomponentes/SidebarUser/styles.module.css']
-
 const root = path.resolve(__dirname, '../../components')
 
 const cssFiles = (dir: string): string[] =>
@@ -65,7 +63,7 @@ describe('motion variables per component', () => {
   const files = cssFiles(root).filter((file) => animated(readFileSync(file, 'utf8')))
 
   it('names a prefix for every css module that animates', () => {
-    expect(files.map(relative).filter((name) => !(name in prefixes) && !exempt.includes(name))).toEqual([])
+    expect(files.map(relative).filter((name) => !(name in prefixes))).toEqual([])
   })
 
   for (const [name, prefix] of Object.entries(prefixes)) {

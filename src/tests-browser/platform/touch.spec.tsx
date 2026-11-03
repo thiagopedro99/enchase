@@ -19,7 +19,6 @@ import { Select } from '@components/common/Select/index.tsx'
 import { Slider } from '@components/common/Slider/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
-import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import { builtInStyleEntries } from '@tests/shared/fixtures/styles.ts'
 import { renderInBrowser } from '../support/harness.tsx'
 import { part, parts } from '../support/hookProbes.ts'
@@ -118,19 +117,6 @@ describe('touch pointer in a real browser', () => {
       const fields = [document.querySelector('[data-slot="input-field"]'), document.querySelector('[data-slot="select-field"]')] as HTMLElement[]
 
       await expect.poll(() => fields.map((field) => getComputedStyle(field).fontSize)).toEqual(['16px', '16px'])
-    } finally {
-      await disableTouch()
-    }
-  })
-
-  touchCapable('touchEmulation')('does not tint the logout button on hover with a touch pointer', async () => {
-    renderInBrowser(<SidebarUser name="Pedro Lima" collapsed={false} onLogout={() => undefined} />)
-    await enableTouch()
-    try {
-      const rules = [...document.styleSheets].flatMap((sheet) => [...sheet.cssRules])
-      const ungated = rules.filter((rule) => rule instanceof CSSStyleRule && rule.selectorText.includes(':hover') && rule.selectorText.includes('logout'))
-
-      expect(ungated).toHaveLength(0)
     } finally {
       await disableTouch()
     }

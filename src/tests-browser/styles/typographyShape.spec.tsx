@@ -16,7 +16,6 @@ import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import { Switch } from '@components/common/Switch/index.tsx'
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import { resetTooltipGroup } from '@components/common/Tooltip/defaultData.ts'
-import { SidebarUser } from '@components/layout/subcomponentes/SidebarUser/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 import { useToast } from '@components/toast/index.ts'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
@@ -173,22 +172,6 @@ const Notifier = () => {
 }
 
 describe('the parts that only show up on demand, from the hooks', () => {
-  it('takes the text and the corners of the user of the sidebar from their hooks', () => {
-    onRoot({
-      '--enchase-sidebar-user-avatar-radius': '3px',
-      '--enchase-sidebar-user-avatar-font-size': '13px',
-      '--enchase-sidebar-user-avatar-font-weight': '800',
-      '--enchase-sidebar-user-name-font-size': '15px',
-      '--enchase-sidebar-user-name-font-weight': '700',
-      '--enchase-sidebar-user-logout-radius': '4px'
-    })
-    renderInBrowser(<SidebarUser name="Pedro Lima" collapsed={false} onLogout={() => undefined} />)
-
-    expect([style('sidebar-user-avatar').borderTopLeftRadius, style('sidebar-user-avatar').fontSize, style('sidebar-user-avatar').fontWeight]).toEqual(['3px', '13px', '800'])
-    expect([style('sidebar-user-name').fontSize, style('sidebar-user-name').fontWeight]).toEqual(['15px', '700'])
-    expect(style('sidebar-user-logout').borderTopLeftRadius).toBe('4px')
-  })
-
   it('takes the corners of an open popover from its hook', () => {
     onRoot({ '--enchase-popover-content-radius': '5px' })
     renderInBrowser(
