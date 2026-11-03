@@ -1,5 +1,7 @@
 export const defaultActivation = 'automatic'
 
+export const defaultVariant = 'line'
+
 export const sections = [
   { value: 'profile', label: 'Profile', text: 'Name, photo and contact details of your account.' },
   { value: 'billing', label: 'Billing', text: 'Current plan, payment method and invoices.' },

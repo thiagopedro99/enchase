@@ -128,6 +128,36 @@
     scale var(--enchase-tabs-duration, var(--enchase-motion-duration-base)) var(--enchase-tabs-ease, var(--enchase-motion-ease-out));
 }
 
+.tabs[data-variant='card'] .indicator {
+  display: none;
+}
+
+.tabs[data-variant='card'] .tab[aria-selected='true']::before {
+  content: none;
+}
+
+.tabs[data-variant='card'] .tab {
+  background-color: var(--enchase-tabs-tab-background, var(--enchase-color-surface-container-low));
+  border: var(--enchase-border-width, 1px) solid var(--enchase-tabs-tab-border-color, var(--enchase-tabs-list-border-color, var(--enchase-color-border)));
+}
+
+.tabs[data-variant='card'] .tab[aria-selected='true'] {
+  background-color: var(--enchase-tabs-tab-background-selected, var(--enchase-color-background));
+  border-block-end-color: var(--enchase-tabs-tab-background-selected, var(--enchase-color-background));
+}
+
+:where(.tabs[data-variant='card'] .list) {
+  gap: var(--enchase-tabs-list-gap-card, 0.125rem);
+}
+
+:where(.tabs[data-variant='card'] .tab) {
+  min-block-size: var(--enchase-tabs-tab-min-height-card, var(--enchase-tabs-tab-min-height, 2.75rem));
+  padding-block: var(--enchase-tabs-tab-padding-block-card, var(--enchase-tabs-tab-padding-block, var(--enchase-space-sm)));
+  padding-inline: var(--enchase-tabs-tab-padding-inline-card, var(--enchase-space-md));
+  border-start-start-radius: var(--enchase-tabs-tab-radius, var(--enchase-radius-md));
+  border-start-end-radius: var(--enchase-tabs-tab-radius, var(--enchase-radius-md));
+}
+
 .panel {
   opacity: 1;
   transition: opacity var(--enchase-tabs-duration, var(--enchase-motion-duration-fast)) var(--enchase-tabs-ease, var(--enchase-motion-ease-out));

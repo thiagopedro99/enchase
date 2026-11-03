@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Badge, Button, Input, Tabs } from 'enchase'
-import { defaultActivation, manySections, sections } from './defaultData.ts'
+import { defaultActivation, defaultVariant, manySections, sections } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { CSSProperties } from 'react'
@@ -30,7 +30,8 @@ const meta = {
   args: {
     ariaLabel: 'Account sections',
     items,
-    activation: defaultActivation
+    activation: defaultActivation,
+    variant: defaultVariant
   },
   parameters: {
     layout: 'padded',
@@ -58,6 +59,12 @@ const meta = {
     onValueChange: {
       description: 'Called with the value of the tab that the user has just selected, by click or by keyboard.',
       control: false
+    },
+    variant: {
+      description: 'Look of the tabs. `line` draws a line under the tabs and an indicator under the selected one. `card` draws every tab as a box with the top corners rounded, and the selected one is filled with the background of the page and open at the bottom, so it joins the panel under it. The fill of the selected tab is `--enchase-tabs-tab-background-selected`: put it on the surface that the panel sits on.',
+      control: 'inline-radio',
+      options: ['line', 'card'],
+      table: { defaultValue: { summary: `'${defaultVariant}'` } }
     },
     activation: {
       description: 'When a tab focused with the arrow keys becomes the selected one: automatic selects the tab as soon as it gets the focus; manual only moves the focus, and Enter or Space selects it. Prefer manual when the panel is slow to load.',
@@ -90,6 +97,10 @@ export const WithDefaultValue: Story = {
 export const Controlled: Story = {
   parameters: { controls: { disable: true } },
   render: () => <ControlledDemo />
+}
+
+export const Card: Story = {
+  args: { variant: 'card' }
 }
 
 export const ManualActivation: Story = {

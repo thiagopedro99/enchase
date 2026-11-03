@@ -1,7 +1,7 @@
 import { forwardRef, useId, useRef } from 'react'
 
 import { useControllableState } from '@hooks/useControllableState.ts'
-import { defaultActivation, tabsBase } from './defaultData.ts'
+import { defaultActivation, defaultVariant, tabsBase } from './defaultData.ts'
 import { useTabIndicator } from '@hooks/useTabIndicator.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
@@ -20,7 +20,7 @@ const targetPosition = (key: string, position: number, count: number, step: numb
   return undefined
 }
 
-export const Tabs = forwardRef<HTMLDivElement, TabsProps>(({ items, value, defaultValue, onValueChange, activation = defaultActivation, ariaLabel, animation, ...props }, ref) => {
+export const Tabs = forwardRef<HTMLDivElement, TabsProps>(({ items, value, defaultValue, onValueChange, activation = defaultActivation, variant = defaultVariant, ariaLabel, animation, ...props }, ref) => {
   const baseId = useId()
   const { dir } = useUIConfig()
   const listRef = useRef<HTMLDivElement>(null)
@@ -32,7 +32,7 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(({ items, value, defau
   const tabbableIndex = activeIndex >= 0 && !items[activeIndex].disabled ? activeIndex : firstEnabled
   const motionStyle = useMotionStyle('fade', 'tabs', animation, undefined, tabsBase)
   const indicator = useTabIndicator(listRef, indicatorRef, activeIndex >= 0 ? selected : undefined, [dir, ...items.map((item) => item.value)].join('\u0000'))
-  const root = mergeProps({ ...slot('tabs'), className: styles.tabs, style: motionStyle }, props)
+  const root = mergeProps({ ...slot('tabs'), className: styles.tabs, style: motionStyle, 'data-variant': variant === defaultVariant ? undefined : variant }, props)
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return

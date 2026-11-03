@@ -103,6 +103,18 @@ afterEach(() => {
 })
 
 describe('the tabs of the workbench style', () => {
+
+  it('draws the card tabs 40px high, with 8px corners at the top, white when selected and #FAFAFA when not, joined to the panel, as the original does', () => {
+    show(<Tabs ariaLabel="Account" items={tabs} defaultValue="two" variant="card" />)
+
+    expect(Math.round(part('tabs-tab', 0).getBoundingClientRect().height)).toBe(40)
+    expect([px(style('tabs-tab', 0).borderTopLeftRadius), px(style('tabs-tab', 0).borderBottomLeftRadius)]).toEqual([8, 0])
+    expect(style('tabs-tab', 1).backgroundColor).toBe('rgb(255, 255, 255)')
+    expect(style('tabs-tab', 0).backgroundColor).toBe('rgb(250, 250, 250)')
+    expect(style('tabs-tab', 1).borderBottomColor).toBe('rgb(255, 255, 255)')
+    expect(style('tabs-tab', 0).borderTopColor).toBe('rgb(240, 240, 240)')
+    expect(Math.round(part('tabs-tab', 1).getBoundingClientRect().left - part('tabs-tab', 0).getBoundingClientRect().right)).toBe(2)
+  })
   it('makes the tab 46px high with 12px above and below the text and 14px regular type, as the original does', () => {
     show(<Tabs ariaLabel="Account" items={tabs} defaultValue="one" />)
     const tab = style('tabs-tab')

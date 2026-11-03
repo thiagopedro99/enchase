@@ -261,8 +261,34 @@ describe('Tabs', () => {
     expect(ref.current).toBe(container.querySelector('[data-slot="tabs"]'))
   })
 
+  it('marks nothing on the root for the line style it has by default, and the card style when it is asked', () => {
+    const { container, unmount } = renderWithProviders(<Tabs items={items} variant="line" />)
+
+    expect(container.querySelector('[data-slot="tabs"]')).not.toHaveAttribute('data-variant')
+    unmount()
+
+    const other = renderWithProviders(<Tabs items={items} variant="card" />)
+
+    expect(other.container.querySelector('[data-slot="tabs"]')).toHaveAttribute('data-variant', 'card')
+  })
+
+  it('keeps the same tabs, the same panels and the same keyboard in the card style', async () => {
+    const user = userEvent.setup()
+
+    renderWithProviders(<Tabs ariaLabel="Conta" items={items} variant="card" />)
+
+    expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toEqual(['Perfil', 'Cobrança', 'Equipe'])
+    expect(document.querySelectorAll('[data-slot="tabs-indicator"]')).toHaveLength(1)
+
+    await user.tab()
+    await user.keyboard('{ArrowRight}')
+
+    expect(selectedTab()).toHaveTextContent('Cobrança')
+    expect(screen.getByRole('tabpanel')).toHaveTextContent('Dados de cobrança')
+  })
+
   it('does not pass its own props to the page', () => {
-    const { container } = renderWithProviders(<Tabs items={items} defaultValue="team" onValueChange={() => undefined} activation="manual" ariaLabel="Conta" animation={false} />)
+    const { container } = renderWithProviders(<Tabs items={items} defaultValue="team" onValueChange={() => undefined} activation="manual" variant="card" ariaLabel="Conta" animation={false} />)
     const root = container.querySelector('[data-slot="tabs"]') as HTMLElement
 
     for (const name of ['items', 'value', 'defaultvalue', 'onvaluechange', 'activation', 'arialabel', 'animation']) {

@@ -822,6 +822,7 @@ A set of tabs that splits content into panels and shows one at a time. It follow
 | `defaultValue` | `string` | — | Value of the tab that starts selected, for use without external control. Without it, the first tab that is not disabled is used. |
 | `onValueChange` | `(value: string) => void` | — | Called with the value of the tab that the user has just selected, by click or by keyboard. |
 | `activation` | `'automatic' \| 'manual'` | `'automatic'` | When a tab focused with the arrow keys becomes the selected one: automatic selects the tab as soon as it gets the focus; manual only moves the focus, and Enter or Space selects it. Prefer manual when the panel is slow to load. |
+| `variant` | `'line' \| 'card'` | `'line'` | Look of the tabs. `line` draws a line under the tabs and an indicator under the selected one. `card` draws every tab as a box with the top corners rounded, and the selected one is filled with the background of the page and open at the bottom, so it joins the panel under it. The fill of the selected tab is `--enchase-tabs-tab-background-selected`: put it on the surface that the panel sits on. |
 | `ariaLabel` | `string` | — | Name of the list of tabs for screen readers. It does not appear on the screen: describe what the tabs organize, such as Account sections. |
 | `animation` | `false \| { recipe, tuning }` | `fade` | Animation of the indicator, which slides to the selected tab, and of the panel, which appears with a fade. false turns it off; { tuning: { duration } } sets the duration in seconds. |
 
@@ -2305,9 +2306,13 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-tabs-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-tabs-indicator-color` | `var(--enchase-color-primary)` | `border-block-end` |
 | `--enchase-tabs-indicator-width` | `2px` (`--enchase-border-width-strong`) | `border-block-end`, `block-size` |
-| `--enchase-tabs-list-border-color` | `var(--enchase-color-border)` | `box-shadow` |
+| `--enchase-tabs-list-border-color` | `var(--enchase-color-border)` | `box-shadow`, `border` |
 | `--enchase-tabs-list-gap` | `normal` | `gap` |
+| `--enchase-tabs-list-gap-card` | `0.125rem` | `gap` |
 | `--enchase-tabs-panel-padding-block-start` | `1rem` (`--enchase-space-md`) | `padding-block-start` |
+| `--enchase-tabs-tab-background` | `var(--enchase-color-surface-container-low)` | `background-color` |
+| `--enchase-tabs-tab-background-selected` | `var(--enchase-color-background)` | `background-color`, `border-block-end-color` |
+| `--enchase-tabs-tab-border-color` | `var(--enchase-tabs-list-border-color, var(--enchase-color-border))` | `border` |
 | `--enchase-tabs-tab-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-tabs-tab-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-tabs-tab-color-hover` | `var(--enchase-color-text-primary)` | `color` |
@@ -2316,8 +2321,12 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-tabs-tab-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-tabs-tab-line-height` | `1.2` (`--enchase-line-height-tight`) | `line-height` |
 | `--enchase-tabs-tab-min-height` | `2.75rem` | `min-block-size` |
+| `--enchase-tabs-tab-min-height-card` | `2.75rem` (`--enchase-tabs-tab-min-height`) | `min-block-size` |
 | `--enchase-tabs-tab-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
+| `--enchase-tabs-tab-padding-block-card` | `var(--enchase-tabs-tab-padding-block, var(--enchase-space-sm))` | `padding-block` |
 | `--enchase-tabs-tab-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-tabs-tab-padding-inline-card` | `1rem` (`--enchase-space-md`) | `padding-inline` |
+| `--enchase-tabs-tab-radius` | `0.75rem` (`--enchase-radius-md`) | `border-start-start-radius`, `border-start-end-radius` |
 
 ### Tag
 

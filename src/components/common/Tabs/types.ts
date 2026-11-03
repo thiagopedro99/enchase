@@ -1,6 +1,8 @@
 import type { HTMLAttributes, ReactNode } from 'react'
 import type { MotionOverride } from '@motion/types.ts'
 
+export type TabsVariant = 'line' | 'card'
+
 export interface TabsItem {
   value: string
   label: ReactNode
@@ -14,6 +16,7 @@ export interface TabsProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChang
   defaultValue?: string | undefined
   onValueChange?: ((value: string) => void) | undefined
   activation?: 'automatic' | 'manual' | undefined
+  variant?: TabsVariant | undefined
   ariaLabel?: string | undefined
   animation?: MotionOverride | undefined
 }
