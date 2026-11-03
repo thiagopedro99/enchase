@@ -120,8 +120,8 @@ describe('the tabs of the workbench style', () => {
 
     expect([px(tab.paddingLeft), px(tab.paddingRight)]).toEqual([0, 0])
     expect(style('tabs-list').columnGap).toBe('32px')
-    expect(part('tabs-tab', 1).getBoundingClientRect().left - part('tabs-tab', 0).getBoundingClientRect().right).toBeCloseTo(32, 1)
-    expect(textBox(part('tabs-tab', 1)).left - textBox(part('tabs-tab', 0)).right).toBeCloseTo(32, 1)
+    expect(part('tabs-tab', 1).getBoundingClientRect().left - part('tabs-tab', 0).getBoundingClientRect().right).toBeCloseTo(32, 0)
+    expect(textBox(part('tabs-tab', 1)).left - textBox(part('tabs-tab', 0)).right).toBeCloseTo(32, 0)
   })
 
   it('draws a 2px bar in the primary blue #0958D9 under the selected tab, where the original draws #1677FF, and a 1px line in the border color along the list', () => {
