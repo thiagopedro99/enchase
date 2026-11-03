@@ -5,6 +5,8 @@ import { ConfirmModal, Modal } from '@components/common/Modal/index.tsx'
 import { Accordion } from '@components/common/Accordion/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
+import { Divider } from '@components/common/Divider/index.tsx'
+import Footer from '@components/footer/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
 import { at, part, style } from '../support/hookProbes.ts'
@@ -120,12 +122,11 @@ describe('the accordion of the workbench style', () => {
     expect(style('accordion-trigger').backgroundColor).toBe('rgb(250, 250, 250)')
   })
 
-  it('pads the content by 16px at the sides and below, where the original also pads it by 16px above because the panel has no hook for the top', () => {
+  it('pads the content by 16px on every side, as the original does', () => {
     show(accordion)
     const panel = style('accordion-panel')
 
-    expect([px(panel.paddingLeft), px(panel.paddingRight), px(panel.paddingBottom)]).toEqual([16, 16, 16])
-    expect(px(panel.paddingTop)).toBe(0)
+    expect([px(panel.paddingTop), px(panel.paddingRight), px(panel.paddingBottom), px(panel.paddingLeft)]).toEqual([16, 16, 16, 16])
   })
 
   it('keeps a 1px line in the border color between the items', () => {
@@ -388,5 +389,57 @@ describe('the popover of the workbench style', () => {
     await waitForSettled(at('popover-content'))
 
     expect(style('popover-content').backgroundColor).toBe('rgb(31, 31, 31)')
+  })
+})
+
+describe('the drawer, the divider, the footer and the headings of the workbench style', () => {
+  it('draws a 1px line in the border color under the header and over the footer of the drawer, as the original does', async () => {
+    show(
+      <Drawer open onClose={() => undefined} title="Title" footer={<Button>Save</Button>}>
+        Body
+      </Drawer>
+    )
+    await waitForSettled(at('drawer-panel'))
+    const header = style('drawer-header')
+    const footer = style('drawer-footer')
+
+    expect([header.borderBottomWidth, header.borderBottomStyle, header.borderBottomColor]).toEqual(['1px', 'solid', 'rgb(240, 240, 240)'])
+    expect([footer.borderTopWidth, footer.borderTopStyle, footer.borderTopColor]).toEqual(['1px', 'solid', 'rgb(240, 240, 240)'])
+    expect([header.borderTopWidth, footer.borderBottomWidth]).toEqual(['0px', '0px'])
+  })
+
+  it('puts 24px above and below a horizontal divider and 8px at the sides of a vertical one, as the original does', () => {
+    show(
+      <>
+        <Divider />
+        <Divider orientation="vertical" />
+      </>
+    )
+
+    expect([px(style('divider', 0).marginTop), px(style('divider', 0).marginBottom), px(style('divider', 0).marginLeft)]).toEqual([24, 24, 0])
+    expect([px(style('divider', 1).marginLeft), px(style('divider', 1).marginRight), px(style('divider', 1).marginTop)]).toEqual([8, 8, 0])
+  })
+
+  it('pads the footer by 24px above and below and 50px at the sides, as the original does', () => {
+    show(<Footer links={[{ label: 'Docs', href: '/docs' }]} />)
+    const footer = style('footer')
+
+    expect([px(footer.paddingTop), px(footer.paddingBottom)]).toEqual([24, 24])
+    expect([px(footer.paddingLeft), px(footer.paddingRight)]).toEqual([50, 50])
+  })
+
+  it('writes the headings in 600 weight, as the original does', () => {
+    show(
+      <>
+        <h1>One</h1>
+        <h2>Two</h2>
+        <h3>Three</h3>
+        <h4>Four</h4>
+        <h5>Five</h5>
+        <h6>Six</h6>
+      </>
+    )
+
+    expect(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map((tag) => getComputedStyle(document.querySelector(tag) as Element).fontWeight)).toEqual(['600', '600', '600', '600', '600', '600'])
   })
 })

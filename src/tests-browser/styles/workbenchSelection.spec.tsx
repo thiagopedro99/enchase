@@ -10,6 +10,7 @@ import { Switch } from '@components/common/Switch/index.tsx'
 import { Slider } from '@components/common/Slider/index.tsx'
 import { at, part, style } from '../support/hookProbes.ts'
 import { workbench } from '@styles/presets/workbench.ts'
+import { parseComputedColor } from '../support/color.ts'
 import { renderInBrowser } from '../support/harness.tsx'
 import { waitForSettled } from '../support/settle.ts'
 
@@ -26,6 +27,16 @@ const showDark = async (ui: ReactElement) => {
 }
 
 const px = (value: string) => parseFloat(value)
+
+const channelsOf = (value: string) => {
+  const { r, g, b } = parseComputedColor(value)
+
+  return [r, g, b]
+}
+
+const lifted = [39, 108, 222]
+
+const expectNear = (actual: number[], expected: number[]) => actual.forEach((channel, index) => expect(Math.abs(channel - (expected[index] as number))).toBeLessThanOrEqual(1))
 
 const plan = [
   { value: 'a', label: 'Free' },
@@ -337,5 +348,80 @@ describe('the segmented control of the workbench style', () => {
     expect(style('segmented-control').backgroundColor).toBe('rgb(39, 39, 39)')
     expect(style('segmented-control-item', 0).backgroundColor).toBe('rgb(20, 20, 20)')
     expect(style('segmented-control-item', 1).backgroundColor).toBe('rgba(0, 0, 0, 0)')
+  })
+})
+
+describe('the controls of the workbench style under the pointer', () => {
+  it('darkens the off track of the switch to 0.65 black, where the original goes from 0.25 to 0.45, and lifts the on track with a layer of white over the primary blue', async () => {
+    show(
+      <>
+        <Switch label="Off" />
+        <Switch label="On" defaultChecked />
+      </>
+    )
+    await userEvent.hover(part('switch', 0))
+    await waitForSettled(at('switch', 0))
+
+    expect(style('switch-track', 0).backgroundColor).toBe('rgba(0, 0, 0, 0.65)')
+    expect(style('switch-track', 1).backgroundColor).toBe('rgb(9, 88, 217)')
+
+    await userEvent.hover(part('switch', 1))
+    await waitForSettled(at('switch', 1))
+
+    expectNear(channelsOf(style('switch-track', 1).backgroundColor), lifted)
+    expect(style('switch-track', 0).backgroundColor).toBe('rgba(0, 0, 0, 0.45)')
+  })
+
+  it('lifts the checked box under the pointer with a layer of white over the primary blue and keeps its border, where the original goes from #1677FF to #4096FF', async () => {
+    show(<Checkbox label="Accept" defaultChecked />)
+    await userEvent.hover(part('checkbox'))
+    await waitForSettled(at('checkbox'))
+
+    expectNear(channelsOf(style('checkbox-box').backgroundColor), lifted)
+    expect(style('checkbox-box').borderTopColor).toBe('rgb(9, 88, 217)')
+  })
+
+  it('moves the border of the empty circle of the radio to the primary blue under the pointer and lifts the checked circle, as the original does', async () => {
+    show(<RadioGroup label="Plan" options={plan} defaultValue="a" />)
+    await userEvent.hover(part('radio-group-option', 1))
+    await waitForSettled(at('radio-group-option', 1))
+
+    expect(style('radio-group-control', 1).borderTopColor).toBe('rgb(9, 88, 217)')
+    expect(style('radio-group-control', 0).backgroundColor).toBe('rgb(9, 88, 217)')
+
+    await userEvent.hover(part('radio-group-option', 0))
+    await waitForSettled(at('radio-group-option', 0))
+
+    expectNear(channelsOf(style('radio-group-control', 0).backgroundColor), lifted)
+  })
+
+  it('thickens the ring of the thumb of the slider to 3px under the pointer and lifts the passed part of the track, where the original grows the ring to 2.5px and adds a halo of 6px', async () => {
+    show(<Slider ariaLabel="Volume" defaultValue={40} />)
+    await userEvent.hover(part('slider-thumb'))
+    await waitForSettled(at('slider-thumb'))
+
+    expect(style('slider-thumb').borderTopWidth).toBe('3px')
+    expectNear(channelsOf(style('slider-range').backgroundColor), lifted)
+  })
+
+  it('keeps the ring of the thumb of the slider at 3px while the mouse is down', async () => {
+    show(<Slider ariaLabel="Volume" defaultValue={40} />)
+    await pressMouse('[data-slot=slider-thumb]')
+    await waitForSettled(at('slider-thumb'))
+
+    expect(style('slider-thumb').borderTopWidth).toBe('3px')
+  })
+})
+
+describe('the corners of the segmented control of the workbench style by size', () => {
+  it.each([
+    ['sm', 4, 2],
+    ['md', 6, 4],
+    ['lg', 8, 6]
+  ] as const)('rounds the track of the %s control at %ipx and its items at %ipx, as the original does', (size, track, item) => {
+    show(<SegmentedControl size={size} ariaLabel="View" items={views} defaultValue="a" />)
+
+    expect(px(style('segmented-control').borderTopLeftRadius)).toBe(track)
+    expect(px(style('segmented-control-item', 0).borderTopLeftRadius)).toBe(item)
   })
 })

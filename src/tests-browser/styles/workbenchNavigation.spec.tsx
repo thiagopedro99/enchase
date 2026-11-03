@@ -114,11 +114,13 @@ describe('the tabs of the workbench style', () => {
     expect(tab.fontWeight).toBe('400')
   })
 
-  it('keeps the texts of two tabs 32px apart with 16px on each side of a tab, where the original has no padding and a 32px margin, because there is no hook for the gap between tabs', () => {
+  it('keeps two tabs 32px apart with no padding at the sides of a tab, as the original does with a 32px margin, so the bar and the pointer cover the text only', () => {
     show(<Tabs ariaLabel="Account" items={tabs} defaultValue="one" />)
     const tab = style('tabs-tab')
 
-    expect([px(tab.paddingLeft), px(tab.paddingRight)]).toEqual([16, 16])
+    expect([px(tab.paddingLeft), px(tab.paddingRight)]).toEqual([0, 0])
+    expect(style('tabs-list').columnGap).toBe('32px')
+    expect(part('tabs-tab', 1).getBoundingClientRect().left - part('tabs-tab', 0).getBoundingClientRect().right).toBeCloseTo(32, 1)
     expect(textBox(part('tabs-tab', 1)).left - textBox(part('tabs-tab', 0)).right).toBeCloseTo(32, 1)
   })
 
@@ -180,11 +182,11 @@ describe('the inline menu of the sidebar in the workbench style', () => {
     expect(nav.right - first.right).toBe(4)
   })
 
-  it('pads the item by 24px on both sides, where the original has 24px at the start and 16px at the end because the padding of the item is one hook, and puts 10px between the icon and the label', () => {
+  it('pads the item by 24px at the start and 16px at the end, as the original does, and puts 10px between the icon and the label', () => {
     show(sidebar)
     const item = getComputedStyle(sidebarLink(0)())
 
-    expect([px(item.paddingLeft), px(item.paddingRight)]).toEqual([24, 24])
+    expect([px(item.paddingLeft), px(item.paddingRight)]).toEqual([24, 16])
     expect([px(item.paddingTop), px(item.paddingBottom)]).toEqual([0, 0])
     expect(item.columnGap).toBe('10px')
   })
@@ -240,12 +242,12 @@ describe('the horizontal menu of the navbar in the workbench style', () => {
     expect(link.fontWeight).toBe('400')
   })
 
-  it('pads the link by 16px and keeps it 32px high, the hit size, where the original item is 46px high with a 2px underline, because the link has no hook for its height or for an underline', () => {
+  it('pads the link by 16px and makes it 46px high, as the original does, and draws no underline where the original draws one of 2px, because the link has no hook for it', () => {
     show(<Navbar sections={menu} />)
     const link = getComputedStyle(navbarLink(1)())
 
     expect([px(link.paddingLeft), px(link.paddingRight)]).toEqual([16, 16])
-    expect(navbarLink(1)().getBoundingClientRect().height).toBe(32)
+    expect(navbarLink(1)().getBoundingClientRect().height).toBe(46)
     expect(link.borderBottomWidth).toBe('0px')
   })
 
@@ -352,7 +354,7 @@ describe('the pagination of the workbench style', () => {
     expect(px(style('pagination-page', 1).fontSize)).toBe(14)
   })
 
-  it('draws the current page with a 1px border and the text in the primary blue #0958D9 over no fill, as the original does with #1677FF, in regular weight where the original writes 600 because one hook sets the weight of every page', () => {
+  it('draws the current page with a 1px border and the text in the primary blue #0958D9 over no fill, as the original does with #1677FF, in 600 weight, as the original does, and the other pages in 400', () => {
     show(<Pagination pageCount={10} page={1} />)
     const current = style('pagination-page', 0)
     const other = style('pagination-page', 1)
@@ -361,7 +363,8 @@ describe('the pagination of the workbench style', () => {
     expect(current.borderTopColor).toBe('rgb(9, 88, 217)')
     expect(current.color).toBe('rgb(9, 88, 217)')
     expect(current.backgroundColor).toBe('rgba(0, 0, 0, 0)')
-    expect(current.fontWeight).toBe('400')
+    expect(current.fontWeight).toBe('600')
+    expect(other.fontWeight).toBe('400')
     expect(other.borderTopColor).toBe('rgba(0, 0, 0, 0)')
     expect(other.color).toBe('rgba(0, 0, 0, 0.88)')
   })

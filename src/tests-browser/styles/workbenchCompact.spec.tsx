@@ -10,6 +10,7 @@ import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Drawer } from '@components/common/Drawer/index.tsx'
+import { Divider } from '@components/common/Divider/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
 import { Table } from '@components/common/Table/index.tsx'
 import { Badge } from '@components/common/Badge/index.tsx'
@@ -86,13 +87,14 @@ afterEach(() => {
 })
 
 describe('the compact density of the workbench style, in the tabs and the accordion', () => {
-  it('makes the tab 36px high with 8px above and below the text, as the original does, and keeps 16px on each side, because the original keeps the 32px between the tabs', () => {
+  it('makes the tab 36px high with 8px above and below the text, as the original does, and keeps the 32px between the tabs with no padding at the sides', () => {
     show(<Tabs ariaLabel="Account" items={tabs} defaultValue="one" />, 'compact')
     const tab = style('tabs-tab')
 
     expect(part('tabs-tab').getBoundingClientRect().height).toBe(36)
     expect([px(tab.paddingTop), px(tab.paddingBottom)]).toEqual([8, 8])
-    expect([px(tab.paddingLeft), px(tab.paddingRight)]).toEqual([16, 16])
+    expect([px(tab.paddingLeft), px(tab.paddingRight)]).toEqual([0, 0])
+    expect(style('tabs-list').columnGap).toBe('32px')
   })
 
   it('brings the 46px tab back when the attribute leaves the root', () => {
@@ -233,7 +235,7 @@ describe('the compact density of the workbench style, in the containers', () => 
     expect([px(style('modal-header').paddingTop), px(style('modal-footer').paddingBottom)]).toEqual([16, 16])
   })
 
-  it('pads the header of the drawer by 8px above and below and 16px at the sides, the body by 16px and the footer by 4px and 8px, as the original does, which makes the header 40px high around the 24px close button and the footer 36px high around the 28px button', async () => {
+  it('pads the header of the drawer by 8px above and below and 16px at the sides, the body by 16px and the footer by 4px and 8px, as the original does, which makes the header 41px high around the 24px close button and its line, and the footer 37px high around the 28px button and its line', async () => {
     show(
       <Drawer open onClose={() => undefined} title="Title" footer={<Button>Save</Button>}>
         Body
@@ -245,8 +247,8 @@ describe('the compact density of the workbench style, in the containers', () => 
     expect([px(style('drawer-header').paddingTop), px(style('drawer-header').paddingBottom), px(style('drawer-header').paddingLeft)]).toEqual([8, 8, 16])
     expect([px(style('drawer-body').paddingTop), px(style('drawer-body').paddingBottom), px(style('drawer-body').paddingLeft)]).toEqual([16, 16, 16])
     expect([px(style('drawer-footer').paddingTop), px(style('drawer-footer').paddingBottom), px(style('drawer-footer').paddingLeft)]).toEqual([4, 4, 8])
-    expect(part('drawer-header').getBoundingClientRect().height).toBe(40)
-    expect(part('drawer-footer').getBoundingClientRect().height).toBe(36)
+    expect(part('drawer-header').getBoundingClientRect().height).toBe(41)
+    expect(part('drawer-footer').getBoundingClientRect().height).toBe(37)
   })
 
   it('pads the alert by 4px above and below and 12px at the sides, as the original does', () => {
@@ -315,5 +317,23 @@ describe('the compact density of the workbench style, in the badge, the tag and 
 
     expect([px(bubble.paddingTop), px(bubble.paddingBottom), px(bubble.paddingLeft), px(bubble.paddingRight)]).toEqual([4, 4, 4, 4])
     expect(part('tooltip-bubble').getBoundingClientRect().height).toBeCloseTo(30, 0)
+  })
+})
+
+describe('the compact density of the workbench style, in the accordion panel, the divider, the horizontal menu and the calendar header', () => {
+  it('pads the content of the accordion by 8px above and below and 16px at the sides, as the original does', () => {
+    show(
+      <Accordion items={[{ value: 'a', title: 'First', content: <p>One</p> }]} defaultValue={['a']} />,
+      'compact'
+    )
+    const panel = style('accordion-panel')
+
+    expect([px(panel.paddingTop), px(panel.paddingBottom), px(panel.paddingLeft), px(panel.paddingRight)]).toEqual([8, 8, 16, 16])
+  })
+
+  it('puts 16px above and below a horizontal divider, as the original does', () => {
+    show(<Divider />, 'compact')
+
+    expect([px(style('divider').marginTop), px(style('divider').marginBottom)]).toEqual([16, 16])
   })
 })

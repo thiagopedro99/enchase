@@ -3,6 +3,7 @@ import { userEvent } from 'vitest/browser'
 
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { ButtonLink } from '@components/common/ButtonLink/index.tsx'
+import { Link } from '@components/common/Link/index.tsx'
 import { DatePicker } from '@components/common/DatePicker/index.tsx'
 import { Combobox } from '@components/common/Combobox/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
@@ -181,7 +182,7 @@ describe('the buttons of the workbench style', () => {
     expect(style('button').boxShadow).toBe('rgba(0, 0, 0, 0.5) 0px 1px 2px 0px, rgba(0, 0, 0, 0.3) 0px 1px 3px 1px')
   })
 
-  it('gives the ghost button 15px of inline padding at every size, where the original small button has 7px, because the hook of the ghost padding has no size', () => {
+  it('gives the ghost button 7px of inline padding in the small size and 15px in the others, as the original does', () => {
     show(
       <>
         <Button variant="ghost" size="sm">
@@ -196,7 +197,7 @@ describe('the buttons of the workbench style', () => {
       </>
     )
 
-    expect([0, 1, 2].map((index) => px(style('button', index).paddingLeft))).toEqual([15, 15, 15])
+    expect([0, 1, 2].map((index) => px(style('button', index).paddingLeft))).toEqual([7, 15, 15])
   })
 
   it('lets the shape of the caller reshape the three sizes through the radius scale, which the soft shape sets to 6px, 10px and 14px', () => {
@@ -452,6 +453,13 @@ describe('the list of the combobox in the workbench style', () => {
 
     expect(style('combobox-option', 1).fontWeight).toBe('600')
   })
+
+  it('fills the chosen option with the light blue container #E6F4FF, where the original fills it with #BAE0FF, and leaves the others without a fill', async () => {
+    await opened()
+
+    expect(style('combobox-option', 1).backgroundColor).toBe('rgb(230, 244, 255)')
+    expect(style('combobox-option', 0).backgroundColor).toBe('rgba(0, 0, 0, 0)')
+  })
 })
 
 describe('the calendar of the date picker in the workbench style', () => {
@@ -460,14 +468,21 @@ describe('the calendar of the date picker in the workbench style', () => {
     await waitForSettled(() => part('date-picker-calendar'))
   }
 
-  it('sizes the day at 36px with 4px corners and 14px regular type, with no hook for the 24px core of the original', async () => {
+  it('sizes the day at 36px around a 24px core with 4px corners and 14px regular type, as the original does', async () => {
     await opened()
     const day = part('date-picker-calendar-day-number').getBoundingClientRect()
 
-    expect([day.width, day.height]).toEqual([36, 36])
+    expect(part('date-picker-calendar-day').getBoundingClientRect().height).toBe(36)
+    expect([day.width, day.height]).toEqual([24, 24])
     expect(px(style('date-picker-calendar-day-number').borderTopLeftRadius)).toBe(4)
     expect(px(style('date-picker-calendar-day-number').fontSize)).toBe(14)
     expect(style('date-picker-calendar-day-number').fontWeight).toBe('400')
+  })
+
+  it('makes the header 41px high with its line, as the original does with 40px and a line of 1px', async () => {
+    await opened()
+
+    expect(part('date-picker-calendar-header').getBoundingClientRect().height).toBe(41)
   })
 
   it('draws a 1px line in the border color under the header, as the original does', async () => {
@@ -486,5 +501,18 @@ describe('the calendar of the date picker in the workbench style', () => {
     expect(px(style('date-picker-calendar-title').fontSize)).toBe(14)
     expect(style('date-picker-calendar-weekday').fontWeight).toBe('400')
     expect(px(style('date-picker-calendar-weekday').fontSize)).toBe(14)
+  })
+})
+
+describe('the link of the workbench style', () => {
+  it('stands 24px high at 14px, the floor of a target, where a line of 22px stands under it', () => {
+    show(
+      <div style={{ display: 'flex' }}>
+        <Link href="/docs">Docs</Link>
+      </div>
+    )
+
+    expect(px(style('link').lineHeight)).toBeCloseTo(24, 1)
+    expect(part('link').getBoundingClientRect().height).toBeCloseTo(24, 1)
   })
 })
