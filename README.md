@@ -140,7 +140,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => (
 
 - `brand` is one color (hex or `rgb()`, without transparency), and `createTheme` derives the light and dark palettes from it. The tests of the library sweep hundreds of brand colors, from very light to very dark and from gray to vivid, and require that `validateTheme` finds no pair below the minimum contrast.
 - `shape` is the corner radius: `pill` (the default), `soft` or `square`.
-- `style` changes the look of the whole kit at once. `enchase` is the default, and `shadcn` comes closer to shadcn/ui: a neutral palette, borders instead of shadows, 36 px controls and the label above the field. Each style is its own entry (`enchase/styles/<name>`), so only the one you import reaches your bundle.
+- `style` changes the look of the whole kit at once. `enchase` is the default, and `shadcn` comes closer to shadcn/ui: a neutral palette, borders instead of shadows, 36 px controls and the label above the field. `workbench` is a neutral, dense look for work screens (24, 32 and 40 px controls, 1 px borders, a blue primary and a compact density of its own), inspired by the visual language of Ant Design (MIT): a style of Enchase, not a port and not compatible with `antd`. Each style is its own entry (`enchase/styles/<name>`), so only the one you import reaches your bundle.
 
 What you pass overrides the style, and your own CSS overrides both: every part has a `data-slot` and reads variables named `--enchase-<slot>-<property>`, and the full list, generated from the CSS, is in [API.md](API.md). In development the provider warns in the console about color pairs below the minimum contrast. Outside React (build, server, CI), run `validateTheme(createTheme(theme))` from `enchase/theme`.
 
@@ -155,10 +155,11 @@ What you pass overrides the style, and your own CSS overrides both: every part h
 In Next.js (App Router) that is the `<html>` of the root layout. From the client, set `document.documentElement.dataset.density = 'compact'` and go back with `document.documentElement.removeAttribute('data-density')`; switching at run time works. The attribute goes on `<html>` and only there, unlike `data-theme`: on a `div` or on `<body>` it does nothing, so there are no density islands. There is no `spacious` and no way back to the default inside a compact tree, and the type, the radius and the drawing of the checkbox, the radio, the switch, the icons and the avatar do not change.
 
 - **Not for touch-first interfaces.** The target size goes down to 32 px with any pointer. The floor of 24 px (WCAG 2.5.8) still holds, and `--enchase-hit-size-lg`, for the buttons that open, close or collapse a navigation, stays at 44 px.
+- **A style can carry its own compact.** `defineStyle` takes `density: { compact: { tokens, hooks } }`, which takes the place of the default block while the style is active; `workbench` does it, with 10 tokens and 30 hooks, and keeps the targets at 24 px or more without shrinking the type. `enchase` and `shadcn` declare none, and their CSS is the one of before.
 - **The `shadcn` style is half compact.** It declares its own measures, so it follows the tokens (buttons, fields, tabs and paddings) and keeps the heights that it fixes itself: the accordion, the table rows, the menu items, the sidebar and the bars.
 - **Your own tokens.** In `enchase/styles.css`, which has no layer, a token of yours on `:root` loses to the compact block. Use `enchase/styles.layer.css` with `cssLayer="enchase-theme"`, where your CSS without a layer always wins, or write `html:root[data-density='compact'] { ... }`. A hook of yours wins in both.
 
-The Storybook has a Density item in the toolbar and a System/Density page with the tokens, the hooks and the size of each part in both styles, and what `shadcn` follows and what it does not.
+The Storybook has a Density item in the toolbar and a System/Density page with the tokens, the hooks and the size of each part in the three styles, and what `shadcn` follows and what it does not.
 
 ## Good to know
 
@@ -175,7 +176,7 @@ The Storybook has a Density item in the toolbar and a System/Density page with t
 | --- | --- |
 | `enchase` | Components, providers, hooks and types. Marked `'use client'`. |
 | `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring`, `timedSpring`, `themeCss` and the tokens (`baseTokens`, `defaultTheme`, `lightTheme`, `darkTheme`, `breakpoints`, `colorRoles`, `themeModes`, `defaultThemeCss`), with their types. Nothing else is public. No React. |
-| `enchase/styles/<name>` | One visual style per entry: `enchase/styles/shadcn` and `enchase/styles/enchase`. Data only, no React, and only in the bundle of whoever imports it. |
+| `enchase/styles/<name>` | One visual style per entry: `enchase/styles/shadcn`, `enchase/styles/workbench` and `enchase/styles/enchase`. Data only, no React, and only in the bundle of whoever imports it. |
 | `enchase/locales` | `en` and `ptBR` (`{ locale, dir, messages }`). Data only. |
 | `enchase/icons` | The 20 icons the components use inside, one component per icon. Works in Server Components. |
 | `enchase/styles.css` | The CSS of the components. |
@@ -199,8 +200,8 @@ Not guaranteed:
 
 - Full WCAG conformance. The library checks what its tokens and tests cover, and it does not replace an audit or testing with screen readers: nothing was tested with NVDA, JAWS or VoiceOver, and manual review in real Safari is still needed.
 - The contrast of custom themes written in `hsl()`, `oklch()` or `oklab()`. Those formats are not measured, and the warning says how many pairs went unchecked.
-- Velocity gestures (swipe to dismiss, inertia) and Material 3 and Ant Design styles. They don't exist yet.
-- The compact density outside the two built-in styles. It is a set of absolute values chosen for `enchase` and `shadcn`: a style of your own, made with `defineStyle`, receives the same block and cannot declare its own compact, and in a style whose default is already denser, some parts may not compact, or may even grow (the floor of 24 px still holds).
+- Velocity gestures (swipe to dismiss, inertia) and a Material 3 style. They don't exist yet.
+- The compact density outside the built-in styles. The default block is a set of absolute values chosen for `enchase` and `shadcn` (`workbench` brings its own compact): a style of your own, made with `defineStyle`, receives the same block and can replace it with its own compact (`density`), but the values it declares are its own and the library does not check them against the default size of the style, so in a style whose default is already denser, some parts may not compact, or may even grow (the floor of 24 px still holds).
 
 ## Documentation
 

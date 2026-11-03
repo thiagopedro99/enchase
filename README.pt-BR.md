@@ -29,8 +29,8 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 - Conformidade total com WCAG: a lib verifica o que os tokens e os testes cobrem, e não substitui auditoria nem teste com leitores de tela (nada foi testado com NVDA, JAWS ou VoiceOver).
 - Firefox e WebKit rodam a mesma suíte de navegador do Chromium, um arquivo por vez. No Linux ficam pulados 19 testes no Firefox e 19 no WebKit, porque dependem de chamadas só do Chromium (emulação de toque, mouse cru, métricas de layout e transparência reduzida) ou de uma emulação que o navegador não tem (cores forçadas no WebKit, contraste aumentado no Firefox); a lista central com o motivo está em `src/tests-browser/support/browserSkips.ts`, e os testes que dependem de um recurso que o navegador não tem são pulados só onde ele falta. Os testes de toque rodam no WebKit com o perfil de um iPhone (toque nativo), o mais perto do Safari que dá para automatizar. Os três navegadores passam no CI em Linux (Ubuntu 24.04) e bloqueiam o workflow. A devolução do foco ao gatilho e a armadilha de Tab funcionam também no Safari, onde clicar num botão não o focaliza: a biblioteca guarda o gatilho a partir do último ponteiro ou tecla. Revisão manual em Safari de verdade e com leitores de tela continua necessária.
 - Contraste de temas personalizados em `hsl()`, `oklch()` ou `oklab()`: esses formatos não são medidos, e o aviso diz quantos pares ficaram sem checar.
-- Gestos com velocidade (arrastar para dispensar, inércia) e os estilos Material 3 e Ant Design: ainda não existem.
-- A densidade `compact` fora dos dois estilos embutidos: o bloco padrão é um conjunto de valores absolutos, escolhidos para o `enchase` e o `shadcn`. Um estilo próprio, feito com `defineStyle`, recebe esse bloco e pode trocá-lo pelo compacto dele (`density`), mas os valores que ele declara são dele e a biblioteca não os confere contra o tamanho padrão do estilo: o que ele não declara fica com o bloco padrão, e num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
+- Gestos com velocidade (arrastar para dispensar, inércia) e um estilo Material 3: ainda não existem.
+- A densidade `compact` fora dos estilos embutidos: o bloco padrão é um conjunto de valores absolutos, escolhidos para o `enchase` e o `shadcn` (o `workbench` traz o compacto dele, com valores medidos para ele). Um estilo próprio, feito com `defineStyle`, recebe esse bloco e pode trocá-lo pelo compacto dele (`density`), mas os valores que ele declara são dele e a biblioteca não os confere contra o tamanho padrão do estilo: o que ele não declara fica com o bloco padrão, e num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
 
 ## Instalação
 
@@ -99,7 +99,7 @@ O `GlobalStyles` é opcional. Ele acrescenta uma folha pequena, em `@layer encha
 | --- | --- |
 | `enchase` | Componentes, provedores, hooks e tipos. Marcada como `'use client'`. |
 | `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring`, `timedSpring`, `themeCss` e os tokens (veja "O que `enchase/theme` exporta"), com os tipos. Sem React. |
-| `enchase/styles/<nome>` | Um estilo visual por entrada: `enchase/styles/shadcn` e `enchase/styles/enchase`. Só dados, sem React, e só entra no bundle de quem a importa. |
+| `enchase/styles/<nome>` | Um estilo visual por entrada: `enchase/styles/shadcn`, `enchase/styles/workbench` e `enchase/styles/enchase`. Só dados, sem React, e só entra no bundle de quem a importa. |
 | `enchase/locales` | `en` e `ptBR` (`{ locale, dir, messages }`). Só dados. |
 | `enchase/icons` | Os 20 ícones que os componentes usam por dentro, um componente por ícone. Funciona em Server Components. |
 | `enchase/styles.css` | CSS dos componentes. |
@@ -625,7 +625,7 @@ O `createTheme` troca os raios com a seção `shape` (um preset) e com `radius` 
 
 ### Estilo visual
 
-`style` troca o visual do kit inteiro de uma vez: a paleta, os raios, as alturas, os pesos, as bordas, as sombras e o lugar do rótulo dos campos. Sem `style`, o visual é o de sempre (o estilo `enchase`, que não muda nada). O `shadcn` aproxima o kit do shadcn/ui: paleta neutra, bordas no lugar de sombras, botões e campos de 36px com texto de 14px, cantos de `0.5rem` e o rótulo acima do campo.
+`style` troca o visual do kit inteiro de uma vez: a paleta, os raios, as alturas, os pesos, as bordas, as sombras e o lugar do rótulo dos campos. Sem `style`, o visual é o de sempre (o estilo `enchase`, que não muda nada). O `shadcn` aproxima o kit do shadcn/ui: paleta neutra, bordas no lugar de sombras, botões e campos de 36px com texto de 14px, cantos de `0.5rem` e o rótulo acima do campo. O `workbench` é um visual neutro e denso para telas de trabalho, com compacto próprio (veja "O estilo `workbench`").
 
 ```tsx
 import { shadcn } from 'enchase/styles/shadcn'
@@ -639,7 +639,7 @@ import { shadcn } from 'enchase/styles/shadcn'
 </ColorModeProvider>
 ```
 
-- Cada estilo tem a própria entrada, `enchase/styles/<nome>` (`enchase/styles/shadcn` e `enchase/styles/enchase`), e só entra no bundle de quem a importa: sem `style`, o `ColorModeProvider` e o `createTheme` não carregam nenhum dado de estilo, e quem importa o `shadcn` paga por ele (cerca de 2,5 kB em gzip) e por nenhum outro, nem mesmo em um bundler que não remove código morto. Também dá para carregar um estilo sob demanda, com `import('enchase/styles/shadcn')`. Não existe `enchase/styles` sozinho, de propósito: o CSS é `enchase/styles.css`, e esquecer o `.css` dá erro em vez de um import que não faz nada. Um estilo é só dado, então vale em Server Components: importe-o no layout de servidor e passe-o à prop `theme` do `ColorModeProvider`.
+- Cada estilo tem a própria entrada, `enchase/styles/<nome>` (`enchase/styles/shadcn`, `enchase/styles/workbench` e `enchase/styles/enchase`), e só entra no bundle de quem a importa: sem `style`, o `ColorModeProvider` e o `createTheme` não carregam nenhum dado de estilo, e quem importa o `shadcn` paga por ele (cerca de 2,5 kB em gzip) e por nenhum outro, nem mesmo em um bundler que não remove código morto. Também dá para carregar um estilo sob demanda, com `import('enchase/styles/shadcn')`. Não existe `enchase/styles` sozinho, de propósito: o CSS é `enchase/styles.css`, e esquecer o `.css` dá erro em vez de um import que não faz nada. Um estilo é só dado, então vale em Server Components: importe-o no layout de servidor e passe-o à prop `theme` do `ColorModeProvider`.
 - O `style` é um objeto, não um nome: `style: 'shadcn'` lança erro dizendo para importar o estilo de `enchase/styles/shadcn`.
 - O estilo é "inspirado em", não uma cópia: o contrato de acessibilidade da biblioteca vale mais que a fidelidade. Onde o original fica abaixo dele, o estilo ajusta. A borda dos campos e a trilha da chave desligada são `#808080` (3:1 contra o fundo; a do original tem 1,26:1). O anel de foco é sólido, de 2px, na cor `primary` e com 2px de folga (o original usa um anel translúcido, que não chega a 3:1). O texto secundário sobre as superfícies cinza e o vermelho de erro usado como texto têm 4,5:1. Em cores forçadas (o modo de alto contraste do Windows), a borda do campo em foco engrossa para 2px, porque a sombra do anel some. O desenho do checkbox e do radio é de 16px, mas a área de toque continua com 24px ou mais.
 - Além das cores e dos raios, o estilo muda: botões de 32, 36 e 40px, campos de 36px e texto de 14px nos controles, uma sombra pequena nos botões e nos campos, alertas neutros com o ícone e o título coloridos, badges tingidos (sólidos só o `primary` e o de erro), abas só com o sublinhado, acordeão sem contorno e com linhas entre os itens, diálogo, popover e notificação com borda, e o rótulo acima do controle.
@@ -668,6 +668,28 @@ A linha da base é uma borda de verdade, não `box-shadow`, porque o modo de cor
 **O rótulo flutuante só existe em `outlined`**, porque o entalhe no contorno é do `<fieldset>` que só ele desenha. Com qualquer outra variante, um `labelPlacement` `floating` (passado na prop ou vindo do estilo) vira `stacked`: o rótulo fica acima do campo, com o placeholder visível, e o `data-label-placement` do contêiner diz `stacked`.
 
 A prop `required` dos seis campos passa o atributo nativo `required` ao elemento e, quando há `label`, desenha um `*` depois do texto do rótulo, na cor `error` do tema, a `0.25rem` do texto. **É uma mudança visível para quem já passava `required` a esses campos**: o `*` passa a aparecer, sem mais nada. A marca é só visual: um `<span aria-hidden="true">` dentro do `<label>` cujo `*` vem do CSS (`::after`), então ela não entra no nome acessível nem no texto do rótulo (o `getByLabelText('E-mail')` continua achando o campo), e o que a tecnologia assistiva lê é o `required` nativo, nunca o asterisco. Ela aparece em `floating`, `stacked` e `start`; no flutuante, o entalhe do contorno, que é medido pelo texto do `<legend>`, ganha a largura dela para o contorno não passar por baixo. Três ganchos mudam a marca: `--enchase-input-required-color` (`var(--enchase-color-error)`), `--enchase-input-required-gap` (`0.25rem`) e `--enchase-input-required-display` (`inline`; `none` esconde a marca, num campo, num contêiner ou no `:root`, e o entalhe volta à largura de antes). No `Combobox` com `multiple`, o `required` nativo vai ao campo de texto, que fica vazio quando há etiquetas.
+
+#### O estilo `workbench`
+
+`import { workbench } from 'enchase/styles/workbench'`. Um visual neutro e denso para telas de trabalho, inspirado na linguagem visual do Ant Design (MIT): é um estilo do Enchase, não um port, e não é compatível com o `antd`. Controles de 24, 32 e 40px, cantos de 2, 4, 6 e 8px (os botões, de 4, 6 e 8px por tamanho), bordas de 1px, o rótulo acima do campo, texto de 14px, o azul `#0958D9` como `primary` e, no escuro, um azul claro com texto escuro (`#65A9F3`), sombras leves nos popups no claro e as sombras do Enchase no escuro. Passa nas conferências de contraste do tema (152 pares, no claro e no escuro, com e sem cor de marca), onde o original reprovaria 93 delas.
+
+Onde o `workbench` sai do original de propósito:
+
+| Parte | No `workbench` | Por quê |
+| --- | --- | --- |
+| Texto desabilitado | 38% | O original usa 25% (1,83:1 de contraste) |
+| Placeholder | 55% | Ajustado ao contraste que o tema confere |
+| Borda do campo | 45% de alfa (3,28:1 ou mais) | A do original tem 1,24:1 |
+| Hover e pressionado | Uma camada de 6% e de 10% do estado, não uma cor mais clara | O mesmo mecanismo dos outros estilos |
+| Borda do `Alert` por tipo | Os papéis de estado, que passam AA, mais escuros que o pastel do original | Quem aceitar o contraste menor põe o pastel pelo gancho `--enchase-alert-border-color-<tipo>` (`info`, `success`, `warning` e `error`) |
+| Alvos de 24px | `Alert` de 43px, fechar do `Alert` e remover do `Tag` de 24 × 24, `Tag` removível de 26px e link do `Breadcrumbs` de 24px | O piso de 24px do WCAG 2.5.8: o original tem alvos menores |
+| Compacto | Não encolhe a tipografia e mantém os alvos em 24px ou mais | Veja "O compacto do `workbench`" |
+| Rótulo flutuante | Com `labelPlacement="floating"`, o rótulo fica a 4px do entalhe, a 14 e a 12px | O estilo põe o rótulo acima do campo por padrão |
+| `Switch` | Sem tamanho pequeno | O componente não tem a prop `size` |
+
+O que o estilo não reproduz (limites conhecidos): a entrelinha do título do `Modal` e do `Drawer` é de 19,2px (24px no original), porque o título recebe a entrelinha global dos títulos; o `ConfirmModal` tem a largura do `Modal` (520px; 416px no original); o `Alert` com descrição usa o título e o padding do `Alert` sem descrição, e o ícone dele e o do toast têm o tamanho do componente; o `Avatar` é redondo, o título do `Popover` é uma prop, e o item atual da `Navbar` usa o fundo `primaryContainer`, sem o sublinhado de 2px; o toast usa o fundo do tipo, onde o original é branco com o ícone colorido.
+
+O `workbench` não usa `base.spacing`: mantém a escala de espaço do Enchase e ajusta o que difere pelos ganchos de cada componente. A lista dos ganchos que ele declara está em `src/styles/presets/workbench.ts`.
 
 ### Criar um estilo
 
@@ -901,7 +923,7 @@ Com `container` nulo, ou com a função devolvendo `null`, o overlay cai no `bod
 - **Só no `<html>`.** Ao contrário do `data-theme`, que vale em qualquer ancestral, `data-density="compact"` num `div` ou no `<body>` não faz nada (medido: nenhum retângulo muda), porque todo seletor do bloco começa com `:root`. Não há ilhas de densidade: os overlays saem no `<body>`, que só a raiz alcança.
 - **Sem volta ao padrão e sem outros eixos.** Dentro de uma árvore compact, `data-density="default"` num elemento não muda nada. A densidade não mexe na tipografia (o rótulo flutuante dos campos e o entalhe do contorno dependem dela), nos raios, nem no desenho do checkbox, do radio, da chave, dos ícones e do avatar, e deixa de fora as larguras (`Sidebar`, `Modal`, `Drawer` e `Menu`), o anel de foco, as bordas, as camadas de estado e o movimento.
 - **Não é para interface pensada para o dedo.** O alvo de toque vai a 32px em qualquer ponteiro, inclusive em tela de toque: a densidade não olha `pointer: coarse`. O piso de 24px (WCAG 2.5.8) continua valendo, porque todo alvo lê `max(24px, var(--enchase-hit-size, ...))`, e `--enchase-hit-size-lg` (os botões que abrem, fecham ou recolhem uma navegação) continua em 44px. O único alvo abaixo de 24px é o polegar do `Slider` (20px no `enchase`, 16px no `shadcn`), como já era no padrão: o controle de 32px ao redor dele é a área de arrastar. Os campos mantêm a fonte de 16px em ponteiro de toque.
-- **Valores absolutos, para os estilos embutidos.** O bloco padrão do compact é um conjunto de valores absolutos (uma propriedade personalizada não consegue escalar o valor que ela mesma sobrescreve), escolhidos para o `enchase` e o `shadcn`. Um estilo próprio, feito com `defineStyle`, recebe esse bloco e pode declarar o compact dele (veja "O compacto de um estilo"); sem declará-lo, num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
+- **Valores absolutos, para os estilos embutidos.** O bloco padrão do compact é um conjunto de valores absolutos (uma propriedade personalizada não consegue escalar o valor que ela mesma sobrescreve), escolhidos para o `enchase` e o `shadcn` (o `workbench` traz o dele). Um estilo próprio, feito com `defineStyle`, recebe esse bloco e pode declarar o compact dele (veja "O compacto de um estilo"); sem declará-lo, num estilo cujo padrão já é mais denso que o do `enchase` algumas peças podem não compactar ou até crescer (o piso de 24px continua valendo).
 
 ### O que muda
 
@@ -945,7 +967,7 @@ O estilo `shadcn` fica meio compact de propósito: ele declara por conta própri
 - **Não segue**, porque o estilo fixa a medida: os outros ganchos da tabela (`--enchase-textarea-min-height`, `--enchase-accordion-trigger-min-height`, `--enchase-select-option-padding-block`, `--enchase-badge-padding-inline-md`, `--enchase-sidebar-item-control-height`, `--enchase-sidebar-header-min-height`, `--enchase-navbar-bar-height` e `--enchase-layout-header-height`). Ficam como estavam o gatilho do `Accordion` (52px), a linha média da `Table` (38px), o item do `Menu` (33px), a opção do `Combobox` (33px), o item (32px) e o cabeçalho (56px) da `Sidebar`, a barra da `Navbar` e a do `Layout` (56px) e o `Alert` (83px).
 - **Um rótulo flutuante do `shadcn` fica 4px mais perto do entalhe no compact.** O rótulo flutuante não é o padrão do estilo (o rótulo dele fica acima do campo, sem entalhe) e só aparece com `labelPlacement="floating"`: o início do rótulo menos o início do texto do entalhe vai de -5px para -1px, o rótulo continua dentro do entalhe e a folga do entalhe é a mesma.
 
-A página System/Density do Storybook traz o tamanho de cada peça, no padrão e no compact, nos dois estilos, e o item Density da barra de ferramentas liga o atributo em todas as histórias.
+A página System/Density do Storybook traz o tamanho de cada peça, no padrão e no compact, nos três estilos, e o item Density da barra de ferramentas liga o atributo em todas as histórias.
 
 ### O compacto de um estilo
 
@@ -968,7 +990,26 @@ export const tight = defineStyle({
 
 - **Substitui o bloco padrão chave por chave.** O token que o estilo declara vence o do bloco padrão, e o que ele não declara herda o valor do bloco padrão. Num estilo que já é mais denso que o do `enchase`, declare os tokens que o bloco padrão faria crescer: no exemplo, o `--enchase-hit-size` do estilo é 28px e o do bloco padrão é 32px, então o estilo declara 24px.
 - **Os ganchos do compacto do estilo têm a força dos tokens.** Saem na mesma regra dos tokens, `:root[data-density='compact']` (0,2,0), e por isso vencem o gancho que o próprio estilo declara em `hooks` no `:root` (0,1,0), coisa que o bloco padrão (0,0,0) não faz: no exemplo, o campo tem 36px e vai a 32px no compact. Os ganchos do bloco padrão que o estilo não redeclara continuam em `:where(:root[data-density='compact'])` (0,0,0) e perdem para um gancho do estilo, como no `shadcn`; se o estilo redeclara todos, essa regra não é escrita.
-- **`enchase` e `shadcn` não têm `density`.** O CSS que eles geram é o de antes, com o bloco padrão.
+- **`enchase` e `shadcn` não têm `density`.** O CSS que eles geram é o de antes, com o bloco padrão. O `workbench` declara o compacto dele (veja "O compacto do `workbench`").
+
+### O compacto do `workbench`
+
+O `workbench` declara o compacto dele, a seção `density` do estilo, e por isso não usa o bloco padrão dos tokens: são 10 tokens e 30 ganchos, com valores medidos para ele. O compacto não encolhe a tipografia, mantém os alvos em 24px ou mais e deixa o padding de 50px da barra do `Layout` como está.
+
+| Token | Padrão (`workbench`) | `compact` do `workbench` |
+| --- | --- | --- |
+| `--enchase-hit-size` | `2rem` | `1.5rem` |
+| `--enchase-control-height-sm` | `1.5rem` | `1.5rem` |
+| `--enchase-control-height-md` | `2rem` | `1.75rem` |
+| `--enchase-control-height-lg` | `2.5rem` | `2.1875rem` |
+| `--enchase-space-sm` | `0.5rem` | `0.25rem` |
+| `--enchase-space-md` | `1rem` | `0.5rem` |
+| `--enchase-space-lg` | `1.5rem` | `1rem` |
+| `--enchase-space-xl` | `2rem` | `2rem` |
+| `--enchase-space-2xl` | `3rem` | `3rem` |
+| `--enchase-space-3xl` | `4rem` | `3rem` |
+
+O `--enchase-space-3xl` o estilo não declara: herda o do bloco padrão. Os ganchos do compacto do `workbench` saem na força dos tokens (0,2,0): abas e gatilho do `Accordion` de 36px, item da `Sidebar` de 35px, o padding do botão, do campo, da opção da lista, da célula da `Table`, do `Modal` e do `Drawer`, a altura de `Badge` e `Tag`, o padding do `Tooltip` e do painel do `Accordion`, a margem do `Divider`, o link da `Navbar` de 40px e o cabeçalho do calendário de 36px.
 
 ### Seus valores sobre a densidade
 
@@ -1010,7 +1051,7 @@ npm run build:lib && npm run pack:check && npm run test:consumer
 
 ## Estado do projeto
 
-Versão `0.x`, em desenvolvimento ativo. Há dois estilos visuais, `enchase` e `shadcn`, e a densidade `compact`. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band) e os estilos Material 3 e Ant Design.
+Versão `0.x`, em desenvolvimento ativo. Há três estilos visuais, `enchase`, `shadcn` e `workbench`, e a densidade `compact`. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band) e um estilo Material 3.
 
 ## Contribuindo
 
