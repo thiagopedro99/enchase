@@ -310,6 +310,7 @@ A thin line that separates sections of content or groups of controls. It is an `
 | --- | --- | --- | --- |
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Direction of the line. A vertical divider is announced with `aria-orientation="vertical"` and stretches to the height of its parent when the parent is a flex container. |
 | `decorative` | `boolean` | `false` | Hides the divider from assistive technology (`role="none"`). Use it when the line only adds to the look and the content already reads in order. |
+| `textAlign` | `'start' \| 'center' \| 'end'` | `'center'` | Where the text of a divider with `children` sits: in the middle, with a line on each side, or at the `start` or the `end`, with a short line on that side. It follows the direction of the text. It has no effect without `children`. |
 
 Also accepts the other attributes of `<hr>`, passed on to the element.
 
@@ -1514,9 +1515,15 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | Hook | Default | Property |
 | --- | --- | --- |
 | `--enchase-divider-border-color` | `var(--enchase-color-border)` | `border-block-start`, `border-inline-start` |
+| `--enchase-divider-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-divider-line-width` | `1.5rem` | `inline-size` |
 | `--enchase-divider-margin-block` | `0` | `margin-block` |
 | `--enchase-divider-margin-inline` | `0` | `margin-inline` |
 | `--enchase-divider-min-height` | `1rem` | `min-block-size` |
+| `--enchase-divider-text-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-divider-text-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-divider-text-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-divider-text-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
 
 ### Drawer
 

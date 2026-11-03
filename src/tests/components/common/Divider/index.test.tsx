@@ -33,12 +33,80 @@ describe('Divider', () => {
     expect(divider).toHaveAttribute('data-orientation', 'vertical')
   })
 
-  it('does not pass orientation and decorative to the page as attributes', () => {
-    renderWithProviders(<Divider orientation="vertical" decorative />)
+  it('stays an hr with no text attribute unless it has a text', () => {
+    renderWithProviders(<Divider textAlign="start" />)
+    const divider = screen.getByRole('separator')
+
+    expect(divider.tagName).toBe('HR')
+    expect(divider).not.toHaveAttribute('data-with-text')
+    expect(divider).not.toHaveAttribute('data-text-align')
+    expect(divider.querySelector('[data-slot="divider-text"]')).toBeNull()
+  })
+
+  it('writes its children between two lines, as a horizontal separator on a div', () => {
+    renderWithProviders(<Divider>or</Divider>)
+    const divider = screen.getByRole('separator')
+    const [before, text, after] = [...divider.children]
+
+    expect(divider.tagName).toBe('DIV')
+    expect(divider).toHaveAttribute('data-orientation', 'horizontal')
+    expect(divider).toHaveAttribute('data-with-text', '')
+    expect(divider).toHaveAttribute('data-text-align', 'center')
+    expect(divider).not.toHaveAttribute('aria-orientation')
+    expect([before, text, after].map((part) => part.getAttribute('data-slot'))).toEqual(['divider-line', 'divider-text', 'divider-line'])
+    expect([before, after].map((line) => line.getAttribute('aria-hidden'))).toEqual(['true', 'true'])
+    expect(text).toHaveTextContent('or')
+  })
+
+  it.each(['start', 'center', 'end'] as const)('puts the text at the %s', (align) => {
+    renderWithProviders(<Divider textAlign={align}>or</Divider>)
+
+    expect(screen.getByRole('separator')).toHaveAttribute('data-text-align', align)
+  })
+
+  it('keeps the text readable when the divider is decorative, and takes it out of the separators', () => {
+    renderWithProviders(<Divider decorative>or</Divider>)
+
+    expect(screen.queryByRole('separator')).toBeNull()
+    expect(screen.getByText('or')).toBeInTheDocument()
+    expect(document.querySelector('[data-slot="divider"]')).toHaveAttribute('role', 'none')
+  })
+
+  it('draws no text on a vertical divider, which stays an hr', () => {
+    renderWithProviders(<Divider orientation="vertical">or</Divider>)
+    const divider = screen.getByRole('separator')
+
+    expect(divider.tagName).toBe('HR')
+    expect(divider).toHaveAttribute('aria-orientation', 'vertical')
+    expect(screen.queryByText('or')).toBeNull()
+  })
+
+  it.each([undefined, null, false, ''] as const)('stays an hr for children that are %j', (children) => {
+    renderWithProviders(<Divider>{children}</Divider>)
+
+    expect(screen.getByRole('separator').tagName).toBe('HR')
+  })
+
+  it('passes the other attributes and the handlers to the div that holds the text', () => {
+    renderWithProviders(
+      <Divider id="split" className="custom" data-test="yes">
+        or
+      </Divider>
+    )
+    const divider = screen.getByRole('separator')
+
+    expect(divider).toHaveAttribute('id', 'split')
+    expect(divider).toHaveAttribute('data-test', 'yes')
+    expect(divider.className).toContain('custom')
+  })
+
+  it('does not pass orientation, decorative and textAlign to the page as attributes', () => {
+    renderWithProviders(<Divider orientation="vertical" decorative textAlign="end" />)
     const divider = document.querySelector('hr') as HTMLElement
 
     expect(divider).not.toHaveAttribute('orientation')
     expect(divider).not.toHaveAttribute('decorative')
+    expect(divider).not.toHaveAttribute('textalign')
   })
 
   it('passes the other attributes to the hr', () => {
@@ -47,6 +115,20 @@ describe('Divider', () => {
 
     expect(divider).toHaveAttribute('id', 'between')
     expect(divider).toHaveAttribute('title', 'Between the sections')
+  })
+
+  it('has no axe violations with a text, decorative or not, at each end', async () => {
+    const { container } = renderWithProviders(
+      <>
+        <Divider>or</Divider>
+        <Divider textAlign="start">or</Divider>
+        <Divider textAlign="end" decorative>
+          or
+        </Divider>
+      </>
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
   })
 
   it('has no axe violations in each orientation, decorative or not', async () => {

@@ -432,6 +432,18 @@ describe('the drawer, the divider, the footer and the headings of the workbench 
     expect([px(style('divider', 1).marginLeft), px(style('divider', 1).marginRight), px(style('divider', 1).marginTop)]).toEqual([8, 8, 0])
   })
 
+  it('writes the text of a divider in 16px, 500 weight and the main text color, between lines that leave 5% of the width at the start, as the original does', () => {
+    show(
+      <div style={{ inlineSize: 400 }}>
+        <Divider textAlign="start">Details</Divider>
+      </div>
+    )
+
+    expect([px(style('divider-text').fontSize), style('divider-text').fontWeight, style('divider-text').color]).toEqual([16, '500', 'rgba(0, 0, 0, 0.88)'])
+    expect(Math.round(part('divider-line', 0).getBoundingClientRect().width)).toBe(20)
+    expect([px(style('divider').marginTop), px(style('divider').marginBottom)]).toEqual([24, 24])
+  })
+
   it('pads the footer by 24px above and below and 50px at the sides, as the original does', () => {
     show(<Footer links={[{ label: 'Docs', href: '/docs' }]} />)
     const footer = style('footer')

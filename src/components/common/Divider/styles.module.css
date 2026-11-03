@@ -23,3 +23,41 @@
   margin-inline: var(--enchase-divider-margin-inline, 0);
   border-inline-start: var(--enchase-border-width, 1px) solid var(--enchase-divider-border-color, var(--enchase-color-border));
 }
+
+.divider[data-with-text] {
+  display: flex;
+  align-items: center;
+  border: 0;
+}
+
+:where(.divider[data-with-text]) {
+  gap: var(--enchase-divider-gap, var(--enchase-space-md));
+}
+
+.line {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  border-block-start: var(--enchase-border-width, 1px) solid var(--enchase-divider-border-color, var(--enchase-color-border));
+}
+
+.divider[data-text-align='start'] .line:first-child,
+.divider[data-text-align='end'] .line:last-child {
+  flex: 0 0 auto;
+}
+
+:where(.divider[data-text-align='start'] .line:first-child, .divider[data-text-align='end'] .line:last-child) {
+  inline-size: var(--enchase-divider-line-width, 1.5rem);
+}
+
+.text {
+  flex-shrink: 1;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+:where(.text) {
+  font-size: var(--enchase-divider-text-font-size, var(--enchase-font-size-sm));
+  font-weight: var(--enchase-divider-text-font-weight, var(--enchase-font-weight-medium));
+  line-height: var(--enchase-divider-text-line-height, var(--enchase-line-height-normal, 1.5));
+  color: var(--enchase-divider-text-color, var(--enchase-color-text-secondary));
+}

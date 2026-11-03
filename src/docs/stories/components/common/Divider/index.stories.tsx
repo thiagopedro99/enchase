@@ -1,5 +1,5 @@
 import { Button, Divider, Flex } from 'enchase'
-import { defaultDecorative, defaultOrientation } from './defaultData.ts'
+import { defaultDecorative, defaultOrientation, defaultTextAlign } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import type { CSSProperties } from 'react'
@@ -9,7 +9,8 @@ const meta = {
   component: Divider,
   args: {
     orientation: defaultOrientation,
-    decorative: defaultDecorative
+    decorative: defaultDecorative,
+    textAlign: defaultTextAlign
   },
   parameters: {
     docs: {
@@ -32,6 +33,16 @@ const meta = {
       options: ['horizontal', 'vertical'],
       table: { defaultValue: { summary: `'${defaultOrientation}'` } }
     },
+    textAlign: {
+      description: 'Where the text of a divider with `children` sits: in the middle, with a line on each side, or at the `start` or the `end`, with a short line on that side. It follows the direction of the text. It has no effect without `children`.',
+      control: 'inline-radio',
+      options: ['start', 'center', 'end'],
+      table: { defaultValue: { summary: `'${defaultTextAlign}'` } }
+    },
+    children: {
+      description: 'Text written on the line, on a horizontal divider. The divider becomes a `<div role="separator">` with the text between two lines, and `decorative` still leaves the text to be read. Without `children`, and on a vertical divider, it stays the `<hr>` of always.',
+      control: 'text'
+    },
     decorative: {
       description: 'Hides the divider from assistive technology (`role="none"`). Use it when the line only adds to the look and the content already reads in order.',
       control: 'boolean',
@@ -45,6 +56,14 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+export const WithText: Story = {
+  args: { children: 'or' }
+}
+
+export const TextAtTheStart: Story = {
+  args: { children: 'Details', textAlign: 'start' }
+}
 
 export const BetweenSections: Story = {
   parameters: { controls: { disable: true } },
