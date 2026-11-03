@@ -37,6 +37,69 @@
   overflow: hidden;
 }
 
+.progress[data-variant='linear'][data-show-value] {
+  display: flex;
+  align-items: center;
+}
+
+:where(.progress[data-variant='linear'][data-show-value]) {
+  gap: var(--enchase-progress-value-gap, var(--enchase-space-sm));
+}
+
+.progress[data-variant='linear'][data-show-value] .track {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+}
+
+.value {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+:where(.value) {
+  line-height: var(--enchase-progress-value-line-height, 1);
+  color: var(--enchase-progress-value-color, var(--enchase-color-text-secondary));
+  font-weight: var(--enchase-progress-value-font-weight, var(--enchase-font-weight-medium));
+}
+
+:where(.progress[data-variant='linear'] .value) {
+  flex-shrink: 0;
+  min-inline-size: var(--enchase-progress-value-min-width, 3em);
+  text-align: end;
+}
+
+:where(.progress[data-variant='linear'][data-size='sm'] .value) {
+  font-size: var(--enchase-progress-value-font-size-sm, var(--enchase-font-size-xs));
+}
+
+:where(.progress[data-variant='linear'][data-size='md'] .value) {
+  font-size: var(--enchase-progress-value-font-size-md, var(--enchase-font-size-sm));
+}
+
+:where(.progress[data-variant='linear'][data-size='lg'] .value) {
+  font-size: var(--enchase-progress-value-font-size-lg, var(--enchase-font-size-base));
+}
+
+.progress[data-variant='circular'] .value {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:where(.progress[data-variant='circular'][data-size='sm'] .value) {
+  font-size: var(--enchase-progress-ring-value-font-size-sm, 0.5rem);
+}
+
+:where(.progress[data-variant='circular'][data-size='md'] .value) {
+  font-size: var(--enchase-progress-ring-value-font-size-md, 0.5625rem);
+}
+
+:where(.progress[data-variant='circular'][data-size='lg'] .value) {
+  font-size: var(--enchase-progress-ring-value-font-size-lg, 0.8125rem);
+}
+
 :where(.track) {
   border-radius: var(--enchase-progress-track-radius, var(--enchase-radius-full));
   background-color: var(--enchase-progress-track-background, var(--enchase-color-surface-container-high));

@@ -5,3 +5,5 @@ export const defaultMax = 100
 export const defaultVariant: ProgressVariant = 'linear'
 
 export const defaultSize: ProgressSize = 'md'
+
+export const defaultShowValue = false

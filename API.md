@@ -648,6 +648,7 @@ Shows how far a task has come, as a bar or as a ring. With a `value` it is deter
 | `max` | `number` | `100` | Value that means the task is done. A number that is not above 0 is replaced by 100. |
 | `variant` | `'linear' \| 'circular'` | `'linear'` | Shape of the progress: a bar that fills its row, or a ring that sits in the text. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the progress. For the bar it sets the thickness (sm is 0.25 rem, md is 0.5 rem and lg is 0.75 rem) and for the ring the diameter (sm is 1.5 rem, md is 2.5 rem and lg is 3.5 rem). |
+| `showValue` | `boolean` | `false` | Writes the percentage of the value as text: after the bar, in the same row, or in the middle of the ring. The text is hidden from assistive technology, which reads the value of the progressbar, and it is not written while the progress is indeterminate. It follows the language of the provider. The ring fits the text from the md size on, and has its own hooks for the size of the text, `--enchase-progress-ring-value-font-size-sm`, `-md` and `-lg`, besides the ones of the bar. |
 | `animation` | `false \| { recipe, tuning }` | `shimmer (bar), spin (ring)` | Loop of the indeterminate state. false turns it off and leaves a still, faded bar or ring. { tuning: { duration } } sets the seconds of one cycle. The determinate bar and ring also stop easing when it is false. |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
@@ -1931,6 +1932,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-progress-indicator-width` | `40%` | `inline-size` |
 | `--enchase-progress-loop-ease` | `cubic-bezier(0.4, 0, 0.2, 1)` (`--enchase-motion-ease-in-out`) | `animation` |
 | `--enchase-progress-ring-duration` | `0.8s` | `animation` |
+| `--enchase-progress-ring-value-font-size-lg` | `0.8125rem` | `font-size` |
+| `--enchase-progress-ring-value-font-size-md` | `0.5625rem` | `font-size` |
+| `--enchase-progress-ring-value-font-size-sm` | `0.5rem` | `font-size` |
 | `--enchase-progress-size-lg` | `3.5rem` | `inline-size`, `block-size` |
 | `--enchase-progress-size-md` | `2.5rem` | `inline-size`, `block-size` |
 | `--enchase-progress-size-sm` | `1.5rem` | `inline-size`, `block-size` |
@@ -1940,6 +1944,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-progress-track-height-md` | `0.5rem` | `block-size` |
 | `--enchase-progress-track-height-sm` | `0.25rem` | `block-size` |
 | `--enchase-progress-track-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
+| `--enchase-progress-value-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-progress-value-font-size-lg` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-progress-value-font-size-md` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-progress-value-font-size-sm` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-progress-value-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-progress-value-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-progress-value-line-height` | `1` | `line-height` |
+| `--enchase-progress-value-min-width` | `3em` | `min-inline-size` |
 
 ### RadioGroup
 

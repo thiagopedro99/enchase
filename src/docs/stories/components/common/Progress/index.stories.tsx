@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Flex, Progress } from 'enchase'
-import { defaultMax, defaultSize, defaultVariant, sizes, variants } from './defaultData.ts'
+import { defaultMax, defaultShowValue, defaultSize, defaultVariant, sizes, variants } from './defaultData.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 
@@ -54,6 +54,7 @@ const meta = {
     max: defaultMax,
     variant: defaultVariant,
     size: defaultSize,
+    showValue: defaultShowValue,
     'aria-label': 'Uploading photos'
   },
   parameters: {
@@ -92,6 +93,11 @@ const meta = {
       options: sizes,
       table: { defaultValue: { summary: `'${defaultSize}'` } }
     },
+    showValue: {
+      description: 'Writes the percentage of the value as text: after the bar, in the same row, or in the middle of the ring. The text is hidden from assistive technology, which reads the value of the progressbar, and it is not written while the progress is indeterminate. It follows the language of the provider. The ring fits the text from the md size on, and has its own hooks for the size of the text, `--enchase-progress-ring-value-font-size-sm`, `-md` and `-lg`, besides the ones of the bar.',
+      control: 'boolean',
+      table: { defaultValue: { summary: String(defaultShowValue) } }
+    },
     animation: {
       description: 'Loop of the indeterminate state. false turns it off and leaves a still, faded bar or ring. { tuning: { duration } } sets the seconds of one cycle. The determinate bar and ring also stop easing when it is false.',
       control: 'object',
@@ -105,6 +111,14 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+export const WithValue: Story = {
+  args: { showValue: true, value: 65 }
+}
+
+export const RingWithValue: Story = {
+  args: { variant: 'circular', size: 'lg', showValue: true, value: 65 }
+}
 
 export const Circular: Story = {
   args: { variant: 'circular', value: 65 }

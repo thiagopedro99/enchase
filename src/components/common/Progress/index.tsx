@@ -1,5 +1,8 @@
-import { defaultMax, defaultSize, defaultVariant } from './defaultData.ts'
+import { useMemo } from 'react'
+
+import { defaultMax, defaultShowValue, defaultSize, defaultVariant } from './defaultData.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { resolveLocale } from '@utils/resolveLocale.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { resolveLoopMotion } from '@motion/loop.ts'
 import styles from './styles.module.css'
@@ -7,8 +10,9 @@ import styles from './styles.module.css'
 import type { CSSProperties } from 'react'
 import type { ProgressProps } from './types.ts'
 
-export const Progress = ({ value, max = defaultMax, variant = defaultVariant, size = defaultSize, animation, ...props }: ProgressProps) => {
-  const { labels, motion: settings } = useUIConfig()
+export const Progress = ({ value, max = defaultMax, variant = defaultVariant, size = defaultSize, showValue = defaultShowValue, animation, ...props }: ProgressProps) => {
+  const { labels, locale, motion: settings } = useUIConfig()
+  const percent = useMemo(() => new Intl.NumberFormat(resolveLocale(locale, Intl.NumberFormat), { style: 'percent', maximumFractionDigits: 0 }), [locale])
   const circular = variant === 'circular'
   const end = Number.isFinite(max) && max > 0 ? max : defaultMax
   const current = value !== undefined && Number.isFinite(value) ? Math.min(Math.max(value, 0), end) : undefined
@@ -24,6 +28,7 @@ export const Progress = ({ value, max = defaultMax, variant = defaultVariant, si
     'aria-valuenow': current,
     'data-variant': variant,
     'data-size': size,
+    'data-show-value': showValue ? '' : undefined,
     'data-state': current === undefined ? 'indeterminate' : current >= end ? 'complete' : 'loading',
     'data-motion': motion,
     style: { ...style, '--progress': fraction } as CSSProperties
@@ -40,6 +45,18 @@ export const Progress = ({ value, max = defaultMax, variant = defaultVariant, si
         <div className={styles.track} {...slot('progress', 'track')}>
           <div className={styles.bar} {...slot('progress', 'indicator')} />
         </div>
+      )}
+
+      {showValue && current !== undefined && circular && (
+        <span className={styles.value} aria-hidden="true" {...slot('progress', 'ring-value')}>
+          {percent.format(fraction)}
+        </span>
+      )}
+
+      {showValue && current !== undefined && !circular && (
+        <span className={styles.value} aria-hidden="true" {...slot('progress', 'value')}>
+          {percent.format(fraction)}
+        </span>
       )}
     </div>
   )

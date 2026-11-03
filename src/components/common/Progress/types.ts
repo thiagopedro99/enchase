@@ -10,5 +10,6 @@ export interface ProgressProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
   max?: number | undefined
   variant?: ProgressVariant | undefined
   size?: ProgressSize | undefined
+  showValue?: boolean | undefined
   animation?: MotionOverride | undefined
 }

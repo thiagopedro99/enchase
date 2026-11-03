@@ -323,6 +323,23 @@ describe('the progress of the workbench style', () => {
     expect(px(style('progress-indicator', 0).strokeWidth)).toBe(3)
   })
 
+  it('writes the text of the bar in regular weight and the main text color, and the text of the circle in 15px, 24px and 27.6px, which is 15% of the width plus 6px as in the original', () => {
+    show(
+      <>
+        <Progress value={30} showValue />
+        <Progress value={30} variant="circular" size="sm" showValue />
+        <Progress value={30} variant="circular" showValue />
+        <Progress value={30} variant="circular" size="lg" showValue />
+      </>
+    )
+
+    expect(style('progress-value', 0).fontWeight).toBe('400')
+    expect(style('progress-value', 0).color).toBe('rgba(0, 0, 0, 0.88)')
+    expect(px(style('progress-ring-value', 0).fontSize)).toBe(15)
+    expect(px(style('progress-ring-value', 1).fontSize)).toBe(24)
+    expect(px(style('progress-ring-value', 2).fontSize)).toBeCloseTo(27.6, 1)
+  })
+
   it('draws the large circle at 144px, where the original has no large size, so the style continues the scale of its 60px and 120px circles with the same 6% stroke', () => {
     show(
       <>

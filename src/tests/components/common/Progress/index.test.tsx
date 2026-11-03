@@ -139,10 +139,61 @@ describe('Progress', () => {
     expect(bar()).toHaveAttribute('data-size', size)
   })
 
-  it('does not pass value, max, variant, size and animation to the page as attributes', () => {
-    renderWithProviders(<Progress value={10} max={20} variant="circular" size="lg" animation={false} />)
+  it('does not pass value, max, variant, size, showValue and animation to the page as attributes', () => {
+    renderWithProviders(<Progress value={10} max={20} variant="circular" size="lg" showValue animation={false} />)
 
-    for (const name of ['value', 'max', 'variant', 'size', 'animation']) expect(bar()).not.toHaveAttribute(name)
+    for (const name of ['value', 'max', 'variant', 'size', 'showvalue', 'animation']) expect(bar()).not.toHaveAttribute(name)
+  })
+
+  it('writes no text, and marks nothing on the root, unless it is told to', () => {
+    renderWithProviders(<Progress value={40} />)
+
+    expect(bar()).not.toHaveAttribute('data-show-value')
+    expect(bar().querySelector('[data-slot="progress-value"]')).toBeNull()
+    expect(bar().textContent).toBe('')
+  })
+
+  it('writes the percentage of the range after the track, hidden from assistive technology, and marks the root', () => {
+    renderWithProviders(<Progress value={30} max={120} showValue />)
+    const text = bar().querySelector('[data-slot="progress-value"]') as HTMLElement
+
+    expect(bar()).toHaveAttribute('data-show-value', '')
+    expect(text).toHaveAttribute('aria-hidden', 'true')
+    expect(text.textContent).toBe('25%')
+    expect(bar().lastElementChild).toBe(text)
+    expect(bar()).toHaveAttribute('aria-valuenow', '30')
+  })
+
+  it.each([
+    [33.4, '33%'],
+    [250, '100%'],
+    [-5, '0%']
+  ] as const)('writes %s as %s, whole and inside the range', (value, text) => {
+    renderWithProviders(<Progress value={value} showValue />)
+
+    expect(bar().querySelector('[data-slot="progress-value"]')?.textContent).toBe(text)
+  })
+
+  it('writes the text in the ring too', () => {
+    renderWithProviders(<Progress variant="circular" value={65} showValue />)
+
+    expect(bar().querySelector('[data-slot="progress-ring-value"]')?.textContent).toBe('65%')
+    expect(bar().querySelector('[data-slot="progress-value"]')).toBeNull()
+  })
+
+  it('writes no text while the progress is indeterminate', () => {
+    renderWithProviders(<Progress variant="circular" showValue />)
+
+    expect(bar()).toHaveAttribute('data-show-value', '')
+    expect(bar().querySelector('[data-slot="progress-value"], [data-slot="progress-ring-value"]')).toBeNull()
+  })
+
+  it('writes the percentage in the language of the provider', () => {
+    renderWithProviders(<Progress value={50} showValue />, { locale: { ...en, locale: 'ar-EG' } })
+    const text = bar().querySelector('[data-slot="progress-value"]')?.textContent
+
+    expect(text).toBe(new Intl.NumberFormat('ar-EG', { style: 'percent', maximumFractionDigits: 0 }).format(0.5))
+    expect(text).not.toMatch(/[0-9]/)
   })
 
   it('passes the other attributes to the root', () => {
