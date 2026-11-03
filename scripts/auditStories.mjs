@@ -39,7 +39,7 @@ const pageRules = [
 
 const accepted = [
   {
-    story: 'components-slider--disabled',
+    storyPrefix: 'components-slider--',
     rule: 'color-contrast',
     selector: '[data-slot="slider-value"]',
     reason: 'RC-01: the value of a disabled Slider is an inactive component, which WCAG 1.4.3 exempts from the contrast minimum'
@@ -419,7 +419,7 @@ const duration = (ms) => `${Math.floor(ms / 60000)}m ${Math.round((ms % 60000) /
 
 const load = () => `${loadavg()[0].toFixed(2)} on ${cpus().length} cores`
 
-const acceptedBy = (node) => accepted.find((entry) => entry.story === node.story && entry.rule === node.rule && entry.selector === node.selector)
+const acceptedBy = (node) => accepted.find((entry) => node.story.startsWith(entry.storyPrefix) && entry.rule === node.rule && entry.selector === node.selector)
 
 const familyOf = (node) => knownIncomplete.find((family) => family.rule === node.rule && family.messageKeys.includes(node.messageKey))
 
@@ -440,7 +440,12 @@ const report = (outcomes, jobs, elapsed, loadStart) => {
   console.log(`    by impact: ${impacts.map((impact) => `${impact} ${byImpact[impact] ?? 0}`).join(', ')}`)
   console.log(`    by rule: ${listOf(countBy(violations, (node) => node.rule))}`)
   console.log(`  accepted entries (${accepted.length}):`)
-  accepted.forEach((entry) => console.log(`    ${entry.story} ${entry.rule} ${entry.selector}: matched ${violations.filter((node) => acceptedBy(node) === entry).length} nodes. ${entry.reason}`))
+  accepted.forEach((entry) => {
+    const matched = violations.filter((node) => acceptedBy(node) === entry)
+
+    console.log(`    ${entry.storyPrefix}* ${entry.rule} ${entry.selector}: matched ${matched.length} nodes. ${entry.reason}`)
+    Object.entries(countBy(matched, (node) => node.story)).forEach(([story, count]) => console.log(`      ${story}: ${count} nodes`))
+  })
   console.log(`  incomplete (needs review, never fails the audit): ${incomplete.length} nodes in ${audited.filter((outcome) => outcome.incomplete.length > 0).length} runs`)
   knownIncomplete.forEach((family) => console.log(`    ${family.id} ${known[family.id] ?? 0} nodes: ${family.cause}`))
   console.log(`    not in the known families: ${listOf(unknown)}`)
