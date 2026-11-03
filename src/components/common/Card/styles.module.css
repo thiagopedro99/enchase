@@ -31,6 +31,51 @@
   box-shadow: var(--enchase-card-shadow-outlined, none);
 }
 
+.card[data-with-header] {
+  padding: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-block-end: var(--enchase-border-width, 1px) solid var(--enchase-card-header-border-color, var(--enchase-color-border));
+}
+
+:where(.header) {
+  gap: var(--enchase-card-header-gap, var(--enchase-space-md));
+  min-block-size: var(--enchase-card-header-min-height, 3rem);
+  padding-block: var(--enchase-card-header-padding-block, var(--enchase-space-sm));
+  padding-inline: var(--enchase-card-header-padding-inline, var(--enchase-space-lg));
+}
+
+.title {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+:where(.title) {
+  font-size: var(--enchase-card-title-font-size, var(--enchase-font-size-lg));
+  font-weight: var(--enchase-card-title-font-weight, var(--enchase-font-weight-semibold));
+  line-height: var(--enchase-card-title-line-height, var(--enchase-line-height-snug, 1.4));
+  color: var(--enchase-card-title-color, var(--enchase-color-text-primary));
+}
+
+.extra {
+  flex-shrink: 0;
+}
+
+:where(.extra) {
+  font-size: var(--enchase-card-extra-font-size, var(--enchase-font-size-sm));
+  line-height: var(--enchase-card-extra-line-height, var(--enchase-line-height-normal, 1.5));
+  color: var(--enchase-card-extra-color, var(--enchase-color-text-secondary));
+}
+
+:where(.body) {
+  padding: var(--enchase-card-body-padding, var(--enchase-card-padding, var(--enchase-space-lg)));
+}
+
 @media (hover: hover) and (pointer: fine) {
   :where(.card[data-variant='elevated']:hover) {
     box-shadow: var(--enchase-card-shadow-elevated-hover, var(--enchase-shadow-md));

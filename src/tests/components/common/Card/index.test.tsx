@@ -34,6 +34,105 @@ describe('Card', () => {
   })
 })
 
+describe('Card header', () => {
+  const root = () => screen.getByTestId('card')
+
+  it('keeps its children straight in the root, with nothing marked, unless it has a header', () => {
+    renderWithProviders(
+      <Card data-testid="card" padding="2rem">
+        <span>content</span>
+      </Card>
+    )
+
+    expect(root()).not.toHaveAttribute('data-with-header')
+    expect([...root().children].map((child) => child.tagName)).toEqual(['SPAN'])
+    expect(root()).toHaveStyle({ padding: '2rem' })
+  })
+
+  it.each([undefined, null, false, ''] as const)('stays without a header for a header that is %j', (header) => {
+    renderWithProviders(
+      <Card data-testid="card" header={header} headerExtra={header}>
+        content
+      </Card>
+    )
+
+    expect(root()).not.toHaveAttribute('data-with-header')
+    expect(root().querySelector('[data-slot="card-header"]')).toBeNull()
+  })
+
+  it('writes the header above the body, with the title and the extra, and marks the root', () => {
+    renderWithProviders(
+      <Card data-testid="card" header="Invoice" headerExtra={<button type="button">Edit</button>}>
+        content
+      </Card>
+    )
+    const [header, body] = [...root().children]
+
+    expect(root()).toHaveAttribute('data-with-header', '')
+    expect([header, body].map((part) => part.getAttribute('data-slot'))).toEqual(['card-header', 'card-body'])
+    expect([...header.children].map((part) => part.getAttribute('data-slot'))).toEqual(['card-title', 'card-extra'])
+    expect(header.querySelector('[data-slot="card-title"]')).toHaveTextContent('Invoice')
+    expect(header.querySelector('[data-slot="card-extra"]')).toContainElement(screen.getByRole('button', { name: 'Edit' }))
+    expect(body).toHaveTextContent('content')
+  })
+
+  it('writes an empty title to keep the extra at the end when there is only the extra, and no extra when there is only the title', () => {
+    const { unmount } = renderWithProviders(
+      <Card data-testid="card" headerExtra="Extra">
+        content
+      </Card>
+    )
+
+    expect([...root().querySelector('[data-slot="card-header"]')!.children].map((part) => part.getAttribute('data-slot'))).toEqual(['card-title', 'card-extra'])
+    expect(root().querySelector('[data-slot="card-title"]')).toBeEmptyDOMElement()
+    unmount()
+
+    renderWithProviders(
+      <Card data-testid="card" header="Title">
+        content
+      </Card>
+    )
+
+    expect(root().querySelector('[data-slot="card-extra"]')).toBeNull()
+  })
+
+  it('moves the padding prop to the body, and keeps the style of the caller on the root', () => {
+    renderWithProviders(
+      <Card data-testid="card" header="Title" padding="2rem" style={{ color: 'red' }}>
+        content
+      </Card>
+    )
+
+    expect(root().style.padding).toBe('')
+    expect(root()).toHaveStyle({ color: 'rgb(255, 0, 0)' })
+    expect(root().querySelector('[data-slot="card-body"]')).toHaveStyle({ padding: '2rem' })
+  })
+
+  it('does not pass header and headerExtra to the page as attributes', () => {
+    renderWithProviders(
+      <Card data-testid="card" header="Title" headerExtra="Extra">
+        content
+      </Card>
+    )
+
+    for (const name of ['header', 'headerextra']) expect(root(), name).not.toHaveAttribute(name)
+  })
+
+  it('keeps the tag, the role and the lift of the root, and has no axe violations', async () => {
+    const { container } = renderWithProviders(
+      <Grid as="ul">
+        <Card as="li" variant="elevated" header="Title" headerExtra={<button type="button">Edit</button>}>
+          content
+        </Card>
+      </Grid>
+    )
+
+    expect(container.querySelector('li')).toHaveAttribute('data-with-header', '')
+    expect(container.querySelector('li')).toHaveAttribute('data-motion')
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
 describe('Card contract', () => {
   it('marks the root with a slot and the variant and keeps the caller className last', () => {
     renderWithProviders(

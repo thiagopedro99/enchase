@@ -114,6 +114,8 @@ A surface that groups content, in the variants `default`, `elevated` and `outlin
 | `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
 | `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Appearance of the card. Only elevated rises when the pointer is over it. |
 | `padding` | `string` | — | Inner spacing (any CSS value). Without it, the default spacing applies, and a class of your own always wins over it. |
+| `header` | `ReactNode` | — | Title of the card, in a header over the content, with a line under it. With it, or with `headerExtra`, the content goes into a body of its own and the inner spacing (the `padding` prop or `--enchase-card-padding`) goes to the body, so the line of the header crosses the whole card. Without them, the card is the same as always. |
+| `headerExtra` | `ReactNode` | — | What goes at the end of the header, such as a link or a button. With only `headerExtra`, the title is empty and the extra stays at the end. |
 | `animation` | `false \| { recipe, tuning }` | `lift` | false turns the motion off. { tuning: { duration, distance } } sets the lift (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion. |
 
 Also accepts the other HTML attributes of the root element.
@@ -1371,18 +1373,31 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-card-background-default` | `var(--enchase-color-surface-container)` | `background-color` |
 | `--enchase-card-background-elevated` | `var(--enchase-color-surface-container-low)` | `background-color` |
 | `--enchase-card-background-outlined` | `var(--enchase-color-surface)` | `background-color` |
+| `--enchase-card-body-padding` | `var(--enchase-card-padding, var(--enchase-space-lg))` | `padding` |
 | `--enchase-card-border-color-default` | `transparent` | `border` |
 | `--enchase-card-border-color-outlined` | `var(--enchase-color-border)` | `border` |
 | `--enchase-card-border-width-default` | `0` | `border` |
 | `--enchase-card-distance` | `2px` (`--enchase-motion-distance-xs`) | `transform` |
 | `--enchase-card-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` (also in CardButton) |
 | `--enchase-card-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` (also in CardButton) |
+| `--enchase-card-extra-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-card-extra-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-card-extra-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
+| `--enchase-card-header-border-color` | `var(--enchase-color-border)` | `border-block-end` |
+| `--enchase-card-header-gap` | `1rem` (`--enchase-space-md`) | `gap` |
+| `--enchase-card-header-min-height` | `3rem` | `min-block-size` |
+| `--enchase-card-header-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
+| `--enchase-card-header-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
 | `--enchase-card-padding` | `1.5rem` (`--enchase-space-lg`) | `padding` |
 | `--enchase-card-radius` | `1.5rem` (`--enchase-radius-xl`) | `border-radius` |
 | `--enchase-card-shadow-default` | `none` | `box-shadow` |
 | `--enchase-card-shadow-elevated` | `var(--enchase-shadow-sm)` | `box-shadow` |
 | `--enchase-card-shadow-elevated-hover` | `var(--enchase-shadow-md)` | `box-shadow` |
 | `--enchase-card-shadow-outlined` | `none` | `box-shadow` |
+| `--enchase-card-title-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-card-title-font-size` | `1.125rem` (`--enchase-font-size-lg`) | `font-size` |
+| `--enchase-card-title-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-card-title-line-height` | `1.4` (`--enchase-line-height-snug`) | `line-height` |
 
 ### CardButton
 

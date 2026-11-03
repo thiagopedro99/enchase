@@ -158,6 +158,20 @@ describe('the card of the workbench style', () => {
     expect(px(card.paddingLeft)).toBe(24)
   })
 
+  it('writes the header 56px high, with the title in 16px and 600 weight, the extra in 14px and the main text color, and a 1px line in the border color, as the original does', () => {
+    show(
+      <Card header="Title" headerExtra="Extra">
+        Body
+      </Card>
+    )
+
+    expect(Math.round(part('card-header').getBoundingClientRect().height)).toBe(56)
+    expect([px(style('card-title').fontSize), style('card-title').fontWeight, style('card-title').color]).toEqual([16, '600', 'rgba(0, 0, 0, 0.88)'])
+    expect([px(style('card-extra').fontSize), style('card-extra').color]).toEqual([14, 'rgba(0, 0, 0, 0.88)'])
+    expect([style('card-header').borderBottomWidth, style('card-header').borderBottomColor]).toEqual(['1px', 'rgb(240, 240, 240)'])
+    expect([px(style('card-header').paddingLeft), px(style('card-body').paddingLeft), px(style('card-body').paddingTop)]).toEqual([24, 24, 24])
+  })
+
   it('keeps the elevated card white, with the small shadow at rest and the card shadow of the original under the pointer', async () => {
     show(<Card variant="elevated">Body</Card>)
 

@@ -1,4 +1,4 @@
-import { Card, Grid } from 'enchase'
+import { Button, Card, Grid } from 'enchase'
 import { asArgType } from '@docs/shared/argTypes.ts'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -29,6 +29,14 @@ const meta = {
       description: 'Inner spacing (any CSS value). Without it, the default spacing applies, and a class of your own always wins over it.',
       control: 'text'
     },
+    header: {
+      description: 'Title of the card, in a header over the content, with a line under it. With it, or with `headerExtra`, the content goes into a body of its own and the inner spacing (the `padding` prop or `--enchase-card-padding`) goes to the body, so the line of the header crosses the whole card. Without them, the card is the same as always.',
+      control: 'text'
+    },
+    headerExtra: {
+      description: 'What goes at the end of the header, such as a link or a button. With only `headerExtra`, the title is empty and the extra stays at the end.',
+      control: false
+    },
     animation: {
       description: 'false turns the motion off. { tuning: { duration, distance } } sets the lift (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion.',
       control: 'object',
@@ -48,6 +56,10 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+export const WithHeader: Story = {
+  args: { header: 'Invoice 2026-118', headerExtra: <Button variant="link" size="sm">Edit</Button>, variant: 'outlined', children: 'Issued on March 3, paid by bank transfer.' }
+}
 
 export const Elevated: Story = {
   args: { variant: 'elevated' }
