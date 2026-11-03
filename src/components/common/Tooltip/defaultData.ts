@@ -5,6 +5,10 @@ import type { TooltipAnimation, TooltipPosition } from './types.ts'
 
 export const defaultPosition: TooltipPosition = 'top'
 
+export const defaultArrow = false
+
+export const arrowPadding = 6
+
 export const openDelay = 100
 
 export const groupWindowMs = 300

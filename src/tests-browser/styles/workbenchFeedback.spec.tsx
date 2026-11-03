@@ -250,6 +250,25 @@ describe('the tooltip of the workbench style', () => {
     expect(bubble.fontWeight).toBe('400')
   })
 
+  it('draws the arrow 16px wide at its base and 8px high, as the original does, which is a square of 11.3px turned by 45 degrees', async () => {
+    show(
+      <div style={{ margin: '200px auto', width: 100 }}>
+        <Tooltip text="Tip" openDelay={0} arrow>
+          <button type="button">Trigger</button>
+        </Tooltip>
+      </div>
+    )
+    await userEvent.hover(page.getByRole('button', { name: 'Trigger' }))
+    await expect.poll(() => part('tooltip-bubble').getAttribute('data-state')).toBe('open')
+    await waitForSettled(at('tooltip-bubble'))
+    const tip = part('tooltip-arrow').getBoundingClientRect()
+
+    expect(px(style('tooltip-arrow').width)).toBeCloseTo(11.31, 1)
+    expect(tip.width).toBeCloseTo(16, 0)
+    expect(tip.bottom - part('tooltip-bubble').getBoundingClientRect().bottom).toBeCloseTo(8, 0)
+    expect(style('tooltip-arrow').backgroundColor).toBe('rgb(38, 38, 38)')
+  })
+
   it('pads the bubble by 6px and 8px and rounds it at 6px, which makes it 34px high, as the original does', async () => {
     await opened()
     const bubble = style('tooltip-bubble')

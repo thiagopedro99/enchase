@@ -52,6 +52,35 @@
   transform-origin: 0 50%;
 }
 
+.arrow {
+  position: absolute;
+  box-sizing: border-box;
+  background-color: inherit;
+  transform: rotate(45deg);
+  pointer-events: none;
+}
+
+:where(.arrow) {
+  inline-size: var(--enchase-tooltip-arrow-size, 8px);
+  block-size: var(--enchase-tooltip-arrow-size, 8px);
+}
+
+.bubble:where([data-position='top']) > .arrow {
+  inset-block-end: calc(var(--enchase-tooltip-arrow-size, 8px) / -2);
+}
+
+.bubble:where([data-position='bottom']) > .arrow {
+  inset-block-start: calc(var(--enchase-tooltip-arrow-size, 8px) / -2);
+}
+
+.bubble:where([data-position='left']) > .arrow {
+  right: calc(var(--enchase-tooltip-arrow-size, 8px) / -2);
+}
+
+.bubble:where([data-position='right']) > .arrow {
+  left: calc(var(--enchase-tooltip-arrow-size, 8px) / -2);
+}
+
 @media (hover: none) and (pointer: coarse) {
   .bubble {
     display: none;

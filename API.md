@@ -901,6 +901,7 @@ A text tooltip for a trigger, opened by pointer and by focus. It gives the trigg
 | `children` | `ReactNode` | *required* | The trigger. It sits inside a div (data-slot="tooltip-trigger") and, with describe on, receives aria-describedby. |
 | `position` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Side of the trigger where the tooltip appears. start and end follow the direction of the UIProvider (left and right in ltr, the reverse in rtl). Near the edge of the screen the tooltip flips to the other side and shifts to fit. |
 | `describe` | `boolean` | `true` | Turns on the accessible description of the trigger. Turn it off when the trigger already has the same text as its name, like an icon-only button. |
+| `arrow` | `boolean` | `false` | Draws a pointer on the edge of the tooltip that faces the trigger, in the color of the tooltip, pointing at the middle of the trigger. Near the edge of the screen, where the tooltip moves along the trigger, the pointer slides to keep pointing at it. `--enchase-tooltip-arrow-size` sets its size. |
 | `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
 | `animation` | `false \| { recipe, tuning }` | `pop` | false turns off the transition. The default recipe is "pop", a fade with a light scale; { recipe: "fade" } only fades; { tuning: { duration } } changes the duration in seconds. |
 | `openDelay` | `number` | `100` | Milliseconds between entering the trigger and showing the tooltip. 0 shows it at once. With another tooltip open, or one closed less than 300 ms ago, the next one opens without waiting and without animation. |
@@ -2417,6 +2418,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 
 | Hook | Default | Property |
 | --- | --- | --- |
+| `--enchase-tooltip-arrow-size` | `8px` | `inline-size`, `block-size`, `inset-block-end`, `inset-block-start`, `right`, `left` |
 | `--enchase-tooltip-bubble-color` | `var(--enchase-color-inverse-on-surface)` | `color` |
 | `--enchase-tooltip-bubble-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-tooltip-bubble-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |

@@ -1,7 +1,7 @@
 import { cloneElement, isValidElement, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { bubbleOffset, closeDelay as defaultCloseDelay, defaultPosition, joinsGroup, openDelay as defaultOpenDelay, resolveAnimation, tooltipGroup, viewportPadding } from './defaultData.ts'
+import { arrowPadding, bubbleOffset, closeDelay as defaultCloseDelay, defaultArrow, defaultPosition, joinsGroup, openDelay as defaultOpenDelay, resolveAnimation, tooltipGroup, viewportPadding } from './defaultData.ts'
 import { autoUpdate, computePosition, resolvePlacement } from '../../../positioning/index.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { classNames } from '@utils/classNames.ts'
@@ -18,6 +18,7 @@ export const Tooltip = ({
   children,
   position = defaultPosition,
   describe = true,
+  arrow = defaultArrow,
   container,
   animation,
   openDelay = defaultOpenDelay,
@@ -34,6 +35,7 @@ export const Tooltip = ({
   const [instant, setInstant] = useState(false)
   const id = useId()
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const arrowRef = useRef<HTMLSpanElement>(null)
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const presence = usePresence<HTMLSpanElement>(open)
@@ -94,17 +96,29 @@ export const Tooltip = ({
 
     let first = true
     const update = () => {
-      const result = computePosition(reference, bubble, { placement: resolvePlacement(position, dir === 'rtl'), offset: bubbleOffset, padding: viewportPadding })
+      const pointer = arrowRef.current
+      const result = computePosition(reference, bubble, {
+        placement: resolvePlacement(position, dir === 'rtl'),
+        offset: bubbleOffset,
+        padding: viewportPadding,
+        arrow: pointer ? { element: pointer, padding: arrowPadding } : undefined
+      })
 
       bubble.style.left = `${result.x}px`
       bubble.style.top = `${result.y}px`
       bubble.dataset.position = result.placement.split('-')[0]
+
+      if (pointer) {
+        pointer.style.left = result.arrow?.x === undefined ? '' : `${result.arrow.x}px`
+        pointer.style.top = result.arrow?.y === undefined ? '' : `${result.arrow.y}px`
+      }
+
       if (result.referenceHidden && !first) setOpen(false)
       first = false
     }
 
     return autoUpdate(reference, bubble, update)
-  }, [presence.mounted, presence.ref, position, dir, target])
+  }, [presence.mounted, presence.ref, position, dir, target, arrow])
 
   const trigger = describe && isValidElement(children) ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string | undefined }>, { 'aria-describedby': id }) : children
 
@@ -139,7 +153,16 @@ export const Tooltip = ({
           {text}
         </span>
       )}
-      {target && createPortal(presence.mounted ? <span {...bubbleProps}>{text}</span> : null, target)}
+      {target &&
+        createPortal(
+          presence.mounted ? (
+            <span {...bubbleProps}>
+              {text}
+              {arrow && <span ref={arrowRef} aria-hidden="true" className={styles.arrow} {...slot('tooltip', 'arrow')} />}
+            </span>
+          ) : null,
+          target
+        )}
     </div>
   )
 }

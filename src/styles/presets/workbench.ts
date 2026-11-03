@@ -208,6 +208,7 @@ const feedback: HookValues = {
   '--enchase-tooltip-bubble-radius': 'var(--enchase-radius-md)',
   '--enchase-tooltip-bubble-font-size': 'var(--enchase-font-size-sm)',
   '--enchase-tooltip-bubble-font-weight': 'var(--enchase-font-weight-regular)',
+  '--enchase-tooltip-arrow-size': '0.7071rem',
   '--enchase-toast-min-height': '2.5rem',
   '--enchase-toast-padding-inline': '0.75rem',
   '--enchase-toast-radius': 'var(--enchase-radius-lg)',

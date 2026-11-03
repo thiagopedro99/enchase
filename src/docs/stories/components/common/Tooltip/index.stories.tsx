@@ -10,6 +10,7 @@ const meta = {
     text: 'Save changes',
     position: 'top',
     describe: true,
+    arrow: false,
     openDelay: 0,
     closeDelay: 120,
     children: <Button>Save</Button>
@@ -36,6 +37,11 @@ const meta = {
       description: 'Turns on the accessible description of the trigger. Turn it off when the trigger already has the same text as its name, like an icon-only button.',
       control: 'boolean',
       table: { defaultValue: { summary: 'true' } }
+    },
+    arrow: {
+      description: 'Draws a pointer on the edge of the tooltip that faces the trigger, in the color of the tooltip, pointing at the middle of the trigger. Near the edge of the screen, where the tooltip moves along the trigger, the pointer slides to keep pointing at it. `--enchase-tooltip-arrow-size` sets its size.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } }
     },
     openDelay: {
       description: 'Milliseconds between entering the trigger and showing the tooltip. 0 shows it at once. With another tooltip open, or one closed less than 300 ms ago, the next one opens without waiting and without animation.',
@@ -83,6 +89,10 @@ export const Positions: Story = {
       ))}
     </div>
   )
+}
+
+export const WithArrow: Story = {
+  args: { arrow: true }
 }
 
 export const IconOnly: Story = {

@@ -165,6 +165,51 @@ describe('Tooltip', () => {
   })
 })
 
+describe('Tooltip arrow', () => {
+  const open = async (arrow?: boolean) => {
+    const user = userEvent.setup()
+    const view = renderWithProviders(
+      <Tooltip text="Save changes" arrow={arrow} openDelay={0}>
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    await user.hover(screen.getByRole('button', { name: 'Save' }))
+    await waitFor(() => expect(document.querySelector('[data-slot="tooltip-bubble"]')).not.toBeNull())
+
+    return { ...view, bubble: document.querySelector('[data-slot="tooltip-bubble"]') as HTMLElement }
+  }
+
+  it('draws no arrow unless it is told to', async () => {
+    const { bubble } = await open()
+
+    expect(bubble.querySelector('[data-slot="tooltip-arrow"]')).toBeNull()
+    expect(bubble.children).toHaveLength(0)
+  })
+
+  it('draws an arrow inside the bubble, hidden from assistive technology, after the text', async () => {
+    const { bubble } = await open(true)
+    const arrow = bubble.querySelector('[data-slot="tooltip-arrow"]') as HTMLElement
+
+    expect(arrow).toHaveAttribute('aria-hidden', 'true')
+    expect(bubble.lastElementChild).toBe(arrow)
+    expect(bubble).toHaveTextContent('Save changes')
+  })
+
+  it('does not pass arrow to the page as an attribute, and keeps the description of the trigger', async () => {
+    const { container } = await open(true)
+
+    expect(container.querySelector('[arrow]')).toBeNull()
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveAccessibleDescription('Save changes')
+  })
+
+  it('has no axe violations with the arrow', async () => {
+    const { container } = await open(true)
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
 describe('Tooltip placement', () => {
   afterEach(() => vi.restoreAllMocks())
 

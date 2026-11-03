@@ -11,6 +11,7 @@ export interface TooltipProps {
   children: ReactNode
   position?: TooltipPosition | undefined
   describe?: boolean | undefined
+  arrow?: boolean | undefined
   container?: PortalContainer | undefined
   animation?: MotionOverride | undefined
   openDelay?: number | undefined
