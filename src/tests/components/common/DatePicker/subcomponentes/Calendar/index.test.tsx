@@ -278,6 +278,24 @@ describe('Calendar with the keyboard', () => {
     expect(focused()).toBe('2026-10-14')
   })
 
+  it('marks the grid as keyboard focus once a key moves the focus, and clears the mark when a pointer goes down on it', async () => {
+    const user = userEvent.setup()
+
+    render({ value: '2026-10-15' })
+    focus('2026-10-15')
+
+    expect(screen.getByRole('grid')).not.toHaveAttribute('data-keyboard-focus')
+
+    await user.keyboard('{ArrowRight}')
+    expect(screen.getByRole('grid')).toHaveAttribute('data-keyboard-focus', '')
+
+    await user.keyboard('{PageDown}')
+    expect(screen.getByRole('grid')).toHaveAttribute('data-keyboard-focus', '')
+
+    await user.pointer({ keys: '[MouseLeft>]', target: cell('2026-11-20') })
+    expect(screen.getByRole('grid')).not.toHaveAttribute('data-keyboard-focus')
+  })
+
   it('moves the focus by one week with the up and down arrows', async () => {
     const user = userEvent.setup()
 

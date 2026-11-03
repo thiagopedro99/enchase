@@ -7,7 +7,7 @@ const width = 'var(--enchase-focus-width, 2px)'
 const elsewhere = new Set([
   'common/Checkbox/styles.module.css | .hidden:focus-visible + .box',
   'common/Combobox/styles.module.css | .wrapper[data-variant=\'borderless\'] .field:focus-within',
-  'common/DatePicker/subcomponentes/Calendar/subcomponentes/CalendarGrid/styles.module.css | .day:focus-visible .number',
+  'common/DatePicker/subcomponentes/Calendar/subcomponentes/CalendarGrid/styles.module.css | .day:focus-visible .number, .grid[data-keyboard-focus] .day:focus .number',
   'common/RadioGroup/styles.module.css | .hidden:focus-visible + .control',
   'common/Switch/styles.module.css | .hidden:focus-visible + .track'
 ])

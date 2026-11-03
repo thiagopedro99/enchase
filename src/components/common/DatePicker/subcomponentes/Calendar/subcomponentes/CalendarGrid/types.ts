@@ -6,6 +6,7 @@ export interface CalendarGridProps {
   weeks: CalendarDate[][]
   weekdays: number[]
   focused: CalendarDate
+  keyboard: boolean
   today: CalendarDate
   format: DateFormatter
   labelledBy: string
@@ -14,4 +15,5 @@ export interface CalendarGridProps {
   isDisabled: (date: CalendarDate) => boolean
   onChoose: (date: CalendarDate) => void
   onKeyDown: (event: KeyboardEvent<HTMLTableElement>) => void
+  onPointerDown: () => void
 }
