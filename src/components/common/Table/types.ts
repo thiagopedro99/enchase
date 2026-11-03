@@ -28,6 +28,7 @@ export interface TableProps<Row> extends Omit<HTMLAttributes<HTMLDivElement>, 'c
   empty?: ReactNode | undefined
   size?: 'sm' | 'md' | undefined
   striped?: boolean | undefined
+  bordered?: boolean | undefined
   sort?: TableSort | undefined
   onSortChange?: ((sort: TableSort) => void) | undefined
   stickyHeader?: boolean | undefined

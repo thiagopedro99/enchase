@@ -309,6 +309,7 @@ const colorHooks: HookValues = {
   '--enchase-card-border-color-default': 'var(--enchase-color-border)',
   '--enchase-table-header-color': 'var(--enchase-color-text-primary)',
   '--enchase-table-header-border-color-end': 'var(--enchase-color-border)',
+  '--enchase-table-border-color-bordered': 'var(--enchase-color-border)',
   '--enchase-table-row-background-selected': 'var(--enchase-color-primary-container)',
   '--enchase-table-row-background-selected-hover': 'color-mix(in srgb, var(--enchase-color-primary) 12%, var(--enchase-color-primary-container))',
   '--enchase-modal-body-color': 'var(--enchase-color-text-primary)',

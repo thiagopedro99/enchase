@@ -164,6 +164,17 @@ describe('Table', () => {
     expect(other.container.querySelector('[data-slot="table"]')).toHaveAttribute('data-striped')
   })
 
+  it('draws no lines between the columns unless it is told to, and marks the root when it is', () => {
+    const { container, unmount } = renderWithProviders(<Table columns={columns} rows={orders} />)
+
+    expect(container.querySelector('[data-slot="table"]')).not.toHaveAttribute('data-bordered')
+    unmount()
+
+    const other = renderWithProviders(<Table columns={columns} rows={orders} bordered />)
+
+    expect(other.container.querySelector('[data-slot="table"]')).toHaveAttribute('data-bordered', '')
+  })
+
   it('forwards the ref to the root', () => {
     const ref = createRef<HTMLDivElement>()
     const { container } = renderWithProviders(<Table columns={columns} rows={orders} ref={ref} />)
@@ -172,10 +183,10 @@ describe('Table', () => {
   })
 
   it('does not pass its own props to the page', () => {
-    const { container } = renderWithProviders(<Table columns={columns} rows={orders} getRowKey={(row) => row.id} caption="Pedidos" ariaLabel="Lista" empty="Vazio" size="sm" striped />)
+    const { container } = renderWithProviders(<Table columns={columns} rows={orders} getRowKey={(row) => row.id} caption="Pedidos" ariaLabel="Lista" empty="Vazio" size="sm" striped bordered />)
     const root = container.querySelector('[data-slot="table"]') as HTMLElement
 
-    for (const name of ['columns', 'rows', 'getrowkey', 'caption', 'arialabel', 'empty', 'size', 'striped']) {
+    for (const name of ['columns', 'rows', 'getrowkey', 'caption', 'arialabel', 'empty', 'size', 'striped', 'bordered']) {
       expect(root, name).not.toHaveAttribute(name)
     }
   })

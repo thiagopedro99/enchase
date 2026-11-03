@@ -795,6 +795,7 @@ A semantic data table, built from `columns` and `rows`: a `<table>` with a capti
 | `empty` | `ReactNode` | — | Content shown in a cell that spans all the columns when there are no rows. Without it, only the header appears. |
 | `size` | `'sm' \| 'md'` | `'md'` | Density of the rows: sm is compact and md is the default. The compact density of the whole kit (`data-density` on the `<html>`) keeps the sm rows at the same height. |
 | `striped` | `boolean` | `false` | Alternates the background of the rows to help follow a long row. |
+| `bordered` | `boolean` | `false` | Draws a line between the columns, in the cells of the header and of the rows, besides the lines between the rows. The color of the line between the columns is `--enchase-table-cell-border-color-end`, which falls back to the color of the line between the rows, and the frame of the table takes `--enchase-table-border-color-bordered` before `--enchase-table-border-color`. |
 | `sort` | `TableSort` | — | How the rows are ordered now: `{ key, direction }`, where `key` is the key of a column and `direction` is `ascending` or `descending`. The table marks that column with `aria-sort`, whether it has a button or not, and shows the direction on its button. The rows themselves are yours to order. See the Sortable story. |
 | `onSortChange` | `(sort: TableSort) => void` | — | Called when a sort button is activated, with the sort that was asked for: ascending for a column that is not sorted and the opposite direction for the sorted one. It does not change anything by itself: order the rows and pass the new `sort` back. Without it the buttons do nothing. |
 | `stickyHeader` | `boolean` | `false` | Keeps the header at the top of the table while the rows scroll under it. It only works when the table has a height limit, such as `style={{ maxBlockSize: "16rem" }}`: without one the page scrolls and the header goes with it. |
@@ -2231,10 +2232,12 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 
 | Hook | Default | Property |
 | --- | --- | --- |
-| `--enchase-table-border-color` | `var(--enchase-color-border)` | `border` |
+| `--enchase-table-border-color` | `var(--enchase-color-border)` | `border`, `border-color` |
+| `--enchase-table-border-color-bordered` | `var(--enchase-table-border-color, var(--enchase-color-border))` | `border-color` |
 | `--enchase-table-caption-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 | `--enchase-table-caption-padding` | `1rem` (`--enchase-space-md`) | `padding` |
-| `--enchase-table-cell-border-color` | `var(--enchase-color-border)` | `border-block-end` |
+| `--enchase-table-cell-border-color` | `var(--enchase-color-border)` | `border-block-end`, `border-inline-end` |
+| `--enchase-table-cell-border-color-end` | `var(--enchase-table-cell-border-color, var(--enchase-color-border))` | `border-inline-end` |
 | `--enchase-table-cell-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
 | `--enchase-table-cell-padding-block-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
 | `--enchase-table-cell-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |

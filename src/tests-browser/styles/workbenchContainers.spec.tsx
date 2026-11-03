@@ -209,6 +209,18 @@ describe('the table of the workbench style', () => {
     expect(px(box.borderTopLeftRadius)).toBe(8)
   })
 
+  it('draws the frame and the lines between the columns in the border color when the table is bordered, as the original does', () => {
+    show(<Table columns={columns} rows={rows} getRowKey={(row) => row.name} ariaLabel="People" bordered />)
+
+    expect(style('table').borderTopColor).toBe('rgb(240, 240, 240)')
+    expect(style('table').borderTopWidth).toBe('1px')
+    expect(style('table-header', 0).borderRightColor).toBe('rgb(240, 240, 240)')
+    expect(rowCell(0, 0).tagName).toBeDefined()
+    expect(getComputedStyle(rowCell(0, 0)).borderRightWidth).toBe('1px')
+    expect(getComputedStyle(rowCell(0, 0)).borderRightColor).toBe('rgb(240, 240, 240)')
+    expect(getComputedStyle(rowCell(0, columns.length - 1)).borderRightWidth).toBe('0px')
+  })
+
   it('writes the header in 600 weight and 0.88 black on #FAFAFA, as the original does, with a 1px line in the border color between the columns where the original draws a 1.6em separator', () => {
     show(plainTable)
     const header = style('table-header', 0)

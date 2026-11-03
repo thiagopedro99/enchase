@@ -73,6 +73,14 @@
   border-inline-end: var(--enchase-table-header-border-width-end, 0) var(--enchase-table-header-border-style-end, none) var(--enchase-table-header-border-color-end, currentColor);
 }
 
+.container[data-bordered] {
+  border-color: var(--enchase-table-border-color-bordered, var(--enchase-table-border-color, var(--enchase-color-border)));
+}
+
+.container[data-bordered] :is(.header, .cell, .rowHeader):not(:last-child) {
+  border-inline-end: var(--enchase-border-width, 1px) solid var(--enchase-table-cell-border-color-end, var(--enchase-table-cell-border-color, var(--enchase-color-border)));
+}
+
 .header[data-sortable] {
   position: relative;
 }

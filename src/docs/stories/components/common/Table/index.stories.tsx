@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Badge, Button, Pagination, Table } from 'enchase'
-import { compareOrders, defaultSize, defaultStickyHeader, defaultStriped, orders, pageSize, statusLabels, statusVariants } from './defaultData.ts'
+import { compareOrders, defaultBordered, defaultSize, defaultStickyHeader, defaultStriped, orders, pageSize, statusLabels, statusVariants } from './defaultData.ts'
 
 import type { TableColumn, TableSort } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -142,6 +142,7 @@ const meta = {
     rows: orders.slice(0, 6),
     size: defaultSize,
     striped: defaultStriped,
+    bordered: defaultBordered,
     stickyHeader: defaultStickyHeader
   },
   parameters: {
@@ -197,6 +198,11 @@ const meta = {
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultStriped) } }
     },
+    bordered: {
+      description: 'Draws a line between the columns, in the cells of the header and of the rows, besides the lines between the rows. The color of the line between the columns is `--enchase-table-cell-border-color-end`, which falls back to the color of the line between the rows, and the frame of the table takes `--enchase-table-border-color-bordered` before `--enchase-table-border-color`.',
+      control: 'boolean',
+      table: { defaultValue: { summary: String(defaultBordered) } }
+    },
     sort: {
       description: 'How the rows are ordered now: `{ key, direction }`, where `key` is the key of a column and `direction` is `ascending` or `descending`. The table marks that column with `aria-sort`, whether it has a button or not, and shows the direction on its button. The rows themselves are yours to order. See the Sortable story.',
       control: false
@@ -234,6 +240,10 @@ export const Playground: Story = {}
 
 export const Striped: Story = {
   args: { striped: true }
+}
+
+export const Bordered: Story = {
+  args: { bordered: true }
 }
 
 export const Small: Story = {

@@ -1,6 +1,6 @@
 import { forwardRef, useId, useMemo, useRef } from 'react'
 
-import { defaultLoadingRows, defaultSize, defaultStickyHeader, defaultStriped } from './defaultData.ts'
+import { defaultBordered, defaultLoadingRows, defaultSize, defaultStickyHeader, defaultStriped } from './defaultData.ts'
 import { SortIndicator } from './subcomponentes/SortIndicator/index.tsx'
 import { rowKeysOf, rowSelection } from './rowSelection.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
@@ -23,7 +23,7 @@ const textOf = <Row,>(row: Row, column: TableColumn<Row>) => {
 }
 
 export const Table = forwardRef(function Table<Row>(
-  { columns, rows, getRowKey, caption, ariaLabel, empty, size = defaultSize, striped = defaultStriped, sort, onSortChange, stickyHeader = defaultStickyHeader, loading, selectedKeys, onSelectedKeysChange, ...props }: TableProps<Row>,
+  { columns, rows, getRowKey, caption, ariaLabel, empty, size = defaultSize, striped = defaultStriped, bordered = defaultBordered, sort, onSortChange, stickyHeader = defaultStickyHeader, loading, selectedKeys, onSelectedKeysChange, ...props }: TableProps<Row>,
   ref: ForwardedRef<HTMLDivElement>
 ) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -44,6 +44,7 @@ export const Table = forwardRef(function Table<Row>(
       className: styles.container,
       'data-size': size,
       'data-striped': striped ? '' : undefined,
+      'data-bordered': bordered ? '' : undefined,
       'data-sticky-header': stickyHeader ? '' : undefined,
       'data-loading': busy ? '' : undefined,
       tabIndex: overflowing ? 0 : undefined,
