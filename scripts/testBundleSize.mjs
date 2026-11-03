@@ -31,7 +31,8 @@ const budgets = [
   { label: 'enchase style', source: "export { enchase } from 'enchase/styles/enchase'\n", maxBytes: 16384, styles: ['enchase'] },
   { label: 'shadcn style', source: "export { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 34816, styles: ['shadcn'] },
   { label: 'workbench style', source: "export { workbench } from 'enchase/styles/workbench'\n", maxBytes: 39936, styles: ['workbench'] },
-  { label: 'ColorModeProvider with shadcn', source: "export { ColorModeProvider } from 'enchase'\nexport { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 59392, styles: ['shadcn'], density: true }
+  { label: 'ColorModeProvider with shadcn', source: "export { ColorModeProvider } from 'enchase'\nexport { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 59392, styles: ['shadcn'], density: true },
+  { label: 'ColorModeProvider with workbench', source: "export { ColorModeProvider } from 'enchase'\nexport { workbench } from 'enchase/styles/workbench'\n", maxBytes: 64512, styles: ['workbench'], density: true }
 ]
 
 const hookNames = `import { readFileSync } from 'node:fs'
