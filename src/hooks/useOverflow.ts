@@ -16,12 +16,28 @@ export const useOverflow = (ref: RefObject<HTMLElement | null>) => {
 
     if (typeof ResizeObserver === 'undefined') return
 
-    const observer = new ResizeObserver(measure)
+    const resizes = new ResizeObserver(measure)
+    const observeAll = () => {
+      resizes.observe(element)
+      for (const child of element.children) resizes.observe(child)
+    }
 
-    observer.observe(element)
-    for (const child of element.children) observer.observe(child)
+    observeAll()
 
-    return () => observer.disconnect()
+    const changes =
+      typeof MutationObserver === 'undefined'
+        ? undefined
+        : new MutationObserver(() => {
+            observeAll()
+            measure()
+          })
+
+    changes?.observe(element, { childList: true, subtree: true, characterData: true })
+
+    return () => {
+      resizes.disconnect()
+      changes?.disconnect()
+    }
   }, [ref])
 
   return overflowing

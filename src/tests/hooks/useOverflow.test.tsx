@@ -67,6 +67,33 @@ describe('useOverflow', () => {
     expect(screen.getByTestId('box')).not.toHaveAttribute('data-overflowing')
   })
 
+  it('measures again when content arrives that resizes neither the box nor its children', async () => {
+    render(<Harness />)
+    const box = screen.getByTestId('box')
+
+    expect(box).not.toHaveAttribute('data-overflowing')
+
+    size.scrollHeight = 300
+    box.appendChild(document.createElement('p'))
+    await act(async () => {
+      await Promise.resolve()
+    })
+
+    expect(box).toHaveAttribute('data-overflowing')
+  })
+
+  it('observes the children that arrive after the mount', async () => {
+    render(<Harness />)
+    const child = document.createElement('p')
+
+    screen.getByTestId('box').appendChild(child)
+    await act(async () => {
+      await Promise.resolve()
+    })
+
+    expect(observers[0].observed).toContain(child)
+  })
+
   it('reports an overflow measured on mount', () => {
     size.scroll = 300
 
