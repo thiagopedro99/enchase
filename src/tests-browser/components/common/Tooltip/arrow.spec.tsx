@@ -83,11 +83,11 @@ describe('the arrow of the Tooltip in a real browser', () => {
     expect(Math.round(tip.bottom - (bubble() as HTMLElement).getBoundingClientRect().bottom)).toBe(6)
   })
 
-  it('keeps pointing at the trigger, inside the bubble, when the bubble moves along the trigger near the edge of the screen', async () => {
+  it('keeps pointing at the middle of a trigger of a fixed size, inside the bubble, when the bubble moves along the trigger near the edge of the screen', async () => {
     renderInBrowser(
       <div style={{ position: 'absolute', top: 300, left: 2 }}>
         <Tooltip text="A dica longa o bastante para empurrar a bolha" position="top" arrow openDelay={0}>
-          <button>Alvo</button>
+          <button style={{ inlineSize: 80, blockSize: 32, padding: 0 }}>Alvo</button>
         </Tooltip>
       </div>
     )
@@ -97,7 +97,7 @@ describe('the arrow of the Tooltip in a real browser', () => {
     expect(Math.round(box.left)).toBe(8)
     expect(point.x).toBeGreaterThanOrEqual(box.left + 6 + 4 - 0.5)
     expect(point.x).toBeLessThanOrEqual(box.right - 6 - 4 + 0.5)
-    expect(Math.abs(point.x - reference.x)).toBeLessThanOrEqual(1.5)
+    expect(Math.abs(point.x - reference.x)).toBeLessThanOrEqual(1)
   })
 
   it('moves to the other edge when the bubble flips under the trigger for lack of room', async () => {
