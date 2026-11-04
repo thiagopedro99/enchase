@@ -59,10 +59,10 @@ export type UseSegmentedControlOptions = UseSegmentedControlSingleOptions | UseS
 export interface UseSegmentedControlReturn {
   selected: string[]
   choose: (value: string) => void
-  getGroupProps: <User extends object = object>(props?: User) => { role: 'group' | 'radiogroup'; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void } & User
+  getGroupProps: <User extends object = object>(props?: User & HTMLAttributes<HTMLElement>) => { role: 'group' | 'radiogroup'; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void } & User
   getItemProps: <User extends object = object>(
     value: string,
-    props?: User
+    props?: User & HTMLAttributes<HTMLElement>
   ) => {
     ref: RefCallback<HTMLButtonElement>
     type: 'button'

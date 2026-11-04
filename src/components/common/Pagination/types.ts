@@ -32,7 +32,7 @@ export interface UsePaginationReturn {
   hasPrevious: boolean
   hasNext: boolean
   goTo: (page: number) => void
-  getPreviousProps: <User extends object = object>(props?: User) => { type: 'button'; 'aria-disabled': true | undefined; onClick: (event: MouseEvent<HTMLButtonElement>) => void } & User
-  getNextProps: <User extends object = object>(props?: User) => { type: 'button'; 'aria-disabled': true | undefined; onClick: (event: MouseEvent<HTMLButtonElement>) => void } & User
-  getPageProps: <User extends object = object>(page: number, props?: User) => { type: 'button'; 'aria-current': 'page' | undefined; onClick: (event: MouseEvent<HTMLButtonElement>) => void } & User
+  getPreviousProps: <User extends object = object>(props?: User & HTMLAttributes<HTMLElement>) => { type: 'button'; 'aria-disabled': true | undefined; onClick: (event: MouseEvent<HTMLButtonElement>) => void } & User
+  getNextProps: <User extends object = object>(props?: User & HTMLAttributes<HTMLElement>) => { type: 'button'; 'aria-disabled': true | undefined; onClick: (event: MouseEvent<HTMLButtonElement>) => void } & User
+  getPageProps: <User extends object = object>(page: number, props?: User & HTMLAttributes<HTMLElement>) => { type: 'button'; 'aria-current': 'page' | undefined; onClick: (event: MouseEvent<HTMLButtonElement>) => void } & User
 }

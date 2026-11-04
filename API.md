@@ -1050,8 +1050,8 @@ Returns:
 | --- | --- |
 | `expanded` | `string[]` |
 | `toggle` | `(value: string) => void` |
-| `getTriggerProps` | `<User extends object = object>(value: string, props?: User \| undefined) => { ref: RefCallback<HTMLButtonElement>; type: 'button'; id: string; 'aria-expanded': boolean; 'aria-controls': string; disabled: boolean \| undefined; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void; } & Omit<User, 'ref'>` |
-| `getPanelProps` | `<User extends object = object>(value: string, props?: User \| undefined) => { role: 'region'; id: string; 'aria-labelledby': string; hidden: boolean; } & User` |
+| `getTriggerProps` | `<User extends object = object>(value: string, props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { ref: RefCallback<HTMLButtonElement>; type: 'button'; id: string; 'aria-expanded': boolean; 'aria-controls': string; disabled: boolean \| undefined; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void; } & Omit<User, 'ref'>` |
+| `getPanelProps` | `<User extends object = object>(value: string, props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { role: 'region'; id: string; 'aria-labelledby': string; hidden: boolean; } & User` |
 
 ### usePagination
 
@@ -1084,9 +1084,9 @@ Returns:
 | `hasPrevious` | `boolean` |
 | `hasNext` | `boolean` |
 | `goTo` | `(page: number) => void` |
-| `getPreviousProps` | `<User extends object = object>(props?: User \| undefined) => { type: 'button'; 'aria-disabled': true \| undefined; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & User` |
-| `getNextProps` | `<User extends object = object>(props?: User \| undefined) => { type: 'button'; 'aria-disabled': true \| undefined; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & User` |
-| `getPageProps` | `<User extends object = object>(page: number, props?: User \| undefined) => { type: 'button'; 'aria-current': 'page' \| undefined; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & User` |
+| `getPreviousProps` | `<User extends object = object>(props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { type: 'button'; 'aria-disabled': true \| undefined; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & User` |
+| `getNextProps` | `<User extends object = object>(props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { type: 'button'; 'aria-disabled': true \| undefined; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & User` |
+| `getPageProps` | `<User extends object = object>(page: number, props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { type: 'button'; 'aria-current': 'page' \| undefined; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & User` |
 
 ### useSegmentedControl
 
@@ -1115,8 +1115,8 @@ Returns:
 | --- | --- |
 | `selected` | `string[]` |
 | `choose` | `(value: string) => void` |
-| `getGroupProps` | `<User extends object = object>(props?: User \| undefined) => { role: 'group' \| 'radiogroup'; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void; } & User` |
-| `getItemProps` | `<User extends object = object>(value: string, props?: User \| undefined) => { ref: RefCallback<HTMLButtonElement>; type: 'button'; role: 'radio' \| undefined; 'aria-checked': boolean \| undefined; 'aria-pressed': boolean \| undefined; tabIndex: 0 \| -1 \| undefined; disabled: boolean; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & Omit<User, 'ref'>` |
+| `getGroupProps` | `<User extends object = object>(props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { role: 'group' \| 'radiogroup'; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void; } & User` |
+| `getItemProps` | `<User extends object = object>(value: string, props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { ref: RefCallback<HTMLButtonElement>; type: 'button'; role: 'radio' \| undefined; 'aria-checked': boolean \| undefined; 'aria-pressed': boolean \| undefined; tabIndex: 0 \| -1 \| undefined; disabled: boolean; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & Omit<User, 'ref'>` |
 
 ### useSlider
 
@@ -1151,9 +1151,9 @@ Returns:
 | `dragging` | `boolean` |
 | `pointerFocus` | `boolean` |
 | `setValue` | `(value: number) => void` |
-| `getTrackProps` | `<User extends object = object>(props?: User \| undefined) => { ref: RefCallback<HTMLElement>; } & Omit<User, 'ref'>` |
-| `getControlProps` | `<User extends object = object>(props?: User \| undefined) => { onPointerDown: (event: PointerEvent<HTMLElement>) => void; onPointerMove: (event: PointerEvent<HTMLElement>) => void; onPointerUp: (event: PointerEvent<HTMLElement>) => void; onPointerCancel: (event: PointerEvent<HTMLElement>) => void; onLostPointerCapture: (event: PointerEvent<HTMLElement>) => void; } & User` |
-| `getThumbProps` | `<User extends object = object>(props?: User \| undefined) => { ref: RefCallback<HTMLElement>; role: 'slider'; tabIndex: 0 \| undefined; 'aria-valuemin': number; 'aria-valuemax': number; 'aria-valuenow': number; 'aria-valuetext': string \| undefined; 'aria-disabled': true \| undefined; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void; onBlur: () => void; } & Omit<User, 'ref'>` |
+| `getTrackProps` | `<User extends object = object>(props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { ref: RefCallback<HTMLElement>; } & Omit<User, 'ref'>` |
+| `getControlProps` | `<User extends object = object>(props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { onPointerDown: (event: PointerEvent<HTMLElement>) => void; onPointerMove: (event: PointerEvent<HTMLElement>) => void; onPointerUp: (event: PointerEvent<HTMLElement>) => void; onPointerCancel: (event: PointerEvent<HTMLElement>) => void; onLostPointerCapture: (event: PointerEvent<HTMLElement>) => void; } & User` |
+| `getThumbProps` | `<User extends object = object>(props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { ref: RefCallback<HTMLElement>; role: 'slider'; tabIndex: 0 \| undefined; 'aria-valuemin': number; 'aria-valuemax': number; 'aria-valuenow': number; 'aria-valuetext': string \| undefined; 'aria-disabled': true \| undefined; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void; onBlur: () => void; } & Omit<User, 'ref'>` |
 
 ### useTabs
 
@@ -1183,9 +1183,9 @@ Returns:
 | `activeIndex` | `number` |
 | `tabbableIndex` | `number` |
 | `select` | `(value: string) => void` |
-| `getListProps` | `<User extends object = object>(props?: User \| undefined) => { role: 'tablist'; tabIndex: -1; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void; } & User` |
-| `getTabProps` | `<User extends object = object>(value: string, props?: User \| undefined) => { ref: RefCallback<HTMLButtonElement>; type: 'button'; role: 'tab'; id: string; 'aria-selected': boolean; 'aria-controls': string; tabIndex: 0 \| -1; disabled: boolean \| undefined; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & Omit<User, 'ref'>` |
-| `getPanelProps` | `<User extends object = object>(value: string, props?: User \| undefined) => { role: 'tabpanel'; id: string; 'aria-labelledby': string; tabIndex: 0; hidden: boolean; } & User` |
+| `getListProps` | `<User extends object = object>(props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { role: 'tablist'; tabIndex: -1; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void; } & User` |
+| `getTabProps` | `<User extends object = object>(value: string, props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { ref: RefCallback<HTMLButtonElement>; type: 'button'; role: 'tab'; id: string; 'aria-selected': boolean; 'aria-controls': string; tabIndex: 0 \| -1; disabled: boolean \| undefined; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & Omit<User, 'ref'>` |
+| `getPanelProps` | `<User extends object = object>(value: string, props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { role: 'tabpanel'; id: string; 'aria-labelledby': string; tabIndex: 0; hidden: boolean; } & User` |
 
 ## Icons
 

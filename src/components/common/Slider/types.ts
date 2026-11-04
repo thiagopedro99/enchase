@@ -35,9 +35,9 @@ export interface UseSliderReturn {
   dragging: boolean
   pointerFocus: boolean
   setValue: (value: number) => void
-  getTrackProps: <User extends object = object>(props?: User) => { ref: RefCallback<HTMLElement> } & Omit<User, 'ref'>
+  getTrackProps: <User extends object = object>(props?: User & HTMLAttributes<HTMLElement>) => { ref: RefCallback<HTMLElement> } & Omit<User, 'ref'>
   getControlProps: <User extends object = object>(
-    props?: User
+    props?: User & HTMLAttributes<HTMLElement>
   ) => {
     onPointerDown: (event: PointerEvent<HTMLElement>) => void
     onPointerMove: (event: PointerEvent<HTMLElement>) => void
@@ -46,7 +46,7 @@ export interface UseSliderReturn {
     onLostPointerCapture: (event: PointerEvent<HTMLElement>) => void
   } & User
   getThumbProps: <User extends object = object>(
-    props?: User
+    props?: User & HTMLAttributes<HTMLElement>
   ) => {
     ref: RefCallback<HTMLElement>
     role: 'slider'

@@ -106,7 +106,7 @@ export const Headless = () => {
   return (
     <div>
       <div {...tabs.getListProps({ 'aria-label': 'Sections' })}>
-        <button {...tabs.getTabProps('a', { className: 'tab' })}>One</button>
+        <button {...tabs.getTabProps('a', { className: 'tab', onClick: (event) => event.preventDefault() })}>One</button>
       </div>
       <div {...tabs.getPanelProps('a', { className: 'panel' })}>First</div>
       <nav>
@@ -125,7 +125,7 @@ export const Headless = () => {
       </h3>
       <div {...accordion.getPanelProps('a', { className: 'panel' })}>First</div>
       <div {...slider.getControlProps()}>
-        <div {...slider.getTrackProps({ className: 'track' })}>
+        <div {...slider.getTrackProps({ className: 'track', style: { position: 'absolute' } })}>
           <div {...slider.getThumbProps({ 'aria-label': 'Volume' })} style={{ insetInlineStart: slider.percent + '%' }} />
         </div>
       </div>

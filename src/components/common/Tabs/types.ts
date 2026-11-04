@@ -34,10 +34,10 @@ export interface UseTabsReturn {
   activeIndex: number
   tabbableIndex: number
   select: (value: string) => void
-  getListProps: <User extends object = object>(props?: User) => { role: 'tablist'; tabIndex: -1; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void } & User
+  getListProps: <User extends object = object>(props?: User & HTMLAttributes<HTMLElement>) => { role: 'tablist'; tabIndex: -1; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void } & User
   getTabProps: <User extends object = object>(
     value: string,
-    props?: User
+    props?: User & HTMLAttributes<HTMLElement>
   ) => {
     ref: RefCallback<HTMLButtonElement>
     type: 'button'
@@ -49,5 +49,5 @@ export interface UseTabsReturn {
     disabled: boolean | undefined
     onClick: (event: MouseEvent<HTMLButtonElement>) => void
   } & Omit<User, 'ref'>
-  getPanelProps: <User extends object = object>(value: string, props?: User) => { role: 'tabpanel'; id: string; 'aria-labelledby': string; tabIndex: 0; hidden: boolean } & User
+  getPanelProps: <User extends object = object>(value: string, props?: User & HTMLAttributes<HTMLElement>) => { role: 'tabpanel'; id: string; 'aria-labelledby': string; tabIndex: 0; hidden: boolean } & User
 }

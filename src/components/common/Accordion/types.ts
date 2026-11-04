@@ -36,7 +36,7 @@ export interface UseAccordionReturn {
   toggle: (value: string) => void
   getTriggerProps: <User extends object = object>(
     value: string,
-    props?: User
+    props?: User & HTMLAttributes<HTMLElement>
   ) => {
     ref: RefCallback<HTMLButtonElement>
     type: 'button'
@@ -47,5 +47,5 @@ export interface UseAccordionReturn {
     onClick: (event: MouseEvent<HTMLButtonElement>) => void
     onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => void
   } & Omit<User, 'ref'>
-  getPanelProps: <User extends object = object>(value: string, props?: User) => { role: 'region'; id: string; 'aria-labelledby': string; hidden: boolean } & User
+  getPanelProps: <User extends object = object>(value: string, props?: User & HTMLAttributes<HTMLElement>) => { role: 'region'; id: string; 'aria-labelledby': string; hidden: boolean } & User
 }
