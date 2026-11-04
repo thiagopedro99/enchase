@@ -2,6 +2,8 @@
 
 Contributions are welcome. Before you open a pull request, read [`skill.md`](./skill.md), which describes the code conventions and the component contract (it is written in Portuguese). Consistency with the existing pattern comes before any new abstraction.
 
+The policies of the project: [VERSIONING.md](VERSIONING.md) (what is the public API and what breaks), [ACCESSIBILITY.md](ACCESSIBILITY.md) (what is tested and what is not), [SECURITY.md](SECURITY.md) (how to report a vulnerability) and [MIGRATION.md](MIGRATION.md) (what to check when you upgrade).
+
 ## Running it
 
 ```bash

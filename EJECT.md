@@ -4,7 +4,7 @@
 
 It is the way out of the library, not the way to use it. A copy stops following the library: nothing updates it, and the accessibility contract of the package holds for what the package publishes, not for your copy. Most changes do not need it: the CSS hooks (`--enchase-<part>-<property>`), the styles (`createTheme({ style })`) and the `data-slot` of every part change how a component looks, and the props change what it does. Eject when you need another markup or another behavior.
 
-**Experimental in 0.16 and 0.17.** The command, its options and the format of `enchase.eject.json` can still change in a minor.
+**Experimental in 0.16 and 0.17.** The command, its options and the format of `enchase.eject.json` can still change in a minor, as [VERSIONING.md](VERSIONING.md) says.
 
 ## Use
 

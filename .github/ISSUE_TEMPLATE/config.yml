@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a vulnerability
+    url: https://github.com/thiagopedro99/enchase/security/advisories/new
+    about: Please do not open a public issue for a vulnerability. SECURITY.md says what to expect.

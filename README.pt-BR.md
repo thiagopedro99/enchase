@@ -42,6 +42,8 @@ npm install enchase
 
 ### Navegadores suportados
 
+A matriz completa, com React, Node e o que cada versão testa, está na seção [Support](README.md#support) do README em inglês; este trecho resume os navegadores.
+
 Chrome e Edge 120, Firefox 129 e Safari 17.5 (iOS 17.5) ou mais novos. A lista está no campo `browserslist` do `package.json`, que também define o alvo do CSS publicado, e é a política de suporte da biblioteca. A única exigência dura é o `inert`, que isola a página atrás de um modal (Chrome 102, Safari 15.5 e Firefox 112). O resto degrada bem em um navegador mais antigo: sem `@starting-style` a animação de entrada some, sem `linear()` a mola cai na curva `ease` e sem `color-mix()` alguns fundos de estado (hover e desabilitado) não aparecem.
 
 ## Início rápido
@@ -1072,6 +1074,8 @@ npm run build:lib && npm run pack:check && npm run test:consumer
 ## Estado do projeto
 
 Versão `0.x`, em desenvolvimento ativo. Há três estilos visuais, `enchase`, `shadcn` e `workbench`, e a densidade `compact`. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band) e um estilo Material 3.
+
+Os documentos de política, em inglês: [VERSIONING.md](VERSIONING.md) (o que é API pública, o que quebra e como funciona uma depreciação), [ACCESSIBILITY.md](ACCESSIBILITY.md) (o que é testado e o que não é), [SECURITY.md](SECURITY.md) (como reportar uma vulnerabilidade) e [MIGRATION.md](MIGRATION.md) (o que conferir ao atualizar, uma página por minor desde a 0.13).
 
 ## Contribuindo
 
