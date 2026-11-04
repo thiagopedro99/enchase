@@ -27,7 +27,25 @@ npm install enchase
 
 `react` and `react-dom` (version 19) are peer dependencies. The package is ESM and ships its types.
 
-Supported browsers: Chrome and Edge 120, Firefox 129 and Safari 17.5 (iOS 17.5), or newer. The list is the `browserslist` field of `package.json`, which also sets the target of the published CSS, and it is the support policy of the library. The one hard requirement is `inert`, which isolates the page behind a modal (Chrome 102, Safari 15.5 and Firefox 112). The rest degrades gracefully in an older browser: without `@starting-style` the entry animation is gone, without `linear()` the spring falls back to the `ease` curve, and without `color-mix()` some state backgrounds (hover and disabled) don't show.
+The versions of React, the browsers and Node that the library supports are in the [support matrix](#support).
+
+## Support
+
+| | Minimum | Tested on |
+| --- | --- | --- |
+| React and React DOM | 19 | 19 |
+| Chrome | 120 | Chromium, the one of Playwright (`npm run test:browser`) |
+| Edge | 120 | the same Chromium: Edge is not tested apart |
+| Firefox | 129 | Firefox, the one of Playwright (`npm run test:browser:firefox`) |
+| Safari | 17.5 | WebKit, the one of Playwright on Linux (`npm run test:browser:webkit`): Safari itself is not tested |
+| iOS Safari | 17.5 | the same WebKit: an iPhone is not tested |
+| Node | 20 | 22, the version that CI runs |
+| Next.js | not declared | 15 (`npm run test:next`), with the App Router and Server Components |
+| Vite | not declared | 8 (`npm run test:eject`) |
+
+The minimum of the browsers is the `browserslist` field of `package.json`, which also sets the target of the published CSS, and the minimum of Node is the `engines` field, which the `enchase eject` command and the build follow. Raising a minimum is a breaking change, as [VERSIONING.md](VERSIONING.md) says. The suites run on the latest version of each engine, so the minimum is what the library declares and compiles for, and not a version where every test ran.
+
+The one hard requirement of the browsers is `inert`, which isolates the page behind a modal (Chrome 102, Safari 15.5 and Firefox 112). The rest degrades gracefully in an older browser: without `@starting-style` the entry animation is gone, without `linear()` the spring falls back to the `ease` curve, and without `color-mix()` some state backgrounds (hover and disabled) don't show.
 
 ## Quick start
 
