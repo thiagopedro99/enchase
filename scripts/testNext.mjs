@@ -79,6 +79,17 @@ const ejectedExpectations = [
   ['the pagination that was ejected, rendered by a server component', 'data-slot="pagination-page"']
 ]
 
+const headlessExpectations = [
+  ['the page of the hooks, a server component', 'Headless server page'],
+  ['the tab list of useTabs, rendered by a client component', 'role="tablist"'],
+  ['the selected tab of useTabs', 'aria-selected="true"'],
+  ['the current page of usePagination', 'aria-current="page"'],
+  ['the radio group of useSegmentedControl', 'role="radiogroup"'],
+  ['the open item of useAccordion', 'aria-expanded="true"'],
+  ['the slider of useSlider', 'role="slider"'],
+  ['the value of useSlider', 'aria-valuenow="30"']
+]
+
 const cssExpectations = [
   ['the layer order from the layered stylesheet', '@layer enchase-theme, enchase-base, enchase'],
   ['the components inside the enchase layer', '@layer enchase'],
@@ -134,12 +145,18 @@ try {
 
   for (const [label, needle] of ejectedExpectations) if (!ejectedHtml.includes(needle)) missing.push([label])
 
+  const headless = await fetch(`http://127.0.0.1:${port}/headless`)
+  const headlessHtml = await headless.text()
+
+  for (const [label, needle] of headlessExpectations) if (!headlessHtml.includes(needle)) missing.push([label])
+
   if (response.status !== 200) throw new Error(`unexpected status ${response.status}`)
   if (ejected.status !== 200) throw new Error(`unexpected status ${ejected.status} on /ejected`)
+  if (headless.status !== 200) throw new Error(`unexpected status ${headless.status} on /headless`)
   if (styled.status !== 200) throw new Error(`unexpected status ${styled.status} on /styled`)
   if (missing.length > 0) throw new Error(`the server html is missing:\n${missing.map(([label]) => `  - ${label}`).join('\n')}`)
 
-  console.log(`next consumer rendered ${expectations.length + cssExpectations.length + forbidden.length + styledExpectations.length + ejectedExpectations.length} server checks on port ${port}`)
+  console.log(`next consumer rendered ${expectations.length + cssExpectations.length + forbidden.length + styledExpectations.length + ejectedExpectations.length + headlessExpectations.length} server checks on port ${port}`)
 } finally {
   if (server && server.exitCode === null) {
     const exited = new Promise((resolveExit) => server.once('exit', resolveExit))

@@ -6,6 +6,10 @@ export type MemberDoc = { name: string; type: string }
 
 export type HookDoc = { name: string; signature: string; note?: string; members: MemberDoc[] }
 
+export type OptionDoc = { name: string; type: string; required: boolean }
+
+export type ExperimentalHookDoc = HookDoc & { entry: string; options: OptionDoc[] }
+
 export type IconDoc = { name: string; dataIcon: string; directional: boolean }
 
 export type IconsDoc = { props: PropDoc[]; element?: string; items: IconDoc[] }
@@ -18,4 +22,4 @@ export type CssHookDoc = { name: string; owner: string; default: string; token?:
 
 export type CssHooksGroup = { component: string; hooks: CssHookDoc[] }
 
-export const renderApiDocs: (model: { components: ComponentDoc[]; hooks: HookDoc[]; icons: IconsDoc; cssHooks?: CssHooksGroup[] }) => string
+export const renderApiDocs: (model: { components: ComponentDoc[]; hooks: HookDoc[]; experimental?: ExperimentalHookDoc[]; icons: IconsDoc; cssHooks?: CssHooksGroup[] }) => string

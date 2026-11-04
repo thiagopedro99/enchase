@@ -29,11 +29,11 @@ const elementTags = {
 
 const typeFlags = ts.TypeFormatFlags.NoTruncation | ts.TypeFormatFlags.UseSingleQuotesForStringLiteralType
 
-const createProgram = (file = 'index.ts') => {
+const createProgram = (file = 'index.ts', others = []) => {
   const config = ts.readConfigFile(join(root, 'tsconfig.app.json'), ts.sys.readFile)
   const parsed = ts.parseJsonConfigFileContent(config.config, ts.sys, root)
   const entry = join(root, 'lib', file)
-  const program = ts.createProgram({ rootNames: [entry], options: parsed.options })
+  const program = ts.createProgram({ rootNames: [entry, ...others.map((other) => join(root, 'lib', other))], options: parsed.options })
 
   return { program, checker: program.getTypeChecker(), entry }
 }
@@ -187,7 +187,9 @@ const parameterText = (checker, parameter) => {
   const optional = Boolean(declaration.questionToken || declaration.initializer)
   const type = declaration.type ? declaration.type.getText() : checker.typeToString(checker.getTypeOfSymbolAtLocation(parameter, declaration), undefined, typeFlags)
 
-  return `${parameter.getName()}${optional ? '?' : ''}: ${type.replace(/\s+/g, ' ')}`
+  const name = /^__\d+$/.test(parameter.getName()) ? 'options' : parameter.getName()
+
+  return `${name}${optional ? '?' : ''}: ${type.replace(/\s+/g, ' ')}`
 }
 
 const hookDoc = (checker, name, symbol) => {
@@ -245,8 +247,28 @@ const loadStoryDocs = async (server) => {
   return docs
 }
 
+const experimentalFiles = readdirSync(join(root, 'lib', 'experimental')).filter((file) => file.endsWith('.ts')).sort()
+
+const experimentalDoc = ({ program, checker }, file) => {
+  const [hook] = valueExports({ program, checker, entry: join(root, 'lib', 'experimental', file) }).filter(({ name }) => /^use[A-Z]/.test(name))
+  const [parameter] = callSignatureOf(checker, hook.symbol).parameters
+  const optionsType = checker.getTypeOfSymbolAtLocation(parameter, parameter.declarations[0])
+
+  const options = optionsType.getProperties().map((property) => ({
+    name: property.getName(),
+    type: optionsType.isUnion() ? checker.typeToString(checker.getTypeOfSymbolAtLocation(property, parameter.declarations[0]), undefined, typeFlags).replace(/ \| undefined$/, '') : typeOf(checker, property),
+    required: !(property.flags & ts.SymbolFlags.Optional)
+  }))
+
+  const returned = callSignatureOf(checker, hook.symbol).getReturnType()
+  const members = returned.getProperties().map((member) => ({ name: member.getName(), type: checker.typeToString(checker.getTypeOfSymbolAtLocation(member, member.declarations[0]), undefined, typeFlags).replace(/\s+/g, ' ') }))
+
+  return { ...hookDoc(checker, hook.name, hook.symbol), members, entry: `enchase/experimental/${file.replace(/\.ts$/, '')}`, options }
+}
+
 const buildModel = async () => {
   const main = createProgram()
+  const experimental = createProgram(`experimental/${experimentalFiles[0]}`, experimentalFiles.slice(1).map((file) => `experimental/${file}`))
   const icons = createProgram('icons.ts')
   const { checker } = main
   const server = await createServer({ root, configFile: join(root, 'vite.config.ts'), appType: 'custom', logLevel: 'error', server: { middlewareMode: true, hmr: false, watch: null } })
@@ -264,6 +286,7 @@ const buildModel = async () => {
     return {
       components: exported.filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(checker, symbol)).map(({ name, symbol }) => componentDoc(checker, name, symbol, docs.get(name) ?? { argTypes: {} })),
       hooks: exported.filter(({ name }) => /^use[A-Z]/.test(name)).map(({ name, symbol }) => hookDoc(checker, name, symbol)),
+      experimental: experimentalFiles.map((file) => experimentalDoc(experimental, file)),
       icons: { props, element, items: iconExports.map(({ name, symbol }) => iconDoc(name, symbol)) },
       cssHooks: cssHooksModel(join(root, 'src', 'components'), tokens)
     }
@@ -307,10 +330,10 @@ if (check) {
     process.exit(1)
   }
 
-  console.log(`API.md is up to date: ${model.components.length} components, ${model.hooks.length} hooks, ${model.icons.items.length} icons`)
+  console.log(`API.md is up to date: ${model.components.length} components, ${model.hooks.length} hooks, ${model.experimental.length} experimental hooks, ${model.icons.items.length} icons`)
 } else {
   writeFileSync(outputPath, markdown)
-  console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks, ${model.icons.items.length} icons`)
+  console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks, ${model.experimental.length} experimental hooks, ${model.icons.items.length} icons`)
   if (problems.length > 0) {
     console.error(problems.join('\n'))
     process.exit(1)

@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -114,6 +114,13 @@ try {
   expect(names.every((name) => recorded.components[name] === installed.version), 'the manifest must list every component that was ejected, with its version')
   expect(Object.keys(recorded.files).length === copied.size && Object.values(recorded.files).every((hash) => /^[0-9a-f]{16}$/.test(hash)), 'the manifest must hold a hash for every file that was copied')
 
+  const hooks = ['Tabs', 'Pagination', 'SegmentedControl', 'Accordion', 'Slider']
+  const withoutHook = hooks.filter((name) => !copied.has(`components/common/${name}/use${name}.ts`))
+  const importingHooks = readdirSync(folder, { recursive: true }).filter((file) => /\.tsx?$/.test(file) && readFileSync(join(folder, file), 'utf8').includes('enchase/experimental'))
+
+  expect(withoutHook.length === 0, `the copy of ${withoutHook.join(', ')} must carry its hook as a file of its own`)
+  expect(importingHooks.length === 0, `a copy must not import enchase/experimental, because the code that you ejected has to be yours, hooks included: ${importingHooks.join(', ')}`)
+
   const again = capture(command, ['eject', 'Button', '--dir', 'src/enchase'], consumer)
 
   expect(again.includes('0 files written'), 'ejecting a component twice must not write anything the second time')
@@ -206,7 +213,7 @@ try {
 
   if (failures.length > 0) throw new Error(`the eject command is not as it should be:\n${failures.map((failure) => `  - ${failure}`).join('\n')}`)
 
-  console.log(`eject: ${names.length} components copied by the installed command, compiled with tsc and bundled by vite, ${contract.join(', ')} rendered on the server inside the UIProvider of the package, and the jsdom specs of ${contract.join(', ')} pass against the copies`)
+  console.log(`eject: ${names.length} components copied by the installed command, compiled with tsc and bundled by vite, ${contract.join(', ')} rendered on the server inside the UIProvider of the package, and the jsdom specs of ${contract.join(', ')} pass against the copies, and the copies carry their hooks (${hooks.join(', ')}) as files of their own, with no import of enchase/experimental`)
 } finally {
   rmSync(workdir, { recursive: true, force: true })
   if (existsSync(contractFolder)) rmSync(contractFolder, { recursive: true, force: true })

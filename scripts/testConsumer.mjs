@@ -26,6 +26,16 @@ import { createTheme, defineStyle, validateTheme } from 'enchase/theme'
 import type { RadiusOverrides, ShapePreset, ThemeInput, ThemeStyle, ThemeStyleMode } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
+import { useTabs } from 'enchase/experimental/tabs'
+import type { UseTabsOptions, UseTabsReturn } from 'enchase/experimental/tabs'
+import { usePagination } from 'enchase/experimental/pagination'
+import type { PaginationItem, UsePaginationOptions, UsePaginationReturn } from 'enchase/experimental/pagination'
+import { useSegmentedControl } from 'enchase/experimental/segmented-control'
+import type { UseSegmentedControlOptions, UseSegmentedControlReturn } from 'enchase/experimental/segmented-control'
+import { useAccordion } from 'enchase/experimental/accordion'
+import type { UseAccordionOptions, UseAccordionReturn } from 'enchase/experimental/accordion'
+import { useSlider } from 'enchase/experimental/slider'
+import type { UseSliderOptions, UseSliderReturn } from 'enchase/experimental/slider'
 import type { MouseEvent } from 'react'
 import 'enchase/styles.css'
 import 'enchase/styles.layer.css'
@@ -76,6 +86,53 @@ declare const maybeMessage: string | undefined
 declare const maybeCount: number | undefined
 declare const maybeTheme: ThemeInput | undefined
 declare const maybeHandler: (() => void) | undefined
+
+const tabsOptions: UseTabsOptions = { items: [{ value: 'a' }, { value: 'b', disabled: true }], activation: 'manual', value: maybeMessage, onValueChange: (value: string) => void value }
+const pagerOptions: UsePaginationOptions = { pageCount: 12, page: maybeCount, defaultPage: maybeCount, onPageChange: (page: number) => void page }
+const groupOptions: UseSegmentedControlOptions = { items: [{ value: 'a' }, { value: 'b', disabled: true }], multiple: true, defaultValue: ['a'], onValueChange: (value: string[]) => void value }
+const radioGroupOptions: UseSegmentedControlOptions = { items: [{ value: 'a' }], value: maybeMessage, disabled: undefined, onValueChange: (value: string) => void value }
+const accordionOptions: UseAccordionOptions = { items: [{ value: 'a' }], multiple: true, value: undefined, onValueChange: (value: string[]) => void value }
+const sliderOptions: UseSliderOptions = { min: 0, max: 10, step: maybeCount, value: maybeCount, formatValue: (value: number) => value + '%', onValueChange: (value: number) => void value }
+
+export const Headless = () => {
+  const tabs: UseTabsReturn = useTabs(tabsOptions)
+  const pager: UsePaginationReturn = usePagination(pagerOptions)
+  const group: UseSegmentedControlReturn = useSegmentedControl(groupOptions)
+  const radios: UseSegmentedControlReturn = useSegmentedControl(radioGroupOptions)
+  const accordion: UseAccordionReturn = useAccordion(accordionOptions)
+  const slider: UseSliderReturn = useSlider(sliderOptions)
+  const pages: PaginationItem[] = pager.items
+
+  return (
+    <div>
+      <div {...tabs.getListProps({ 'aria-label': 'Sections' })}>
+        <button {...tabs.getTabProps('a', { className: 'tab' })}>One</button>
+      </div>
+      <div {...tabs.getPanelProps('a', { className: 'panel' })}>First</div>
+      <nav>
+        <button {...pager.getPreviousProps({ 'aria-label': 'Back' })} />
+        {pages.map((item) => (typeof item === 'number' ? <button key={item} {...pager.getPageProps(item)}>{item}</button> : <span key={item}>...</span>))}
+        <button {...pager.getNextProps({ 'aria-label': 'Next' })} />
+      </nav>
+      <div {...group.getGroupProps({ 'aria-label': 'View' })}>
+        <button {...group.getItemProps('a', { 'data-state': group.selected.includes('a') ? 'on' : 'off' })}>A</button>
+      </div>
+      <div {...radios.getGroupProps()}>
+        <button {...radios.getItemProps('a')} onClick={maybeHandler}>A</button>
+      </div>
+      <h3>
+        <button {...accordion.getTriggerProps('a', { className: 'trigger' })}>One</button>
+      </h3>
+      <div {...accordion.getPanelProps('a', { className: 'panel' })}>First</div>
+      <div {...slider.getControlProps()}>
+        <div {...slider.getTrackProps({ className: 'track' })}>
+          <div {...slider.getThumbProps({ 'aria-label': 'Volume' })} style={{ insetInlineStart: slider.percent + '%' }} />
+        </div>
+      </div>
+      <output>{slider.valueText}</output>
+    </div>
+  )
+}
 
 export const OptionalValues = () => (
   <ColorModeProvider theme={maybeTheme}>
@@ -244,7 +301,7 @@ try {
 
   console.log('the packed theme.css carries the compact density block once')
 
-  const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/workbench': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/styles': false, 'enchase/styles/theme/style': false }
+  const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/workbench': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/styles': false, 'enchase/styles/theme/style': false, 'enchase/experimental/tabs': true, 'enchase/experimental/pagination': true, 'enchase/experimental/segmented-control': true, 'enchase/experimental/accordion': true, 'enchase/experimental/slider': true, 'enchase/experimental': false, 'enchase/experimental/menu': false }
   const wrong = Object.entries(expected).filter(([specifier, should]) => resolves(specifier) !== should)
 
   if (wrong.length > 0) throw new Error(`the installed package resolves the wrong entries:\n${wrong.map(([specifier, should]) => `  - ${specifier} should ${should ? 'resolve' : 'fail, so forgetting the .css of enchase/styles.css is an error and not an import that does nothing'}`).join('\n')}`)

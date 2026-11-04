@@ -18,7 +18,7 @@ const toCssTarget = (entry: string) => {
 
 const cssTarget = (JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')).browserslist as string[]).map(toCssTarget)
 
-const clientEntryName = 'index'
+const isClientEntry = (name: string) => name === 'index' || name.startsWith('experimental/')
 
 export default defineConfig({
   plugins: [react()],
@@ -51,6 +51,11 @@ export default defineConfig({
         theme: resolve(root, 'lib/theme.ts'),
         locales: resolve(root, 'lib/locales.ts'),
         icons: resolve(root, 'lib/icons.ts'),
+        'experimental/tabs': resolve(root, 'lib/experimental/tabs.ts'),
+        'experimental/pagination': resolve(root, 'lib/experimental/pagination.ts'),
+        'experimental/segmented-control': resolve(root, 'lib/experimental/segmented-control.ts'),
+        'experimental/accordion': resolve(root, 'lib/experimental/accordion.ts'),
+        'experimental/slider': resolve(root, 'lib/experimental/slider.ts'),
         'styles/enchase': resolve(root, 'lib/styles/enchase.ts'),
         'styles/shadcn': resolve(root, 'lib/styles/shadcn.ts'),
         'styles/workbench': resolve(root, 'lib/styles/workbench.ts')
@@ -64,7 +69,7 @@ export default defineConfig({
         preserveModules: true,
         preserveModulesRoot: 'src',
         entryFileNames: '[name].js',
-        banner: (chunk) => (chunk.isEntry && chunk.name === clientEntryName ? "'use client'" : '')
+        banner: (chunk) => (chunk.isEntry && isClientEntry(chunk.name) ? "'use client'" : '')
       }
     }
   }

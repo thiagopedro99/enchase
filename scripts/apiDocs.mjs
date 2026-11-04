@@ -3,6 +3,11 @@ export const hookNotes = {
   useColorMode: 'The chosen color mode (`light`, `dark` or `system`), the resolved mode (`light` or `dark`) and the functions to change it. Throws an error outside the `ColorModeProvider`.',
   useScrollSpy: 'Returns the `id` of the section that is in the reading band, from `topOffset` px (default 96) below the top to 45% of the screen height, or `undefined` while none has arrived. It follows sections that mount later, remount or leave the page, and only the contents of the `ids` array count, not its identity.',
   useToast: 'Opens notifications through the `success`, `error`, `warning` and `info` methods, for example `success("Saved", 3000)`, and each one returns the id of the notification, which `removeToast(id)` accepts to close it and `update(id, patch)` accepts to change it. The message is text or nodes. `duration` is in milliseconds and 0 keeps the notification open until someone closes it. The third argument takes `className`, `style`, `action` (`{ label, onClick }`, a button that runs `onClick` and closes the notification) and `dismissible` (false removes the close button and the close by click or Esc). `update(id, patch)` changes `message`, `type`, `duration`, `action`, `dismissible`, `className` or `style` in place, and a new `duration` restarts the countdown. `promise(task, { loading, success, error })` shows `loading` as a notification that does not expire and turns it into `success` or `error` when the promise settles (both can be functions of the value or of the reason), and returns the same promise. Throws an error outside the `ToastProvider`.',
+  useTabs: 'The state, the keyboard and the roles of a tab list, as prop getters for the list, for each tab and for each panel. The arrows, Home and End move the focus along the enabled tabs (the arrows swap in right to left) and select what they focus, unless `activation` is `manual`. The ids that tie a tab to its panel come from `useId` and from the position of the value in `items`.',
+  usePagination: 'The current page, the items to draw (page numbers and the two ellipses) and the prop getters of the previous button, of the next button and of each page button. The counts are read as whole numbers that are not negative and the page stays inside the range. The previous and next buttons stay focusable at the ends and say so with `aria-disabled`.',
+  useSegmentedControl: 'The selected values, the keyboard and the roles of a group of options. By default it is a radio group, with one tab stop and the arrows moving the choice; with `multiple` it is a group of toggle buttons that all stay in the tab order. The options follow the `multiple` of the component: a string for one value and a list for several.',
+  useAccordion: 'The open items and the prop getters of the triggers and of the panels of a group of disclosures. One item is open at a time unless `multiple` is set, and the arrows, Home and End move the focus along the enabled triggers without opening anything. The heading around each trigger is yours.',
+  useSlider: 'The value, its position in percent and the prop getters of the control (which takes the pointer), of the track and of the thumb of a slider. The value stays on a step inside the range, and the pointer, the arrows, Home, End, PageUp and PageDown set it, mirrored in right to left. A touch waits for the finger to go across before it moves. `dragging` and `pointerFocus` tell the states to draw.',
   useUIConfig: 'Configuration of the nearest `UIProvider`: motion, labels, text direction, language code (`locale`, such as `pt-BR`) and breakpoints. Without a provider, it returns the default values.'
 }
 
@@ -66,7 +71,40 @@ const cssHooksSection = (cssHooks) =>
       .join('\n\n')
   ].join('\n')
 
-export const renderApiDocs = ({ components, hooks, icons, cssHooks = [] }) => {
+const experimentalIntro =
+  'Headless hooks: the state, the keyboard and the ARIA of a component, as prop getters that you spread on your own markup, with no CSS and no markup of the library. Each one has an entry of its own, `enchase/experimental/<name>`, which exports the hook and its types and is for Client Components. They are experimental: they can change in a minor release, until [VERSIONING.md](VERSIONING.md) says that they were promoted. [HEADLESS.md](HEADLESS.md) explains how to use them.'
+
+const experimentalSection = (experimental) => {
+  const sorted = [...experimental].sort(collator)
+
+  const hookSection = ({ name, entry, signature, note, options, members }) =>
+    [
+      `### ${name}`,
+      '',
+      `Import it from ${code(entry)}.`,
+      '',
+      '```ts',
+      signature,
+      '```',
+      ...(note ? ['', note] : []),
+      '',
+      'Options:',
+      '',
+      '| Option | Type | Required |',
+      '| --- | --- | --- |',
+      ...options.map((option) => `| ${code(option.name)} | ${code(option.type)} | ${option.required ? 'yes' : '—'} |`),
+      '',
+      'Returns:',
+      '',
+      '| Member | Type |',
+      '| --- | --- |',
+      ...members.map((member) => `| ${code(member.name)} | ${code(member.type)} |`)
+    ].join('\n')
+
+  return ['## Experimental hooks', '', experimentalIntro, '', sorted.map(({ name }) => `[${name}](#${name.toLowerCase()})`).join(' · '), '', sorted.map(hookSection).join('\n\n')].join('\n')
+}
+
+export const renderApiDocs = ({ components, hooks, experimental = [], icons, cssHooks = [] }) => {
   const sortedComponents = [...components].sort(collator)
   const sortedHooks = [...hooks].sort(collator)
   const index = sortedComponents.map(({ name }) => `[${name}](#${name.toLowerCase()})`).join(' · ')
@@ -75,7 +113,7 @@ export const renderApiDocs = ({ components, hooks, icons, cssHooks = [] }) => {
     [
       '# API',
       '',
-      'Reference of the props, the hooks and the icons exported by `enchase` and `enchase/icons`, generated by `npm run docs:api` from the types of the package and the stories of the Storybook. Do not edit this file by hand: change the type or the `argTypes` of the story and generate it again.',
+      'Reference of the props, the hooks and the icons exported by `enchase` and `enchase/icons`, and of the experimental hooks of `enchase/experimental/*`, generated by `npm run docs:api` from the types of the package and the stories of the Storybook. Do not edit this file by hand: change the type or the `argTypes` of the story and generate it again.',
       '',
       'Usage examples are in the [README](README.md), in the [full guide](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md), in Portuguese, and in the [Storybook](https://enchase.othiagosilva.com.br/docs/).',
       '',
@@ -90,6 +128,7 @@ export const renderApiDocs = ({ components, hooks, icons, cssHooks = [] }) => {
       sortedHooks.map(({ name }) => `[${name}](#${name.toLowerCase()})`).join(' · '),
       '',
       sortedHooks.map(hookSection).join('\n\n'),
+      ...(experimental.length > 0 ? ['', experimentalSection(experimental)] : []),
       '',
       iconsSection(icons),
       ...(cssHooks.length > 0 ? ['', cssHooksSection(cssHooks)] : [])

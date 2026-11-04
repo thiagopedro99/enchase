@@ -73,6 +73,31 @@
       "import": "./dist-lib/icons.js",
       "default": "./dist-lib/icons.js"
     },
+    "./experimental/tabs": {
+      "types": "./dist-lib/types/lib/experimental/tabs.d.ts",
+      "import": "./dist-lib/experimental/tabs.js",
+      "default": "./dist-lib/experimental/tabs.js"
+    },
+    "./experimental/pagination": {
+      "types": "./dist-lib/types/lib/experimental/pagination.d.ts",
+      "import": "./dist-lib/experimental/pagination.js",
+      "default": "./dist-lib/experimental/pagination.js"
+    },
+    "./experimental/segmented-control": {
+      "types": "./dist-lib/types/lib/experimental/segmented-control.d.ts",
+      "import": "./dist-lib/experimental/segmented-control.js",
+      "default": "./dist-lib/experimental/segmented-control.js"
+    },
+    "./experimental/accordion": {
+      "types": "./dist-lib/types/lib/experimental/accordion.d.ts",
+      "import": "./dist-lib/experimental/accordion.js",
+      "default": "./dist-lib/experimental/accordion.js"
+    },
+    "./experimental/slider": {
+      "types": "./dist-lib/types/lib/experimental/slider.d.ts",
+      "import": "./dist-lib/experimental/slider.js",
+      "default": "./dist-lib/experimental/slider.js"
+    },
     "./styles/enchase": {
       "types": "./dist-lib/types/lib/styles/enchase.d.ts",
       "import": "./dist-lib/styles/enchase.js",

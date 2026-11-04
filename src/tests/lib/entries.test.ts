@@ -9,6 +9,11 @@ import * as locales from 'enchase/locales'
 import * as enchaseStyle from 'enchase/styles/enchase'
 import * as shadcnStyle from 'enchase/styles/shadcn'
 import * as workbenchStyle from 'enchase/styles/workbench'
+import * as segmentedControlHook from 'enchase/experimental/segmented-control'
+import * as paginationHook from 'enchase/experimental/pagination'
+import * as accordionHook from 'enchase/experimental/accordion'
+import * as sliderHook from 'enchase/experimental/slider'
+import * as tabsHook from 'enchase/experimental/tabs'
 import * as theme from 'enchase/theme'
 
 const typeExportsOf = (file: string) => {
@@ -46,6 +51,28 @@ describe('public entries', () => {
       expect(entry).not.toHaveProperty('shadcn')
       expect(entry).not.toHaveProperty('workbench')
       expect(entry).not.toHaveProperty('enchase')
+    }
+  })
+
+  it('exports each experimental hook from an entry of its own, with that hook and nothing else', () => {
+    expect(Object.keys(tabsHook)).toEqual(['useTabs'])
+    expect(Object.keys(paginationHook)).toEqual(['usePagination'])
+    expect(Object.keys(segmentedControlHook)).toEqual(['useSegmentedControl'])
+    expect(Object.keys(accordionHook)).toEqual(['useAccordion'])
+    expect(Object.keys(sliderHook)).toEqual(['useSlider'])
+  })
+
+  it('exports from each experimental entry the types that its hook names, and only those', () => {
+    expect(typeExportsOf('lib/experimental/tabs.ts').sort()).toEqual(['UseTabsOptions', 'UseTabsReturn'])
+    expect(typeExportsOf('lib/experimental/pagination.ts').sort()).toEqual(['PaginationItem', 'UsePaginationOptions', 'UsePaginationReturn'])
+    expect(typeExportsOf('lib/experimental/segmented-control.ts').sort()).toEqual(['UseSegmentedControlOptions', 'UseSegmentedControlReturn'])
+    expect(typeExportsOf('lib/experimental/accordion.ts').sort()).toEqual(['UseAccordionOptions', 'UseAccordionReturn'])
+    expect(typeExportsOf('lib/experimental/slider.ts').sort()).toEqual(['UseSliderOptions', 'UseSliderReturn'])
+  })
+
+  it('keeps the experimental hooks out of every other entry', () => {
+    for (const entry of [main, theme, icons, locales, enchaseStyle, shadcnStyle, workbenchStyle]) {
+      for (const name of ['useTabs', 'usePagination', 'useSegmentedControl', 'useAccordion', 'useSlider']) expect(entry).not.toHaveProperty(name)
     }
   })
 

@@ -17,6 +17,8 @@ The script packs the library, copies this folder to a temporary directory (nothi
 - the stylesheets `enchase/styles.layer.css` and `enchase/theme.css`, fetched from the built page and checked for the layer order and the theme variables;
 - the layout rendered in the wide default (`data-layout="auto"`) with the generated responsive rules.
 
+`/headless` is a Server Component page that renders a Client Component, which calls the five hooks of `enchase/experimental/*` (`useTabs`, `usePagination`, `useSegmentedControl`, `useAccordion` and `useSlider`): the script checks that the roles and the states that the hooks give come through the server render, and the build checks that a hook can be imported from a client file under a server page.
+
 The app has two root layouts, one for each route group. `/` is the plain one, with `shape: 'soft'` and no style, and it must not carry any style hook or label placement. `/styled` has its own layout, which imports `shadcn` from `enchase/styles/shadcn` in a Server Component and hands it to the `ColorModeProvider`: the script checks that the theme variables, the hooks and the stacked label placement of the style come through the server render.
 
 `/ejected` is a Server Component that imports `Button`, `Tabs` and `Pagination` from the copies that `enchase eject` wrote into the app, so a missing `'use client'` in a copy, or a style that Next cannot build, breaks `next build`.
