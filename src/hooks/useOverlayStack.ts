@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-const stack: symbol[] = []
+import { shared } from '../utils/shared.ts'
 
-const pointer: { top: symbol | undefined; installed: boolean } = { top: undefined, installed: false }
+const { stack, pointer } = shared('overlayStack.v1', () => ({ stack: [] as symbol[], pointer: { top: undefined as symbol | undefined, installed: false } }))
 
 const topOfStack = () => stack[stack.length - 1]
 

@@ -1,9 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
 
+import { shared } from '@utils/shared.ts'
+
 import type { PopoverTree, PopoverTreeNode } from './types.ts'
 import type { RefObject } from 'react'
 
-export const PopoverTreeContext = createContext<PopoverTree | null>(null)
+export const PopoverTreeContext = shared('popoverTreeContext.v1', () => createContext<PopoverTree | null>(null))
 
 export const usePopoverTree = (contentRef: RefObject<HTMLElement | null>, mounted: boolean) => {
   const parent = useContext(PopoverTreeContext)

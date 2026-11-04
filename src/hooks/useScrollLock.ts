@@ -1,26 +1,26 @@
 import { useEffect } from 'react'
 
-let lockCount = 0
-let previousOverflow = ''
-let previousOverscroll = ''
+import { shared } from '../utils/shared.ts'
+
+const lock = shared('scrollLock.v1', () => ({ count: 0, overflow: '', overscroll: '' }))
 
 export const useScrollLock = (active = true) => {
   useEffect(() => {
     if (!active) return
 
-    if (lockCount === 0) {
-      previousOverflow = document.body.style.overflow
-      previousOverscroll = document.body.style.overscrollBehavior
+    if (lock.count === 0) {
+      lock.overflow = document.body.style.overflow
+      lock.overscroll = document.body.style.overscrollBehavior
       document.body.style.overflow = 'hidden'
       document.body.style.overscrollBehavior = 'none'
     }
-    lockCount += 1
+    lock.count += 1
 
     return () => {
-      lockCount -= 1
-      if (lockCount === 0) {
-        document.body.style.overflow = previousOverflow
-        document.body.style.overscrollBehavior = previousOverscroll
+      lock.count -= 1
+      if (lock.count === 0) {
+        document.body.style.overflow = lock.overflow
+        document.body.style.overscrollBehavior = lock.overscroll
       }
     }
   }, [active])

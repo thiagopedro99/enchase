@@ -1,10 +1,12 @@
 import { createContext, useContext } from 'react'
 
+import { shared } from '@utils/shared.ts'
+
 import type { FieldVariant, LabelPlacement, ThemeDefaults } from '@styles/tokens/types.ts'
 
 export const defaultThemeDefaults: ThemeDefaults = { labelPlacement: 'floating' }
 
-export const ThemeDefaultsContext = createContext<ThemeDefaults>(defaultThemeDefaults)
+export const ThemeDefaultsContext = shared('themeDefaultsContext.v1', () => createContext<ThemeDefaults>(defaultThemeDefaults))
 
 export const useThemeDefaults = () => useContext(ThemeDefaultsContext)
 

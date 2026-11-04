@@ -197,6 +197,7 @@ Especificação, não descrição: os componentes atuais ainda não cumprem tudo
 
 - Arquivos com mais de ~200 linhas devem ter lógica extraída para hooks (Single Responsibility Principle).
 - Faça somente o solicitado — escopo contido.
+- Contexto do React e estado no topo do módulo (`let`, `Map`, `Set`, lista) moram em `shared('nome.v1', () => ...)` (`utils/shared.ts`), para que uma cópia ejetada do módulo e a do pacote vejam a mesma instância; tabela ou cache que só o módulo lê entra na lista de exceções de `src/tests/singletons.test.ts`.
 
 ## Imutabilidade e performance
 

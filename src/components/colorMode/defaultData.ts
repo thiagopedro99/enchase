@@ -1,3 +1,5 @@
+import { shared } from '@utils/shared.ts'
+
 import type { ColorMode, ColorModeStorage } from './types.ts'
 
 export const colorModes: readonly ColorMode[] = ['light', 'dark', 'system']
@@ -33,7 +35,7 @@ const scriptLiteral = (value: string) => JSON.stringify(value).replace(/</g, '\\
 export const colorModeScript = (storageKey: string = defaultStorageKey, defaultMode: ColorMode = defaultColorMode) =>
   `(function(){try{var m=localStorage.getItem(${scriptLiteral(storageKey)});if(m!=='light'&&m!=='dark'&&m!=='system')m=${scriptLiteral(defaultMode)};if(m==='system')m=matchMedia(${scriptLiteral(systemDarkQuery)}).matches?'dark':'light';var d=document.documentElement;d.dataset.theme=m;d.style.colorScheme=m}catch(e){}})()`
 
-const listeners = new Map<string, Set<() => void>>()
+const listeners = shared('colorModeListeners.v1', () => new Map<string, Set<() => void>>())
 
 export const subscribeToStoredMode = (key: string, notify: () => void) => {
   const set = listeners.get(key) ?? new Set<() => void>()
