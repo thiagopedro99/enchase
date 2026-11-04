@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { consumerCss } from './consumerCss.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const { exports, files, version } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+const { bin, exports, files, version } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 
 const targets = (value) => (typeof value === 'string' ? [value] : Object.values(value).flatMap(targets))
 
@@ -127,6 +127,11 @@ for (const [where, css] of themeStylesheets) {
 }
 
 const kitIndex = join(root, 'eject', 'index.json')
+const binFile = bin?.enchase ? join(root, bin.enchase) : null
+
+if (!binFile || !existsSync(binFile)) leaks.push('the bin of the package does not point to a file, so npx enchase has nothing to run')
+else if (!readFileSync(binFile, 'utf8').startsWith('#!/usr/bin/env node\n')) leaks.push(`${bin.enchase} must start with the node shebang, or the command does not run where npm links it`)
+if (!files.includes('bin')) leaks.push('the bin folder is not in the files of the package, so the eject command is not published')
 
 if (!files.includes('eject')) leaks.push('the eject folder is not in the files of the package, so the sources that the eject command copies are not published')
 if (JSON.stringify(exports).includes('/eject/')) leaks.push('an export points into the eject folder: the sources are copied by the command, and an import of them would put a second copy of a component in a bundle')

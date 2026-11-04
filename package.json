@@ -35,9 +35,13 @@
     "type": "git",
     "url": "git+https://github.com/thiagopedro99/enchase.git"
   },
+  "bin": {
+    "enchase": "./bin/enchase.mjs"
+  },
   "files": [
     "dist-lib",
     "eject",
+    "bin",
     "README.md",
     "API.md",
     "LICENSE"
@@ -104,6 +108,7 @@
     "pack:check": "npm pack --dry-run && publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./styles.layer.css ./theme.css",
     "test:consumer": "node scripts/testConsumer.mjs",
     "test:next": "node scripts/testNext.mjs",
+    "test:eject": "node scripts/testEject.mjs",
     "test:size": "node scripts/testBundleSize.mjs",
     "test:stories-a11y": "node scripts/auditStories.mjs",
     "docs:api": "node scripts/buildApiDocs.mjs",
