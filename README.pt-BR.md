@@ -912,6 +912,24 @@ return (
 
 Com `container` nulo, ou com a função devolvendo `null`, o overlay cai no `body`; a função roda só no cliente, nunca no servidor. Os overlays são `position: fixed` com as coordenadas da janela, então um ancestral do contêiner com `transform`, `filter` ou `contain` vira o bloco de contenção e desloca o overlay, e um que cria contexto de empilhamento (`z-index`, `opacity`, `isolation`) prende o `z-index` do overlay dentro dele: escolha um contêiner sem essas propriedades. O mesmo vale para o que o `data-theme` não resolve: um gancho declarado no `:root` como `var(--enchase-color-surface)` continua com as cores do documento, porque o alias é resolvido onde é declarado (veja acima).
 
+## Ejetar um componente
+
+Quando os ganchos de CSS, os estilos e as props não bastam, `enchase eject` copia o código de um componente para o seu projeto, e dali em diante o código é seu:
+
+```bash
+npx enchase eject Button Tabs     # copia para src/enchase
+npx enchase eject --list          # os componentes que podem ser ejetados, e os arquivos de cada um
+npx enchase eject --diff Button   # o que mudou, em cada lado, desde que você ejetou
+```
+
+A cópia leva o componente e o que só ele usa (hooks, utilitários, o CSS Module, tokens, movimento e posicionamento). O que o pacote já exporta continua nele, e a cópia importa de `enchase`: os outros componentes, `useUIConfig`, os tipos e os ícones (`enchase/icons`), então mantenha o `enchase` instalado. Os arquivos mantêm o layout da biblioteca (`Button` vai para `src/enchase/components/common/Button/index.tsx`), e o comando imprime o caminho para importar. A entrada de cada cópia começa com `'use client'`, o CSS lê os mesmos `--enchase-*` do tema, e o bundler precisa tratar `*.module.css`.
+
+`UIProvider`, `ColorModeProvider`, `ToastProvider`, os estilos e o tema não são ejetáveis: guardam o estado que tudo compartilha, ou são dados. A cópia e o pacote dividem uma instância só dos contextos e da pilha de overlays, da trava de rolagem e do último elemento usado (em `globalThis`, com chaves `enchase.<nome>.v1`), então um `Menu` ejetado dentro de um `Popover` do pacote ainda fecha com Esc de cima para baixo.
+
+Nada atualiza uma cópia. Depois de subir o `enchase`, `--diff` compara cada arquivo com a biblioteca instalada agora e com a versão que você ejetou (registrada em `enchase.eject.json`) e diz quem mudou: `library` (só a biblioteca: `eject --force` traz a nova), `yours`, `both` (junte à mão, com o diff impresso), `new` e `missing`. O comando sai com 1 quando a biblioteca mudou um arquivo. `--force` troca o seu arquivo pelo da biblioteca: faça commit antes.
+
+O código é MIT e o aviso viaja com as cópias: o comando grava `LICENSE` ao lado delas, junto de `enchase.eject.json`; guarde os dois. Uma cópia é código seu: um problema nela vale quando reproduz com o componente da biblioteca. O recurso é experimental na 0.16 e na 0.17, e o [EJECT.md](EJECT.md) tem o resto, em inglês.
+
 ## Densidade
 
 `data-density="compact"` no `<html>` deixa o kit inteiro mais compacto: controles e barras mais baixos, alvos de toque de 32px e a escala de espaço mais apertada. É só CSS, um bloco de variáveis `--enchase-*` que vale enquanto o `<html>` tem o atributo: não há prop, hook do React nem opção nova no `createTheme`. Os valores são os do bloco padrão da biblioteca, e um estilo próprio pode trazer o compacto dele (veja "O compacto de um estilo").
@@ -1044,6 +1062,7 @@ npm run test:browser          # Chromium real (Playwright)
 npm run test:browser:firefox  # Firefox
 npm run test:browser:webkit   # WebKit
 npm run test:next         # app Next mínimo com o pacote empacotado
+npm run test:eject        # ejeta todos os componentes num projeto com o pacote empacotado
 npm run lint
 npm run build:lib && npm run pack:check && npm run test:consumer
 ```

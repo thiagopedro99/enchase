@@ -26,6 +26,7 @@ npm run build:lib
 npm run pack:check
 npm run test:consumer
 npm run test:next
+npm run test:eject        # ejects every component into a project that installs the packed package
 npm run test:size         # what an import costs in the bundle of whoever uses it
 ```
 

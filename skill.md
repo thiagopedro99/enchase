@@ -197,6 +197,7 @@ Especificação, não descrição: os componentes atuais ainda não cumprem tudo
 
 - Arquivos com mais de ~200 linhas devem ter lógica extraída para hooks (Single Responsibility Principle).
 - Faça somente o solicitado — escopo contido.
+- Todo componente de `common/*`, `Layout`, `Navbar` e `Footer` exportado em `lib/index.ts` é ejetável: `scripts/buildEject.mjs` copia o componente e o que só ele usa e reescreve para `enchase`, `enchase/icons` e `enchase/theme` o que o pacote já exporta. Por isso o que um componente importa de fora da própria pasta tem de ser um arquivo de `src` com especificador literal (nada de `import()` com caminho calculado), e `npm run test:eject` é o contrato: ejeta tudo num projeto com o pacote empacotado, compila, empacota, renderiza e roda os specs jsdom de `Button`, `Tabs` e `Menu` contra as cópias.
 - Contexto do React e estado no topo do módulo (`let`, `Map`, `Set`, lista) moram em `shared('nome.v1', () => ...)` (`utils/shared.ts`), para que uma cópia ejetada do módulo e a do pacote vejam a mesma instância; tabela ou cache que só o módulo lê entra na lista de exceções de `src/tests/singletons.test.ts`.
 
 ## Imutabilidade e performance

@@ -144,6 +144,17 @@ export const Providers = ({ children }: { children: React.ReactNode }) => (
 
 What you pass overrides the style, and your own CSS overrides both: every part has a `data-slot` and reads variables named `--enchase-<slot>-<property>`, and the full list, generated from the CSS, is in [API.md](API.md). In development the provider warns in the console about color pairs below the minimum contrast. Outside React (build, server, CI), run `validateTheme(createTheme(theme))` from `enchase/theme`.
 
+## Eject
+
+When the CSS hooks, the styles and the props are not enough, `enchase eject` copies the source of a component into your project, and from then on the code is yours:
+
+```bash
+npx enchase eject Button Tabs
+npx enchase eject --diff Button
+```
+
+The copies keep importing from `enchase` whatever the package already exports, and share its contexts and overlays, so they work next to the components of the package. Nothing updates a copy, and `--diff` tells what the library changed since you ejected. It is experimental in 0.16 and 0.17. [EJECT.md](EJECT.md) has the rest: what is copied, what your project needs, and the license that travels with the code.
+
 ## Density
 
 `data-density="compact"` on `<html>` tightens the whole kit: shorter controls and bars, 32 px targets and a tighter space scale. It is plain CSS, with no prop and no API of its own.
@@ -206,6 +217,7 @@ Not guaranteed:
 ## Documentation
 
 - [Storybook](https://enchase.othiagosilva.com.br/docs/): every component, interactive, plus the pages about the theme, the shape, the styles, the density and the motion.
+- [EJECT.md](EJECT.md): `enchase eject`, to copy a component into your project and own the code.
 - [API.md](API.md): props, types, defaults, hooks and CSS hooks of every component. It ships inside the package, in `node_modules/enchase/API.md`.
 - [README.pt-BR.md](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md): the full guide, with routing and how each `href` is handled, the theme in depth, how to create a style, motion, customization by CSS, the density, server rendering and tests.
 

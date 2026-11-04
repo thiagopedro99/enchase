@@ -42,6 +42,7 @@
     "dist-lib",
     "eject",
     "bin",
+    "EJECT.md",
     "README.md",
     "API.md",
     "LICENSE"
