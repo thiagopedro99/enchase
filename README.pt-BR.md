@@ -931,7 +931,7 @@ A cópia leva o componente e o que só ele usa (hooks, utilitários, o CSS Modul
 
 Nada atualiza uma cópia. Depois de subir o `enchase`, `--diff` compara cada arquivo com a biblioteca instalada agora e com a versão que você ejetou (registrada em `enchase.eject.json`) e diz quem mudou: `library` (só a biblioteca: `eject --force` traz a nova), `yours`, `both` (junte à mão, com o diff impresso), `new` e `missing`. O comando sai com 1 quando a biblioteca mudou um arquivo. `--force` troca o seu arquivo pelo da biblioteca: faça commit antes.
 
-O código é MIT e o aviso viaja com as cópias: o comando grava `LICENSE` ao lado delas, junto de `enchase.eject.json`; guarde os dois. Uma cópia é código seu: um problema nela vale quando reproduz com o componente da biblioteca. O recurso é experimental na 0.16 e na 0.17, e o [EJECT.md](EJECT.md) tem o resto, em inglês.
+O código é MIT e o aviso viaja com as cópias: o comando grava `LICENSE` ao lado delas, junto de `enchase.eject.json`; guarde os dois. Uma cópia é código seu: o contrato de acessibilidade vale para o que o pacote publica e não para ela, e um problema nela vale quando reproduz com o componente da biblioteca. O recurso é experimental, e o [VERSIONING.md](VERSIONING.md) diz quando ele deixa de ser; o [EJECT.md](EJECT.md) tem o resto (o que o eject promete e o que não promete, entre outras coisas), em inglês.
 
 ## Hooks sem markup (experimental)
 

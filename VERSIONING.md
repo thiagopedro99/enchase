@@ -49,6 +49,8 @@ An entry under `enchase/experimental/*`, and the `enchase eject` command until t
 
 A hook of `enchase/experimental/*` is promoted when its signature stays the same for two minor versions in a row, [HEADLESS.md](HEADLESS.md) covers it, and a spec in real browsers covers its focus and its pointer. The notes of the release that promotes it say so, and say where it lives from then on.
 
+The `enchase eject` command is promoted when three things stay the same for two minor versions in a row: its interface (the commands and the options), the format of `enchase.eject.json`, and the set of files that each component copies (`eject/index.json`). 0.18 and 0.19 are meant to be the same, so 0.20 can promote it, together with what 1.0 asks for. The notes of the release that promotes it say so.
+
 ## Which versions get fixes
 
 Fixes, security ones included, go to the latest minor version, as a patch. There are no backports.

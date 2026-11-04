@@ -171,7 +171,7 @@ npx enchase eject Button Tabs
 npx enchase eject --diff Button
 ```
 
-The copies keep importing from `enchase` whatever the package already exports, and share its contexts and overlays, so they work next to the components of the package. Nothing updates a copy, and `--diff` tells what the library changed since you ejected. It is experimental in 0.16 and 0.17. [EJECT.md](EJECT.md) has the rest: what is copied, what your project needs, and the license that travels with the code.
+The copies keep importing from `enchase` whatever the package already exports, and share its contexts and overlays, so they work next to the components of the package. Nothing updates a copy, and `--diff` tells what the library changed since you ejected; the accessibility contract holds for what the package publishes, not for a copy that you change. The command is experimental, and [VERSIONING.md](VERSIONING.md) says when it is promoted. If it is the behavior of five components that you want under your own markup, the headless hooks below are lighter than a copy. [EJECT.md](EJECT.md) has the rest: what eject promises and what it does not, what is copied, what your project needs, and the license that travels with the code.
 
 ## Headless hooks
 
