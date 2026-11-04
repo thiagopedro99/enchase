@@ -25,6 +25,8 @@ A change to any of these can break an app:
 
 A minor version may break. The first bullet of the notes of every release says whether anything does ("No breaking change", or what breaks), the [migration guide](MIGRATION.md) has a page for the minor, and a patch never breaks.
 
+A break that is on purpose is declared: `npm run check:api` compares every build with the last version on npm, and a removal, a change or a raised minimum in the stable API fails until `api-breaks.json` lists it and the first bullet of the notes cites it. [CONTRIBUTING.md](CONTRIBUTING.md) has the details.
+
 ## From 1.0
 
 - A **major** version is the only one that breaks the public API.
