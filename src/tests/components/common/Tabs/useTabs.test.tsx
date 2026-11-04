@@ -7,11 +7,12 @@ import { axe } from '@tests/axe.ts'
 import { useTabs } from '@components/common/Tabs/useTabs.ts'
 
 import type { UseTabsOptions } from '@components/common/Tabs/types.ts'
+import type { RefObject } from 'react'
 
 interface ShellProps extends UseTabsOptions {
   listProps?: Record<string, unknown>
-  tabProps?: (index: number) => Record<string, unknown>
-  panelProps?: (index: number) => Record<string, unknown>
+  tabProps?: (value: string) => Record<string, unknown>
+  panelProps?: (value: string) => Record<string, unknown>
 }
 
 const items = [{ value: 'one' }, { value: 'two' }, { value: 'three' }]
@@ -24,15 +25,15 @@ const Shell = ({ listProps, tabProps, panelProps, ...options }: ShellProps) => {
   return (
     <div>
       <div {...tabs.getListProps({ 'aria-label': 'Sections', ...listProps })}>
-        {options.items.map((item, index) => (
-          <button key={item.value} {...tabs.getTabProps(index, tabProps?.(index))}>
+        {options.items.map((item) => (
+          <button key={item.value} {...tabs.getTabProps(item.value, tabProps?.(item.value))}>
             {item.value}
           </button>
         ))}
       </div>
 
-      {options.items.map((item, index) => (
-        <div key={item.value} {...tabs.getPanelProps(index, panelProps?.(index))}>
+      {options.items.map((item) => (
+        <div key={item.value} {...tabs.getPanelProps(item.value, panelProps?.(item.value))}>
           {item.value} panel
         </div>
       ))}
@@ -193,6 +194,14 @@ describe('useTabs', () => {
     expect(result.current).toMatchObject({ selected: 'three', activeIndex: 2, tabbableIndex: 2 })
   })
 
+  it('treats a value that is not in the items as a tab that is neither selected nor in the tab order', () => {
+    const { result } = renderHook(() => useTabs({ items: [{ value: 'one', disabled: true }], defaultValue: 'missing' }))
+
+    expect(result.current.activeIndex).toBe(-1)
+    expect(result.current.getTabProps('missing')).toMatchObject({ 'aria-selected': false, tabIndex: -1 })
+    expect(result.current.getPanelProps('missing')).toMatchObject({ hidden: true })
+  })
+
   it('passes the props of the consumer through, and chains its handlers before its own', async () => {
     const user = userEvent.setup()
     const clicked = vi.fn()
@@ -216,38 +225,38 @@ describe('useTabs', () => {
     expect(selectedTab()).toHaveTextContent('three')
   })
 
-  it('leaves its own handler out when the handler of the consumer prevents the default', async () => {
+  it('still runs its own handler when the handler of the consumer prevents the default', async () => {
     const user = userEvent.setup()
 
     render(<Shell items={items} tabProps={() => ({ onClick: (event: { preventDefault: () => void }) => event.preventDefault() })} listProps={{ onKeyDown: (event: { preventDefault: () => void }) => event.preventDefault() }} />)
     await user.click(screen.getByRole('tab', { name: 'two' }))
 
-    expect(selectedTab()).toHaveTextContent('one')
+    expect(selectedTab()).toHaveTextContent('two')
 
     await user.keyboard('{ArrowRight}')
 
-    expect(selectedTab()).toHaveTextContent('one')
+    expect(selectedTab()).toHaveTextContent('three')
   })
 
   it('respects the ids that come from outside, in the references between the tab and the panel', () => {
-    render(<Shell items={items} tabProps={(index) => ({ id: `mine-${index}` })} />)
+    render(<Shell items={items} tabProps={(value) => ({ id: `mine-${value}` })} />)
 
-    expect(screen.getAllByRole('tab').map((tab) => tab.id)).toEqual(['mine-0', 'mine-1', 'mine-2'])
-    expect(screen.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', 'mine-0')
+    expect(screen.getAllByRole('tab').map((tab) => tab.id)).toEqual(['mine-one', 'mine-two', 'mine-three'])
+    expect(screen.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', 'mine-one')
   })
 
   it('keeps the ref of the consumer and its own, and focuses through them', async () => {
     const user = userEvent.setup()
-    const refs = [createRef<HTMLButtonElement>(), createRef<HTMLButtonElement>(), createRef<HTMLButtonElement>()]
+    const refs: Record<string, RefObject<HTMLButtonElement | null>> = { one: createRef(), two: createRef(), three: createRef() }
 
-    render(<Shell items={items} tabProps={(index) => ({ ref: refs[index] })} />)
+    render(<Shell items={items} tabProps={(value) => ({ ref: refs[value] })} />)
 
-    expect(refs.map((ref) => ref.current?.textContent)).toEqual(['one', 'two', 'three'])
+    expect(Object.values(refs).map((ref) => ref.current?.textContent)).toEqual(['one', 'two', 'three'])
 
     await user.tab()
     await user.keyboard('{ArrowRight}')
 
-    expect(refs[1].current).toHaveFocus()
+    expect(refs.two.current).toHaveFocus()
   })
 
   it('has no accessibility violations in a shell of its own', async () => {

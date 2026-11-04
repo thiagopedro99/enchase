@@ -22,8 +22,8 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(({ items, value, defau
   return (
     <div {...root} ref={ref}>
       <div {...tabs.getListProps({ ref: listRef, 'aria-label': ariaLabel, className: styles.list, 'data-indicator': indicator.visible ? '' : undefined, ...slot('tabs', 'list') })}>
-        {items.map((item, index) => (
-          <button key={item.value} {...tabs.getTabProps(index, { className: styles.tab, ...slot('tabs', 'tab') })}>
+        {items.map((item) => (
+          <button key={item.value} {...tabs.getTabProps(item.value, { className: styles.tab, ...slot('tabs', 'tab') })}>
             {item.label}
           </button>
         ))}
@@ -39,8 +39,8 @@ export const Tabs = forwardRef<HTMLDivElement, TabsProps>(({ items, value, defau
         />
       </div>
 
-      {items.map((item, index) => (
-        <div key={item.value} {...tabs.getPanelProps(index, { className: styles.panel, ...slot('tabs', 'panel') })}>
+      {items.map((item) => (
+        <div key={item.value} {...tabs.getPanelProps(item.value, { className: styles.panel, ...slot('tabs', 'panel') })}>
           {item.content}
         </div>
       ))}
