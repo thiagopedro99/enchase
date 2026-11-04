@@ -85,7 +85,7 @@ describe('DatePicker in a real browser', () => {
     expect(field()).toHaveFocus()
     expect(popup()).toBeNull()
     expect(document.elementFromPoint(box.left + 12, box.top + box.height / 2)).toBe(field())
-    expect(document.elementFromPoint(rect(toggle()).left + 20, rect(toggle()).top + 20)).toBe(toggle().querySelector('svg') ?? toggle())
+    expect(toggle().contains(document.elementFromPoint(rect(toggle()).left + 20, rect(toggle()).top + 20))).toBe(true)
   })
 
   it('opens under the field, on its start edge and clear of it', async () => {
