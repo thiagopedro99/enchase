@@ -1,66 +1,58 @@
 import { forwardRef } from 'react'
 
-import { defaultBoundaryCount, defaultPage, defaultSiblingCount, defaultSize } from './defaultData.ts'
-import { useControllableState } from '@hooks/useControllableState.ts'
 import { ChevronRightIcon } from '../Icon/icons/ChevronRightIcon.tsx'
 import { ChevronLeftIcon } from '../Icon/icons/ChevronLeftIcon.tsx'
-import { paginationItems } from '@utils/paginationItems.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { usePagination } from './usePagination.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
+import { defaultSize } from './defaultData.ts'
 import styles from './styles.module.css'
 
 import type { PaginationProps } from './types.ts'
 
-const count = (value: number, fallback: number) => (Number.isFinite(value) ? Math.max(Math.floor(value), 0) : fallback)
+export const Pagination = forwardRef<HTMLElement, PaginationProps>(({ pageCount, page, defaultPage, onPageChange, siblingCount, boundaryCount, size = defaultSize, ariaLabel, animation, ...props }, ref) => {
+  const { labels } = useUIConfig()
+  const pagination = usePagination({ pageCount, page, defaultPage, onPageChange, siblingCount, boundaryCount })
+  const motionStyle = useMotionStyle('fade', 'pagination', animation)
+  const root = mergeProps({ ...slot('pagination'), className: styles.pagination, style: motionStyle, 'data-size': size, 'aria-label': ariaLabel ?? labels.pagination }, props)
 
-export const Pagination = forwardRef<HTMLElement, PaginationProps>(
-  ({ pageCount, page, defaultPage: initialPage = defaultPage, onPageChange, siblingCount = defaultSiblingCount, boundaryCount = defaultBoundaryCount, size = defaultSize, ariaLabel, animation, ...props }, ref) => {
-    const { labels } = useUIConfig()
-    const [selected, setSelected] = useControllableState<number>(page, initialPage, onPageChange)
-    const motionStyle = useMotionStyle('fade', 'pagination', animation)
-    const total = count(pageCount, 0)
-    const current = Math.min(Math.max(count(selected, 1), 1), Math.max(total, 1))
-    const items = paginationItems(current, total, count(siblingCount, defaultSiblingCount), count(boundaryCount, defaultBoundaryCount))
-    const root = mergeProps({ ...slot('pagination'), className: styles.pagination, style: motionStyle, 'data-size': size, 'aria-label': ariaLabel ?? labels.pagination }, props)
+  if (pagination.pageCount < 1) return null
 
-    if (total < 1) return null
+  return (
+    <nav {...root} ref={ref}>
+      <ul className={styles.list} {...slot('pagination', 'list')}>
+        <li className={styles.item}>
+          <button {...pagination.getPreviousProps({ className: styles.control, 'aria-label': labels.previousPage, ...slot('pagination', 'previous') })}>
+            <ChevronLeftIcon size={20} />
+          </button>
+        </li>
 
-    return (
-      <nav {...root} ref={ref}>
-        <ul className={styles.list} {...slot('pagination', 'list')}>
-          <li className={styles.item}>
-            <button type="button" className={styles.control} aria-label={labels.previousPage} aria-disabled={current <= 1 || undefined} onClick={() => current > 1 && setSelected(current - 1)} {...slot('pagination', 'previous')}>
-              <ChevronLeftIcon size={20} />
-            </button>
-          </li>
+        {pagination.items.map((item) =>
+          typeof item === 'number' ? (
+            <li key={item} className={styles.item}>
+              <button {...pagination.getPageProps(item, { className: styles.control, ...slot('pagination', 'page') })}>
+                {item}
+              </button>
+            </li>
+          ) : (
+            <li key={item} className={styles.item} aria-hidden="true">
+              <span className={styles.ellipsis} {...slot('pagination', 'ellipsis')}>
+                …
+              </span>
+            </li>
+          )
+        )}
 
-          {items.map((item) =>
-            typeof item === 'number' ? (
-              <li key={item} className={styles.item}>
-                <button type="button" className={styles.control} aria-current={item === current ? 'page' : undefined} onClick={() => setSelected(item)} {...slot('pagination', 'page')}>
-                  {item}
-                </button>
-              </li>
-            ) : (
-              <li key={item} className={styles.item} aria-hidden="true">
-                <span className={styles.ellipsis} {...slot('pagination', 'ellipsis')}>
-                  …
-                </span>
-              </li>
-            )
-          )}
-
-          <li className={styles.item}>
-            <button type="button" className={styles.control} aria-label={labels.nextPage} aria-disabled={current >= total || undefined} onClick={() => current < total && setSelected(current + 1)} {...slot('pagination', 'next')}>
-              <ChevronRightIcon size={20} />
-            </button>
-          </li>
-        </ul>
-      </nav>
-    )
-  }
-)
+        <li className={styles.item}>
+          <button {...pagination.getNextProps({ className: styles.control, 'aria-label': labels.nextPage, ...slot('pagination', 'next') })}>
+            <ChevronRightIcon size={20} />
+          </button>
+        </li>
+      </ul>
+    </nav>
+  )
+})
 
 Pagination.displayName = 'Pagination'
 
