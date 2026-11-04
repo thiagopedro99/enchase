@@ -1,5 +1,38 @@
 # Changelog
 
+## v0.16.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.15.0...v0.16.0)
+
+### Enhancements
+
+- Ship the component sources in the package ([016274f](https://github.com/thiagopedro99/enchase/commit/016274f))
+- Add the eject command ([c8994de](https://github.com/thiagopedro99/enchase/commit/c8994de))
+- Leave the icons and the theme types to the package in the copies ([9f6b5d8](https://github.com/thiagopedro99/enchase/commit/9f6b5d8))
+- Write the license and a manifest next to the copies ([c4e9945](https://github.com/thiagopedro99/enchase/commit/c4e9945))
+- Compare the copies with the library with eject --diff ([d12060e](https://github.com/thiagopedro99/enchase/commit/d12060e))
+
+### Fixes
+
+- Redraw the calendar icon with a geometry of its own ([02afa8c](https://github.com/thiagopedro99/enchase/commit/02afa8c))
+
+### Refactors
+
+- Share contexts and module state between copies of a module ([680d71f](https://github.com/thiagopedro99/enchase/commit/680d71f))
+
+### Notes
+
+- No breaking change. New: the `enchase eject` command, which copies the source of a component into your project so that the code is yours. It is experimental in 0.16 and 0.17: the command, its options and the format of `enchase.eject.json` can still change in a minor. The components, their DOM and their CSS are as in 0.15.0 apart from the calendar icon (below): since that release no `.css` file and no `index.tsx` of a component changed, and the only other code that did is the twelve modules of the shared state described below.
+- `enchase eject <Component...>` copies the component and what only it uses (its hooks, its utilities, its CSS Module, and the tokens, the motion and the positioning code that it needs) into `src/enchase` (`--dir` changes the folder), keeping the layout of the library. What the package already exports stays in the package, and the copy imports it from `enchase`: the other components, `useUIConfig`, the types, the icons (`enchase/icons`) and the theme types (`enchase/theme`). A copy is small: the median is 11 files, with `Button` at 9 (the CSS Module included), `Tabs` 12, `Menu` 28, `DatePicker` 45, `Combobox` 49, and the composite `Layout`, `Navbar` and `Footer` at 35, 30 and 7. Forty-eight names can be ejected: every component of the package, apart from the providers. `UIProvider`, `ColorModeProvider`, `ToastProvider`, the styles and the theme cannot, because they hold the state that everything shares or they are data. `--list` prints what can be ejected, and `--force` overwrites a file that already exists and differs from the library (without it the command stops before it writes anything).
+- What a copy needs: a bundler that handles `*.module.css`, React 19, and `moduleResolution` set to `bundler` or `node` (the imports have no extension, so `allowImportingTsExtensions` is not needed). The entry of every copy starts with `'use client'`, as the package does, so a copy works inside a tree of Server Components, and its CSS reads the same `--enchase-*` hooks, so the theme, the styles and your own hooks keep applying. The command writes `LICENSE` and `enchase.eject.json` next to the copies: the first carries the license of the code (the files carry no header, because the project does not comment code), and the second records the version and a hash of every file as it was ejected.
+- `enchase eject --diff <Component...>` tells what changed, on each side, since the ejection: for every file it compares yours with the library installed now and with the hash that was recorded, and says `library` (only the library changed it), `yours`, `both`, `new` or `missing`, with a unified diff of the files that the library changed. It writes nothing and exits with 1 when the library changed a file, so a CI job can tell that a copy is behind. Nothing updates a copy, and the accessibility contract of the package holds for what the package publishes, not for the copy: EJECT.md has the policy.
+- One state for the package and the copies: the eight contexts (the configuration of the `UIProvider`, the two of the navigation, the color mode, the defaults of the theme, the control and the tree of the popovers, and the toasts) and the four holders of state (the stack of overlays, the lock of the page scroll, the last element that was used, and the listeners of the stored color mode) now live on `globalThis`, under `Symbol.for('enchase.<name>.v1')`. Without that, an ejected `Modal` over a `Drawer` of the package would release the scroll of the page when the Drawer closed, and the Escape key would not know which layer is on top. Twelve tests fail without the change, and `src/tests/singletons.test.ts` fails when a module keeps a new context or state at its top outside `shared()`.
+- Weight: the sources travel in the package, in a folder that is not an entry, so nothing imports them and no bundle carries them: 638 to 940 files, 288.5 to 402.6 kB packed (114 kB more) and 1.5 to 2.2 MB unpacked. In JavaScript (gzip, per module) the shared state adds 64 B to `Button`, 92 B to `Menu`, 150 B to `Drawer`, 104 B to `Combobox`, 113 B to `DatePicker` and 72 B to `ColorModeProvider`, and the icons, `createTheme` and the styles do not change.
+- The calendar icon was redrawn; it is the only visible change in the icons. `CalendarIcon`, the one of the `DatePicker`, has a geometry of its own now: the box is 18 by 16 with corners of 3 (it was 18 by 18 with corners of 2), the pins go from 3 to 7 and the line of the header is at 11, so the icon is 2 px lower and a little rounder. `enchase/icons` still exports the same 20 names, and the other 19 icons are as they were.
+- Checked: `npm run test:eject`, new and part of the `package` workflow, packs the library, installs it in a project and runs the installed command to eject the 48 names, compiles them with `tsc`, bundles them with Vite, renders `Button`, `Tabs`, `Menu` and `Pagination` on the server inside the `UIProvider` of the package (the `Pagination` reads its labels from it), checks `--list`, that a second ejection writes nothing, that a changed file stops the command, `--force` and the `yours`, `library` and `both` states of `--diff`, and then runs the jsdom specs of `Button`, `Tabs` and `Menu` (130 tests) against the copies. `test:next` renders three ejected components in a page that is a Server Component, and fails when a copy loses its `'use client'`. The redrawn icon was checked in the `Gallery` story of the `Icon`, and the jsdom and Chromium specs of the `Icon` and of the `DatePicker` pass (one spec of the `DatePicker` clicked a point of the toggle that the new line of the header now covers, so it asks that the point is inside the toggle instead of on its `svg`).
+- Screen readers: nothing changed in the roles, the names and the states that the components render (the calendar icon is decorative), and the README still says that nothing was tested with NVDA, JAWS or VoiceOver.
+- Docs: `EJECT.md` (shipped in the package), a section in `README.md` and in `README.pt-BR.md`, and the rules for new modules in `skill.md`.
+
 ## v0.15.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.14.0...v0.15.0)
