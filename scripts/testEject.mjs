@@ -140,6 +140,53 @@ try {
 
   expect(readFileSync(button, 'utf8') === original, '--force must put the file of the library back')
 
+  const outcome = (args) => {
+    try {
+      return { code: 0, output: capture(command, args, consumer) }
+    } catch (error) {
+      return { code: error.status, output: `${error.stdout}${error.stderr}` }
+    }
+  }
+
+  const compare = ['eject', '--diff', 'Button', '--dir', 'src/enchase']
+  const unchanged = outcome(compare)
+
+  expect(unchanged.code === 0 && unchanged.output.includes('the copy is the library'), '--diff must say that a copy that nobody touched is the library')
+
+  const types = join(folder, 'components', 'common', 'Button', 'types.ts')
+  const typesOriginal = readFileSync(types, 'utf8')
+
+  writeFileSync(types, `${typesOriginal}\nexport const mine = 1\n`)
+
+  const yours = outcome(compare)
+
+  expect(yours.code === 0 && /yours\s+components\/common\/Button\/types\.ts/.test(yours.output), '--diff must name the file that you changed, and exit with 0 while the library has not changed anything')
+
+  const styles = join(folder, 'components', 'common', 'Button', 'styles.module.css')
+  const libraryStyles = join(consumer, 'node_modules', 'enchase', 'eject', 'files', 'components', 'common', 'Button', 'styles.module.css')
+  const stylesOriginal = readFileSync(styles, 'utf8')
+
+  writeFileSync(libraryStyles, `${stylesOriginal}\n.extra { color: red; }\n`)
+
+  const changed = outcome(compare)
+
+  expect(changed.code === 1 && /library\s+components\/common\/Button\/styles\.module\.css/.test(changed.output) && changed.output.includes('+.extra { color: red; }'), '--diff must show what the library changed, and exit with 1')
+
+  writeFileSync(styles, `${stylesOriginal}\n.extra { color: blue; }\n`)
+
+  const both = outcome(compare)
+
+  expect(both.code === 1 && /both\s+components\/common\/Button\/styles\.module\.css/.test(both.output), '--diff must tell a file that both sides changed')
+
+  writeFileSync(libraryStyles, stylesOriginal)
+  writeFileSync(styles, stylesOriginal)
+  writeFileSync(types, typesOriginal)
+
+  const elsewhere = outcome(['eject', '--diff', 'Button', '--dir', 'src/other'])
+
+  expect(elsewhere.code === 1 && elsewhere.output.includes('does not exist'), '--diff must refuse a folder where nothing was ejected')
+  expect(outcome(compare).output.includes('the copy is the library'), 'the copies must be the library again after the changes of the test are undone')
+
   writeFileSync(join(consumer, 'src', 'main.tsx'), mainSource)
   writeFileSync(join(consumer, 'src', 'smoke.tsx'), smokeSource)
 
