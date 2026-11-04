@@ -1,5 +1,36 @@
 # Changelog
 
+## v0.18.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.17.0...v0.18.0)
+
+### Enhancements
+
+- Add experimental entries for the headless hooks ([d660cf0](https://github.com/thiagopedro99/enchase/commit/d660cf0))
+
+### Refactors
+
+- Extract the behavior of the tabs into a hook ([cda6739](https://github.com/thiagopedro99/enchase/commit/cda6739))
+- Take the tab and the panel by value in the tabs hook ([27b04ec](https://github.com/thiagopedro99/enchase/commit/27b04ec))
+- Drop the id registry from the tabs hook ([5038893](https://github.com/thiagopedro99/enchase/commit/5038893))
+- Extract the behavior of the pagination into a hook ([bf1d299](https://github.com/thiagopedro99/enchase/commit/bf1d299))
+- Extract the behavior of the segmented control into a hook ([b39f838](https://github.com/thiagopedro99/enchase/commit/b39f838))
+- Extract the behavior of the accordion into a hook ([3edc2a2](https://github.com/thiagopedro99/enchase/commit/3edc2a2))
+- Extract the behavior of the slider into a hook ([8e02336](https://github.com/thiagopedro99/enchase/commit/8e02336))
+- Type the props that the getters of the hooks take ([e5cfe6b](https://github.com/thiagopedro99/enchase/commit/e5cfe6b))
+
+### Notes
+
+- No breaking change. `Tabs`, `Pagination`, `SegmentedControl`, `Accordion` and `Slider` keep their props, their CSS and their DOM: the three stylesheets of the package (`styles.css`, `styles.layer.css` and `theme.css`) are byte for byte the ones of 0.17.0, no `.css` file, no test and no story of those components changed, and rendered on the server in 3,440 cases (the combinations of the props that change their markup) the HTML has the same elements, attributes and values as in 0.17.0, with one difference, the order of the attributes of some elements (below). New: five experimental entries, `enchase/experimental/tabs`, `enchase/experimental/pagination`, `enchase/experimental/segmented-control`, `enchase/experimental/accordion` and `enchase/experimental/slider`, each with the hook that holds the behavior of that component (the state, the keyboard, the roles and the ARIA attributes) and the prop getters that you spread on your own markup, with no CSS and no markup of the library.
+- The five components are now built on those hooks: they call their hook, spread what its getters return and keep what is theirs (the markup, the `data-*` states, the labels of the `UIProvider`). Of the 3,440 renders, 1,040 are identical to the byte, and in the other 2,400 only the order of the attributes of some elements changed: in the buttons of `Pagination`, `aria-disabled` and `aria-current` now come before `class`; in the thumb of the `Slider`, `aria-label` and `aria-labelledby` come after `aria-valuenow`; and in an item of the `SegmentedControl` that has an `aria-label`, it comes after `disabled` and not before `tabindex`. The browser does not care; it shows only in a test that snapshots the HTML of those elements, and such a snapshot changes once. The tests of the five components did not change and pass in jsdom and in real Chromium, Firefox and WebKit.
+- The hooks are experimental: they and their types can change in a minor, the notes list every change, and they do not count for the three minor versions in a row without a break that 1.0 asks for. A hook is promoted when its signature stays the same for two minor versions in a row, HEADLESS.md covers it and a spec in real browsers covers its focus and its pointer (VERSIONING.md says so), and the notes of that release say where it lives from then on.
+- The getters take the value of the item (the page, in `Pagination`): `getTabProps(value)`, `getPanelProps(value)`, `getItemProps(value)`, `getTriggerProps(value)` and `getPageProps(page)`, with `getListProps`, `getGroupProps`, `getControlProps`, `getTrackProps`, `getThumbProps`, `getPreviousProps` and `getNextProps` for the parts that are not of an item. The optional last argument takes your props: your handlers run first and the handler of the hook runs after them even when yours calls `preventDefault()`, your `ref` is kept, and your `id` and the other props win. Its type is the attributes of an HTML element plus what you pass, so a handler is typed by its event and a literal `style` compiles. The ids that tie a tab or a trigger to its panel come from `useId` and from the position of the value, and a getter never rewrites what another one gives.
+- Each entry starts with `'use client'`, carries no CSS, no component and no other hook, and exports its hook and the types of its options and of what it returns (`UseTabsOptions` and `UseTabsReturn`, and `PaginationItem` for `usePagination`). The package has 16 exports, against 11. `enchase eject` copies a hook with its component, as a file of the copy, and no copy imports `enchase/experimental`.
+- Weight: the package goes from 950 to 980 files and from 412.7 to 425.3 kB packed (the hooks, the entries and their types, and HEADLESS.md). The five components weigh more, because they go through the getters (`composeProps`, `mergeRefs` and one function for each part). Bundled on their own, minified and in gzip, `Tabs` goes from 12,866 B and 5,194 B to 14,148 B and 5,560 B, `Pagination` from 12,740 B and 4,893 B to 13,587 B and 5,126 B, `SegmentedControl` from 12,554 B and 5,094 B to 13,638 B and 5,410 B, `Accordion` from 12,562 B and 5,022 B to 13,667 B and 5,356 B, and `Slider` from 13,618 B and 5,344 B to 14,897 B and 5,713 B (233 to 369 B more in gzip). Nothing else changes: `Button` is 8,343 B and 3.4 kB in both. A hook alone is 2.1 to 4.1 kB minified and 1.0 to 1.8 kB in gzip (`useTabs` 2,884 B and 1,336 B, `usePagination` 2,102 B and 1,011 B, `useSegmentedControl` 4,107 B and 1,781 B, `useAccordion` 2,552 B and 1,203 B, `useSlider` 4,065 B and 1,770 B), and each has a budget in `npm run test:size`.
+- Checked: `npm run test:consumer` compiles the examples of README.md and HEADLESS.md (11 blocks) and a component that calls the five hooks against the packed package, with `strict`, `exactOptionalPropertyTypes` and `skipLibCheck: false`, and it also checks that a handler without a type and a literal `style` compile in the argument of a getter; `npm run test:next` renders a Client Component with the five hooks under a Server Component page (8 more checks); `npm run test:eject` fails when a copy imports `enchase/experimental` or has no hook; `scripts/checkPackage.mjs` fails when an experimental entry loses its `'use client'` or reaches a component, a stylesheet or another hook; and five specs with 23 tests, in Chromium, Firefox and WebKit, run the five hooks on bare markup (focus, keyboard, pointer and right to left).
+- Screen readers: nothing changed in what the components render (the roles, the names and the states are the same), and the README still says that nothing was tested with NVDA, JAWS or VoiceOver. A hook gives the roles, the states and the keyboard; the names and the markup that you write with it are yours.
+- Docs: `HEADLESS.md` (shipped in the package), a section in `README.md` and in `README.pt-BR.md`, the section "Experimental hooks" of `API.md`, the criterion of promotion in `VERSIONING.md`, a row in `ACCESSIBILITY.md` and the rules of the hooks in `skill.md`.
+
 ## v0.17.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.16.0...v0.17.0)
