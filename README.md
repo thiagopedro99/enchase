@@ -39,7 +39,7 @@ The versions of React, the browsers and Node that the library supports are in th
 | Firefox | 129 | Firefox, the one of Playwright (`npm run test:browser:firefox`) |
 | Safari | 17.5 | WebKit, the one of Playwright on Linux (`npm run test:browser:webkit`): Safari itself is not tested |
 | iOS Safari | 17.5 | the same WebKit: an iPhone is not tested |
-| Node | 20 | 22, the version that CI runs |
+| Node | 22 | 22, the version that CI runs |
 | Next.js | not declared | 15 (`npm run test:next`), with the App Router and Server Components |
 | Vite | not declared | 8 (`npm run test:eject`) |
 

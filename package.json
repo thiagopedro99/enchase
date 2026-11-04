@@ -128,7 +128,7 @@
     "react-dom": "^19.0.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
