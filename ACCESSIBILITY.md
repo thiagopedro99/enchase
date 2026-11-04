@@ -26,13 +26,87 @@ The real-browser suite runs on the latest Chromium, Firefox and WebKit of Playwr
 
 ## What is not tested
 
-- **The speech of screen readers.** Nothing was tested with NVDA, JAWS or VoiceOver: the roles, the names and the states are tested, and what a screen reader says about them is not. The issue "Test the components with NVDA, JAWS and VoiceOver" tracks it, and it is one of the criteria for 1.0.
+- **The speech of screen readers.** Nothing was tested with NVDA, JAWS or VoiceOver: the roles, the names and the states are tested, and what a screen reader says about them is not. The issue "Test the components with NVDA, JAWS and VoiceOver" tracks it, and it is one of the criteria for 1.0. The script of the test and an empty table for the results are in the section "Screen reader tests, not run yet", below.
 - **Safari and iOS themselves.** WebKit on Linux stands in for them, and a manual review in real Safari is still needed. Edge is not tested apart from Chromium.
 - **Windows high contrast (`forced-colors`).** A few rules exist, for the navbar, the segmented control and the textarea, and the mode is not tested in a real browser.
 - **Zoom and reflow.** The layout is tested at the widths of the breakpoints, and not at 400% of zoom.
 - **Voice control, switch devices and magnifiers.**
 - **The contrast of a custom theme written in `hsl()`, `oklch()` or `oklab()`.** Those formats are not measured, and the warning says how many pairs went unchecked.
 - **Manual audits and tests with people.**
+
+## Screen reader tests, not run yet
+
+Nothing in this section has been run. It is the script and the table for the test that [the criterion for 1.0](https://github.com/thiagopedro99/enchase/issues/9) asks for, and the README keeps saying that nothing was tested until the table has results.
+
+### How
+
+Open each story in the [Storybook](https://enchase.othiagosilva.com.br/docs/) (`iframe.html?id=<story>` shows only the story), and test in these combinations:
+
+| Screen reader | System and browser |
+| --- | --- |
+| NVDA | Windows, with Firefox and with Chrome |
+| JAWS | Windows, with Chrome |
+| VoiceOver | macOS, with Safari |
+| VoiceOver | iOS, with Safari |
+
+For each line of the script, do the step with the keyboard (on iOS, with the swipe and double tap gestures) and write down what was said about the name, the role, the state, the position in a set when there is one, and the change that the step causes. What the column "Listen for" lists is what the markup says, which the jsdom tests and axe already check: the test is about what each reader does with it. Write the version of the reader and of the browser once, at the top of its column. In a cell, `ok` means that what was said covers the column "Listen for", `differs` is followed by the words that were said, and `not announced` means that nothing was. Each `differs` and `not announced` is an issue of its own, with the component, the reader, its version and what was said, and it stays in this file until it is fixed or documented.
+
+### The script
+
+| Component | Stories | Do | Listen for |
+| --- | --- | --- | --- |
+| Tabs | `components-tabs--playground` | Tab into the list, then ← and →, then Tab again. | The name of the list; each tab as a tab, with its name, selected or not, and its position; the panel when the focus enters it. |
+| Accordion | `components-accordion--playground` | Tab to a header, Enter, then ↓ and ↑ between headers. | The header as a button, with the level of its heading, expanded or collapsed; the content after it opens. |
+| SegmentedControl | `components-segmentedcontrol--playground`, `components-segmentedcontrol--multiple` | Tab in, then ← and →. In the multiple story, Space on each button. | The name of the group; each option as a radio button, checked or not, or as a toggle button, pressed or not. |
+| RadioGroup | `components-radiogroup--playground`, `components-radiogroup--with-error` | Tab in, then the arrows. | The name of the group; each radio button with its state and position; the error. |
+| Checkbox and CheckboxGroup | `components-checkbox--with-error`, `components-checkboxgroup--with-error` | Tab in, then Space. | The name; checked or not; the name of the group; the error when it is invalid. |
+| Switch | `components-switch--playground` | Tab in, then Space. | The name; the role of switch; on or off. |
+| Slider | `components-slider--playground` | Tab to the thumb, then ←, →, Home, End and PageUp. | The name; the value with its minimum and maximum, or the formatted text; the new value after every key. |
+| NumberInput | `components-numberinput--playground`, `components-numberinput--with-error` | Type a number, then ↑ and ↓, then the step buttons. | A spin button with its value, minimum and maximum; the names of the step buttons; the new value after a step; the error. |
+| Select | `components-select--playground`, `components-select--with-error` | Open the list and move through the options. | The label; the selected value; the options; the error. |
+| Combobox | `components-combobox--playground`, `components-combobox--multiple` | Type to filter, then ↓, Enter and Esc. | A combobox, expanded or collapsed; the option that is active; the options that are selected; the number of results or that there are none. |
+| DatePicker | `components-datepicker--playground` | Open the calendar, move with the arrows and with PageUp and PageDown, choose a day. | The dialog and its name; the grid; each day with its state (selected, today, unavailable); the month announced when it changes; the focus coming back. |
+| Menu | `components-menu--playground` | Open with Enter or ↓, move, choose an item, then open again and press Esc. | The button that opens it, expanded with a popup; each item with its name; the focus coming back to the button. |
+| Popover | `components-popover--playground` | Open it, Tab inside, then Esc. | The trigger as expanded or collapsed; the content; the focus coming back. |
+| Modal and ConfirmModal | `components-modal--playground`, `components-confirmmodal--playground` | Open it, Tab around, then Esc. | The dialog (or alert dialog) with its name; its description read when it opens; the focus staying inside, and coming back. |
+| Drawer | `components-drawer--playground` | Open it, Tab around, then Esc. | The dialog and its name; the focus staying inside, and coming back. |
+| Tooltip | `components-tooltip--playground` | Focus the trigger. | The text of the tooltip, read as the description of the trigger. |
+| Pagination | `components-pagination--playground` | Tab through the buttons and press one. | The navigation landmark and its name; each page button; the current page; the previous or the next button as unavailable at the ends. |
+| Breadcrumbs | `components-breadcrumbs--playground`, `components-breadcrumbs--collapsed` | Tab through the links. | The navigation landmark; the links; the current page; the button that shows the whole path when it is collapsed. |
+| Navbar | `components-navbar--playground` | In a narrow window, Tab to the menu button and open it. | The navigation landmarks and their names; the current item; the menu button, expanded or collapsed. |
+| Table | `components-table--sortable`, `components-table--selectable`, `components-table--loading` | Move through the cells, activate a sortable header, select a row. | The name of the table; the column header read with each cell; the direction of the sort; the rows that are selected; that it is busy. |
+| Alert and Toast | `components-alert--playground`, `components-toast--playground` | Show an alert, then a toast. | The message announced when it appears, without the focus moving; the name of the close button. |
+| Input and Textarea | `components-input--with-error`, `components-textarea--with-error` | Tab in and type. | The label; the helper text as the description; the field as invalid; the error announced. |
+| Progress and Loading | `components-progress--with-value`, `components-loading--playground` | Reach them with the reading cursor. | The progress bar with its value; the loading status announced. |
+
+### The results
+
+| Component | NVDA | JAWS | VoiceOver macOS | VoiceOver iOS |
+| --- | --- | --- | --- | --- |
+| Version and browser | | | | |
+| Tabs | | | | |
+| Accordion | | | | |
+| SegmentedControl | | | | |
+| RadioGroup | | | | |
+| Checkbox and CheckboxGroup | | | | |
+| Switch | | | | |
+| Slider | | | | |
+| NumberInput | | | | |
+| Select | | | | |
+| Combobox | | | | |
+| DatePicker | | | | |
+| Menu | | | | |
+| Popover | | | | |
+| Modal and ConfirmModal | | | | |
+| Drawer | | | | |
+| Tooltip | | | | |
+| Pagination | | | | |
+| Breadcrumbs | | | | |
+| Navbar | | | | |
+| Table | | | | |
+| Alert and Toast | | | | |
+| Input and Textarea | | | | |
+| Progress and Loading | | | | |
 
 ## Reporting a problem
 

@@ -266,7 +266,7 @@ Verified by automated tests:
 
 Not guaranteed:
 
-- Full WCAG conformance. The library checks what its tokens and tests cover, and it does not replace an audit or testing with screen readers: nothing was tested with NVDA, JAWS or VoiceOver, and manual review in real Safari is still needed.
+- Full WCAG conformance. The library checks what its tokens and tests cover, and it does not replace an audit or testing with screen readers: nothing was tested with NVDA, JAWS or VoiceOver (the script for that test is in [ACCESSIBILITY.md](ACCESSIBILITY.md#screen-reader-tests-not-run-yet) and has not been run), and manual review in real Safari is still needed.
 - The contrast of custom themes written in `hsl()`, `oklch()` or `oklab()`. Those formats are not measured, and the warning says how many pairs went unchecked.
 - Velocity gestures (swipe to dismiss, inertia) and a Material 3 style. They don't exist yet.
 - The compact density outside the built-in styles. The default block is a set of absolute values chosen for `enchase` and `shadcn` (`workbench` brings its own compact): a style of your own, made with `defineStyle`, receives the same block and can replace it with its own compact (`density`), but the values it declares are its own and the library does not check them against the default size of the style, so in a style whose default is already denser, some parts may not compact, or may even grow (the floor of 24 px still holds).
