@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { consumerCss } from './consumerCss.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const { exports } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+const { exports, files, version } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 
 const targets = (value) => (typeof value === 'string' ? [value] : Object.values(value).flatMap(targets))
 
@@ -126,9 +126,23 @@ for (const [where, css] of themeStylesheets) {
   }
 }
 
+const kitIndex = join(root, 'eject', 'index.json')
+
+if (!files.includes('eject')) leaks.push('the eject folder is not in the files of the package, so the sources that the eject command copies are not published')
+if (JSON.stringify(exports).includes('/eject/')) leaks.push('an export points into the eject folder: the sources are copied by the command, and an import of them would put a second copy of a component in a bundle')
+
+if (!existsSync(kitIndex)) leaks.push('eject/index.json is missing, so the package ships no sources to copy')
+else {
+  const kit = JSON.parse(readFileSync(kitIndex, 'utf8'))
+  const lacking = Object.values(kit.entries).flatMap((entry) => entry.files).filter((file) => !existsSync(join(root, 'eject', 'files', file)))
+
+  if (kit.version !== version) leaks.push(`eject/index.json is of ${kit.version} and the package is ${version}: build the kit again`)
+  if (lacking.length > 0) leaks.push(`eject/index.json lists files that the kit does not have: ${lacking.join(', ')}`)
+}
+
 if (leaks.length > 0) {
   console.error(`the package is not as it should be:\n${leaks.map((leak) => `  - ${leak}`).join('\n')}`)
   process.exit(1)
 }
 
-console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches (${jsEntries.length} entries walked), the css mirrors right to left from the dir attribute, as published and after the default build of Vite, and the compact density block is in theme.css once, behind the attribute on the root, and in no other stylesheet`)
+console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches (${jsEntries.length} entries walked), the css mirrors right to left from the dir attribute, as published and after the default build of Vite, and the compact density block is in theme.css once, behind the attribute on the root, and in no other stylesheet, and the eject kit has every file that it lists, out of the exports`)
