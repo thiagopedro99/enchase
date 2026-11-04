@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -19,6 +20,10 @@ const fail = (message) => {
   console.error(`enchase: ${message}`)
   process.exit(1)
 }
+
+const hashOf = (path) => createHash('sha256').update(readFileSync(path, 'utf8').replace(/\r\n/g, '\n')).digest('hex').slice(0, 16)
+
+const sorted = (object) => Object.fromEntries(Object.entries(object).sort(([a], [b]) => a.localeCompare(b)))
 
 const parse = (argv) => {
   const options = { dir: 'src/enchase', force: false, list: false, help: false }
@@ -85,7 +90,7 @@ const files = [...new Set(names.flatMap((name) => kit.entries[kit.components[nam
 const plan = files.map((file) => {
   const from = join(kitRoot, 'files', ...file.split('/'))
   const to = join(destination, ...file.split('/'))
-  const status = !existsSync(to) ? 'new' : readFileSync(from).equals(readFileSync(to)) ? 'same' : 'different'
+  const status = !existsSync(to) ? 'new' : hashOf(from) === hashOf(to) ? 'same' : 'different'
 
   return { file, from, to, status }
 })
@@ -101,6 +106,37 @@ written.forEach((item) => {
   copyFileSync(item.from, item.to)
 })
 
+const manifestPath = join(destination, 'enchase.eject.json')
+const licensePath = join(destination, 'LICENSE')
+
+const previous = (() => {
+  if (!existsSync(manifestPath)) return { components: {}, files: {} }
+
+  try {
+    return JSON.parse(readFileSync(manifestPath, 'utf8'))
+  } catch {
+    return fail(`${join(options.dir, 'enchase.eject.json')} is not valid JSON; fix it or delete it, and run the command again`)
+  }
+})()
+
+if (!existsSync(licensePath)) copyFileSync(join(packageRoot, 'LICENSE'), licensePath)
+
+writeFileSync(
+  manifestPath,
+  `${JSON.stringify(
+    {
+      package: 'enchase',
+      version: kit.version,
+      license: kit.license,
+      repository: kit.repository,
+      components: sorted({ ...previous.components, ...Object.fromEntries(names.map((name) => [name, kit.version])) }),
+      files: sorted({ ...previous.files, ...Object.fromEntries(plan.map((item) => [item.file, hashOf(item.from)])) })
+    },
+    null,
+    2
+  )}\n`
+)
+
 const importPath = (name) => {
   const path = relative(process.cwd(), join(destination, ...kit.components[name].split('/'))).split(sep).join('/')
   const bare = path.replace(/\.tsx?$/, '').replace(/\/index$/, '')
@@ -110,4 +146,5 @@ const importPath = (name) => {
 
 console.log(`ejected ${names.join(', ')} into ${options.dir}: ${written.length} files written, ${plan.length - written.length} already there`)
 names.forEach((name) => console.log(`  ${name}: ${importPath(name)}`))
-console.log('The copies import from "enchase" (components, hooks and the provider), so keep it installed, and their styles are CSS Modules, so your bundler has to handle *.module.css.')
+console.log('The copies import from "enchase" (components, hooks, icons and the provider), so keep it installed, and their styles are CSS Modules, so your bundler has to handle *.module.css.')
+console.log('LICENSE and enchase.eject.json are next to the copies: keep them, the first carries the license of the code.')

@@ -104,9 +104,20 @@ try {
 
   expect(first.includes('ejected'), 'enchase eject did not say what it did')
 
+  const folder = join(consumer, 'src', 'enchase')
+  const installed = JSON.parse(readFileSync(join(consumer, 'node_modules', 'enchase', 'package.json'), 'utf8'))
+  const recorded = JSON.parse(readFileSync(join(folder, 'enchase.eject.json'), 'utf8'))
+  const copied = new Set(names.flatMap((name) => kit.entries[kit.components[name]].files))
+
+  expect(readFileSync(join(folder, 'LICENSE'), 'utf8') === readFileSync(join(root, 'LICENSE'), 'utf8'), 'the license of the package must be next to the copies')
+  expect(recorded.version === installed.version && recorded.license === 'MIT', 'the manifest must carry the version and the license of the package')
+  expect(names.every((name) => recorded.components[name] === installed.version), 'the manifest must list every component that was ejected, with its version')
+  expect(Object.keys(recorded.files).length === copied.size && Object.values(recorded.files).every((hash) => /^[0-9a-f]{16}$/.test(hash)), 'the manifest must hold a hash for every file that was copied')
+
   const again = capture(command, ['eject', 'Button', '--dir', 'src/enchase'], consumer)
 
   expect(again.includes('0 files written'), 'ejecting a component twice must not write anything the second time')
+  expect(JSON.stringify(JSON.parse(readFileSync(join(folder, 'enchase.eject.json'), 'utf8'))) === JSON.stringify(recorded), 'ejecting a component again must keep what the manifest says of the others')
 
   const button = join(consumer, 'src', 'enchase', kit.components.Button)
   const original = readFileSync(button, 'utf8')
