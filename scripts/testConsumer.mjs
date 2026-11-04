@@ -8,7 +8,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
 const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
-const readmeSnippets = [...readFileSync(join(root, 'README.md'), 'utf8').matchAll(/```tsx\n([\s\S]*?)```/g)].map((match) => match[1])
+const readmeSnippets = ['README.md', 'HEADLESS.md'].flatMap((file) => [...readFileSync(join(root, file), 'utf8').matchAll(/```tsx\n([\s\S]*?)```/g)].map((match) => match[1]))
 const recipe = readFileSync(join(root, 'src', 'docs', 'components', 'FormRecipe', 'index.tsx'), 'utf8')
 const formPackages = ['react-hook-form', 'zod', '@hookform/resolvers']
 const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -268,7 +268,7 @@ try {
   writeFileSync(join(consumer, 'css.d.ts'), "declare module '*.css'\n")
   writeFileSync(join(consumer, 'index.tsx'), entry)
 
-  if (readmeSnippets.length === 0) throw new Error('README.md has no tsx block to compile')
+  if (readmeSnippets.length === 0) throw new Error('README.md and HEADLESS.md have no tsx block to compile')
   if (unpinned.length > 0) throw new Error(`${unpinned.join(', ')} must be devDependencies with an exact version (no ^ or ~), because the consumer compiles the forms recipe against the versions the repository tests`)
 
   mkdirSync(join(consumer, 'readme'))
@@ -317,7 +317,7 @@ try {
 
   if (leaks.length > 0) throw new Error(`the packed enchase must not depend on the packages of the forms recipe, which are only devDependencies:\n${leaks.map((leak) => `  - ${leak}`).join('\n')}`)
 
-  console.log(`consumer, the ${readmeSnippets.length} tsx blocks of the README and the forms recipe (${formPackages.map((name) => `${name}@${formVersions[name]}`).join(', ')}) compiled against enchase@${installed.version} with skipLibCheck: false and exactOptionalPropertyTypes, enchase does not depend on those packages, and enchase/styles alone does not resolve`)
+  console.log(`consumer, the ${readmeSnippets.length} tsx blocks of the README and of HEADLESS.md and the forms recipe (${formPackages.map((name) => `${name}@${formVersions[name]}`).join(', ')}) compiled against enchase@${installed.version} with skipLibCheck: false and exactOptionalPropertyTypes, enchase does not depend on those packages, and enchase/styles alone does not resolve`)
 } finally {
   rmSync(workdir, { recursive: true, force: true })
 }

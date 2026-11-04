@@ -104,6 +104,7 @@ O `GlobalStyles` é opcional. Ele acrescenta uma folha pequena, em `@layer encha
 | `enchase/styles/<nome>` | Um estilo visual por entrada: `enchase/styles/shadcn`, `enchase/styles/workbench` e `enchase/styles/enchase`. Só dados, sem React, e só entra no bundle de quem a importa. |
 | `enchase/locales` | `en` e `ptBR` (`{ locale, dir, messages }`). Só dados. |
 | `enchase/icons` | Os 20 ícones que os componentes usam por dentro, um componente por ícone. Funciona em Server Components. |
+| `enchase/experimental/<nome>` | Um hook sem markup, experimental, por entrada (`tabs`, `pagination`, `segmented-control`, `accordion` e `slider`), com os tipos. Para Client Components, sem CSS e sem componente. |
 | `enchase/styles.css` | CSS dos componentes. |
 | `enchase/styles.layer.css` | O mesmo CSS dentro de `@layer enchase`. |
 | `enchase/theme.css` | Variáveis do tema padrão, claro e escuro, como arquivo estático. |
@@ -931,6 +932,42 @@ A cópia leva o componente e o que só ele usa (hooks, utilitários, o CSS Modul
 Nada atualiza uma cópia. Depois de subir o `enchase`, `--diff` compara cada arquivo com a biblioteca instalada agora e com a versão que você ejetou (registrada em `enchase.eject.json`) e diz quem mudou: `library` (só a biblioteca: `eject --force` traz a nova), `yours`, `both` (junte à mão, com o diff impresso), `new` e `missing`. O comando sai com 1 quando a biblioteca mudou um arquivo. `--force` troca o seu arquivo pelo da biblioteca: faça commit antes.
 
 O código é MIT e o aviso viaja com as cópias: o comando grava `LICENSE` ao lado delas, junto de `enchase.eject.json`; guarde os dois. Uma cópia é código seu: um problema nela vale quando reproduz com o componente da biblioteca. O recurso é experimental na 0.16 e na 0.17, e o [EJECT.md](EJECT.md) tem o resto, em inglês.
+
+## Hooks sem markup (experimental)
+
+Quando o markup precisa ser seu, cinco componentes têm um hook que entrega o comportamento deles (o estado, o teclado, os papéis e os atributos ARIA) e nada do markup nem do CSS: `useTabs`, `usePagination`, `useSegmentedControl`, `useAccordion` e `useSlider`, cada um na sua entrada (`enchase/experimental/tabs`, `enchase/experimental/pagination`, `enchase/experimental/segmented-control`, `enchase/experimental/accordion` e `enchase/experimental/slider`). Os componentes do pacote usam esses mesmos hooks.
+
+```tsx
+'use client'
+
+import { useTabs } from 'enchase/experimental/tabs'
+
+const items = [{ value: 'um' }, { value: 'dois' }]
+
+export const MinhasAbas = () => {
+  const tabs = useTabs({ items })
+
+  return (
+    <div>
+      <div {...tabs.getListProps({ 'aria-label': 'Seções' })}>
+        {items.map((item) => (
+          <button key={item.value} {...tabs.getTabProps(item.value)}>
+            {item.value}
+          </button>
+        ))}
+      </div>
+
+      {items.map((item) => (
+        <div key={item.value} {...tabs.getPanelProps(item.value)}>
+          Painel {item.value}
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+Cada hook devolve o estado e um getter por parte (`getTabProps(value, props?)`, `getPageProps(page, props?)`): você espalha o resultado no seu elemento e passa as suas props no segundo argumento, onde os seus handlers rodam primeiro (e o do hook roda depois, mesmo que o seu chame `preventDefault()`), o seu `ref` é mantido e o seu `id` vence. O estado que o seu CSS precisa (`data-state`, `data-open`) é seu: o hook devolve o estado e você escolhe o atributo. A entrada começa com `'use client'`, não traz CSS nem componente e não lê o `UIProvider`, então todo texto de rótulo é seu, e a direção (RTL) vem do `dir` de um elemento acima. São experimentais na 0.18 e podem mudar numa minor; o [HEADLESS.md](HEADLESS.md), em inglês, tem as regras e um exemplo de cada hook.
 
 ## Densidade
 

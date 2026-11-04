@@ -45,6 +45,8 @@ Before 1.0 the same steps apply when they can, but the removal can come in the n
 
 An entry under `enchase/experimental/*`, and the `enchase eject` command until the notes say that it was promoted, are experimental: they may change or go away in a minor version, and the notes list every change. The path of an experimental entry says so. They do not count for the three minor versions in a row without a break that 1.0 asks for.
 
+A hook of `enchase/experimental/*` is promoted when its signature stays the same for two minor versions in a row, [HEADLESS.md](HEADLESS.md) covers it, and a spec in real browsers covers its focus and its pointer. The notes of the release that promotes it say so, and say where it lives from then on.
+
 ## Which versions get fixes
 
 Fixes, security ones included, go to the latest minor version, as a patch. There are no backports.

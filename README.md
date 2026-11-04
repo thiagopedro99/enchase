@@ -173,6 +173,42 @@ npx enchase eject --diff Button
 
 The copies keep importing from `enchase` whatever the package already exports, and share its contexts and overlays, so they work next to the components of the package. Nothing updates a copy, and `--diff` tells what the library changed since you ejected. It is experimental in 0.16 and 0.17. [EJECT.md](EJECT.md) has the rest: what is copied, what your project needs, and the license that travels with the code.
 
+## Headless hooks
+
+When the markup has to be yours, five components have a hook that gives you their behavior (the state, the keyboard, the roles and the ARIA attributes) and none of their markup or CSS. They are experimental in 0.18:
+
+```tsx
+'use client'
+
+import { useTabs } from 'enchase/experimental/tabs'
+
+const items = [{ value: 'one' }, { value: 'two' }]
+
+export const MyTabs = () => {
+  const tabs = useTabs({ items })
+
+  return (
+    <div>
+      <div {...tabs.getListProps({ 'aria-label': 'Sections' })}>
+        {items.map((item) => (
+          <button key={item.value} {...tabs.getTabProps(item.value)}>
+            {item.value}
+          </button>
+        ))}
+      </div>
+
+      {items.map((item) => (
+        <div key={item.value} {...tabs.getPanelProps(item.value)}>
+          {item.value} panel
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+Each hook has an entry of its own, `enchase/experimental/tabs`, `pagination`, `segmented-control`, `accordion` and `slider`, which starts with `'use client'` and brings no CSS and no component. A getter takes the value of the item and, as a last argument, your own props, where your handlers run first and your `ref` and your `id` are kept. [HEADLESS.md](HEADLESS.md) has the rules and an example of each hook.
+
 ## Density
 
 `data-density="compact"` on `<html>` tightens the whole kit: shorter controls and bars, 32 px targets and a tighter space scale. It is plain CSS, with no prop and no API of its own.
@@ -208,6 +244,7 @@ The Storybook has a Density item in the toolbar and a System/Density page with t
 | `enchase/styles/<name>` | One visual style per entry: `enchase/styles/shadcn`, `enchase/styles/workbench` and `enchase/styles/enchase`. Data only, no React, and only in the bundle of whoever imports it. |
 | `enchase/locales` | `en` and `ptBR` (`{ locale, dir, messages }`). Data only. |
 | `enchase/icons` | The 20 icons the components use inside, one component per icon. Works in Server Components. |
+| `enchase/experimental/<name>` | One experimental headless hook per entry (`tabs`, `pagination`, `segmented-control`, `accordion` and `slider`), with its types. For Client Components, with no CSS and no component. |
 | `enchase/styles.css` | The CSS of the components. |
 | `enchase/styles.layer.css` | The same CSS inside `@layer enchase`. |
 | `enchase/theme.css` | The variables of the default theme, light and dark, as a static file. |
@@ -238,6 +275,7 @@ Not guaranteed:
 
 - [Storybook](https://enchase.othiagosilva.com.br/docs/): every component, interactive, plus the pages about the theme, the shape, the styles, the density and the motion.
 - [EJECT.md](EJECT.md): `enchase eject`, to copy a component into your project and own the code.
+- [HEADLESS.md](HEADLESS.md): the experimental hooks that give the behavior of five components without their markup.
 - [VERSIONING.md](VERSIONING.md): what is the public API, what a breaking change is, how a deprecation works and what experimental means.
 - [ACCESSIBILITY.md](ACCESSIBILITY.md): what is tested, in which engines, and what is not, screen readers included.
 - [MIGRATION.md](MIGRATION.md): what to check when you upgrade, one page for each minor version since 0.13.

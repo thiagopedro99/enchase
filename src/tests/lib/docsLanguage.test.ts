@@ -114,7 +114,7 @@ const entries: Entry[] = [
   ...filesIn('src/docs').filter((file) => file.endsWith('.stories.tsx')).flatMap((file) => propertyTexts(file, inStory)),
   ...filesIn('src/docs/shared').filter((file) => path.posix.dirname(file) === 'src/docs/shared' && file.endsWith('.ts')).flatMap((file) => propertyTexts(file, inShared)),
   ...literalTexts('scripts/apiDocs.mjs'),
-  ...['README.md', 'CONTRIBUTING.md', 'public/llms.txt', ...filesIn('src/docs/pages').filter((file) => file.endsWith('.mdx'))].flatMap(proseTexts)
+  ...['README.md', 'HEADLESS.md', 'CONTRIBUTING.md', 'public/llms.txt', ...filesIn('src/docs/pages').filter((file) => file.endsWith('.mdx'))].flatMap(proseTexts)
 ]
 
 const scanned = [...new Set(entries.map((entry) => entry.file))]
