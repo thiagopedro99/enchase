@@ -10,7 +10,7 @@ const workdir = mkdtempSync(join(tmpdir(), 'enchase-eject-'))
 const contractFolder = join(root, '.eject-contract')
 const run = (command, args, cwd, env = {}) => execFileSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32', env: { ...process.env, ...env } })
 const capture = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'pipe', shell: process.platform === 'win32' }).toString()
-const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
+const installedVersion = (name) => JSON.parse(readFileSync(join(root, 'node_modules', name, 'package.json'), 'utf8')).version
 const kit = JSON.parse(readFileSync(join(root, 'eject', 'index.json'), 'utf8'))
 const names = Object.keys(kit.components).sort()
 const contract = ['Button', 'Tabs', 'Menu']
@@ -94,7 +94,7 @@ try {
   writeFileSync(join(consumer, 'src', 'css.d.ts'), "declare module '*.css'\n")
   writeFileSync(join(consumer, 'smoke.mjs'), smokeRunner)
 
-  run(npm, ['install', '--no-audit', '--no-fund', tarball, 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', 'typescript@5.8', `vite@${manifest.devDependencies.vite}`, `@vitejs/plugin-react@${manifest.devDependencies['@vitejs/plugin-react']}`], consumer)
+  run(npm, ['install', '--no-audit', '--no-fund', tarball, 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', 'typescript@5.8', `vite@${installedVersion('vite')}`, `@vitejs/plugin-react@${installedVersion('@vitejs/plugin-react')}`], consumer)
 
   const listed = capture(command, ['eject', '--list'], consumer)
 
