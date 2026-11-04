@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.17.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.16.0...v0.17.0)
+
+### Notes
+
+- No breaking change in the API, and no code of a component changed: this release is documentation, a policy and the tests that keep them true. The one thing to check is `engines` (below), which declares a minimum of Node for the first time. The package gets four new documents (`VERSIONING.md`, `SECURITY.md`, `ACCESSIBILITY.md` and `MIGRATION.md`), the pages of `docs/migration/`, and a new field in `package.json`, `engines`.
+- `engines`: `package.json` now declares `"node": ">=20"` for the `enchase eject` command and for the build. npm and pnpm warn on an older Node and install anyway, and a package manager that enforces `engines` (Yarn 1, or npm with `engine-strict`) refuses until the Node is updated or the check is turned off. CI runs Node 22, so 20 is the oldest Node that the project declares and not one that its tests ran on, and it reached its end of life on 30 April 2026.
+- `VERSIONING.md` says what the public API is (the exports of every entry and the `enchase` command, the props, the `--enchase-*` hooks and the `data-slot` names that API.md lists, the theme, the roles, names, states and keyboard behavior that ACCESSIBILITY.md promises, and the minimum versions of React, the browsers and Node) and what it is not (the DOM around a `data-slot`, the class names, `src/` and the `eject/` folder). Before 1.0 a minor may break, and the first bullet of the notes says whether it does; from 1.0 only a major breaks, and a deprecated API keeps working for at least two minors. What is experimental, the `enchase/experimental/*` entries and the eject command until the notes say that it was promoted, may change in a minor and does not count for the three minors in a row without a break that 1.0 asks for. Fixes go to the latest minor, and raising a minimum of React, of a browser or of Node is a breaking change.
+- The support matrix is in the README (the section Support): React 19, Chrome and Edge 120, Firefox 129, Safari and iOS Safari 17.5 (the `browserslist` of `package.json`) and Node 20, and what each one is tested on: the real-browser suites run on the latest Chromium, Firefox and WebKit of Playwright, on Linux, CI runs Node 22, and the consumers that it builds are Next 15 and Vite 8. `src/tests/lib/supportMatrix.test.ts` fails when the table and `package.json` disagree.
+- `ACCESSIBILITY.md` is the contract in one place: the target is WCAG 2.2 AA, with no claim of conformance, and every row names the test or the script that backs it (axe in 63 test files in jsdom and on the 380 stories in six combinations, the focus, `inert`, scroll lock and Esc flows in the three engines, the contrast of the palette, the targets of 24 px, the focus ring, `prefers-reduced-motion`, right to left, and server rendering). It also says what is not tested: the speech of screen readers, Safari and iOS themselves, `forced-colors`, zoom and reflow, voice control, the contrast of a custom theme in `hsl()`, `oklch()` or `oklab()`, and manual audits. `src/tests/lib/docsReferences.test.ts` fails when a file that it names is gone.
+- `SECURITY.md` says how to report a vulnerability in private (the private vulnerability reporting of GitHub), that a first answer comes within seven days, that a fix is a patch of the latest minor, and what is in scope (the package and the eject command).
+- The migration guide: `MIGRATION.md` and one page for each minor since 0.13 (`docs/migration/0.13.md` to `0.17.md`). A page only quotes the notes of its release, and `src/tests/lib/migration.test.ts` fails when it quotes something that the changelog does not say, and when the changelog has a minor without its page, so a release adds its page (CONTRIBUTING.md says so).
+- Under `.github/` there are now templates for a bug report and for a feature request (a vulnerability goes to the private channel) and for a pull request.
+- Weight: the package goes from 941 to 949 files and from 402.6 to 412.4 kB packed (9.7 kB more), all of it documentation. The JavaScript and the CSS are the ones of 0.16.0: nothing under `src/` (apart from the tests), `lib/`, `scripts/` or `bin/` changed.
+- Checked: lint, the build, `docs:api:check`, the 5,077 jsdom tests, `build:lib`, `pack:check`, `test:size`, `test:consumer`, `test:next` and `test:eject` pass. The real-browser suites were not run for this release, because nothing that runs changed.
+- Screen readers: nothing changed in what the components render, and the README still says that nothing was tested with NVDA, JAWS or VoiceOver; testing them is a criterion for 1.0.
+
 ## v0.16.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.15.0...v0.16.0)
