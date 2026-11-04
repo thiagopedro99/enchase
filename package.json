@@ -46,6 +46,8 @@
     "VERSIONING.md",
     "SECURITY.md",
     "ACCESSIBILITY.md",
+    "MIGRATION.md",
+    "docs/migration",
     "README.md",
     "API.md",
     "LICENSE"
