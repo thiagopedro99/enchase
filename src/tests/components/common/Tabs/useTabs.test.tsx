@@ -238,11 +238,16 @@ describe('useTabs', () => {
     expect(selectedTab()).toHaveTextContent('three')
   })
 
-  it('respects the ids that come from outside, in the references between the tab and the panel', () => {
-    render(<Shell items={items} tabProps={(value) => ({ id: `mine-${value}` })} />)
+  it('lets an id that comes from outside win without rewriting the reference on the other side', () => {
+    const { rerender } = render(<Shell items={items} tabProps={(value) => ({ id: `mine-${value}` })} />)
 
     expect(screen.getAllByRole('tab').map((tab) => tab.id)).toEqual(['mine-one', 'mine-two', 'mine-three'])
-    expect(screen.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', 'mine-one')
+    expect(screen.getByRole('tabpanel')).not.toHaveAttribute('aria-labelledby', 'mine-one')
+    expect(screen.getByRole('tab', { name: 'one' })).toHaveAttribute('aria-controls', screen.getByRole('tabpanel').id)
+
+    rerender(<Shell items={items} tabProps={(value) => ({ id: `mine-${value}` })} panelProps={(value) => ({ 'aria-labelledby': `mine-${value}` })} />)
+
+    expect(screen.getByRole('tabpanel', { name: 'one' })).toHaveAttribute('aria-labelledby', 'mine-one')
   })
 
   it('keeps the ref of the consumer and its own, and focuses through them', async () => {

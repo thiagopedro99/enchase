@@ -26,8 +26,9 @@ export const useTabs = ({ items, value, defaultValue, onValueChange, activation 
   const [selected, setSelected] = useControllableState<string>(value, defaultValue ?? items[firstEnabled]?.value ?? '', onValueChange)
   const activeIndex = items.findIndex((item) => item.value === selected)
   const tabbableIndex = activeIndex >= 0 && !items[activeIndex].disabled ? activeIndex : firstEnabled
-  const ids = { tab: new Map<number, string>(), panel: new Map<number, string>() }
   const indexOf = (itemValue: string) => items.findIndex((item) => item.value === itemValue)
+  const tabId = (index: number) => `${baseId}-tab-${index}`
+  const panelId = (index: number) => `${baseId}-panel-${index}`
 
   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return
@@ -57,16 +58,13 @@ export const useTabs = ({ items, value, defaultValue, onValueChange, activation 
     const index = indexOf(tabValue)
     const known = index >= 0
     const { ref, ...rest } = (props ?? {}) as { ref?: Ref<HTMLButtonElement> | undefined } & Props
-    const id = typeof rest.id === 'string' ? rest.id : `${baseId}-tab-${index}`
-
-    ids.tab.set(index, id)
 
     const own: Omit<ReturnType<UseTabsReturn['getTabProps']>, 'ref'> = {
       type: 'button',
       role: 'tab',
-      id,
+      id: tabId(index),
       'aria-selected': known && index === activeIndex,
-      'aria-controls': ids.panel.get(index) ?? `${baseId}-panel-${index}`,
+      'aria-controls': panelId(index),
       tabIndex: known && index === tabbableIndex ? 0 : -1,
       disabled: items[index]?.disabled,
       onClick: () => setSelected(tabValue)
@@ -82,11 +80,7 @@ export const useTabs = ({ items, value, defaultValue, onValueChange, activation 
 
   const getPanelProps: UseTabsReturn['getPanelProps'] = (panelValue, props) => {
     const index = indexOf(panelValue)
-    const id = typeof (props as Props | undefined)?.id === 'string' ? ((props as Props).id as string) : `${baseId}-panel-${index}`
-
-    ids.panel.set(index, id)
-
-    const own: ReturnType<UseTabsReturn['getPanelProps']> = { role: 'tabpanel', id, 'aria-labelledby': ids.tab.get(index) ?? `${baseId}-tab-${index}`, tabIndex: 0, hidden: index < 0 || index !== activeIndex }
+    const own: ReturnType<UseTabsReturn['getPanelProps']> = { role: 'tabpanel', id: panelId(index), 'aria-labelledby': tabId(index), tabIndex: 0, hidden: index < 0 || index !== activeIndex }
 
     return composeProps(own, props)
   }
