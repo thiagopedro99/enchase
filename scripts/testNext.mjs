@@ -72,6 +72,13 @@ const styledExpectations = [
   ['the theme variables inside the css layer', '@layer enchase-theme']
 ]
 
+const ejectedExpectations = [
+  ['the page of the components that were ejected', 'Ejected server page'],
+  ['the button that was ejected, rendered by a server component', 'data-slot="button"'],
+  ['the tabs that were ejected, rendered by a server component', 'data-slot="tabs-tab"'],
+  ['the pagination that was ejected, rendered by a server component', 'data-slot="pagination-page"']
+]
+
 const cssExpectations = [
   ['the layer order from the layered stylesheet', '@layer enchase-theme, enchase-base, enchase'],
   ['the components inside the enchase layer', '@layer enchase'],
@@ -103,6 +110,7 @@ try {
   writeFileSync(join(app, 'package.json'), JSON.stringify({ name: 'enchase-next-consumer', private: true, version: '0.0.0' }, null, 2))
 
   run(npm, ['install', '--no-audit', '--no-fund', tarball, 'next@15', 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', '@types/node@22', 'typescript@5.8'], app)
+  run(join(app, 'node_modules', '.bin', windows ? 'enchase.cmd' : 'enchase'), ['eject', 'Button', 'Tabs', 'Pagination', '--dir', 'enchase'], app)
   run(process.execPath, [join(app, 'node_modules', 'next', 'dist', 'bin', 'next'), 'build'], app)
 
   server = spawn(process.execPath, [join(app, 'node_modules', 'next', 'dist', 'bin', 'next'), 'start', '-p', String(port)], { cwd: app, stdio: 'inherit' })
@@ -121,11 +129,17 @@ try {
 
   for (const [label, needle] of styledExpectations) if (!styledHtml.includes(needle)) missing.push([label])
 
+  const ejected = await fetch(`http://127.0.0.1:${port}/ejected`)
+  const ejectedHtml = await ejected.text()
+
+  for (const [label, needle] of ejectedExpectations) if (!ejectedHtml.includes(needle)) missing.push([label])
+
   if (response.status !== 200) throw new Error(`unexpected status ${response.status}`)
+  if (ejected.status !== 200) throw new Error(`unexpected status ${ejected.status} on /ejected`)
   if (styled.status !== 200) throw new Error(`unexpected status ${styled.status} on /styled`)
   if (missing.length > 0) throw new Error(`the server html is missing:\n${missing.map(([label]) => `  - ${label}`).join('\n')}`)
 
-  console.log(`next consumer rendered ${expectations.length + cssExpectations.length + forbidden.length + styledExpectations.length} server checks on port ${port}`)
+  console.log(`next consumer rendered ${expectations.length + cssExpectations.length + forbidden.length + styledExpectations.length + ejectedExpectations.length} server checks on port ${port}`)
 } finally {
   if (server && server.exitCode === null) {
     const exited = new Promise((resolveExit) => server.once('exit', resolveExit))

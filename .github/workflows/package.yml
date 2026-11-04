@@ -27,4 +27,5 @@ jobs:
       - run: npm run pack:check
       - run: npm run test:consumer
       - run: npm run test:next
+      - run: npm run test:eject
       - run: npm run test:size
