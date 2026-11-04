@@ -16,7 +16,7 @@ const aliases = Object.entries(tsconfig.compilerOptions.paths)
 const suffixes = ['', '.ts', '.tsx', '/index.ts', '/index.tsx']
 const codeFile = /\.(ts|tsx)$/
 const entryPattern = /^src\/components\/(common\/[^/]+|layout|navbar|footer)\/index\.tsx$/
-const allowedPackages = /^(react|react-dom)(\/.*)?$|^enchase$/
+const allowedPackages = /^(react|react-dom)(\/.*)?$|^enchase(\/(icons|locales|theme))?$/
 const toPosix = (path) => path.split(sep).join('/')
 const where = (file) => toPosix(relative(root, file))
 
@@ -120,22 +120,32 @@ const originOf = (file, name, seen = new Set()) => {
   return null
 }
 
-const libIndex = join(root, 'lib', 'index.ts')
-const libInfo = exportsOf(libIndex)
+const publicEntries = [
+  ['enchase', 'index.ts'],
+  ['enchase/icons', 'icons.ts'],
+  ['enchase/locales', 'locales.ts'],
+  ['enchase/theme', 'theme.ts']
+]
+
 const publicNames = new Map()
 const published = []
 
-for (const exported of [...libInfo.named.keys(), ...libInfo.local]) {
-  const origin = originOf(libIndex, exported)
+for (const [specifier, name] of publicEntries) {
+  const entry = join(root, 'lib', name)
+  const info = exportsOf(entry)
 
-  if (!origin) throw new Error(`lib/index.ts exports ${exported}, which does not lead to a declaration`)
+  for (const exported of [...info.named.keys(), ...info.local]) {
+    const origin = originOf(entry, exported)
 
-  const names = publicNames.get(origin.file) ?? new Map()
+    if (!origin) throw new Error(`lib/${name} exports ${exported}, which does not lead to a declaration`)
 
-  if (!names.has(origin.name)) names.set(origin.name, exported)
+    const names = publicNames.get(origin.file) ?? new Map()
 
-  publicNames.set(origin.file, names)
-  published.push({ exported, ...origin })
+    if (!names.has(origin.name)) names.set(origin.name, { specifier, exported })
+
+    publicNames.set(origin.file, names)
+    published.push({ specifier, exported, ...origin })
+  }
 }
 
 for (const [file, names] of publicNames) {
@@ -183,16 +193,17 @@ const statements = (node, elements, names, specifier) => {
   const type = elements.typeOnly ? 'type ' : ''
   const pub = elements.items.filter((item) => names.has(item.imported))
   const kept = elements.items.filter((item) => !names.has(item.imported))
-  const lines = [`${verb} ${type}{ ${pub.map((item) => binding(item, names.get(item.imported))).join(', ')} } from 'enchase'`]
+  const groups = pub.reduce((map, item) => map.set(names.get(item.imported).specifier, [...(map.get(names.get(item.imported).specifier) ?? []), item]), new Map())
+  const lines = [...groups].map(([from, items]) => `${verb} ${type}{ ${items.map((item) => binding(item, names.get(item.imported).exported)).join(', ')} } from '${from}'`)
 
-  if (kept.length === 0) return lines
+  if (kept.length === 0) return { lines, local: false }
 
   const asDefault = verb === 'import' ? kept.find((item) => item.imported === 'default') : undefined
   const rest = kept.filter((item) => item !== asDefault)
   const braces = rest.length > 0 ? `{ ${rest.map((item) => binding(item, item.imported)).join(', ')} }` : ''
   const clause = [asDefault?.local, braces].filter(Boolean).join(', ')
 
-  return [...lines, `${verb} ${type}${clause} from '${specifier}'`]
+  return { lines: [...lines, `${verb} ${type}${clause} from '${specifier}'`], local: true }
 }
 
 const analysis = new Map()
@@ -229,9 +240,9 @@ const analyze = (file) => {
 
         if (covered) {
           const specifier = relativeSpecifier(file, resolved.file)
-          const lines = statements(node, elements, names, specifier)
+          const { lines, local } = statements(node, elements, names, specifier)
 
-          if (lines.length > 1) {
+          if (local) {
             if (resolveSpecifier(file, specifier).file !== resolved.file) throw new Error(`${where(file)}: ${specifier} would resolve to a file other than ${where(resolved.file)}`)
             deps.add(resolved.file)
           }
@@ -274,7 +285,7 @@ const closureOf = (entry) => {
   return [...files]
 }
 
-const roots = published.filter(({ exported, file, typeOnly }) => !typeOnly && /^[A-Z]/.test(exported) && entryPattern.test(where(file))).sort((a, b) => a.exported.localeCompare(b.exported))
+const roots = published.filter(({ specifier, exported, file, typeOnly }) => specifier === 'enchase' && !typeOnly && /^[A-Z]/.test(exported) && entryPattern.test(where(file))).sort((a, b) => a.exported.localeCompare(b.exported))
 
 if (roots.length === 0) throw new Error('lib/index.ts exports no component that can be ejected')
 
