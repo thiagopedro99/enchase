@@ -142,6 +142,7 @@
     "test:next": "node scripts/testNext.mjs",
     "test:eject": "node scripts/testEject.mjs",
     "test:size": "node scripts/testBundleSize.mjs",
+    "check:api": "node scripts/checkApi.mjs",
     "test:stories-a11y": "node scripts/auditStories.mjs",
     "docs:api": "node scripts/buildApiDocs.mjs",
     "docs:api:check": "node scripts/buildApiDocs.mjs --check",

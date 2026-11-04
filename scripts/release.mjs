@@ -3,6 +3,8 @@ import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
+import { breaksAgainstNotes, breaksFile } from './apiBreaks.mjs'
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const windows = process.platform === 'win32'
 const changelogen = 'changelogen@0.6.2'
@@ -57,6 +59,8 @@ export const compareVersions = (first, second) => {
 
 export const distTag = (version) => (parseVersion(version).prerelease.length > 0 ? 'next' : 'latest')
 
+const highestOf = (published) => published.reduce((best, item) => (best === undefined || compareVersions(item, best) > 0 ? item : best), undefined)
+
 export const decideRelease = ({ version, published, tagExists }) => {
   const tag = distTag(version)
 
@@ -68,7 +72,7 @@ export const decideRelease = ({ version, published, tagExists }) => {
 
   if (tagExists) return { action: 'fail', tag, reason: `the tag v${version} exists but ${version} is not on npm` }
 
-  const highest = published.reduce((best, item) => (best === undefined || compareVersions(item, best) > 0 ? item : best), undefined)
+  const highest = highestOf(published)
 
   if (highest !== undefined && compareVersions(version, highest) <= 0) return { action: 'fail', tag, reason: `${version} is not greater than ${highest}, the highest version on npm` }
 
@@ -121,7 +125,8 @@ const remoteTagExists = (tag) => {
 
 const check = async () => {
   const { name, version } = readPackage()
-  const decision = decideRelease({ version, published: await publishedVersions(name), tagExists: remoteTagExists(`v${version}`) })
+  const published = await publishedVersions(name)
+  const decision = decideRelease({ version, published, tagExists: remoteTagExists(`v${version}`) })
   const outputs = { action: decision.action, version, tag: decision.tag, prerelease: String(parseVersion(version).prerelease.length > 0), reason: decision.reason }
 
   console.log(`release decision: ${decision.action} (${decision.reason})`)
@@ -136,6 +141,18 @@ const check = async () => {
   }
 
   if (decision.action === 'fail') process.exitCode = 1
+
+  if (decision.action === 'publish') {
+    const breaks = join(root, breaksFile)
+    const changelog = join(root, 'CHANGELOG.md')
+      const highest = highestOf(published)
+    const { errors, warnings } = breaksAgainstNotes({ file: existsSync(breaks) ? JSON.parse(readFileSync(breaks, 'utf8')) : undefined, changelog: existsSync(changelog) ? readFileSync(changelog, 'utf8') : '', version, highest })
+
+    for (const warning of warnings) console.log(`warning: ${warning}`)
+    for (const error of errors) console.error(`${breaksFile}: ${error}`)
+
+    if (errors.length > 0) process.exitCode = 1
+  }
 }
 
 const notes = (version) => {
