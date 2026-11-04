@@ -216,6 +216,8 @@ Consumers import only from these entries. The internal code (`src/`) is not publ
 
 ## What is verified, and what is not
 
+The contract in full, with the test or the script behind each claim, is in [ACCESSIBILITY.md](ACCESSIBILITY.md).
+
 Verified by automated tests:
 
 - Every component passes axe (vitest-axe) in jsdom, and the flows of focus, `inert`, scroll lock, stacked Esc and focus restoration run in real Chromium, Firefox and WebKit.
@@ -237,6 +239,7 @@ Not guaranteed:
 - [Storybook](https://enchase.othiagosilva.com.br/docs/): every component, interactive, plus the pages about the theme, the shape, the styles, the density and the motion.
 - [EJECT.md](EJECT.md): `enchase eject`, to copy a component into your project and own the code.
 - [VERSIONING.md](VERSIONING.md): what is the public API, what a breaking change is, how a deprecation works and what experimental means.
+- [ACCESSIBILITY.md](ACCESSIBILITY.md): what is tested, in which engines, and what is not, screen readers included.
 - [SECURITY.md](SECURITY.md): how to report a vulnerability in private, and what to expect.
 - [API.md](API.md): props, types, defaults, hooks and CSS hooks of every component. It ships inside the package, in `node_modules/enchase/API.md`.
 - [README.pt-BR.md](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md): the full guide, with routing and how each `href` is handled, the theme in depth, how to create a style, motion, customization by CSS, the density, server rendering and tests.
