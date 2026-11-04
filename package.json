@@ -36,7 +36,7 @@
     "url": "git+https://github.com/thiagopedro99/enchase.git"
   },
   "bin": {
-    "enchase": "./bin/enchase.mjs"
+    "enchase": "bin/enchase.mjs"
   },
   "files": [
     "dist-lib",
