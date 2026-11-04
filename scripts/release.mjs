@@ -145,7 +145,7 @@ const check = async () => {
   if (decision.action === 'publish') {
     const breaks = join(root, breaksFile)
     const changelog = join(root, 'CHANGELOG.md')
-      const highest = highestOf(published)
+    const highest = highestOf(published)
     const { errors, warnings } = breaksAgainstNotes({ file: existsSync(breaks) ? JSON.parse(readFileSync(breaks, 'utf8')) : undefined, changelog: existsSync(changelog) ? readFileSync(changelog, 'utf8') : '', version, highest })
 
     for (const warning of warnings) console.log(`warning: ${warning}`)
