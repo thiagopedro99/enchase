@@ -40,7 +40,7 @@ Not ejectable: `UIProvider`, `ColorModeProvider`, `ToastProvider`, the styles an
 
 - A bundler that handles `*.module.css` (Vite, Next.js, webpack and Parcel do).
 - React 19.
-- Nothing about TypeScript beyond `moduleResolution` set to `bundler` or `node`: the imports of the copies have no extension, and `allowImportingTsExtensions` is not needed.
+- Nothing about TypeScript beyond `moduleResolution` set to `bundler` or `node`: the imports of the copies have no extension, and `allowImportingTsExtensions` is not needed. The copies are written for `strict`, and they are not for `exactOptionalPropertyTypes`, `noUncheckedIndexedAccess` or `noPropertyAccessFromIndexSignature`: with those on, the compiler reports errors in them (12, 38 and 315 today), so keep the folder out of that configuration, or fix the copies, which are yours.
 
 The entry of every copy starts with `'use client'`, as the package does, so a copy works inside a tree of Server Components. The CSS of the copy reads the same `--enchase-*` hooks as the package, so the theme, the styles and your own hooks keep applying.
 
