@@ -5,6 +5,7 @@ import { ToastProvider } from '@components/toast/index.ts'
 import UIProvider from '@components/uiProvider/index.tsx'
 import { GlobalStyles } from '@styles/react.tsx'
 import { ptBR } from '@locales/ptBR.ts'
+import { FlushStyles } from './FlushStyles.tsx'
 
 import type { ThemeInput } from '@styles/theme/createTheme.ts'
 import type { ReactElement } from 'react'
@@ -14,7 +15,10 @@ export const renderInBrowser = (ui: ReactElement, motion: 'auto' | 'never' = 'ne
     <ColorModeProvider defaultMode={mode} storage={null} theme={theme}>
       <GlobalStyles />
       <UIProvider locale={ptBR} motion={{ mode: motion }} navigate={() => undefined} currentHref="/">
-        <ToastProvider>{ui}</ToastProvider>
+        <ToastProvider>
+          {ui}
+          <FlushStyles />
+        </ToastProvider>
       </UIProvider>
     </ColorModeProvider>
   )
