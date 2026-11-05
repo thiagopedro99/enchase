@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useCallback, useLayoutEffect, useRef } from 'react'
 
 import { reflowEase } from './defaultData.ts'
 
@@ -26,7 +26,7 @@ const flipOffset = (element: HTMLElement) => {
 export const useFlip = (containerRef: RefObject<HTMLElement | null>, enabled: boolean) => {
   const tops = useRef(new Map<string, number>())
 
-  useLayoutEffect(() => {
+  const flip = useCallback(() => {
     const container = containerRef.current
     if (!container) return
 
@@ -60,5 +60,9 @@ export const useFlip = (containerRef: RefObject<HTMLElement | null>, enabled: bo
 
       element.animate([{ translate: `0 ${delta}px` }, { translate: '0 0' }], { id: flipAnimationId, duration: durationMs, easing: spring || reflowEase })
     }
-  })
+  }, [containerRef, enabled])
+
+  useLayoutEffect(flip)
+
+  return flip
 }

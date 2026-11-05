@@ -880,7 +880,7 @@ A `<style>` with the `--enchase-*` CSS variables of the theme. The `ColorModePro
 
 ### ToastProvider
 
-Holds the queue of notifications and the region where they appear (`role="region"`, named by `labels.notifications`, not a live region). Two hidden announcers, which exist before the first notification, read the text of each one aloud: `role="status"` for success, info and warning, and `role="alert"` for error. The countdown of all the notifications stops while the pointer or the keyboard focus is anywhere in the region. The `success`, `error`, `warning` and `info` methods of `useToast` open the notifications, and the message can be text or nodes.
+Holds the queue of notifications and the region where they appear (`role="region"`, named by `labels.notifications`, not a live region). Two hidden announcers, which exist before the first notification, read the text of each one aloud: `role="status"` for success, info and warning, and `role="alert"` for error. The countdown of all the notifications stops while the pointer or the keyboard focus is anywhere in the region. Providers on the same `position` and `container` share one region, and the notifications of all of them stack in the order they arrive; the region takes its `className` and `style` from the first provider that mounted, while `limit` and `animation` stay with each provider. When that first provider unmounts while the others still show notifications, the region passes to the next provider and those notifications enter again, with the countdown restarted and the text announced again. The `success`, `error`, `warning` and `info` methods of `useToast` open the notifications, and the message can be text or nodes.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |

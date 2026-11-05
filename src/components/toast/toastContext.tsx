@@ -5,6 +5,7 @@ import { defaultToastDuration, defaultToastPosition, reducedMotionQuery } from '
 import { VisuallyHidden } from '@components/common/VisuallyHidden/index.tsx'
 import { inertExemptSlot } from '@hooks/useInertSiblings.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { mergeRefs } from '@utils/mergeRefs.ts'
 import { useMediaQuery } from '@hooks/useMediaQuery.ts'
 import { usePortalContainer } from '@hooks/usePortalContainer.ts'
 import { useIsClient } from '@hooks/useIsClient.ts'
@@ -12,16 +13,15 @@ import { useAnnouncer } from './useAnnouncer.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import ToastItemComponent from './toastItem.tsx'
 import { ToastContext } from './context.ts'
+import { useToastViewport } from './viewportStore.ts'
 import { useFlip } from './useFlip.ts'
 import styles from './styles.module.css'
 
 import type { Toast, ToastEntry, ToastOptions, ToastProviderProps, ToastPromiseMessages, ToastType, ToastUpdate } from './types.ts'
-import type { FocusEvent, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 export const ToastProvider = ({ children, container, position = defaultToastPosition, limit, animation, className, style }: ToastProviderProps) => {
   const [entries, setEntries] = useState<ToastEntry[]>([])
-  const [hovered, setHovered] = useState(false)
-  const [focused, setFocused] = useState(false)
   const viewportRef = useRef<HTMLDivElement>(null)
   const { labels } = useUIConfig()
   const reduced = useMediaQuery(reducedMotionQuery)
@@ -40,6 +40,8 @@ export const ToastProvider = ({ children, container, position = defaultToastPosi
   }, [isClient])
 
   const target = usePortalContainer(container)
+  const { owner, element, paused, setElement, registerFlip, reflow } = useToastViewport(target, position)
+  const containerRef = useMemo(() => mergeRefs<HTMLDivElement>(viewportRef, setElement), [setElement])
 
   useLayoutEffect(() => {
     if (!host || !target) return
@@ -49,7 +51,13 @@ export const ToastProvider = ({ children, container, position = defaultToastPosi
     return () => host.remove()
   }, [host, target])
 
-  useFlip(viewportRef, !reduced)
+  const flip = useFlip(viewportRef, !reduced)
+
+  useLayoutEffect(() => (owner ? registerFlip(flip) : undefined), [owner, registerFlip, flip])
+
+  useLayoutEffect(() => {
+    if (!owner) reflow()
+  })
 
   const announce = useCallback((type: ToastType, text: string) => (type === 'error' ? announceAlert(text) : announceStatus(text)), [announceAlert, announceStatus])
 
@@ -110,16 +118,14 @@ export const ToastProvider = ({ children, container, position = defaultToastPosi
       className: styles.container,
       role: 'region',
       'aria-label': labels.notifications,
-      'data-position': position,
-      onMouseEnter: () => setHovered(true),
-      onMouseLeave: () => setHovered(false),
-      onFocus: () => setFocused(true),
-      onBlur: (event: FocusEvent<HTMLElement>) => {
-        if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false)
-      }
+      'data-position': position
     },
     { className, style }
   )
+
+  const items = shown.map(({ toast, closing }) => (
+    <ToastItemComponent key={toast.id} toast={toast} open={!closing} onRemove={removeToast} onDispose={disposeToast} onAnnounce={announce} paused={paused} from={from} animation={animation} />
+  ))
 
   const viewport = (
     <>
@@ -129,11 +135,11 @@ export const ToastProvider = ({ children, container, position = defaultToastPosi
       <VisuallyHidden role="alert" aria-atomic="true">
         {alertText}
       </VisuallyHidden>
-      <div ref={viewportRef} {...viewportProps}>
-        {shown.map(({ toast, closing }) => (
-          <ToastItemComponent key={toast.id} toast={toast} open={!closing} onRemove={removeToast} onDispose={disposeToast} onAnnounce={announce} paused={hovered || focused} from={from} animation={animation} />
-        ))}
-      </div>
+      {owner && (
+        <div ref={containerRef} {...viewportProps}>
+          {items}
+        </div>
+      )}
     </>
   )
 
@@ -141,6 +147,7 @@ export const ToastProvider = ({ children, container, position = defaultToastPosi
     <ToastContext.Provider value={actions}>
       {children}
       {host && createPortal(viewport, host)}
+      {!owner && element && createPortal(items, element)}
     </ToastContext.Provider>
   )
 }
