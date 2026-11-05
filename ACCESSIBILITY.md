@@ -26,7 +26,7 @@ The real-browser suite runs on the latest Chromium, Firefox and WebKit of Playwr
 
 ## What is not tested
 
-- **The speech of screen readers.** Nothing was tested with NVDA, JAWS or VoiceOver: the roles, the names and the states are tested, and what a screen reader says about them is not. The issue "Test the components with NVDA, JAWS and VoiceOver" tracks it, and it is one of the criteria for 1.0, which asks for two combinations: NVDA with Firefox on Windows, and VoiceOver with Safari on macOS, run by hand over the whole script. JAWS and VoiceOver on iOS wait for 1.1. The script of the test and an empty table for the results are in the section "Screen reader tests, not run yet", below.
+- **The speech of screen readers.** Nothing was tested with NVDA, JAWS or VoiceOver: the roles, the names and the states are tested, and what a screen reader says about them is not. Testing them is one of the criteria for 1.0, which asks for two combinations: NVDA with Firefox on Windows, and VoiceOver with Safari on macOS, run by hand over the whole script. JAWS and VoiceOver on iOS wait for 1.1. The script of the test and an empty table for the results are in the section "Screen reader tests, not run yet", below.
 - **Safari and iOS themselves.** WebKit on Linux stands in for them, and a manual review in real Safari is still needed. Edge is not tested apart from Chromium.
 - **Windows high contrast (`forced-colors`).** A few rules exist, for the navbar, the segmented control and the textarea, and the mode is not tested in a real browser.
 - **Zoom and reflow.** The layout is tested at the widths of the breakpoints, and not at 400% of zoom.
@@ -36,7 +36,7 @@ The real-browser suite runs on the latest Chromium, Firefox and WebKit of Playwr
 
 ## Screen reader tests, not run yet
 
-Nothing in this section has been run. It is the script and the table for the test that [the criterion for 1.0](https://github.com/thiagopedro99/enchase/issues/9) asks for, and the README keeps saying that nothing was tested until the table has results.
+Nothing in this section has been run. It is the script and the table for the test that the criterion for 1.0 asks for, and the README keeps saying that nothing was tested until the table has results.
 
 The criterion for 1.0 asks for two combinations, run by hand over the 23 lines of the script: NVDA with Firefox on Windows, and VoiceOver with Safari on macOS. The table gets the version of the reader, of the browser and of the system. JAWS and VoiceOver on iOS wait for 1.1: their columns stay in the table, empty and marked as not run, and the README keeps saying that they were not tested.
 
