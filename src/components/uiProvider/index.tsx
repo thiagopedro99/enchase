@@ -25,7 +25,7 @@ export const UIProvider = ({ children, motion, locale, labels, breakpoints, navi
 
   const responsiveCss = useMemo(() => breakpointCss(value.breakpoints), [value.breakpoints])
 
-  const stableNavigate =useMemo(() => (hasNavigate ? (href: string) => navigateRef.current?.(href) : undefined), [hasNavigate])
+  const stableNavigate = useMemo(() => (hasNavigate ? (href: string) => navigateRef.current?.(href) : undefined), [hasNavigate])
 
   useEffect(() => {
     navigateRef.current = navigate
