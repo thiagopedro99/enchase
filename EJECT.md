@@ -4,7 +4,7 @@
 
 It is the way out of the library, not the way to use it. A copy stops following the library: nothing updates it, and the accessibility contract of the package holds for what the package publishes, not for your copy. Most changes do not need it: the CSS hooks (`--enchase-<part>-<property>`), the styles (`createTheme({ style })`) and the `data-slot` of every part change how a component looks, and the props change what it does. Eject when you need another markup or another behavior. If it is the behavior of `Tabs`, `Pagination`, `SegmentedControl`, `Accordion` or `Slider` that you want under your own markup, a [headless hook](HEADLESS.md) is lighter than a copy.
 
-**Experimental, and it stays so in 0.19.** The command, its options, the format of `enchase.eject.json` and the set of files that each component copies can still change in a minor, as [VERSIONING.md](VERSIONING.md) says. The reason is that a copy is the one place where the layout of the library, which is not public API, becomes a contract with your project: until those three things stay the same for two minor versions in a row, a minor may still move them. [VERSIONING.md](VERSIONING.md) has the criterion for promoting the command.
+**Stable since 0.20.** The command, its options and the format of `enchase.eject.json` are part of the public API, as [VERSIONING.md](VERSIONING.md) says, and every component that `eject/index.json` lists is ejectable and compiles next to the package (`npm run test:eject`). What is not frozen is the layout of the folders and the files of a component: a copy is the one place where that layout, which is not public API, becomes part of your project, and `--diff` is how a copy meets a change of it. The set of files of each component was the same from 0.18 to 0.19, which is what the promotion asked for, and it is the evidence for the promotion and not a promise from now on.
 
 ## The premise
 
@@ -14,7 +14,7 @@ The code is yours, and so is what comes with it. What eject promises:
 - It is MIT code that you can change without asking: the command writes the `LICENSE` next to the copies.
 - It works next to the package that is installed: it shares the contexts and the overlays with it. Every release compiles and bundles all the copies in a project that installs the packed package, and runs the jsdom specs of `Button`, `Tabs` and `Menu` against them (`npm run test:eject`).
 - It does not overwrite your work. Without `--force` the command stops before it writes anything, and `--diff` writes nothing.
-- It does not depend on what is experimental: a component that has a hook copies it as a file of its own, and no copy imports `enchase/experimental`.
+- It does not depend on the hooks of the package: a component that has a hook copies it as a file of its own, and no copy imports `enchase/headless` or `enchase/experimental`.
 
 What it does not promise:
 
@@ -22,7 +22,7 @@ What it does not promise:
 - That a copy keeps compiling after an upgrade. It imports from `enchase` (the other components, `useUIConfig`, the types, the icons and the theme types), so a minor that breaks one of those breaks the copy, and the notes of the release say what.
 - The accessibility contract. [ACCESSIBILITY.md](ACCESSIBILITY.md) holds for what the package publishes, not for a copy that you change.
 - Support for a copy. An issue is welcome when it reproduces with the component of the library.
-- That the folders and the files of a component stay as they are. They are not public API, which is why the command is experimental.
+- That the folders and the files of a component stay as they are. They are not public API, even though the command is stable: a minor may move them, the notes of the release say so, and `--diff` tells what changed on each side.
 
 ## Eject, a hook or the CSS
 
@@ -30,10 +30,10 @@ What it does not promise:
 | --- | --- | --- |
 | Another color, size, corner or density, or a look for the whole kit | The CSS hooks, the styles and `createTheme` | [README.md](README.md), [API.md](API.md) |
 | The same component with other options | The props | [API.md](API.md) |
-| The behavior of `Tabs`, `Pagination`, `SegmentedControl`, `Accordion` or `Slider` under your own markup | The hook of `enchase/experimental/<name>`, which is experimental | [HEADLESS.md](HEADLESS.md) |
-| Another markup or another behavior of any component, or the code itself | `enchase eject`, which is experimental | this file |
+| The behavior of `Tabs`, `Pagination`, `SegmentedControl`, `Accordion` or `Slider` under your own markup | The hook of `enchase/headless/<name>` | [HEADLESS.md](HEADLESS.md) |
+| Another markup or another behavior of any component, or the code itself | `enchase eject` | this file |
 
-The decision on the public headless hooks, taken in 0.18: the behavior of those five components is public as hooks under `enchase/experimental/`, and the components of the package are built on them. So ejecting one of them also copies its hook, and you can change the behavior without the experimental entry. The other components have no hook, and eject is how you own their behavior.
+The decision on the public headless hooks, taken in 0.18 and kept when they were promoted in 0.20: the behavior of those five components is public as hooks under `enchase/headless/`, and the components of the package are built on them. So ejecting one of them also copies its hook, and you can change the behavior without the entry of the package. The other components have no hook, and eject is how you own their behavior.
 
 ## Use
 

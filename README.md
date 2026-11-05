@@ -171,16 +171,16 @@ npx enchase eject Button Tabs
 npx enchase eject --diff Button
 ```
 
-The copies keep importing from `enchase` whatever the package already exports, and share its contexts and overlays, so they work next to the components of the package. Nothing updates a copy, and `--diff` tells what the library changed since you ejected; the accessibility contract holds for what the package publishes, not for a copy that you change. The command is experimental, and [VERSIONING.md](VERSIONING.md) says when it is promoted. If it is the behavior of five components that you want under your own markup, the headless hooks below are lighter than a copy. [EJECT.md](EJECT.md) has the rest: what eject promises and what it does not, what is copied, what your project needs, and the license that travels with the code.
+The copies keep importing from `enchase` whatever the package already exports, and share its contexts and overlays, so they work next to the components of the package. Nothing updates a copy, and `--diff` tells what the library changed since you ejected; the accessibility contract holds for what the package publishes, not for a copy that you change. The command is stable since 0.20: its commands, its options and the format of `enchase.eject.json` are part of the public API, and the layout of the files of a component is not. If it is the behavior of five components that you want under your own markup, the headless hooks below are lighter than a copy. [EJECT.md](EJECT.md) has the rest: what eject promises and what it does not, what is copied, what your project needs, and the license that travels with the code.
 
 ## Headless hooks
 
-When the markup has to be yours, five components have a hook that gives you their behavior (the state, the keyboard, the roles and the ARIA attributes) and none of their markup or CSS. They are experimental in 0.18:
+When the markup has to be yours, five components have a hook that gives you their behavior (the state, the keyboard, the roles and the ARIA attributes) and none of their markup or CSS. They are part of the stable API since 0.20:
 
 ```tsx
 'use client'
 
-import { useTabs } from 'enchase/experimental/tabs'
+import { useTabs } from 'enchase/headless/tabs'
 
 const items = [{ value: 'one' }, { value: 'two' }]
 
@@ -207,7 +207,7 @@ export const MyTabs = () => {
 }
 ```
 
-Each hook has an entry of its own, `enchase/experimental/tabs`, `pagination`, `segmented-control`, `accordion` and `slider`, which starts with `'use client'` and brings no CSS and no component. A getter takes the value of the item and, as a last argument, your own props, where your handlers run first and your `ref` and your `id` are kept. [HEADLESS.md](HEADLESS.md) has the rules and an example of each hook.
+Each hook has an entry of its own, `enchase/headless/tabs`, `pagination`, `segmented-control`, `accordion` and `slider`, which starts with `'use client'` and brings no CSS and no component. The old `enchase/experimental/<name>` paths still work, flagged as deprecated, and go away in 1.0. A getter takes the value of the item and, as a last argument, your own props, where your handlers run first and your `ref` and your `id` are kept. [HEADLESS.md](HEADLESS.md) has the rules and an example of each hook.
 
 ## Density
 
@@ -244,7 +244,8 @@ The Storybook has a Density item in the toolbar and a System/Density page with t
 | `enchase/styles/<name>` | One visual style per entry: `enchase/styles/shadcn`, `enchase/styles/workbench` and `enchase/styles/enchase`. Data only, no React, and only in the bundle of whoever imports it. |
 | `enchase/locales` | `en` and `ptBR` (`{ locale, dir, messages }`). Data only. |
 | `enchase/icons` | The 20 icons the components use inside, one component per icon. Works in Server Components. |
-| `enchase/experimental/<name>` | One experimental headless hook per entry (`tabs`, `pagination`, `segmented-control`, `accordion` and `slider`), with its types. For Client Components, with no CSS and no component. |
+| `enchase/headless/<name>` | One headless hook per entry (`tabs`, `pagination`, `segmented-control`, `accordion` and `slider`), with its types. For Client Components, with no CSS and no component. |
+| `enchase/experimental/<name>` | The old path of the same five hooks: a deprecated alias, removed in 1.0. Use `enchase/headless/<name>`. |
 | `enchase/styles.css` | The CSS of the components. |
 | `enchase/styles.layer.css` | The same CSS inside `@layer enchase`. |
 | `enchase/theme.css` | The variables of the default theme, light and dark, as a static file. |
@@ -275,7 +276,7 @@ Not guaranteed:
 
 - [Storybook](https://enchase.othiagosilva.com.br/docs/): every component, interactive, plus the pages about the theme, the shape, the styles, the density and the motion.
 - [EJECT.md](EJECT.md): `enchase eject`, to copy a component into your project and own the code.
-- [HEADLESS.md](HEADLESS.md): the experimental hooks that give the behavior of five components without their markup.
+- [HEADLESS.md](HEADLESS.md): the hooks that give the behavior of five components without their markup.
 - [VERSIONING.md](VERSIONING.md): what is the public API, what a breaking change is, how a deprecation works and what experimental means.
 - [ACCESSIBILITY.md](ACCESSIBILITY.md): what is tested, in which engines, and what is not, screen readers included.
 - [MIGRATION.md](MIGRATION.md): what to check when you upgrade, one page for each minor version since 0.13.

@@ -6,7 +6,7 @@ Enchase follows [semantic versioning](https://semver.org), with the rules below 
 
 A change to any of these can break an app:
 
-- the exports of every entry of the package (`enchase`, `enchase/theme`, `enchase/styles/<name>`, `enchase/locales`, `enchase/icons`, `enchase/styles.css`, `enchase/styles.layer.css` and `enchase/theme.css`), with their types, and the `enchase` command;
+- the exports of every entry of the package (`enchase`, `enchase/theme`, `enchase/styles/<name>`, `enchase/locales`, `enchase/icons`, `enchase/headless/<name>`, `enchase/styles.css`, `enchase/styles.layer.css` and `enchase/theme.css`), with their types, and the `enchase` command;
 - the props of the components, their types and what they do;
 - the CSS hooks (`--enchase-<part>-<property>`) and their defaults, and the `data-slot` names of the parts, as [API.md](API.md) lists them;
 - the theme: the tokens, the shape of `ThemeStyle` and what `createTheme`, `defineStyle` and `validateTheme` accept and return;
@@ -45,11 +45,14 @@ Before 1.0 the same steps apply when they can, but the removal can come in the n
 
 ## Experimental
 
-An entry under `enchase/experimental/*`, and the `enchase eject` command until the notes say that it was promoted, are experimental: they may change or go away in a minor version, and the notes list every change. The path of an experimental entry says so. They do not count for the three minor versions in a row without a break that 1.0 asks for.
+An entry under `enchase/experimental/*` is experimental: it may change or go away in a minor version, and the notes list every change. The path of an experimental entry says so, and it does not count for the three minor versions in a row without a break that 1.0 asks for.
 
-A hook of `enchase/experimental/*` is promoted when its signature stays the same for two minor versions in a row, [HEADLESS.md](HEADLESS.md) covers it, and a spec in real browsers covers its focus and its pointer. The notes of the release that promotes it say so, and say where it lives from then on.
+Nothing new is experimental today. A hook or a command that was experimental is promoted when it has stayed the same for two minor versions in a row and is documented and tested: for a hook, its signature, [HEADLESS.md](HEADLESS.md) and a spec in real browsers that covers its focus and its pointer; for the `enchase eject` command, its interface (the commands and the options), the format of `enchase.eject.json` and the set of files that each component copies (`eject/index.json`). The notes of the release that promotes it say so, and say where it lives from then on.
 
-The `enchase eject` command is promoted when three things stay the same for two minor versions in a row: its interface (the commands and the options), the format of `enchase.eject.json`, and the set of files that each component copies (`eject/index.json`). 0.18 and 0.19 are meant to be the same, so 0.20 can promote it, together with what 1.0 asks for. The notes of the release that promotes it say so.
+0.20 promoted both, because 0.18 and 0.19 had the same signatures, the same interface, the same format and the same files:
+
+- The five hooks of [HEADLESS.md](HEADLESS.md) live in `enchase/headless/<name>`, and are part of the stable API. The old `enchase/experimental/<name>` paths are deprecated aliases of them: they keep working, the editor and `tsc` flag every import, and 1.0 removes them.
+- `enchase eject` is stable. What is frozen is its interface (the commands and the options), the format of `enchase.eject.json` (`format: 1`) and that every component that `eject/index.json` lists is ejectable and compiles next to the package (`npm run test:eject`). What is not frozen is the layout of the folders and the files of a component, which is not public API: the set of files that was the same from 0.18 to 0.19 was the evidence for the promotion, and it is not a promise. A minor may move it, the notes say so, and `--diff` is how a copy meets the change ([EJECT.md](EJECT.md)).
 
 ## Which versions get fixes
 

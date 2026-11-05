@@ -1,6 +1,6 @@
 # Headless hooks
 
-**Experimental in 0.18.** The hooks and their types can change in a minor version, as [VERSIONING.md](VERSIONING.md) says, until the notes say that they were promoted.
+**Stable since 0.20.** The hooks and their types are part of the public API, as [VERSIONING.md](VERSIONING.md) says. They were experimental in 0.18 and 0.19, and the old `enchase/experimental/<name>` paths still work, flagged as deprecated, until 1.0 (see the end of this page).
 
 A hook gives you the behavior of a component, which is its state, its keyboard, its roles and its ARIA attributes, and none of its markup or CSS. You write the elements, and the hook hands you what to spread on each one. Five components have one: `Tabs`, `Pagination`, `SegmentedControl`, `Accordion` and `Slider`, and the components of the package are built on the very same hooks.
 
@@ -12,12 +12,12 @@ Which one to use:
 
 ## Use one
 
-Each hook has an entry of its own, with the hook and its types and nothing else: `enchase/experimental/tabs`, `enchase/experimental/pagination`, `enchase/experimental/segmented-control`, `enchase/experimental/accordion` and `enchase/experimental/slider`. An entry starts with `'use client'` and a hook is called in a Client Component. A hook brings no CSS, no component and no `UIProvider`: it works outside one, and the text of every label is yours.
+Each hook has an entry of its own, with the hook and its types and nothing else: `enchase/headless/tabs`, `enchase/headless/pagination`, `enchase/headless/segmented-control`, `enchase/headless/accordion` and `enchase/headless/slider`. An entry starts with `'use client'` and a hook is called in a Client Component. A hook brings no CSS, no component and no `UIProvider`: it works outside one, and the text of every label is yours.
 
 ```tsx
 'use client'
 
-import { useTabs } from 'enchase/experimental/tabs'
+import { useTabs } from 'enchase/headless/tabs'
 
 const items = [
   { value: 'profile', label: 'Profile' },
@@ -89,7 +89,7 @@ It returns the current `page`, the `pageCount`, the `items` to draw (page number
 ```tsx
 'use client'
 
-import { usePagination } from 'enchase/experimental/pagination'
+import { usePagination } from 'enchase/headless/pagination'
 
 export const Pages = ({ pageCount }: { pageCount: number }) => {
   const pagination = usePagination({ pageCount })
@@ -127,7 +127,7 @@ The options follow the component: with `multiple` the value is a list and `onVal
 ```tsx
 'use client'
 
-import { useSegmentedControl } from 'enchase/experimental/segmented-control'
+import { useSegmentedControl } from 'enchase/headless/segmented-control'
 
 const views = ['list', 'board', 'calendar']
 
@@ -157,7 +157,7 @@ The value is a list of the open values. One item is open at a time unless `multi
 ```tsx
 'use client'
 
-import { useAccordion } from 'enchase/experimental/accordion'
+import { useAccordion } from 'enchase/headless/accordion'
 
 const questions = [
   { value: 'plan', question: 'Which plan do I need?', answer: 'The free one is enough to start.' },
@@ -196,7 +196,7 @@ The control needs `touch-action: pan-y` and `user-select: none`, so that a verti
 ```tsx
 'use client'
 
-import { useSlider } from 'enchase/experimental/slider'
+import { useSlider } from 'enchase/headless/slider'
 
 export const Volume = () => {
   const slider = useSlider({ defaultValue: 30, formatValue: (value) => `${value}%` })
@@ -217,8 +217,10 @@ export const Volume = () => {
 
 ## What is checked
 
-The jsdom tests of every hook, the specs that run it in real Chromium, Firefox and WebKit (focus, keyboard, pointer and right to left), the size of each entry, a Next 15 app that calls the five hooks in a Client Component under a Server Component, and the compilation of the examples above against the packed package, with `strict` and `exactOptionalPropertyTypes`. The reference of the options and of what each hook returns is in [API.md](API.md).
+The jsdom tests of every hook, the specs that run it in real Chromium, Firefox and WebKit (focus, keyboard, pointer and right to left), the size of each entry, a Next 15 app that calls the five hooks in a Client Component under a Server Component, and the compilation of the examples above against the packed package, with `strict` and `exactOptionalPropertyTypes`, which also checks that each old `enchase/experimental/<name>` path still compiles and is flagged as deprecated, and that none of the new ones is. The reference of the options and of what each hook returns is in [API.md](API.md).
 
-## When they stop being experimental
+## Stability and the old path
 
-A hook is promoted when its signature stays the same for two minor versions in a row, this document covers it, and a spec in real browsers covers its focus and its pointer. The notes of the release that promotes it say so, and say where it lives from then on.
+The hooks are part of the stable API since 0.20. They were experimental in 0.18 and 0.19, and each one kept its signature in both, which is what [VERSIONING.md](VERSIONING.md) asks for a promotion, together with this page and the specs in real Chromium, Firefox and WebKit that cover their focus and their pointer.
+
+The old paths, `enchase/experimental/tabs`, `pagination`, `segmented-control`, `accordion` and `slider`, are deprecated aliases: each one exports the very hooks and types of the `enchase/headless/<name>` of the same name, so nothing breaks, and the editor and `tsc` flag every import of them as deprecated. They are removed in 1.0. To move, change `experimental` to `headless` in the import and nothing else.
