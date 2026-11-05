@@ -116,10 +116,10 @@ try {
 
   const hooks = ['Tabs', 'Pagination', 'SegmentedControl', 'Accordion', 'Slider']
   const withoutHook = hooks.filter((name) => !copied.has(`components/common/${name}/use${name}.ts`))
-  const importingHooks = readdirSync(folder, { recursive: true }).filter((file) => /\.tsx?$/.test(file) && readFileSync(join(folder, file), 'utf8').includes('enchase/experimental'))
+  const importingHooks = readdirSync(folder, { recursive: true }).filter((file) => /\.tsx?$/.test(file) && /enchase\/(headless|experimental)/.test(readFileSync(join(folder, file), 'utf8')))
 
   expect(withoutHook.length === 0, `the copy of ${withoutHook.join(', ')} must carry its hook as a file of its own`)
-  expect(importingHooks.length === 0, `a copy must not import enchase/experimental, because the code that you ejected has to be yours, hooks included: ${importingHooks.join(', ')}`)
+  expect(importingHooks.length === 0, `a copy must not import enchase/headless or enchase/experimental, because the code that you ejected has to be yours, hooks included: ${importingHooks.join(', ')}`)
 
   const again = capture(command, ['eject', 'Button', '--dir', 'src/enchase'], consumer)
 

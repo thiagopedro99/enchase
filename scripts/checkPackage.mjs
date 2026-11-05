@@ -3,6 +3,7 @@ import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { consumerCss } from './consumerCss.mjs'
+import { deprecationGaps } from './hookDeclarations.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const { bin, exports, files, version } = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
@@ -84,6 +85,12 @@ for (const [key, value] of jsEntries) {
         const alias = existsSync(headlessFile) && (readFileSync(join(root, value.import), 'utf8') === readFileSync(headlessFile, 'utf8') || importsOf(join(root, value.import)).includes(`../headless/${kebab}.js`))
 
         if (!alias) leaks.push(`${key} is not an alias of ${headlessPrefix}${kebab}: it must export what that entry exports, from the same modules, or the old path would drift from the new one`)
+
+        const headlessTypes = join(root, 'dist-lib', 'types', 'lib', 'headless', `${kebab}.d.ts`)
+        const oldTypes = join(root, value.types ?? '')
+
+        if (!existsSync(headlessTypes) || !existsSync(oldTypes)) leaks.push(`${key} or ${headlessPrefix}${kebab} has no declaration file`)
+        else deprecationGaps(readFileSync(headlessTypes, 'utf8'), readFileSync(oldTypes, 'utf8')).forEach((gap) => leaks.push(`${key}: ${gap}, and every export of the old entry must carry @deprecated so that the editor and tsc point to ${headlessPrefix}${kebab}`))
       }
       if (stylesheets.length > 0) leaks.push(`${key} imports a stylesheet (${stylesheets.join(', ')}): a hook carries no css`)
     }

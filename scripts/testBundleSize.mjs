@@ -20,6 +20,7 @@ const budgets = [
   { label: 'useSegmentedControl', source: "export { useSegmentedControl } from 'enchase/headless/segmented-control'\n", maxBytes: 5120 },
   { label: 'useAccordion', source: "export { useAccordion } from 'enchase/headless/accordion'\n", maxBytes: 3072 },
   { label: 'useSlider', source: "export { useSlider } from 'enchase/headless/slider'\n", maxBytes: 5120 },
+  { label: 'useTabs from the old path', source: "export { useTabs } from 'enchase/experimental/tabs'\n", maxBytes: 3584 },
   { label: 'CloseIcon', source: "export { CloseIcon } from 'enchase/icons'\n", maxBytes: 4096 },
   { label: 'AllIcons', source: "export * from 'enchase/icons'\n", maxBytes: 8192 },
   { label: 'Button', source: "export { Button } from 'enchase'\n", maxBytes: 12288 },

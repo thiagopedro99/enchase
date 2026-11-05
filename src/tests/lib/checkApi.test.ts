@@ -284,6 +284,36 @@ describe('the comparison of two builds of the package', () => {
   })
 })
 
+describe('the comparison of the headless entries', () => {
+  const entry = { types: './dist-lib/types/lib/headless/thing.d.ts', import: './dist-lib/headless/thing.js', default: './dist-lib/headless/thing.js' }
+  const declaration = (returned: string) => `export declare const useThing: (options: ThingOptions) => ThingReturn;\nexport interface ThingOptions {\n    a: string;\n}\nexport interface ThingReturn {\n${returned}}\n`
+  const withHeadless = (returned: string) => ({ manifest: { exports: { ...manifest.exports, './headless/thing': entry } }, files: { 'dist-lib/types/lib/headless/thing.d.ts': declaration(returned), 'dist-lib/headless/thing.js': 'export const useThing = () => ({})\n' } })
+
+  it('compares a headless entry like any stable entry, so a member that goes away breaks it', async () => {
+    const result = await compare(withHeadless('    b: string;\n'.replace('b: string', 'c: string')), withHeadless('    b: string;\n'))
+
+    expect(keys(result)).toEqual(['removed toy/headless/thing ThingReturn.b'])
+    expect(result.experimental).toEqual([])
+  })
+
+  it('lets a new headless entry pass as an addition, and never lists it with the experimental ones', async () => {
+    const result = await compare(withHeadless('    b: string;\n'))
+
+    expect(result.breaks).toEqual([])
+    expect(result.added).toEqual(['exports ./headless/thing', 'entry toy/headless/thing'])
+    expect(result.experimental).toEqual([])
+  })
+
+  it('lets the old experimental entry change into an alias without failing, and reports it by the name of the hook', async () => {
+    const alias = "import * as headless from '../headless/thing.js';\n/** @deprecated Import it from 'enchase/headless/thing'. */\nexport declare const useThing: typeof headless.useThing;\n/** @deprecated Import it from 'enchase/headless/thing'. */\nexport type ThingOptions = headless.ThingOptions;\n/** @deprecated Import it from 'enchase/headless/thing'. */\nexport type ThingReturn = headless.ThingReturn;\n"
+    const after = withHeadless('    b: string;\n')
+    const result = await compare({ ...after, files: { ...after.files, 'dist-lib/types/lib/experimental/thing.d.ts': alias } })
+
+    expect(result.breaks).toEqual([])
+    expect(result.experimental.map((change) => [change.label, change.hook, change.kind])).toEqual([['toy/experimental/thing', 'useThing', 'changed']])
+  })
+})
+
 describe('the breaks that a release declares', () => {
   const detected = [
     { section: 'declarations', key: 'removed toy TabsProps.label', detail: 'label?: string', names: ['TabsProps', 'TabsProps.label'] },

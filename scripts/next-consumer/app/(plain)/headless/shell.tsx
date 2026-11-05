@@ -1,10 +1,10 @@
 'use client'
 
-import { useSegmentedControl } from 'enchase/experimental/segmented-control'
-import { usePagination } from 'enchase/experimental/pagination'
-import { useAccordion } from 'enchase/experimental/accordion'
-import { useSlider } from 'enchase/experimental/slider'
-import { useTabs } from 'enchase/experimental/tabs'
+import { useSegmentedControl } from 'enchase/headless/segmented-control'
+import { usePagination } from 'enchase/headless/pagination'
+import { useAccordion } from 'enchase/headless/accordion'
+import { useSlider } from 'enchase/headless/slider'
+import { useTabs } from 'enchase/headless/tabs'
 
 const items = [{ value: 'a' }, { value: 'b' }]
 

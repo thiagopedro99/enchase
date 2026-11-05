@@ -87,7 +87,12 @@ const headlessExpectations = [
   ['the radio group of useSegmentedControl', 'role="radiogroup"'],
   ['the open item of useAccordion', 'aria-expanded="true"'],
   ['the slider of useSlider', 'role="slider"'],
-  ['the value of useSlider', 'aria-valuenow="30"']
+  ['the value of useSlider', 'aria-valuenow="30"'],
+  ['the tab list of useTabs from the old path', 'aria-label="Old tabs"'],
+  ['the page of usePagination from the old path', 'aria-label="Old pages"'],
+  ['the radio group of useSegmentedControl from the old path', 'aria-label="Old view"'],
+  ['the panel of useAccordion from the old path', 'aria-label="Old answer"'],
+  ['the thumb of useSlider from the old path', 'aria-label="Old volume"']
 ]
 
 const cssExpectations = [

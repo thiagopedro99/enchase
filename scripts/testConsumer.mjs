@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
+import { createRequire } from 'node:module'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -26,16 +27,16 @@ import { createTheme, defineStyle, validateTheme } from 'enchase/theme'
 import type { RadiusOverrides, ShapePreset, ThemeInput, ThemeStyle, ThemeStyleMode } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
-import { useTabs } from 'enchase/experimental/tabs'
-import type { UseTabsOptions, UseTabsReturn } from 'enchase/experimental/tabs'
-import { usePagination } from 'enchase/experimental/pagination'
-import type { PaginationItem, UsePaginationOptions, UsePaginationReturn } from 'enchase/experimental/pagination'
-import { useSegmentedControl } from 'enchase/experimental/segmented-control'
-import type { UseSegmentedControlOptions, UseSegmentedControlReturn } from 'enchase/experimental/segmented-control'
-import { useAccordion } from 'enchase/experimental/accordion'
-import type { UseAccordionOptions, UseAccordionReturn } from 'enchase/experimental/accordion'
-import { useSlider } from 'enchase/experimental/slider'
-import type { UseSliderOptions, UseSliderReturn } from 'enchase/experimental/slider'
+import { useTabs } from 'enchase/headless/tabs'
+import type { UseTabsOptions, UseTabsReturn } from 'enchase/headless/tabs'
+import { usePagination } from 'enchase/headless/pagination'
+import type { PaginationItem, UsePaginationOptions, UsePaginationReturn } from 'enchase/headless/pagination'
+import { useSegmentedControl } from 'enchase/headless/segmented-control'
+import type { UseSegmentedControlOptions, UseSegmentedControlReturn } from 'enchase/headless/segmented-control'
+import { useAccordion } from 'enchase/headless/accordion'
+import type { UseAccordionOptions, UseAccordionReturn } from 'enchase/headless/accordion'
+import { useSlider } from 'enchase/headless/slider'
+import type { UseSliderOptions, UseSliderReturn } from 'enchase/headless/slider'
 import type { MouseEvent } from 'react'
 import 'enchase/styles.css'
 import 'enchase/styles.layer.css'
@@ -238,7 +239,35 @@ export const accepted = (values: Registration): true => values.terms
 export const Page = () => <FormRecipe onSubmit={(values) => void date(values)} />
 `
 
+const legacy = `import { useTabs } from 'enchase/experimental/tabs'
+import type { UseTabsOptions, UseTabsReturn } from 'enchase/experimental/tabs'
+import { usePagination } from 'enchase/experimental/pagination'
+import type { PaginationItem, UsePaginationOptions, UsePaginationReturn } from 'enchase/experimental/pagination'
+import { useSegmentedControl } from 'enchase/experimental/segmented-control'
+import type { UseSegmentedControlOptions, UseSegmentedControlReturn } from 'enchase/experimental/segmented-control'
+import { useAccordion } from 'enchase/experimental/accordion'
+import type { UseAccordionOptions, UseAccordionReturn } from 'enchase/experimental/accordion'
+import { useSlider } from 'enchase/experimental/slider'
+import type { UseSliderOptions, UseSliderReturn } from 'enchase/experimental/slider'
+
+const tabsOptions: UseTabsOptions = { items: [{ value: 'a' }], activation: 'manual' }
+const sliderOptions: UseSliderOptions = { min: 0, max: 10, defaultValue: 5 }
+
+export const Old = () => {
+  const tabs: UseTabsReturn = useTabs(tabsOptions)
+  const pager: UsePaginationReturn = usePagination({ pageCount: 3 } satisfies UsePaginationOptions)
+  const group: UseSegmentedControlReturn = useSegmentedControl({ items: [{ value: 'a' }] } satisfies UseSegmentedControlOptions)
+  const accordion: UseAccordionReturn = useAccordion({ items: [{ value: 'a' }] } satisfies UseAccordionOptions)
+  const slider: UseSliderReturn = useSlider(sliderOptions)
+  const items: PaginationItem[] = pager.items
+
+  return [tabs.selected, items.length, group.selected, accordion.expanded, slider.value]
+}
+`
+
 const consumerPackage = { name: 'enchase-consumer', private: true, type: 'module', version: '0.0.0' }
+
+const hookNames = ['useTabs', 'UseTabsOptions', 'UseTabsReturn', 'usePagination', 'PaginationItem', 'UsePaginationOptions', 'UsePaginationReturn', 'useSegmentedControl', 'UseSegmentedControlOptions', 'UseSegmentedControlReturn', 'useAccordion', 'UseAccordionOptions', 'UseAccordionReturn', 'useSlider', 'UseSliderOptions', 'UseSliderReturn']
 
 const consumerConfig = {
   compilerOptions: {
@@ -254,7 +283,7 @@ const consumerConfig = {
     noEmit: true,
     types: []
   },
-  include: ['index.tsx', 'css.d.ts', 'readme/*.tsx', 'recipe/*.tsx']
+  include: ['index.tsx', 'legacy.tsx', 'css.d.ts', 'readme/*.tsx', 'recipe/*.tsx']
 }
 
 try {
@@ -267,6 +296,7 @@ try {
   writeFileSync(join(consumer, 'tsconfig.json'), JSON.stringify(consumerConfig, null, 2))
   writeFileSync(join(consumer, 'css.d.ts'), "declare module '*.css'\n")
   writeFileSync(join(consumer, 'index.tsx'), entry)
+  writeFileSync(join(consumer, 'legacy.tsx'), legacy)
 
   if (readmeSnippets.length === 0) throw new Error('README.md and HEADLESS.md have no tsx block to compile')
   if (unpinned.length > 0) throw new Error(`${unpinned.join(', ')} must be devDependencies with an exact version (no ^ or ~), because the consumer compiles the forms recipe against the versions the repository tests`)
@@ -280,6 +310,62 @@ try {
 
   run(npm, ['install', '--no-audit', '--no-fund', tarball, 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', 'typescript@5.8', ...formPackages.map((name) => `${name}@${formVersions[name]}`)], consumer)
   run(process.execPath, [join(consumer, 'node_modules', 'typescript', 'bin', 'tsc'), '-p', 'tsconfig.json'], consumer)
+
+  const typescript = createRequire(join(consumer, 'package.json'))('typescript')
+
+  const service = typescript.createLanguageService({
+    getScriptFileNames: () => [join(consumer, 'index.tsx'), join(consumer, 'legacy.tsx'), join(consumer, 'css.d.ts')],
+    getScriptVersion: () => '1',
+    getScriptSnapshot: (file) => (typescript.sys.fileExists(file) ? typescript.ScriptSnapshot.fromString(typescript.sys.readFile(file) ?? '') : undefined),
+    getCurrentDirectory: () => consumer,
+    getCompilationSettings: () => typescript.convertCompilerOptionsFromJson(consumerConfig.compilerOptions, consumer).options,
+    getDefaultLibFileName: (settings) => typescript.getDefaultLibFilePath(settings),
+    fileExists: typescript.sys.fileExists,
+    readFile: typescript.sys.readFile,
+    readDirectory: typescript.sys.readDirectory
+  })
+
+  const flagged = (file) =>
+    new Set(
+      service
+        .getSuggestionDiagnostics(join(consumer, file))
+        .filter((diagnostic) => diagnostic.code === 6385)
+        .map((diagnostic) => /'([^']+)' is deprecated/.exec(typescript.flattenDiagnosticMessageText(diagnostic.messageText, ' '))?.[1])
+    )
+
+  const oldFlagged = flagged('legacy.tsx')
+  const newFlagged = flagged('index.tsx')
+  const notFlagged = hookNames.filter((name) => !oldFlagged.has(name))
+  const flaggedNew = hookNames.filter((name) => newFlagged.has(name))
+
+  if (notFlagged.length > 0) throw new Error(`the language service must flag as deprecated what is imported from enchase/experimental, and it did not flag: ${notFlagged.join(', ')}`)
+  if (flaggedNew.length > 0) throw new Error(`nothing imported from enchase/headless may be deprecated, and the language service flagged: ${flaggedNew.join(', ')}`)
+
+  console.log(`the ${hookNames.length} names imported from enchase/experimental are flagged as deprecated by the language service, and none imported from enchase/headless is`)
+
+  const same = JSON.parse(
+    execFileSync(
+      process.execPath,
+      [
+        '--input-type=module',
+        '-e',
+        `const differing = []
+for (const name of ['tabs', 'pagination', 'segmented-control', 'accordion', 'slider']) {
+  const headless = await import('enchase/headless/' + name)
+  const experimental = await import('enchase/experimental/' + name)
+  const keys = Object.keys(headless)
+
+  if (keys.length === 0 || Object.keys(experimental).join() !== keys.join() || keys.some((key) => headless[key] !== experimental[key])) differing.push(name)
+}
+console.log(JSON.stringify(differing))`
+      ],
+      { cwd: consumer }
+    ).toString()
+  )
+
+  if (same.length > 0) throw new Error(`enchase/experimental/<name> must be the same hook as enchase/headless/<name>, and it is not for: ${same.join(', ')}`)
+
+  console.log('each enchase/experimental/<name> exports the very hooks of enchase/headless/<name>')
 
   const resolves = (specifier) => {
     try {
@@ -301,7 +387,7 @@ try {
 
   console.log('the packed theme.css carries the compact density block once')
 
-  const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/workbench': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/styles': false, 'enchase/styles/theme/style': false, 'enchase/experimental/tabs': true, 'enchase/experimental/pagination': true, 'enchase/experimental/segmented-control': true, 'enchase/experimental/accordion': true, 'enchase/experimental/slider': true, 'enchase/experimental': false, 'enchase/experimental/menu': false }
+  const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/workbench': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/styles': false, 'enchase/styles/theme/style': false, 'enchase/headless/tabs': true, 'enchase/headless/pagination': true, 'enchase/headless/segmented-control': true, 'enchase/headless/accordion': true, 'enchase/headless/slider': true, 'enchase/headless': false, 'enchase/headless/menu': false, 'enchase/experimental/tabs': true, 'enchase/experimental/pagination': true, 'enchase/experimental/segmented-control': true, 'enchase/experimental/accordion': true, 'enchase/experimental/slider': true, 'enchase/experimental': false, 'enchase/experimental/menu': false }
   const wrong = Object.entries(expected).filter(([specifier, should]) => resolves(specifier) !== should)
 
   if (wrong.length > 0) throw new Error(`the installed package resolves the wrong entries:\n${wrong.map(([specifier, should]) => `  - ${specifier} should ${should ? 'resolve' : 'fail, so forgetting the .css of enchase/styles.css is an error and not an import that does nothing'}`).join('\n')}`)
