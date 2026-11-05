@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react'
+import { act, render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { useRef } from 'react'
 
@@ -17,6 +17,20 @@ const Stack = ({ ids, duration = 200, enabled = true }: { ids: string[]; duratio
     <div ref={ref}>
       {ids.map((id) => (
         <div key={id} data-flip-id={id} style={{ transitionDuration: `${duration}ms` }} />
+      ))}
+    </div>
+  )
+}
+
+const Handle = ({ held }: { held: { current: (() => void) | undefined } }) => {
+  const ref = useRef<HTMLDivElement>(null)
+
+  held.current = useFlip(ref, true)
+
+  return (
+    <div ref={ref}>
+      {['a', 'b'].map((id) => (
+        <div key={id} data-flip-id={id} style={{ transitionDuration: '200ms' }} />
       ))}
     </div>
   )
@@ -170,5 +184,28 @@ describe('useFlip', () => {
     rerender(<Stack ids={['b']} enabled={false} />)
 
     expect(animate).not.toHaveBeenCalled()
+  })
+
+  it('hands back the function that measures, to run when the layout changes without a render of the hook', () => {
+    tops.set('a', 0)
+    tops.set('b', 60)
+    const held: { current: (() => void) | undefined } = { current: undefined }
+    render(<Handle held={held} />)
+
+    tops.set('b', 0)
+    act(() => held.current?.())
+
+    expect(animate).toHaveBeenCalledTimes(1)
+    expect(animate).toHaveBeenCalledWith([{ translate: '0 60px' }, { translate: '0 0' }], expect.objectContaining({ duration: 200 }))
+  })
+
+  it('keeps the same function across renders while the container and the switch stay the same', () => {
+    const held: { current: (() => void) | undefined } = { current: undefined }
+    const { rerender } = render(<Handle held={held} />)
+    const first = held.current
+
+    rerender(<Handle held={held} />)
+
+    expect(held.current).toBe(first)
   })
 })
