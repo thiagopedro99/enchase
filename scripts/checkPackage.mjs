@@ -47,7 +47,9 @@ const reach = (entry) => {
 }
 
 const stylePrefix = './styles/'
+const headlessPrefix = './headless/'
 const experimentalPrefix = './experimental/'
+const hookPrefixes = [headlessPrefix, experimentalPrefix]
 const pascal = (kebab) => kebab.split('-').map((word) => word[0].toUpperCase() + word.slice(1)).join('')
 const jsEntries = Object.entries(exports).filter(([, value]) => typeof value === 'object' && typeof value.import === 'string' && value.import.endsWith('.js'))
 const leaks = []
@@ -60,18 +62,29 @@ for (const [key, value] of jsEntries) {
 
     if (styles.length > 0) leaks.push(`${key} reaches the style definitions (${styles.join(', ')}), so every user of it would pay for them`)
 
-    if (key.startsWith(experimentalPrefix)) {
+    const hookPrefix = hookPrefixes.find((prefix) => key.startsWith(prefix))
+
+    if (hookPrefix) {
       const entry = value.import.replace(/^\.\//, '')
-      const name = pascal(key.slice(experimentalPrefix.length))
+      const kebab = key.slice(hookPrefix.length)
+      const name = pascal(kebab)
       const hook = `dist-lib/components/common/${name}/use${name}.js`
+      const own = [entry, `dist-lib/headless/${kebab}.js`]
       const components = files.filter((file) => file === 'dist-lib/index.js' || /^dist-lib\/components\/.+\/index\.js$/.test(file))
-      const siblings = files.filter((file) => file.startsWith('dist-lib/experimental/') && file !== entry)
+      const siblings = files.filter((file) => /^dist-lib\/(headless|experimental)\//.test(file) && !own.includes(file))
       const stylesheets = files.filter((file) => importsOf(join(root, file)).some((specifier) => specifier.endsWith('.css')))
 
       if (!/^["']use client["'];?\r?\n/.test(readFileSync(join(root, value.import), 'utf8'))) leaks.push(`${key} must start with the "use client" directive, like the main entry, or a hook that is imported in a Server Component fails with a message that does not say why`)
       if (!files.includes(hook)) leaks.push(`${key} does not reach its hook (${hook})`)
       if (components.length > 0) leaks.push(`${key} reaches a component (${components.join(', ')}): a hook must not pull the markup of the library, which is what it replaces`)
-      if (siblings.length > 0) leaks.push(`${key} reaches another experimental entry (${siblings.join(', ')}), so the hooks would not be independent`)
+      if (siblings.length > 0) leaks.push(`${key} reaches another hook entry (${siblings.join(', ')}), so the hooks would not be independent`)
+
+      if (hookPrefix === experimentalPrefix) {
+        const headlessFile = join(root, own[1])
+        const alias = existsSync(headlessFile) && (readFileSync(join(root, value.import), 'utf8') === readFileSync(headlessFile, 'utf8') || importsOf(join(root, value.import)).includes(`../headless/${kebab}.js`))
+
+        if (!alias) leaks.push(`${key} is not an alias of ${headlessPrefix}${kebab}: it must export what that entry exports, from the same modules, or the old path would drift from the new one`)
+      }
       if (stylesheets.length > 0) leaks.push(`${key} imports a stylesheet (${stylesheets.join(', ')}): a hook carries no css`)
     }
 
@@ -88,14 +101,23 @@ for (const [key, value] of jsEntries) {
   if (packages.length > 0) leaks.push(`${key} imports packages (${packages.join(', ')}), and a style is only data`)
 }
 
-const experimentalDir = join(root, 'dist-lib', 'experimental')
-const builtExperimental = existsSync(experimentalDir) ? readdirSync(experimentalDir).filter((file) => file.endsWith('.js')).map((file) => file.slice(0, -'.js'.length)) : []
+const builtHooks = (prefix) => {
+  const dir = join(root, 'dist-lib', prefix.slice('./'.length, -1))
 
-for (const name of builtExperimental) {
-  if (!(`${experimentalPrefix}${name}` in exports)) leaks.push(`the hook entry ${name} is built but the package does not export ${experimentalPrefix}${name}`)
+  return existsSync(dir) ? readdirSync(dir).filter((file) => file.endsWith('.js')).map((file) => file.slice(0, -'.js'.length)).sort() : []
 }
 
-if (builtExperimental.length === 0) leaks.push('the package builds no experimental entry')
+for (const prefix of hookPrefixes) {
+  const built = builtHooks(prefix)
+
+  for (const name of built) {
+    if (!(`${prefix}${name}` in exports)) leaks.push(`the hook entry ${name} is built but the package does not export ${prefix}${name}`)
+  }
+
+  if (built.length === 0) leaks.push(`the package builds no ${prefix.slice('./'.length, -1)} entry`)
+}
+
+if (builtHooks(headlessPrefix).join() !== builtHooks(experimentalPrefix).join()) leaks.push('the headless and the experimental entries are not the same hooks, and each hook of the old path must have its new one')
 
 const presetsDir = join(root, 'dist-lib', 'styles', 'presets')
 const builtStyles = existsSync(presetsDir) ? readdirSync(presetsDir).filter((file) => file.endsWith('.js')).map((file) => file.slice(0, -'.js'.length)) : []
@@ -176,4 +198,4 @@ if (leaks.length > 0) {
   process.exit(1)
 }
 
-console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches, and each ${experimentalPrefix}<name> entry starts with "use client" and reaches its hook and no component, stylesheet or other hook (${jsEntries.length} entries walked), the css mirrors right to left from the dir attribute, as published and after the default build of Vite, and the compact density block is in theme.css once, behind the attribute on the root, and in no other stylesheet, and the eject kit has every file that it lists, out of the exports`)
+console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches, and each ${headlessPrefix}<name> entry, and the ${experimentalPrefix}<name> that is an alias of it, starts with "use client" and reaches its hook and no component, stylesheet or other hook (${jsEntries.length} entries walked), the css mirrors right to left from the dir attribute, as published and after the default build of Vite, and the compact density block is in theme.css once, behind the attribute on the root, and in no other stylesheet, and the eject kit has every file that it lists, out of the exports`)

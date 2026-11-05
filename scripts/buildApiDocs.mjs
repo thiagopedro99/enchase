@@ -247,10 +247,10 @@ const loadStoryDocs = async (server) => {
   return docs
 }
 
-const experimentalFiles = readdirSync(join(root, 'lib', 'experimental')).filter((file) => file.endsWith('.ts')).sort()
+const headlessFiles = readdirSync(join(root, 'lib', 'headless')).filter((file) => file.endsWith('.ts')).sort()
 
-const experimentalDoc = ({ program, checker }, file) => {
-  const [hook] = valueExports({ program, checker, entry: join(root, 'lib', 'experimental', file) }).filter(({ name }) => /^use[A-Z]/.test(name))
+const headlessDoc = ({ program, checker }, file) => {
+  const [hook] = valueExports({ program, checker, entry: join(root, 'lib', 'headless', file) }).filter(({ name }) => /^use[A-Z]/.test(name))
   const [parameter] = callSignatureOf(checker, hook.symbol).parameters
   const optionsType = checker.getTypeOfSymbolAtLocation(parameter, parameter.declarations[0])
 
@@ -263,12 +263,12 @@ const experimentalDoc = ({ program, checker }, file) => {
   const returned = callSignatureOf(checker, hook.symbol).getReturnType()
   const members = returned.getProperties().map((member) => ({ name: member.getName(), type: checker.typeToString(checker.getTypeOfSymbolAtLocation(member, member.declarations[0]), undefined, typeFlags).replace(/\s+/g, ' ') }))
 
-  return { ...hookDoc(checker, hook.name, hook.symbol), members, entry: `enchase/experimental/${file.replace(/\.ts$/, '')}`, options }
+  return { ...hookDoc(checker, hook.name, hook.symbol), members, entry: `enchase/headless/${file.replace(/\.ts$/, '')}`, options }
 }
 
 const buildModel = async () => {
   const main = createProgram()
-  const experimental = createProgram(`experimental/${experimentalFiles[0]}`, experimentalFiles.slice(1).map((file) => `experimental/${file}`))
+  const headless = createProgram(`headless/${headlessFiles[0]}`, headlessFiles.slice(1).map((file) => `headless/${file}`))
   const icons = createProgram('icons.ts')
   const { checker } = main
   const server = await createServer({ root, configFile: join(root, 'vite.config.ts'), appType: 'custom', logLevel: 'error', server: { middlewareMode: true, hmr: false, watch: null } })
@@ -286,7 +286,7 @@ const buildModel = async () => {
     return {
       components: exported.filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(checker, symbol)).map(({ name, symbol }) => componentDoc(checker, name, symbol, docs.get(name) ?? { argTypes: {} })),
       hooks: exported.filter(({ name }) => /^use[A-Z]/.test(name)).map(({ name, symbol }) => hookDoc(checker, name, symbol)),
-      experimental: experimentalFiles.map((file) => experimentalDoc(experimental, file)),
+      headless: headlessFiles.map((file) => headlessDoc(headless, file)),
       icons: { props, element, items: iconExports.map(({ name, symbol }) => iconDoc(name, symbol)) },
       cssHooks: cssHooksModel(join(root, 'src', 'components'), tokens)
     }
@@ -330,10 +330,10 @@ if (check) {
     process.exit(1)
   }
 
-  console.log(`API.md is up to date: ${model.components.length} components, ${model.hooks.length} hooks, ${model.experimental.length} experimental hooks, ${model.icons.items.length} icons`)
+  console.log(`API.md is up to date: ${model.components.length} components, ${model.hooks.length} hooks, ${model.headless.length} headless hooks, ${model.icons.items.length} icons`)
 } else {
   writeFileSync(outputPath, markdown)
-  console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks, ${model.experimental.length} experimental hooks, ${model.icons.items.length} icons`)
+  console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks, ${model.headless.length} headless hooks, ${model.icons.items.length} icons`)
   if (problems.length > 0) {
     console.error(problems.join('\n'))
     process.exit(1)

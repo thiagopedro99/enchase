@@ -15,6 +15,7 @@ export default defineConfig({
       'enchase/locales': resolve(__dirname, './lib/locales.ts'),
       'enchase/icons': resolve(__dirname, './lib/icons.ts'),
       'enchase/styles': resolve(__dirname, './lib/styles'),
+      'enchase/headless': resolve(__dirname, './lib/headless'),
       'enchase/experimental': resolve(__dirname, './lib/experimental'),
       enchase: resolve(__dirname, './lib/index.ts'),
       '@components': resolve(__dirname, './src/components'),

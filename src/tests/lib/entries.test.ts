@@ -9,11 +9,16 @@ import * as locales from 'enchase/locales'
 import * as enchaseStyle from 'enchase/styles/enchase'
 import * as shadcnStyle from 'enchase/styles/shadcn'
 import * as workbenchStyle from 'enchase/styles/workbench'
-import * as segmentedControlHook from 'enchase/experimental/segmented-control'
-import * as paginationHook from 'enchase/experimental/pagination'
-import * as accordionHook from 'enchase/experimental/accordion'
-import * as sliderHook from 'enchase/experimental/slider'
-import * as tabsHook from 'enchase/experimental/tabs'
+import * as segmentedControlHook from 'enchase/headless/segmented-control'
+import * as paginationHook from 'enchase/headless/pagination'
+import * as accordionHook from 'enchase/headless/accordion'
+import * as sliderHook from 'enchase/headless/slider'
+import * as tabsHook from 'enchase/headless/tabs'
+import * as oldSegmentedControlHook from 'enchase/experimental/segmented-control'
+import * as oldPaginationHook from 'enchase/experimental/pagination'
+import * as oldAccordionHook from 'enchase/experimental/accordion'
+import * as oldSliderHook from 'enchase/experimental/slider'
+import * as oldTabsHook from 'enchase/experimental/tabs'
 import * as theme from 'enchase/theme'
 
 const typeExportsOf = (file: string) => {
@@ -54,7 +59,7 @@ describe('public entries', () => {
     }
   })
 
-  it('exports each experimental hook from an entry of its own, with that hook and nothing else', () => {
+  it('exports each headless hook from an entry of its own, with that hook and nothing else', () => {
     expect(Object.keys(tabsHook)).toEqual(['useTabs'])
     expect(Object.keys(paginationHook)).toEqual(['usePagination'])
     expect(Object.keys(segmentedControlHook)).toEqual(['useSegmentedControl'])
@@ -62,15 +67,32 @@ describe('public entries', () => {
     expect(Object.keys(sliderHook)).toEqual(['useSlider'])
   })
 
-  it('exports from each experimental entry the types that its hook names, and only those', () => {
-    expect(typeExportsOf('lib/experimental/tabs.ts').sort()).toEqual(['UseTabsOptions', 'UseTabsReturn'])
-    expect(typeExportsOf('lib/experimental/pagination.ts').sort()).toEqual(['PaginationItem', 'UsePaginationOptions', 'UsePaginationReturn'])
-    expect(typeExportsOf('lib/experimental/segmented-control.ts').sort()).toEqual(['UseSegmentedControlOptions', 'UseSegmentedControlReturn'])
-    expect(typeExportsOf('lib/experimental/accordion.ts').sort()).toEqual(['UseAccordionOptions', 'UseAccordionReturn'])
-    expect(typeExportsOf('lib/experimental/slider.ts').sort()).toEqual(['UseSliderOptions', 'UseSliderReturn'])
+  it('exports from each headless entry the types that its hook names, and only those', () => {
+    expect(typeExportsOf('lib/headless/tabs.ts').sort()).toEqual(['UseTabsOptions', 'UseTabsReturn'])
+    expect(typeExportsOf('lib/headless/pagination.ts').sort()).toEqual(['PaginationItem', 'UsePaginationOptions', 'UsePaginationReturn'])
+    expect(typeExportsOf('lib/headless/segmented-control.ts').sort()).toEqual(['UseSegmentedControlOptions', 'UseSegmentedControlReturn'])
+    expect(typeExportsOf('lib/headless/accordion.ts').sort()).toEqual(['UseAccordionOptions', 'UseAccordionReturn'])
+    expect(typeExportsOf('lib/headless/slider.ts').sort()).toEqual(['UseSliderOptions', 'UseSliderReturn'])
   })
 
-  it('keeps the experimental hooks out of every other entry', () => {
+  it('keeps each experimental entry as a re-export of the headless entry of the same name, with the same hook', () => {
+    const pairs = [
+      ['tabs', tabsHook, oldTabsHook],
+      ['pagination', paginationHook, oldPaginationHook],
+      ['segmented-control', segmentedControlHook, oldSegmentedControlHook],
+      ['accordion', accordionHook, oldAccordionHook],
+      ['slider', sliderHook, oldSliderHook]
+    ] as const
+
+    for (const [name, headless, experimental] of pairs) {
+      expect(readFileSync(path.resolve(__dirname, '../../..', `lib/experimental/${name}.ts`), 'utf8')).toBe(`export * from '../headless/${name}.ts'\n`)
+      expect(Object.keys(experimental)).toEqual(Object.keys(headless))
+
+      for (const key of Object.keys(headless)) expect(experimental[key as keyof typeof experimental], `${name}: ${key}`).toBe(headless[key as keyof typeof headless])
+    }
+  })
+
+  it('keeps the headless hooks out of every other entry', () => {
     for (const entry of [main, theme, icons, locales, enchaseStyle, shadcnStyle, workbenchStyle]) {
       for (const name of ['useTabs', 'usePagination', 'useSegmentedControl', 'useAccordion', 'useSlider']) expect(entry).not.toHaveProperty(name)
     }

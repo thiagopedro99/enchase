@@ -15,11 +15,11 @@ const run = (command, args, cwd) => execFileSync(command, args, { cwd, stdio: 'i
 
 const budgets = [
   { label: 'Icon', source: "export { Icon } from 'enchase'\n", maxBytes: 4096 },
-  { label: 'useTabs', source: "export { useTabs } from 'enchase/experimental/tabs'\n", maxBytes: 3584 },
-  { label: 'usePagination', source: "export { usePagination } from 'enchase/experimental/pagination'\n", maxBytes: 2560 },
-  { label: 'useSegmentedControl', source: "export { useSegmentedControl } from 'enchase/experimental/segmented-control'\n", maxBytes: 5120 },
-  { label: 'useAccordion', source: "export { useAccordion } from 'enchase/experimental/accordion'\n", maxBytes: 3072 },
-  { label: 'useSlider', source: "export { useSlider } from 'enchase/experimental/slider'\n", maxBytes: 5120 },
+  { label: 'useTabs', source: "export { useTabs } from 'enchase/headless/tabs'\n", maxBytes: 3584 },
+  { label: 'usePagination', source: "export { usePagination } from 'enchase/headless/pagination'\n", maxBytes: 2560 },
+  { label: 'useSegmentedControl', source: "export { useSegmentedControl } from 'enchase/headless/segmented-control'\n", maxBytes: 5120 },
+  { label: 'useAccordion', source: "export { useAccordion } from 'enchase/headless/accordion'\n", maxBytes: 3072 },
+  { label: 'useSlider', source: "export { useSlider } from 'enchase/headless/slider'\n", maxBytes: 5120 },
   { label: 'CloseIcon', source: "export { CloseIcon } from 'enchase/icons'\n", maxBytes: 4096 },
   { label: 'AllIcons', source: "export * from 'enchase/icons'\n", maxBytes: 8192 },
   { label: 'Button', source: "export { Button } from 'enchase'\n", maxBytes: 12288 },

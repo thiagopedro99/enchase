@@ -8,7 +8,7 @@ export type HookDoc = { name: string; signature: string; note?: string; members:
 
 export type OptionDoc = { name: string; type: string; required: boolean }
 
-export type ExperimentalHookDoc = HookDoc & { entry: string; options: OptionDoc[] }
+export type HeadlessHookDoc = HookDoc & { entry: string; options: OptionDoc[] }
 
 export type IconDoc = { name: string; dataIcon: string; directional: boolean }
 
@@ -22,4 +22,4 @@ export type CssHookDoc = { name: string; owner: string; default: string; token?:
 
 export type CssHooksGroup = { component: string; hooks: CssHookDoc[] }
 
-export const renderApiDocs: (model: { components: ComponentDoc[]; hooks: HookDoc[]; experimental?: ExperimentalHookDoc[]; icons: IconsDoc; cssHooks?: CssHooksGroup[] }) => string
+export const renderApiDocs: (model: { components: ComponentDoc[]; hooks: HookDoc[]; headless?: HeadlessHookDoc[]; icons: IconsDoc; cssHooks?: CssHooksGroup[] }) => string

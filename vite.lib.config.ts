@@ -18,7 +18,7 @@ const toCssTarget = (entry: string) => {
 
 const cssTarget = (JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf8')).browserslist as string[]).map(toCssTarget)
 
-const isClientEntry = (name: string) => name === 'index' || name.startsWith('experimental/')
+const isClientEntry = (name: string) => name === 'index' || name.startsWith('headless/') || name.startsWith('experimental/')
 
 export default defineConfig({
   plugins: [react()],
@@ -51,6 +51,11 @@ export default defineConfig({
         theme: resolve(root, 'lib/theme.ts'),
         locales: resolve(root, 'lib/locales.ts'),
         icons: resolve(root, 'lib/icons.ts'),
+        'headless/tabs': resolve(root, 'lib/headless/tabs.ts'),
+        'headless/pagination': resolve(root, 'lib/headless/pagination.ts'),
+        'headless/segmented-control': resolve(root, 'lib/headless/segmented-control.ts'),
+        'headless/accordion': resolve(root, 'lib/headless/accordion.ts'),
+        'headless/slider': resolve(root, 'lib/headless/slider.ts'),
         'experimental/tabs': resolve(root, 'lib/experimental/tabs.ts'),
         'experimental/pagination': resolve(root, 'lib/experimental/pagination.ts'),
         'experimental/segmented-control': resolve(root, 'lib/experimental/segmented-control.ts'),

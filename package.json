@@ -74,6 +74,31 @@
       "import": "./dist-lib/icons.js",
       "default": "./dist-lib/icons.js"
     },
+    "./headless/tabs": {
+      "types": "./dist-lib/types/lib/headless/tabs.d.ts",
+      "import": "./dist-lib/headless/tabs.js",
+      "default": "./dist-lib/headless/tabs.js"
+    },
+    "./headless/pagination": {
+      "types": "./dist-lib/types/lib/headless/pagination.d.ts",
+      "import": "./dist-lib/headless/pagination.js",
+      "default": "./dist-lib/headless/pagination.js"
+    },
+    "./headless/segmented-control": {
+      "types": "./dist-lib/types/lib/headless/segmented-control.d.ts",
+      "import": "./dist-lib/headless/segmented-control.js",
+      "default": "./dist-lib/headless/segmented-control.js"
+    },
+    "./headless/accordion": {
+      "types": "./dist-lib/types/lib/headless/accordion.d.ts",
+      "import": "./dist-lib/headless/accordion.js",
+      "default": "./dist-lib/headless/accordion.js"
+    },
+    "./headless/slider": {
+      "types": "./dist-lib/types/lib/headless/slider.d.ts",
+      "import": "./dist-lib/headless/slider.js",
+      "default": "./dist-lib/headless/slider.js"
+    },
     "./experimental/tabs": {
       "types": "./dist-lib/types/lib/experimental/tabs.d.ts",
       "import": "./dist-lib/experimental/tabs.js",
