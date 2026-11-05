@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.20.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.19.1...v0.20.0)
+
+### Enhancements
+
+- Export the headless hooks from stable entries ([434be07](https://github.com/thiagopedro99/enchase/commit/434be07))
+- Deprecate the experimental hook entries ([a5c27fb](https://github.com/thiagopedro99/enchase/commit/a5c27fb))
+
+### Notes
+
+- No breaking change, and the stable API did not lose anything: `npm run check:api` against 0.19.1 reports 21 keys of `exports` and none removed, 12 stable entries with 1,090 lines of declarations and none removed, changed or widened, the same 1,219 `--enchase-*` names, 277 `data-slot` names and 575 hooks of the styles, and the three stylesheets are byte for byte those of 0.19.1. The paths `enchase/experimental/*` keep working, with a deprecation warning in the editor and in `tsc`, until 1.0 removes them. `enchase eject` is stable since 0.20: it freezes its commands and options, the format of `enchase.eject.json` (`format: 1`) and that every component that `eject/index.json` lists is ejectable and compiles next to the package, and it does not freeze the layout of the folders and the files of a component, which stays outside the API, with `--diff` as the way a copy meets a change.
+- The five hooks have stable entries of their own: `enchase/headless/tabs`, `pagination`, `segmented-control`, `accordion` and `slider`. `useTabs`, `usePagination`, `useSegmentedControl`, `useAccordion` and `useSlider` have the same signatures as in 0.18.0 and 0.19, which is what [VERSIONING.md](VERSIONING.md) asks for a promotion, together with [HEADLESS.md](HEADLESS.md) and the specs in real Chromium, Firefox and WebKit that cover their focus and their pointer. Each entry exports its hook and its types, starts with `'use client'` and brings no CSS and no component, as the experimental ones did.
+- `enchase/experimental/<name>` is now an alias of `enchase/headless/<name>`: it exports the very same hook and types (the JavaScript of the old entries did not change, and the bundle of `useTabs` is 2,884 bytes minified by both paths), and the declarations of the old entries carry `@deprecated` on every export, so the editor and `tsc` flag each import and say where to go. To move, change `experimental` to `headless` in the import and nothing else. The tag is written into the declarations by the build (`scripts/deprecateExperimental.mjs`, a step of `npm run build:lib`), because the source of the library has no comments, and `build:lib` fails when an export of an old entry has no tag or when the new entry exports something that cannot be aliased. `check:api` lists the five old entries as changed, in its own section and without failing (`useTabs`, `usePagination`, `useSegmentedControl`, `useAccordion` and `useSlider`), and treats the new ones as stable.
+- `enchase eject` has the same command and the same kit as in 0.18 and 0.19 (`bin/enchase.mjs`, `eject/index.json` and the 304 files of `eject/files` are identical, apart from the version), which is the criterion that [VERSIONING.md](VERSIONING.md) set for promoting it. The set of files of each component was the evidence for the promotion and is not a promise from now on: [EJECT.md](EJECT.md) says plainly that the layout of the files is not public API. A copy still imports neither `enchase/headless` nor `enchase/experimental`, and `npm run test:eject` fails when one does.
+- This is the third minor version in a row without a break, of the three that 1.0 asks for (0.18, 0.19 and 0.20). With it published, that criterion is met, and what is left for 1.0 is the security policy and the test with screen readers.
+- Weight: the package goes from 983 to 994 files and from 430.4 to 432.5 kB packed: the ten files of the five headless entries (the `.js` and the `.d.ts` of each), the new declarations of the old entries and the lines of the documentation. `test:size` finds the same bytes as before for the five hooks (2,884, 2,102, 4,107, 2,552 and 4,065 minified) and the same for `useTabs` by the old path, and `ToastProvider` is unchanged.
+- Checked: lint, the build, `docs:api:check`, the 5,237 jsdom tests, `build:lib`, `check:api` against 0.19.1, `pack:check` (publint and attw, with the 21 keys of `exports`), `test:size`, `test:consumer` (it compiles the examples of the documentation against the packed package, and checks that the language service flags the 16 names imported from the old paths as deprecated and none of those imported from the new ones), `test:next` (72 checks of the server render, the old paths included) and `test:eject` pass, and so do the whole browser suites in real Chromium, Firefox and WebKit (2,933, 2,897 and 2,884 tests).
+- Screen readers: nothing changed in what the components render, and the README still says that nothing was tested with NVDA, JAWS or VoiceOver. What 1.0 asks for stays in `ACCESSIBILITY.md`: NVDA with Firefox on Windows and VoiceOver with Safari on macOS, run by hand.
+
 ## v0.19.1
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.19.0...v0.19.1)
