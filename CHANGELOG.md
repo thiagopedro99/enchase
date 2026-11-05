@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.19.1
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.19.0...v0.19.1)
+
+### Fixes
+
+- Share one toast viewport per position ([2668d3d](https://github.com/thiagopedro99/enchase/commit/2668d3d))
+
+### Notes
+
+- No breaking change: this is a fix. Toast providers on the same position and the same container now share one viewport. Before, each provider mounted its own `position: fixed` region and the stacks of two providers overlapped in the same corner, as in the Docs page of the Storybook, where every story has its own provider. Inside one provider nothing changes, and with a single provider the DOM and the CSS are the ones of 0.19.0.
+- How it works: the first provider that mounts for a position and a container owns the region (`role="region"`, `data-position`, named by `labels.notifications`), and the others render their toasts into it as direct children, in the order they arrive, so the reflow of the stack covers all of them. The pause by pointer or by focus holds for the toasts of every provider in the region. `limit`, `animation` and the two announcers (`role="status"` and `role="alert"`) stay with each provider, and the `className` and the `style` of the region are those of the first provider. What is shared is keyed by the element of the `container` and the `position`, so providers with another container or another position do not mix. The cost, which the story of the `ToastProvider` also says: when the first provider unmounts while the others still show toasts, the region passes to the next one and those toasts enter again, with the countdown restarted and the text announced again.
+- The API and the types are those of 0.19.0. `npm run check:api` against the published 0.19.0 found nothing removed, changed or raised (16 keys of `exports`, 1,004 lines of declarations, 1,219 `--enchase-*` names, 277 `data-slot` names), and the three stylesheets are byte for byte the ones of 0.19.0. A copy of the package from before 0.19.1 on the same page keeps its own region, since it does not know the shared one.
+- `ACCESSIBILITY.md` says what 1.0 asks of the screen reader tests: NVDA with Firefox on Windows and VoiceOver with Safari on macOS, run by hand over the 23 lines of the script, with JAWS and VoiceOver on iOS left for 1.1. Nothing in it was run yet, and the README still says so.
+- Weight: `ToastProvider` goes from 20,612 to 23,271 bytes minified and from 7,534 to 8,343 bytes gzip (+2,659 and +809), measured by `test:size` as a single import of it, which now has a budget of 24,576 bytes. What does not import it did not change. The package goes from 981 to 983 files and from 428.9 to 430.4 kB packed: the module of the shared region and its declarations, and the lines of `ACCESSIBILITY.md`.
+- Checked: lint, the build, `docs:api:check`, the 5,226 jsdom tests, `build:lib`, `check:api` against 0.19.0, `pack:check`, `test:size`, `test:consumer`, `test:next` and `test:eject` pass, and so do the specs of the toast in real Chromium, Firefox and WebKit (61 tests in each, 8 of them new). Run against the provider of 0.19.0, the new tests that stack, pause and reflow across providers fail. The other real-browser suites were not run by hand; the release workflow runs them on the release commit before it publishes.
+- Screen readers: with several providers on the same position there is now one region of notifications in the page, and not one for each, which is what a screen reader lists among the landmarks; nothing else changed in what the components render. The README still says that nothing was tested with NVDA, JAWS or VoiceOver.
+
 ## v0.19.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.18.0...v0.19.0)
