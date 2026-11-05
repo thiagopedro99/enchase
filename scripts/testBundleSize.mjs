@@ -28,6 +28,7 @@ const budgets = [
   { label: 'SegmentedControl', source: "export { SegmentedControl } from 'enchase'\n", maxBytes: 14336 },
   { label: 'Slider', source: "export { Slider } from 'enchase'\n", maxBytes: 16384 },
   { label: 'Table', source: "export { Table } from 'enchase'\n", maxBytes: 21504 },
+  { label: 'ToastProvider', source: "export { ToastProvider } from 'enchase'\n", maxBytes: 24576 },
   { label: 'Menu', source: "export { Menu } from 'enchase'\n", maxBytes: 36864 },
   { label: 'Combobox', source: "export { Combobox } from 'enchase'\n", maxBytes: 43008 },
   { label: 'DatePicker', source: "export { DatePicker } from 'enchase'\n", maxBytes: 53248 },
