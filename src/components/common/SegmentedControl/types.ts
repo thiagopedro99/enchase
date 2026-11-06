@@ -12,6 +12,7 @@ export interface SegmentedControlItem {
 
 export interface SegmentedControlBaseProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue' | 'children' | 'role'> {
   items: SegmentedControlItem[]
+  label?: string | undefined
   ariaLabel?: string | undefined
   size?: SegmentedControlSize | undefined
   fullWidth?: boolean | undefined

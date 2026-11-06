@@ -130,3 +130,35 @@
     color: HighlightText;
   }
 }
+
+.field {
+  display: inline-flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+:where(.field) {
+  align-items: flex-start;
+}
+
+:where(.field[data-full-width]) {
+  align-items: stretch;
+  inline-size: 100%;
+}
+
+.label {
+  box-sizing: border-box;
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-segmented-control-label-font-size, var(--enchase-font-size-base));
+  font-weight: var(--enchase-segmented-control-label-font-weight, var(--enchase-font-weight-medium));
+  color: var(--enchase-segmented-control-label-color, var(--enchase-color-text-secondary));
+}
+
+:where(.label) {
+  margin-block-end: var(--enchase-segmented-control-label-margin-block-end, var(--enchase-space-sm));
+}

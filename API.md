@@ -679,7 +679,7 @@ Also accepts the other attributes of `<fieldset>`, passed on to the element. For
 
 ### SegmentedControl
 
-A row of connected buttons to switch between a few alternatives that mean the same kind of thing, such as a view or a unit, without leaving the page. By default it chooses one: it is a `radiogroup`, with a single Tab stop on the checked option and the arrow keys, Home and End to move and check. With `multiple` it is a group of toggle buttons (`aria-pressed`), each one pressed or not, and Tab moves between them. It is not a set of tabs: nothing here shows or hides a panel, so use `Tabs` for that. It accepts `ref`, which goes to the root, and the attributes of the `<div>`.
+A row of connected buttons to switch between a few alternatives that mean the same kind of thing, such as a view or a unit, without leaving the page. By default it chooses one: it is a `radiogroup`, with a single Tab stop on the checked option and the arrow keys, Home and End to move and check. With `multiple` it is a group of toggle buttons (`aria-pressed`), each one pressed or not, and Tab moves between them. It is not a set of tabs: nothing here shows or hides a panel, so use `Tabs` for that. It accepts `ref`, which goes to the group, and the attributes of the `<div>`, also when there is a `label`, which puts a wrapper around the group.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -688,7 +688,8 @@ A row of connected buttons to switch between a few alternatives that mean the sa
 | `defaultValue` | `string \| string[]` | — | Option checked at the start, or the list of the pressed ones with multiple, for use without external control. Without it, nothing is chosen. |
 | `onValueChange` | `((value: string) => void) \| ((value: string[]) => void)` | — | Called with the value of the option the user has just checked, by click or by keyboard, or with the list of all the pressed values, in the order of the items, with multiple. Clicking the checked option of a single control does nothing. |
 | `items` | `SegmentedControlItem[]` | *required* | Options of the control, in the order they appear. Each item has `value` (unique), `label` (text or nodes, such as an icon and a word), `ariaLabel` (the name of an option whose label is only an icon) and, optionally, `disabled`. The `label` sits inside a `<button>`, so no other button, link or field fits in it. |
-| `ariaLabel` | `string` | — | Name of the control for screen readers, such as View. It is not shown: describe what the options change. Without it, pass aria-labelledby. |
+| `label` | `string` | — | Visible text above the control that names the group, like the `label` of the `RadioGroup`. The control gets a `<div>` around it with the text and the group, and the group takes its name from the text (`aria-labelledby`), so `ariaLabel` is not used when both are given. The `ref`, the `className`, the `style` and the other attributes stay on the group. Without `label` the control is the group alone, as it always was. |
+| `ariaLabel` | `string` | — | Name of the control for screen readers, such as View. It is not shown: describe what the options change. It is not used when there is a `label`, which names the group. Without either, pass aria-labelledby. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Height of the control: sm is as tall as a small button, md as a medium button and lg as a large one. |
 | `fullWidth` | `boolean` | `false` | Makes the control fill the width of its container, with options of the same width. |
 | `disabled` | `boolean` | `false` | Disables all the options. |
@@ -2218,6 +2219,10 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-segmented-control-item-radius-lg` | `0` (`--enchase-segmented-control-item-radius`) | `border-radius` |
 | `--enchase-segmented-control-item-radius-sm` | `0` (`--enchase-segmented-control-item-radius`) | `border-radius` |
 | `--enchase-segmented-control-item-shadow-selected` | `none` | `box-shadow` |
+| `--enchase-segmented-control-label-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-segmented-control-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
+| `--enchase-segmented-control-label-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-segmented-control-label-margin-block-end` | `0.5rem` (`--enchase-space-sm`) | `margin-block-end` |
 | `--enchase-segmented-control-padding` | `0` | `padding` |
 | `--enchase-segmented-control-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-segmented-control-radius-lg` | `var(--enchase-segmented-control-radius, var(--enchase-radius-button))` | `border-radius` |

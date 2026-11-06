@@ -392,3 +392,137 @@ describe('SegmentedControl contract', () => {
     expect(screen.getByRole('radiogroup').style.getPropertyValue('--enchase-segmented-control-duration')).toBe('0ms')
   })
 })
+
+describe('SegmentedControl with a visible label', () => {
+  it('shows the label above the group, in a wrapper of its own, and names the radio group by it', () => {
+    const { container } = renderWithProviders(<SegmentedControl label="View" items={views} />)
+    const group = screen.getByRole('radiogroup', { name: 'View' })
+    const text = screen.getByText('View')
+    const field = container.querySelector('[data-slot="segmented-control-field"]')
+
+    expect(field).not.toBeNull()
+    expect([...(field as Element).children]).toEqual([text, group])
+    expect(text.tagName).toBe('SPAN')
+    expect(text).toHaveAttribute('data-slot', 'segmented-control-label')
+    expect(text.id).not.toBe('')
+    expect(group).toHaveAttribute('aria-labelledby', text.id)
+    expect(group).not.toHaveAttribute('aria-label')
+    expect(group.contains(text)).toBe(false)
+    expect(radios().map((radio) => radio.textContent)).toEqual(['List', 'Board', 'Calendar'])
+  })
+
+  it('names the group of toggle buttons by the label too, with multiple', () => {
+    renderWithProviders(<SegmentedControl multiple label="Days" items={views} />)
+    const group = screen.getByRole('group', { name: 'Days' })
+
+    expect(group).toHaveAttribute('aria-labelledby', screen.getByText('Days').id)
+    expect(group).not.toHaveAttribute('aria-label')
+  })
+
+  it('does not use ariaLabel when there is a label, and keeps using it without one', () => {
+    const { unmount } = renderWithProviders(<SegmentedControl label="Visible" ariaLabel="Hidden" items={views} />)
+
+    expect(screen.getByRole('radiogroup', { name: 'Visible' })).not.toHaveAttribute('aria-label')
+    expect(screen.queryByRole('radiogroup', { name: 'Hidden' })).not.toBeInTheDocument()
+    unmount()
+
+    renderWithProviders(<SegmentedControl ariaLabel="Hidden" items={views} />)
+
+    expect(screen.getByRole('radiogroup', { name: 'Hidden' })).toHaveAttribute('aria-label', 'Hidden')
+    expect(screen.getByRole('radiogroup')).not.toHaveAttribute('aria-labelledby')
+  })
+
+  it('leaves the group alone in the page, with no wrapper and no label, when there is no label', () => {
+    const { container } = renderWithProviders(<SegmentedControl ariaLabel="View" items={views} />)
+
+    expect(container.querySelector('[data-slot="segmented-control-field"]')).toBeNull()
+    expect(container.querySelector('[data-slot="segmented-control-label"]')).toBeNull()
+    expect(screen.getByRole('radiogroup').parentElement).toBe(container)
+  })
+
+  it('treats an empty label as no label', () => {
+    const { container } = renderWithProviders(<SegmentedControl label="" ariaLabel="View" items={views} />)
+
+    expect(container.querySelector('[data-slot="segmented-control-field"]')).toBeNull()
+    expect(screen.getByRole('radiogroup', { name: 'View' })).toBeInTheDocument()
+  })
+
+  it('gives each control its own label, named by its own text', () => {
+    renderWithProviders(
+      <>
+        <SegmentedControl label="View" items={views} />
+        <SegmentedControl label="Order" items={views} />
+      </>
+    )
+    const first = screen.getByRole('radiogroup', { name: 'View' })
+    const second = screen.getByRole('radiogroup', { name: 'Order' })
+
+    expect(screen.getByText('View').id).not.toBe(screen.getByText('Order').id)
+    expect(first.getAttribute('aria-labelledby')).toBe(screen.getByText('View').id)
+    expect(second.getAttribute('aria-labelledby')).toBe(screen.getByText('Order').id)
+  })
+
+  it('keeps the ref, the className, the style and the other attributes on the group, not on the wrapper', () => {
+    const ref = createRef<HTMLDivElement>()
+    const { container } = renderWithProviders(<SegmentedControl label="View" items={views} ref={ref} className="mine" style={{ margin: '3px' }} data-testid="control" />)
+    const group = screen.getByRole('radiogroup')
+    const field = container.querySelector('[data-slot="segmented-control-field"]') as HTMLElement
+
+    expect(ref.current).toBe(group)
+    expect(group.className.split(' ').at(-1)).toBe('mine')
+    expect(group.style.margin).toBe('3px')
+    expect(screen.getByTestId('control')).toBe(group)
+    expect(field.className).not.toContain('mine')
+    expect(field.style.margin).toBe('')
+    expect(field).not.toHaveAttribute('data-testid')
+  })
+
+  it('marks the wrapper as full width together with the group, and not otherwise', () => {
+    const { container, unmount } = renderWithProviders(<SegmentedControl label="View" items={views} />)
+
+    expect(container.querySelector('[data-slot="segmented-control-field"]')).not.toHaveAttribute('data-full-width')
+    unmount()
+
+    const { container: wide } = renderWithProviders(<SegmentedControl label="View" items={views} fullWidth />)
+
+    expect(wide.querySelector('[data-slot="segmented-control-field"]')).toHaveAttribute('data-full-width')
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('data-full-width')
+  })
+
+  it('does not pass the label to the page as an attribute', () => {
+    const { container } = renderWithProviders(<SegmentedControl label="View" items={views} />)
+
+    expect(screen.getByRole('radiogroup')).not.toHaveAttribute('label')
+    expect(container.querySelector('[data-slot="segmented-control-field"]')).not.toHaveAttribute('label')
+  })
+
+  it('keeps the keyboard and the checking working', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    renderWithProviders(<SegmentedControl label="View" items={views} defaultValue="list" onValueChange={onValueChange} />)
+
+    await user.tab()
+    await user.keyboard('{ArrowRight}')
+
+    expect(screen.getByRole('radio', { name: 'Board' })).toHaveFocus()
+    expect(checked()).toEqual(['Board'])
+    expect(onValueChange).toHaveBeenCalledWith('board')
+
+    await user.click(screen.getByText('View'))
+
+    expect(checked()).toEqual(['Board'])
+  })
+
+  it('has no axe violations with a label, in every shape', async () => {
+    const { container } = renderWithProviders(
+      <>
+        <SegmentedControl label="One" items={views} defaultValue="board" />
+        <SegmentedControl multiple label="Several" items={views} defaultValue={['list']} />
+        <SegmentedControl label="Wide" items={views} fullWidth size="lg" />
+        <SegmentedControl label="Off" items={views} disabled />
+      </>
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})

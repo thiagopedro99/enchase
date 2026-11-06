@@ -42,7 +42,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'A row of connected buttons to switch between a few alternatives that mean the same kind of thing, such as a view or a unit, without leaving the page. By default it chooses one: it is a `radiogroup`, with a single Tab stop on the checked option and the arrow keys, Home and End to move and check. With `multiple` it is a group of toggle buttons (`aria-pressed`), each one pressed or not, and Tab moves between them. It is not a set of tabs: nothing here shows or hides a panel, so use `Tabs` for that. It accepts `ref`, which goes to the root, and the attributes of the `<div>`.'
+          'A row of connected buttons to switch between a few alternatives that mean the same kind of thing, such as a view or a unit, without leaving the page. By default it chooses one: it is a `radiogroup`, with a single Tab stop on the checked option and the arrow keys, Home and End to move and check. With `multiple` it is a group of toggle buttons (`aria-pressed`), each one pressed or not, and Tab moves between them. It is not a set of tabs: nothing here shows or hides a panel, so use `Tabs` for that. It accepts `ref`, which goes to the group, and the attributes of the `<div>`, also when there is a `label`, which puts a wrapper around the group.'
       }
     }
   },
@@ -51,8 +51,12 @@ const meta = {
       description: 'Options of the control, in the order they appear. Each item has `value` (unique), `label` (text or nodes, such as an icon and a word), `ariaLabel` (the name of an option whose label is only an icon) and, optionally, `disabled`. The `label` sits inside a `<button>`, so no other button, link or field fits in it.',
       control: false
     },
+    label: {
+      description: 'Visible text above the control that names the group, like the `label` of the `RadioGroup`. The control gets a `<div>` around it with the text and the group, and the group takes its name from the text (`aria-labelledby`), so `ariaLabel` is not used when both are given. The `ref`, the `className`, the `style` and the other attributes stay on the group. Without `label` the control is the group alone, as it always was.',
+      control: 'text'
+    },
     ariaLabel: {
-      description: 'Name of the control for screen readers, such as View. It is not shown: describe what the options change. Without it, pass aria-labelledby.',
+      description: 'Name of the control for screen readers, such as View. It is not shown: describe what the options change. It is not used when there is a `label`, which names the group. Without either, pass aria-labelledby.',
       control: 'text'
     },
     multiple: {
@@ -118,6 +122,17 @@ export const Sizes: Story = {
       ))}
     </Flex>
   )
+}
+
+export const WithLabel: Story = {
+  args: { label: 'View', ariaLabel: undefined, defaultValue: 'board' },
+  parameters: {
+    docs: {
+      description: {
+        story: 'A visible name above the control. The group takes its name from the text, so `ariaLabel` is not needed. The text has its own hooks, `--enchase-segmented-control-label-font-size`, `-font-weight`, `-color` and `-margin-block-end`, the same as the legend of the `RadioGroup`.'
+      }
+    }
+  }
 }
 
 export const WithIcons: Story = {
