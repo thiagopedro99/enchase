@@ -21,6 +21,8 @@ The script packs the library, copies this folder to a temporary directory (nothi
 
 The app has two root layouts, one for each route group. `/` is the plain one, with `shape: 'soft'` and no style, and it must not carry any style hook or label placement. `/styled` has its own layout, which imports `shadcn` from `enchase/styles/shadcn` in a Server Component and hands it to the `ColorModeProvider`: the script checks that the theme variables, the hooks and the stacked label placement of the style come through the server render.
 
+`/parts` has a root layout of its own, which imports the css of `ButtonLink` and `Badge` from `enchase/css/<file>.css` instead of `enchase/styles.layer.css`: the script reads `enchase/css/index.json` from the installed package and writes that layout, with the files that the map lists in `needs` and in the order of the map, and the test then requires that the stylesheets of the built page define every class of the library that the page uses, and that no css of a component the page does not use comes with them.
+
 `/ejected` is a Server Component that imports `Button`, `Tabs` and `Pagination` from the copies that `enchase eject` wrote into the app, so a missing `'use client'` in a copy, or a style that Next cannot build, breaks `next build`.
 
 It does not publish anything and removes the temporary directory and the server process at the end.

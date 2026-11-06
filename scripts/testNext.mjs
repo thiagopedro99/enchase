@@ -1,5 +1,5 @@
 import { execFileSync, spawn } from 'node:child_process'
-import { cpSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -72,6 +72,12 @@ const styledExpectations = [
   ['the theme variables inside the css layer', '@layer enchase-theme']
 ]
 
+const partsExpectations = [
+  ['the page of the components that import their own css', 'Per component css server page'],
+  ['the link button, rendered by a server component', 'data-slot="button-link"'],
+  ['the badge, rendered by a server component', 'data-slot="badge"']
+]
+
 const ejectedExpectations = [
   ['the page of the components that were ejected', 'Ejected server page'],
   ['the button that was ejected, rendered by a server component', 'data-slot="button"'],
@@ -94,6 +100,30 @@ const headlessExpectations = [
   ['the panel of useAccordion from the old path', 'aria-label="Old answer"'],
   ['the thumb of useSlider from the old path', 'aria-label="Old volume"']
 ]
+
+const partsKeys = ['button-link', 'badge']
+
+const partsLayout = (files) => `import { ColorModeProvider, ColorModeScript, UIProvider } from 'enchase'
+${files.map((file) => `import 'enchase/css/${file}'`).join('\n')}
+import 'enchase/theme.css'
+
+import type { ReactNode } from 'react'
+
+export default function PartsLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <ColorModeScript />
+      </head>
+      <body>
+        <ColorModeProvider cssLayer="enchase-theme">
+          <UIProvider>{children}</UIProvider>
+        </ColorModeProvider>
+      </body>
+    </html>
+  )
+}
+`
 
 const cssExpectations = [
   ['the layer order from the layered stylesheet', '@layer enchase-theme, enchase-base, enchase'],
@@ -127,6 +157,12 @@ try {
 
   run(npm, ['install', '--no-audit', '--no-fund', tarball, 'next@15', 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', '@types/node@22', 'typescript@5.8'], app)
   run(join(app, 'node_modules', '.bin', windows ? 'enchase.cmd' : 'enchase'), ['eject', 'Button', 'Tabs', 'Pagination', '--dir', 'enchase'], app)
+
+  const cssMap = JSON.parse(readFileSync(join(app, 'node_modules', 'enchase', 'dist-lib', 'css', 'index.json'), 'utf8'))
+  const order = Object.keys(cssMap.components)
+  const partsFiles = [...new Set(partsKeys.flatMap((key) => [...cssMap.components[key].needs, key]))].sort((first, second) => order.indexOf(first) - order.indexOf(second)).map((key) => cssMap.components[key].file)
+
+  writeFileSync(join(app, 'app', '(parts)', 'layout.tsx'), partsLayout(partsFiles))
   run(process.execPath, [join(app, 'node_modules', 'next', 'dist', 'bin', 'next'), 'build'], app)
 
   server = spawn(process.execPath, [join(app, 'node_modules', 'next', 'dist', 'bin', 'next'), 'start', '-p', String(port)], { cwd: app, stdio: 'inherit' })
@@ -155,13 +191,31 @@ try {
 
   for (const [label, needle] of headlessExpectations) if (!headlessHtml.includes(needle)) missing.push([label])
 
+  const parts = await fetch(`http://127.0.0.1:${port}/parts`)
+  const partsHtml = await parts.text()
+  const partsHrefs = [...partsHtml.matchAll(/href="([^"]+\.css)"/g)].map((match) => match[1])
+  const partsCss = (await Promise.all(partsHrefs.map(async (href) => (await fetch(new URL(href, `http://127.0.0.1:${port}/`))).text()))).join('\n')
+  const partsClasses = [...new Set([...partsHtml.matchAll(/class="([^"]*)"/g)].flatMap((match) => match[1].split(/\s+/)).filter((name) => /^_[A-Za-z0-9-]+_[a-z0-9]+_\d+$/.test(name)))]
+  const partsUndefined = partsClasses.filter((name) => !partsCss.includes(`.${name}`))
+
+  for (const [label, needle] of partsExpectations) if (!partsHtml.includes(needle)) missing.push([label])
+
+  const partsConditions = [
+    ['classes of the library on the page of the components that import their own css', partsClasses.length > 0],
+    [`the css of the files that the map lists for ButtonLink and Badge defines every class of the page, and lacks ${partsUndefined.join(', ')}`, partsUndefined.length === 0],
+    ['no css of a component that the page of the components does not use', !/\._(card|modal|table)_[a-z0-9]+_\d+/.test(partsCss)]
+  ]
+
+  for (const [label, holds] of partsConditions) if (!holds) missing.push([label])
+
   if (response.status !== 200) throw new Error(`unexpected status ${response.status}`)
+  if (parts.status !== 200) throw new Error(`unexpected status ${parts.status} on /parts`)
   if (ejected.status !== 200) throw new Error(`unexpected status ${ejected.status} on /ejected`)
   if (headless.status !== 200) throw new Error(`unexpected status ${headless.status} on /headless`)
   if (styled.status !== 200) throw new Error(`unexpected status ${styled.status} on /styled`)
   if (missing.length > 0) throw new Error(`the server html is missing:\n${missing.map(([label]) => `  - ${label}`).join('\n')}`)
 
-  console.log(`next consumer rendered ${expectations.length + cssExpectations.length + forbidden.length + styledExpectations.length + ejectedExpectations.length + headlessExpectations.length} server checks on port ${port}`)
+  console.log(`next consumer rendered ${expectations.length + cssExpectations.length + forbidden.length + styledExpectations.length + partsExpectations.length + partsConditions.length + ejectedExpectations.length + headlessExpectations.length} server checks on port ${port}`)
 } finally {
   if (server && server.exitCode === null) {
     const exited = new Promise((resolveExit) => server.once('exit', resolveExit))

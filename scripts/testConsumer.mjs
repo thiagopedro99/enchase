@@ -5,6 +5,9 @@ import { createRequire } from 'node:module'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { consumerCss } from './consumerCss.mjs'
+import { sameRules } from './cssFiles.mjs'
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const workdir = mkdtempSync(join(tmpdir(), 'enchase-consumer-'))
@@ -463,7 +466,40 @@ console.log(JSON.stringify(differing))`
 
   console.log('the packed theme.css carries the compact density block once')
 
-  const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/workbench': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/styles': false, 'enchase/styles/theme/style': false, 'enchase/headless/tabs': true, 'enchase/headless/pagination': true, 'enchase/headless/segmented-control': true, 'enchase/headless/accordion': true, 'enchase/headless/slider': true, 'enchase/headless': false, 'enchase/headless/menu': false, 'enchase/experimental/tabs': true, 'enchase/experimental/pagination': true, 'enchase/experimental/segmented-control': true, 'enchase/experimental/accordion': true, 'enchase/experimental/slider': true, 'enchase/experimental': false, 'enchase/experimental/menu': false }
+  const cssFolder = join(consumer, 'node_modules', 'enchase', 'dist-lib', 'css')
+  const cssMap = JSON.parse(readFileSync(join(cssFolder, 'index.json'), 'utf8'))
+  const cssKeys = Object.keys(cssMap.components)
+  const cssOf = (key) => readFileSync(join(cssFolder, cssMap.components[key].file), 'utf8')
+  const unresolved = cssKeys.map((key) => cssMap.components[key].file).filter((file) => !resolves(`enchase/css/${file}`))
+  const firstClass = (css) => /\.(_[A-Za-z0-9-]+_[a-z0-9]+_\d+)/.exec(css)?.[1]
+  const importsOf = (keys, layer) => keys.map((key) => `@import 'enchase/css/${cssMap.components[key].file}'${layer ? ' layer(enchase)' : ''};`).join('\n')
+  const needed = [...cssMap.components['button-link'].needs, 'button-link']
+
+  const consumerStylesheet = async (name, source) => {
+    writeFileSync(join(consumer, `${name}.css`), `${source}\n`)
+
+    return consumerCss(join(consumer, `${name}.css`))
+  }
+
+  if (cssMap.format !== 1) throw new Error(`enchase/css/index.json must have the format 1, and it has ${cssMap.format}`)
+  if (unresolved.length > 0) throw new Error(`the installed package does not resolve enchase/css/<file> for: ${unresolved.join(', ')}`)
+
+  const imported = await consumerStylesheet('imported', importsOf(needed, false))
+  const layered = await consumerStylesheet('layered', `@layer enchase-theme, enchase-base, enchase;\n${importsOf(needed, true)}`)
+  const everyFile = await consumerStylesheet('every', importsOf(cssKeys, false))
+  const whole = await consumerStylesheet('whole', "@import 'enchase/styles.css';")
+  const lacking = needed.filter((key) => !imported.includes(`.${firstClass(cssOf(key))}`))
+  const layerStart = layered.search(/@layer enchase\s*\{/)
+  const outsideLayer = needed.filter((key) => layered.indexOf(`.${firstClass(cssOf(key))}`) < layerStart)
+
+  if (lacking.length > 0) throw new Error(`the css of ButtonLink, from the files that the map says it needs, lacks the classes of: ${lacking.join(', ')}`)
+  if (imported.includes(`.${firstClass(cssOf('card'))}`)) throw new Error('the css of ButtonLink, from the files that the map says it needs, has the classes of Card, which it does not use')
+  if (layerStart < 0 || outsideLayer.length > 0) throw new Error(`the files imported with layer(enchase) are not inside @layer enchase, for: ${outsideLayer.join(', ') || 'all of them'}`)
+  if (!sameRules(whole, [everyFile])) throw new Error('the css of all the files of enchase/css, imported one after the other, is not the css of enchase/styles.css after the build of an app')
+
+  console.log(`enchase/css: ${cssKeys.length} files that resolve, with the map of ${cssMap.components['button-link'].needs.length + 1} files for ButtonLink, the same in a layer, and all together the rules of enchase/styles.css`)
+
+  const expected = { 'enchase/styles/shadcn': true, 'enchase/styles/workbench': true, 'enchase/styles/enchase': true, 'enchase/styles.css': true, 'enchase/css/button.css': true, 'enchase/css/index.json': true, 'enchase/css': false, 'enchase/styles': false, 'enchase/styles/theme/style': false, 'enchase/headless/tabs': true, 'enchase/headless/pagination': true, 'enchase/headless/segmented-control': true, 'enchase/headless/accordion': true, 'enchase/headless/slider': true, 'enchase/headless': false, 'enchase/headless/menu': false, 'enchase/experimental/tabs': true, 'enchase/experimental/pagination': true, 'enchase/experimental/segmented-control': true, 'enchase/experimental/accordion': true, 'enchase/experimental/slider': true, 'enchase/experimental': false, 'enchase/experimental/menu': false }
   const wrong = Object.entries(expected).filter(([specifier, should]) => resolves(specifier) !== should)
 
   if (wrong.length > 0) throw new Error(`the installed package resolves the wrong entries:\n${wrong.map(([specifier, should]) => `  - ${specifier} should ${should ? 'resolve' : 'fail, so forgetting the .css of enchase/styles.css is an error and not an import that does nothing'}`).join('\n')}`)
