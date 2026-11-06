@@ -61,7 +61,7 @@ const meta = {
       table: { defaultValue: { summary: 'default' } }
     },
     padding: {
-      description: 'Inner spacing (any CSS value), as in the `Card`. Without it, the default spacing applies, and a class of your own always wins over it.',
+      description: 'Inner spacing as one fixed CSS value, as in the `Card`: written in a variable, so a class of your own wins over it and a card inside does not inherit it. For a value that changes with the screen size, set `--enchase-card-padding` in your CSS.',
       control: 'text'
     },
     animation: {

@@ -120,7 +120,7 @@ A surface that groups content, in the variants `default`, `elevated` and `outlin
 | --- | --- | --- | --- |
 | `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
 | `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Appearance of the card. Only elevated rises when the pointer is over it. |
-| `padding` | `string` | — | Inner spacing (any CSS value). Without it, the default spacing applies, and a class of your own always wins over it. |
+| `padding` | `string` | — | Inner spacing as one fixed CSS value (`0`, `1rem`). It is written in a variable of the card, not as an inline `padding`, so a class of your own still wins over it and a card inside this one does not inherit it. Without it, the default spacing applies. A value that changes with the screen size does not go in this prop: set the hook `--enchase-card-padding` (`--enchase-card-body-padding` for the body of a card with a header) in your CSS, with a media query. |
 | `header` | `ReactNode` | — | Title of the card, in a header over the content, with a line under it. With it, or with `headerExtra`, the content goes into a body of its own and the inner spacing (the `padding` prop or `--enchase-card-padding`) goes to the body, so the line of the header crosses the whole card. Without them, the card is the same as always. |
 | `headerExtra` | `ReactNode` | — | What goes at the end of the header, such as a link or a button. With only `headerExtra`, the title is empty and the extra stays at the end. |
 | `animation` | `false \| { recipe, tuning }` | `lift` | false turns the motion off. { tuning: { duration, distance } } sets the lift (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion. |
@@ -137,7 +137,7 @@ A card that is clickable as a whole and performs an action: a real `<button type
 | `ref` | `Ref<HTMLButtonElement>` | — | Ref of the `<button>`. |
 | `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Appearance of the surface, the same as the `Card`. Only the `elevated` one rises when the pointer is over it. |
 | `animation` | `false \| { recipe, tuning }` | `lift` | false turns the motion off. { tuning: { duration, distance } } sets the lift of the `elevated` variant (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion. |
-| `padding` | `string` | — | Inner spacing (any CSS value), as in the `Card`. Without it, the default spacing applies, and a class of your own always wins over it. |
+| `padding` | `string` | — | Inner spacing as one fixed CSS value, as in the `Card`: written in a variable, so a class of your own wins over it and a card inside does not inherit it. For a value that changes with the screen size, set `--enchase-card-padding` in your CSS. |
 
 Also accepts the other attributes of `<button>`, passed on to the element.
 
@@ -152,7 +152,7 @@ A card that is clickable as a whole and leads to another page: a real `<a href>`
 | `ref` | `Ref<HTMLAnchorElement>` | — | Ref of the `<a>`. |
 | `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Appearance of the surface, the same as the `Card`. Only the `elevated` one rises when the pointer is over it. |
 | `animation` | `false \| { recipe, tuning }` | `lift` | false turns the motion off. { tuning: { duration, distance } } sets the lift of the `elevated` variant (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion. |
-| `padding` | `string` | — | Inner spacing (any CSS value), as in the `Card`. Without it, the default spacing applies, and a class of your own always wins over it. |
+| `padding` | `string` | — | Inner spacing as one fixed CSS value, as in the `Card`: written in a variable, so a class of your own wins over it and a card inside does not inherit it. For a value that changes with the screen size, set `--enchase-card-padding` in your CSS. |
 
 Also accepts the other attributes of `<a>`, passed on to the element.
 

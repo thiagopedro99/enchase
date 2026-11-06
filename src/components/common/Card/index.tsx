@@ -1,7 +1,7 @@
 import { defaultTag, roleOf } from '@utils/structureTag.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { defaultVariant } from './defaultData.ts'
-import { useCardSurface } from './surface.ts'
+import { cardPaddingStyle, useCardSurface } from './surface.ts'
 import styles from './styles.module.css'
 
 import type { HTMLAttributes, ReactNode } from 'react'
@@ -30,7 +30,7 @@ export const Card = ({ as: Tag = defaultTag, children, animation, variant = defa
         )}
       </div>
 
-      <div className={styles.body} style={padding ? { padding } : undefined} {...slot('card', 'body')}>
+      <div className={styles.body} style={cardPaddingStyle(padding)} {...slot('card', 'body')}>
         {children}
       </div>
     </Tag>

@@ -26,7 +26,7 @@ const meta = {
       table: { defaultValue: { summary: 'default' } }
     },
     padding: {
-      description: 'Inner spacing (any CSS value). Without it, the default spacing applies, and a class of your own always wins over it.',
+      description: 'Inner spacing as one fixed CSS value (`0`, `1rem`). It is written in a variable of the card, not as an inline `padding`, so a class of your own still wins over it and a card inside this one does not inherit it. Without it, the default spacing applies. A value that changes with the screen size does not go in this prop: set the hook `--enchase-card-padding` (`--enchase-card-body-padding` for the body of a card with a header) in your CSS, with a media query.',
       control: 'text'
     },
     header: {

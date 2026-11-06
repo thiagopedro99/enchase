@@ -47,7 +47,8 @@ describe('Card header', () => {
 
     expect(root()).not.toHaveAttribute('data-with-header')
     expect([...root().children].map((child) => child.tagName)).toEqual(['SPAN'])
-    expect(root()).toHaveStyle({ padding: '2rem' })
+    expect(root().style.getPropertyValue('--card-padding-prop')).toBe('2rem')
+    expect(root().style.padding).toBe('')
   })
 
   it.each([undefined, null, false, ''] as const)('stays without a header for a header that is %j', (header) => {
@@ -104,9 +105,13 @@ describe('Card header', () => {
       </Card>
     )
 
+    const body = root().querySelector('[data-slot="card-body"]') as HTMLElement
+
     expect(root().style.padding).toBe('')
+    expect(root().style.getPropertyValue('--card-padding-prop')).toBe('')
     expect(root()).toHaveStyle({ color: 'rgb(255, 0, 0)' })
-    expect(root().querySelector('[data-slot="card-body"]')).toHaveStyle({ padding: '2rem' })
+    expect(body.style.getPropertyValue('--card-padding-prop')).toBe('2rem')
+    expect(body.style.padding).toBe('')
   })
 
   it('does not pass header and headerExtra to the page as attributes', () => {
@@ -148,7 +153,7 @@ describe('Card contract', () => {
     expect(card.className.split(' ').at(-1)).toBe('mine')
   })
 
-  it('merges the caller style over the padding prop', () => {
+  it('writes the padding prop in a variable, so the padding of the caller style still wins', () => {
     renderWithProviders(
       <>
         <Card padding="2rem" data-testid="padded">
@@ -160,7 +165,9 @@ describe('Card contract', () => {
       </>
     )
 
-    expect(screen.getByTestId('padded')).toHaveStyle({ padding: '2rem' })
+    expect(screen.getByTestId('padded').style.getPropertyValue('--card-padding-prop')).toBe('2rem')
+    expect(screen.getByTestId('padded').style.padding).toBe('')
+    expect(screen.getByTestId('styled').style.getPropertyValue('--card-padding-prop')).toBe('2rem')
     expect(screen.getByTestId('styled')).toHaveStyle({ padding: '1px', color: 'rgb(255, 0, 0)' })
   })
 
@@ -295,7 +302,7 @@ describe('Card as', () => {
     )
     const card = screen.getByTestId('card')
 
-    expect(card).toHaveStyle({ padding: '2rem' })
+    expect(card.style.getPropertyValue('--card-padding-prop')).toBe('2rem')
     expect(card).toHaveAttribute('data-motion', 'lift')
     expect(screen.getByRole('article', { name: 'Project' })).toBe(card)
   })

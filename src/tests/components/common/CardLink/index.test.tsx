@@ -124,7 +124,7 @@ describe('CardLink contract', () => {
     expect(screen.getByTestId('tile')).toHaveAttribute('data-variant', 'default')
   })
 
-  it('keeps the caller className last and merges the caller style over the padding', () => {
+  it('keeps the caller className last, writes the padding in a variable and lets the padding of the caller style win', () => {
     renderWithProviders(
       <>
         <CardLink href="/a" padding="2rem" className="mine" data-testid="padded">
@@ -136,8 +136,10 @@ describe('CardLink contract', () => {
       </>
     )
 
-    expect(screen.getByTestId('padded')).toHaveStyle({ padding: '2rem' })
+    expect(screen.getByTestId('padded').style.getPropertyValue('--card-padding-prop')).toBe('2rem')
+    expect(screen.getByTestId('padded').style.padding).toBe('')
     expect(screen.getByTestId('padded').className.split(' ').at(-1)).toBe('mine')
+    expect(screen.getByTestId('styled').style.getPropertyValue('--card-padding-prop')).toBe('2rem')
     expect(screen.getByTestId('styled')).toHaveStyle({ padding: '1px', color: 'rgb(255, 0, 0)' })
   })
 

@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   list-style: none;
+  --card-padding-prop: initial;
   transition:
     transform var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-card-ease, var(--enchase-motion-ease-out)),
     box-shadow var(--enchase-card-duration, var(--enchase-motion-duration-fast)) var(--enchase-card-ease, var(--enchase-motion-ease-out)),
@@ -11,7 +12,7 @@
 
 :where(.card) {
   border-radius: var(--enchase-card-radius, var(--enchase-radius-xl));
-  padding: var(--enchase-card-padding, var(--enchase-space-lg));
+  padding: var(--card-padding-prop, var(--enchase-card-padding, var(--enchase-space-lg)));
 }
 
 :where(.card[data-variant='default']) {
@@ -73,7 +74,7 @@
 }
 
 :where(.body) {
-  padding: var(--enchase-card-body-padding, var(--enchase-card-padding, var(--enchase-space-lg)));
+  padding: var(--card-padding-prop, var(--enchase-card-body-padding, var(--enchase-card-padding, var(--enchase-space-lg))));
 }
 
 @media (hover: hover) and (pointer: fine) {
