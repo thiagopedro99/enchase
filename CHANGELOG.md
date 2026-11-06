@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.21.1
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.21.0...v0.21.1)
+
+### Fixes
+
+- Style the label of the segmented control in the shadcn style ([306fbd3](https://github.com/thiagopedro99/enchase/commit/306fbd3))
+
+### Notes
+
+- No breaking change, and nothing of the API changed: `npm run check:api` against 0.21.0 reports 21 keys of `exports` and none removed, 12 stable entries with the same 1,118 lines of declarations, the same 1,223 `--enchase-*` names and 279 `data-slot` names, and 578 hooks of the styles, the 575 of 0.21.0 and three new ones of the shadcn style. Of the 998 files of the package, three differ from 0.21.0: `dist-lib/styles/presets/shadcn.js`, which is the JavaScript of the shadcn style, `eject/index.json`, in its `version`, and `package.json`. `styles.css`, `styles.layer.css` and `theme.css` are byte for byte those of 0.21.0, the other two styles are unchanged, and the kit of `enchase eject` has the same files as before, apart from that version.
+- Fixed: the label of the `SegmentedControl` (new in 0.21.0) came out in the shadcn style with the defaults of the component, 16px, medium weight and the secondary text color, while the label of the `Slider` and the legends of the `RadioGroup` and of the `CheckboxGroup` in that style are 14px and in the primary text color. The style set the hooks of those three and none for the `SegmentedControl`, whose label hooks were born in 0.21.0 without an entry in the styles. The shadcn style now sets `--enchase-segmented-control-label-font-size` to `--enchase-font-size-sm`, `-font-weight` to `--enchase-font-weight-medium` and `-color` to `--enchase-color-text-primary`, as it does for the others, and the margin keeps its default. The default style and the workbench one set none of these labels and do not change.
+- A guard keeps it from happening again: `src/tests/styles/presets/groupLabels.test.ts` demands that each built-in style gives the label of the `SegmentedControl` (`font-size`, `font-weight` and `color`) the same value, in the same record of the style, as the label of the `Slider` and the legends of the `RadioGroup` and of the `CheckboxGroup` that the style defines, and fails a style that sets it with none of the others. A group label that is born next goes into the list of that file. Without the three hooks the guard fails on the shadcn style with eight problems. A spec in Chromium, Firefox and WebKit measures the four labels in the shadcn style, in the light and in the dark mode: 14px, medium weight, the text color and a margin of 8px; without the fix it measures 16px and the secondary color.
+- Weight: the package keeps its 998 files and its 438.3 kB packed (438,289 to 438,302 bytes), and the JavaScript of the shadcn style goes from 20,627 to 20,874 bytes, the three new entries. In `test:size`, the shadcn style goes from 34,633 to 34,880 bytes minified, over the budget of 34 KiB that it had, so the budget is 35 KiB (35,840) now; `ColorModeProvider` with the shadcn style goes from 59,021 to 59,268 of its 59,392, and every other row is the same.
+- Checked: lint, the build, `docs:api:check`, the 5,312 jsdom tests, `build:lib`, `check:api` against 0.21.0, `pack:check` (publint and attw, with the 21 keys of `exports`), `test:size`, `test:consumer`, `test:next` (72 checks of the server render) and `test:eject` pass, and so do the whole browser suites in real Chromium, Firefox and WebKit (2,970, 2,934 and 2,921 tests).
+- Screen readers: nothing changed in what the components render, only the size and the color of one label in one style, and the README still says that nothing was tested with NVDA, JAWS or VoiceOver. What 1.0 asks for stays in `ACCESSIBILITY.md`: NVDA with Firefox on Windows and VoiceOver with Safari on macOS, run by hand.
+
 ## v0.21.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.20.0...v0.21.0)
