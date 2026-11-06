@@ -5,7 +5,7 @@ import { describePortalContainerContract } from '@tests/shared/contracts/portalC
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import userEvent from '@testing-library/user-event'
 import { createRef, useState } from 'react'
-import { screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import { axe } from '@tests/axe.ts'
@@ -14,6 +14,13 @@ import { Combobox } from '@components/common/Combobox/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 
 import type { ComboboxOption } from '@components/common/Combobox/types.ts'
+
+const runtimes: ComboboxOption[] = [
+  { value: 'node', label: 'Node.js' },
+  { value: 'deno', label: 'Deno' },
+  { value: 'bun', label: 'Bun' },
+  { value: 'angular', label: 'Angular' }
+]
 
 const fruits: ComboboxOption[] = [
   { value: 'apple', label: 'Apple' },
@@ -236,25 +243,276 @@ describe('Combobox', () => {
     expect(field()).not.toHaveAttribute('aria-activedescendant')
   })
 
-  it('does not choose anything with Enter while no option is active', async () => {
+  it('does not choose anything with Enter when nothing was typed and no option is active', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    renderWithProviders(<Combobox label="Fruit" options={fruits} onValueChange={onValueChange} />)
+
+    await user.click(field())
+    await user.keyboard('{Enter}')
+
+    expect(onValueChange).not.toHaveBeenCalled()
+    expect(field()).not.toHaveAttribute('aria-activedescendant')
+    expect(listbox()).toBeInTheDocument()
+  })
+
+  it('makes the first match active after typing, announced and marked in the list, and moves on from it with an arrow', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Combobox label="Fruit" options={fruits} />)
+
+    await user.type(field(), 'a')
+
+    const apple = screen.getByRole('option', { name: 'Apple' })
+
+    expect(field()).toHaveAttribute('aria-activedescendant', apple.id)
+    expect(apple).toHaveAttribute('data-active')
+    expect(within(listbox()).getAllByRole('option').filter((option) => option.hasAttribute('data-active'))).toHaveLength(1)
+
+    await user.keyboard('{ArrowDown}')
+
+    expect(field()).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Banana' }).id)
+  })
+
+  it('chooses the first match with Enter right after typing, closes and tells the app', async () => {
     const user = userEvent.setup()
     const onValueChange = vi.fn()
     renderWithProviders(<Combobox label="Fruit" options={fruits} onValueChange={onValueChange} />)
 
     await user.type(field(), 'ap{Enter}')
 
+    expect(onValueChange).toHaveBeenCalledTimes(1)
+    expect(onValueChange).toHaveBeenCalledWith('apple')
+    expect(field()).toHaveValue('Apple')
+    expect(field()).toHaveFocus()
+    await closed()
+  })
+
+  it('makes the only option left active, and chooses it with Enter without submitting the form', async () => {
+    const user = userEvent.setup()
+    const onSubmit = vi.fn((event: { preventDefault: () => void }) => event.preventDefault())
+    const onValueChange = vi.fn()
+    renderWithProviders(
+      <form onSubmit={onSubmit}>
+        <Combobox label="Runtime" options={runtimes} onValueChange={onValueChange} />
+        <button type="submit">Send</button>
+      </form>
+    )
+
+    await user.type(field(), 'nod')
+
+    const node = screen.getByRole('option', { name: 'Node.js' })
+
+    expect(optionLabels()).toEqual(['Node.js'])
+    expect(field()).toHaveAttribute('aria-activedescendant', node.id)
+    expect(node).toHaveAttribute('data-active')
+
+    await user.keyboard('{Enter}')
+
+    expect(onValueChange).toHaveBeenCalledWith('node')
+    expect(field()).toHaveValue('Node.js')
+    expect(onSubmit).not.toHaveBeenCalled()
+    await closed()
+  })
+
+  it('starts the arrows from the first of the options left, not from the top of the list', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    renderWithProviders(<Combobox label="Runtime" options={runtimes} onValueChange={onValueChange} />)
+
+    await user.type(field(), 'no')
+
+    expect(optionLabels()).toEqual(['Node.js', 'Deno'])
+    expect(field()).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Node.js' }).id)
+
+    await user.keyboard('{ArrowDown}')
+
+    expect(field()).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Deno' }).id)
+
+    await user.keyboard('{Enter}')
+
+    expect(onValueChange).toHaveBeenCalledWith('deno')
+  })
+
+  it('skips a disabled first match, and chooses the first one that is enabled', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    const options = [
+      { value: 'alpha', label: 'Alpha', disabled: true },
+      { value: 'alphabet', label: 'Alphabet' },
+      { value: 'alphanumeric', label: 'Alphanumeric' }
+    ]
+    renderWithProviders(<Combobox label="Word" options={options} onValueChange={onValueChange} />)
+
+    await user.type(field(), 'alpha')
+
+    expect(field()).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Alphabet' }).id)
+
+    await user.keyboard('{Enter}')
+
+    expect(onValueChange).toHaveBeenCalledWith('alphabet')
+  })
+
+  it('has no active option, and leaves Enter to the form, when no match is enabled or there is none', async () => {
+    const user = userEvent.setup()
+    const onSubmit = vi.fn((event: { preventDefault: () => void }) => event.preventDefault())
+    const onValueChange = vi.fn()
+    renderWithProviders(
+      <form onSubmit={onSubmit}>
+        <Combobox label="Fruit" options={fruits} onValueChange={onValueChange} />
+        <button type="submit">Send</button>
+      </form>
+    )
+
+    await user.type(field(), 'cher')
+
+    expect(optionLabels()).toEqual(['Cherry'])
+    expect(field()).not.toHaveAttribute('aria-activedescendant')
+
+    await user.keyboard('{Enter}')
+
+    expect(onSubmit).toHaveBeenCalledTimes(1)
+
+    await user.clear(field())
+    await user.type(field(), 'zzz')
+
+    expect(field()).not.toHaveAttribute('aria-activedescendant')
+
+    await user.keyboard('{Enter}')
+
+    expect(onSubmit).toHaveBeenCalledTimes(2)
     expect(onValueChange).not.toHaveBeenCalled()
   })
 
-  it('starts with no active option after typing, and moves to the first match with an arrow', async () => {
+  it('leaves Enter to the form when the list is closed', async () => {
+    const user = userEvent.setup()
+    const onSubmit = vi.fn((event: { preventDefault: () => void }) => event.preventDefault())
+    const onValueChange = vi.fn()
+    renderWithProviders(
+      <form onSubmit={onSubmit}>
+        <Combobox label="Fruit" options={fruits} onValueChange={onValueChange} />
+        <button type="submit">Send</button>
+      </form>
+    )
+
+    await user.type(field(), 'ap')
+    await user.keyboard('{Escape}')
+    await closed()
+    await user.keyboard('{Enter}')
+
+    expect(onSubmit).toHaveBeenCalledTimes(1)
+    expect(onValueChange).not.toHaveBeenCalled()
+  })
+
+  it('does not choose anything with Enter while an input method is composing the text', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    renderWithProviders(<Combobox label="Fruit" options={fruits} onValueChange={onValueChange} />)
+
+    await user.type(field(), 'ap')
+    fireEvent.keyDown(field(), { key: 'Enter', isComposing: true })
+
+    expect(onValueChange).not.toHaveBeenCalled()
+    expect(listbox()).toBeInTheDocument()
+    expect(field()).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Apple' }).id)
+  })
+
+  it('goes back to the first match when the text changes after the user moved with the arrows', async () => {
     const user = userEvent.setup()
     renderWithProviders(<Combobox label="Fruit" options={fruits} />)
 
     await user.type(field(), 'a')
+    await user.keyboard('{ArrowDown}')
+
+    expect(field()).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Banana' }).id)
+
+    await user.keyboard('p')
+
+    expect(field()).toHaveValue('ap')
+    expect(field()).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Apple' }).id)
+  })
+
+  it('lets the pointer take the active option away from the first match', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    renderWithProviders(<Combobox label="Fruit" options={fruits} onValueChange={onValueChange} />)
+
+    await user.type(field(), 'a')
+    await user.hover(screen.getByRole('option', { name: 'Banana' }))
+
+    expect(field()).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Banana' }).id)
+
+    await user.keyboard('{Enter}')
+
+    expect(onValueChange).toHaveBeenCalledWith('banana')
+  })
+
+  it('has no active option once the text is emptied again, with every option back in the list', async () => {
+    const user = userEvent.setup()
+    const onValueChange = vi.fn()
+    renderWithProviders(<Combobox label="Fruit" options={fruits} onValueChange={onValueChange} />)
+
+    await user.type(field(), 'ap')
+    await user.keyboard('{Backspace}{Backspace}')
+
+    expect(field()).toHaveValue('')
+    expect(optionLabels()).toEqual(['Apple', 'Banana', 'Cherry', 'Grape', 'São Paulo'])
     expect(field()).not.toHaveAttribute('aria-activedescendant')
 
-    await user.keyboard('{ArrowDown}')
-    expect(field()).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Apple' }).id)
+    await user.keyboard('{Enter}')
+
+    expect(onValueChange).not.toHaveBeenCalled()
+  })
+
+  describe('with options that come from the app', () => {
+    const stale = fruits.slice(0, 2)
+    const found: ComboboxOption[] = [
+      { value: 'kiwi', label: 'Kiwi' },
+      { value: 'kumquat', label: 'Kumquat' }
+    ]
+
+    const Remote = ({ onValueChange }: { onValueChange: (value: string | null) => void }) => {
+      const [state, setState] = useState({ loading: false, options: stale })
+
+      return (
+        <Combobox
+          label="Fruit"
+          filter={false}
+          options={state.options}
+          loading={state.loading}
+          onValueChange={onValueChange}
+          onInputChange={(typed) => {
+            if (typed === '') return
+
+            setState((current) => ({ ...current, loading: true }))
+            setTimeout(() => setState({ loading: false, options: found }), 30)
+          }}
+        />
+      )
+    }
+
+    it('waits for the results before it makes an option active, and then follows the options that arrive', async () => {
+      const user = userEvent.setup()
+      const onValueChange = vi.fn()
+      renderWithProviders(<Remote onValueChange={onValueChange} />)
+
+      await user.type(field(), 'k')
+
+      expect(listbox()).toHaveAttribute('aria-busy', 'true')
+      expect(optionLabels()).toEqual(['Apple', 'Banana', 'Carregando'])
+      expect(field()).not.toHaveAttribute('aria-activedescendant')
+
+      await user.keyboard('{Enter}')
+
+      expect(onValueChange).not.toHaveBeenCalled()
+
+      await waitFor(() => expect(optionLabels()).toEqual(['Kiwi', 'Kumquat']))
+
+      expect(field()).toHaveAttribute('aria-activedescendant', screen.getByRole('option', { name: 'Kiwi' }).id)
+
+      await user.keyboard('{Enter}')
+
+      expect(onValueChange).toHaveBeenCalledWith('kiwi')
+    })
   })
 
   it('closes with Escape and keeps what was typed', async () => {
@@ -728,6 +986,24 @@ describe('Combobox with several choices', () => {
     await user.click(screen.getByRole('option', { name: 'Grape' }))
 
     expect(hiddenValues('fruits')).toEqual(['apple', 'grape'])
+  })
+
+  it('toggles the first match with Enter, keeps the list open and the text cleared, and toggles it back', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    renderWithProviders(<Several onChange={onChange} />)
+
+    await user.type(field(), 'ap{Enter}')
+
+    expect(onChange).toHaveBeenLastCalledWith(['apple'])
+    expect(field()).toHaveValue('')
+    expect(listbox()).toBeInTheDocument()
+    expect(field()).not.toHaveAttribute('aria-activedescendant')
+
+    await user.type(field(), 'ap{Enter}')
+
+    expect(onChange).toHaveBeenLastCalledWith([])
+    expect(listbox()).toBeInTheDocument()
   })
 
   it('opens on the first option with ArrowDown even when there are choices', async () => {

@@ -42,6 +42,8 @@ export const useCombobox = ({ options, multiple, value, defaultValue, onValueCha
   const visible = useMemo(() => visibleOptions(options, typed ?? '', filter), [options, typed, filter])
   const navigate = useListNavigation({ items: visible.map((option) => ({ disabled: option.disabled })) })
   const shown = isOpen && !disabled
+  const searching = typed !== null && typed.trim() !== '' && !loading
+  const current = active >= 0 ? active : searching ? visible.findIndex((option) => !option.disabled) : -1
 
   useEffect(() => {
     selected.forEach((selectedValue) => {
@@ -123,16 +125,16 @@ export const useCombobox = ({ options, multiple, value, defaultValue, onValueCha
         return
       }
 
-      const target = navigate(event, active)
+      const target = navigate(event, current)
 
       if (target !== undefined) setActive(target)
 
       return
     }
 
-    if (event.key === 'Enter' && shown && active >= 0 && visible[active]) {
+    if (event.key === 'Enter' && !event.nativeEvent.isComposing && shown && current >= 0 && visible[current]) {
       event.preventDefault()
-      choose(visible[active])
+      choose(visible[current])
 
       return
     }
@@ -140,5 +142,5 @@ export const useCombobox = ({ options, multiple, value, defaultValue, onValueCha
     if (event.key === 'Backspace' && multiple && text === '' && selected.length > 0) remove(selected[selected.length - 1])
   }
 
-  return { shown, selected, labelOf, text, visible, empty: visible.length === 0 && !loading, active, setActive, setOpen, close, settle, choose, remove, handleChange, handleKeyDown, floated: text !== '' || (multiple && selected.length > 0) }
+  return { shown, selected, labelOf, text, visible, empty: visible.length === 0 && !loading, active: current, setActive, setOpen, close, settle, choose, remove, handleChange, handleKeyDown, floated: text !== '' || (multiple && selected.length > 0) }
 }
