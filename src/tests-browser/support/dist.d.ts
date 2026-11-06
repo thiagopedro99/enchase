@@ -2,6 +2,11 @@ declare module '*/dist-lib/index.js' {
   export * from 'enchase'
 }
 
+declare module '*/index.json?raw' {
+  const text: string
+  export default text
+}
+
 declare module '*.css?inline' {
   const css: string
   export default css
