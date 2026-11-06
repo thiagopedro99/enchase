@@ -4,7 +4,7 @@ import { defaultVariant } from './defaultData.ts'
 import { useCardSurface } from './surface.ts'
 import styles from './styles.module.css'
 
-import type { ReactNode } from 'react'
+import type { HTMLAttributes, ReactNode } from 'react'
 import type { CardProps } from './types.ts'
 
 const filled = (node: ReactNode) => node !== undefined && node !== null && node !== false && node !== ''
@@ -14,10 +14,10 @@ export const Card = ({ as: Tag = defaultTag, children, animation, variant = defa
   const surface = useCardSurface({ variant, padding: withHeader ? undefined : padding, animation })
   const own = { ...slot('card'), ...surface, className: styles.card, role: roleOf(Tag), 'data-with-header': withHeader ? '' : undefined }
 
-  if (!withHeader) return <Tag {...mergeProps(own, props)}>{children}</Tag>
+  if (!withHeader) return <Tag {...(mergeProps(own, props) as HTMLAttributes<HTMLElement>)}>{children}</Tag>
 
   return (
-    <Tag {...mergeProps(own, props)}>
+    <Tag {...(mergeProps(own, props) as HTMLAttributes<HTMLElement>)}>
       <div className={styles.header} {...slot('card', 'header')}>
         <div className={styles.title} {...slot('card', 'title')}>
           {header}

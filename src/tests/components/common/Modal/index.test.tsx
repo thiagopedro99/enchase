@@ -6,7 +6,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
-import { useState } from 'react'
+import { createRef, useState } from 'react'
 
 import { ConfirmModal, Modal } from '@components/common/Modal/index.tsx'
 
@@ -492,5 +492,76 @@ describe('Modal body scrolling', () => {
     )
 
     expect(await axe(await screen.findByRole('dialog'))).toHaveNoViolations()
+  })
+})
+
+describe('Modal ref', () => {
+  it('stays null while closed, holds the dialog panel while open and goes back to null once closed', async () => {
+    const user = userEvent.setup()
+    const ref = createRef<HTMLDivElement>()
+    renderWithProviders(
+      <ControlledDialog>
+        {({ open, close }) => (
+          <Modal isOpen={open} onClose={close} title="Edit profile" ref={ref}>
+            <input aria-label="Name" />
+          </Modal>
+        )}
+      </ControlledDialog>
+    )
+
+    expect(ref.current).toBeNull()
+
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+
+    expect(ref.current).toBe(screen.getByRole('dialog', { name: 'Edit profile' }))
+    expect(ref.current).toBe(document.querySelector('[data-slot="modal-panel"]'))
+    expect(ref.current).toBeInstanceOf(HTMLDivElement)
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => expect(ref.current).toBeNull())
+  })
+
+  it('calls a ref callback with the panel and then with null, and keeps the focus inside the dialog', async () => {
+    const user = userEvent.setup()
+    const calls: (HTMLDivElement | null)[] = []
+    renderWithProviders(
+      <ControlledDialog>
+        {({ open, close }) => (
+          <Modal
+            isOpen={open}
+            onClose={close}
+            title="Edit profile"
+            ref={(node) => {
+              calls.push(node)
+            }}
+          >
+            <input aria-label="Name" />
+          </Modal>
+        )}
+      </ControlledDialog>
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+
+    expect(calls.at(-1)).toBe(screen.getByRole('dialog', { name: 'Edit profile' }))
+    expect(screen.getByRole('dialog', { name: 'Edit profile' }).contains(document.activeElement)).toBe(true)
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => expect(calls.at(-1)).toBeNull())
+  })
+
+  it('gives the ref of the confirmation dialog the same panel', async () => {
+    const user = userEvent.setup()
+    const ref = createRef<HTMLDivElement>()
+    renderWithProviders(<ControlledDialog>{({ open, close }) => <ConfirmModal isOpen={open} onClose={close} onConfirm={vi.fn()} message="Delete this item?" ref={ref} />}</ControlledDialog>)
+
+    expect(ref.current).toBeNull()
+
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+
+    expect(ref.current).toBe(screen.getByRole('alertdialog'))
+    expect(ref.current).toBe(document.querySelector('[data-slot="modal-panel"]'))
   })
 })

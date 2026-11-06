@@ -39,7 +39,11 @@ const meta = {
       description: 'Class of the element (data-slot="skeleton"), which wins over the default sizes and radii.',
       control: 'text'
     },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the root `<div>`.',
+      control: false
+    }
   }
 } satisfies Meta<typeof Skeleton>
 

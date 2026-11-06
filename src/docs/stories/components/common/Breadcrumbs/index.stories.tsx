@@ -36,6 +36,10 @@ const meta = {
     className: {
       description: 'User class, applied to the root after the library class. It also accepts style and data-slot on the parts.',
       control: false
+    },
+    ref: {
+      description: 'Ref of the root `<nav>` (`data-slot="breadcrumbs"`). It stays `null` when `items` is empty, because nothing is rendered then.',
+      control: false
     }
   }
 } satisfies Meta<typeof Breadcrumbs>

@@ -77,6 +77,10 @@ const meta = {
     style: {
       description: 'Style of the panel, merged with the library style (yours wins).',
       control: false
+    },
+    ref: {
+      description: 'Ref of the panel of the dialog (`data-slot="modal-panel"`), the element that receives `className` and `style`. It is `null` while the dialog is closed, because the panel is not in the page then.',
+      control: false
     }
   },
   parameters: {

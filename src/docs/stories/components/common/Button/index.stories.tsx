@@ -90,6 +90,10 @@ const meta = {
       control: { type: 'number', min: 0, step: 1 },
       if: { arg: 'motionRecipe', eq: 'lift' },
       table: { category: 'Motion' }
+    },
+    ref: {
+      description: 'Ref of the `<button>`.',
+      control: false
     }
   },
   render: ({ motionRecipe, motionDuration, motionScale, motionDistance, ...args }) => (

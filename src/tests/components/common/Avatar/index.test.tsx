@@ -2,6 +2,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { fireEvent, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { Avatar } from '@components/common/Avatar/index.tsx'
 
@@ -217,5 +218,19 @@ describe('Avatar contract', () => {
     renderWithProviders(<Avatar name="Ana" data-slot="mine" data-testid="avatar" />)
 
     expect(screen.getByTestId('avatar')).toHaveAttribute('data-slot', 'avatar')
+  })
+})
+
+describe('Avatar ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLSpanElement>()
+    const { unmount } = renderWithProviders(<Avatar ref={ref} name="Ana Souza" />)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="avatar"]'))
+    expect(ref.current).toBeInstanceOf(HTMLSpanElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

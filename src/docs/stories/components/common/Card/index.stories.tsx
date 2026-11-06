@@ -47,7 +47,11 @@ const meta = {
       control: 'text'
     },
     children: { control: 'text' },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the root element, which is the `as` tag (a `<div>` by default), also with a `header`.',
+      control: false
+    }
   }
 } satisfies Meta<typeof Card>
 

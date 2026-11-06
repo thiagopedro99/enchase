@@ -11,6 +11,7 @@ import { useOverlayStack } from '@hooks/useOverlayStack.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { focusFirst, focusTrigger } from './focus.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { mergeRefs } from '@utils/mergeRefs.ts'
 import { tabbablesIn } from '@utils/tabbable.ts'
 import { usePortalContainer } from '@hooks/usePortalContainer.ts'
 import { usePresence } from '@hooks/usePresence.ts'
@@ -39,12 +40,14 @@ export const Popover = ({
   className,
   style,
   contentClassName,
-  contentStyle
+  contentStyle,
+  ref: userRef
 }: PopoverProps) => {
   const { dir } = useUIConfig()
   const target = usePortalContainer(container)
   const [isOpen, setOpen] = useControllableState(open, initiallyOpen, onOpenChange)
   const { mounted, state, ref } = usePresence<HTMLDivElement>(isOpen)
+  const contentRef = useMemo(() => mergeRefs(ref, userRef), [ref, userRef])
   const id = useId()
   const triggerRef = useRef<HTMLSpanElement>(null)
   const arrowRef = useRef<HTMLSpanElement>(null)
@@ -92,7 +95,7 @@ export const Popover = ({
 
   const contentProps = mergeProps(
     {
-      ref,
+      ref: contentRef,
       id,
       role,
       dir,

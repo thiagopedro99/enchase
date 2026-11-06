@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { Alert } from '@components/common/Alert/index.tsx'
 
@@ -224,5 +225,19 @@ describe('Alert contract', () => {
     await user.click(screen.getByRole('status'))
 
     expect(onClick).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('Alert ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLDivElement>()
+    const { unmount } = renderWithProviders(<Alert ref={ref}>Saved</Alert>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="alert"]'))
+    expect(ref.current).toBeInstanceOf(HTMLDivElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

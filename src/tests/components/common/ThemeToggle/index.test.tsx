@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
 import { act, screen } from '@testing-library/react'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import ThemeToggle from '@components/common/ThemeToggle/index.tsx'
 
@@ -96,5 +97,19 @@ describe('ThemeToggle', () => {
     const { container } = renderWithProviders(<ThemeToggle />)
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('ThemeToggle ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLButtonElement>()
+    const { unmount } = renderWithProviders(<ThemeToggle ref={ref} />)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="theme-toggle"]'))
+    expect(ref.current).toBeInstanceOf(HTMLButtonElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

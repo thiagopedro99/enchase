@@ -1,9 +1,10 @@
-import { cloneElement, isValidElement, useEffect, useId, useLayoutEffect, useRef, useState } from 'react'
+import { cloneElement, isValidElement, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { arrowPadding, bubbleOffset, closeDelay as defaultCloseDelay, defaultArrow, defaultPosition, joinsGroup, openDelay as defaultOpenDelay, resolveAnimation, tooltipGroup, viewportPadding } from './defaultData.ts'
 import { autoUpdate, computePosition, resolvePlacement } from '../../../positioning/index.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { mergeRefs } from '@utils/mergeRefs.ts'
 import { classNames } from '@utils/classNames.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { usePortalContainer } from '@hooks/usePortalContainer.ts'
@@ -26,7 +27,8 @@ export const Tooltip = ({
   className,
   style,
   bubbleClassName,
-  bubbleStyle
+  bubbleStyle,
+  ref
 }: TooltipProps) => {
   const { motion, dir } = useUIConfig()
   const target = usePortalContainer(container)
@@ -39,6 +41,7 @@ export const Tooltip = ({
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const presence = usePresence<HTMLSpanElement>(open)
+  const bubbleRef = useMemo(() => mergeRefs(presence.ref, ref), [presence.ref, ref])
 
   const clearTimers = () => {
     if (openTimer.current) clearTimeout(openTimer.current)
@@ -134,7 +137,7 @@ export const Tooltip = ({
 
   const bubbleProps = mergeProps(
     {
-      ref: presence.ref,
+      ref: bubbleRef,
       className: styles.bubble,
       style: bubbleVariables,
       'data-state': presence.state,

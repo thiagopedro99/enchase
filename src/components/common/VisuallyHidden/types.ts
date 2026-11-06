@@ -1,3 +1,3 @@
-import type { HTMLAttributes } from 'react'
+import type { HTMLAttributes, Ref } from 'react'
 
-export type VisuallyHiddenProps = HTMLAttributes<HTMLSpanElement>
+export type VisuallyHiddenProps = HTMLAttributes<HTMLSpanElement> & { ref?: Ref<HTMLSpanElement> | undefined }

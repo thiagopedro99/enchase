@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { CSSProperties, ReactNode, Ref } from 'react'
 import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { MotionOverride } from '@motion/types.ts'
 
@@ -20,6 +20,7 @@ export interface TooltipProps {
   style?: CSSProperties | undefined
   bubbleClassName?: string | undefined
   bubbleStyle?: CSSProperties | undefined
+  ref?: Ref<HTMLSpanElement> | undefined
 }
 
 export type TooltipAnimation = {

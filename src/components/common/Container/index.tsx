@@ -3,7 +3,7 @@ import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import styles from './styles.module.css'
 
-import type { CSSProperties } from 'react'
+import type { CSSProperties, HTMLAttributes } from 'react'
 import type { ContainerProps } from './types.ts'
 
 export const Container = ({ as: Tag = defaultTag, children, maxWidth = 'lg', padding = true, center = true, ...props }: ContainerProps) => {
@@ -23,7 +23,7 @@ export const Container = ({ as: Tag = defaultTag, children, maxWidth = 'lg', pad
     'data-center': center ? undefined : 'false'
   }
 
-  return <Tag {...mergeProps(own, props)}>{children}</Tag>
+  return <Tag {...(mergeProps(own, props) as HTMLAttributes<HTMLElement>)}>{children}</Tag>
 }
 
 export default Container

@@ -78,7 +78,11 @@ const meta = {
       control: 'text'
     },
     children: { control: false },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the `<button>`.',
+      control: false
+    }
   }
 } satisfies Meta<typeof CardButton>
 

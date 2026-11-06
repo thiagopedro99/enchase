@@ -102,6 +102,10 @@ const meta = {
       description: 'Loop of the indeterminate state. false turns it off and leaves a still, faded bar or ring. { tuning: { duration } } sets the seconds of one cycle. The determinate bar and ring also stop easing when it is false.',
       control: 'object',
       table: { type: { summary: 'false | { recipe, tuning }' }, defaultValue: { summary: 'shimmer (bar), spin (ring)' } }
+    },
+    ref: {
+      description: 'Ref of the root `<div>` (`role="progressbar"`).',
+      control: false
     }
   }
 } satisfies Meta<typeof Progress>

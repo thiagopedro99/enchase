@@ -2,6 +2,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { describe, expect, it } from 'vitest'
 import { screen } from '@testing-library/react'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { Card } from '@components/common/Card/index.tsx'
 import { Grid } from '@components/common/Grid/index.tsx'
@@ -312,5 +313,32 @@ describe('Card as', () => {
     expect(screen.getByRole('list', { name: 'Projects' })).toBeInTheDocument()
     expect(screen.getAllByRole('listitem')).toHaveLength(2)
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Card ref', () => {
+  it('gives the ref the root element, whatever its tag and with or without a header', () => {
+    const plain = createRef<HTMLElement>()
+    const section = createRef<HTMLElement>()
+    const headed = createRef<HTMLElement>()
+    const { unmount } = renderWithProviders(
+      <>
+        <Card ref={plain}>Body</Card>
+        <Card ref={section} as="section">
+          Body
+        </Card>
+        <Card ref={headed} header="Title">
+          Body
+        </Card>
+      </>
+    )
+    const roots = [...document.querySelectorAll('[data-slot="card"]')]
+
+    expect([plain.current, section.current, headed.current]).toEqual(roots)
+    expect(roots.map((root) => root.tagName)).toEqual(['DIV', 'SECTION', 'DIV'])
+
+    unmount()
+
+    expect([plain.current, section.current, headed.current]).toEqual([null, null, null])
   })
 })

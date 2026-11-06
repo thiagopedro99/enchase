@@ -44,7 +44,11 @@ const meta = {
       description: 'Class of the element (`data-slot="link"`), which wins over the style of the library.',
       control: 'text'
     },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the `<a>`.',
+      control: false
+    }
   },
   parameters: {
     docs: {

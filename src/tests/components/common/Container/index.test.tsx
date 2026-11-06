@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { createRef } from 'react'
 
 import { Container } from '@components/common/Container/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
@@ -129,5 +130,20 @@ describe('Container as', () => {
     const { container } = render(<Container as="main">Conteúdo</Container>)
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Container ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLElement>()
+    const { unmount } = render(<Container ref={ref}>x</Container>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="container"]'))
+    expect(ref.current).toBeInstanceOf(HTMLElement)
+    expect(ref.current?.tagName).toBe('DIV')
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

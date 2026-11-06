@@ -82,7 +82,11 @@ const meta = {
     style: { description: 'Style of the wrapper around the button, merged with the library style (yours wins).', control: false },
     contentClassName: { description: 'Class of the box of the menu (data-slot="popover-content"): the background, the border and the shadow. The list inside is data-slot="menu" and each item is data-slot="menu-item".', control: false },
     contentStyle: { description: 'Style of the box of the menu, merged with the library style (yours wins).', control: false },
-    children: { description: 'The element that opens the menu, normally a button. It receives aria-haspopup, aria-expanded and aria-controls, and the arrow keys: ArrowDown opens the menu on the first item and ArrowUp on the last.', control: false }
+    children: { description: 'The element that opens the menu, normally a button. It receives aria-haspopup, aria-expanded and aria-controls, and the arrow keys: ArrowDown opens the menu on the first item and ArrowUp on the last.', control: false },
+    ref: {
+      description: 'Ref of the panel of the menu (`role="menu"`, `data-slot="popover-content"`), the element that receives `contentClassName` and `contentStyle`. It is `null` while the menu is closed, because the panel is not in the page then.',
+      control: false
+    }
   }
 } satisfies Meta<typeof Menu>
 

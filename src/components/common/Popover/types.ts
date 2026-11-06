@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode, RefObject } from 'react'
+import type { CSSProperties, ReactNode, Ref, RefObject } from 'react'
 import type { PlacementInput } from '../../../positioning/index.ts'
 import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { MotionOverride } from '@motion/types.ts'
@@ -25,6 +25,7 @@ export interface PopoverProps {
   style?: CSSProperties | undefined
   contentClassName?: string | undefined
   contentStyle?: CSSProperties | undefined
+  ref?: Ref<HTMLDivElement> | undefined
 }
 
 export type PopoverTreeNode = (node: Node) => boolean

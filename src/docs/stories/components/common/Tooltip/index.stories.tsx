@@ -69,7 +69,11 @@ const meta = {
     },
     children: { description: 'The trigger. It sits inside a div (data-slot="tooltip-trigger") and, with describe on, receives aria-describedby.', control: false },
     style: { description: 'Style of the element that wraps the trigger.', control: false },
-    bubbleStyle: { description: 'Style of the tooltip.', control: false }
+    bubbleStyle: { description: 'Style of the tooltip.', control: false },
+    ref: {
+      description: 'Ref of the bubble (`<span data-slot="tooltip-bubble">`), the element that receives `bubbleClassName` and `bubbleStyle`. It is `null` while the tooltip is hidden, because the bubble is not in the page then.',
+      control: false
+    }
   }
 } satisfies Meta<typeof Tooltip>
 

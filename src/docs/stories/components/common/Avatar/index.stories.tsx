@@ -35,6 +35,10 @@ const meta = {
     children: {
       description: 'Content shown instead of the initials when there is no image, for example an icon. It does not change the accessible name.',
       control: false
+    },
+    ref: {
+      description: 'Ref of the root `<span>` (`data-slot="avatar"`).',
+      control: false
     }
   }
 } satisfies Meta<typeof Avatar>

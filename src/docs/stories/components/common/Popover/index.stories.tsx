@@ -115,7 +115,11 @@ const meta = {
       control: false
     },
     style: { description: 'Style of the element that wraps the trigger.', control: false },
-    contentStyle: { description: 'Style of the content.', control: false }
+    contentStyle: { description: 'Style of the content.', control: false },
+    ref: {
+      description: 'Ref of the content panel (`data-slot="popover-content"`), the element that receives `contentClassName` and `contentStyle`. It is `null` while the popover is closed, because the panel is not in the page then. The trigger is your own `children`, which takes its own ref.',
+      control: false
+    }
   }
 } satisfies Meta<typeof Popover>
 

@@ -1,10 +1,11 @@
 import { createPortal } from 'react-dom'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { usePortalContainer } from '@hooks/usePortalContainer.ts'
 import { useInertSiblings } from '@hooks/useInertSiblings.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { mergeRefs } from '@utils/mergeRefs.ts'
 import { useScrollLock } from '@hooks/useScrollLock.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { usePresence } from '@hooks/usePresence.ts'
@@ -22,8 +23,9 @@ const Spinner = ({ part, size, color, animation }: SpinnerProps) => {
   return <span {...slot(part, 'spinner')} className={styles.spinner} data-size={size} data-motion={motion} style={merged} aria-hidden="true" />
 }
 
-const OverlayLoading = ({ size, text, color, animation, ...props }: Required<Pick<LoadingProps, 'size'>> & Omit<LoadingProps, 'size' | 'overlay' | 'container'>) => {
+const OverlayLoading = ({ size, text, color, animation, ref, ...props }: Required<Pick<LoadingProps, 'size'>> & Omit<LoadingProps, 'size' | 'overlay' | 'container'>) => {
   const rootRef = useRef<HTMLDivElement>(null)
+  const mergedRef = useMemo(() => mergeRefs(rootRef, ref), [ref])
   const { labels } = useUIConfig()
   const [shown, setShown] = useState(false)
   const { state } = usePresence(shown)
@@ -35,7 +37,7 @@ const OverlayLoading = ({ size, text, color, animation, ...props }: Required<Pic
   const own = { ...slot('loading'), className: styles.root, 'data-state': state }
 
   return (
-    <div ref={rootRef} {...mergeProps(own, props)}>
+    <div ref={mergedRef} {...mergeProps(own, props)}>
       <div {...slot('loading', 'backdrop')} className={styles.overlay} aria-hidden="true" />
       <div {...slot('loading', 'content')} className={styles.container} data-overlay="" role="status" aria-live="polite">
         <Spinner part="loading" size={size} color={color} animation={animation} />

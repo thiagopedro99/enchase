@@ -1,5 +1,5 @@
 import type { MotionOverride } from '@motion/types.ts'
-import type { HTMLAttributes } from 'react'
+import type { HTMLAttributes, Ref } from 'react'
 
 export type ProgressVariant = 'linear' | 'circular'
 
@@ -12,4 +12,5 @@ export interface ProgressProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chi
   size?: ProgressSize | undefined
   showValue?: boolean | undefined
   animation?: MotionOverride | undefined
+  ref?: Ref<HTMLDivElement> | undefined
 }

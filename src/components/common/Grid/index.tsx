@@ -4,7 +4,7 @@ import { defaultTag, roleOf } from '@utils/structureTag.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import styles from './styles.module.css'
 
-import type { CSSProperties } from 'react'
+import type { CSSProperties, HTMLAttributes } from 'react'
 import type { GridProps } from './types.ts'
 
 export const Grid = ({ as: Tag = defaultTag, children, columns = defaultColumns, gap, minColumnWidth, centerLastRow = defaultCenterLastRow, ...props }: GridProps) => {
@@ -17,7 +17,7 @@ export const Grid = ({ as: Tag = defaultTag, children, columns = defaultColumns,
     'data-center-last': centerLastRow && !minColumnWidth ? '' : undefined
   }
 
-  return <Tag {...mergeProps(own, props)}>{children}</Tag>
+  return <Tag {...(mergeProps(own, props) as HTMLAttributes<HTMLElement>)}>{children}</Tag>
 }
 
 export default Grid

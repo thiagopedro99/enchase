@@ -14,7 +14,7 @@ import styles from './styles.module.css'
 
 import type { DrawerDialogProps, DrawerProps } from './types.ts'
 
-const DrawerDialog = ({ open, state, panelRef, motionStyle, side, size, title, ariaLabel, footer, showCloseButton, closeOnOverlayClick, closeOnEsc, onClose, className, style, children }: DrawerDialogProps) => {
+const DrawerDialog = ({ open, state, panelRef, ref, motionStyle, side, size, title, ariaLabel, footer, showCloseButton, closeOnOverlayClick, closeOnEsc, onClose, className, style, children }: DrawerDialogProps) => {
   const titleId = useId()
   const bodyRef = useRef<HTMLDivElement>(null)
   const overflowing = useOverflow(bodyRef)
@@ -36,6 +36,7 @@ const DrawerDialog = ({ open, state, panelRef, motionStyle, side, size, title, a
       open={open}
       state={state}
       panelRef={panelRef}
+      userRef={ref}
       label={title ? undefined : ariaLabel}
       labelledBy={title ? titleId : undefined}
       onClose={onClose}

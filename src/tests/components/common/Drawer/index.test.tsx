@@ -6,7 +6,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
-import { useState } from 'react'
+import { createRef, useState } from 'react'
 
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
@@ -591,5 +591,34 @@ describe('Drawer body scrolling', () => {
     )
 
     expect(await axe(await screen.findByRole('dialog'))).toHaveNoViolations()
+  })
+})
+
+describe('Drawer ref', () => {
+  it('stays null while closed, holds the dialog panel while open and goes back to null once closed', async () => {
+    const user = userEvent.setup()
+    const ref = createRef<HTMLDivElement>()
+    renderWithProviders(
+      <ControlledDialog>
+        {({ open, close }) => (
+          <Drawer open={open} onClose={close} title="Filters" ref={ref}>
+            <input aria-label="Name" />
+          </Drawer>
+        )}
+      </ControlledDialog>
+    )
+
+    expect(ref.current).toBeNull()
+
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+
+    expect(ref.current).toBe(screen.getByRole('dialog', { name: 'Filters' }))
+    expect(ref.current).toBe(document.querySelector('[data-slot="drawer-panel"]'))
+    expect(ref.current).toBeInstanceOf(HTMLDivElement)
+    expect(ref.current?.contains(document.activeElement)).toBe(true)
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => expect(ref.current).toBeNull())
   })
 })

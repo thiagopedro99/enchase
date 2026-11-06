@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { createRef } from 'react'
 
 import { VisuallyHidden } from '@components/common/VisuallyHidden/index.tsx'
 import { axe } from '@tests/axe.ts'
@@ -22,5 +23,19 @@ describe('VisuallyHidden', () => {
     const { container } = render(<VisuallyHidden>Texto</VisuallyHidden>)
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('VisuallyHidden ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLSpanElement>()
+    const { unmount } = render(<VisuallyHidden ref={ref}>Only for screen readers</VisuallyHidden>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="visually-hidden"]'))
+    expect(ref.current).toBeInstanceOf(HTMLSpanElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

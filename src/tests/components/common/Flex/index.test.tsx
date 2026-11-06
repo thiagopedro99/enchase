@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { createRef } from 'react'
 
 import { Badge } from '@components/common/Badge/index.tsx'
 import { Flex } from '@components/common/Flex/index.tsx'
@@ -104,5 +105,20 @@ describe('Flex as', () => {
     expect(screen.getByRole('list', { name: 'Stack' })).toBeInTheDocument()
     expect(screen.getAllByRole('listitem').map((item) => item.textContent)).toEqual(['React', 'TypeScript', 'Vite'])
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Flex ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLElement>()
+    const { unmount } = render(<Flex ref={ref}>x</Flex>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="flex"]'))
+    expect(ref.current).toBeInstanceOf(HTMLElement)
+    expect(ref.current?.tagName).toBe('DIV')
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

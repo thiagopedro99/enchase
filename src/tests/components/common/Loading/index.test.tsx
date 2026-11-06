@@ -3,6 +3,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { screen, waitFor } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { InlineLoading, Loading } from '@components/common/Loading/index.tsx'
 
@@ -151,5 +152,47 @@ describe('Loading contract', () => {
     expect(root).toHaveAttribute('role', 'status')
     expect(root.className.split(' ').at(-1)).toBe('mine')
     expect(root.querySelector('[data-slot="inline-loading-spinner"]')).toHaveAttribute('data-size', 'sm')
+  })
+})
+
+describe('Loading ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLDivElement>()
+    const { unmount } = renderWithProviders(<Loading ref={ref} />)
+
+    expect(ref.current).toBe(screen.getByRole('status'))
+    expect(ref.current).toBeInstanceOf(HTMLDivElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
+  })
+
+  it('gives the ref the root of the overlay, which still makes the page inert behind it', async () => {
+    const ref = createRef<HTMLDivElement>()
+    const { container, unmount } = renderWithProviders(<Loading overlay text="Processing" ref={ref} />)
+
+    await waitFor(() => expect(ref.current).not.toBeNull())
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="loading"]'))
+    expect(ref.current?.parentElement).toBe(document.body)
+    expect(container).toHaveAttribute('inert')
+
+    unmount()
+
+    expect(ref.current).toBeNull()
+    expect(container).not.toHaveAttribute('inert')
+  })
+
+  it('gives the ref the root of the inline loading', () => {
+    const ref = createRef<HTMLSpanElement>()
+    const { unmount } = renderWithProviders(<InlineLoading ref={ref} />)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="inline-loading"]'))
+    expect(ref.current).toBeInstanceOf(HTMLSpanElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

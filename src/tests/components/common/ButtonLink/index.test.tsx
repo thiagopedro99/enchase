@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { ButtonLink } from '@components/common/ButtonLink/index.tsx'
 
@@ -386,5 +387,19 @@ describe('ButtonLink navigation', () => {
     renderLink({ download: 'manual.pdf' })
 
     expect(link()).toHaveAttribute('download', 'manual.pdf')
+  })
+})
+
+describe('ButtonLink ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLAnchorElement>()
+    const { unmount } = renderWithProviders(<ButtonLink ref={ref} href="/docs">Docs</ButtonLink>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="button-link"]'))
+    expect(ref.current).toBeInstanceOf(HTMLAnchorElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

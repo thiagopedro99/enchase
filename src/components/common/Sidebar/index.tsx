@@ -1,6 +1,9 @@
+import { useMemo } from 'react'
+
 import { drawerOverride, drawerWidth, itemMotionVariables } from './defaultData.ts'
 import { DrawerLayer } from '../Drawer/DrawerLayer.tsx'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { mergeRefs } from '@utils/mergeRefs.ts'
 import { useCollapsePhase } from '@hooks/useCollapsePhase.ts'
 import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { usePresence } from '@hooks/usePresence.ts'
@@ -12,10 +15,11 @@ import type { PresenceState } from '@hooks/usePresence.ts'
 import type { CSSProperties, RefObject } from 'react'
 import type { SidebarProps } from './types.ts'
 
-const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, footer, collapsed = false, onToggleCollapsed, ariaLabel, id, className, style, animation }: SidebarProps) => {
+const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, footer, collapsed = false, onToggleCollapsed, ariaLabel, id, className, style, animation, ref: userRef }: SidebarProps) => {
   const { labels } = useUIConfig()
   const motionStyle = useMotionStyle('resize', 'sidebar', animation)
   const { phase, ref, compact } = useCollapsePhase<HTMLDivElement>(collapsed)
+  const mergedRef = useMemo(() => mergeRefs(ref, userRef), [ref, userRef])
   const rootProps = mergeProps(
     {
       ...slot('sidebar'),
@@ -28,7 +32,7 @@ const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, foot
   )
 
   return (
-    <div ref={ref} id={id} {...rootProps}>
+    <div ref={mergedRef} id={id} {...rootProps}>
       <SidebarContent
         sections={sections}
         activeSectionId={activeSectionId}
@@ -46,7 +50,7 @@ const PermanentSidebar = ({ sections, activeSectionId, currentHref, header, foot
 
 type ModalPanelProps = SidebarProps & { open: boolean; state: PresenceState; panelRef: RefObject<HTMLDivElement | null>; motionStyle: CSSProperties }
 
-const ModalSidebarPanel = ({ sections, activeSectionId, currentHref, header, footer, onClose, ariaLabel, id, className, style, open, state, panelRef, motionStyle }: ModalPanelProps) => {
+const ModalSidebarPanel = ({ sections, activeSectionId, currentHref, header, footer, onClose, ariaLabel, id, className, style, open, state, panelRef, motionStyle, ref }: ModalPanelProps) => {
   const { labels } = useUIConfig()
   const name = ariaLabel ?? labels.mobileNavigation
 
@@ -66,6 +70,7 @@ const ModalSidebarPanel = ({ sections, activeSectionId, currentHref, header, foo
       open={open}
       state={state}
       panelRef={panelRef}
+      userRef={ref}
       label={name}
       onClose={onClose}
       root={{ ...slot('sidebar'), 'data-variant': 'modal' }}

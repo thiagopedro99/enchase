@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { AlertTriangleIcon } from '@components/common/Icon/icons/AlertTriangleIcon.tsx'
 import { CalendarIcon } from '@components/common/Icon/icons/CalendarIcon.tsx'
@@ -153,5 +154,19 @@ describe.each(icons)('%s icon', (name, Component) => {
     expect(svg).toHaveAttribute('width', '20')
     expect(svg).toHaveAttribute('aria-hidden', 'true')
     expect(svg.querySelectorAll('path, rect, circle').length).toBeGreaterThan(0)
+  })
+})
+
+describe('Icon ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<SVGSVGElement>()
+    const { unmount } = render(<Icon ref={ref}><circle cx="12" cy="12" r="1" /></Icon>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="icon"]'))
+    expect(ref.current).toBeInstanceOf(SVGSVGElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

@@ -47,6 +47,10 @@ const meta = {
       description: 'Hides the divider from assistive technology (`role="none"`). Use it when the line only adds to the look and the content already reads in order.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultDecorative) } }
+    },
+    ref: {
+      description: 'Ref of the `<hr>`, or of the `<div>` that holds the lines and the text when the divider has text.',
+      control: false
     }
   }
 } satisfies Meta<typeof Divider>

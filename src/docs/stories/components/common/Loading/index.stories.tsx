@@ -47,7 +47,11 @@ const meta = {
       description: 'Class of the root element (data-slot="loading").',
       control: 'text'
     },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the root `<div>`. With `overlay` it is the root of the overlay, which is rendered in a portal, and it stays `null` until the overlay is mounted.',
+      control: false
+    }
   }
 } satisfies Meta<typeof Loading>
 

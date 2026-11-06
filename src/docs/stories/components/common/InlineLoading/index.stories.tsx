@@ -32,7 +32,11 @@ const meta = {
       description: 'Class of the root element (data-slot="inline-loading").',
       control: 'text'
     },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the root `<span>`.',
+      control: false
+    }
   },
   parameters: {
     docs: {

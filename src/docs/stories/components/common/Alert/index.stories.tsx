@@ -57,6 +57,10 @@ const meta = {
     onClose: {
       description: 'Shows the close button and is called when it is clicked. The Alert does not go away on its own: you remove it. The name of the button comes from labels.closeToast of the UIProvider.',
       control: false
+    },
+    ref: {
+      description: 'Ref of the root `<div>` (`data-slot="alert"`).',
+      control: false
     }
   }
 } satisfies Meta<typeof Alert>

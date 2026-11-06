@@ -36,6 +36,7 @@ A status message inside the page, in four types (`info`, `success`, `warning` an
 | `title` | `string` | — | Highlighted title, above the message. |
 | `icon` | `ReactNode` | — | Icon in place of the default one of each type. With null or false, the Alert shows no icon. The icon is decorative (aria-hidden), so the text has to say everything. |
 | `onClose` | `() => void` | — | Shows the close button and is called when it is clicked. The Alert does not go away on its own: you remove it. The name of the button comes from labels.closeToast of the UIProvider. |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref of the root `<div>` (`data-slot="alert"`). |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
 
@@ -49,6 +50,7 @@ A round picture for a person or an entity. It shows the image when there is one 
 | `src` | `string` | — | Address of the image. While it loads, and if it fails, the avatar shows the initials. Change it and the avatar waits for the new image. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the avatar: sm is 2 rem, md is 2.5 rem and lg is 3.5 rem. |
 | `children` | `ReactNode` | — | Content shown instead of the initials when there is no image, for example an icon. It does not change the accessible name. |
+| `ref` | `Ref<HTMLSpanElement>` | — | Ref of the root `<span>` (`data-slot="avatar"`). |
 
 Also accepts the other attributes of `<span>`, passed on to the element.
 
@@ -60,6 +62,7 @@ A small label for a state or a count, such as "New", "Paid" or "3". The color co
 | --- | --- | --- | --- |
 | `variant` | `'neutral' \| 'primary' \| 'success' \| 'warning' \| 'error' \| 'info'` | `'neutral'` | Color of the badge, by theme role: neutral is gray, primary uses the main color and success, warning, error and info follow the states. |
 | `size` | `'sm' \| 'md'` | `'md'` | Size of the badge: sm is 20 px tall and md is 24 px. |
+| `ref` | `Ref<HTMLSpanElement>` | — | Ref of the root `<span>` (`data-slot="badge"`). |
 
 Also accepts the other attributes of `<span>`, passed on to the element.
 
@@ -72,6 +75,7 @@ A breadcrumb trail: a `<nav>` with an ordered list, in which the last item is th
 | `items` | `BreadcrumbItem[]` | *required* | The trail, in order. The last item is the current page; the others become links when they have an href. |
 | `maxItems` | `number` | `4` | Above this number, the middle items become an ellipsis button that shows the full path. |
 | `ariaLabel` | `string` | — | Accessible name of the navigation. The default comes from the UIProvider (labels.breadcrumb). |
+| `ref` | `Ref<HTMLElement>` | — | Ref of the root `<nav>` (`data-slot="breadcrumbs"`). It stays `null` when `items` is empty, because nothing is rendered then. |
 
 Also accepts the other HTML attributes of the root element.
 
@@ -86,6 +90,7 @@ A button with seven variants and three sizes, and press feedback made with CSS o
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
 | `iconOnly` | `boolean` | `false` | Makes the button a square for a single icon: as wide as it is tall in every size, with the same padding on the four sides and the icon in the middle. There is no text to name it, so pass `aria-label`; without it a screen reader announces an empty button. |
 | `animation` | `false \| { recipe, from, tuning }` | `press` | Motion recipe of the button, made with CSS only. Use false to turn the animation off, or { recipe, tuning } with press (scales on press) or lift (rises on hover); other recipes are ignored. The duration, the scale and the distance become the variables --enchase-button-duration, --enchase-button-scale and --enchase-button-distance. Use the controls of the Motion group to experiment. The root element accepts className and style, and exposes data-slot="button". |
+| `ref` | `Ref<HTMLButtonElement>` | — | Ref of the `<button>`. |
 
 Also accepts the other attributes of `<button>`, passed on to the element.
 
@@ -99,6 +104,7 @@ A link that looks like a `Button`. It is a real `<a href>`, and goes through the
 | `native` | `boolean` | `false` | Leaves the click to the browser even on an app route. |
 | `externalIcon` | `boolean` | `true` | With `target="_blank"`, shows the external link icon after the content. `false` removes only the icon and keeps the "opens in a new tab" text for screen readers. A link with a single icon of its own takes `iconOnly`, which already leaves the external icon out. |
 | `iconOnly` | `boolean` | `false` | Makes the link a square for a single icon, the same as the `iconOnly` of the `Button`: as wide as it is tall in every size, with the same padding on the four sides and the icon in the middle. There is no text to name it, so pass `aria-label`. With `target="_blank"` it draws no external link icon and keeps only the "opens in a new tab" text for screen readers, so put the warning in the label itself. |
+| `ref` | `Ref<HTMLAnchorElement>` | — | Ref of the `<a>`. |
 | `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger' \| 'dashed' \| 'link'` | `'primary'` | Visual style, the same as the `Button`. |
 | `animation` | `false \| { recipe, from, tuning }` | `press` | Motion recipe of the `Button`. Use false to turn it off, or { recipe, tuning } with press or lift. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size, the same as the `Button`. |
@@ -118,6 +124,7 @@ A surface that groups content, in the variants `default`, `elevated` and `outlin
 | `header` | `ReactNode` | — | Title of the card, in a header over the content, with a line under it. With it, or with `headerExtra`, the content goes into a body of its own and the inner spacing (the `padding` prop or `--enchase-card-padding`) goes to the body, so the line of the header crosses the whole card. Without them, the card is the same as always. |
 | `headerExtra` | `ReactNode` | — | What goes at the end of the header, such as a link or a button. With only `headerExtra`, the title is empty and the extra stays at the end. |
 | `animation` | `false \| { recipe, tuning }` | `lift` | false turns the motion off. { tuning: { duration, distance } } sets the lift (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion. |
+| `ref` | `Ref<HTMLElement>` | — | Ref of the root element, which is the `as` tag (a `<div>` by default), also with a `header`. |
 
 Also accepts the other HTML attributes of the root element.
 
@@ -127,6 +134,7 @@ A card that is clickable as a whole and performs an action: a real `<button type
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
+| `ref` | `Ref<HTMLButtonElement>` | — | Ref of the `<button>`. |
 | `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Appearance of the surface, the same as the `Card`. Only the `elevated` one rises when the pointer is over it. |
 | `animation` | `false \| { recipe, tuning }` | `lift` | false turns the motion off. { tuning: { duration, distance } } sets the lift of the `elevated` variant (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion. |
 | `padding` | `string` | — | Inner spacing (any CSS value), as in the `Card`. Without it, the default spacing applies, and a class of your own always wins over it. |
@@ -141,6 +149,7 @@ A card that is clickable as a whole and leads to another page: a real `<a href>`
 | --- | --- | --- | --- |
 | `href` | `string` | *required* | Destination of the link, with the same rules as the `Link`: an app route goes to the `navigate` of the `UIProvider`; anchors, the hash of the current page and external URLs are left to the browser. |
 | `native` | `boolean` | `false` | Leaves the click to the browser even on an app route. |
+| `ref` | `Ref<HTMLAnchorElement>` | — | Ref of the `<a>`. |
 | `variant` | `'default' \| 'elevated' \| 'outlined'` | `'default'` | Appearance of the surface, the same as the `Card`. Only the `elevated` one rises when the pointer is over it. |
 | `animation` | `false \| { recipe, tuning }` | `lift` | false turns the motion off. { tuning: { duration, distance } } sets the lift of the `elevated` variant (seconds and pixels). The lift only runs with a fine pointer and with no preference for reduced motion. |
 | `padding` | `string` | — | Inner spacing (any CSS value), as in the `Card`. Without it, the default spacing applies, and a class of your own always wins over it. |
@@ -254,6 +263,7 @@ A ready-made confirmation modal: an alertdialog with the question and the cancel
 | `confirmText` | `string` | — | Text of the confirm button. Without it, it uses labels.confirm from the UIProvider. |
 | `cancelText` | `string` | — | Text of the cancel button, which receives the initial focus. Without it, it uses labels.cancel from the UIProvider. |
 | `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger' \| 'dashed' \| 'link'` | `'primary'` | Style of the confirm button, the same as in the Button. |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref of the panel of the dialog (`data-slot="modal-panel"`), the element that receives `className` and `style`. It is `null` while the dialog is closed, because the panel is not in the page then. |
 | `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
 | `animation` | `MotionOverride` | — | false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale, as in the Modal. |
 | `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
@@ -269,6 +279,7 @@ Limits the width of the content using the breakpoints of the `UIProvider`, with 
 | `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Maximum width, taken from the breakpoints of the UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px by default). full sets no limit. 2xl is still accepted as an alias of xxl. |
 | `padding` | `boolean \| string` | `true` | true uses the default spacing on the sides, false removes it, and a CSS string sets the value (variable --enchase-container-padding). |
 | `center` | `boolean` | `true` | Centers the container. With false it stays at the start, and in RTL on the right side. |
+| `ref` | `Ref<HTMLElement>` | — | Ref of the root element, which is the `as` tag (a `<div>` by default). |
 
 Also accepts the other HTML attributes of the root element.
 
@@ -314,6 +325,7 @@ A thin line that separates sections of content or groups of controls. It is an `
 | `orientation` | `'horizontal' \| 'vertical'` | `'horizontal'` | Direction of the line. A vertical divider is announced with `aria-orientation="vertical"` and stretches to the height of its parent when the parent is a flex container. |
 | `decorative` | `boolean` | `false` | Hides the divider from assistive technology (`role="none"`). Use it when the line only adds to the look and the content already reads in order. |
 | `textAlign` | `'start' \| 'center' \| 'end'` | `'center'` | Where the text of a divider with `children` sits: in the middle, with a line on each side, or at the `start` or the `end`, with a short line on that side. It follows the direction of the text. It has no effect without `children`. |
+| `ref` | `Ref<HTMLHRElement>` | — | Ref of the `<hr>`, or of the `<div>` that holds the lines and the text when the divider has text. |
 
 Also accepts the other attributes of `<hr>`, passed on to the element.
 
@@ -338,6 +350,7 @@ A panel that slides in from the edge of the page, rendered in a portal like the 
 | `animation` | `MotionOverride` | — | false turns off the motion; { tuning: { duration } } changes how long the slide takes. The panel always travels at least its own width. |
 | `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
 | `style` | `CSSProperties` | — | Style of the panel, merged with the library style (yours wins). |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref of the panel (`role="dialog"`, `data-slot="drawer-panel"`), the element that receives `className` and `style`. It is `null` while the drawer is closed, because the panel is not in the page then. |
 
 ### Flex
 
@@ -351,6 +364,7 @@ A flexbox container configured by props: direction, alignment, distribution, spa
 | `justify` | `'start' \| 'center' \| 'end' \| 'between' \| 'around' \| 'evenly'` | `'start'` | Distribution on the main axis. |
 | `gap` | `string` | — | Space between the children, passed through a CSS variable. The default comes from the spacing token. |
 | `wrap` | `boolean` | `false` | Allows line wrapping. |
+| `ref` | `Ref<HTMLElement>` | — | Ref of the root element, which is the `as` tag (a `<div>` by default). |
 
 Also accepts the other HTML attributes of the root element.
 
@@ -384,6 +398,7 @@ A CSS grid that reduces its columns by itself when they do not fit, without a me
 | `gap` | `string` | — | Space between the cells, through a CSS variable. The default comes from the spacing token. |
 | `minColumnWidth` | `string` | — | Minimum width of each column (any CSS value). When set, it is used instead of columns and the grid uses auto-fit. |
 | `centerLastRow` | `boolean` | `false` | Centers the last row when it is incomplete, such as the last two cards of five in three columns. The grid becomes a flex row that wraps: each cell has the width of one column and the full rows stay aligned to the columns. It works with `columns` (number or object) and is ignored with `minColumnWidth`, because then the number of columns depends on the width. |
+| `ref` | `Ref<HTMLElement>` | — | Ref of the root element, which is the `as` tag (a `<div>` by default). |
 
 Also accepts the other HTML attributes of the root element.
 
@@ -429,6 +444,7 @@ An inline loading indicator: a span with role="status" and the ring. To cover a 
 | `color` | `string` | — | Color of the spinning arc (any CSS color). |
 | `label` | `string` | — | Text for screen readers only. Without it, it announces labels.loading from the UIProvider. |
 | `animation` | `false \| { recipe, tuning }` | `spin` | false stops the spinning. { tuning: { duration } } sets the seconds of one full turn. With reduced motion the spin becomes an opacity pulse. |
+| `ref` | `Ref<HTMLSpanElement>` | — | Ref of the root `<span>`. |
 
 Also accepts the other attributes of `<span>`, passed on to the element.
 
@@ -508,6 +524,7 @@ A ring-shaped loading indicator, with optional text. With `overlay`, it covers t
 | `text` | `string` | — | Visible text. Without it, a screen reader announces labels.loading. |
 | `color` | `string` | — | Color of the spinning arc (any CSS color). |
 | `animation` | `false \| { recipe, tuning }` | `spin` | false stops the spinning. { tuning: { duration } } sets the seconds of one full turn. With reduced motion the spin becomes an opacity pulse. |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref of the root `<div>`. With `overlay` it is the root of the overlay, which is rendered in a portal, and it stays `null` until the overlay is mounted. |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
 
@@ -531,6 +548,7 @@ A button that opens a list of actions. It is a `Popover` with `role="menu"`: the
 | `style` | `CSSProperties` | — | Style of the wrapper around the button, merged with the library style (yours wins). |
 | `contentClassName` | `string` | — | Class of the box of the menu (data-slot="popover-content"): the background, the border and the shadow. The list inside is data-slot="menu" and each item is data-slot="menu-item". |
 | `contentStyle` | `CSSProperties` | — | Style of the box of the menu, merged with the library style (yours wins). |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref of the panel of the menu (`role="menu"`, `data-slot="popover-content"`), the element that receives `contentClassName` and `contentStyle`. It is `null` while the menu is closed, because the panel is not in the page then. |
 
 ### Modal
 
@@ -553,6 +571,7 @@ A modal dialog rendered in a portal: the focus stays trapped in the panel, the p
 | `animation` | `MotionOverride` | — | false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale. |
 | `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
 | `style` | `CSSProperties` | — | Style of the panel, merged with the library style (yours wins). |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref of the panel of the dialog (`data-slot="modal-panel"`), the element that receives `className` and `style`. It is `null` while the modal is closed, because the panel is not in the page then. |
 
 ### Navbar
 
@@ -641,6 +660,7 @@ A floating panel attached to a trigger. Its position adjusts itself near the edg
 | `style` | `CSSProperties` | — | Style of the element that wraps the trigger. |
 | `contentClassName` | `string` | — | Class of the content (data-slot="popover-content"), the box that carries the background, the border, the shadow and the arrow. What scrolls and carries the padding is the body (data-slot="popover-body"). You can also style it by data-state and data-placement. |
 | `contentStyle` | `CSSProperties` | — | Style of the content. |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref of the content panel (`data-slot="popover-content"`), the element that receives `contentClassName` and `contentStyle`. It is `null` while the popover is closed, because the panel is not in the page then. The trigger is your own `children`, which takes its own ref. |
 
 ### Progress
 
@@ -654,6 +674,7 @@ Shows how far a task has come, as a bar or as a ring. With a `value` it is deter
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the progress. For the bar it sets the thickness (sm is 0.25 rem, md is 0.5 rem and lg is 0.75 rem) and for the ring the diameter (sm is 1.5 rem, md is 2.5 rem and lg is 3.5 rem). |
 | `showValue` | `boolean` | `false` | Writes the percentage of the value as text: after the bar, in the same row, or in the middle of the ring. The text is hidden from assistive technology, which reads the value of the progressbar, and it is not written while the progress is indeterminate. It follows the language of the provider. The ring fits the text from the md size on, and has its own hooks for the size of the text, `--enchase-progress-ring-value-font-size-sm`, `-md` and `-lg`, besides the ones of the bar. |
 | `animation` | `false \| { recipe, tuning }` | `shimmer (bar), spin (ring)` | Loop of the indeterminate state. false turns it off and leaves a still, faded bar or ring. { tuning: { duration } } sets the seconds of one cycle. The determinate bar and ring also stop easing when it is false. |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref of the root `<div>` (`role="progressbar"`). |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
 
@@ -738,6 +759,7 @@ A side menu. `permanent` stays on the page and collapses to a bar of icons; `mod
 | `animation` | `false \| { recipe, from, tuning }` | — | false turns off the motion. In permanent it adjusts the collapse ({ tuning: { duration } }); in modal, the slide of the drawer ({ tuning: { distance, duration } }). |
 | `className` | `string` | — | Class of the root (data-slot="sidebar"); in the drawer, of the panel (data-slot="sidebar-panel"). You can also style it by data-slot, data-state and data-variant. |
 | `style` | `CSSProperties` | — | Style of the root in permanent or of the panel in modal. |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref of the element that receives `className` and `style`: the root `<div>` of the permanent sidebar or, with `variant="modal"`, the panel of the dialog (`data-slot="sidebar-panel"`), which is `null` while the sidebar is closed. |
 
 ### Skeleton
 
@@ -749,6 +771,7 @@ A placeholder shown while the content loads, with an animated shimmer, in text, 
 | `width` | `string` | — | Width (any CSS value). On the circular variant, width or height sets both sides. |
 | `height` | `string` | — | Height (any CSS value). |
 | `animation` | `false \| { recipe, tuning }` | `shimmer` | false turns the shimmer off. { tuning: { duration } } changes the duration in seconds. With reduced motion the shimmer becomes a pulse of opacity. |
+| `ref` | `Ref<HTMLDivElement>` | — | Ref of the root `<div>`. |
 
 Also accepts the other attributes of `<div>`, passed on to the element.
 
@@ -839,6 +862,7 @@ A label for content that belongs to the user, such as a keyword, a filter or a r
 | `children` | `ReactNode` | *required* | Content of the tag: a short text. Long text is cut with an ellipsis when the tag has no room. |
 | `size` | `'sm' \| 'md'` | `'md'` | Size of the tag: sm is 1.75 rem tall and md is 2 rem. |
 | `onRemove` | `() => void` | — | Called, with no arguments, when the remove button is activated. The button only exists when this is set. The tag does not remove itself: take it out of your list. |
+| `ref` | `Ref<HTMLSpanElement>` | — | Ref of the root `<span>` (`data-slot="tag"`). |
 
 Also accepts the other attributes of `<span>`, passed on to the element.
 
@@ -869,6 +893,7 @@ A button that toggles between the light and the dark mode, with the icon swappin
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `animation` | `MotionOverride` | — | false turns off the press feedback; { recipe } adjusts it. The icon swaps by a CSS crossfade in up to 150 ms. |
+| `ref` | `Ref<HTMLButtonElement>` | — | Ref of the `<button>`. |
 
 Also accepts the other attributes of `<button>`, passed on to the element.
 
@@ -913,6 +938,7 @@ A text tooltip for a trigger, opened by pointer and by focus. It gives the trigg
 | `style` | `CSSProperties` | — | Style of the element that wraps the trigger. |
 | `bubbleClassName` | `string` | — | Class of the tooltip (data-slot="tooltip-bubble"). You can also style it by data-slot, data-position and data-state. |
 | `bubbleStyle` | `CSSProperties` | — | Style of the tooltip. |
+| `ref` | `Ref<HTMLSpanElement>` | — | Ref of the bubble (`<span data-slot="tooltip-bubble">`), the element that receives `bubbleClassName` and `bubbleStyle`. It is `null` while the tooltip is hidden, because the bubble is not in the page then. |
 
 ### UIProvider
 
@@ -932,7 +958,9 @@ Configuration shared by all the components: language and texts, breakpoints, mot
 
 Hides the text from the screen but keeps it in the accessibility tree. Use it to name controls that only have an icon.
 
-No props of its own.
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `ref` | `Ref<HTMLSpanElement>` | — | Ref of the `<span>`. |
 
 Also accepts the other attributes of `<span>`, passed on to the element.
 

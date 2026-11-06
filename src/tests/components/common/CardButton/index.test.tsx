@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { CardButton } from '@components/common/CardButton/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
@@ -199,5 +200,19 @@ describe('CardButton contract', () => {
     expect(screen.getAllByRole('listitem')).toHaveLength(2)
     expect(screen.getAllByRole('button').map((button) => button.textContent)).toEqual(['React', 'TypeScript'])
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('CardButton ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLButtonElement>()
+    const { unmount } = renderWithProviders(<CardButton ref={ref}>Open</CardButton>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="card-button"]'))
+    expect(ref.current).toBeInstanceOf(HTMLButtonElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

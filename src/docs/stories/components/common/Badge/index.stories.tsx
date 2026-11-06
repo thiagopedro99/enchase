@@ -35,6 +35,10 @@ const meta = {
       control: 'inline-radio',
       options: ['sm', 'md'],
       table: { defaultValue: { summary: `'${defaultSize}'` } }
+    },
+    ref: {
+      description: 'Ref of the root `<span>` (`data-slot="badge"`).',
+      control: false
     }
   }
 } satisfies Meta<typeof Badge>

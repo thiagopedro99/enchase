@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { fireEvent, screen } from '@testing-library/react'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { CardLink } from '@components/common/CardLink/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
@@ -249,5 +250,19 @@ describe('CardLink navigation', () => {
     fireEvent.click(link())
 
     expect(navigate).not.toHaveBeenCalled()
+  })
+})
+
+describe('CardLink ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLAnchorElement>()
+    const { unmount } = renderWithProviders(<CardLink ref={ref} href="/docs">Docs</CardLink>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="card-link"]'))
+    expect(ref.current).toBeInstanceOf(HTMLAnchorElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

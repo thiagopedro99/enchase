@@ -101,7 +101,11 @@ const meta = {
       description: 'Class of the root (data-slot="sidebar"); in the drawer, of the panel (data-slot="sidebar-panel"). You can also style it by data-slot, data-state and data-variant.',
       control: 'text'
     },
-    style: { description: 'Style of the root in permanent or of the panel in modal.', control: false }
+    style: { description: 'Style of the root in permanent or of the panel in modal.', control: false },
+    ref: {
+      description: 'Ref of the element that receives `className` and `style`: the root `<div>` of the permanent sidebar or, with `variant="modal"`, the panel of the dialog (`data-slot="sidebar-panel"`), which is `null` while the sidebar is closed.',
+      control: false
+    }
   }
 } satisfies Meta<typeof Sidebar>
 

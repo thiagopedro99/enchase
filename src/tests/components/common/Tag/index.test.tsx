@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { en } from '@locales/en.ts'
 import { Tag } from '@components/common/Tag/index.tsx'
@@ -187,5 +188,19 @@ describe('Tag contract', () => {
     )
 
     expect(screen.getByRole('button')).toHaveAttribute('type', 'button')
+  })
+})
+
+describe('Tag ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLSpanElement>()
+    const { unmount } = renderWithProviders(<Tag ref={ref}>React</Tag>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="tag"]'))
+    expect(ref.current).toBeInstanceOf(HTMLSpanElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

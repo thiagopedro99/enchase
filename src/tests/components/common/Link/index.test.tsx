@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { Link } from '@components/common/Link/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
@@ -222,5 +223,19 @@ describe('Link to a section of the current page', () => {
     } finally {
       window.history.replaceState(null, '', '/')
     }
+  })
+})
+
+describe('Link ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLAnchorElement>()
+    const { unmount } = render(<Link ref={ref} href="/docs">Docs</Link>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="link"]'))
+    expect(ref.current).toBeInstanceOf(HTMLAnchorElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

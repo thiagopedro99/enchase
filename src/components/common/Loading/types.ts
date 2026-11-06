@@ -1,6 +1,6 @@
 import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { MotionOverride } from '@motion/types.ts'
-import type { HTMLAttributes } from 'react'
+import type { HTMLAttributes, Ref } from 'react'
 
 export type LoadingSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
@@ -11,6 +11,7 @@ export interface LoadingProps extends Omit<HTMLAttributes<HTMLDivElement>, 'chil
   text?: string | undefined
   color?: string | undefined
   animation?: MotionOverride | undefined
+  ref?: Ref<HTMLDivElement> | undefined
 }
 
 export interface InlineLoadingProps extends Omit<HTMLAttributes<HTMLSpanElement>, 'children'> {
@@ -18,6 +19,7 @@ export interface InlineLoadingProps extends Omit<HTMLAttributes<HTMLSpanElement>
   color?: string | undefined
   label?: string | undefined
   animation?: MotionOverride | undefined
+  ref?: Ref<HTMLSpanElement> | undefined
 }
 
 export type SpinnerProps = {

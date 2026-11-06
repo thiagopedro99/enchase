@@ -59,7 +59,11 @@ const meta = {
       description: 'Class of the element (data-slot="icon"), which wins over the library style.',
       control: 'text'
     },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the `<svg>`.',
+      control: false
+    }
   },
   parameters: {
     docs: {

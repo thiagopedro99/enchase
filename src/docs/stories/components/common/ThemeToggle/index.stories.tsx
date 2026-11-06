@@ -20,6 +20,10 @@ const meta = {
     className: {
       description: 'Class of whoever uses the library, applied to the button after the class of the library.',
       control: false
+    },
+    ref: {
+      description: 'Ref of the `<button>`.',
+      control: false
     }
   }
 } satisfies Meta<typeof ThemeToggle>

@@ -2,7 +2,7 @@ import { describeDialogContract } from '@tests/shared/contracts/dialogContract.t
 import { ControlledDialog } from '@tests/shared/contracts/dialogHarness.tsx'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
-import { useState } from 'react'
+import { createRef, useState } from 'react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { HomeIcon, LayoutGridIcon } from '@tests/shared/fixtures/exampleIcons.tsx'
@@ -412,5 +412,42 @@ describe('Sidebar contract', () => {
 
     expect(closeModal).toHaveBeenCalledTimes(1)
     expect(closeDrawer).not.toHaveBeenCalled()
+  })
+})
+
+describe('Sidebar ref', () => {
+  it('gives the ref the root of the permanent sidebar, which still follows the collapse, and clears it on unmount', () => {
+    const ref = createRef<HTMLDivElement>()
+    const { rerender, unmount } = renderWithProviders(<Sidebar sections={sections} ref={ref} />)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="sidebar"]'))
+    expect(ref.current).toHaveAttribute('data-variant', 'permanent')
+    expect(ref.current).toBeInstanceOf(HTMLDivElement)
+
+    rerender(<Sidebar sections={sections} ref={ref} collapsed />)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="sidebar"]'))
+    expect(ref.current?.getAttribute('data-state')).not.toBe('expanded')
+
+    unmount()
+
+    expect(ref.current).toBeNull()
+  })
+
+  it('gives the ref the panel of the modal sidebar while it is open, and null before and after', async () => {
+    const user = userEvent.setup()
+    const ref = createRef<HTMLDivElement>()
+    renderWithProviders(<ControlledDialog>{({ open, close }) => <Sidebar variant="modal" open={open} onClose={close} sections={sections} ref={ref} />}</ControlledDialog>)
+
+    expect(ref.current).toBeNull()
+
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+
+    expect(ref.current).toBe(screen.getByRole('dialog'))
+    expect(ref.current).toBe(document.querySelector('[data-slot="sidebar-panel"]'))
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => expect(ref.current).toBeNull())
   })
 })

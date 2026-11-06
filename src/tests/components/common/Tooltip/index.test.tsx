@@ -4,6 +4,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import { resetTooltipGroup } from '@components/common/Tooltip/defaultData.ts'
@@ -502,5 +503,29 @@ describe('Tooltip contract', () => {
 
     expect(bubble).not.toHaveAttribute('id')
     expect(bubble).not.toHaveAttribute('role')
+  })
+})
+
+describe('Tooltip ref', () => {
+  it('stays null until the bubble shows, holds the bubble while it shows and goes back to null after it hides', async () => {
+    const user = userEvent.setup()
+    const ref = createRef<HTMLSpanElement>()
+    renderWithProviders(
+      <Tooltip text="Save changes" openDelay={0} ref={ref}>
+        <button>Save</button>
+      </Tooltip>
+    )
+
+    expect(ref.current).toBeNull()
+
+    await user.hover(screen.getByRole('button', { name: 'Save' }))
+
+    expect(await screen.findByText('Save changes', { selector: '[aria-hidden="true"]' })).toBe(ref.current)
+    expect(ref.current).toBe(document.querySelector('[data-slot="tooltip-bubble"]'))
+    expect(ref.current).toBeInstanceOf(HTMLSpanElement)
+
+    await user.unhover(screen.getByRole('button', { name: 'Save' }))
+
+    await waitFor(() => expect(ref.current).toBeNull())
   })
 })

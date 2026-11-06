@@ -92,7 +92,11 @@ const meta = {
     container: containerArgType,
     animation: { description: 'false turns off the motion; { tuning: { duration } } changes how long the slide takes. The panel always travels at least its own width.', control: false },
     children: { description: 'Content of the drawer body, which scrolls when it is taller than the screen.', control: 'text' },
-    footer: { description: 'Fixed content below the body, such as the action buttons.', control: false }
+    footer: { description: 'Fixed content below the body, such as the action buttons.', control: false },
+    ref: {
+      description: 'Ref of the panel (`role="dialog"`, `data-slot="drawer-panel"`), the element that receives `className` and `style`. It is `null` while the drawer is closed, because the panel is not in the page then.',
+      control: false
+    }
   }
 } satisfies Meta<typeof Drawer>
 

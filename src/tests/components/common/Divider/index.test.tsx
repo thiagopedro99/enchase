@@ -2,6 +2,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { Divider } from '@components/common/Divider/index.tsx'
 
@@ -170,5 +171,28 @@ describe('Divider contract', () => {
     renderWithProviders(<Divider decorative role="presentation" />)
 
     expect(document.querySelector('hr')).toHaveAttribute('role', 'presentation')
+  })
+})
+
+describe('Divider ref', () => {
+  it('gives the ref the rule, and the wrapper when it has text, and clears it on unmount', () => {
+    const rule = createRef<HTMLHRElement>()
+    const withText = createRef<HTMLHRElement>()
+    const { unmount } = renderWithProviders(
+      <>
+        <Divider ref={rule} />
+        <Divider ref={withText}>or</Divider>
+      </>
+    )
+    const [first, second] = [...document.querySelectorAll('[data-slot="divider"]')]
+
+    expect(rule.current).toBe(first)
+    expect(first.tagName).toBe('HR')
+    expect(withText.current).toBe(second)
+    expect(second.tagName).toBe('DIV')
+
+    unmount()
+
+    expect([rule.current, withText.current]).toEqual([null, null])
   })
 })

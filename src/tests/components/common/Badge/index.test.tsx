@@ -2,6 +2,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { Badge } from '@components/common/Badge/index.tsx'
 
@@ -112,5 +113,19 @@ describe('Badge contract', () => {
     renderWithProviders(<Badge data-slot="mine">Novo</Badge>)
 
     expect(screen.getByText('Novo')).toHaveAttribute('data-slot', 'badge')
+  })
+})
+
+describe('Badge ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLSpanElement>()
+    const { unmount } = renderWithProviders(<Badge ref={ref}>New</Badge>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="badge"]'))
+    expect(ref.current).toBeInstanceOf(HTMLSpanElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

@@ -75,6 +75,10 @@ const meta = {
     onRemove: {
       description: 'Called, with no arguments, when the remove button is activated. The button only exists when this is set. The tag does not remove itself: take it out of your list.',
       control: false
+    },
+    ref: {
+      description: 'Ref of the root `<span>` (`data-slot="tag"`).',
+      control: false
     }
   }
 } satisfies Meta<typeof Tag>

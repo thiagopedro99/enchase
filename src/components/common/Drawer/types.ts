@@ -1,7 +1,7 @@
 import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { PresenceState } from '@hooks/usePresence.ts'
 import type { MotionOverride } from '@motion/types.ts'
-import type { CSSProperties, ReactNode, RefObject } from 'react'
+import type { CSSProperties, ReactNode, Ref, RefObject } from 'react'
 
 export type DrawerSide = 'start' | 'end'
 
@@ -23,6 +23,7 @@ export interface DrawerProps {
   animation?: MotionOverride | undefined
   className?: string | undefined
   style?: CSSProperties | undefined
+  ref?: Ref<HTMLDivElement> | undefined
 }
 
 export type DrawerDialogProps = Required<Pick<DrawerProps, 'side' | 'size' | 'showCloseButton' | 'closeOnOverlayClick' | 'closeOnEsc'>> &
@@ -38,6 +39,7 @@ export interface DrawerLayerProps {
   open: boolean
   state: PresenceState
   panelRef: RefObject<HTMLDivElement | null>
+  userRef?: Ref<HTMLDivElement> | undefined
   label?: string | undefined
   labelledBy?: string | undefined
   onClose?: (() => void) | undefined

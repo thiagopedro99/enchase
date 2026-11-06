@@ -71,7 +71,11 @@ const meta = {
     container: containerArgType,
     animation: { description: 'false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale.', control: false },
     children: { description: 'Content of the modal body.', control: 'text' },
-    footer: { description: 'Fixed content below the body, such as the action buttons.', control: false }
+    footer: { description: 'Fixed content below the body, such as the action buttons.', control: false },
+    ref: {
+      description: 'Ref of the panel of the dialog (`data-slot="modal-panel"`), the element that receives `className` and `style`. It is `null` while the modal is closed, because the panel is not in the page then.',
+      control: false
+    }
   }
 } satisfies Meta<typeof Modal>
 

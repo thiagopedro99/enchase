@@ -2,6 +2,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { en } from '@locales/en.ts'
 import { Progress } from '@components/common/Progress/index.tsx'
@@ -280,5 +281,19 @@ describe('Progress contract', () => {
     renderWithProviders(<Progress value={10} data-slot="mine" />)
 
     expect(bar()).toHaveAttribute('data-slot', 'progress')
+  })
+})
+
+describe('Progress ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLDivElement>()
+    const { unmount } = renderWithProviders(<Progress ref={ref} value={40} />)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="progress"]'))
+    expect(ref.current).toBeInstanceOf(HTMLDivElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

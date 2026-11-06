@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
-import { useState } from 'react'
+import { createRef, useState } from 'react'
 
 import { Menu } from '@components/common/Menu/index.tsx'
 
@@ -522,5 +522,31 @@ describe('Menu', () => {
     const omitted = await rendered({})
 
     expect(await rendered(explicit)).toBe(omitted)
+  })
+})
+
+describe('Menu ref', () => {
+  it('stays null while closed, holds the menu panel while open and goes back to null once closed', async () => {
+    const user = userEvent.setup()
+    const ref = createRef<HTMLDivElement>()
+    renderWithProviders(
+      <Menu label="Actions" items={entries()} ref={ref}>
+        <button>Open</button>
+      </Menu>
+    )
+
+    expect(ref.current).toBeNull()
+
+    await user.click(trigger())
+
+    expect(ref.current).toBe(await screen.findByRole('menu', { name: 'Actions' }))
+    expect(ref.current).toBe(document.querySelector('[data-slot="popover-content"]'))
+    expect(ref.current).toBeInstanceOf(HTMLDivElement)
+
+    await user.keyboard('{Escape}')
+
+    await closed()
+
+    expect(ref.current).toBeNull()
   })
 })

@@ -1,7 +1,7 @@
 import { createPortal } from 'react-dom'
 
 import { usePortalContainer } from '@hooks/usePortalContainer.ts'
-import { useId, useRef } from 'react'
+import { useId, useMemo, useRef } from 'react'
 import { CloseIcon } from '../Icon/icons/CloseIcon.tsx'
 
 import { useModalBehavior } from '@hooks/useModalBehavior.ts'
@@ -10,6 +10,7 @@ import { useMotionStyle } from '@hooks/useMotionStyle.ts'
 import { useOverflow } from '@hooks/useOverflow.ts'
 import { usePresence } from '@hooks/usePresence.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
+import { mergeRefs } from '@utils/mergeRefs.ts'
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { Button } from '../Button/index.tsx'
 import { Flex } from '../Flex/index.tsx'
@@ -24,6 +25,7 @@ const ModalDialog = ({
   open,
   state,
   panelRef,
+  ref,
   title,
   ariaLabel,
   role,
@@ -39,6 +41,7 @@ const ModalDialog = ({
 }: ModalDialogProps & { open: boolean; state: PresenceState; panelRef: RefObject<HTMLDivElement | null>; motionStyle: CSSProperties }) => {
   const rootRef = useRef<HTMLDivElement>(null)
   const bodyRef = useRef<HTMLDivElement>(null)
+  const mergedPanelRef = useMemo(() => mergeRefs(panelRef, ref), [panelRef, ref])
   const overflowing = useOverflow(bodyRef)
   const titleId = useId()
   const bodyId = useId()
@@ -68,7 +71,7 @@ const ModalDialog = ({
     <div ref={rootRef} {...slot('modal')}>
       <div {...slot('modal', 'overlay')} className={styles.backdrop} style={motionStyle} data-state={state} onClick={closeOnOverlayClick ? () => isTop.wasTopAtPointerDown() && onClose() : undefined} />
 
-      <div ref={panelRef} {...panelProps}>
+      <div ref={mergedPanelRef} {...panelProps}>
         {(title || showCloseButton) && (
           <div {...slot('modal', 'header')} className={styles.header}>
             {title && (
@@ -157,7 +160,8 @@ export const ConfirmModal = ({
   container,
   animation,
   className,
-  style
+  style,
+  ref
 }: ConfirmModalProps) => {
   const { labels } = useUIConfig()
 
@@ -176,6 +180,7 @@ export const ConfirmModal = ({
       animation={animation}
       className={className}
       style={style}
+      ref={ref}
       footer={
         <Flex justify="end" className={styles.actions}>
           <Button variant="outline" onClick={onClose} data-autofocus>

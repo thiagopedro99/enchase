@@ -50,7 +50,11 @@ const meta = {
       table: { defaultValue: { summary: 'false' } }
     },
     className: { description: 'Class of the root (data-slot="grid").', control: 'text' },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the root element, which is the `as` tag (a `<div>` by default).',
+      control: false
+    }
   }
 } satisfies Meta<typeof Grid>
 

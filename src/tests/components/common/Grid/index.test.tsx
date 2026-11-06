@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { createRef } from 'react'
 
 import { Grid } from '@components/common/Grid/index.tsx'
 import { structureTags } from '@utils/structureTag.ts'
@@ -185,5 +186,20 @@ describe('Grid as', () => {
     expect(screen.getByRole('list')).toBeInTheDocument()
     expect(screen.getAllByRole('listitem')).toHaveLength(3)
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Grid ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLElement>()
+    const { unmount } = render(<Grid ref={ref}>x</Grid>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="grid"]'))
+    expect(ref.current).toBeInstanceOf(HTMLElement)
+    expect(ref.current?.tagName).toBe('DIV')
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

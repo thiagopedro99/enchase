@@ -230,6 +230,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `as` | `Container`, `Flex`, `Grid`, `Card` | Tag HTML da raiz, só entre as de estrutura: `div` (padrão), `section`, `article`, `aside`, `nav`, `header`, `footer`, `main`, `ul`, `ol` e `li`. Com `ul` e `ol` a raiz leva `role="list"`. Veja [Listas e cartões clicáveis](#listas-e-cartões-clicáveis). |
 | `animation` | Componentes com movimento | `false` desliga o movimento do componente; `{ recipe, tuning }` troca a receita. Veja [Movimento](#movimento). |
 | `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup` e no `CheckboxGroup`, vão para o `<fieldset>`, que é a raiz. |
+| `ref` | Os componentes que desenham um elemento | O elemento da raiz (nos campos, o controle nativo). Nas camadas flutuantes (`Modal`, `ConfirmModal`, `Drawer`, `Popover`, `Menu`, `Tooltip` e a `Sidebar` modal) é o painel, que só existe aberto: vale `null` enquanto a camada está fechada. |
 | `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
 | `open` e `onClose` | `Drawer` | Sempre controlados. |
 | `value`, `defaultValue` e `onValueChange` | `RadioGroup`, `SegmentedControl`, `Tabs`, `Accordion` | Valor da opção marcada, da aba escolhida ou, no `Accordion` e no `SegmentedControl` com `multiple`, a lista dos itens abertos ou pressionados (`string[]`), controlado ou não. `onValueChange` recebe o valor que o usuário acabou de escolher. |

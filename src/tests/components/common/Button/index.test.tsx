@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { screen } from '@testing-library/react'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { Button } from '@components/common/Button/index.tsx'
 
@@ -261,5 +262,19 @@ describe('Button contract', () => {
 
     expect(screen.getByRole('button', { name: 'Subtle' }).style.getPropertyValue('--enchase-button-duration')).toBe('90ms')
     expect(screen.getByRole('button', { name: 'Tuned' }).style.getPropertyValue('--enchase-button-scale')).toBe('0.8')
+  })
+})
+
+describe('Button ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLButtonElement>()
+    const { unmount } = renderWithProviders(<Button ref={ref}>Save</Button>)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="button"]'))
+    expect(ref.current).toBeInstanceOf(HTMLButtonElement)
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

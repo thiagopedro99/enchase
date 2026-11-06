@@ -8,7 +8,11 @@ const meta = {
   args: { children: 'Text for screen readers only' },
   argTypes: {
     className: { description: 'Class of the element (data-slot="visually-hidden").', control: 'text' },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the `<span>`.',
+      control: false
+    }
   },
   parameters: {
     docs: {

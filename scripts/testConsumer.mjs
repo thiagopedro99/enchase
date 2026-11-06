@@ -16,7 +16,7 @@ const manifest = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
 const formVersions = Object.fromEntries(formPackages.map((name) => [name, manifest.devDependencies?.[name]]))
 const unpinned = formPackages.filter((name) => !/^\d+\.\d+\.\d+$/.test(formVersions[name] ?? ''))
 
-const entry = `import { Accordion, Alert, Badge, Button, ButtonLink, Card, CardButton, CardLink, ColorModeProvider, Container, Flex, Grid, Input, Layout, Link, Modal, Navbar, NumberInput, Pagination, RadioGroup, Select, Switch, Table, Tabs, Textarea, ToastProvider, UIProvider, useToast, useUIConfig } from 'enchase'
+const entry = `import { Accordion, Alert, Avatar, Badge, Breadcrumbs, Button, ButtonLink, Card, CardButton, CardLink, ColorModeProvider, ConfirmModal, Container, Divider, Drawer, Flex, Grid, Icon, InlineLoading, Input, Layout, Link, Loading, Menu, Modal, Navbar, NumberInput, Pagination, Popover, Progress, RadioGroup, Select, Sidebar, Skeleton, Switch, Table, Tabs, Tag, Textarea, ThemeToggle, ToastProvider, Tooltip, UIProvider, VisuallyHidden, useToast, useUIConfig } from 'enchase'
 import type { AccordionProps, AlertProps, BadgeProps, ButtonLinkProps, CardButtonProps, CardLinkProps, CardProps, ContainerProps, FlexProps, GridProps, LayoutProps, NavbarProps, NumberInputFormat, NumberInputProps, PaginationProps, RadioGroupProps, SidebarSection, SwitchProps, TableColumn, TableProps, TabsProps, TextareaProps, UILabels } from 'enchase'
 import { ChevronDownIcon, CloseIcon } from 'enchase/icons'
 import type { IconProps } from 'enchase/icons'
@@ -37,6 +37,7 @@ import { useAccordion } from 'enchase/headless/accordion'
 import type { UseAccordionOptions, UseAccordionReturn } from 'enchase/headless/accordion'
 import { useSlider } from 'enchase/headless/slider'
 import type { UseSliderOptions, UseSliderReturn } from 'enchase/headless/slider'
+import { useRef } from 'react'
 import type { MouseEvent } from 'react'
 import 'enchase/styles.css'
 import 'enchase/styles.layer.css'
@@ -132,6 +133,76 @@ export const Headless = () => {
         </div>
       </div>
       <output>{slider.valueText}</output>
+    </div>
+  )
+}
+
+export const Refs = () => {
+  const alert = useRef<HTMLDivElement>(null)
+  const avatar = useRef<HTMLSpanElement>(null)
+  const badge = useRef<HTMLSpanElement>(null)
+  const breadcrumbs = useRef<HTMLElement>(null)
+  const button = useRef<HTMLButtonElement>(null)
+  const buttonLink = useRef<HTMLAnchorElement>(null)
+  const card = useRef<HTMLDivElement>(null)
+  const cardButton = useRef<HTMLButtonElement>(null)
+  const cardLink = useRef<HTMLAnchorElement>(null)
+  const container = useRef<HTMLElement>(null)
+  const divider = useRef<HTMLHRElement>(null)
+  const flex = useRef<HTMLDivElement>(null)
+  const grid = useRef<HTMLElement>(null)
+  const icon = useRef<SVGSVGElement>(null)
+  const link = useRef<HTMLAnchorElement>(null)
+  const loading = useRef<HTMLDivElement>(null)
+  const inlineLoading = useRef<HTMLSpanElement>(null)
+  const progress = useRef<HTMLDivElement>(null)
+  const skeleton = useRef<HTMLDivElement>(null)
+  const tag = useRef<HTMLSpanElement>(null)
+  const themeToggle = useRef<HTMLButtonElement>(null)
+  const hidden = useRef<HTMLSpanElement>(null)
+  const modal = useRef<HTMLDivElement>(null)
+  const confirm = useRef<HTMLDivElement>(null)
+  const drawer = useRef<HTMLDivElement>(null)
+  const sidebar = useRef<HTMLDivElement>(null)
+  const popover = useRef<HTMLDivElement>(null)
+  const menu = useRef<HTMLDivElement>(null)
+  const tooltip = useRef<HTMLSpanElement>(null)
+
+  return (
+    <div>
+      <Alert ref={alert}>Saved</Alert>
+      <Avatar ref={avatar} name="Ana Souza" />
+      <Badge ref={badge}>New</Badge>
+      <Breadcrumbs ref={breadcrumbs} items={[{ id: 'home', label: 'Home', href: '/' }, { id: 'page', label: 'Page' }]} />
+      <Button ref={button}>Save</Button>
+      <ButtonLink ref={buttonLink} href="/docs">Docs</ButtonLink>
+      <Card ref={card} as="section">Card</Card>
+      <CardButton ref={cardButton}>Open</CardButton>
+      <CardLink ref={cardLink} href="/docs">Docs</CardLink>
+      <Container ref={container} as="main">Main</Container>
+      <Divider ref={divider} />
+      <Flex ref={flex}>Row</Flex>
+      <Grid ref={grid} as="ul">
+        <li>Item</li>
+      </Grid>
+      <Icon ref={icon}><circle cx="12" cy="12" r="1" /></Icon>
+      <Link ref={link} href="/docs">Docs</Link>
+      <Loading ref={loading} />
+      <InlineLoading ref={inlineLoading} />
+      <Progress ref={progress} value={40} />
+      <Skeleton ref={skeleton} />
+      <Tag ref={tag}>React</Tag>
+      <ThemeToggle ref={themeToggle} />
+      <VisuallyHidden ref={hidden}>Only for screen readers</VisuallyHidden>
+      <Modal ref={modal} isOpen={false} onClose={() => undefined}>Body</Modal>
+      <ConfirmModal ref={confirm} isOpen={false} onClose={() => undefined} onConfirm={() => undefined} message="Delete it?" />
+      <Drawer ref={drawer} open={false} onClose={() => undefined}>Body</Drawer>
+      <Sidebar ref={sidebar} sections={sections} />
+      <Popover ref={popover} content="More"><Button>Open</Button></Popover>
+      <Menu ref={menu} label="Actions" items={[{ id: 'edit', label: 'Edit' }]}><Button>Open</Button></Menu>
+      <Tooltip ref={tooltip} text="Hint"><Button>Hover</Button></Tooltip>
+      <Button ref={(node: HTMLButtonElement | null) => void node}>Callback</Button>
+      <Card ref={undefined}>Without</Card>
     </div>
   )
 }

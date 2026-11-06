@@ -1,7 +1,7 @@
 import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { PlacementInput } from '../../../positioning/index.ts'
 import type { MotionOverride } from '@motion/types.ts'
-import type { CSSProperties, ReactNode, RefObject } from 'react'
+import type { CSSProperties, ReactNode, Ref, RefObject } from 'react'
 
 export type MenuItem = {
   id: string
@@ -36,6 +36,7 @@ export interface MenuProps {
   style?: CSSProperties | undefined
   contentClassName?: string | undefined
   contentStyle?: CSSProperties | undefined
+  ref?: Ref<HTMLDivElement> | undefined
 }
 
 export interface MenuListProps {

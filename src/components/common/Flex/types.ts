@@ -1,5 +1,5 @@
 import type { StructureTag } from '@utils/structureTag.ts'
-import type { HTMLAttributes } from 'react'
+import type { HTMLAttributes, Ref } from 'react'
 
 export type FlexDirection = 'row' | 'column' | 'row-reverse' | 'column-reverse'
 export type FlexAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline'
@@ -12,4 +12,5 @@ export interface FlexProps extends HTMLAttributes<HTMLElement> {
   justify?: FlexJustify | undefined
   gap?: string | undefined
   wrap?: boolean | undefined
+  ref?: Ref<HTMLElement> | undefined
 }

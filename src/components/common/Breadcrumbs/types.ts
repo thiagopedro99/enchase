@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from 'react'
+import type { HTMLAttributes, Ref } from 'react'
 
 export type BreadcrumbItem = {
   id: string
@@ -11,6 +11,7 @@ export interface BreadcrumbsProps extends Omit<HTMLAttributes<HTMLElement>, 'chi
   items: BreadcrumbItem[]
   maxItems?: number | undefined
   ariaLabel?: string | undefined
+  ref?: Ref<HTMLElement> | undefined
 }
 
 export type BreadcrumbEntry = BreadcrumbItem | 'ellipsis'

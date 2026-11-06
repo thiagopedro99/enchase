@@ -1,6 +1,6 @@
 import type { BreakpointKey } from '../../uiProvider/types.ts'
 import type { StructureTag } from '@utils/structureTag.ts'
-import type { HTMLAttributes } from 'react'
+import type { HTMLAttributes, Ref } from 'react'
 
 export interface GridProps extends HTMLAttributes<HTMLElement> {
   as?: StructureTag | undefined
@@ -8,4 +8,5 @@ export interface GridProps extends HTMLAttributes<HTMLElement> {
   gap?: string | undefined
   minColumnWidth?: string | undefined
   centerLastRow?: boolean | undefined
+  ref?: Ref<HTMLElement> | undefined
 }

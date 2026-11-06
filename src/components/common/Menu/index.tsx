@@ -15,7 +15,7 @@ type TriggerProps = {
   onKeyDown?: ((event: KeyboardEvent<HTMLElement>) => void) | undefined
 }
 
-export const Menu = ({ children, items, label, open, defaultOpen: initiallyOpen = defaultOpen, onOpenChange, placement = defaultPlacement, offset = defaultOffset, container, animation, className, style, contentClassName, contentStyle }: MenuProps) => {
+export const Menu = ({ children, items, label, open, defaultOpen: initiallyOpen = defaultOpen, onOpenChange, placement = defaultPlacement, offset = defaultOffset, container, animation, className, style, contentClassName, contentStyle, ref }: MenuProps) => {
   const [isOpen, setOpen] = useControllableState(open, initiallyOpen, onOpenChange)
   const entry = useRef<MenuEntryPoint | undefined>(undefined)
 
@@ -54,6 +54,7 @@ export const Menu = ({ children, items, label, open, defaultOpen: initiallyOpen 
       style={style}
       contentClassName={classNames(styles.menu, contentClassName)}
       contentStyle={contentStyle}
+      ref={ref}
       content={<MenuList items={items} entry={entry} animation={animation} />}
     >
       {trigger}

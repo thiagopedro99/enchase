@@ -80,7 +80,11 @@ const meta = {
       control: 'text'
     },
     children: { control: false },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the `<a>`.',
+      control: false
+    }
   },
   render: (args) => (
     <ClickProbe>

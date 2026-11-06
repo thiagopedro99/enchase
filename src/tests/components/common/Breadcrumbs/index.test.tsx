@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
+import { createRef } from 'react'
 
 import { Breadcrumbs } from '@components/common/Breadcrumbs/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
@@ -179,5 +180,20 @@ describe('Breadcrumbs', () => {
     await user.click(screen.getByRole('button', { name: 'Mostrar caminho completo' }))
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Breadcrumbs ref', () => {
+  it('gives the ref the root element and clears it on unmount', () => {
+    const ref = createRef<HTMLElement>()
+    const { unmount } = renderWithProviders(<Breadcrumbs ref={ref} items={[{ id: 'home', label: 'Home', href: '/' }, { id: 'page', label: 'Page' }]} />)
+
+    expect(ref.current).toBe(document.querySelector('[data-slot="breadcrumbs"]'))
+    expect(ref.current).toBeInstanceOf(HTMLElement)
+    expect(ref.current?.tagName).toBe('NAV')
+
+    unmount()
+
+    expect(ref.current).toBeNull()
   })
 })

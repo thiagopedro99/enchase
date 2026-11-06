@@ -41,7 +41,11 @@ const meta = {
       table: { defaultValue: { summary: 'true' } }
     },
     className: { description: 'Class of the root (data-slot="container"), which wins over the default styles.', control: 'text' },
-    style: { control: false }
+    style: { control: false },
+    ref: {
+      description: 'Ref of the root element, which is the `as` tag (a `<div>` by default).',
+      control: false
+    }
   }
 } satisfies Meta<typeof Container>
 

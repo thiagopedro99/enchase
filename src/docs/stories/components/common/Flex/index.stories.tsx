@@ -27,7 +27,11 @@ const meta = {
     align: { control: 'select', options: ['start', 'center', 'end', 'stretch', 'baseline'], description: 'Alignment on the cross axis.' },
     justify: { control: 'select', options: ['start', 'center', 'end', 'between', 'around', 'evenly'], description: 'Distribution on the main axis.' },
     gap: { control: 'text', description: 'Space between the children, passed through a CSS variable. The default comes from the spacing token.' },
-    wrap: { control: 'boolean', description: 'Allows line wrapping.', table: { defaultValue: { summary: 'false' } } }
+    wrap: { control: 'boolean', description: 'Allows line wrapping.', table: { defaultValue: { summary: 'false' } } },
+    ref: {
+      description: 'Ref of the root element, which is the `as` tag (a `<div>` by default).',
+      control: false
+    }
   }
 } satisfies Meta<typeof Flex>
 

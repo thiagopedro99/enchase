@@ -4,7 +4,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { renderToString } from 'react-dom/server'
-import { useEffect, useState } from 'react'
+import { createRef, useEffect, useState } from 'react'
 import { axe } from '@tests/axe.ts'
 
 import { usePopoverControl } from '@components/common/Popover/popoverControl.ts'
@@ -753,5 +753,53 @@ describe('the control of a popover for its content', () => {
     const { result } = renderHook(() => usePopoverControl())
 
     expect(result.current).toBeNull()
+  })
+})
+
+describe('Popover ref', () => {
+  it('stays null while closed, holds the content panel while open and goes back to null once closed', async () => {
+    const user = userEvent.setup()
+    const ref = createRef<HTMLDivElement>()
+    renderWithProviders(
+      <Popover content={content} label="Detalhes" ref={ref}>
+        <button>Abrir</button>
+      </Popover>
+    )
+
+    expect(ref.current).toBeNull()
+
+    await user.click(screen.getByRole('button', { name: 'Abrir' }))
+
+    expect(ref.current).toBe(await screen.findByRole('dialog', { name: 'Detalhes' }))
+    expect(ref.current).toBe(document.querySelector('[data-slot="popover-content"]'))
+    expect(ref.current).toBeInstanceOf(HTMLDivElement)
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => expect(ref.current).toBeNull())
+  })
+
+  it('calls a ref callback with the panel and then with null', async () => {
+    const user = userEvent.setup()
+    const calls: (HTMLDivElement | null)[] = []
+    renderWithProviders(
+      <Popover
+        content={content}
+        label="Detalhes"
+        ref={(node) => {
+          calls.push(node)
+        }}
+      >
+        <button>Abrir</button>
+      </Popover>
+    )
+
+    await user.click(screen.getByRole('button', { name: 'Abrir' }))
+
+    expect(calls.at(-1)).toBe(await screen.findByRole('dialog', { name: 'Detalhes' }))
+
+    await user.keyboard('{Escape}')
+
+    await waitFor(() => expect(calls.at(-1)).toBeNull())
   })
 })
