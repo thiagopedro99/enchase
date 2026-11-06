@@ -216,6 +216,33 @@ describe('the comparison of two builds of the package', () => {
     expect(result.added).toEqual(['toy Result.count'])
   })
 
+  it('does not read the names that a function destructures in its parameter as part of the declaration', async () => {
+    const declared = (parameter: string) => withTabs(files['dist-lib/types/src/tabs.d.ts'].replace('(props: TabsProps)', parameter))
+    const asFunction = (parameter: string) => withTabs(files['dist-lib/types/src/tabs.d.ts'].replace('const Tabs: (props: TabsProps) =>', `function Tabs(${parameter}):`))
+
+    const grown = await compare(declared('({ items, mode, label, ...props }: TabsProps)'), declared('({ items, mode, ...props }: TabsProps)'))
+
+    expect(grown.breaks).toEqual([])
+    expect(grown.added).toEqual([])
+    expect(grown.widened).toEqual([])
+
+    const nested = await compare(declared('({ items: { first, second }, label }: { items: { first: string; second: string }; label?: string }, [a, b, c]: string[])'), declared('({ items: { first }, mode }: { items: { first: string; second: string }; label?: string }, [a]: string[])'))
+
+    expect(nested.breaks).toEqual([])
+
+    const asDeclaration = await compare(asFunction('{ items, label, ...props }: TabsProps'), asFunction('{ items, ...props }: TabsProps'))
+
+    expect(asDeclaration.breaks).toEqual([])
+    expect(asDeclaration.added).toEqual([])
+  })
+
+  it('still fails a change of what a destructured parameter accepts, and of the parameters that follow it', async () => {
+    const declared = (parameter: string) => withTabs(files['dist-lib/types/src/tabs.d.ts'].replace('(props: TabsProps)', parameter))
+
+    expect(keys(await compare(declared('({ items }: TabsProps & { extra: string })'), declared('({ items, label }: TabsProps)')))).toEqual(['changed toy Tabs'])
+    expect(keys(await compare(declared('({ items }: TabsProps, extra: string)'), declared('({ items }: TabsProps)')))).toEqual(['changed toy Tabs'])
+  })
+
   it('fails when a whole type or a whole entry is gone, once and not once for each member', async () => {
     const noResult = "export { Tabs } from '../src/tabs.js';\nexport type { TabsProps, Mode } from '../src/tabs.js';\n"
     const result = await compare({ files: { 'dist-lib/types/lib/index.d.ts': noResult, 'dist-lib/types/src/tabs.d.ts': tabs(Object.values(members).join('\n')).replace(/export interface Result \{[^}]*\}\n/, '') } })

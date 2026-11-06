@@ -22,6 +22,25 @@ const squash = (text) =>
 
 const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'))
 
+const hideBindings = (node, source) => {
+  const base = node.getStart(source)
+  const edits = []
+
+  const walk = (child) => {
+    if (ts.isParameter(child) && (ts.isObjectBindingPattern(child.name) || ts.isArrayBindingPattern(child.name))) {
+      edits.push({ from: child.name.getStart(source) - base, to: child.name.getEnd() - base, mark: ts.isObjectBindingPattern(child.name) ? '{ ... }' : '[ ... ]' })
+
+      return
+    }
+
+    ts.forEachChild(child, walk)
+  }
+
+  walk(node)
+
+  return edits.reduceRight((text, { from, to, mark }) => `${text.slice(0, from)}${mark}${text.slice(to)}`, node.getText(source))
+}
+
 const sorted = (items) => [...new Set(items)].sort()
 
 const flatten = (value, prefix = '') => (typeof value === 'string' ? { [prefix || 'default']: value } : Object.entries(value).reduce((all, [condition, inner]) => ({ ...all, ...flatten(inner, prefix ? `${prefix}.${condition}` : condition) }), {}))
@@ -222,8 +241,8 @@ export const readDeclarations = (packageDir, entries) => {
       } else if (ts.isClassDeclaration(declaration)) {
         put(name, `class ${name}${parametersOf(declaration)}${heritageOf(declaration) ? ` ${heritageOf(declaration)}` : ''}`)
         members(name, declaration.members, sourceFile)
-      } else if (ts.isFunctionDeclaration(declaration)) put(name, squash(declaration.getText(sourceFile)).replace(/^(export\s+)?(default\s+)?(declare\s+)?/, ''))
-      else if (ts.isVariableDeclaration(declaration)) put(name, `const ${squash(declaration.getText(sourceFile))}`)
+      } else if (ts.isFunctionDeclaration(declaration)) put(name, squash(hideBindings(declaration, sourceFile)).replace(/^(export\s+)?(default\s+)?(declare\s+)?/, ''))
+      else if (ts.isVariableDeclaration(declaration)) put(name, `const ${squash(hideBindings(declaration, sourceFile))}`)
       else if (ts.isEnumDeclaration(declaration)) {
         put(name, `enum ${name}`)
         members(name, declaration.members, sourceFile)
