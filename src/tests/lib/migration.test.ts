@@ -10,7 +10,7 @@ const changelog = read('CHANGELOG.md')
 
 const index = read('MIGRATION.md')
 
-const first = [0, 13]
+const first = [0, 10]
 
 const published = [...changelog.matchAll(/^## v(\d+)\.(\d+)\.0$/gm)].map((match) => [Number(match[1]), Number(match[2])]).filter(([major, minor]) => major > first[0] || (major === first[0] && minor >= first[1]))
 
@@ -31,8 +31,8 @@ const quotesOf = (minor: string) =>
     .map((line) => line.slice(2))
 
 describe('the migration guide', () => {
-  it('has a page for every minor version of the changelog from 0.13, so that a release adds its page', () => {
-    expect(minors.length).toBeGreaterThanOrEqual(4)
+  it('has a page for every minor version of the changelog from 0.10, so that a release adds its page', () => {
+    expect(minors.length).toBeGreaterThanOrEqual(11)
     expect(minors.filter((minor) => !existsSync(path.join(root, 'docs', 'migration', `${minor}.md`)))).toEqual([])
   })
 

@@ -1115,7 +1115,7 @@ npm run build:lib && npm run pack:check && npm run test:consumer
 
 Versão `0.x`, em desenvolvimento ativo. Há três estilos visuais, `enchase`, `shadcn` e `workbench`, e a densidade `compact`. Ainda não existem: gestos com velocidade (arrastar para dispensar, inércia, rubber-band) e um estilo Material 3.
 
-Os documentos de política, em inglês: [VERSIONING.md](VERSIONING.md) (o que é API pública, o que quebra e como funciona uma depreciação), [ACCESSIBILITY.md](ACCESSIBILITY.md) (o que é testado e o que não é), [SECURITY.md](SECURITY.md) (como reportar uma vulnerabilidade) e [MIGRATION.md](MIGRATION.md) (o que conferir ao atualizar, uma página por minor desde a 0.13).
+Os documentos de política, em inglês: [VERSIONING.md](VERSIONING.md) (o que é API pública, o que quebra e como funciona uma depreciação), [ACCESSIBILITY.md](ACCESSIBILITY.md) (o que é testado e o que não é), [SECURITY.md](SECURITY.md) (como reportar uma vulnerabilidade) e [MIGRATION.md](MIGRATION.md) (o que conferir ao atualizar, uma página por minor desde a 0.10).
 
 ## Contribuindo
 

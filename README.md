@@ -279,7 +279,7 @@ Not guaranteed:
 - [HEADLESS.md](HEADLESS.md): the hooks that give the behavior of five components without their markup.
 - [VERSIONING.md](VERSIONING.md): what is the public API, what a breaking change is, how a deprecation works and what experimental means.
 - [ACCESSIBILITY.md](ACCESSIBILITY.md): what is tested, in which engines, and what is not, screen readers included.
-- [MIGRATION.md](MIGRATION.md): what to check when you upgrade, one page for each minor version since 0.13.
+- [MIGRATION.md](MIGRATION.md): what to check when you upgrade, one page for each minor version since 0.10.
 - [SECURITY.md](SECURITY.md): how to report a vulnerability in private, and what to expect.
 - [API.md](API.md): props, types, defaults, hooks and CSS hooks of every component. It ships inside the package, in `node_modules/enchase/API.md`.
 - [README.pt-BR.md](https://github.com/thiagopedro99/enchase/blob/main/README.pt-BR.md): the full guide, with routing and how each `href` is handled, the theme in depth, how to create a style, motion, customization by CSS, the density, server rendering and tests.
