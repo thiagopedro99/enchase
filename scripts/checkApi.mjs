@@ -83,11 +83,11 @@ const unwrap = (text) => {
   return unwrap(text.slice(1, -1).trim())
 }
 
-export const unionMembers = (text) => {
+const splitTop = (text, separator) => {
   const members = []
   let rest = text
 
-  for (let at = topLevelIndex(rest, '|'); at !== -1; at = topLevelIndex(rest, '|')) {
+  for (let at = topLevelIndex(rest, separator); at !== -1; at = topLevelIndex(rest, separator)) {
     members.push(rest.slice(0, at))
     rest = rest.slice(at + 1)
   }
@@ -95,6 +95,22 @@ export const unionMembers = (text) => {
   members.push(rest)
 
   return members.map((member) => unwrap(member.trim())).filter(Boolean)
+}
+
+export const unionMembers = (text) => splitTop(text, '|')
+
+const optionalMember = /^(?:readonly\s+)?(?:[A-Za-z_$][\w$]*|'[^']*'|"[^"]*")\?\s*:/
+
+const optionalOnly = (part) => part.startsWith('{') && part.endsWith('}') && splitTop(part.slice(1, -1), ';').every((member) => optionalMember.test(member)) && part.length > 2
+
+const growsByOptionals = (before, after) => {
+  if (unionMembers(before).length > 1 || unionMembers(after).length > 1) return false
+
+  const oldParts = splitTop(before, '&')
+  const nextParts = splitTop(after, '&')
+  const extra = nextParts.filter((part) => !oldParts.includes(part))
+
+  return extra.length > 0 && oldParts.every((part) => nextParts.includes(part)) && extra.every(optionalOnly)
 }
 
 const typePartOf = (text) => {
@@ -119,7 +135,7 @@ export const isWidened = (before, after) => {
   const oldMembers = unionMembers(old.type)
   const nextMembers = unionMembers(next.type)
 
-  return nextMembers.length > oldMembers.length && oldMembers.every((member) => nextMembers.includes(member))
+  return (nextMembers.length > oldMembers.length && oldMembers.every((member) => nextMembers.includes(member))) || growsByOptionals(old.type, next.type)
 }
 
 const boundOf = (text) => {

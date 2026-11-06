@@ -110,6 +110,21 @@ describe('the helpers of the API check', () => {
     expect(isWidened('read(): string', 'read(): string | number')).toBe(false)
   })
 
+  it('calls an alias widened when it gains parts that hold only optional members, and nothing else', () => {
+    const base = 'type Props = HTMLAttributes<HTMLSpanElement>'
+    const optional = '{ ref?: Ref<HTMLSpanElement> | undefined; }'
+
+    expect(isWidened(base, `${base} & ${optional}`)).toBe(true)
+    expect(isWidened(`${base} & { size?: number | undefined; }`, `${base} & { size?: number | undefined; } & ${optional}`)).toBe(true)
+    expect(isWidened(base, `${base} & { ref: Ref<HTMLSpanElement>; }`)).toBe(false)
+    expect(isWidened(base, `${base} & { ref?: Ref<HTMLSpanElement> | undefined; extra: string; }`)).toBe(false)
+    expect(isWidened(base, `${base} & Other`)).toBe(false)
+    expect(isWidened(base, `${base} & {}`)).toBe(false)
+    expect(isWidened(`${base} & ${optional}`, base)).toBe(false)
+    expect(isWidened(base, `Other & ${optional}`)).toBe(false)
+    expect(isWidened('type Props = A | B', `type Props = A | B & ${optional}`)).toBe(false)
+  })
+
   it('reads the lowest version that a range allows', () => {
     expect(lowerBound('>=22')).toEqual([22, 0, 0])
     expect(lowerBound('^19.0.0')).toEqual([19, 0, 0])
@@ -198,6 +213,21 @@ describe('the comparison of two builds of the package', () => {
 
     expect(result.breaks).toEqual([])
     expect(result.widened).toEqual(['toy TabsProps.mode: mode?: Mode | undefined -> mode?: Mode | "c" | undefined', "toy Mode: type Mode = 'a' | 'b' -> type Mode = 'a' | 'b' | 'c'"])
+  })
+
+  it('reports an alias that gains optional members as widened, and fails one that gains a required member', async () => {
+    const withAlias = (alias: string) => ({
+      files: {
+        'dist-lib/types/lib/index.d.ts': "export { Tabs } from '../src/tabs.js';\nexport type { TabsProps, Mode, Result, Attrs } from '../src/tabs.js';\n",
+        'dist-lib/types/src/tabs.d.ts': `${files['dist-lib/types/src/tabs.d.ts']}export type Attrs = ${alias};\n`
+      }
+    })
+
+    const grown = await compare(withAlias('Base & { ref?: string | undefined; }'), withAlias('Base'))
+
+    expect(grown.breaks).toEqual([])
+    expect(grown.widened).toEqual(['toy Attrs: type Attrs = Base -> type Attrs = Base & { ref?: string | undefined; }'])
+    expect(keys(await compare(withAlias('Base & { ref: string; }'), withAlias('Base')))).toEqual(['changed toy Attrs'])
   })
 
   it('lets a new optional member through, and fails a new required member of a type that the app writes', async () => {
