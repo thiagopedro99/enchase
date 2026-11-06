@@ -368,6 +368,22 @@ describe('the selection controls of the shadcn style', () => {
     expect([px(style('segmented-control-item', 0).paddingLeft), px(style('segmented-control-item', 0).fontSize)]).toEqual([12, 14])
   })
 
+  it.each(['light', 'dark'] as const)('shows the label of the segmented control as the label of the slider and the legends of the groups, 14px medium in the text color, in the %s mode', (mode) => {
+    show(
+      <>
+        <SegmentedControl label="View" items={[{ value: 'a', label: 'List' }]} />
+        <Slider label="Volume" defaultValue={40} />
+        <RadioGroup label="Plan" options={[{ value: 'a', label: 'A' }]} />
+        <CheckboxGroup label="Topics" options={[{ value: 'a', label: 'A' }]} />
+      </>,
+      mode
+    )
+    const labels = ['segmented-control-label', 'slider-label', 'radio-group-legend', 'checkbox-group-legend'].map((slot) => style(slot))
+
+    expect(labels.map((label) => [px(label.fontSize), label.fontWeight, label.color])).toEqual(labels.map(() => [14, '500', roleColor('text-primary')]))
+    expect(style('segmented-control-label').marginBlockEnd).toBe('8px')
+  })
+
   it('draws the slider with a 6px track, a 16px round thumb with a 1px border, 14px medium text and half opacity when disabled', () => {
     show(
       <>

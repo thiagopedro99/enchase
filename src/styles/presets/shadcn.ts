@@ -177,6 +177,8 @@ const controls: HookValues = {
   '--enchase-segmented-control-item-padding-inline-sm': '0.5rem',
   '--enchase-segmented-control-item-padding-inline-md': '0.75rem',
   '--enchase-segmented-control-item-padding-inline-lg': '1rem',
+  '--enchase-segmented-control-label-font-size': 'var(--enchase-font-size-sm)',
+  '--enchase-segmented-control-label-font-weight': 'var(--enchase-font-weight-medium)',
 
   '--enchase-slider-track-height': '0.375rem',
   '--enchase-slider-thumb-size': '1rem',
@@ -334,6 +336,7 @@ const colorHooks: HookValues = {
   '--enchase-segmented-control-item-border-color': 'var(--enchase-color-border)',
   '--enchase-segmented-control-item-background-selected': 'var(--enchase-color-surface-container)',
   '--enchase-segmented-control-item-color-selected': 'var(--enchase-color-text-primary)',
+  '--enchase-segmented-control-label-color': 'var(--enchase-color-text-primary)',
   '--enchase-checkbox-group-legend-color': 'var(--enchase-color-text-primary)',
   '--enchase-slider-track-background': 'var(--enchase-color-surface-container)',
   '--enchase-slider-thumb-background': 'var(--enchase-color-background)',
