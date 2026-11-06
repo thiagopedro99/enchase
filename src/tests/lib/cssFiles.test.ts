@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import { componentOf, cssComponents, cssMap, joinModules, kebab, keepsOrder, normalizeCss, orderModules, reachable, rulesOf, sameRules } from '../../../scripts/cssFiles.mjs'
+import { componentOf, cssComponents, cssFileProblems, cssMap, joinModules, kebab, keepsOrder, normalizeCss, orderModules, reachable, rulesOf, sameRules } from '../../../scripts/cssFiles.mjs'
+
+import type { CssMap } from '../../../scripts/cssFiles.mjs'
 
 const icon = { path: 'components/common/Icon/styles.module.css', css: '.i{display:inline-block}\n' }
 
@@ -194,5 +196,89 @@ describe('cssComponents', () => {
     expect(Object.keys(map.components)).toEqual(['icon', 'button', 'button-link', 'toast'])
     expect(Object.keys(map.components['button-link'] ?? {})).toEqual(['file', 'needs', 'files', 'bytes', 'gzip'])
     expect(map.components['button-link']).toMatchObject({ file: 'button-link.css', needs: ['icon', 'button'], files: [buttonLink.path] })
+  })
+})
+
+describe('cssFileProblems', () => {
+  const modules = [icon, button, buttonLink, swap, toast]
+
+  const js = {
+    'components/common/Icon/index.js': "import styles from './styles.module.js'",
+    'components/common/Icon/swap.module.js': 'export default {}',
+    'components/common/Icon/styles.module.js': 'export default {}',
+    'components/common/Button/index.js': "import styles from './styles.module.js'",
+    'components/common/Button/styles.module.js': 'export default {}',
+    'components/common/ButtonLink/index.js': "import { Button } from '../Button/index.js'\nimport styles from './styles.module.js'",
+    'components/common/ButtonLink/styles.module.js': 'export default {}',
+    'components/toast/toastContext.js': "import styles from './styles.module.js'",
+    'components/toast/styles.module.js': 'export default {}'
+  }
+
+  const styles = stylesOf(...modules)
+  const components = cssComponents({ modules, js })
+  const sources = modules.map(({ path }) => path)
+  const files = Object.fromEntries(components.map(({ file, css }) => [file, css]))
+  const map = cssMap(components)
+
+  const check = (changes: { map?: CssMap; files?: Record<string, string>; styles?: string; sources?: string[] } = {}) => cssFileProblems({ map, files, styles, sources, js, ...changes })
+
+  const withEntry = (key: string, change: object): CssMap => ({ ...map, components: { ...map.components, [key]: { ...map.components[key]!, ...change } } })
+
+  it('finds nothing wrong in files that are the css of styles.css, split by component, with the map that the javascript gives', () => {
+    expect(check()).toEqual([])
+  })
+
+  it('refuses a map of another format, a file that is not named as its component, and a file that is missing or not in the map', () => {
+    expect(check({ map: { ...map, format: 2 } })).toEqual([expect.stringContaining('format 2')])
+    expect(check({ map: withEntry('button', { file: 'press.css' }) }).join('\n')).toContain('gives button the file press.css')
+    expect(check({ files: Object.fromEntries(Object.entries(files).filter(([name]) => name !== 'button.css')) }).join('\n')).toContain('css/button.css, the file of button, does not exist')
+    expect(check({ files: { ...files, 'extra.css': '.x{top:0}\n' } }).join('\n')).toContain('css/extra.css is not in css/index.json')
+  })
+
+  it('refuses a size that is not the size of the file, and a file that does not end with one newline or has the marker of Vite', () => {
+    expect(check({ map: withEntry('button', { bytes: 1 }) }).join('\n')).toContain('says that button.css has 1 bytes')
+    expect(check({ map: withEntry('button', { gzip: 1 }) }).join('\n')).toContain('says that button.css has 1 bytes in gzip')
+    expect(check({ files: { ...files, 'toast.css': '.t{position:fixed}' } }).join('\n')).toContain('css/toast.css must end with one newline')
+    expect(check({ files: { ...files, 'toast.css': '.t{position:fixed}\n\n' } }).join('\n')).toContain('css/toast.css must end with one newline')
+    expect(check({ files: { ...files, 'toast.css': '.t{position:fixed}\n/*$vite$:1*/\n' } }).join('\n')).toContain('marker that Vite writes')
+  })
+
+  it('refuses a file that reads data-density or has a rule that the right to left build rewrote', () => {
+    expect(check({ files: { ...files, 'toast.css': ':root[data-density=compact]{top:0}\n' } }).join('\n')).toContain('css/toast.css reads data-density')
+    expect(check({ files: { ...files, 'toast.css': ':dir(rtl) .t{top:0}\n' } }).join('\n')).toContain('css/toast.css has a :dir() or a :lang() selector')
+  })
+
+  it('refuses rules that styles.css does not have, rules that are missing, and rules in another order inside a file', () => {
+    expect(check({ files: { ...files, 'toast.css': '.t{position:absolute}\n' } }).join('\n')).toContain('css/toast.css has rules that styles.css does not have')
+    expect(check({ files: { ...files, 'toast.css': '.t{position:fixed}.t{position:fixed}\n' } }).join('\n')).toContain('not the rules of styles.css')
+    expect(check({ files: { ...files, 'icon.css': '.s{flex-shrink:0}.i{display:inline-block}\n' } }).join('\n')).toContain('css/icon.css has rules that styles.css does not have, or in another order')
+    expect(check({ files: { ...files, 'badge.css': '' }, map: { ...map, components: { ...map.components, badge: { file: 'badge.css', needs: [], files: [], bytes: 0, gzip: 20 } } } }).length).toBeGreaterThan(0)
+  })
+
+  it('accepts a declaration in another place of a rule, which the second build of Vite does', () => {
+    expect(check({ files: { ...files, 'button.css': '.b{color:red;margin:0}\n' }, map: withEntry('button', { bytes: 23, gzip: components[1]!.gzip }) }).filter((problem) => !problem.includes('gzip'))).toEqual([])
+  })
+
+  it('refuses a css module that is in no file, in two, under another component than its folder, or that the sources do not have', () => {
+    expect(check({ sources: [...sources, 'components/common/Card/styles.module.css'] }).join('\n')).toContain('that no file of css/ has: components/common/Card/styles.module.css')
+    expect(check({ sources: sources.slice(1) }).join('\n')).toContain(`that the sources do not have: ${icon.path}`)
+    expect(check({ map: withEntry('toast', { files: [toast.path, button.path] }) }).join('\n')).toContain(`in more than one file: ${button.path}`)
+    expect(check({ map: withEntry('toast', { files: [button.path] }) }).join('\n')).toContain(`${button.path} under toast`)
+  })
+
+  it('refuses a map that does not say what the javascript reaches, or that puts a need after the component', () => {
+    expect(check({ map: withEntry('button-link', { needs: ['icon'] }) }).join('\n')).toContain('says that button-link needs icon, and its javascript reaches the css of button')
+    expect(check({ map: withEntry('toast', { needs: ['icon'] }) }).join('\n')).toContain('says that toast needs icon, and its javascript reaches the css of nothing')
+    expect(check({ map: withEntry('icon', { needs: ['toast'] }) }).join('\n')).toContain('says that icon needs toast')
+  })
+
+  it('counts the right to left selectors of the files against styles.css', () => {
+    const rtl = { path: 'components/common/Badge/styles.module.css', css: '[dir=rtl] .r{top:0}\n' }
+    const withRtl = [...modules, rtl]
+    const rtlComponents = cssComponents({ modules: withRtl, js: { ...js, 'components/common/Badge/index.js': 'export const Badge = 1' } })
+    const rtlFiles = Object.fromEntries(rtlComponents.map(({ file, css }) => [file, css]))
+
+    expect(cssFileProblems({ map: cssMap(rtlComponents), files: rtlFiles, styles: stylesOf(...withRtl), sources: withRtl.map(({ path }) => path), js: { ...js, 'components/common/Badge/index.js': 'export const Badge = 1' } })).toEqual([])
+    expect(cssFileProblems({ map: cssMap(rtlComponents), files: rtlFiles, styles: stylesOf(...modules, { css: '.r{top:0}\n' }), sources: withRtl.map(({ path }) => path), js }).join('\n')).toContain('[dir=rtl] selectors')
   })
 })

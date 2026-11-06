@@ -3,6 +3,7 @@ import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { consumerCss } from './consumerCss.mjs'
+import { cssFileProblems } from './cssFiles.mjs'
 import { deprecationGaps } from './hookDeclarations.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -10,7 +11,7 @@ const { bin, exports, files, version } = JSON.parse(readFileSync(join(root, 'pac
 
 const targets = (value) => (typeof value === 'string' ? [value] : Object.values(value).flatMap(targets))
 
-const built = [...new Set(targets(exports))].filter((target) => target.startsWith('./dist-lib/'))
+const built = [...new Set(targets(exports))].filter((target) => target.startsWith('./dist-lib/') && !target.includes('*'))
 const broken = built.filter((target) => !existsSync(join(root, target)) || statSync(join(root, target)).size === 0)
 
 if (broken.length > 0) {
@@ -181,6 +182,28 @@ for (const [where, css] of themeStylesheets) {
   }
 }
 
+const cssPattern = './css/*'
+const cssDir = join(root, 'dist-lib', 'css')
+
+if (exports[cssPattern] !== './dist-lib/css/*') leaks.push(`the package must export ${cssPattern} as ./dist-lib/css/*, so that enchase/css/<component>.css and enchase/css/index.json resolve`)
+
+if (!existsSync(join(cssDir, 'index.json'))) leaks.push('dist-lib/css/index.json is missing, so the package ships no map of the css of each component')
+else {
+  const toPosix = (name) => name.split(sep).join('/')
+  const cssNames = readdirSync(cssDir).filter((name) => name.endsWith('.css')).sort()
+  const js = Object.fromEntries(readdirSync(join(root, 'dist-lib'), { recursive: true }).filter((name) => name.endsWith('.js')).map((name) => [toPosix(name), readFileSync(join(root, 'dist-lib', name), 'utf8')]))
+
+  leaks.push(
+    ...cssFileProblems({
+      map: JSON.parse(readFileSync(join(cssDir, 'index.json'), 'utf8')),
+      files: Object.fromEntries(cssNames.map((name) => [name, readFileSync(join(cssDir, name), 'utf8')])),
+      styles: readFileSync(join(root, 'dist-lib', 'styles.css'), 'utf8'),
+      sources: sources.map(toPosix).filter((name) => name.startsWith('components/')),
+      js
+    })
+  )
+}
+
 const kitIndex = join(root, 'eject', 'index.json')
 const binFile = bin?.enchase ? join(root, bin.enchase) : null
 
@@ -205,4 +228,4 @@ if (leaks.length > 0) {
   process.exit(1)
 }
 
-console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches, and each ${headlessPrefix}<name> entry, and the ${experimentalPrefix}<name> that is an alias of it, starts with "use client" and reaches its hook and no component, stylesheet or other hook (${jsEntries.length} entries walked), the css mirrors right to left from the dir attribute, as published and after the default build of Vite, and the compact density block is in theme.css once, behind the attribute on the root, and in no other stylesheet, and the eject kit has every file that it lists, out of the exports`)
+console.log(`package outputs checked: ${built.length} export targets exist and are not empty, ${clientEntry} starts with "use client", each ${stylePrefix}<name> entry reaches only its own style, which no other entry reaches, and each ${headlessPrefix}<name> entry, and the ${experimentalPrefix}<name> that is an alias of it, starts with "use client" and reaches its hook and no component, stylesheet or other hook (${jsEntries.length} entries walked), the css mirrors right to left from the dir attribute, as published and after the default build of Vite, the css of each component is, all together and in order, the css of styles.css, with every module in one file and the map of the files as the javascript reaches them, and the compact density block is in theme.css once, behind the attribute on the root, and in no other stylesheet, and the eject kit has every file that it lists, out of the exports`)

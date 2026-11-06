@@ -142,6 +142,7 @@
     "./styles.css": "./dist-lib/styles.css",
     "./styles.layer.css": "./dist-lib/styles.layer.css",
     "./theme.css": "./dist-lib/theme.css",
+    "./css/*": "./dist-lib/css/*",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -162,7 +163,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build -o storybook-static",
     "build:lib": "vite build -c vite.lib.config.ts && vite build -c vite.css.config.ts && tsc -p tsconfig.lib.json && node scripts/fixDeclarations.mjs && node scripts/deprecateExperimental.mjs && node scripts/buildCssOutputs.mjs && node scripts/buildCssFiles.mjs && node scripts/buildEject.mjs && node scripts/checkPackage.mjs",
-    "pack:check": "npm pack --dry-run && publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./styles.layer.css ./theme.css",
+    "pack:check": "npm pack --dry-run && publint && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./styles.layer.css ./theme.css ./css/*",
     "test:consumer": "node scripts/testConsumer.mjs",
     "test:next": "node scripts/testNext.mjs",
     "test:eject": "node scripts/testEject.mjs",

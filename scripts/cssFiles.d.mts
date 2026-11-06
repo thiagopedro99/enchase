@@ -32,6 +32,10 @@ export const importsOf: (source: string) => string[]
 
 export const reachable: (js: Record<string, string>, entries: string[]) => Set<string>
 
+export const needsOf: (input: { groups: { key: string; folder: string; files: string[] }[]; js: Record<string, string> }) => Record<string, string[]>
+
 export const cssComponents: (input: { modules: CssModule[]; js: Record<string, string> }) => CssComponent[]
 
 export const cssMap: (components: CssComponent[]) => CssMap
+
+export const cssFileProblems: (input: { map: CssMap; files: Record<string, string>; styles: string; sources: string[]; js: Record<string, string> }) => string[]
