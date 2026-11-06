@@ -23,8 +23,8 @@ import type { IconProps } from 'enchase/icons'
 import { enchase as enchaseStyle } from 'enchase/styles/enchase'
 import { shadcn } from 'enchase/styles/shadcn'
 import { workbench } from 'enchase/styles/workbench'
-import { createTheme, defineStyle, validateTheme } from 'enchase/theme'
-import type { RadiusOverrides, ShapePreset, ThemeInput, ThemeStyle, ThemeStyleMode } from 'enchase/theme'
+import { contrastChecks, createTheme, defineStyle, validateTheme } from 'enchase/theme'
+import type { ContrastCheck, RadiusOverrides, ShapePreset, ThemeInput, ThemeStyle, ThemeStyleMode } from 'enchase/theme'
 import { en, ptBR } from 'enchase/locales'
 import type { Locale } from 'enchase/locales'
 import { useTabs } from 'enchase/headless/tabs'
@@ -293,6 +293,7 @@ export const largeHitSize: string = theme.base.hit.sizeLg
 export const normalLineHeight: number = theme.base.fonts.lineHeights.normal
 export const controlSpacing: string = theme.base.fonts.letterSpacings.control
 export const problems = validateTheme(theme)
+export const pairs: ContrastCheck[] = contrastChecks(theme.light.colors)
 export const chosen: ThemeStyle = shadcn
 export const dense: ThemeStyle = workbench
 export const styled = createTheme({ style: chosen })

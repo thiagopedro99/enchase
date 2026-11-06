@@ -240,7 +240,7 @@ The Storybook has a Density item in the toolbar and a System/Density page with t
 | Entry | Contents |
 | --- | --- |
 | `enchase` | Components, providers, hooks and types. Marked `'use client'`. |
-| `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring`, `timedSpring`, `themeCss` and the tokens (`baseTokens`, `defaultTheme`, `lightTheme`, `darkTheme`, `breakpoints`, `colorRoles`, `themeModes`, `defaultThemeCss`), with their types. Nothing else is public. No React. |
+| `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastChecks`, `contrastRatio`, `spring`, `timedSpring`, `themeCss` and the tokens (`baseTokens`, `defaultTheme`, `lightTheme`, `darkTheme`, `breakpoints`, `colorRoles`, `themeModes`, `defaultThemeCss`), with their types. Nothing else is public. No React. |
 | `enchase/styles/<name>` | One visual style per entry: `enchase/styles/shadcn`, `enchase/styles/workbench` and `enchase/styles/enchase`. Data only, no React, and only in the bundle of whoever imports it. |
 | `enchase/locales` | `en` and `ptBR` (`{ locale, dir, messages }`). Data only. |
 | `enchase/icons` | The 20 icons the components use inside, one component per icon. Works in Server Components. |

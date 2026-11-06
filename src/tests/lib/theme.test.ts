@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { enchase } from 'enchase/styles/enchase'
 import { shadcn } from 'enchase/styles/shadcn'
-import { createTheme, defineStyle, spring, validateMotion, validateTheme } from 'enchase/theme'
+import { contrastChecks, createTheme, defineStyle, spring, validateMotion, validateTheme } from 'enchase/theme'
 import { formatContrastIssues } from '@styles/theme/validateTheme.ts'
 import { formatMotionIssues } from '@styles/theme/motion.ts'
 
@@ -23,6 +23,25 @@ describe('the public theme entry protects the contrast contract', () => {
 
   it('finds nothing wrong in the built-in theme', () => {
     expect(validateTheme(createTheme())).toEqual([])
+  })
+
+  it('lists the pairs of colors of one mode that validateTheme checks, with the minimum each one needs', () => {
+    const { colors } = createTheme().light
+    const checks = contrastChecks(colors)
+
+    expect(checks.find((check) => check.label === 'onPrimary on primary')).toEqual({ label: 'onPrimary on primary', foreground: colors.onPrimary, background: colors.primary, minimum: 4.5 })
+    expect(checks.find((check) => check.label === 'form control border on surface')).toEqual({ label: 'form control border on surface', foreground: colors.borderStrong, background: colors.surface, minimum: 3 })
+    expect(new Set(checks.map((check) => check.minimum))).toEqual(new Set([3, 4.5]))
+    expect(checks.every((check) => check.label !== '' && check.foreground !== '' && check.background !== '')).toBe(true)
+  })
+
+  it('is the list that validateTheme reads: each issue it reports is one of the pairs of its mode', () => {
+    const theme = createTheme({ light: { colors: { onPrimary: '#EEEEEE', primary: '#DDDDDD' } } })
+    const issues = validateTheme(theme)
+
+    expect(issues.length).toBeGreaterThan(1)
+
+    for (const issue of issues) expect(contrastChecks(theme[issue.mode].colors)).toContainEqual({ label: issue.label, foreground: issue.foreground, background: issue.background, minimum: issue.minimum })
   })
 
   it('customizes the motion tokens and warns about a duration longer than 300ms', () => {

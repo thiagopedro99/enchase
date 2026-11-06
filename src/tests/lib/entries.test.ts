@@ -40,8 +40,8 @@ describe('public entries', () => {
     expect(main).not.toHaveProperty('createTheme')
   })
 
-  it('exports exactly the theme tools from enchase/theme, with the checks and the internals kept out', () => {
-    expect(Object.keys(theme).sort()).toEqual(['baseTokens', 'breakpoints', 'colorRoles', 'contrastRatio', 'createTheme', 'darkTheme', 'defaultTheme', 'defaultThemeCss', 'defineStyle', 'lightTheme', 'spring', 'themeCss', 'themeModes', 'timedSpring', 'validateMotion', 'validateTheme'])
+  it('exports exactly the theme tools from enchase/theme, with the internals kept out', () => {
+    expect(Object.keys(theme).sort()).toEqual(['baseTokens', 'breakpoints', 'colorRoles', 'contrastChecks', 'contrastRatio', 'createTheme', 'darkTheme', 'defaultTheme', 'defaultThemeCss', 'defineStyle', 'lightTheme', 'spring', 'themeCss', 'themeModes', 'timedSpring', 'validateMotion', 'validateTheme'])
     expect(typeExportsOf('lib/theme.ts').sort()).toEqual(['BaseTokens', 'ColorRole', 'ColorTokens', 'ContrastCheck', 'ContrastIssue', 'FontOverrides', 'HookValues', 'LabelPlacement', 'ModeTokens', 'MotionIssue', 'MotionOverrides', 'RadiusOverrides', 'RadiusTokens', 'ShadowTokens', 'ShapePreset', 'SpringInput', 'SpringName', 'SpringOverride', 'SpringPerceptual', 'SpringPhysics', 'SpringResult', 'SpringTiming', 'ThemeCssOptions', 'ThemeDefaults', 'ThemeInput', 'ThemeMode', 'ThemeOverrides', 'ThemeSet', 'ThemeStyle', 'ThemeStyleMode', 'VariableGroup'])
   })
 

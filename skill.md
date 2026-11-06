@@ -236,7 +236,7 @@ Especificação, não descrição: os componentes atuais ainda não cumprem tudo
 - Elementos decorativos (`svg` de ícone, spinner, skeleton) com `aria-hidden="true"`; spinner com texto alternativo oculto via `VisuallyHidden`.
 - Paleta (`src/styles/tokens/`) nos dois temas: texto ≥ 4.5:1 (WCAG 1.4.3) e componentes de interface ≥ 3:1 (1.4.11). Borda de campo (`Input`, `Select`, `Checkbox`) usa `colors.borderStrong`; `colors.border` é só para divisor decorativo. Placeholder usa `colors.text.placeholder` (nunca `text.disabled`). Texto sobre um papel de cor usa o `on*` correspondente.
 - Links no conteúdo são sublinhados por padrão (1.4.1); só links de navegação (logo, menus, rodapé) removem o sublinhado no próprio `.module.css`.
-- Todo token de cor novo ou alterado entra na lista `contrastChecks` de `src/styles/theme/validateTheme.ts`. O teste `src/tests/styles/theme/contrast.test.ts` percorre essa lista com `contrastRatio` de `src/styles/theme/contrast.ts`, e o `validateTheme` usa a mesma lista para avisar sobre temas personalizados.
+- Todo token de cor novo ou alterado entra na lista `contrastChecks` de `src/styles/theme/validateTheme.ts`, que também é exportada por `enchase/theme` (a função e o formato dos pares são contrato; o conteúdo cresce com os tokens). O teste `src/tests/styles/theme/contrast.test.ts` percorre essa lista com `contrastRatio` de `src/styles/theme/contrast.ts`, e o `validateTheme` usa a mesma lista para avisar sobre temas personalizados.
 - Optional chaining (`?.`) e nullish coalescing (`??`) em vez de verificações verbosas.
 
 ## Testes

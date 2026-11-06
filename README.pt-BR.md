@@ -100,7 +100,7 @@ O `GlobalStyles` é opcional. Ele acrescenta uma folha pequena, em `@layer encha
 | Entrada | Conteúdo |
 | --- | --- |
 | `enchase` | Componentes, provedores, hooks e tipos. Marcada como `'use client'`. |
-| `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastRatio`, `spring`, `timedSpring`, `themeCss` e os tokens (veja "O que `enchase/theme` exporta"), com os tipos. Sem React. |
+| `enchase/theme` | `createTheme`, `defineStyle`, `validateTheme`, `validateMotion`, `contrastChecks`, `contrastRatio`, `spring`, `timedSpring`, `themeCss` e os tokens (veja "O que `enchase/theme` exporta"), com os tipos. Sem React. |
 | `enchase/styles/<nome>` | Um estilo visual por entrada: `enchase/styles/shadcn`, `enchase/styles/workbench` e `enchase/styles/enchase`. Só dados, sem React, e só entra no bundle de quem a importa. |
 | `enchase/locales` | `en` e `ptBR` (`{ locale, dir, messages }`). Só dados. |
 | `enchase/icons` | Os 20 ícones que os componentes usam por dentro, um componente por ícone. Funciona em Server Components. |
@@ -576,6 +576,7 @@ const issues = validateTheme(theme)
 | `defineStyle(style)` | Confere um estilo visual e o devolve congelado. |
 | `validateTheme(theme)` | Lista os pares de cor abaixo do contraste mínimo. |
 | `validateMotion(base)` | Lista as durações de movimento acima do recomendado. |
+| `contrastChecks(colors)` | Lista os pares de cor de um modo que o `validateTheme` confere, cada um com `label`, `foreground`, `background` e o contraste mínimo (`minimum`) que exige. Um token de cor novo traz os seus pares, então a lista pode crescer numa minor. |
 | `contrastRatio(foreground, background)` | A razão de contraste do WCAG entre duas cores. |
 | `spring(input)`, `timedSpring({ duration, bounce })` | A curva `linear()` de uma mola e a duração em milissegundos, por física (`stiffness`, `damping`) ou por duração e `bounce`. |
 | `themeCss(theme, { layer })` | O CSS das variáveis de um tema, para o `ThemeVariables`. Com `layer`, dentro dessa camada. |
