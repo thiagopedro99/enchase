@@ -142,6 +142,8 @@ const isSubsequence = (part, whole) => {
 
 export const keepsOrder = (fileCss, stylesCss) => isSubsequence(rulesOf(fileCss), rulesOf(stylesCss))
 
+export const keepsMapOrder = (fileCssList, stylesCss) => isSubsequence(fileCssList.map((css) => rulesOf(css)[0]), rulesOf(stylesCss))
+
 export const sameRules = (stylesCss, fileCssList) => {
   const expected = rulesOf(stylesCss).sort()
   const found = fileCssList.flatMap(rulesOf).sort()
@@ -260,6 +262,10 @@ export const cssFileProblems = ({ map, files, styles, sources, js }) => {
   if (repeated.length > 0) problems.push(`css/index.json lists a css module in more than one file: ${repeated.map(([path]) => path).join(', ')}`)
   if (missing.length > 0) problems.push(`css modules of the sources that no file of css/ has: ${missing.join(', ')}`)
   if (stray.length > 0) problems.push(`css/index.json lists css modules that the sources do not have: ${stray.map(([path]) => path).join(', ')}`)
+
+  const mapOrder = entries.flatMap(([, component]) => (component.file in files ? [files[component.file]] : []))
+
+  if (mapOrder.length > 0 && !keepsMapOrder(mapOrder, styles)) problems.push('css/index.json lists the components in another order than the one that the first rule of each file has in styles.css')
 
   if (names.length > 0 && !sameRules(styles, Object.values(files))) problems.push('the rules of the files of css/, all together, are not the rules of styles.css: one is missing, repeated or different')
 

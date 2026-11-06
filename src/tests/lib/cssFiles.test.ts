@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { componentOf, cssComponents, cssFileProblems, cssMap, joinModules, kebab, keepsOrder, normalizeCss, orderModules, reachable, rulesOf, sameRules } from '../../../scripts/cssFiles.mjs'
+import { componentOf, cssComponents, cssFileProblems, cssMap, joinModules, kebab, keepsMapOrder, keepsOrder, normalizeCss, orderModules, reachable, rulesOf, sameRules } from '../../../scripts/cssFiles.mjs'
 
 import type { CssMap } from '../../../scripts/cssFiles.mjs'
 
@@ -122,6 +122,12 @@ describe('keepsOrder and sameRules', () => {
     expect(keepsOrder('.c{left:0}.b{margin:0;color:red}', styles)).toBe(false)
     expect(keepsOrder('.z{top:0}', styles)).toBe(false)
     expect(keepsOrder('.c{left:0}.c{left:0}', styles)).toBe(false)
+  })
+
+  it('accepts the files in the order of their first rule in styles.css, and refuses another order', () => {
+    expect(keepsMapOrder(['.a{top:0}.z{top:1}', '.b{margin:0;color:red}', '.c{left:0}'], styles)).toBe(true)
+    expect(keepsMapOrder(['.c{left:0}', '.b{color:red;margin:0}'], styles)).toBe(false)
+    expect(keepsMapOrder(['.b{margin:0;color:red}', '.a{top:0}'], styles)).toBe(true)
   })
 
   it('compares the rules of the files, as a whole, with the rules of styles.css', () => {
@@ -253,6 +259,12 @@ describe('cssFileProblems', () => {
     expect(check({ files: { ...files, 'toast.css': '.t{position:fixed}.t{position:fixed}\n' } }).join('\n')).toContain('not the rules of styles.css')
     expect(check({ files: { ...files, 'icon.css': '.s{flex-shrink:0}.i{display:inline-block}\n' } }).join('\n')).toContain('css/icon.css has rules that styles.css does not have, or in another order')
     expect(check({ files: { ...files, 'badge.css': '' }, map: { ...map, components: { ...map.components, badge: { file: 'badge.css', needs: [], files: [], bytes: 0, gzip: 20 } } } }).length).toBeGreaterThan(0)
+  })
+
+  it('refuses a map that lists the components in another order than styles.css', () => {
+    const reversed: CssMap = { ...map, components: Object.fromEntries(Object.entries(map.components).reverse()) }
+
+    expect(check({ map: reversed }).join('\n')).toContain('lists the components in another order')
   })
 
   it('accepts a declaration in another place of a rule, which the second build of Vite does', () => {

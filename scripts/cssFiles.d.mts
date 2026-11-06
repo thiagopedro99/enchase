@@ -26,6 +26,8 @@ export const normalizeCss: (css: string) => string
 
 export const keepsOrder: (fileCss: string, stylesCss: string) => boolean
 
+export const keepsMapOrder: (fileCssList: string[], stylesCss: string) => boolean
+
 export const sameRules: (stylesCss: string, fileCssList: string[]) => boolean
 
 export const importsOf: (source: string) => string[]
