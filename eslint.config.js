@@ -18,7 +18,7 @@ const stylesBoundary = (files, forbidden, message, { withReact = true } = {}) =>
 })
 
 export default tseslint.config(
-  { ignores: ['dist', 'dist-lib', 'storybook-static', '.claude', 'eject', '.eject-contract'] },
+  { ignores: ['dist', 'dist-lib', 'dist-css', 'storybook-static', '.claude', 'eject', '.eject-contract'] },
   {
     files: ['src/components/**/*.{ts,tsx}'],
     rules: {
