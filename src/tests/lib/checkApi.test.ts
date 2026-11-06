@@ -157,6 +157,61 @@ describe('the helpers of the API check', () => {
 })
 
 describe('the comparison of two builds of the package', () => {
+  it('lists a required member that becomes optional as widened in a type that the app writes, and fails it in a type that the app reads', () => {
+    const owners = ['TabsProps', 'BreadcrumbItem', 'SelectOption', 'Result']
+    const required = new Map(owners.flatMap((name) => [[name, `interface ${name}`], [`${name}.id`, 'id: string']]))
+    const optional = new Map(owners.flatMap((name) => [[name, `interface ${name}`], [`${name}.id`, 'id?: string | undefined']]))
+    const diff = diffLines(required, optional)
+
+    expect(diff.widened.map(({ key }) => key)).toEqual(['TabsProps.id', 'BreadcrumbItem.id', 'SelectOption.id'])
+    expect(diff.changed.map(({ key }) => key)).toEqual(['Result.id'])
+    expect(diff.widened[0].detail).toBe('id: string -> id?: string | undefined')
+  })
+
+  it('keeps failing a member that changes its type while it becomes optional, one that becomes required, and one that was optional with another type', () => {
+    const before = new Map([
+      ['TabsProps', 'interface TabsProps'],
+      ['TabsProps.label', 'label: string'],
+      ['TabsProps.size', 'size?: string | undefined'],
+      ['TabsProps.mode', 'mode: string'],
+      ['TabsProps.name', 'name: string']
+    ])
+    const after = new Map([
+      ['TabsProps', 'interface TabsProps'],
+      ['TabsProps.label', 'label?: number | undefined'],
+      ['TabsProps.size', 'size: string'],
+      ['TabsProps.mode', 'mode?: string | number | undefined'],
+      ['TabsProps.name', 'readonly name?: string | undefined']
+    ])
+    const diff = diffLines(before, after)
+
+    expect(diff.widened).toEqual([])
+    expect(diff.changed.map(({ key }) => key)).toEqual(['TabsProps.label', 'TabsProps.size', 'TabsProps.mode', 'TabsProps.name'])
+  })
+
+  it('fails a new required member of an Item or of an Option, as of a Props, and lets an optional one through', () => {
+    const before = new Map([
+      ['SelectOption', 'interface SelectOption'],
+      ['SelectOption.value', 'value: string'],
+      ['MenuItem', 'type MenuItem'],
+      ['MenuItem.id', 'id: string']
+    ])
+    const after = new Map([
+      ['SelectOption', 'interface SelectOption'],
+      ['SelectOption.value', 'value: string'],
+      ['SelectOption.extra', 'extra: string'],
+      ['MenuItem', 'type MenuItem'],
+      ['MenuItem.id', 'id: string'],
+      ['MenuItem.icon', 'icon?: string | undefined'],
+      ['MenuItem.must', 'must: boolean']
+    ])
+    const diff = diffLines(before, after)
+
+    expect(diff.addedRequired.map(({ key }) => key)).toEqual(['SelectOption.extra', 'MenuItem.must'])
+    expect(diff.added.map(({ key }) => key)).toEqual(['MenuItem.icon'])
+    expect(diff.changed).toEqual([])
+  })
+
   it('finds nothing between two identical builds, and nothing in the experimental entries', async () => {
     const result = await compare()
 

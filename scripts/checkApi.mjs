@@ -12,7 +12,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const windows = process.platform === 'win32'
 const experimentalPrefix = './experimental/'
 const stylePrefix = './styles/'
-const inputOwner = /(Props|Options|Input)$/
+const inputOwner = /(Props|Options|Input|Item|Option)$/
 
 const squash = (text) =>
   text
@@ -338,17 +338,27 @@ export const readSurface = async (packageDir, load = (url) => import(url)) => {
   }
 }
 
+const optionalTwin = (before, after) => {
+  const old = typePartOf(before)
+  const next = typePartOf(after)
+
+  if (!old || !next || next.prefix !== `${old.prefix}?`) return false
+
+  return next.type === old.type || next.type === `${old.type} | undefined`
+}
+
 export const diffLines = (before, after) => {
   const result = { removed: [], changed: [], widened: [], added: [], addedRequired: [] }
+  const owner = (key) => key.split('.')[0]
+  const relaxes = (key, from, to) => key.includes('.') && inputOwner.test(owner(key)) && optionalTwin(from, to)
 
   for (const [key, text] of before) {
     if (!after.has(key)) result.removed.push({ key, detail: text })
-    else if (after.get(key) !== text) result[isWidened(text, after.get(key)) ? 'widened' : 'changed'].push({ key, detail: `${text} -> ${after.get(key)}` })
+    else if (after.get(key) !== text) result[isWidened(text, after.get(key)) || relaxes(key, text, after.get(key)) ? 'widened' : 'changed'].push({ key, detail: `${text} -> ${after.get(key)}` })
   }
 
   for (const [key, text] of after) if (!before.has(key)) result.added.push({ key, detail: text })
 
-  const owner = (key) => key.split('.')[0]
   const removedOwners = new Set(result.removed.filter(({ key }) => !key.includes('.')).map(({ key }) => key))
   const addedOwners = new Set(result.added.filter(({ key }) => !key.includes('.')).map(({ key }) => key))
 
