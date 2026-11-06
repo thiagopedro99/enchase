@@ -108,6 +108,7 @@ O `GlobalStyles` é opcional. Ele acrescenta uma folha pequena, em `@layer encha
 | `enchase/experimental/<nome>` | O caminho antigo dos mesmos cinco hooks: um alias deprecado, removido na 1.0. Use `enchase/headless/<nome>`. |
 | `enchase/styles.css` | CSS dos componentes. |
 | `enchase/styles.layer.css` | O mesmo CSS dentro de `@layer enchase`. |
+| `enchase/css/<nome>.css` | O CSS de um componente, cortado de `enchase/styles.css`. O `enchase/css/index.json` é o mapa: o arquivo de cada componente e os arquivos de que ele precisa. |
 | `enchase/theme.css` | Variáveis do tema padrão, claro e escuro, como arquivo estático. |
 
 Quem consome importa só dessas entradas. O código interno (`src/`) não é público.
@@ -900,6 +901,36 @@ O CSS vem em duas variantes. Importe uma delas, nunca as duas:
 - `enchase/styles.css`: o layout (tamanho, padding, raio) usa `:where()` e sempre perde para a sua classe. Cores, borda e hover só são vencidos se o seu CSS carregar depois.
 - `enchase/styles.layer.css`: o mesmo conteúdo em `@layer enchase`, com a ordem `@layer enchase-theme, enchase-base, enchase;`. Qualquer CSS seu sem camada vence em qualquer ordem. Combine com `<ColorModeProvider cssLayer="enchase-theme">`.
 - `enchase/theme.css`: as variáveis do tema padrão como arquivo, para tê-las na primeira resposta do servidor sem esperar JavaScript. Um tema personalizado continua indo em `ColorModeProvider theme`.
+
+### Só o CSS dos componentes que você usa
+
+`enchase/css/<nome>.css` é o CSS de um componente só (`button.css`, `button-link.css`, `date-picker.css`): as regras de `enchase/styles.css`, cortadas por componente, para o app que usa poucos componentes carregar menos CSS. Um componente pode precisar do CSS de outros, e o `enchase/css/index.json` diz quais. Para cada componente, a chave é o nome do arquivo sem `.css` e o valor tem:
+
+| Campo | O que é |
+| --- | --- |
+| `file` | O nome do arquivo em `enchase/css/`. |
+| `needs` | Os componentes cujo CSS vem antes, na ordem de importar (`button-link` precisa de `icon`, `button` e `visually-hidden`). |
+| `files` | Os módulos CSS de `src/` que formam o arquivo, na ordem que têm em `styles.css`. |
+| `bytes`, `gzip` | O tamanho do arquivo, cru e em gzip. |
+
+Para vários componentes, importe a união dos `needs` e dos próprios componentes, na ordem do mapa (a ordem das chaves de `components` é a de `styles.css`):
+
+```ts
+import 'enchase/css/icon.css'
+import 'enchase/css/button.css'
+import 'enchase/css/visually-hidden.css'
+import 'enchase/css/button-link.css'
+import 'enchase/theme.css'
+```
+
+Para pôr os arquivos numa camada, declare a ordem e importe cada um com `layer(enchase)`:
+
+```css
+@layer enchase-theme, enchase-base, enchase;
+@import 'enchase/css/button.css' layer(enchase);
+```
+
+Use esses arquivos ou `enchase/styles.css`, nunca os dois, e deixe o `enchase/theme.css` para o tema. O `enchase/styles.css` continua o mesmo arquivo de antes, e os arquivos de `enchase/css/`, todos juntos, têm as regras dele, cada arquivo com as regras na ordem que elas têm lá (uma declaração pode ficar em outro lugar dentro de uma regra); o `npm run build:lib` confere isso.
 
 ### Overlays dentro de um trecho da página
 

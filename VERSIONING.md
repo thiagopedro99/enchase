@@ -6,7 +6,8 @@ Enchase follows [semantic versioning](https://semver.org), with the rules below 
 
 A change to any of these can break an app:
 
-- the exports of every entry of the package (`enchase`, `enchase/theme`, `enchase/styles/<name>`, `enchase/locales`, `enchase/icons`, `enchase/headless/<name>`, `enchase/styles.css`, `enchase/styles.layer.css` and `enchase/theme.css`), with their types, and the `enchase` command;
+- the exports of every entry of the package (`enchase`, `enchase/theme`, `enchase/styles/<name>`, `enchase/locales`, `enchase/icons`, `enchase/headless/<name>`, `enchase/styles.css`, `enchase/styles.layer.css`, `enchase/theme.css`, `enchase/css/<name>.css` and `enchase/css/index.json`), with their types, and the `enchase` command;
+- the css of each component: the names of the files of `enchase/css/` (the name of the component in kebab-case, as `button-link.css`), the format of `enchase/css/index.json` (`format: 1`, and for each component the `file`, the `needs`, the `files`, the `bytes` and the `gzip`) and that the files, all together, have the rules of `enchase/styles.css`, each file with its rules in the order they have there (a declaration can sit in another place inside a rule). A new file, or a new field, is a minor version; renaming or removing a file, changing what a field means or the format, or taking a rule out of a file, is a break;
 - the props of the components, their types and what they do;
 - the CSS hooks (`--enchase-<part>-<property>`) and their defaults, and the `data-slot` names of the parts, as [API.md](API.md) lists them;
 - the theme: the tokens, the shape of `ThemeStyle` and what `createTheme`, `defineStyle` and `validateTheme` accept and return;
