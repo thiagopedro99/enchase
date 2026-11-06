@@ -141,9 +141,9 @@ export const tableRows = [
 ]
 
 export const breadcrumbItems = [
-  { id: 'home', label: 'Home', href: '/' },
-  { id: 'settings', label: 'Settings', href: '/settings' },
-  { id: 'now', label: 'Density' }
+  { value: 'home', label: 'Home', href: '/' },
+  { value: 'settings', label: 'Settings', href: '/settings' },
+  { value: 'now', label: 'Density' }
 ]
 
 export const navigationSections: SidebarSection[] = [

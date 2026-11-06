@@ -173,7 +173,7 @@ export const Refs = () => {
       <Alert ref={alert}>Saved</Alert>
       <Avatar ref={avatar} name="Ana Souza" />
       <Badge ref={badge}>New</Badge>
-      <Breadcrumbs ref={breadcrumbs} items={[{ id: 'home', label: 'Home', href: '/' }, { id: 'page', label: 'Page' }]} />
+      <Breadcrumbs ref={breadcrumbs} items={[{ value: 'home', label: 'Home', href: '/' }, { id: 'docs', label: 'Docs', href: '/docs' }, { label: 'Page' }]} />
       <Button ref={button}>Save</Button>
       <ButtonLink ref={buttonLink} href="/docs">Docs</ButtonLink>
       <Card ref={card} as="section">Card</Card>

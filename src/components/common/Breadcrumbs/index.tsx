@@ -42,7 +42,7 @@ export const Breadcrumbs = ({ items, maxItems = defaultMaxItems, ariaLabel, ...p
       <ol ref={listRef} className={styles.list} {...slot('breadcrumbs', 'list')}>
         {entries.map((entry, index) => {
           const isLast = index === entries.length - 1
-          const key = entry === 'ellipsis' ? 'ellipsis' : entry.id
+          const key = entry === 'ellipsis' ? 'ellipsis' : (entry.value ?? entry.id ?? `#${items.indexOf(entry)}`)
 
           return (
             <li key={key} className={styles.item} {...slot('breadcrumbs', 'item')} data-priority={index < entries.length - 2 ? 'low' : undefined}>

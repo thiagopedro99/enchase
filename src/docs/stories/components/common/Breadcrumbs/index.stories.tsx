@@ -7,9 +7,9 @@ const meta = {
   component: Breadcrumbs,
   args: {
     items: [
-      { id: 'home', label: 'Home', href: '/' },
-      { id: 'docs', label: 'Documentation', href: '/docs' },
-      { id: 'api', label: 'API' }
+      { value: 'home', label: 'Home', href: '/' },
+      { value: 'docs', label: 'Documentation', href: '/docs' },
+      { value: 'api', label: 'API' }
     ],
     maxItems: 4
   },
@@ -22,7 +22,7 @@ const meta = {
   },
   argTypes: {
     items: {
-      description: 'The trail, in order. The last item is the current page; the others become links when they have an href.',
+      description: 'The trail, in order. Each item has `label` (the text) and, optionally, `href` (the destination: an item without it is plain text), `native` (the browser loads the page, without going through `navigate`) and `value`, a name that is unique in the trail, which is the key of the item; an item without it is keyed by its position. `id` is the old name of `value`: it is still accepted until 1.0, and `value` wins when both are given. The last item is the current page, with no link even when it has an `href`.',
       control: 'object'
     },
     maxItems: {
@@ -53,12 +53,12 @@ export const Playground: Story = {}
 export const Collapsed: Story = {
   args: {
     items: [
-      { id: 'a', label: 'Level A', href: '/a' },
-      { id: 'b', label: 'Level B', href: '/b' },
-      { id: 'c', label: 'Level C', href: '/c' },
-      { id: 'd', label: 'Level D', href: '/d' },
-      { id: 'e', label: 'Level E', href: '/e' },
-      { id: 'f', label: 'Level F' }
+      { value: 'a', label: 'Level A', href: '/a' },
+      { value: 'b', label: 'Level B', href: '/b' },
+      { value: 'c', label: 'Level C', href: '/c' },
+      { value: 'd', label: 'Level D', href: '/d' },
+      { value: 'e', label: 'Level E', href: '/e' },
+      { value: 'f', label: 'Level F' }
     ],
     maxItems: 4
   }

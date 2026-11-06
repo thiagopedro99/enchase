@@ -107,9 +107,9 @@ export const Preview = (props: PreviewProps) => {
 
           <Breadcrumbs
             items={[
-              { id: 'home', label: 'Home', href: '/' },
-              { id: 'docs', label: 'Documents', href: '/docs' },
-              { id: 'now', label: 'Current' }
+              { value: 'home', label: 'Home', href: '/' },
+              { value: 'docs', label: 'Documents', href: '/docs' },
+              { value: 'now', label: 'Current' }
             ]}
           />
 

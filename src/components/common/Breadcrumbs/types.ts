@@ -1,7 +1,8 @@
 import type { HTMLAttributes, Ref } from 'react'
 
 export type BreadcrumbItem = {
-  id: string
+  value?: string | undefined
+  id?: string | undefined
   label: string
   href?: string | undefined
   native?: boolean | undefined

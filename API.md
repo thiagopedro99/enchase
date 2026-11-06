@@ -72,7 +72,7 @@ A breadcrumb trail: a `<nav>` with an ordered list, in which the last item is th
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `items` | `BreadcrumbItem[]` | *required* | The trail, in order. The last item is the current page; the others become links when they have an href. |
+| `items` | `BreadcrumbItem[]` | *required* | The trail, in order. Each item has `label` (the text) and, optionally, `href` (the destination: an item without it is plain text), `native` (the browser loads the page, without going through `navigate`) and `value`, a name that is unique in the trail, which is the key of the item; an item without it is keyed by its position. `id` is the old name of `value`: it is still accepted until 1.0, and `value` wins when both are given. The last item is the current page, with no link even when it has an `href`. |
 | `maxItems` | `number` | `4` | Above this number, the middle items become an ellipsis button that shows the full path. |
 | `ariaLabel` | `string` | — | Accessible name of the navigation. The default comes from the UIProvider (labels.breadcrumb). |
 | `ref` | `Ref<HTMLElement>` | — | Ref of the root `<nav>` (`data-slot="breadcrumbs"`). It stays `null` when `items` is empty, because nothing is rendered then. |

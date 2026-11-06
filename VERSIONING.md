@@ -43,6 +43,12 @@ From 1.0 an API is deprecated before it is removed:
 
 Before 1.0 the same steps apply when they can, but the removal can come in the next minor, with a note and a page in the migration guide.
 
+## Names kept until 1.0
+
+When a name is replaced by a more fitting one and the old one costs nothing to keep, both work until 1.0, the notes of the release that adds the new name say so, and the types do not flag the old one. Today there is one:
+
+- `id` in the items of `Breadcrumbs` and in the `breadcrumbs` of `Layout`. The name is `value`, as in `Tabs`, `Accordion` and `SegmentedControl`. An item takes either, `value` wins when both are given, and an item with neither is keyed by its position in the trail: the type does not ask for a name. The page is the same with either name, and `id` is accepted until 1.0.
+
 ## Experimental
 
 An entry under `enchase/experimental/*` is experimental: it may change or go away in a minor version, and the notes list every change. The path of an experimental entry says so, and it does not count for the three minor versions in a row without a break that 1.0 asks for.

@@ -24,49 +24,49 @@ const derive = (currentHref: string | undefined, activePageSectionId?: string, o
 
 describe('deriveBreadcrumbs', () => {
   it('returns only the home item on the home route', () => {
-    expect(derive('/')).toEqual([{ id: 'home', label: 'Início', href: '/' }])
+    expect(derive('/')).toEqual([{ value: 'home', label: 'Início', href: '/' }])
   })
 
   it('prefixes the home link before another route', () => {
     expect(derive('/docs')).toEqual([
-      { id: 'home', label: 'Início', href: '/' },
-      { id: 'docs', label: 'Docs', href: '/docs' }
+      { value: 'home', label: 'Início', href: '/' },
+      { value: 'docs', label: 'Docs', href: '/docs' }
     ])
   })
 
   it('matches the most specific route for nested paths', () => {
-    expect(derive('/docs/api').map((item) => item.id)).toEqual(['home', 'docs-api'])
-    expect(derive('/docs/api/v2').map((item) => item.id)).toEqual(['home', 'docs-api'])
+    expect(derive('/docs/api').map((item) => item.value)).toEqual(['home', 'docs-api'])
+    expect(derive('/docs/api/v2').map((item) => item.value)).toEqual(['home', 'docs-api'])
   })
 
   it('does not treat a path prefix without a separator as a match', () => {
-    expect(derive('/documentos').map((item) => item.id)).toEqual(['home', 'current-page'])
+    expect(derive('/documentos').map((item) => item.value)).toEqual(['home', 'current-page'])
   })
 
   it('falls back to the page title when no route matches', () => {
     expect(derive('/nao-existe')).toEqual([
-      { id: 'home', label: 'Início', href: '/' },
-      { id: 'current-page', label: 'Título da página' }
+      { value: 'home', label: 'Início', href: '/' },
+      { value: 'current-page', label: 'Título da página' }
     ])
   })
 
   it('appends the active page section as the last crumb', () => {
     const trail = derive('/docs', 'intro')
 
-    expect(trail.map((item) => item.id)).toEqual(['home', 'docs', 'intro'])
-    expect(trail[2]).toEqual({ id: 'intro', label: 'Introdução', href: '#intro' })
+    expect(trail.map((item) => item.value)).toEqual(['home', 'docs', 'intro'])
+    expect(trail[2]).toEqual({ value: 'intro', label: 'Introdução', href: '#intro' })
   })
 
   it('ignores an unknown active section', () => {
-    expect(derive('/docs', 'nope').map((item) => item.id)).toEqual(['home', 'docs'])
+    expect(derive('/docs', 'nope').map((item) => item.value)).toEqual(['home', 'docs'])
   })
 
   it('works without a home route', () => {
-    expect(derive('/docs', undefined, { sections: [{ id: 'nav', items: [{ id: 'docs', label: 'Docs', href: '/docs' }] }] })).toEqual([{ id: 'docs', label: 'Docs', href: '/docs' }])
+    expect(derive('/docs', undefined, { sections: [{ id: 'nav', items: [{ id: 'docs', label: 'Docs', href: '/docs' }] }] })).toEqual([{ value: 'docs', label: 'Docs', href: '/docs' }])
   })
 
   it('ignores items that are not routes of the app', () => {
-    const ids = derive('/docs/reference/x').map((item) => item.id)
+    const ids = derive('/docs/reference/x').map((item) => item.value)
 
     expect(ids).not.toContain('anchor')
     expect(ids).not.toContain('external')
@@ -86,7 +86,7 @@ describe('deriveBreadcrumbs', () => {
       }
     ]
 
-    expect(derive('/', undefined, { sections: landing })).toEqual([{ id: 'home', label: 'Início', href: '/' }])
-    expect(derive('/sobre', undefined, { sections: landing }).map((item) => item.id)).toEqual(['home', 'current-page'])
+    expect(derive('/', undefined, { sections: landing })).toEqual([{ value: 'home', label: 'Início', href: '/' }])
+    expect(derive('/sobre', undefined, { sections: landing }).map((item) => item.value)).toEqual(['home', 'current-page'])
   })
 })

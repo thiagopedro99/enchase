@@ -1,7 +1,7 @@
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 import { createRef } from 'react'
 
@@ -11,19 +11,48 @@ import UIProvider from '@components/uiProvider/index.tsx'
 import type { BreadcrumbItem } from '@components/common/Breadcrumbs/types.ts'
 
 const short: BreadcrumbItem[] = [
+  { value: 'home', label: 'Início', href: '/' },
+  { value: 'docs', label: 'Docs', href: '/docs' },
+  { value: 'api', label: 'API' }
+]
+
+const long: BreadcrumbItem[] = [
+  { value: 'a', label: 'Nível A', href: '/a' },
+  { value: 'b', label: 'Nível B', href: '/b' },
+  { value: 'c', label: 'Nível C', href: '/c' },
+  { value: 'd', label: 'Nível D', href: '/d' },
+  { value: 'e', label: 'Nível E', href: '/e' },
+  { value: 'f', label: 'Nível F' }
+]
+
+const withId: BreadcrumbItem[] = [
   { id: 'home', label: 'Início', href: '/' },
   { id: 'docs', label: 'Docs', href: '/docs' },
   { id: 'api', label: 'API' }
 ]
 
-const long: BreadcrumbItem[] = [
-  { id: 'a', label: 'Nível A', href: '/a' },
-  { id: 'b', label: 'Nível B', href: '/b' },
-  { id: 'c', label: 'Nível C', href: '/c' },
-  { id: 'd', label: 'Nível D', href: '/d' },
-  { id: 'e', label: 'Nível E', href: '/e' },
-  { id: 'f', label: 'Nível F' }
+const withNeither: BreadcrumbItem[] = [
+  { label: 'Início', href: '/' },
+  { label: 'Docs', href: '/docs' },
+  { label: 'API' }
 ]
+
+const longWithNeither: BreadcrumbItem[] = [
+  { label: 'Nível A', href: '/a' },
+  { label: 'Nível B', href: '/b' },
+  { label: 'Nível C', href: '/c' },
+  { label: 'Nível D', href: '/d' },
+  { label: 'Nível E', href: '/e' },
+  { label: 'Nível F' }
+]
+
+const crumb = (name: 'value' | 'id', key: string, href: string | undefined): BreadcrumbItem => (name === 'value' ? { value: key, label: key, href } : { id: key, label: key, href })
+
+const trailOf = (name: 'value' | 'id', keys: string[]) => keys.map((key, index) => crumb(name, key, index < keys.length - 1 ? `/${key}` : undefined))
+
+const nodeOf = (label: string) => screen.getByText(label).closest('li')
+
+const quiet = () => vi.spyOn(console, 'error').mockImplementation(() => undefined)
 
 describe('Breadcrumbs', () => {
   it('renders a labelled navigation with an ordered list', () => {
@@ -45,7 +74,7 @@ describe('Breadcrumbs', () => {
   })
 
   it('does not link the last item even when it has a destination', () => {
-    renderWithProviders(<Breadcrumbs items={[{ id: 'a', label: 'A', href: '/a' }, { id: 'b', label: 'B', href: '/b' }]} />)
+    renderWithProviders(<Breadcrumbs items={[{ value: 'a', label: 'A', href: '/a' }, { value: 'b', label: 'B', href: '/b' }]} />)
 
     expect(screen.queryByRole('link', { name: 'B' })).not.toBeInTheDocument()
     expect(screen.getByText('B')).toHaveAttribute('aria-current', 'page')
@@ -69,7 +98,7 @@ describe('Breadcrumbs', () => {
     const navigate = vi.fn()
     render(
       <UIProvider navigate={navigate}>
-        <Breadcrumbs items={[{ id: 'a', label: 'Docs', href: '/docs/', native: true }, { id: 'b', label: 'Atual' }]} />
+        <Breadcrumbs items={[{ value: 'a', label: 'Docs', href: '/docs/', native: true }, { value: 'b', label: 'Atual' }]} />
       </UIProvider>
     )
 
@@ -82,9 +111,9 @@ describe('Breadcrumbs', () => {
     renderWithProviders(
       <Breadcrumbs
         items={[
-          { id: 'a', label: 'Âncora', href: '#secao' },
-          { id: 'b', label: 'Sem destino' },
-          { id: 'c', label: 'Atual' }
+          { value: 'a', label: 'Âncora', href: '#secao' },
+          { value: 'b', label: 'Sem destino' },
+          { value: 'c', label: 'Atual' }
         ]}
       />
     )
@@ -186,7 +215,7 @@ describe('Breadcrumbs', () => {
 describe('Breadcrumbs ref', () => {
   it('gives the ref the root element and clears it on unmount', () => {
     const ref = createRef<HTMLElement>()
-    const { unmount } = renderWithProviders(<Breadcrumbs ref={ref} items={[{ id: 'home', label: 'Home', href: '/' }, { id: 'page', label: 'Page' }]} />)
+    const { unmount } = renderWithProviders(<Breadcrumbs ref={ref} items={[{ value: 'home', label: 'Home', href: '/' }, { value: 'page', label: 'Page' }]} />)
 
     expect(ref.current).toBe(document.querySelector('[data-slot="breadcrumbs"]'))
     expect(ref.current).toBeInstanceOf(HTMLElement)
@@ -195,5 +224,87 @@ describe('Breadcrumbs ref', () => {
     unmount()
 
     expect(ref.current).toBeNull()
+  })
+})
+
+describe('Breadcrumbs item name', () => {
+  afterEach(() => vi.restoreAllMocks())
+
+  it('renders the same trail whether the items are named by value, by id or not at all, without a key warning', () => {
+    const error = quiet()
+    const markup = (items: BreadcrumbItem[]) => {
+      const { unmount } = renderWithProviders(<Breadcrumbs items={items} />)
+      const html = screen.getByRole('navigation').outerHTML
+
+      unmount()
+
+      return html
+    }
+
+    expect(markup(withId)).toBe(markup(short))
+    expect(markup(withNeither)).toBe(markup(short))
+    expect(error).not.toHaveBeenCalled()
+  })
+
+  it('keeps value and id off the page', () => {
+    renderWithProviders(<Breadcrumbs items={[{ value: 'home', id: 'old', label: 'Início', href: '/' }, { id: 'docs', label: 'Docs', href: '/docs' }, { value: 'api', label: 'API' }]} />)
+
+    expect(screen.getByRole('navigation').querySelectorAll('[id], [value]')).toHaveLength(0)
+  })
+
+  it('keys an item by its value before its id, so an id that repeats does not clash', () => {
+    const error = quiet()
+
+    renderWithProviders(<Breadcrumbs items={[{ value: 'a', id: 'same', label: 'A', href: '/a' }, { value: 'b', id: 'same', label: 'B', href: '/b' }, { value: 'c', label: 'C' }]} />)
+
+    expect(screen.getAllByRole('listitem')).toHaveLength(3)
+    expect(error).not.toHaveBeenCalled()
+  })
+
+  it('takes a trail that mixes both names with items that have neither, without a key warning', () => {
+    const error = quiet()
+
+    renderWithProviders(<Breadcrumbs items={[{ value: 'home', label: 'Início', href: '/' }, { id: 'docs', label: 'Docs', href: '/docs' }, { label: 'Guia', href: '/guia' }, { label: 'API' }]} />)
+
+    expect(screen.getAllByRole('listitem')).toHaveLength(4)
+    expect(screen.getByText('API')).toHaveAttribute('aria-current', 'page')
+    expect(error).not.toHaveBeenCalled()
+  })
+
+  it('keeps the node of an item with neither name when the collapsed trail opens', async () => {
+    const user = userEvent.setup()
+
+    render(
+      <UIProvider>
+        <Breadcrumbs items={longWithNeither} maxItems={4} />
+      </UIProvider>
+    )
+    const [first, fifth, last] = ['Nível A', 'Nível E', 'Nível F'].map(nodeOf)
+
+    await user.click(document.querySelector('[data-slot="breadcrumbs-ellipsis"]') as HTMLElement)
+
+    expect(screen.getAllByRole('listitem')).toHaveLength(6)
+    expect(nodeOf('Nível A')).toBe(first)
+    expect(nodeOf('Nível E')).toBe(fifth)
+    expect(nodeOf('Nível F')).toBe(last)
+  })
+
+  describe.each(['value', 'id'] as const)('named by %s', (name) => {
+    it('keeps the node of an item when another one comes in before the last', () => {
+      const view = (keys: string[]) => (
+        <UIProvider>
+          <Breadcrumbs items={trailOf(name, keys)} />
+        </UIProvider>
+      )
+      const { rerender } = render(view(['home', 'docs', 'api']))
+      const [home, docs, api] = ['home', 'docs', 'api'].map(nodeOf)
+
+      rerender(view(['home', 'docs', 'guide', 'api']))
+
+      expect(screen.getAllByRole('listitem')).toHaveLength(4)
+      expect(nodeOf('home')).toBe(home)
+      expect(nodeOf('docs')).toBe(docs)
+      expect(nodeOf('api')).toBe(api)
+    })
   })
 })

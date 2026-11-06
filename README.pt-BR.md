@@ -157,7 +157,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Progress` | `<Progress value={40} aria-label="Enviando fotos" />`; sem `value` é indeterminado, e `variant="circular"` desenha um anel |
 | `Skeleton` | `<Skeleton variant="text" width="12rem" />` |
 | `Divider` | `<Divider />`, ou `<Divider orientation="vertical" />` entre botões de uma linha `Flex` |
-| `Breadcrumbs` | `<Breadcrumbs items={[{ id: 'home', label: 'Início', href: '/' }, { id: 'page', label: 'Atual' }]} />` |
+| `Breadcrumbs` | `<Breadcrumbs items={[{ value: 'home', label: 'Início', href: '/' }, { value: 'page', label: 'Atual' }]} />` |
 | `Sidebar` | `<Sidebar sections={sections} collapsed={collapsed} onToggleCollapsed={toggle} />` |
 | `Navbar` | `<Navbar logo="Meu app" sections={sections} />` |
 | `Footer` | `<Footer companyName="Acme" notice="Licença MIT." />` |
