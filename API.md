@@ -97,7 +97,8 @@ A link that looks like a `Button`. It is a real `<a href>`, and goes through the
 | --- | --- | --- | --- |
 | `href` | `string` | *required* | Destination of the link, with the same rules as the `Link`: an app route goes to the `navigate` of the `UIProvider`; anchors, the hash of the current page and external URLs are left to the browser. |
 | `native` | `boolean` | `false` | Leaves the click to the browser even on an app route. |
-| `externalIcon` | `boolean` | `true` | With `target="_blank"`, shows the external link icon after the content. `false` removes only the icon (useful in an icon-only button) and keeps the "opens in a new tab" text for screen readers; in an icon-only link with `aria-label`, put the warning in the label itself. |
+| `externalIcon` | `boolean` | `true` | With `target="_blank"`, shows the external link icon after the content. `false` removes only the icon and keeps the "opens in a new tab" text for screen readers. A link with a single icon of its own takes `iconOnly`, which already leaves the external icon out. |
+| `iconOnly` | `boolean` | `false` | Makes the link a square for a single icon, the same as the `iconOnly` of the `Button`: as wide as it is tall in every size, with the same padding on the four sides and the icon in the middle. There is no text to name it, so pass `aria-label`. With `target="_blank"` it draws no external link icon and keeps only the "opens in a new tab" text for screen readers, so put the warning in the label itself. |
 | `variant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger' \| 'dashed' \| 'link'` | `'primary'` | Visual style, the same as the `Button`. |
 | `animation` | `false \| { recipe, from, tuning }` | `press` | Motion recipe of the `Button`. Use false to turn it off, or { recipe, tuning } with press or lift. |
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size, the same as the `Button`. |

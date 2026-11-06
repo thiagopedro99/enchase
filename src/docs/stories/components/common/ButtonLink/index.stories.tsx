@@ -1,5 +1,5 @@
 import { ButtonLink, Icon } from 'enchase'
-import { defaultExternalIcon } from './defaultData.ts'
+import { defaultExternalIcon, defaultIconOnly } from './defaultData.ts'
 
 import { ClickProbe } from '@docs/shared/components/ClickProbe.tsx'
 
@@ -37,13 +37,18 @@ const meta = {
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
+    iconOnly: {
+      description: 'Makes the link a square for a single icon, the same as the `iconOnly` of the `Button`: as wide as it is tall in every size, with the same padding on the four sides and the icon in the middle. There is no text to name it, so pass `aria-label`. With `target="_blank"` it draws no external link icon and keeps only the "opens in a new tab" text for screen readers, so put the warning in the label itself.',
+      control: 'boolean',
+      table: { defaultValue: { summary: String(defaultIconOnly) } }
+    },
     native: {
       description: 'Leaves the click to the browser even on an app route.',
       control: 'boolean',
       table: { defaultValue: { summary: 'false' } }
     },
     externalIcon: {
-      description: 'With `target="_blank"`, shows the external link icon after the content. `false` removes only the icon (useful in an icon-only button) and keeps the "opens in a new tab" text for screen readers; in an icon-only link with `aria-label`, put the warning in the label itself.',
+      description: 'With `target="_blank"`, shows the external link icon after the content. `false` removes only the icon and keeps the "opens in a new tab" text for screen readers. A link with a single icon of its own takes `iconOnly`, which already leaves the external icon out.',
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultExternalIcon) } }
     },
@@ -123,7 +128,7 @@ export const IconOnly: Story = {
   parameters: { controls: { disable: true } },
   render: () => (
     <ClickProbe>
-      <ButtonLink href="https://github.com/thiagopedro99/enchase" target="_blank" externalIcon={false} variant="outline" aria-label="Code on GitHub (opens in a new tab)">
+      <ButtonLink href="https://github.com/thiagopedro99/enchase" target="_blank" iconOnly variant="outline" aria-label="Code on GitHub (opens in a new tab)">
         <Icon>
           <path d="M8 8l-4 4 4 4" />
           <path d="M16 8l4 4-4 4" />

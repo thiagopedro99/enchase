@@ -1,4 +1,4 @@
-import { defaultFullWidth, defaultSize, defaultVariant } from '../Button/defaultData.ts'
+import { defaultFullWidth, defaultIconOnly, defaultSize, defaultVariant } from '../Button/defaultData.ts'
 import { defaultExternalIcon } from './defaultData.ts'
 import { ExternalLinkIcon } from '../Icon/icons/ExternalLinkIcon.tsx'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
@@ -12,7 +12,7 @@ import styles from './styles.module.css'
 
 import type { ButtonLinkProps } from './types.ts'
 
-export const ButtonLink = ({ children, animation, variant = defaultVariant, size = defaultSize, fullWidth = defaultFullWidth, externalIcon = defaultExternalIcon, href, onClick, target, download, native, rel, ...props }: ButtonLinkProps) => {
+export const ButtonLink = ({ children, animation, variant = defaultVariant, size = defaultSize, fullWidth = defaultFullWidth, iconOnly = defaultIconOnly, externalIcon = defaultExternalIcon, href, onClick, target, download, native, rel, ...props }: ButtonLinkProps) => {
   const { labels, motion: settings } = useUIConfig()
   const { motion, style } = resolveButtonMotion(settings, animation)
   const handleClick = useLinkClick({ href, onClick, target, download, native })
@@ -27,6 +27,7 @@ export const ButtonLink = ({ children, animation, variant = defaultVariant, size
     'data-size': size,
     'data-motion': motion,
     'data-full-width': fullWidth ? '' : undefined,
+    'data-icon-only': iconOnly ? '' : undefined,
     onClick: handleClick
   }
 
@@ -35,8 +36,8 @@ export const ButtonLink = ({ children, animation, variant = defaultVariant, size
       {children}
       {opensNewTab && (
         <>
-          {' '}
-          {externalIcon && <ExternalLinkIcon size={16} {...slot('button-link', 'icon')} />}
+          {!iconOnly && ' '}
+          {externalIcon && !iconOnly && <ExternalLinkIcon size={16} {...slot('button-link', 'icon')} />}
           <VisuallyHidden>{labels.opensInNewTab}</VisuallyHidden>
         </>
       )}

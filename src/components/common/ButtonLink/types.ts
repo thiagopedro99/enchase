@@ -5,4 +5,5 @@ export interface ButtonLinkProps extends AnchorHTMLAttributes<HTMLAnchorElement>
   href: string
   native?: boolean | undefined
   externalIcon?: boolean | undefined
+  iconOnly?: boolean | undefined
 }

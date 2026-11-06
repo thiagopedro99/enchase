@@ -47,6 +47,7 @@ const labels: Partial<UILabels> = { closeModal: 'Close', previousPage: 'Back', i
 const locale: Locale = ptBR
 const props: LayoutProps = { children: null, navigationSections: sections, translucent: true }
 const docsLink: ButtonLinkProps = { href: '/docs', native: true, externalIcon: false }
+const iconLink: ButtonLinkProps = { href: 'https://example.com', target: '_blank', iconOnly: true, 'aria-label': 'Example (opens in a new tab)' }
 const navbarProps: NavbarProps = { logo: 'Acme', sections, translucent: true, actions: <Button>Start</Button> }
 const gridProps: GridProps = { columns: { xs: 1, md: 2, xxl: 4 }, gap: '1rem', centerLastRow: true }
 const fixedGridProps: GridProps = { columns: 3, minColumnWidth: '12rem' }
@@ -177,6 +178,9 @@ export const App = () => (
         <Container {...mainProps}>Main</Container>
         <Card onClick={(event: MouseEvent<HTMLDivElement>) => void event}>Handler typed for a div</Card>
         <ButtonLink {...docsLink}>Docs</ButtonLink>
+        <ButtonLink {...iconLink}>
+          <CloseIcon />
+        </ButtonLink>
         <Alert {...alertProps}>Saved</Alert>
         <Badge {...badgeProps}>New</Badge>
         <Textarea {...areaProps} />

@@ -139,6 +139,84 @@ describe('ButtonLink', () => {
     expect(document.querySelector('[data-slot="button-link-icon"]')).toBeNull()
   })
 
+  it('marks the link as icon-only like the button does, and leaves the mark out without the prop', () => {
+    renderWithProviders(
+      <>
+        <ButtonLink href="/home" iconOnly aria-label="Home">
+          <svg aria-hidden="true" />
+        </ButtonLink>
+        <ButtonLink href="/docs">Docs</ButtonLink>
+        <ButtonLink href="/blog" iconOnly={false}>
+          Blog
+        </ButtonLink>
+      </>
+    )
+
+    const iconLink = screen.getByRole('link', { name: 'Home' })
+
+    expect(iconLink).toHaveAttribute('data-icon-only', '')
+    expect(iconLink).toHaveAttribute('data-slot', 'button-link')
+    expect(iconLink).not.toHaveAttribute('icononly')
+    expect(screen.getByRole('link', { name: 'Docs' })).not.toHaveAttribute('data-icon-only')
+    expect(screen.getByRole('link', { name: 'Blog' })).not.toHaveAttribute('data-icon-only')
+  })
+
+  it('adds nothing to an icon-only link that stays in the page', () => {
+    renderWithProviders(
+      <ButtonLink href="/home" iconOnly aria-label="Home">
+        <svg aria-hidden="true" />
+      </ButtonLink>
+    )
+
+    const link = screen.getByRole('link', { name: 'Home' })
+
+    expect(link.textContent).toBe('')
+    expect(link.querySelectorAll('svg')).toHaveLength(1)
+    expect(link).not.toHaveAttribute('target')
+    expect(link).not.toHaveAttribute('rel')
+  })
+
+  it('draws no external link icon in an icon-only link and keeps the warning text and the rel', () => {
+    renderWithProviders(
+      <ButtonLink href="https://example.com" target="_blank" iconOnly aria-label="Repositório (abre em nova aba)">
+        <svg data-testid="mine" aria-hidden="true" />
+      </ButtonLink>
+    )
+
+    const link = screen.getByRole('link', { name: 'Repositório (abre em nova aba)' })
+
+    expect(link.querySelector('[data-slot="button-link-icon"]')).toBeNull()
+    expect(link.querySelectorAll('svg')).toHaveLength(1)
+    expect(screen.getByTestId('mine')).toBeInTheDocument()
+    expect(link.textContent).toBe('(abre em nova aba)')
+    expect(link).toHaveAttribute('target', '_blank')
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('leaves the external icon out of an icon-only link even when externalIcon asks for it', () => {
+    renderWithProviders(
+      <ButtonLink href="https://example.com" target="_blank" iconOnly externalIcon aria-label="Repositório (abre em nova aba)">
+        <svg data-testid="mine" aria-hidden="true" />
+      </ButtonLink>
+    )
+
+    const link = screen.getByRole('link', { name: 'Repositório (abre em nova aba)' })
+
+    expect(link.querySelector('[data-slot="button-link-icon"]')).toBeNull()
+    expect(link.querySelectorAll('svg')).toHaveLength(1)
+  })
+
+  it('uses the configurable new tab label as the only text of an icon-only link', () => {
+    renderWithProviders(
+      <ButtonLink href="https://example.com" target="_blank" iconOnly>
+        <svg aria-hidden="true" />
+      </ButtonLink>,
+      { labels: { opensInNewTab: '(opens in a new tab)' } }
+    )
+
+    expect(screen.getByRole('link', { name: '(opens in a new tab)' })).toHaveAttribute('data-icon-only', '')
+  })
+
   it('keeps a custom rel and uses the configurable new tab label', () => {
     renderWithProviders(
       <ButtonLink href="https://example.com" target="_blank" rel="noopener">
@@ -165,7 +243,7 @@ describe('ButtonLink', () => {
     expect(screen.getByRole('link', { name: 'Começar' })).toHaveFocus()
   })
 
-  it('has no axe violations across variants', async () => {
+  it('has no axe violations across variants and as an icon-only link', async () => {
     const { container } = renderWithProviders(
       <>
         <ButtonLink href="/a" variant="primary">
@@ -176,6 +254,12 @@ describe('ButtonLink', () => {
         </ButtonLink>
         <ButtonLink href="https://example.com" target="_blank" variant="ghost">
           Externo
+        </ButtonLink>
+        <ButtonLink href="/home" iconOnly aria-label="Início">
+          <svg aria-hidden="true" />
+        </ButtonLink>
+        <ButtonLink href="https://example.com" target="_blank" iconOnly aria-label="Repositório (abre em nova aba)">
+          <svg aria-hidden="true" />
         </ButtonLink>
       </>
     )
