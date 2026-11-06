@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url'
 import ts from 'typescript'
 import { createServer } from 'vite'
 
-import { hookNotes, renderApiDocs } from './apiDocs.mjs'
+import { hookNotes, renderApiDocs, themeNotes, themeParameterNames } from './apiDocs.mjs'
 import { cssHooksModel } from './cssHooks.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -182,12 +182,14 @@ const memberTypeOf = (checker, member) => {
   return declaration?.type ? declaration.type.getText().replace(/\s+/g, ' ') : checker.typeToString(checker.getTypeOfSymbolAtLocation(member, declaration), undefined, typeFlags)
 }
 
-const parameterText = (checker, parameter) => {
+const isDestructured = (parameter) => /^__\d+$/.test(parameter.getName())
+
+const parameterText = (checker, parameter, given = 'options') => {
   const declaration = parameter.valueDeclaration
   const optional = Boolean(declaration.questionToken || declaration.initializer)
   const type = declaration.type ? declaration.type.getText() : checker.typeToString(checker.getTypeOfSymbolAtLocation(parameter, declaration), undefined, typeFlags)
 
-  const name = /^__\d+$/.test(parameter.getName()) ? 'options' : parameter.getName()
+  const name = isDestructured(parameter) ? given : parameter.getName()
 
   return `${name}${optional ? '?' : ''}: ${type.replace(/\s+/g, ' ')}`
 }
@@ -199,6 +201,15 @@ const hookDoc = (checker, name, symbol) => {
   const members = returned.flags & ts.TypeFlags.Object && returned.getProperties().length > 0 ? returned.getProperties().map((member) => ({ name: member.getName(), type: memberTypeOf(checker, member) })) : []
 
   return { name, signature: `${name}(${parameters}): ${checker.typeToString(returned, undefined, typeFlags | ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope)}`, note: hookNotes[name], members }
+}
+
+const themeFunctionDoc = (checker, name, symbol) => {
+  const signature = callSignatureOf(checker, symbol)
+  const names = themeParameterNames[name] ?? []
+  const parameters = signature.parameters.map((parameter, index) => parameterText(checker, parameter, names[index])).join(', ')
+  const unnamed = signature.parameters.filter((parameter, index) => isDestructured(parameter) && names[index] === undefined).length
+
+  return { name, signature: `${name}(${parameters}): ${checker.typeToString(signature.getReturnType(), undefined, typeFlags | ts.TypeFormatFlags.UseAliasDefinedOutsideCurrentScope)}`, note: themeNotes[name], members: [], unnamed }
 }
 
 const iconElementOf = (declaration) => {
@@ -270,12 +281,15 @@ const buildModel = async () => {
   const main = createProgram()
   const headless = createProgram(`headless/${headlessFiles[0]}`, headlessFiles.slice(1).map((file) => `headless/${file}`))
   const icons = createProgram('icons.ts')
+  const themeEntry = createProgram('theme.ts')
   const { checker } = main
   const server = await createServer({ root, configFile: join(root, 'vite.config.ts'), appType: 'custom', logLevel: 'error', server: { middlewareMode: true, hmr: false, watch: null } })
 
   try {
     const docs = await loadStoryDocs(server)
     const exported = valueExports(main)
+    const themeExports = valueExports(themeEntry)
+    const isFunction = ({ symbol }) => Boolean(callSignatureOf(themeEntry.checker, symbol))
     const iconExports = valueExports(icons).filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(icons.checker, symbol))
     const { fontVariables, layoutVariables } = await server.ssrLoadModule('/src/styles/css/declarations.ts')
     const { baseTokens } = await server.ssrLoadModule('/src/styles/tokens/index.ts')
@@ -287,6 +301,7 @@ const buildModel = async () => {
       components: exported.filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(checker, symbol)).map(({ name, symbol }) => componentDoc(checker, name, symbol, docs.get(name) ?? { argTypes: {} })),
       hooks: exported.filter(({ name }) => /^use[A-Z]/.test(name)).map(({ name, symbol }) => hookDoc(checker, name, symbol)),
       headless: headlessFiles.map((file) => headlessDoc(headless, file)),
+      theme: { functions: themeExports.filter(isFunction).map(({ name, symbol }) => themeFunctionDoc(themeEntry.checker, name, symbol)), values: themeExports.filter((entry) => !isFunction(entry)).map(({ name }) => name) },
       icons: { props, element, items: iconExports.map(({ name, symbol }) => iconDoc(name, symbol)) },
       cssHooks: cssHooksModel(join(root, 'src', 'components'), tokens)
     }
@@ -313,12 +328,19 @@ const unsafeMarkdown = documented
   .filter(([, text]) => text && /<[a-zA-Z/!]|\*/.test(withoutCode(text)))
   .map(([where]) => where)
 const undescribed = model.components.filter((component) => !component.description).map((component) => component.name)
+const themeFunctions = model.theme.functions.map(({ name }) => name)
+const unnotedTheme = themeFunctions.filter((name) => !themeNotes[name])
+const strayThemeNotes = Object.keys(themeNotes).filter((name) => !themeFunctions.includes(name))
+const unnamedThemeParameters = model.theme.functions.filter(({ unnamed }) => unnamed > 0).map(({ name }) => name)
 const problems = [
   ...(divergentDefaults.length > 0 ? [`defaults that differ between the code and the story:\n${list(divergentDefaults)}`] : []),
   ...(undocumented.length > 0 ? [`props without a description in the story argTypes:\n${list(undocumented)}`] : []),
   ...(unsafeMarkdown.length > 0 ? [`descriptions with an HTML tag or an asterisk outside a code span (wrap it in backticks):\n${list(unsafeMarkdown)}`] : []),
   ...(undescribed.length > 0 ? [`components without a description (parameters.docs.description.component in the story):\n${list(undescribed)}`] : []),
-  ...(unnamedIcons.length > 0 ? [`icons without a name for data-icon (the Icon needs a literal name):\n${list(unnamedIcons)}`] : [])
+  ...(unnamedIcons.length > 0 ? [`icons without a name for data-icon (the Icon needs a literal name):\n${list(unnamedIcons)}`] : []),
+  ...(unnotedTheme.length > 0 ? [`functions of enchase/theme without a note in themeNotes (scripts/apiDocs.mjs):\n${list(unnotedTheme)}`] : []),
+  ...(strayThemeNotes.length > 0 ? [`notes in themeNotes (scripts/apiDocs.mjs) for a function that enchase/theme does not export:\n${list(strayThemeNotes)}`] : []),
+  ...(unnamedThemeParameters.length > 0 ? [`functions of enchase/theme with a destructured parameter that needs a name in themeParameterNames (scripts/apiDocs.mjs):\n${list(unnamedThemeParameters)}`] : [])
 ]
 
 if (check) {
@@ -330,10 +352,10 @@ if (check) {
     process.exit(1)
   }
 
-  console.log(`API.md is up to date: ${model.components.length} components, ${model.hooks.length} hooks, ${model.headless.length} headless hooks, ${model.icons.items.length} icons`)
+  console.log(`API.md is up to date: ${model.components.length} components, ${model.hooks.length} hooks, ${model.headless.length} headless hooks, ${model.theme.functions.length} theme functions, ${model.icons.items.length} icons`)
 } else {
   writeFileSync(outputPath, markdown)
-  console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks, ${model.headless.length} headless hooks, ${model.icons.items.length} icons`)
+  console.log(`API.md written: ${model.components.length} components, ${model.hooks.length} hooks, ${model.headless.length} headless hooks, ${model.theme.functions.length} theme functions, ${model.icons.items.length} icons`)
   if (problems.length > 0) {
     console.error(problems.join('\n'))
     process.exit(1)

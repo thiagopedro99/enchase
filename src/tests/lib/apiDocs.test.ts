@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { escapeCell, renderApiDocs } from '../../../scripts/apiDocs.mjs'
+import * as theme from 'enchase/theme'
+import { escapeCell, renderApiDocs, themeNotes } from '../../../scripts/apiDocs.mjs'
 
-import type { ComponentDoc, CssHooksGroup, HookDoc, IconsDoc } from '../../../scripts/apiDocs.mjs'
+import type { ComponentDoc, CssHooksGroup, HeadlessHookDoc, HookDoc, IconsDoc, ThemeDoc } from '../../../scripts/apiDocs.mjs'
 
 const button: ComponentDoc = {
   name: 'Button',
@@ -19,6 +20,16 @@ const hook: HookDoc = {
   signature: 'useThing(id: string): { value: string }',
   note: 'Returns the value.',
   members: [{ name: 'value', type: 'string | number' }]
+}
+
+const headless: HeadlessHookDoc[] = [{ name: 'useSwitch', signature: 'useSwitch(options: UseSwitchOptions): UseSwitchReturn', members: [], entry: 'enchase/headless/switch', options: [] }]
+
+const themeDoc: ThemeDoc = {
+  functions: [
+    { name: 'validateTheme', signature: 'validateTheme(themes: ThemeSet): ContrastIssue[]', note: 'Lists the pairs below the minimum.', members: [] },
+    { name: 'createTheme', signature: 'createTheme(input?: ThemeInput): ThemeSet', note: 'Makes a theme set.', members: [] }
+  ],
+  values: ['baseTokens', 'themeModes']
 }
 
 const icons: IconsDoc = {
@@ -135,11 +146,42 @@ describe('renderApiDocs', () => {
     expect(markdown.indexOf('## Icons')).toBeLessThan(markdown.indexOf('## CSS hooks'))
   })
 
+  it('lists the functions of enchase/theme by name, with the signature and the note, and names the values that are data', () => {
+    const markdown = renderApiDocs({ components: [button], hooks: [hook], icons, theme: themeDoc })
+
+    expect(markdown).toContain('## Theme')
+    expect(markdown).toContain('(`baseTokens`, `themeModes`)')
+    expect(markdown).toContain('[createTheme](#createtheme) · [validateTheme](#validatetheme)')
+    expect(markdown).toContain('### createTheme\n\n```ts\ncreateTheme(input?: ThemeInput): ThemeSet\n```\n\nMakes a theme set.')
+    expect(markdown).toContain('### validateTheme\n\n```ts\nvalidateTheme(themes: ThemeSet): ContrastIssue[]\n```\n\nLists the pairs below the minimum.')
+    expect(markdown.indexOf('### createTheme')).toBeLessThan(markdown.indexOf('### validateTheme'))
+  })
+
+  it('puts the theme after the headless hooks and before the icons', () => {
+    const markdown = renderApiDocs({ components: [button], hooks: [hook], headless, icons, theme: themeDoc })
+
+    expect(markdown.indexOf('## Headless hooks')).toBeLessThan(markdown.indexOf('## Theme'))
+    expect(markdown.indexOf('## Theme')).toBeLessThan(markdown.indexOf('## Icons'))
+  })
+
+  it('leaves the theme out when it has no functions', () => {
+    expect(render()).not.toContain('## Theme')
+    expect(renderApiDocs({ components: [button], hooks: [hook], icons, theme: { functions: [], values: ['baseTokens'] } })).not.toContain('## Theme')
+  })
+
   it('ends with a single newline and uses no carriage returns', () => {
     const markdown = render()
 
     expect(markdown.endsWith('\n')).toBe(true)
     expect(markdown.endsWith('\n\n')).toBe(false)
     expect(markdown).not.toContain('\r')
+  })
+})
+
+describe('themeNotes', () => {
+  it('has a note for each function of enchase/theme and for no other name', () => {
+    const functions = Object.entries(theme).flatMap(([name, value]) => (typeof value === 'function' ? [name] : []))
+
+    expect(Object.keys(themeNotes).sort()).toEqual(functions.sort())
   })
 })

@@ -16,10 +16,16 @@ export type IconsDoc = { props: PropDoc[]; element?: string; items: IconDoc[] }
 
 export const hookNotes: Record<string, string>
 
+export const themeNotes: Record<string, string>
+
+export const themeParameterNames: Record<string, string[]>
+
+export type ThemeDoc = { functions: HookDoc[]; values: string[] }
+
 export const escapeCell: (text: string) => string
 
 export type CssHookDoc = { name: string; owner: string; default: string; token?: string; properties: string[]; components: string[] }
 
 export type CssHooksGroup = { component: string; hooks: CssHookDoc[] }
 
-export const renderApiDocs: (model: { components: ComponentDoc[]; hooks: HookDoc[]; headless?: HeadlessHookDoc[]; icons: IconsDoc; cssHooks?: CssHooksGroup[] }) => string
+export const renderApiDocs: (model: { components: ComponentDoc[]; hooks: HookDoc[]; headless?: HeadlessHookDoc[]; theme?: ThemeDoc; icons: IconsDoc; cssHooks?: CssHooksGroup[] }) => string
