@@ -4,6 +4,8 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { chromium } from 'playwright'
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'
 const windows = process.platform === 'win32'
@@ -101,6 +103,11 @@ const headlessExpectations = [
   ['the thumb of useSlider from the old path', 'aria-label="Old volume"']
 ]
 
+const flatExpectations = [
+  ['the styled button of a server component, rendered with the styles of styled-components', 'data-slot="button"'],
+  ['the styles of styled-components in the head, written on the server', 'data-styled']
+]
+
 const partsKeys = ['button-link', 'badge']
 
 const partsLayout = (files) => `import { ColorModeProvider, ColorModeScript, UIProvider } from 'enchase'
@@ -155,7 +162,7 @@ try {
   cpSync(join(root, 'scripts', 'next-consumer'), app, { recursive: true })
   writeFileSync(join(app, 'package.json'), JSON.stringify({ name: 'enchase-next-consumer', private: true, version: '0.0.0' }, null, 2))
 
-  run(npm, ['install', '--no-audit', '--no-fund', tarball, 'next@15', 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', '@types/node@22', 'typescript@5.8'], app)
+  run(npm, ['install', '--no-audit', '--no-fund', tarball, 'next@15', 'react@19', 'react-dom@19', '@types/react@19', '@types/react-dom@19', '@types/node@22', 'typescript@5.8', 'styled-components@6.6.0'], app)
   run(join(app, 'node_modules', '.bin', windows ? 'enchase.cmd' : 'enchase'), ['eject', 'Button', 'Tabs', 'Pagination', '--dir', 'enchase'], app)
 
   const cssMap = JSON.parse(readFileSync(join(app, 'node_modules', 'enchase', 'dist-lib', 'css', 'index.json'), 'utf8'))
@@ -208,14 +215,45 @@ try {
 
   for (const [label, holds] of partsConditions) if (!holds) missing.push([label])
 
+  const flat = await fetch(`http://127.0.0.1:${port}/styled-components`)
+  const flatHtml = await flat.text()
+
+  for (const [label, needle] of flatExpectations) if (!flatHtml.includes(needle)) missing.push([label])
+
+  const browser = await chromium.launch()
+
+  try {
+    const flatPage = await browser.newPage()
+
+    await flatPage.goto(`http://127.0.0.1:${port}/styled-components`)
+
+    const buttons = flatPage.locator('[data-slot="button"]')
+    const background = (locator) => locator.evaluate((element) => getComputedStyle(element).backgroundColor)
+
+    if ((await background(buttons.nth(0))) !== 'rgb(1, 2, 3)') missing.push(['the styled button at rest keeps its background over the library in a real browser'])
+    if ((await background(buttons.nth(1))) !== 'rgb(4, 5, 6)') missing.push(['the disabled styled button keeps its background over the library in a real browser'])
+
+    await buttons.nth(0).hover()
+
+    const hovered = await flatPage.waitForFunction(() => getComputedStyle(document.querySelector('[data-slot="button"]')).backgroundColor === 'rgb(9, 9, 9)', null, { timeout: 5000 }).then(
+      () => true,
+      () => false
+    )
+
+    if (!hovered) missing.push(['the styled button under the pointer keeps its hover background over the library in a real browser'])
+  } finally {
+    await browser.close()
+  }
+
   if (response.status !== 200) throw new Error(`unexpected status ${response.status}`)
+  if (flat.status !== 200) throw new Error(`unexpected status ${flat.status} on /styled-components`)
   if (parts.status !== 200) throw new Error(`unexpected status ${parts.status} on /parts`)
   if (ejected.status !== 200) throw new Error(`unexpected status ${ejected.status} on /ejected`)
   if (headless.status !== 200) throw new Error(`unexpected status ${headless.status} on /headless`)
   if (styled.status !== 200) throw new Error(`unexpected status ${styled.status} on /styled`)
   if (missing.length > 0) throw new Error(`the server html is missing:\n${missing.map(([label]) => `  - ${label}`).join('\n')}`)
 
-  console.log(`next consumer rendered ${expectations.length + cssExpectations.length + forbidden.length + styledExpectations.length + partsExpectations.length + partsConditions.length + ejectedExpectations.length + headlessExpectations.length} server checks on port ${port}`)
+  console.log(`next consumer rendered ${expectations.length + cssExpectations.length + forbidden.length + styledExpectations.length + partsExpectations.length + partsConditions.length + ejectedExpectations.length + headlessExpectations.length + flatExpectations.length} server checks and 3 browser checks on port ${port}`)
 } finally {
   if (server && server.exitCode === null) {
     const exited = new Promise((resolveExit) => server.once('exit', resolveExit))
