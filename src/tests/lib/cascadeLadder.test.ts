@@ -1,7 +1,9 @@
+import { readdirSync, readFileSync } from 'node:fs'
+import path from 'node:path'
 import postcss from 'postcss'
 import { describe, expect, it } from 'vitest'
 
-import cascadeLadder, { CascadeLadderError, ladderSelector, ladderValue, specificityOf } from '../../../scripts/cascadeLadder.mjs'
+import cascadeLadder, { CascadeLadderError, ladderProblems, ladderSelector, ladderValue, specificityOf } from '../../../scripts/cascadeLadder.mjs'
 
 const run = (css: string, file = '/repo/src/components/common/Button/styles.module.css') => postcss([cascadeLadder()]).process(css, { from: file }).css
 
@@ -105,5 +107,59 @@ describe('the postcss plugin', () => {
 
   it('fails the build on a selector it cannot ladder', () => {
     expect(() => run('#x { color: red }')).toThrow(CascadeLadderError)
+  })
+})
+
+describe('ladderProblems', () => {
+  it('reports the selectors of a stylesheet that are not on the ladder', () => {
+    expect(ladderProblems(':where(.a):not(_ _ _ _ _) { color: red } .b { color: red } h1 { color: red }')).toEqual(['.b', 'h1'])
+  })
+})
+
+const componentsDir = path.resolve(__dirname, '../../components')
+
+const cssFilesIn = (directory: string): string[] =>
+  readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const file = path.join(directory, entry.name)
+
+    if (entry.isDirectory()) return cssFilesIn(file)
+
+    return entry.name.endsWith('.module.css') ? [file] : []
+  })
+
+const librarySelectors = () =>
+  cssFilesIn(componentsDir).flatMap((file) => {
+    const selectors: string[] = []
+
+    postcss.parse(readFileSync(file, 'utf8')).walkRules((rule) => {
+      if (rule.parent?.type === 'atrule' && /keyframes$/i.test(rule.parent.name)) return
+
+      selectors.push(...rule.selectors)
+    })
+
+    return selectors
+  })
+
+describe('the order of the library on the ladder', () => {
+  it('gives every selector of the library a rung, and the rungs keep the order of the original specificity', () => {
+    const rungs = new Map<string, Set<number>>()
+
+    for (const selector of librarySelectors()) {
+      const key = specificityOf(selector).join(',')
+
+      rungs.set(key, (rungs.get(key) ?? new Set<number>()).add(specificityOf(ladderSelector(selector))[2]))
+    }
+
+    const entries = [...rungs]
+      .map(([key, values]) => ({ original: key.split(',').map(Number), values: [...values] }))
+      .sort((left, right) => left.original[1] - right.original[1] || left.original[2] - right.original[2])
+
+    expect(entries.length).toBeGreaterThan(1)
+    expect(entries.every((entry) => entry.values.length === 1)).toBe(true)
+
+    const ladder = entries.map((entry) => entry.values[0] as number)
+
+    expect(ladder).toEqual([...ladder].sort((left, right) => left - right))
+    expect(new Set(ladder).size).toBe(ladder.length)
   })
 })

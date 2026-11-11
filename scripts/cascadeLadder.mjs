@@ -1,3 +1,4 @@
+import postcss from 'postcss'
 import selectorParser from 'postcss-selector-parser'
 
 const K = 3
@@ -98,6 +99,22 @@ export const ladderSelector = (selector) => {
   const text = base.map((node) => String(node)).join('').trim() || '*'
 
   return `:where(${text}):not(${Array.from({ length: count }, () => '_').join(' ')})${pe}`
+}
+
+export const ladderProblems = (css) => {
+  const problems = []
+
+  postcss.parse(css).walkRules((rule) => {
+    if (rule.parent?.type === 'atrule' && /keyframes$/i.test(rule.parent.name)) return
+
+    for (const selector of rule.selectors) {
+      const [a, b, c] = specificityOf(selector)
+
+      if (a !== 0 || b !== 0 || c < BASE) problems.push(selector)
+    }
+  })
+
+  return problems
 }
 
 const cascadeLadder = () => ({

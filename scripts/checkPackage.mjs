@@ -2,6 +2,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { dirname, join, relative, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
+import { ladderProblems } from './cascadeLadder.mjs'
 import { consumerCss } from './consumerCss.mjs'
 import { cssFileProblems } from './cssFiles.mjs'
 import { deprecationGaps } from './hookDeclarations.mjs'
@@ -161,6 +162,12 @@ for (const file of ['dist-lib/styles.css', 'dist-lib/styles.layer.css']) {
   }
 }
 
+for (const file of ['dist-lib/styles.css', 'dist-lib/styles.layer.css']) {
+  const problems = ladderProblems(readFileSync(join(root, file), 'utf8'))
+
+  if (problems.length > 0) leaks.push(`${file} has selectors that are not on the cascade ladder, which gives each of them (0,0,n) with n of at least 2: ${problems.slice(0, 3).join(', ')}`)
+}
+
 const themeFile = 'dist-lib/theme.css'
 const densitySelectors = [':root[data-density=compact]', ':where(:root[data-density=compact])']
 
@@ -191,7 +198,14 @@ if (!existsSync(join(cssDir, 'index.json'))) leaks.push('dist-lib/css/index.json
 else {
   const toPosix = (name) => name.split(sep).join('/')
   const cssNames = readdirSync(cssDir).filter((name) => name.endsWith('.css')).sort()
-  const js = Object.fromEntries(readdirSync(join(root, 'dist-lib'), { recursive: true }).filter((name) => name.endsWith('.js')).map((name) => [toPosix(name), readFileSync(join(root, 'dist-lib', name), 'utf8')]))
+
+  for (const name of cssNames) {
+    const problems = ladderProblems(readFileSync(join(cssDir, name), 'utf8'))
+
+    if (problems.length > 0) leaks.push(`css/${name} has selectors that are not on the cascade ladder, which gives each of them (0,0,n) with n of at least 2: ${problems.slice(0, 3).join(', ')}`)
+  }
+
+  const js =Object.fromEntries(readdirSync(join(root, 'dist-lib'), { recursive: true }).filter((name) => name.endsWith('.js')).map((name) => [toPosix(name), readFileSync(join(root, 'dist-lib', name), 'utf8')]))
 
   leaks.push(
     ...cssFileProblems({
