@@ -5,7 +5,7 @@ import { describePortalContainerContract } from '@tests/shared/contracts/portalC
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import userEvent from '@testing-library/user-event'
 import { createRef, useState } from 'react'
-import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { render } from '@testing-library/react'
 import { axe } from '@tests/axe.ts'
@@ -470,7 +470,7 @@ describe('Combobox', () => {
       { value: 'kumquat', label: 'Kumquat' }
     ]
 
-    const Remote = ({ onValueChange }: { onValueChange: (value: string | null) => void }) => {
+    const Remote = ({ onValueChange, deliver }: { onValueChange: (value: string | null) => void; deliver: { current?: () => void } }) => {
       const [state, setState] = useState({ loading: false, options: stale })
 
       return (
@@ -484,7 +484,7 @@ describe('Combobox', () => {
             if (typed === '') return
 
             setState((current) => ({ ...current, loading: true }))
-            setTimeout(() => setState({ loading: false, options: found }), 30)
+            deliver.current = () => setState({ loading: false, options: found })
           }}
         />
       )
@@ -493,7 +493,8 @@ describe('Combobox', () => {
     it('waits for the results before it makes an option active, and then follows the options that arrive', async () => {
       const user = userEvent.setup()
       const onValueChange = vi.fn()
-      renderWithProviders(<Remote onValueChange={onValueChange} />)
+      const deliver: { current?: () => void } = {}
+      renderWithProviders(<Remote onValueChange={onValueChange} deliver={deliver} />)
 
       await user.type(field(), 'k')
 
@@ -504,6 +505,8 @@ describe('Combobox', () => {
       await user.keyboard('{Enter}')
 
       expect(onValueChange).not.toHaveBeenCalled()
+
+      act(() => deliver.current?.())
 
       await waitFor(() => expect(optionLabels()).toEqual(['Kiwi', 'Kumquat']))
 
