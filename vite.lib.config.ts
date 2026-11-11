@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import { dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { readFileSync } from 'fs'
+import cascadeLadder from './scripts/cascadeLadder.mjs'
 
 const root = dirname(fileURLToPath(import.meta.url))
 
@@ -22,6 +23,8 @@ const isClientEntry = (name: string) => name === 'index' || name.startsWith('hea
 
 export default defineConfig({
   plugins: [react()],
+
+  css: { postcss: { plugins: [cascadeLadder()] } },
 
   resolve: {
     alias: {
