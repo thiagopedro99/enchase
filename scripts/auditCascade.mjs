@@ -112,33 +112,42 @@ const snapshot = (page) =>
     return { count: hashes.length, hashes, labels }
   })
 
+const animationsDone = () =>
+  Promise.race([Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined))), new Promise((resolve) => setTimeout(resolve, 2500))])
+
 const settled = (handle) =>
   handle.evaluate(
     (node) =>
-      new Promise((resolve) => {
-        const read = () => {
-          const style = getComputedStyle(node)
+      Promise.race([Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined))), new Promise((resolve) => setTimeout(resolve, 2500))]).then(
+        () =>
+          new Promise((resolve) => {
+            const read = () =>
+              ['', '::before', '::after']
+                .map((pseudo) => {
+                  const style = getComputedStyle(node, pseudo || null)
 
-          return Array.from(style).map((name) => style.getPropertyValue(name)).join('|')
-        }
-        let previous = read()
-        let stable = 0
-        let frames = 0
+                  return Array.from(style).map((name) => style.getPropertyValue(name)).join('|')
+                })
+                .join('#')
+            let previous = read()
+            let stable = 0
+            let frames = 0
 
-        const step = () => {
-          frames += 1
+            const step = () => {
+              frames += 1
 
-          const next = read()
+              const next = read()
 
-          stable = next === previous ? stable + 1 : 0
-          previous = next
+              stable = next === previous ? stable + 1 : 0
+              previous = next
 
-          if (stable >= 3 || frames >= 120) resolve(true)
-          else requestAnimationFrame(step)
-        }
+              if (stable >= 3 || frames >= 120) resolve(true)
+              else requestAnimationFrame(step)
+            }
 
-        requestAnimationFrame(step)
-      })
+            requestAnimationFrame(step)
+          })
+      )
   )
 
 const labelled = async (page, state) => {
@@ -215,6 +224,7 @@ const load = async (context, host, id, globals, options) => {
 
     await page.evaluate(() => document.fonts.ready)
     await page.waitForTimeout(400)
+    await page.evaluate(animationsDone)
 
     const rest = await snapshot(page)
 
