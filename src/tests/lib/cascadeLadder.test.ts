@@ -3,7 +3,7 @@ import path from 'node:path'
 import postcss from 'postcss'
 import { describe, expect, it } from 'vitest'
 
-import cascadeLadder, { CascadeLadderError, ladderProblems, ladderSelector, ladderValue, specificityOf } from '../../../scripts/cascadeLadder.mjs'
+import cascadeLadder, { CascadeLadderError, ladderProblems, ladderSelector, ladderSelectors, ladderValue, specificityOf } from '../../../scripts/cascadeLadder.mjs'
 
 const run = (css: string, file = '/repo/src/components/common/Button/styles.module.css') => postcss([cascadeLadder()]).process(css, { from: file }).css
 
@@ -159,7 +159,7 @@ describe('the order of the library on the ladder', () => {
     for (const selector of librarySelectors()) {
       const key = specificityOf(selector).join(',')
 
-      rungs.set(key, (rungs.get(key) ?? new Set<number>()).add(specificityOf(ladderSelector(selector))[2]))
+      for (const ladder of ladderSelectors(selector)) rungs.set(key, (rungs.get(key) ?? new Set<number>()).add(specificityOf(ladder)[2]))
     }
 
     const entries = [...rungs]
@@ -177,14 +177,15 @@ describe('the order of the library on the ladder', () => {
 })
 
 describe('the order of the library inside each band of the ladder', () => {
-  const bandOf = (selector: string) => specificityOf(ladderSelector(selector))[1]
+  const rowsOf = () =>
+    librarySelectors().flatMap((selector) =>
+      ladderSelectors(selector).map((ladder) => ({ band: specificityOf(ladder)[1], original: specificityOf(selector), rung: specificityOf(ladder)[2] }))
+    )
 
   it.each([0, 1])('keeps the order of the original specificity in band %i', (band) => {
     const rungs = new Map<string, number>()
 
-    for (const selector of librarySelectors().filter((item) => bandOf(item) === band)) {
-      rungs.set(specificityOf(selector).join(','), specificityOf(ladderSelector(selector))[2])
-    }
+    for (const row of rowsOf().filter((item) => item.band === band)) rungs.set(row.original.join(','), row.rung)
 
     const entries = [...rungs]
       .map(([key, rung]) => ({ original: key.split(',').map(Number), rung }))
@@ -199,9 +200,23 @@ describe('the order of the library inside each band of the ladder', () => {
 
   it('keeps every selector of the library on the shape of its band', () => {
     const css = librarySelectors()
-      .map((selector) => `${ladderSelector(selector)} { color: red }`)
+      .flatMap((selector) => ladderSelectors(selector))
+      .map((ladder) => `${ladder} { color: red }`)
       .join('\n')
 
     expect(ladderProblems(css)).toEqual([])
+  })
+})
+
+describe('the expansion of a list of states at the subject', () => {
+  it.each([
+    [
+      ".w[data-variant='filled'] .s:is(:focus, :open)",
+      [":where(.w[data-variant='filled'] .s):not(_ _ _ _ _ _ _ _ _ _ _ _ _ _):focus", ":where(.w[data-variant='filled'] .s:open):not(_ _ _ _ _ _ _ _ _ _ _ _ _ _)"]
+    ],
+    ['.s:is(:focus)::before', [':where(.s):not(_ _ _ _ _ _ _ _):focus::before']],
+    ['.a:is(.b, :hover)', [ladderSelector('.a:is(.b, :hover)')]]
+  ])('%s becomes %j', (selector, expected) => {
+    expect(ladderSelectors(selector)).toEqual(expected)
   })
 })

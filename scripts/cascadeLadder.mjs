@@ -72,6 +72,15 @@ const raisedIndex = (nodes) => {
   return -1
 }
 
+const IS_LISTS = [':is', ':matches', ':-webkit-any', ':any']
+
+const isSingleStateList = (node) =>
+  node.type === 'pseudo' &&
+  IS_LISTS.includes(node.value) &&
+  node.nodes.length > 0 &&
+  node.nodes.every((selector) => selector.nodes.length === 1 && selector.nodes[0].type === 'pseudo' && selector.nodes[0].nodes.length === 0 && !isPseudoElement(selector.nodes[0])) &&
+  node.nodes.some((selector) => isState(selector.nodes[0]))
+
 export const specificityOf = (selector) => complexSpecificity(parseOne(selector))
 
 export const ladderValue = (b, c) => {
@@ -139,6 +148,26 @@ const onTheLadder = (selector) => {
   return shaped && states <= 1 && a === 0 && b === states && c >= BASE
 }
 
+export const ladderSelectors = (selector) => {
+  const complex = parseOne(selector)
+  const nodes = []
+
+  complex.each((node) => {
+    nodes.push(node)
+  })
+
+  const from = subjectStart(nodes)
+  const index = nodes.findIndex((node, position) => position >= from && isSingleStateList(node))
+
+  if (index === -1) return [ladderSelector(selector)]
+
+  return nodes[index].nodes.flatMap((alternative) => {
+    const text = nodes.map((node, position) => (position === index ? String(alternative.nodes[0]).trim() : String(node))).join('')
+
+    return ladderSelectors(text)
+  })
+}
+
 export const ladderProblems = (css) => {
   const problems = []
 
@@ -163,7 +192,7 @@ const cascadeLadder = () => ({
     root.walkRules((rule) => {
       if (rule.parent?.type === 'atrule' && /keyframes$/i.test(rule.parent.name)) return
 
-      rule.selectors = rule.selectors.map((selector) => ladderSelector(selector))
+      rule.selectors = rule.selectors.flatMap((selector) => ladderSelectors(selector))
     })
   }
 })
