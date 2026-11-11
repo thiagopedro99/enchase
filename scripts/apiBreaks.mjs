@@ -6,7 +6,9 @@ export const namesOfKey = (key) => {
   return [...new Set([last, last.split('.')[0]])]
 }
 
-export const validBreaksFile = (file) => typeof file === 'object' && file !== null && !Array.isArray(file) && typeof file.since === 'string' && Array.isArray(file.breaks) && file.breaks.every((item) => typeof item?.key === 'string' && typeof item?.note === 'string')
+const validItem = (item) => typeof item?.key === 'string' && typeof item?.note === 'string'
+
+export const validBreaksFile = (file) => typeof file === 'object' && file !== null && !Array.isArray(file) && typeof file.since === 'string' && Array.isArray(file.breaks) && file.breaks.every(validItem) && (file.behavior === undefined || (Array.isArray(file.behavior) && file.behavior.every(validItem)))
 
 export const notesOf = (markdown, version) => {
   const lines = markdown.split(/\r?\n/)
@@ -52,5 +54,5 @@ export const breaksAgainstNotes = ({ file, changelog, version, highest }) => {
 
   if (!notes) return { errors: [`CHANGELOG.md has no section for v${version}, and ${breaksFile} lists ${file.breaks.length} break${file.breaks.length === 1 ? '' : 's'} that the Notes have to cite`], warnings: [] }
 
-  return { errors: checkNotes({ notes, declared: file.breaks }), warnings: [] }
+  return { errors: checkNotes({ notes, declared: [...file.breaks, ...(file.behavior ?? [])] }), warnings: [] }
 }
