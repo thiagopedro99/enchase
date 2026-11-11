@@ -10,7 +10,7 @@ const __dirname = dirname(__filename);
 export default defineConfig({
   plugins: [react()],
 
-  css: { postcss: { plugins: [cascadeLadder()] } },
+  css: { postcss: { plugins: process.env.ENCHASE_CASCADE_LADDER === 'off' ? [] : [cascadeLadder()] } },
 
   resolve: {
     alias: {
