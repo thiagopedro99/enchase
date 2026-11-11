@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.23.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.22.0...v0.23.0)
+
+### Notes
+
+- Four changes in behavior, and none in the API. `npm run check:api` against 0.22.0 reports 22 keys of `exports` and none removed, 12 stable entries with 1,120 lines of declarations and none removed, changed or widened, 1,223 `--enchase-*` names and 279 `data-slot` names with none removed, and 578 hooks of the styles with none removed. The cascade changed in `element-selectors`, `rest-class`, `state-class` and `link-states`, which `api-breaks.json` lists under `behavior`; this first bullet cites each one, and `breaks` is empty.
+- `element-selectors`: an element selector of yours, such as `button` or `h1`, loses to every rule of the library. Before 0.23 it could win over the rules that the library wrote inside `:where()`.
+- `rest-class`: a rest class of yours that comes before the library's stylesheet now wins over the library's rest rules, and over the disabled look of `Button`, as a class that comes after it already did.
+- `state-class`: a class of yours that names a state, such as `.save:hover`, `.save:focus-visible` or `.save:disabled`, now wins over the library's rule for that state, also when it comes before the library's stylesheet.
+- `link-states`: a rule of yours on an element state, such as `a:hover` or `:focus`, no longer changes the hover of the library's links, nor the focus ring of its links, navbar links and breadcrumbs. A class that names the state does.
+
 ## v0.22.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.21.1...v0.22.0)

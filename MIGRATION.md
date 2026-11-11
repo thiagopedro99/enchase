@@ -6,6 +6,7 @@ To upgrade over several versions, read the pages of every minor in between, from
 
 | Upgrading to | Page |
 | --- | --- |
+| 0.23 | [docs/migration/0.23.md](docs/migration/0.23.md) |
 | 0.22 | [docs/migration/0.22.md](docs/migration/0.22.md) |
 | 0.21 | [docs/migration/0.21.md](docs/migration/0.21.md) |
 | 0.20 | [docs/migration/0.20.md](docs/migration/0.20.md) |

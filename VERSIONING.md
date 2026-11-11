@@ -30,7 +30,7 @@ A break that is on purpose is declared: `npm run check:api` compares every build
 
 ## The cascade
 
-Each rule of the library weighs more than an element selector and less than a class. So a class of yours wins over the library, and an element selector of yours loses to it, in both stylesheets, `styles.css` and `styles.layer.css`. This is part of the contract of the package, and [STYLING.md](STYLING.md) says what it means for your CSS.
+Each rule of the library weighs more than an element selector. In `styles.css` a class of yours wins over the rules of the library that style the rest of a component, and a class that names a state wins over the library's rule for that state. An element selector of yours loses to every rule of the library. In `styles.layer.css` the rules of the library are in layers, so a rule of yours outside the layers wins over all of them. This is part of the contract of the package, and [STYLING.md](STYLING.md) says what it means for your CSS.
 
 A change in the cascade is a change of behavior that the API check does not see: `npm run check:api` compares the types and the exports, not the weights. Such a change is listed in `api-breaks.json` under `behavior`, with its key and a note, and the first bullet of the notes of the release cites each key. The list is checked against those notes and against nothing else.
 
