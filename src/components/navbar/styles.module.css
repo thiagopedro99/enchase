@@ -136,20 +136,20 @@
   color: var(--enchase-navbar-menu-link-color-active, var(--enchase-color-text-primary));
 }
 
-.menuLink[aria-current],
-.menuLink[aria-current]:active,
-.mobileMenuLink[aria-current],
-.mobileMenuLink[aria-current]:active {
-  background-color: var(--enchase-navbar-menu-link-background-current, var(--enchase-color-primary-container));
-  color: var(--enchase-navbar-menu-link-color-current, var(--enchase-color-on-primary-container));
-}
-
 @media (hover: hover) and (pointer: fine) {
   .menuLink[aria-current]:hover,
   .mobileMenuLink[aria-current]:hover {
     background-color: var(--enchase-navbar-menu-link-background-current, var(--enchase-color-primary-container));
     color: var(--enchase-navbar-menu-link-color-current, var(--enchase-color-on-primary-container));
   }
+}
+
+.menuLink[aria-current],
+.menuLink[aria-current]:active,
+.mobileMenuLink[aria-current],
+.mobileMenuLink[aria-current]:active {
+  background-color: var(--enchase-navbar-menu-link-background-current, var(--enchase-color-primary-container));
+  color: var(--enchase-navbar-menu-link-color-current, var(--enchase-color-on-primary-container));
 }
 
 :where(.mobileMenuButton, .closeButton) {
