@@ -175,3 +175,33 @@ describe('the order of the library on the ladder', () => {
     expect(new Set(ladder).size).toBe(ladder.length)
   })
 })
+
+describe('the order of the library inside each band of the ladder', () => {
+  const bandOf = (selector: string) => specificityOf(ladderSelector(selector))[1]
+
+  it.each([0, 1])('keeps the order of the original specificity in band %i', (band) => {
+    const rungs = new Map<string, number>()
+
+    for (const selector of librarySelectors().filter((item) => bandOf(item) === band)) {
+      rungs.set(specificityOf(selector).join(','), specificityOf(ladderSelector(selector))[2])
+    }
+
+    const entries = [...rungs]
+      .map(([key, rung]) => ({ original: key.split(',').map(Number), rung }))
+      .sort((left, right) => left.original[1] - right.original[1] || left.original[2] - right.original[2])
+
+    expect(entries.length).toBeGreaterThan(1)
+
+    for (let index = 1; index < entries.length; index += 1) {
+      expect(entries[index].rung).toBeGreaterThan(entries[index - 1].rung)
+    }
+  })
+
+  it('keeps every selector of the library on the shape of its band', () => {
+    const css = librarySelectors()
+      .map((selector) => `${ladderSelector(selector)} { color: red }`)
+      .join('\n')
+
+    expect(ladderProblems(css)).toEqual([])
+  })
+})

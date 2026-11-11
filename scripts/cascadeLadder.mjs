@@ -118,6 +118,27 @@ export const ladderSelector = (selector) => {
   return `:where(${text}):not(${Array.from({ length: count }, () => '_').join(' ')})${state}${pe}`
 }
 
+const isPlaceholder = (node) =>
+  node.type === 'pseudo' &&
+  node.value === ':not' &&
+  node.nodes.length > 0 &&
+  node.nodes.every((selector) => selector.nodes.length > 0 && selector.nodes.every((part) => part.type === 'combinator' || (part.type === 'tag' && part.value === '_')))
+
+const onTheLadder = (selector) => {
+  const nodes = []
+
+  parseOne(selector).each((node) => {
+    nodes.push(node)
+  })
+
+  const last = nodes.length - 1
+  const shaped = nodes.every((node, index) => isWhere(node) || isPlaceholder(node) || isState(node) || (isPseudoElement(node) && index === last))
+  const states = nodes.filter(isState).length
+  const [a, b, c] = specificityOf(selector)
+
+  return shaped && states <= 1 && a === 0 && b === states && c >= BASE
+}
+
 export const ladderProblems = (css) => {
   const problems = []
 
@@ -125,10 +146,7 @@ export const ladderProblems = (css) => {
     if (rule.parent?.type === 'atrule' && /keyframes$/i.test(rule.parent.name)) return
 
     for (const selector of rule.selectors) {
-      const [a, b, c] = specificityOf(selector)
-      const raised = b === 1 && STATE_PSEUDO_CLASSES.some((name) => selector.includes(name))
-
-      if (a !== 0 || (b !== 0 && !raised) || c < BASE) problems.push(selector)
+      if (!onTheLadder(selector)) problems.push(selector)
     }
   })
 
