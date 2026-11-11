@@ -19,6 +19,8 @@ const importOf = (name) => `./enchase/${kit.components[name].replace(/\.tsx$/, '
 const failures = []
 const expect = (condition, message) => condition || failures.push(message)
 
+expect(readdirSync(join(root, 'eject', 'files'), { recursive: true }).filter((name) => /\.(css|tsx?)$/.test(name) && readFileSync(join(root, 'eject', 'files', name), 'utf8').includes(':not(_')).length === 0, 'the kit must carry the css of the sources as they are written: the ladder belongs to the package, and a copy is code that the user reads and owns')
+
 const consumerConfig = {
   compilerOptions: {
     target: 'ES2022',
