@@ -339,9 +339,14 @@
 }
 
 .wrapper[data-variant='filled'] .field:has(.input:disabled),
-.wrapper[data-variant='filled'] .field:has(.input:disabled):focus-within,
-.wrapper[data-variant='filled'] .field:has(.input:disabled):hover {
+.wrapper[data-variant='filled'] .field:has(.input:disabled):focus-within {
   background-color: var(--enchase-input-field-background-filled-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wrapper[data-variant='filled'] .field:has(.input:disabled):hover {
+    background-color: var(--enchase-input-field-background-filled-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent));
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {

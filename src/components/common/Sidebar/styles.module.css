@@ -164,10 +164,16 @@
 }
 
 .nav[data-indicator] .item[aria-current],
-.nav[data-indicator] .item[aria-current]:hover,
 .nav[data-indicator] .item[aria-current]:active {
   position: relative;
   background-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav[data-indicator] .item[aria-current]:hover {
+    position: relative;
+    background-color: transparent;
+  }
 }
 
 :where(.section) {
@@ -266,13 +272,19 @@
 }
 
 .item[aria-current='page'],
-.item[aria-current='page']:hover,
 .item[aria-current='page']:active,
 .item[aria-current='location'],
-.item[aria-current='location']:hover,
 .item[aria-current='location']:active {
   background-color: var(--enchase-sidebar-item-control-background-current, var(--enchase-color-primary-container));
   color: var(--enchase-sidebar-item-control-color-current, var(--enchase-color-on-primary-container));
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .item[aria-current='page']:hover,
+  .item[aria-current='location']:hover {
+    background-color: var(--enchase-sidebar-item-control-background-current, var(--enchase-color-primary-container));
+    color: var(--enchase-sidebar-item-control-color-current, var(--enchase-color-on-primary-container));
+  }
 }
 
 :where(.itemIcon) {
