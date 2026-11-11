@@ -264,7 +264,7 @@ Verified by automated tests:
 - The color pairs of the default palette (light and dark) reach 4.5:1 for text and 3:1 for field borders and the focus ring. `createTheme` throws on an invalid color, and `validateTheme` lists the pairs below the minimum.
 - Interactive targets are at least 24 × 24 px, and the components respect `prefers-reduced-motion` (the movement goes away, the fade stays).
 - Server rendering and hydration run without errors in 6 environment variants (width, saved theme, dark system and reduced motion), plus a minimal Next 15 app (`npm run test:next`) that imports the components in a Server Component.
-- Your `className` wins over the library's, proved in browsers (for the layered stylesheet, in any load order).
+- Your `className` wins over the library's in both stylesheets and in any load order, and an element selector of yours loses to it, proved in browsers. [STYLING.md](STYLING.md) says what wins over what.
 - The compact density, in real Chromium, Firefox and WebKit: the size of each part in both styles, targets of 24 px or more (but the thumb of the `Slider`), the same default look with no attribute, nothing changing when the attribute is on an element other than `<html>`, and the precedence against the layered stylesheet and against your CSS.
 
 Not guaranteed:

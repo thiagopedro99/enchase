@@ -71,7 +71,7 @@ Not ejectable: `UIProvider`, `ColorModeProvider`, `ToastProvider`, the styles an
 - React 19.
 - Nothing about TypeScript beyond `moduleResolution` set to `bundler` or `node`: the imports of the copies have no extension, and `allowImportingTsExtensions` is not needed. The copies are written for `strict`, and they are not for `exactOptionalPropertyTypes`, `noUncheckedIndexedAccess` or `noPropertyAccessFromIndexSignature`: with those on, the compiler reports errors in them (12, 38 and 315 today), so keep the folder out of that configuration, or fix the copies, which are yours.
 
-The entry of every copy starts with `'use client'`, as the package does, so a copy works inside a tree of Server Components. The CSS of the copy reads the same `--enchase-*` hooks as the package, so the theme, the styles and your own hooks keep applying.
+The entry of every copy starts with `'use client'`, as the package does, so a copy works inside a tree of Server Components. The CSS of the copy reads the same `--enchase-*` hooks as the package, so the theme, the styles and your own hooks keep applying. The copy keeps the selectors of the source as they are written: it is code that you own, and it weighs like any CSS of your project, one class or more, while the cascade described in [STYLING.md](STYLING.md) applies to the package that is published.
 
 ## One state, whatever the copies
 

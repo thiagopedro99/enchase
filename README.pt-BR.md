@@ -22,7 +22,7 @@ Componentes React acessíveis por contrato: tema com contraste validado, CSS pri
 - Os pares de cor da paleta padrão (claro e escuro) atingem 4,5:1 para texto e 3:1 para bordas de campos e anel de foco. O `createTheme` lança erro em valor de cor inválido, e `validateTheme` lista os pares abaixo do mínimo.
 - Alvos interativos têm pelo menos 24 x 24 px, e os componentes respeitam `prefers-reduced-motion` (o deslocamento some, o fade continua).
 - Renderização no servidor e hidratação sem erro em 6 variantes de ambiente (largura, tema salvo, sistema escuro e movimento reduzido), mais um app Next 15 mínimo (`npm run test:next`) importando os componentes num Server Component.
-- O `className` de quem usa vence o da biblioteca (provado em navegador, na variante em camada em qualquer ordem de carregamento).
+- O `className` de quem usa vence o da biblioteca nas duas folhas de estilo e em qualquer ordem de carregamento, e um seletor só de elemento de quem usa perde para ela (provado em navegador). O [STYLING.md](STYLING.md) diz o que vence o quê.
 - A densidade `compact`, em Chromium, Firefox e WebKit reais: o tamanho de cada peça nos dois estilos, alvos de 24px ou mais (menos o polegar do `Slider`, que já era menor), o visual padrão idêntico sem o atributo, nada muda com o atributo fora do `<html>` e a precedência contra a variante em camada e contra o CSS do app. O compacto que um estilo declara em `density` tem o mesmo tratamento num estilo de teste: o tamanho das peças, nenhum alvo mais alto nem abaixo de 24px (menos o polegar do `Slider`) e a precedência dos ganchos dele.
 
 **Não garantido:**
