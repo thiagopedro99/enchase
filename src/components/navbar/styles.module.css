@@ -137,7 +137,11 @@
 }
 
 .menuLink[aria-current],
-.mobileMenuLink[aria-current] {
+.menuLink[aria-current]:hover,
+.menuLink[aria-current]:active,
+.mobileMenuLink[aria-current],
+.mobileMenuLink[aria-current]:hover,
+.mobileMenuLink[aria-current]:active {
   background-color: var(--enchase-navbar-menu-link-background-current, var(--enchase-color-primary-container));
   color: var(--enchase-navbar-menu-link-color-current, var(--enchase-color-on-primary-container));
 }

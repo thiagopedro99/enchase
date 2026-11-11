@@ -163,7 +163,9 @@
   transition: translate var(--enchase-sidebar-indicator-duration, var(--enchase-sidebar-duration, var(--enchase-motion-duration-base))) var(--enchase-sidebar-ease, var(--enchase-motion-ease-out));
 }
 
-.nav[data-indicator] .item[aria-current] {
+.nav[data-indicator] .item[aria-current],
+.nav[data-indicator] .item[aria-current]:hover,
+.nav[data-indicator] .item[aria-current]:active {
   position: relative;
   background-color: transparent;
 }
@@ -264,7 +266,11 @@
 }
 
 .item[aria-current='page'],
-.item[aria-current='location'] {
+.item[aria-current='page']:hover,
+.item[aria-current='page']:active,
+.item[aria-current='location'],
+.item[aria-current='location']:hover,
+.item[aria-current='location']:active {
   background-color: var(--enchase-sidebar-item-control-background-current, var(--enchase-color-primary-container));
   color: var(--enchase-sidebar-item-control-color-current, var(--enchase-color-on-primary-container));
 }

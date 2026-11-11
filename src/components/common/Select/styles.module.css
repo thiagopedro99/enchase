@@ -444,7 +444,9 @@
   transition: background-color var(--enchase-select-duration, var(--enchase-motion-duration-fast)) var(--enchase-select-ease, var(--enchase-motion-ease-out));
 }
 
-.wrapper[data-variant='filled'] .select:is(:focus, :open) {
+.wrapper[data-variant='filled'] .select:is(:focus, :open),
+.wrapper[data-variant='filled'] .select:open:focus,
+.wrapper[data-variant='filled'] .select:open:disabled {
   background-color: var(--enchase-input-field-background-filled-focus, var(--enchase-input-field-background-filled, var(--enchase-color-surface-container)));
 }
 
@@ -467,7 +469,8 @@
   border-width: 0;
 }
 
-.wrapper[data-variant='borderless'] .select:is(:focus, :open) {
+.wrapper[data-variant='borderless'] .select:is(:focus, :open),
+.wrapper[data-variant='borderless'] .select:open:focus {
   outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
   outline-offset: var(--enchase-focus-offset, 2px);
   scroll-margin: calc(var(--enchase-focus-width, 2px) + var(--enchase-focus-offset, 2px));
