@@ -14,3 +14,5 @@ export function verdict(options: {
 }): Promise<Verdict>
 
 export function gateFailures<T extends { status: string }>(results: T[]): T[]
+
+export function compareFlips(actual: string[], expected: string[]): { missing: string[]; unexpected: string[] }

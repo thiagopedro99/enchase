@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { gateFailures, verdict } from '../../../scripts/auditCascade.mjs'
+import { compareFlips, gateFailures, verdict } from '../../../scripts/auditCascade.mjs'
 
 const shot = (...hashes: string[]) => ({ count: hashes.length, hashes, labels: hashes.map((_, index) => `element ${index}`) })
 
@@ -63,5 +63,15 @@ describe('the gate of the cascade audit', () => {
     ]
 
     expect(gateFailures(results).map((result) => result.id)).toEqual(['fail', 'noisy', 'error'])
+  })
+})
+
+describe('the expected flips of the page rules', () => {
+  it('is empty when the stories that differ are the expected ones', () => {
+    expect(compareFlips(['b', 'a'], ['a', 'b'])).toEqual({ missing: [], unexpected: [] })
+  })
+
+  it('reports the expected stories that stopped differing and the new stories that started to differ', () => {
+    expect(compareFlips(['a', 'c'], ['a', 'b'])).toEqual({ missing: ['b'], unexpected: ['c'] })
   })
 })

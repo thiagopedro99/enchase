@@ -23,6 +23,7 @@ const MIME = {
   '.ttf': 'font/ttf',
   '.ico': 'image/x-icon'
 }
+const INTERACTIVE = '#storybook-root a[href], #storybook-root button, #storybook-root input, #storybook-root select, #storybook-root textarea, #storybook-root label, #storybook-root [role="tab"], #storybook-root [role="switch"], #storybook-root [role="checkbox"]'
 
 const styleRuns = [
   { name: 'default', globals: '', filter: () => true },
@@ -55,6 +56,11 @@ export const verdict = async ({ control, controlAgain, loadTreatment, retries = 
 
 export const gateFailures = (results) => results.filter((result) => ['fail', 'noisy-fail', 'error'].includes(result.status))
 
+export const compareFlips = (actual, expected) => ({
+  missing: expected.filter((id) => !actual.includes(id)),
+  unexpected: actual.filter((id) => !expected.includes(id))
+})
+
 const serve = (dir) => (route) => {
   const url = new URL(route.request().url())
   const relative = decodeURIComponent(url.pathname).replace(/^\/+/, '') || 'iframe.html'
@@ -81,25 +87,115 @@ const snapshot = (page) =>
 
     if (!rootElement) return null
 
-    const elements = [rootElement, ...rootElement.querySelectorAll('*')]
     const hashes = []
     const labels = []
+    const describe = (element) => {
+      const className = typeof element.className === 'string' && element.className ? `.${element.className.split(' ')[0].slice(0, 30)}` : ''
 
-    for (const element of elements) {
-      const style = getComputedStyle(element)
-      const box = element.getBoundingClientRect()
-      let text = [box.x, box.y, box.width, box.height].map((value) => Math.round(value * 2) / 2).join(',')
+      return `${element.tagName.toLowerCase()}${className}`
+    }
+    const add = (element, pseudo) => {
+      const style = getComputedStyle(element, pseudo || null)
+      let text = pseudo ? '' : [element.getBoundingClientRect()].map((box) => [box.x, box.y, box.width, box.height].map((value) => Math.round(value * 2) / 2).join(',')).join('')
 
       for (const name of Array.from(style).sort()) text += `|${name}:${style.getPropertyValue(name)}`
       hashes.push(fnv(text))
-      const className = typeof element.className === 'string' && element.className ? `.${element.className.split(' ')[0].slice(0, 30)}` : ''
-      labels.push(`${element.tagName.toLowerCase()}${className}`)
+      labels.push(`${describe(element)}${pseudo}`)
     }
 
-    return { count: elements.length, hashes, labels }
+    for (const element of [rootElement, ...rootElement.querySelectorAll('*')]) {
+      add(element, '')
+      add(element, '::before')
+      add(element, '::after')
+    }
+
+    return { count: hashes.length, hashes, labels }
   })
 
-const load = async (context, host, id, globals) => {
+const settled = (handle) =>
+  handle.evaluate(
+    (node) =>
+      new Promise((resolve) => {
+        const read = () => {
+          const style = getComputedStyle(node)
+
+          return Array.from(style).map((name) => style.getPropertyValue(name)).join('|')
+        }
+        let previous = read()
+        let stable = 0
+        let frames = 0
+
+        const step = () => {
+          frames += 1
+
+          const next = read()
+
+          stable = next === previous ? stable + 1 : 0
+          previous = next
+
+          if (stable >= 3 || frames >= 120) resolve(true)
+          else requestAnimationFrame(step)
+        }
+
+        requestAnimationFrame(step)
+      })
+  )
+
+const labelled = async (page, state) => {
+  const result = await snapshot(page)
+
+  return result && { count: result.count, hashes: result.hashes, labels: result.labels.map((label) => `${state}:${label}`) }
+}
+
+const combine = (parts) => ({
+  count: parts.reduce((sum, part) => sum + part.count, 0),
+  hashes: parts.flatMap((part) => part.hashes),
+  labels: parts.flatMap((part) => part.labels)
+})
+
+const statesOf = async (page, limit, skipped) => {
+  const parts = []
+  const candidates = page.locator(INTERACTIVE)
+  const total = await candidates.count()
+  let hovered = 0
+
+  for (let index = 0; index < total && hovered < limit; index += 1) {
+    const element = candidates.nth(index)
+
+    if (!(await element.isVisible().catch(() => false))) continue
+
+    const reached = await element.hover({ timeout: 2000 }).then(
+      () => true,
+      () => false
+    )
+
+    if (!reached) {
+      skipped.push(`hover${index}`)
+      continue
+    }
+
+    hovered += 1
+    await settled(element).catch(() => undefined)
+    parts.push(await labelled(page, `hover${index}`))
+    await page.mouse.move(0, 0)
+  }
+
+  await page.evaluate(() => document.activeElement?.blur())
+
+  for (let index = 0; index < limit; index += 1) {
+    await page.keyboard.press('Tab')
+
+    const focused = await page.evaluateHandle(() => document.activeElement)
+    const element = focused.asElement()
+
+    if (element) await settled(element).catch(() => undefined)
+    parts.push(await labelled(page, `focus${index}`))
+  }
+
+  return parts.filter(Boolean)
+}
+
+const load = async (context, host, id, globals, options) => {
   const page = await context.newPage()
   const query = `id=${id}&viewMode=story${globals ? `&globals=${globals}` : ''}`
 
@@ -114,10 +210,17 @@ const load = async (context, host, id, globals) => {
       null,
       { timeout: 20000 }
     )
+
+    if (options.pageCss) await page.addStyleTag({ content: options.pageCss })
+
     await page.evaluate(() => document.fonts.ready)
     await page.waitForTimeout(400)
 
-    return await snapshot(page)
+    const rest = await snapshot(page)
+
+    if (!rest || options.states === 0) return rest
+
+    return combine([rest, ...(await statesOf(page, options.states, options.skipped))])
   } catch {
     return null
   } finally {
@@ -139,7 +242,7 @@ const ladderIn = (dir) =>
     .filter((name) => name.endsWith('.css'))
     .reduce((sum, name) => sum + (readFileSync(join(dir, name), 'utf8').split(':not(_').length - 1), 0)
 
-const auditEngine = async (name, control, treatment, stories, run) => {
+const auditEngine = async (name, control, treatment, stories, run, options) => {
   const browser = await engines[name].launch({ headless: true })
   const context = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 900 } })
   const results = []
@@ -149,10 +252,12 @@ const auditEngine = async (name, control, treatment, stories, run) => {
 
   try {
     for (const id of stories) {
-      const reference = await load(context, 'audit-control.test', id, run.globals)
-      const again = await load(context, 'audit-control.test', id, run.globals)
+      const skipped = []
+      const scoped = { ...options, skipped }
+      const reference = await load(context, 'audit-control.test', id, run.globals, scoped)
+      const again = await load(context, 'audit-control.test', id, run.globals, scoped)
 
-      results.push({ id, ...(await verdict({ control: reference, controlAgain: again, loadTreatment: () => load(context, 'audit-treatment.test', id, run.globals) })) })
+      results.push({ id, ...(await verdict({ control: reference, controlAgain: again, loadTreatment: () => load(context, 'audit-treatment.test', id, run.globals, scoped) })), skipped })
     }
   } finally {
     await browser.close()
@@ -172,13 +277,25 @@ const main = async () => {
   const filter = option('--filter', null)
   const limit = Number(option('--limit', '0'))
   const output = option('--out', null)
+  const states = Number(option('--states', '0'))
+  const styleOnly = option('--style', null)
+  const pageFile = option('--page-css', null)
+  const expectFile = option('--expect', null)
+  const controlDir = option('--control-dir', null)
+  const treatmentDir = option('--treatment-dir', null)
+  const pageCss = pageFile ? readFileSync(pageFile, 'utf8') : ''
+  const expected = expectFile ? JSON.parse(readFileSync(expectFile, 'utf8')) : null
   const work = mkdtempSync(join(tmpdir(), 'enchase-cascade-audit-'))
-  const control = join(work, 'control')
-  const treatment = join(work, 'treatment')
+  const control = controlDir ?? join(work, 'control')
+  const treatment = treatmentDir ?? join(work, 'treatment')
+
+  if (expected && (expected.filter !== filter || expected.states !== states || Boolean(expected.page) !== Boolean(pageFile))) {
+    throw new Error(`the expectation was recorded with other options: filter ${expected.filter}, states ${expected.states}, page ${Boolean(expected.page)}`)
+  }
 
   try {
-    buildStorybook(control, false)
-    buildStorybook(treatment, true)
+    if (!controlDir) buildStorybook(control, false)
+    if (!treatmentDir) buildStorybook(treatment, true)
 
     if (ladderIn(control) !== 0 || ladderIn(treatment) === 0) {
       throw new Error(`the builds do not differ as expected: the control has ${ladderIn(control)} ladder selectors and the treatment has ${ladderIn(treatment)}`)
@@ -191,32 +308,49 @@ const main = async () => {
       .filter((id) => !filter || new RegExp(filter).test(id))
     const report = {}
     let failures = 0
+    let mismatches = 0
 
     for (const engine of selected) {
-      for (const run of styleRuns) {
+      for (const run of styleRuns.filter((item) => !styleOnly || item.name === styleOnly)) {
         const stories = ids.filter(run.filter).slice(0, limit > 0 ? limit : undefined)
 
         if (stories.length === 0) continue
 
-        const results = await auditEngine(engine, control, treatment, stories, run)
+        const results = await auditEngine(engine, control, treatment, stories, run, { states, pageCss })
         const failed = gateFailures(results)
         const key = `${engine}/${run.name}`
+        const flips = failed.map((result) => result.id).sort()
 
         report[key] = {
           stories: results.length,
           ok: results.filter((result) => result.status === 'ok').length,
           flicker: results.filter((result) => result.status === 'flicker').map((result) => result.id),
           noisy: results.filter((result) => result.noisy).map((result) => result.id),
+          skipped: results.filter((result) => result.skipped.length > 0).map((result) => ({ id: result.id, hovers: result.skipped })),
           fail: failed.map(({ id, status, labels }) => ({ id, status, labels }))
         }
         failures += failed.length
         console.log(`${key}: ${results.length} stories, ${report[key].ok} ok, ${report[key].flicker.length} flicker, ${report[key].noisy.length} with unstable control, ${failed.length} outside noise`)
+
+        if (expected) {
+          const { missing, unexpected } = compareFlips(flips, [...(expected.fails[key] ?? [])].sort())
+
+          if (missing.length > 0 || unexpected.length > 0) {
+            mismatches += 1
+            console.error(`${key}: the flips changed. missing ${missing.join(', ') || 'none'}; unexpected ${unexpected.join(', ') || 'none'}`)
+          }
+        }
       }
     }
 
     if (output) writeFileSync(output, JSON.stringify(report, null, 2))
 
-    if (failures > 0) {
+    if (expected) {
+      if (mismatches > 0) {
+        console.error(`${mismatches} engine and style runs do not match the expected flips.`)
+        process.exitCode = 1
+      }
+    } else if (failures > 0) {
       console.error(`${failures} stories differ outside the noise of the control. See the report${output ? ` in ${output}` : ''}.`)
       process.exitCode = 1
     }
