@@ -33,10 +33,31 @@ const styleRuns = [
 
 const sameHashes = (left, right) => left.count === right.count && left.hashes.every((hash, index) => hash === right.hashes[index])
 
-const differingLabels = (left, right) => left.hashes.map((hash, index) => (hash === right.hashes[index] ? null : left.labels[index])).filter(Boolean)
+const indicesOf = (left, right) => left.hashes.map((hash, index) => (hash === right.hashes[index] ? -1 : index)).filter((index) => index !== -1)
+
+export const directionOf = (control, treatment, reference) => {
+  if (control === undefined || treatment === undefined || reference === undefined) return 'other'
+  if (control !== reference && treatment === reference) return 'lib-wins'
+  if (control === reference && treatment !== reference) return 'page-wins'
+
+  return 'other'
+}
+
+export const directionsOf = ({ control, treatment, reference, differing }) => {
+  const aligned = Boolean(reference) && reference.count === control.count && treatment.count === control.count
+  const directions = differing.map((index) => ({
+    label: control.labels[index],
+    direction: aligned ? directionOf(control.hashes[index], treatment.hashes[index], reference.hashes[index]) : 'other'
+  }))
+  const counts = { 'lib-wins': 0, 'page-wins': 0, other: 0 }
+
+  for (const item of directions) counts[item.direction] += 1
+
+  return { counts, directions }
+}
 
 export const verdict = async ({ control, controlAgain, loadTreatment, retries = 2 }) => {
-  if (!control || !controlAgain) return { status: 'error', noisy: false, labels: [] }
+  if (!control || !controlAgain) return { status: 'error', noisy: false, labels: [], differing: [] }
 
   const noisy = !sameHashes(control, controlAgain)
   const first = await loadTreatment()
@@ -49,12 +70,30 @@ export const verdict = async ({ control, controlAgain, loadTreatment, retries = 
     if (again && sameHashes(control, again)) return { status: 'flicker', noisy }
   }
 
-  if (!first) return { status: 'error', noisy, labels: [] }
+  if (!first) return { status: 'error', noisy, labels: [], differing: [] }
 
-  return { status: noisy ? 'noisy-fail' : 'fail', noisy, labels: differingLabels(control, first).slice(0, 6) }
+  const differing = indicesOf(control, first)
+
+  return { status: noisy ? 'noisy-fail' : 'fail', noisy, labels: differing.map((index) => control.labels[index]).slice(0, 6), differing, treatment: first }
 }
 
 export const gateFailures = (results) => results.filter((result) => ['fail', 'noisy-fail', 'error'].includes(result.status))
+
+export const acceptedFlip = (result) => Boolean(result.directions) && result.directions.counts['page-wins'] === 0 && result.directions.counts.other === 0 && result.directions.counts['lib-wins'] > 0
+
+export const pageGateFailures = (results) => gateFailures(results).filter((result) => !acceptedFlip(result))
+
+const summarized = (results) => {
+  const counts = { 'lib-wins': 0, 'page-wins': 0, other: 0 }
+
+  for (const result of results) {
+    if (!result.directions) continue
+
+    for (const name of Object.keys(counts)) counts[name] += result.directions.counts[name]
+  }
+
+  return counts
+}
 
 export const compareFlips = (actual, expected) => ({
   missing: expected.filter((id) => !actual.includes(id)),
@@ -73,6 +112,13 @@ const serve = (dir) => (route) => {
 
 const snapshot = (page) =>
   page.evaluate(() => {
+    for (const animation of document.getAnimations()) {
+      if (animation.effect?.getComputedTiming?.().iterations === Infinity) {
+        animation.pause()
+        animation.currentTime = 0
+      }
+    }
+
     const fnv = (text) => {
       let hash = 0x811c9dc5
 
@@ -113,42 +159,55 @@ const snapshot = (page) =>
   })
 
 const animationsDone = () =>
-  Promise.race([Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined))), new Promise((resolve) => setTimeout(resolve, 2500))])
+  Promise.race([Promise.all(document.getAnimations().filter((animation) => animation.effect?.getComputedTiming?.().iterations !== Infinity).map((animation) => animation.finished.catch(() => undefined))), new Promise((resolve) => setTimeout(resolve, 2500))])
 
 const settled = (handle) =>
-  handle.evaluate(
-    (node) =>
-      Promise.race([Promise.all(document.getAnimations().map((animation) => animation.finished.catch(() => undefined))), new Promise((resolve) => setTimeout(resolve, 2500))]).then(
-        () =>
-          new Promise((resolve) => {
-            const read = () =>
-              ['', '::before', '::after']
-                .map((pseudo) => {
-                  const style = getComputedStyle(node, pseudo || null)
+  handle.evaluate((node) => {
+    const freeze = () => {
+      for (const animation of document.getAnimations()) {
+        if (animation.effect?.getComputedTiming?.().iterations === Infinity) {
+          animation.pause()
+          animation.currentTime = 0
+        }
+      }
+    }
 
-                  return Array.from(style).map((name) => style.getPropertyValue(name)).join('|')
-                })
-                .join('#')
-            let previous = read()
-            let stable = 0
-            let frames = 0
+    freeze()
 
-            const step = () => {
-              frames += 1
+    return Promise.race([Promise.all(document.getAnimations().filter((animation) => animation.effect?.getComputedTiming?.().iterations !== Infinity).map((animation) => animation.finished.catch(() => undefined))), new Promise((resolve) => setTimeout(resolve, 2500))]).then(
+      () =>
+        new Promise((resolve) => {
+          const read = () => {
+            freeze()
 
-              const next = read()
+            return ['', '::before', '::after']
+              .map((pseudo) => {
+                const style = getComputedStyle(node, pseudo || null)
 
-              stable = next === previous ? stable + 1 : 0
-              previous = next
+                return Array.from(style).map((name) => style.getPropertyValue(name)).join('|')
+              })
+              .join('#')
+          }
+          let previous = read()
+          let stable = 0
+          let frames = 0
 
-              if (stable >= 3 || frames >= 120) resolve(true)
-              else requestAnimationFrame(step)
-            }
+          const step = () => {
+            frames += 1
 
-            requestAnimationFrame(step)
-          })
-      )
-  )
+            const next = read()
+
+            stable = next === previous ? stable + 1 : 0
+            previous = next
+
+            if (stable >= 3 || frames >= 120) resolve(true)
+            else requestAnimationFrame(step)
+          }
+
+          requestAnimationFrame(step)
+        })
+    )
+  })
 
 const labelled = async (page, state) => {
   const result = await snapshot(page)
@@ -283,8 +342,10 @@ const auditEngine = async (name, control, treatment, stories, run, options) => {
       const scoped = { ...options, skipped, states: options.deep && new RegExp(options.deep).test(id) ? 60 : options.states }
       const reference = await load(context, 'audit-control.test', id, run.globals, scoped)
       const again = await load(context, 'audit-control.test', id, run.globals, scoped)
+      const { treatment, differing, ...outcome } = await verdict({ control: reference, controlAgain: again, loadTreatment: () => load(context, 'audit-treatment.test', id, run.globals, scoped) })
+      const directions = options.pageCss && treatment && differing ? directionsOf({ control: reference, treatment, reference: await load(context, 'audit-control.test', id, run.globals, { ...scoped, pageCss: '' }), differing }) : undefined
 
-      results.push({ id, ...(await verdict({ control: reference, controlAgain: again, loadTreatment: () => load(context, 'audit-treatment.test', id, run.globals, scoped) })), skipped })
+      results.push({ id, ...outcome, ...(directions ? { directions } : {}), skipped })
     }
   } finally {
     await browser.close()
@@ -345,9 +406,10 @@ const main = async () => {
         if (stories.length === 0) continue
 
         const results = await auditEngine(engine, control, treatment, stories, run, { states, pageCss, deep })
-        const failed = gateFailures(results)
+        const flagged = gateFailures(results)
+        const failed = pageCss ? pageGateFailures(results) : flagged
         const key = `${engine}/${run.name}`
-        const flips = failed.map((result) => result.id).sort()
+        const flips = flagged.map((result) => result.id).sort()
 
         report[key] = {
           stories: results.length,
@@ -355,10 +417,12 @@ const main = async () => {
           flicker: results.filter((result) => result.status === 'flicker').map((result) => result.id),
           noisy: results.filter((result) => result.noisy).map((result) => result.id),
           skipped: results.filter((result) => result.skipped.length > 0).map((result) => ({ id: result.id, hovers: result.skipped })),
-          fail: failed.map(({ id, status, labels }) => ({ id, status, labels }))
+          directions: pageCss ? summarized(results) : undefined,
+          accepted: pageCss ? flagged.filter(acceptedFlip).map((result) => result.id) : undefined,
+          fail: failed.map(({ id, status, labels, directions }) => ({ id, status, labels, directions: directions?.directions }))
         }
         failures += failed.length
-        console.log(`${key}: ${results.length} stories, ${report[key].ok} ok, ${report[key].flicker.length} flicker, ${report[key].noisy.length} with unstable control, ${failed.length} outside noise`)
+        console.log(`${key}: ${results.length} stories, ${report[key].ok} ok, ${report[key].flicker.length} flicker, ${report[key].noisy.length} with unstable control, ${flagged.length} differ${pageCss ? ` (${report[key].directions['lib-wins']} lib wins, ${report[key].directions['page-wins']} page wins, ${report[key].directions.other} other)` : ''}, ${failed.length} outside ${pageCss ? 'the accepted directions' : 'noise'}`)
 
         if (expected) {
           const { missing, unexpected } = compareFlips(flips, [...(expected.fails[key] ?? [])].sort())
@@ -373,13 +437,13 @@ const main = async () => {
 
     if (output) writeFileSync(output, JSON.stringify(report, null, 2))
 
-    if (expected) {
-      if (mismatches > 0) {
-        console.error(`${mismatches} engine and style runs do not match the expected flips.`)
-        process.exitCode = 1
-      }
-    } else if (failures > 0) {
-      console.error(`${failures} stories differ outside the noise of the control. See the report${output ? ` in ${output}` : ''}.`)
+    if (failures > 0) {
+      console.error(`${failures} stories differ outside the ${pageCss ? 'accepted directions' : 'noise of the control'}. See the report${output ? ` in ${output}` : ''}.`)
+      process.exitCode = 1
+    }
+
+    if (expected && mismatches > 0) {
+      console.error(`${mismatches} engine and style runs do not match the expected flips.`)
       process.exitCode = 1
     }
   } finally {
