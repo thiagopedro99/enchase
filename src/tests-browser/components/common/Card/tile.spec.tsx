@@ -288,7 +288,7 @@ describe('a disabled CardButton in a real browser', () => {
 describe('a CardLink against the styles of a page in a real browser', () => {
   const styled = 'a { color: rgb(0, 0, 255); text-decoration: underline; } a:visited { color: rgb(128, 0, 128); } a:hover { color: rgb(255, 0, 0); text-decoration: underline; }'
 
-  it('stays without underline and with the color of its surroundings when the page styles every link', async () => {
+  it('stays without underline and with the color of its surroundings when the page styles every link, and gives way on hover to the hover rule of the page, which weighs more than any rule of the library', async () => {
     addStyle(styled)
     renderInBrowser(
       <div style={{ color: 'rgb(9, 9, 9)' }}>
@@ -304,8 +304,8 @@ describe('a CardLink against the styles of a page in a real browser', () => {
     await userEvent.hover(element('tile'))
     await frames(4)
 
-    expect(computed('tile').textDecorationLine).toBe('none')
-    expect(computed('tile').color).toBe('rgb(9, 9, 9)')
+    expect(computed('tile').textDecorationLine).toBe('underline')
+    expect(computed('tile').color).toBe('rgb(255, 0, 0)')
   })
 
   it('keeps the color of its surroundings once the address has been visited', () => {
