@@ -186,6 +186,10 @@ const statesOf = async (page, limit, skipped) => {
     hovered += 1
     await settled(element).catch(() => undefined)
     parts.push(await labelled(page, `hover${index}`))
+    await page.mouse.down()
+    await settled(element).catch(() => undefined)
+    parts.push(await labelled(page, `press${index}`))
+    await page.mouse.up()
     await page.mouse.move(0, 0)
   }
 
@@ -219,6 +223,19 @@ const load = async (context, host, id, globals, options) => {
       null,
       { timeout: 20000 }
     )
+
+    await page.evaluate(() => {
+      for (const type of ['click', 'auxclick']) {
+        document.addEventListener(
+          type,
+          (event) => {
+            event.preventDefault()
+            event.stopPropagation()
+          },
+          true
+        )
+      }
+    })
 
     if (options.pageCss) await page.addStyleTag({ content: options.pageCss })
 
@@ -263,7 +280,7 @@ const auditEngine = async (name, control, treatment, stories, run, options) => {
   try {
     for (const id of stories) {
       const skipped = []
-      const scoped = { ...options, skipped }
+      const scoped = { ...options, skipped, states: options.deep && new RegExp(options.deep).test(id) ? 60 : options.states }
       const reference = await load(context, 'audit-control.test', id, run.globals, scoped)
       const again = await load(context, 'audit-control.test', id, run.globals, scoped)
 
@@ -290,6 +307,7 @@ const main = async () => {
   const states = Number(option('--states', '0'))
   const styleOnly = option('--style', null)
   const pageFile = option('--page-css', null)
+  const deep = option('--deep', null)
   const expectFile = option('--expect', null)
   const controlDir = option('--control-dir', null)
   const treatmentDir = option('--treatment-dir', null)
@@ -326,7 +344,7 @@ const main = async () => {
 
         if (stories.length === 0) continue
 
-        const results = await auditEngine(engine, control, treatment, stories, run, { states, pageCss })
+        const results = await auditEngine(engine, control, treatment, stories, run, { states, pageCss, deep })
         const failed = gateFailures(results)
         const key = `${engine}/${run.name}`
         const flips = failed.map((result) => result.id).sort()
