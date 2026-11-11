@@ -61,7 +61,14 @@ describe('ladderSelector', () => {
     ['::selection', ':where(*):not(_ _)::selection', [0, 0, 3]],
     ['.a > .b', ':where(.a > .b):not(_ _ _ _ _ _ _ _)', [0, 0, 8]],
     [':is(.a, b)', ':where(:is(.a, b)):not(_ _ _ _ _)', [0, 0, 5]],
-    [':not(.a .b)', ':where(:not(.a .b)):not(_ _ _ _ _ _ _ _)', [0, 0, 8]]
+    [':not(.a .b)', ':where(:not(.a .b)):not(_ _ _ _ _ _ _ _)', [0, 0, 8]],
+    ['.a:hover', ':where(.a):not(_ _ _ _ _ _ _ _):hover', [0, 1, 8]],
+    ['a:hover::before', ':where(a):not(_ _ _ _ _ _):hover::before', [0, 1, 7]],
+    [':hover', ':where(*):not(_ _ _ _ _):hover', [0, 1, 5]],
+    ['._a > :hover', ':where(._a > *):not(_ _ _ _ _ _ _ _):hover', [0, 1, 8]],
+    ['.a:disabled:hover', ':where(.a:hover):not(_ _ _ _ _ _ _ _ _ _ _):disabled', [0, 1, 11]],
+    ['.a:where(:disabled)', ':where(.a:where(:disabled)):not(_ _ _ _ _)', [0, 0, 5]],
+    ['._input:focus ~ ._label', ':where(._input:focus ~ ._label):not(_ _ _ _ _ _ _ _ _ _ _)', [0, 0, 11]]
   ])('%s becomes %s with specificity %j', (selector, text, expected) => {
     expect(ladderSelector(selector)).toBe(text)
     expect(specificityOf(ladderSelector(selector))).toEqual(expected)
@@ -74,6 +81,7 @@ describe('ladderSelector', () => {
     ['> a'],
     ['a::before b'],
     ['.a > ::before'],
+    ['.a::before:hover'],
     ['.a &']
   ])('refuses %s instead of passing it through', (selector) => {
     expect(() => ladderSelector(selector)).toThrow(CascadeLadderError)
@@ -113,6 +121,10 @@ describe('the postcss plugin', () => {
 describe('ladderProblems', () => {
   it('reports the selectors of a stylesheet that are not on the ladder', () => {
     expect(ladderProblems(':where(.a):not(_ _ _ _ _) { color: red } .b { color: red } h1 { color: red }')).toEqual(['.b', 'h1'])
+  })
+
+  it('accepts a state raised above its band and refuses a state with a second class outside :where', () => {
+    expect(ladderProblems(':where(.a):not(_ _ _ _ _ _ _ _):hover { color: red } :where(.a):not(_ _ _ _ _ _ _ _ _ _ _):disabled { color: red } :where(.a):not(_ _ _ _ _ _ _ _ _):hover .b { color: red }')).toEqual([':where(.a):not(_ _ _ _ _ _ _ _ _):hover .b'])
   })
 })
 

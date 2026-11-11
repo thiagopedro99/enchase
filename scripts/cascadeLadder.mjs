@@ -5,6 +5,7 @@ const K = 3
 const BASE = 2
 const LEGACY_PSEUDO_ELEMENTS = [':before', ':after', ':first-line', ':first-letter']
 const SELECTOR_LISTS = [':is', ':-webkit-any', ':matches', ':any', ':not', ':has']
+const STATE_PSEUDO_CLASSES = [':hover', ':active', ':focus', ':focus-visible', ':focus-within', ':disabled', ':visited', ':checked']
 const LIBRARY_FILE = /[\\/]src[\\/]components[\\/]/
 
 export class CascadeLadderError extends Error {
@@ -17,6 +18,7 @@ export class CascadeLadderError extends Error {
 const isPseudoElement = (node) => node.type === 'pseudo' && (node.value.startsWith('::') || LEGACY_PSEUDO_ELEMENTS.includes(node.value))
 const isWhere = (node) => node.type === 'pseudo' && node.value === ':where'
 const isSelectorList = (node) => node.type === 'pseudo' && SELECTOR_LISTS.includes(node.value)
+const isState = (node) => node.type === 'pseudo' && STATE_PSEUDO_CLASSES.includes(node.value)
 
 const mostSpecific = (list) =>
   list.reduce((best, item) => (item[0] > best[0] || (item[0] === best[0] && (item[1] > best[1] || (item[1] === best[1] && item[2] > best[2]))) ? item : best), [0, 0, 0])
@@ -60,6 +62,16 @@ const parseOne = (selector) => {
   return root.nodes[0]
 }
 
+const subjectStart = (nodes) => nodes.reduce((start, node, index) => (node.type === 'combinator' ? index + 1 : start), 0)
+
+const raisedIndex = (nodes) => {
+  for (let index = subjectStart(nodes); index < nodes.length; index += 1) {
+    if (isState(nodes[index])) return index
+  }
+
+  return -1
+}
+
 export const specificityOf = (selector) => complexSpecificity(parseOne(selector))
 
 export const ladderValue = (b, c) => {
@@ -85,9 +97,13 @@ export const ladderSelector = (selector) => {
 
   if (pseudoElements > (pe ? 1 : 0)) throw new CascadeLadderError(`"${selector}" has a pseudo-element before its end`)
 
-  const base = pe ? nodes.slice(0, -1) : nodes
+  const body = pe ? nodes.slice(0, -1) : nodes
+  const raised = raisedIndex(body)
+  const state = raised === -1 ? '' : String(body[raised])
+  const base = body.filter((_, index) => index !== raised)
+  const trailing = base.length > 0 && base[base.length - 1].type === 'combinator'
 
-  if (base.length > 0 && base[base.length - 1].type === 'combinator') throw new CascadeLadderError(`"${selector}" has a combinator before its pseudo-element`)
+  if (trailing && raised === -1) throw new CascadeLadderError(`"${selector}" has a combinator before its pseudo-element`)
 
   const [a, b, c] = complexSpecificity(complex)
 
@@ -96,9 +112,10 @@ export const ladderSelector = (selector) => {
 
   const n = ladderValue(b, c)
   const count = pe ? n - 1 : n
-  const text = base.map((node) => String(node)).join('').trim() || '*'
+  const joined = base.map((node) => String(node)).join('').trim()
+  const text = trailing ? `${joined} *` : joined || '*'
 
-  return `:where(${text}):not(${Array.from({ length: count }, () => '_').join(' ')})${pe}`
+  return `:where(${text}):not(${Array.from({ length: count }, () => '_').join(' ')})${state}${pe}`
 }
 
 export const ladderProblems = (css) => {
@@ -109,8 +126,9 @@ export const ladderProblems = (css) => {
 
     for (const selector of rule.selectors) {
       const [a, b, c] = specificityOf(selector)
+      const raised = b === 1 && STATE_PSEUDO_CLASSES.some((name) => selector.includes(name))
 
-      if (a !== 0 || b !== 0 || c < BASE) problems.push(selector)
+      if (a !== 0 || (b !== 0 && !raised) || c < BASE) problems.push(selector)
     }
   })
 
