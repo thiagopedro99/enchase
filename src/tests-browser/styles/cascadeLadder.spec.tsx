@@ -1,6 +1,7 @@
 import { cleanup, render } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import { userEvent } from 'vitest/browser'
+import styled from 'styled-components'
 
 import { Button } from '../../../dist-lib/index.js'
 import plainCss from '../../../dist-lib/styles.css?inline'
@@ -207,6 +208,50 @@ describe('a class of the app against the library on the ladder, in both orders',
         </Button>
       </>
     )
+    await frames()
+
+    const [enabled, disabled] = Array.from(document.querySelectorAll<HTMLButtonElement>('button')) as HTMLElement[]
+
+    expect(getComputedStyle(enabled as HTMLElement).backgroundColor).toBe('rgb(1, 2, 3)')
+    expect(getComputedStyle(disabled as HTMLElement).backgroundColor).toBe('rgb(4, 5, 6)')
+
+    await userEvent.hover(enabled as HTMLElement)
+    await expect.poll(() => getComputedStyle(enabled as HTMLElement).backgroundColor).toBe('rgb(9, 9, 9)')
+
+    ;(enabled as HTMLElement).focus()
+    await expect.poll(() => getComputedStyle(enabled as HTMLElement).outlineColor).toBe('rgb(7, 7, 7)')
+  })
+})
+
+describe('a styled(Button) against the library on the ladder, in both orders', () => {
+  const Mine = styled(Button)`
+    background-color: rgb(1, 2, 3);
+
+    &:hover {
+      background-color: rgb(9, 9, 9);
+    }
+
+    &:focus {
+      outline-color: rgb(7, 7, 7);
+    }
+
+    &:disabled {
+      background-color: rgb(4, 5, 6);
+    }
+  `
+
+  it.each(['before', 'after'] as const)('wins on rest, hover, focus and disabled with the styles of styled-components %s the library', async (order) => {
+    reset()
+    render(
+      <>
+        <Mine>Salvar</Mine>
+        <Mine disabled>Salvar</Mine>
+      </>
+    )
+    const library = addStyle(plainCss)
+
+    if (order === 'after') document.head.insertBefore(library, document.querySelector('style[data-styled]'))
+
     await frames()
 
     const [enabled, disabled] = Array.from(document.querySelectorAll<HTMLButtonElement>('button')) as HTMLElement[]
