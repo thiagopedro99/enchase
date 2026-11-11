@@ -61,7 +61,7 @@
   background-color: var(--enchase-input-field-background-focus, transparent);
 }
 
-.select[data-has-label]:not(:focus):not(:has(option:checked:not([data-placeholder]))) {
+.select[data-has-label]:is(:enabled, :disabled):not(:focus):not(:has(option:checked:not([data-placeholder]))) {
   color: transparent;
 }
 
