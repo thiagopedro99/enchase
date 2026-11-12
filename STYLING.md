@@ -32,7 +32,7 @@ With the layered stylesheet, `enchase/styles.layer.css`, the rules of the librar
 
 ## What loses
 
-An element selector on its own (`button`, `h1`, `a`) loses to every rule of the library. A selector with two element names (`div button`) ties with the rules of the library that have neither a class nor an element name, and then the stylesheet that comes last wins.
+An element selector on its own (`button`, `h1`, `a`) loses to every rule of the library. A selector with two element names (`div button`) ties with the rules of the library that have neither a class nor an element name, and then the stylesheet that comes last wins. A selector with three or four element names (`nav ul li a`) wins over the rules of the library that have no class and fewer element names, as it did before 0.23, and loses to every rule that has a class.
 
 The hover and focus rules of the library weigh more than a rest class of yours, so a class without the state does not change them: name the state, as `.save:hover` does above. On the `Link` component, a rule of yours on `a:hover` or on `:focus` loses to the library's rule for that state. On the links of `Breadcrumbs`, `Navbar`, `Sidebar`, `Footer` and `Layout`, a rule of yours on `:focus` loses to the focus ring of the library, so give the link a class that names the state.
 
@@ -70,4 +70,4 @@ Four behaviors changed, and the [migration guide](docs/migration/0.23.md) shows 
 - `element-selectors`: an element selector of yours loses to every rule of the library.
 - `rest-class`: a rest class of yours that comes before the library's stylesheet wins over the library's rest rules, and over the disabled look of `Button`.
 - `state-class`: a class of yours that names a state wins over the library's rule for that state, also when it comes before the library's stylesheet.
-- `link-states`: a rule of yours on an element state no longer changes the hover and the press of the `Link` component, nor the focus ring of the links of `Breadcrumbs`, `Navbar`, `Sidebar`, `Footer` and `Layout`, and of the system stories.
+- `link-states`: a rule of yours on an element state no longer changes the hover and the press of the `Link` component, nor the focus ring of the links of `Breadcrumbs`, `Navbar`, `Sidebar`, `Footer` and `Layout`.

@@ -7,10 +7,11 @@
 ### Notes
 
 - Four changes in behavior, and none in the API. `npm run check:api` against 0.22.0 reports 22 keys of `exports` and none removed, 12 stable entries with 1,120 lines of declarations and none removed, changed or widened, 1,223 `--enchase-*` names and 279 `data-slot` names with none removed, and 578 hooks of the styles with none removed. The cascade changed in `element-selectors`, `rest-class`, `state-class` and `link-states`, which `api-breaks.json` lists under `behavior`; this first bullet cites each one, and `breaks` is empty.
+- The CSS of the library is now on the cascade ladder, so a class of yours wins over the library's rest rules in any load order, without a cascade layer, in plain CSS, CSS Modules and styled-components. A class that names a state wins over the library's rule for that state, and a class without the state does not change the library's hover and focus rules. `styles.layer.css` stays for Tailwind 4, and [STYLING.md](STYLING.md) is the new page that says what wins over what.
 - `element-selectors`: an element selector of yours, such as `button` or `h1`, loses to every rule of the library. Before 0.23 it could win over the rules that the library wrote inside `:where()`.
 - `rest-class`: a rest class of yours that comes before the library's stylesheet now wins over the library's rest rules, and over the disabled look of `Button`, as a class that comes after it already did.
 - `state-class`: a class of yours that names a state, such as `.save:hover`, `.save:focus-visible` or `.save:disabled`, now wins over the library's rule for that state, also when it comes before the library's stylesheet.
-- `link-states`: a rule of yours on an element state, such as `a:hover` or `:focus`, no longer changes the hover and the press of the `Link` component, nor the focus ring of the links of `Breadcrumbs`, `Navbar`, `Sidebar`, `Footer` and `Layout`, and of the system stories. A class that names the state does.
+- `link-states`: a rule of yours on an element state, such as `a:hover` or `:focus`, no longer changes the hover and the press of the `Link` component, nor the focus ring of the links of `Breadcrumbs`, `Navbar`, `Sidebar`, `Footer` and `Layout`. A class that names the state does.
 
 ## v0.22.0
 
