@@ -16,7 +16,7 @@
     },
     {
       "key": "link-states",
-      "note": "a rule of yours on an element state (a:hover, :focus) no longer changes the hover of the library's links, nor the focus ring of its links, navbar links and breadcrumbs"
+      "note": "a rule of yours on an element state (a:hover, :focus) no longer changes the hover and the press of the Link component, nor the focus ring of the links of Breadcrumbs, Navbar, Sidebar, Footer and Layout, and of the system stories"
     }
   ]
 }

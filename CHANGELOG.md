@@ -10,7 +10,7 @@
 - `element-selectors`: an element selector of yours, such as `button` or `h1`, loses to every rule of the library. Before 0.23 it could win over the rules that the library wrote inside `:where()`.
 - `rest-class`: a rest class of yours that comes before the library's stylesheet now wins over the library's rest rules, and over the disabled look of `Button`, as a class that comes after it already did.
 - `state-class`: a class of yours that names a state, such as `.save:hover`, `.save:focus-visible` or `.save:disabled`, now wins over the library's rule for that state, also when it comes before the library's stylesheet.
-- `link-states`: a rule of yours on an element state, such as `a:hover` or `:focus`, no longer changes the hover of the library's links, nor the focus ring of its links, navbar links and breadcrumbs. A class that names the state does.
+- `link-states`: a rule of yours on an element state, such as `a:hover` or `:focus`, no longer changes the hover and the press of the `Link` component, nor the focus ring of the links of `Breadcrumbs`, `Navbar`, `Sidebar`, `Footer` and `Layout`, and of the system stories. A class that names the state does.
 
 ## v0.22.0
 
