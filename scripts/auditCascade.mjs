@@ -60,14 +60,15 @@ export const verdict = async ({ control, controlAgain, loadTreatment, retries = 
   if (!control || !controlAgain) return { status: 'error', noisy: false, labels: [], differing: [] }
 
   const noisy = !sameHashes(control, controlAgain)
+  const matches = (shot) => sameHashes(control, shot) || sameHashes(controlAgain, shot)
   const first = await loadTreatment()
 
-  if (first && sameHashes(control, first)) return { status: 'ok', noisy }
+  if (first && matches(first)) return { status: 'ok', noisy }
 
   for (let attempt = 0; attempt < retries; attempt += 1) {
     const again = await loadTreatment()
 
-    if (again && sameHashes(control, again)) return { status: 'flicker', noisy }
+    if (again && matches(again)) return { status: 'flicker', noisy }
   }
 
   if (!first) return { status: 'error', noisy, labels: [], differing: [] }

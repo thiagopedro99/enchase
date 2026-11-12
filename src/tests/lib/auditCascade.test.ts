@@ -39,6 +39,28 @@ describe('the verdict of the cascade audit for one story', () => {
     expect(result).toEqual({ status: 'noisy-fail', noisy: true, labels: ['element 1'], differing: [1], treatment: shot('a', 'y') })
   })
 
+  it('is ok but noisy when the treatment matches the second load of an unstable control', async () => {
+    const result = await verdict({ control: shot('a', 'b'), controlAgain: shot('a', 'x'), loadTreatment: async () => shot('a', 'x') })
+
+    expect(result).toEqual({ status: 'ok', noisy: true })
+  })
+
+  it('is flicker but noisy when a retry matches the second load of an unstable control', async () => {
+    let loads = 0
+    const result = await verdict({
+      control: shot('a', 'b'),
+      controlAgain: shot('a', 'x'),
+      loadTreatment: async () => {
+        loads += 1
+
+        return loads === 1 ? shot('a', 'y') : shot('a', 'x')
+      }
+    })
+
+    expect(result).toEqual({ status: 'flicker', noisy: true })
+    expect(loads).toBe(2)
+  })
+
   it('is an error when the story does not render', async () => {
     const result = await verdict({ control: null, controlAgain: shot('a'), loadTreatment: async () => shot('a') })
 
