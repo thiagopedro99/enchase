@@ -4,6 +4,32 @@
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.22.0...v0.23.0)
 
+### Enhancements
+
+- Add the cascade ladder transform for library selectors ([a556edf](https://github.com/thiagopedro99/enchase/commit/a556edf))
+- Apply the cascade ladder to the library css builds ([0f81b55](https://github.com/thiagopedro99/enchase/commit/0f81b55))
+- Check that the published css stays on the cascade ladder ([6a87223](https://github.com/thiagopedro99/enchase/commit/6a87223))
+- Add the cascade audit of the stories against a control build ([0dea8c9](https://github.com/thiagopedro99/enchase/commit/0dea8c9))
+- Raise the native state selectors above the library band ([02433ba](https://github.com/thiagopedro99/enchase/commit/02433ba))
+- Check the band shape of every selector of the library ([3b2b7d9](https://github.com/thiagopedro99/enchase/commit/3b2b7d9))
+- Add the states and the page rules to the cascade audit ([d300525](https://github.com/thiagopedro99/enchase/commit/d300525))
+- Check that no base rule of the library beats a state rule ([43cdf81](https://github.com/thiagopedro99/enchase/commit/43cdf81))
+- Press and deep states in the cascade audit ([c577474](https://github.com/thiagopedro99/enchase/commit/c577474))
+- Freeze the infinite animations and classify the page differences in the audit ([6e1200b](https://github.com/thiagopedro99/enchase/commit/6e1200b))
+
+### Fixes
+
+- Check the behavior changes of api-breaks against the notes ([c959f99](https://github.com/thiagopedro99/enchase/commit/c959f99))
+- Declare the types of the cascade audit ([1864359](https://github.com/thiagopedro99/enchase/commit/1864359))
+- Raise each state of a list at the subject of a selector ([f43e50a](https://github.com/thiagopedro99/enchase/commit/f43e50a))
+- Settle the animations before the cascade audit reads a state ([b236d29](https://github.com/thiagopedro99/enchase/commit/b236d29))
+- Add the enabled and disabled states to the select label rule ([108237d](https://github.com/thiagopedro99/enchase/commit/108237d))
+- Name the states in the rules that the ladder would invert ([109d231](https://github.com/thiagopedro99/enchase/commit/109d231))
+- Declare ladderSelectors in the types of the ladder ([f58967b](https://github.com/thiagopedro99/enchase/commit/f58967b))
+- Gate the hover copies with the hover query of the library ([0caf551](https://github.com/thiagopedro99/enchase/commit/0caf551))
+- Declare the hover copies before the pressed ones ([c3741fd](https://github.com/thiagopedro99/enchase/commit/c3741fd))
+- **audit:** Accept a treatment that matches either control load ([590a00e](https://github.com/thiagopedro99/enchase/commit/590a00e))
+
 ### Notes
 
 - Four changes in behavior, and none in the API. `npm run check:api` against 0.22.0 reports 22 keys of `exports` and none removed, 12 stable entries with 1,120 lines of declarations and none removed, changed or widened, 1,223 `--enchase-*` names and 279 `data-slot` names with none removed, and 578 hooks of the styles with none removed. The cascade changed in `element-selectors`, `rest-class`, `state-class` and `link-states`, which `api-breaks.json` lists under `behavior`; this first bullet cites each one, and `breaks` is empty.
@@ -12,6 +38,7 @@
 - `rest-class`: a rest class of yours that comes before the library's stylesheet now wins over the library's rest rules, and over the disabled look of `Button`, as a class that comes after it already did.
 - `state-class`: a class of yours that names a state, such as `.save:hover`, `.save:focus-visible` or `.save:disabled`, now wins over the library's rule for that state, also when it comes before the library's stylesheet.
 - `link-states`: a rule of yours on an element state, such as `a:hover` or `:focus`, no longer changes the hover and the press of the `Link` component, nor the focus ring of the links of `Breadcrumbs`, `Navbar`, `Sidebar`, `Footer` and `Layout`. A class that names the state does.
+- Weight: the package goes from 1,047 to 1,049 files and from 475.1 kB packed (475,072 bytes) to 482.9 kB (482,887 bytes), the two new files being `STYLING.md` and `docs/migration/0.23.md`. `styles.css` goes from 259,539 to 297,932 bytes, and from 27,330 to 28,553 bytes in gzip at level 9 (`zlib.gzipSync`): 14.8% more in bytes and 4.5% more in gzip, which is the cascade ladder and the copies of the state rules. The 47 files of `enchase/css` have 297,966 bytes (259,573 before) and 54,959 in gzip (52,836 before), 34 bytes more than `styles.css`, as in 0.22.0, and `index.json` has 11,329 bytes (11,326 before). No budget of `test:size` changed, every row grows by 7 or 14 bytes minified and by a few bytes in gzip, and every row passes: `Icon` is 1,428 bytes (1,421 before), `Button` 8,346 (8,339), `shadcn style` 34,880 (34,873), and `ColorModeProvider` with `shadcn`, the closest to its budget, 59,268 of 59,392 (59,254 before).
 
 ## v0.22.0
 
