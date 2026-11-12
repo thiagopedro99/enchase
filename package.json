@@ -51,6 +51,7 @@
     "docs/migration",
     "README.md",
     "API.md",
+    "STYLING.md",
     "LICENSE"
   ],
   "exports": {
