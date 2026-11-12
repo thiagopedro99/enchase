@@ -220,7 +220,11 @@ try {
 
   for (const [label, needle] of flatExpectations) if (!flatHtml.includes(needle)) missing.push([label])
 
-  const browser = await chromium.launch()
+  const browser = await chromium.launch().catch((error) => {
+    if (!/Executable doesn't exist/.test(error.message)) throw error
+
+    throw new Error('the Chromium of Playwright is not installed: run `npx playwright install chromium` and then `npm run test:next` again')
+  })
 
   try {
     const flatPage = await browser.newPage()

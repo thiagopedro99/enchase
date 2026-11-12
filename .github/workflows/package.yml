@@ -27,6 +27,7 @@ jobs:
       - run: npm run check:api
       - run: npm run pack:check
       - run: npm run test:consumer
+      - run: npx playwright install --with-deps --only-shell chromium
       - run: npm run test:next
       - run: npm run test:eject
       - run: npm run test:size
