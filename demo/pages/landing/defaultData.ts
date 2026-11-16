@@ -5,8 +5,6 @@ import type { ThemeInput, ThemeStyle } from 'enchase/theme'
 import type { FooterProps, SidebarSection } from 'enchase'
 import type { Look, LookStyle } from './types.ts'
 
-export const landingPath = '/landing'
-
 export const brand = 'Enchase'
 
 export const version = '0.23'
