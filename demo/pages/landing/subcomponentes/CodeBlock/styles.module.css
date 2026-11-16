@@ -1,0 +1,42 @@
+.block {
+  margin: 0;
+  min-inline-size: 0;
+  overflow: hidden;
+  border: var(--enchase-border-width) solid var(--enchase-color-border-light);
+  border-radius: var(--enchase-radius-lg);
+  background: var(--enchase-color-surface-container);
+}
+
+.caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--enchase-space-md);
+  padding: var(--enchase-space-sm) var(--enchase-space-md);
+  border-block-end: var(--enchase-border-width) solid var(--enchase-color-border-light);
+  font-size: var(--enchase-font-size-sm);
+  font-weight: var(--enchase-font-weight-medium);
+  color: var(--enchase-color-text-secondary);
+}
+
+.language {
+  font-family: var(--enchase-font-mono);
+  font-size: var(--enchase-font-size-xs);
+  font-weight: var(--enchase-font-weight-regular);
+}
+
+.pre {
+  margin: 0;
+  padding: var(--enchase-space-md);
+  overflow-x: auto;
+  font-family: var(--enchase-font-mono);
+  font-size: 0.8125rem;
+  line-height: var(--enchase-line-height-relaxed);
+  color: var(--enchase-color-text-primary);
+  tab-size: 2;
+}
+
+.pre:focus-visible {
+  outline: var(--enchase-focus-width) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset-inset);
+}

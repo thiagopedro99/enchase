@@ -1,0 +1,40 @@
+.proof {
+  border-block: var(--enchase-border-width) solid var(--enchase-color-border-light);
+  background: var(--enchase-color-surface-container-low);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--enchase-space-lg) var(--enchase-space-md);
+  margin: 0;
+  padding-block: var(--enchase-space-xl);
+}
+
+@media (min-width: 768px) {
+  .list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.fact {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--enchase-space-xs);
+}
+
+.value {
+  margin: 0;
+  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  font-weight: var(--enchase-font-weight-semibold);
+  line-height: var(--enchase-line-height-none);
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--enchase-color-text-primary);
+}
+
+.label {
+  font-size: var(--enchase-font-size-sm);
+  line-height: var(--enchase-line-height-snug);
+  color: var(--enchase-color-text-secondary);
+}

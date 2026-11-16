@@ -1,0 +1,10 @@
+.data {
+  padding-block-start: var(--enchase-space-lg);
+}
+
+.owner {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--enchase-space-sm);
+  white-space: nowrap;
+}

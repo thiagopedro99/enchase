@@ -1,0 +1,20 @@
+.feedback {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-md);
+  padding-block-start: var(--enchase-space-lg);
+}
+
+.sync {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-sm);
+  font-size: var(--enchase-font-size-sm);
+  color: var(--enchase-color-text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--enchase-space-sm);
+}

@@ -1,0 +1,24 @@
+.section {
+  padding-block: clamp(4rem, 2.5rem + 5vw, 7rem);
+  scroll-margin-block-start: var(--enchase-navbar-bar-height);
+  border-block-start: var(--enchase-border-width) solid var(--enchase-color-border-light);
+  background: var(--enchase-color-surface-container-low);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 1.5rem + 2vw, 3rem);
+}
+
+.list {
+  background: var(--enchase-color-surface);
+}
+
+.list code {
+  padding: 0.1em 0.35em;
+  border-radius: var(--enchase-radius-xs);
+  background: var(--enchase-color-surface-container-high);
+  font-family: var(--enchase-font-mono);
+  font-size: 0.875em;
+}

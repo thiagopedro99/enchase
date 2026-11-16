@@ -1,0 +1,25 @@
+.command {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--enchase-space-sm);
+  max-inline-size: 100%;
+  padding-block: var(--enchase-space-xs);
+  padding-inline: var(--enchase-space-md) var(--enchase-space-xs);
+  border: var(--enchase-border-width) solid var(--enchase-color-border-light);
+  border-radius: var(--enchase-radius-control);
+  background: var(--enchase-color-surface-container-low);
+  font-family: var(--enchase-font-mono);
+  font-size: var(--enchase-font-size-sm);
+  color: var(--enchase-color-text-primary);
+}
+
+.prompt {
+  color: var(--enchase-color-text-secondary);
+  user-select: none;
+}
+
+.text {
+  overflow-x: auto;
+  white-space: nowrap;
+  font-family: inherit;
+}

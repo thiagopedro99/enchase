@@ -1,0 +1,40 @@
+.section {
+  padding-block: clamp(4rem, 2.5rem + 5vw, 7rem);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--enchase-space-lg);
+  padding: clamp(2rem, 1rem + 5vw, 4.5rem) var(--enchase-space-lg);
+  border-radius: var(--enchase-radius-2xl);
+  background: var(--enchase-color-primary-container);
+  text-align: center;
+  color: var(--enchase-color-on-primary-container);
+}
+
+.title {
+  margin: 0;
+  max-inline-size: 36rem;
+  font-size: clamp(1.875rem, 1.2rem + 2.6vw, 2.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+  color: inherit;
+}
+
+.lead {
+  margin: 0;
+  max-inline-size: 34rem;
+  font-size: var(--enchase-font-size-lg);
+  line-height: var(--enchase-line-height-relaxed);
+  color: inherit;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--enchase-space-md);
+}

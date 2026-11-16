@@ -1,0 +1,89 @@
+.section {
+  padding-block: clamp(4rem, 2.5rem + 5vw, 7rem);
+  scroll-margin-block-start: var(--enchase-navbar-bar-height);
+}
+
+.grid {
+  display: grid;
+  align-items: center;
+  gap: clamp(2rem, 1rem + 4vw, 4.5rem);
+}
+
+@media (min-width: 992px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  }
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--enchase-space-lg);
+  min-inline-size: 0;
+}
+
+.points {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.point {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--enchase-space-sm);
+  line-height: var(--enchase-line-height-snug);
+  color: var(--enchase-color-text-primary);
+}
+
+.check {
+  flex: none;
+  margin-block-start: 0.1em;
+  color: var(--enchase-color-success);
+}
+
+.example {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-md);
+  min-inline-size: 0;
+}
+
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-md);
+  padding: var(--enchase-space-lg);
+  border: var(--enchase-border-width) dashed var(--enchase-color-border);
+  border-radius: var(--enchase-radius-lg);
+}
+
+.resultLabel {
+  margin: 0;
+  font-size: var(--enchase-font-size-sm);
+  font-weight: var(--enchase-font-weight-medium);
+  color: var(--enchase-color-text-secondary);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--enchase-space-md);
+}
+
+.save {
+  border-radius: var(--enchase-radius-sm);
+  background: var(--enchase-color-inverse-surface);
+  color: var(--enchase-color-inverse-on-surface);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .save:hover {
+    background: var(--enchase-color-primary);
+    color: var(--enchase-color-on-primary);
+  }
+}
