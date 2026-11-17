@@ -1,0 +1,54 @@
+.demo {
+  --enchase-segmented-control-item-padding-inline-sm: var(--enchase-space-xs);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-lg);
+}
+
+.roles {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.role {
+  flex: 1;
+  block-size: 3rem;
+  border: var(--enchase-border-width) solid var(--enchase-color-border-light);
+}
+
+.role + .role {
+  border-inline-start: 0;
+}
+
+.role:first-child {
+  border-start-start-radius: var(--enchase-radius-lg);
+  border-end-start-radius: var(--enchase-radius-lg);
+}
+
+.role:last-child {
+  border-start-end-radius: var(--enchase-radius-lg);
+  border-end-end-radius: var(--enchase-radius-lg);
+}
+
+.role[data-role='primary'] {
+  background: var(--enchase-color-primary);
+}
+
+.role[data-role='primary-container'] {
+  background: var(--enchase-color-primary-container);
+}
+
+.role[data-role='secondary-container'] {
+  background: var(--enchase-color-secondary-container);
+}
+
+.role[data-role='surface-container-high'] {
+  background: var(--enchase-color-surface-container-high);
+}
+
+.role[data-role='inverse-surface'] {
+  background: var(--enchase-color-inverse-surface);
+}

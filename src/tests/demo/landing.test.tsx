@@ -1,14 +1,18 @@
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
-import { render, screen, within } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
+import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
 import { defaultLook, docsUrl, repositoryUrl } from '@demo/pages/landing/defaultData.ts'
+import { highlight } from '@demo/pages/landing/subcomponentes/CodeBlock/highlight.ts'
+import { steps } from '@demo/pages/landing/subcomponentes/Steps/defaultData.ts'
 import Landing from '@demo/pages/landing/index.tsx'
 import App from '@demo/App.tsx'
 
 const renderLanding = (onLookChange = vi.fn()) => ({ ...renderWithProviders(<Landing look={defaultLook} onLookChange={onLookChange} />, { toasts: true }), onLookChange })
+
+const group = (name: string) => screen.getByRole('radiogroup', { name })
 
 const headingLevels = () => screen.getAllByRole('heading').map((heading) => Number(heading.tagName.slice(1)))
 
@@ -48,7 +52,15 @@ describe('Landing page', () => {
   it('names every section of the page by its heading', () => {
     renderLanding()
 
-    const names = ['Um kit, três visuais. Troque agora.', 'O trabalho chato já vem feito', 'Escreva CSS normal. Ele vence.', 'Antes de instalar', 'Instale e monte a primeira tela hoje']
+    const names = [
+      'Componentes React lapidados para o seu produto',
+      '48 componentes, um import',
+      'O trabalho chato já vem feito',
+      'Um kit, três visuais. Troque agora.',
+      'Da instalação ao primeiro botão em três passos',
+      'Antes de instalar',
+      'Instale e monte a primeira tela hoje'
+    ]
 
     for (const name of names) expect(screen.getByRole('region', { name })).toBeInTheDocument()
   })
@@ -93,9 +105,9 @@ describe('Landing playground', () => {
     const user = userEvent.setup()
     const { onLookChange } = renderLanding()
 
-    await user.click(screen.getByRole('radio', { name: 'shadcn' }))
-    await user.click(screen.getByRole('radio', { name: 'Verde' }))
-    await user.click(screen.getByRole('radio', { name: 'Suave' }))
+    await user.click(within(group('Estilo')).getByRole('radio', { name: 'shadcn' }))
+    await user.click(within(group('Cor da marca')).getByRole('radio', { name: 'Verde' }))
+    await user.click(within(group('Cantos')).getByRole('radio', { name: 'Suave' }))
     await user.click(screen.getByRole('switch', { name: 'Densidade compacta' }))
 
     expect(onLookChange.mock.calls.map(([look]) => look)).toEqual([
@@ -104,6 +116,138 @@ describe('Landing playground', () => {
       { ...defaultLook, shape: 'soft' },
       { ...defaultLook, compact: true }
     ])
+  })
+})
+
+describe('Landing hero', () => {
+  it('paints the page with the brand picked in the hero', async () => {
+    const user = userEvent.setup()
+    const { onLookChange } = renderLanding()
+
+    await user.click(within(group('Pinte esta página')).getByRole('radio', { name: 'Violeta' }))
+
+    expect(onLookChange).toHaveBeenCalledWith({ ...defaultLook, brand: '#7C3AED' })
+  })
+
+  it('moves between the brands with the arrow keys', async () => {
+    const user = userEvent.setup()
+    const { onLookChange } = renderLanding()
+
+    within(group('Pinte esta página')).getByRole('radio', { name: 'A do estilo' }).focus()
+    await user.keyboard('{ArrowRight}')
+
+    expect(onLookChange).toHaveBeenCalledWith({ ...defaultLook, brand: '#0F766E' })
+  })
+
+  it('describes the preview as one image and keeps its copies out of the tab order', () => {
+    const { container } = renderLanding()
+    const preview = screen.getByRole('img', { name: /Prévia de um painel montado só com componentes Enchase/ })
+    const panes = [...preview.children]
+
+    expect(panes.map((pane) => pane.getAttribute('data-theme'))).toEqual(['light', 'dark'])
+
+    for (const pane of panes) {
+      expect(pane).toHaveAttribute('inert')
+      expect(pane).toHaveAttribute('aria-hidden', 'true')
+    }
+
+    expect(container.querySelectorAll('[inert]')).toHaveLength(2)
+  })
+
+  it('opens the divider and lets the keyboard move it', async () => {
+    renderLanding()
+
+    const divider = screen.getByRole('slider', { name: 'Divisão entre o tema claro e o escuro' })
+
+    await waitFor(() => expect(divider).toHaveAttribute('aria-valuetext', '52% no tema claro, 48% no escuro'))
+
+    fireEvent.change(divider, { target: { value: '30' } })
+
+    expect(divider).toHaveAttribute('aria-valuetext', '30% no tema claro, 70% no escuro')
+  })
+})
+
+describe('Landing features', () => {
+  it('asks for the style picked in the features grid', async () => {
+    const user = userEvent.setup()
+    const { onLookChange } = renderLanding()
+
+    await user.click(within(group('Estilo visual da página')).getByRole('radio', { name: 'Workbench' }))
+
+    expect(onLookChange).toHaveBeenCalledWith({ ...defaultLook, style: 'workbench' })
+  })
+
+  it('pauses and resumes the strip of component names', async () => {
+    const user = userEvent.setup()
+
+    renderLanding()
+
+    const strip = screen.getByRole('region', { name: '48 componentes, um import' })
+
+    await user.click(within(strip).getByRole('button', { name: 'Pausar a animação' }))
+
+    expect(strip).toHaveAttribute('data-paused')
+
+    await user.click(within(strip).getByRole('button', { name: 'Retomar a animação' }))
+
+    expect(strip).not.toHaveAttribute('data-paused')
+  })
+
+  it('lists each component name once for assistive technology', () => {
+    renderLanding()
+
+    const strip = screen.getByRole('region', { name: '48 componentes, um import' })
+    const names = within(strip)
+      .getAllByRole('listitem')
+      .map((item) => item.textContent)
+
+    expect(names).toHaveLength(48)
+    expect(new Set(names).size).toBe(48)
+  })
+
+  it('releases and returns the springs', async () => {
+    const user = userEvent.setup()
+
+    renderLanding()
+
+    await user.click(screen.getByRole('button', { name: 'Soltar as molas' }))
+
+    expect(screen.getByRole('button', { name: 'Voltar' })).toBeInTheDocument()
+  })
+})
+
+describe('Landing code', () => {
+  it('keeps every character of the code when it colors the tokens', () => {
+    for (const { blocks } of steps) {
+      for (const { code, language } of blocks) {
+        expect(
+          highlight(code, language)
+            .map(({ text }) => text)
+            .join('')
+        ).toBe(code)
+      }
+    }
+  })
+
+  it('marks strings, keywords and tags of a tsx snippet', () => {
+    const kinds = (text: string) => highlight("import { Button } from 'enchase'\n<Button className={a}>Salvar</Button>", 'tsx').find((token) => token.text === text)?.kind
+
+    expect(kinds('import')).toBe('keyword')
+    expect(kinds("'enchase'")).toBe('string')
+    expect(kinds('Button')).toBe('tag')
+    expect(kinds('className')).toBe('attribute')
+  })
+
+  it('numbers the three steps in an ordered list', () => {
+    renderLanding()
+
+    const region = screen.getByRole('region', { name: 'Da instalação ao primeiro botão em três passos' })
+    const titles = within(region)
+      .getAllByRole('heading', { level: 3 })
+      .map((heading) => heading.textContent)
+
+    expect(titles).toEqual(['Instale', 'Envolva o app', 'Use. E mude com CSS normal'])
+    expect(region.querySelector('ol')?.children).toHaveLength(3)
   })
 })
 
@@ -117,7 +261,7 @@ describe('App', () => {
 
     expect(snippet).not.toHaveTextContent('style: shadcn')
 
-    await user.click(screen.getByRole('radio', { name: 'shadcn' }))
+    await user.click(within(group('Estilo')).getByRole('radio', { name: 'shadcn' }))
     await user.click(screen.getByRole('switch', { name: 'Densidade compacta' }))
 
     expect(snippet).toHaveTextContent('style: shadcn')
@@ -126,6 +270,24 @@ describe('App', () => {
     await user.click(screen.getByRole('switch', { name: 'Densidade compacta' }))
 
     expect(document.documentElement).not.toHaveAttribute('data-density')
+  })
+
+  it('paints the brand from the hero and switches the color mode from the features grid', async () => {
+    const user = userEvent.setup()
+
+    render(<App />)
+
+    await user.click(within(group('Pinte esta página')).getByRole('radio', { name: 'Carmim' }))
+
+    expect(screen.getByLabelText('O tema que você está vendo')).toHaveTextContent("brand: '#BE123C'")
+
+    await user.click(within(group('Modo de cor da página')).getByRole('radio', { name: 'Escuro' }))
+
+    expect(document.documentElement).toHaveAttribute('data-theme', 'dark')
+
+    await user.click(within(group('Modo de cor da página')).getByRole('radio', { name: 'Claro' }))
+
+    expect(document.documentElement).toHaveAttribute('data-theme', 'light')
   })
 
   it('does not draw a breadcrumb trail', () => {

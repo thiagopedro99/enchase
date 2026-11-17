@@ -4,22 +4,43 @@
   overflow: hidden;
   border: var(--enchase-border-width) solid var(--enchase-color-border-light);
   border-radius: var(--enchase-radius-lg);
-  background: var(--enchase-color-surface-container);
+  background: var(--enchase-color-surface);
 }
 
 .caption {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--enchase-space-md);
-  padding: var(--enchase-space-sm) var(--enchase-space-md);
+  gap: var(--enchase-space-sm);
+  min-block-size: 2.75rem;
+  padding-inline: var(--enchase-space-md) var(--enchase-space-xs);
   border-block-end: var(--enchase-border-width) solid var(--enchase-color-border-light);
   font-size: var(--enchase-font-size-sm);
   font-weight: var(--enchase-font-weight-medium);
   color: var(--enchase-color-text-secondary);
 }
 
+.dots {
+  flex: none;
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: var(--enchase-radius-full);
+  background: var(--enchase-color-border-strong);
+  box-shadow:
+    0.875rem 0 0 var(--enchase-color-border-strong),
+    1.75rem 0 0 var(--enchase-color-border-strong);
+  margin-inline-end: 1.75rem;
+}
+
+.label {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .language {
+  padding-inline-end: var(--enchase-space-sm);
   font-family: var(--enchase-font-mono);
   font-size: var(--enchase-font-size-xs);
   font-weight: var(--enchase-font-weight-regular);
@@ -31,7 +52,7 @@
   overflow-x: auto;
   font-family: var(--enchase-font-mono);
   font-size: 0.8125rem;
-  line-height: var(--enchase-line-height-relaxed);
+  line-height: 1.7;
   color: var(--enchase-color-text-primary);
   tab-size: 2;
 }
@@ -39,4 +60,26 @@
 .pre:focus-visible {
   outline: var(--enchase-focus-width) solid var(--enchase-focus-color, var(--enchase-color-primary));
   outline-offset: var(--enchase-focus-offset-inset);
+}
+
+.pre [data-token='keyword'],
+.pre [data-token='variable'] {
+  color: var(--enchase-color-primary);
+}
+
+.pre [data-token='string'] {
+  color: var(--enchase-color-success);
+}
+
+.pre [data-token='tag'] {
+  color: var(--enchase-color-info);
+  font-weight: var(--enchase-font-weight-medium);
+}
+
+.pre [data-token='attribute'] {
+  color: var(--enchase-color-warning);
+}
+
+.pre [data-token='punctuation'] {
+  color: var(--enchase-color-text-secondary);
 }

@@ -1,20 +1,23 @@
-import { useEffect } from 'react'
 import { Layout, useScrollSpy } from 'enchase'
+import { useEffect } from 'react'
 
 import { brand, footerProps, navigationSections, sectionIds } from './defaultData.ts'
 import Playground from './subcomponentes/Playground/index.tsx'
-import Features from './subcomponentes/Features/index.tsx'
-import Styling from './subcomponentes/Styling/index.tsx'
-import Proof from './subcomponentes/Proof/index.tsx'
+import Marquee from './subcomponentes/Marquee/index.tsx'
+import Bento from './subcomponentes/Bento/index.tsx'
+import Steps from './subcomponentes/Steps/index.tsx'
 import Hero from './subcomponentes/Hero/index.tsx'
 import Faq from './subcomponentes/Faq/index.tsx'
 import Cta from './subcomponentes/Cta/index.tsx'
+import { revealFrom } from './reveal.ts'
 import styles from './styles.module.css'
 
-import type { LandingProps } from './types.ts'
+import type { LandingProps, LookChange } from './types.ts'
 
 const Landing = ({ look, onLookChange }: LandingProps) => {
   const activeSectionId = useScrollSpy(sectionIds)
+
+  const paint: LookChange = (next, origin) => revealFrom(origin, () => onLookChange(next))
 
   useEffect(() => {
     document.title = 'Enchase · Componentes React acessíveis'
@@ -32,11 +35,11 @@ const Landing = ({ look, onLookChange }: LandingProps) => {
 
   return (
     <Layout className={styles.landing} navigation="navbar" translucent maxWidth="full" padding={false} brand={brand} navigationSections={navigationSections} activePageSectionId={activeSectionId} footerProps={footerProps}>
-      <Hero />
-      <Proof />
+      <Hero look={look} onLookChange={paint} />
+      <Marquee />
+      <Bento look={look} onLookChange={paint} />
       <Playground look={look} onLookChange={onLookChange} />
-      <Features />
-      <Styling />
+      <Steps />
       <Faq />
       <Cta />
     </Layout>

@@ -9,13 +9,6 @@ export const styleItems: SegmentedControlItem[] = [
   { value: 'workbench', label: 'Workbench' }
 ]
 
-export const brands = [
-  { value: defaultBrand, label: 'A do estilo' },
-  { value: '#0F766E', label: 'Verde' },
-  { value: '#BE123C', label: 'Carmim' },
-  { value: '#B45309', label: 'Âmbar' }
-]
-
 export const shapeItems: SegmentedControlItem[] = [
   { value: 'auto', label: 'Padrão' },
   { value: 'pill', label: 'Pílula' },

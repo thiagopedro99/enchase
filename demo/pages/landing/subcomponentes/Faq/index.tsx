@@ -1,7 +1,7 @@
 import { Accordion, Container } from 'enchase'
 
-import SectionHeading from '../SectionHeading/index.tsx'
 import { defaultOpen, questions } from './defaultData.tsx'
+import SectionHeading from '../SectionHeading/index.tsx'
 import styles from './styles.module.css'
 
 const Faq = () => (

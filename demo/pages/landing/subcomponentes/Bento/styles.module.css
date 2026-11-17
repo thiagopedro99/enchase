@@ -1,0 +1,32 @@
+.section {
+  padding-block: clamp(4rem, 2.5rem + 5vw, 7rem);
+  scroll-margin-block-start: var(--enchase-navbar-bar-height);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--enchase-space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: var(--enchase-space-lg);
+  }
+}

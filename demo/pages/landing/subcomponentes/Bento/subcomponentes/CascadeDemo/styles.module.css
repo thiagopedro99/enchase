@@ -1,0 +1,22 @@
+.demo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-md);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--enchase-space-sm) var(--enchase-space-md);
+}
+
+.arrow {
+  color: var(--enchase-color-text-secondary);
+}
+
+.salvar {
+  border-radius: var(--enchase-radius-sm);
+  background: var(--enchase-color-inverse-surface);
+  color: var(--enchase-color-inverse-on-surface);
+}

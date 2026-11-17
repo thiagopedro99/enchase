@@ -1,0 +1,178 @@
+.stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--enchase-space-md);
+  inline-size: 100%;
+  perspective: 100rem;
+}
+
+.window {
+  position: relative;
+  inline-size: 100%;
+  overflow: hidden;
+  border: var(--enchase-border-width) solid var(--enchase-color-border);
+  border-radius: var(--enchase-radius-2xl);
+  background: var(--enchase-color-surface);
+  box-shadow:
+    0 2.5rem 6rem -2.5rem color-mix(in srgb, var(--enchase-color-primary) 55%, transparent),
+    var(--enchase-shadow-lg);
+  transform-origin: 50% 0;
+  transition:
+    opacity calc(var(--enchase-motion-duration-slow) * 2) var(--enchase-motion-ease-out) var(--enchase-motion-duration-base),
+    transform calc(var(--enchase-motion-duration-slow) * 3) var(--enchase-motion-ease-out) var(--enchase-motion-duration-base);
+}
+
+@starting-style {
+  .window {
+    opacity: 0;
+    transform: translateY(var(--enchase-motion-distance-md)) rotateX(14deg) scale(0.96);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .window {
+    transform: none;
+    transition-property: opacity;
+  }
+}
+
+.chrome {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  block-size: 2.5rem;
+  border-block-end: var(--enchase-border-width) solid var(--enchase-color-border-light);
+  background: var(--enchase-color-surface-container);
+}
+
+.dots {
+  position: absolute;
+  inset-inline-start: var(--enchase-space-md);
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  border-radius: var(--enchase-radius-full);
+  background: var(--enchase-color-border-strong);
+  box-shadow:
+    1rem 0 0 var(--enchase-color-border-strong),
+    2rem 0 0 var(--enchase-color-border-strong);
+}
+
+.address {
+  padding: 0.125rem var(--enchase-space-lg);
+  border-radius: var(--enchase-radius-full);
+  background: var(--enchase-color-surface);
+  font-family: var(--enchase-font-mono);
+  font-size: var(--enchase-font-size-xs);
+  color: var(--enchase-color-text-secondary);
+}
+
+.viewport {
+  position: relative;
+}
+
+.screen {
+  position: relative;
+  display: grid;
+}
+
+.pane {
+  grid-area: 1 / 1;
+  min-inline-size: 0;
+  container-type: inline-size;
+  background: var(--enchase-color-background);
+  color: var(--enchase-color-text-primary);
+  color-scheme: light;
+}
+
+.pane[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+.pane[data-layer='top'] {
+  clip-path: inset(0 0 0 var(--landing-split));
+}
+
+.stage[data-opening] .pane[data-layer='top'] {
+  transition: clip-path calc(var(--enchase-motion-duration-slow) * 3) var(--enchase-motion-ease-in-out) calc(var(--enchase-motion-duration-slow) * 3);
+}
+
+.stage[data-opening] .divider {
+  transition: inset-inline-start calc(var(--enchase-motion-duration-slow) * 3) var(--enchase-motion-ease-in-out) calc(var(--enchase-motion-duration-slow) * 3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage[data-opening] .pane[data-layer='top'],
+  .stage[data-opening] .divider {
+    transition: none;
+  }
+}
+
+.range {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+}
+
+.divider {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: var(--landing-split);
+  inline-size: 2px;
+  margin-inline-start: -1px;
+  background: var(--enchase-color-primary);
+  pointer-events: none;
+}
+
+.grip {
+  position: absolute;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
+  display: grid;
+  place-items: center;
+  inline-size: 2.5rem;
+  block-size: 2.5rem;
+  border-radius: var(--enchase-radius-full);
+  background: var(--enchase-color-primary);
+  box-shadow: var(--enchase-shadow-md);
+  color: var(--enchase-color-on-primary);
+  translate: -50% -50%;
+  transition: scale var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+}
+
+.range:focus-visible + .divider .grip {
+  outline: var(--enchase-focus-width) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset, 2px);
+}
+
+.range:active + .divider .grip {
+  scale: 0.92;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .range:hover + .divider .grip {
+    scale: 1.08;
+  }
+
+  .range:hover:active + .divider .grip {
+    scale: 0.94;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grip {
+    transition: none;
+  }
+}
+
+.hint {
+  margin: 0;
+  font-size: var(--enchase-font-size-sm);
+  text-align: center;
+  color: var(--enchase-color-text-secondary);
+}

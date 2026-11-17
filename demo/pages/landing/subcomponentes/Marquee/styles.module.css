@@ -1,0 +1,91 @@
+.marquee {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-md);
+  padding-block: clamp(2rem, 1.5rem + 2vw, 3.5rem);
+  border-block: var(--enchase-border-width) solid var(--enchase-color-border-light);
+  background: var(--enchase-color-surface-container-low);
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--enchase-space-sm);
+  padding-inline: var(--enchase-space-md);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--enchase-font-size-sm);
+  font-weight: var(--enchase-font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--enchase-color-text-secondary);
+}
+
+.row {
+  display: flex;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+}
+
+.track {
+  display: flex;
+  flex: none;
+  gap: var(--enchase-space-md);
+  margin: 0;
+  padding: 0;
+  padding-inline-end: var(--enchase-space-md);
+  list-style: none;
+  animation: slide 70s linear infinite;
+}
+
+.row[data-reverse] .track {
+  animation-direction: reverse;
+}
+
+.marquee[data-paused] .track {
+  animation-play-state: paused;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .row:hover .track {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes slide {
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+.name {
+  padding: var(--enchase-space-sm) var(--enchase-space-md);
+  border-radius: var(--enchase-radius-full);
+  background: var(--enchase-color-surface);
+  font-family: var(--enchase-font-mono);
+  font-size: var(--enchase-font-size-sm);
+  white-space: nowrap;
+  color: var(--enchase-color-text-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle,
+  .track[aria-hidden='true'] {
+    display: none;
+  }
+
+  .row {
+    mask-image: none;
+  }
+
+  .track {
+    flex: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-inline: var(--enchase-space-md);
+    animation: none;
+  }
+}

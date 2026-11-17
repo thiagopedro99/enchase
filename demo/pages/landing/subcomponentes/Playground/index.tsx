@@ -1,15 +1,15 @@
 import { Card, Container, SegmentedControl, Switch } from 'enchase'
 
-import { brands, shapeItems, snippetOf, styleItems } from './defaultData.ts'
-import { defaultBrand } from '../../defaultData.ts'
+import { shapeItems, snippetOf, styleItems } from './defaultData.ts'
+import { brands, defaultBrand } from '../../defaultData.ts'
 import SectionHeading from '../SectionHeading/index.tsx'
 import CodeBlock from '../CodeBlock/index.tsx'
 import Showcase from '../Showcase/index.tsx'
 import styles from './styles.module.css'
 
-import type { CSSProperties } from 'react'
 import type { Look, LookShape, LookStyle } from '../../types.ts'
 import type { PlaygroundProps } from './types.ts'
+import type { CSSProperties } from 'react'
 
 const brandItems = brands.map(({ value, label }) => ({
   value,
@@ -36,7 +36,7 @@ const Playground = ({ look, onLookChange }: PlaygroundProps) => {
             <SegmentedControl label="Cor da marca" items={brandItems} value={look.brand} onValueChange={(brand: string) => change({ brand })} size="sm" fullWidth />
             <SegmentedControl label="Cantos" items={shapeItems} value={look.shape} onValueChange={(shape: string) => change({ shape: shape as LookShape })} size="sm" fullWidth />
             <Switch label="Densidade compacta" helperText="Controles e espaços menores, para telas de trabalho." checked={look.compact} onChange={(event) => change({ compact: event.target.checked })} />
-            <CodeBlock label="O tema que você está vendo" language="tsx" code={snippetOf(look)} />
+            <CodeBlock label="O tema que você está vendo" language="tsx" code={snippetOf(look)} copy />
           </Card>
 
           <Showcase />

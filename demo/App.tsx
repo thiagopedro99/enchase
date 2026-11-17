@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
 import { ColorModeProvider, GlobalStyles, ToastProvider, UIProvider } from 'enchase'
+import { useMemo, useState } from 'react'
 import { ptBR } from 'enchase/locales'
 
 import { defaultLook, themeOf } from './pages/landing/defaultData.ts'

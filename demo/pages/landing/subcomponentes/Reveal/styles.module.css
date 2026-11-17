@@ -1,0 +1,18 @@
+.reveal {
+  min-inline-size: 0;
+  transition:
+    opacity var(--enchase-motion-duration-slow) var(--enchase-motion-ease-out),
+    translate calc(var(--enchase-motion-duration-slow) * 1.6) var(--enchase-motion-ease-out);
+}
+
+.reveal[data-reveal='pending'] {
+  opacity: 0;
+  translate: 0 var(--enchase-motion-distance-md);
+}
+
+@media print {
+  .reveal[data-reveal='pending'] {
+    opacity: 1;
+    translate: none;
+  }
+}

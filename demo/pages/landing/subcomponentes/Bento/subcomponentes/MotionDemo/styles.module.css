@@ -1,0 +1,66 @@
+.demo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--enchase-space-md);
+}
+
+.tracks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-sm);
+  inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  block-size: 1.75rem;
+  padding-inline: var(--enchase-space-xs) var(--enchase-space-sm);
+  border-radius: var(--enchase-radius-full);
+  background: var(--enchase-color-surface-container-high);
+  container-type: inline-size;
+}
+
+.ball {
+  position: absolute;
+  inset-inline-start: 0.25rem;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: var(--enchase-radius-full);
+  background: var(--enchase-color-primary);
+  box-shadow: var(--enchase-shadow-sm);
+}
+
+.ball[data-spring='gentle'] {
+  transition: translate var(--enchase-motion-spring-gentle-duration) var(--enchase-motion-spring-gentle);
+}
+
+.ball[data-spring='snappy'] {
+  transition: translate var(--enchase-motion-spring-snappy-duration) var(--enchase-motion-spring-snappy);
+}
+
+.ball[data-spring='bouncy'] {
+  transition: translate var(--enchase-motion-spring-bouncy-duration) var(--enchase-motion-spring-bouncy);
+}
+
+.tracks[data-released] .ball {
+  translate: calc(100cqi - 6.75rem) 0;
+}
+
+.name {
+  font-family: var(--enchase-font-mono);
+  font-size: var(--enchase-font-size-xs);
+  color: var(--enchase-color-text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ball[data-spring] {
+    transition: none;
+  }
+}

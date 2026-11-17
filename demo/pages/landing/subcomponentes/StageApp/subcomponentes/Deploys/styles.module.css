@@ -1,0 +1,23 @@
+.deploys {
+  min-inline-size: 0;
+}
+
+.branch {
+  font-family: var(--enchase-font-mono);
+  font-size: var(--enchase-font-size-xs);
+  color: var(--enchase-color-text-secondary);
+}
+
+.name {
+  white-space: nowrap;
+}
+
+.period {
+  display: none;
+}
+
+@container (min-width: 36rem) {
+  .period {
+    display: block;
+  }
+}

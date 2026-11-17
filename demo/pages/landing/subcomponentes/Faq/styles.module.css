@@ -1,7 +1,7 @@
 .section {
   padding-block: clamp(4rem, 2.5rem + 5vw, 7rem);
   scroll-margin-block-start: var(--enchase-navbar-bar-height);
-  border-block-start: var(--enchase-border-width) solid var(--enchase-color-border-light);
+  border-block: var(--enchase-border-width) solid var(--enchase-color-border-light);
   background: var(--enchase-color-surface-container-low);
 }
 

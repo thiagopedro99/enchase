@@ -1,4 +1,5 @@
 import type { ShapePreset } from 'enchase/theme'
+import type { RevealOrigin } from './reveal.ts'
 
 export type LookStyle = 'enchase' | 'shadcn' | 'workbench'
 
@@ -10,6 +11,8 @@ export interface Look {
   shape: LookShape
   compact: boolean
 }
+
+export type LookChange = (look: Look, origin?: RevealOrigin) => void
 
 export interface LandingProps {
   look: Look

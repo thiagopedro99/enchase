@@ -1,3 +1,21 @@
 .landing {
   --enchase-layout-main-padding-block: 0;
 }
+
+:global(html[data-landing-reveal])::view-transition-old(root) {
+  animation: none;
+}
+
+:global(html[data-landing-reveal])::view-transition-new(root) {
+  animation: paint calc(var(--enchase-motion-duration-slow) * 2.4) var(--enchase-motion-ease-in-out) both;
+}
+
+@keyframes paint {
+  from {
+    clip-path: circle(0 at var(--landing-reveal-x) var(--landing-reveal-y));
+  }
+
+  to {
+    clip-path: circle(150vmax at var(--landing-reveal-x) var(--landing-reveal-y));
+  }
+}

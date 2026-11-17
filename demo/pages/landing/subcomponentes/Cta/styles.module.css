@@ -3,25 +3,41 @@
 }
 
 .panel {
+  position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--enchase-space-lg);
-  padding: clamp(2rem, 1rem + 5vw, 4.5rem) var(--enchase-space-lg);
+  overflow: hidden;
+  padding: clamp(2.5rem, 1rem + 6vw, 5.5rem) var(--enchase-space-lg);
+  border: var(--enchase-border-width) solid var(--enchase-color-border-light);
   border-radius: var(--enchase-radius-2xl);
-  background: var(--enchase-color-primary-container);
+  background: var(--enchase-color-surface-container-low);
   text-align: center;
-  color: var(--enchase-color-on-primary-container);
+}
+
+.backdrop {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent) 1px, transparent 0) 0 0 / 1.75rem 1.75rem,
+    radial-gradient(36rem 20rem at 50% 0%, color-mix(in srgb, var(--enchase-color-primary) 26%, transparent), transparent 70%),
+    radial-gradient(28rem 18rem at 12% 100%, color-mix(in srgb, var(--enchase-color-info) 18%, transparent), transparent 70%),
+    radial-gradient(28rem 18rem at 88% 100%, color-mix(in srgb, var(--enchase-color-secondary) 18%, transparent), transparent 70%);
+  pointer-events: none;
 }
 
 .title {
   margin: 0;
-  max-inline-size: 36rem;
-  font-size: clamp(1.875rem, 1.2rem + 2.6vw, 2.75rem);
-  line-height: 1.12;
-  letter-spacing: -0.025em;
+  max-inline-size: 20ch;
+  font-size: clamp(2rem, 1.2rem + 3.4vw, 3.5rem);
+  font-weight: var(--enchase-font-weight-semibold);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
   text-wrap: balance;
-  color: inherit;
+  color: var(--enchase-color-text-primary);
 }
 
 .lead {
@@ -29,7 +45,7 @@
   max-inline-size: 34rem;
   font-size: var(--enchase-font-size-lg);
   line-height: var(--enchase-line-height-relaxed);
-  color: inherit;
+  color: var(--enchase-color-text-secondary);
 }
 
 .actions {

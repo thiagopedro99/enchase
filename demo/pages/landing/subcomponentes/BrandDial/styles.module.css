@@ -1,0 +1,88 @@
+.dial {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--enchase-space-sm) var(--enchase-space-md);
+  padding-block: var(--enchase-space-xs);
+  padding-inline: var(--enchase-space-md) var(--enchase-space-sm);
+  border: var(--enchase-border-width) solid var(--enchase-color-border-light);
+  border-radius: var(--enchase-radius-full);
+  background: color-mix(in srgb, var(--enchase-color-surface) 72%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.label {
+  font-size: var(--enchase-font-size-sm);
+  font-weight: var(--enchase-font-weight-medium);
+  color: var(--enchase-color-text-secondary);
+}
+
+.options {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+}
+
+.option {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  cursor: pointer;
+}
+
+.input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.swatch {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border-radius: var(--enchase-radius-full);
+  background: var(--landing-swatch);
+  outline: 2px solid transparent;
+  outline-offset: 3px;
+  transition:
+    scale var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    outline-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+}
+
+.swatch[data-auto] {
+  border: 0.3125rem solid var(--enchase-color-text-secondary);
+  background: transparent;
+}
+
+.input:checked + .swatch {
+  outline-color: var(--enchase-color-text-primary);
+}
+
+.input:focus-visible + .swatch {
+  outline: var(--enchase-focus-width) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: 4px;
+}
+
+.option:active .swatch {
+  scale: 0.88;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option:hover .swatch {
+    scale: 1.15;
+  }
+
+  .option:hover:active .swatch {
+    scale: 0.92;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swatch {
+    transition: none;
+  }
+}

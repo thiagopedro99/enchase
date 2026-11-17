@@ -57,3 +57,73 @@ export const FeatherIcon = (props: LandingIconProps) => (
     <path d="M9 15l6-6" />
   </Icon>
 )
+
+export const PauseIcon = (props: LandingIconProps) => (
+  <Icon name="pause" {...props}>
+    <path d="M9 5v14" />
+    <path d="M15 5v14" />
+  </Icon>
+)
+
+export const PlayIcon = (props: LandingIconProps) => (
+  <Icon name="play" {...props}>
+    <path d="M8 5l11 7-11 7V5z" />
+  </Icon>
+)
+
+export const GripIcon = (props: LandingIconProps) => (
+  <Icon name="grip" {...props}>
+    <path d="M9 7l-5 5 5 5" />
+    <path d="M15 7l5 5-5 5" />
+  </Icon>
+)
+
+export const HomeIcon = (props: LandingIconProps) => (
+  <Icon name="home" {...props}>
+    <path d="M4 11l8-7 8 7" />
+    <path d="M6 10v9h12v-9" />
+  </Icon>
+)
+
+export const FolderIcon = (props: LandingIconProps) => (
+  <Icon name="folder" {...props}>
+    <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" />
+  </Icon>
+)
+
+export const UsersIcon = (props: LandingIconProps) => (
+  <Icon name="users" {...props}>
+    <circle cx="9" cy="8" r="3" />
+    <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
+    <path d="M16 5.5a3 3 0 0 1 0 5" />
+    <path d="M18 14.5c1.8.8 3 2.7 3 5.5" />
+  </Icon>
+)
+
+export const ChartIcon = (props: LandingIconProps) => (
+  <Icon name="chart" {...props}>
+    <path d="M4 20V10" />
+    <path d="M10 20V4" />
+    <path d="M16 20v-7" />
+    <path d="M22 20H2" />
+  </Icon>
+)
+
+export const SettingsIcon = (props: LandingIconProps) => (
+  <Icon name="settings" {...props}>
+    <path d="M4 7h10" />
+    <path d="M18 7h2" />
+    <circle cx="16" cy="7" r="2" />
+    <path d="M4 17h2" />
+    <path d="M10 17h10" />
+    <circle cx="8" cy="17" r="2" />
+  </Icon>
+)
+
+export const GemIcon = (props: LandingIconProps) => (
+  <Icon name="gem" {...props}>
+    <path d="M6 4h12l4 6-10 11L2 10l4-6z" />
+    <path d="M2 10h20" />
+    <path d="M9 4l-2 6 5 11 5-11-2-6" />
+  </Icon>
+)

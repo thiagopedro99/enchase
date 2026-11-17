@@ -21,9 +21,17 @@ export const changelogUrl = `${repositoryUrl}/blob/main/CHANGELOG.md`
 
 export const docsUrl = import.meta.env.DEV ? 'http://localhost:6006' : '/docs/'
 
-export const sectionIds = ['playground', 'recursos', 'estilizacao', 'faq']
+export const sectionIds = ['recursos', 'playground', 'codigo', 'faq']
 
 export const defaultBrand = 'default'
+
+export const brands = [
+  { value: defaultBrand, label: 'A do estilo' },
+  { value: '#0F766E', label: 'Verde' },
+  { value: '#BE123C', label: 'Carmim' },
+  { value: '#B45309', label: 'Âmbar' },
+  { value: '#7C3AED', label: 'Violeta' }
+]
 
 export const defaultLook: Look = {
   style: 'enchase',
@@ -48,9 +56,9 @@ export const navigationSections: SidebarSection[] = [
   {
     id: 'landing',
     items: [
-      { id: 'playground', label: 'Ao vivo', href: '#playground' },
       { id: 'recursos', label: 'Recursos', href: '#recursos' },
-      { id: 'estilizacao', label: 'Estilização', href: '#estilizacao' },
+      { id: 'playground', label: 'Ao vivo', href: '#playground' },
+      { id: 'codigo', label: 'Código', href: '#codigo' },
       { id: 'faq', label: 'Perguntas', href: '#faq' },
       { id: 'docs', label: 'Documentação', href: docsUrl, native: true }
     ]
