@@ -12,7 +12,38 @@
 }
 
 .list {
+  --enchase-accordion-radius: var(--enchase-radius-xl);
+  --enchase-accordion-border-color: var(--enchase-color-border-light);
+  --enchase-accordion-item-border-color: var(--enchase-color-border-light);
+  --enchase-accordion-trigger-min-height: 4rem;
+  --enchase-accordion-trigger-padding-block: var(--enchase-space-md);
+  --enchase-accordion-trigger-padding-inline: var(--enchase-space-lg);
+  --enchase-accordion-trigger-gap: var(--enchase-space-lg);
+  --enchase-accordion-trigger-font-size: var(--enchase-font-size-base);
+  --enchase-accordion-panel-padding-inline: var(--enchase-space-lg);
+  --enchase-accordion-panel-padding-block-start: 0;
+  --enchase-accordion-panel-padding-block-end: var(--enchase-space-lg);
+  --enchase-accordion-panel-font-size: var(--enchase-font-size-base);
+
   background: var(--enchase-color-surface);
+  box-shadow: var(--enchase-shadow-sm);
+}
+
+.list [data-slot='accordion-panel'] {
+  max-inline-size: 68ch;
+  line-height: var(--enchase-line-height-relaxed);
+  text-wrap: pretty;
+  color: var(--enchase-color-text-secondary);
+}
+
+@media (min-width: 768px) {
+  .list {
+    --enchase-accordion-trigger-min-height: 4.5rem;
+    --enchase-accordion-trigger-padding-inline: var(--enchase-space-xl);
+    --enchase-accordion-trigger-font-size: var(--enchase-font-size-lg);
+    --enchase-accordion-panel-padding-inline: var(--enchase-space-xl);
+    --enchase-accordion-panel-padding-block-end: var(--enchase-space-xl);
+  }
 }
 
 .list code {
