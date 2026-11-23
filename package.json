@@ -130,6 +130,11 @@
       "import": "./dist-lib/styles/enchase.js",
       "default": "./dist-lib/styles/enchase.js"
     },
+    "./styles/material3": {
+      "types": "./dist-lib/types/lib/styles/material3.d.ts",
+      "import": "./dist-lib/styles/material3.js",
+      "default": "./dist-lib/styles/material3.js"
+    },
     "./styles/shadcn": {
       "types": "./dist-lib/types/lib/styles/shadcn.d.ts",
       "import": "./dist-lib/styles/shadcn.js",

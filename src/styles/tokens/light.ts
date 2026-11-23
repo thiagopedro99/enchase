@@ -5,31 +5,31 @@ export const lightTheme = {
     primary: '#4F46E5',
     onPrimary: '#FFFFFF',
     primaryHover: '#4338CA',
-    primaryContainer: '#E1E0FF',
-    onPrimaryContainer: '#14106E',
+    primaryContainer: '#EEF0FF',
+    onPrimaryContainer: '#312E81',
 
-    secondary: '#5C5D72',
+    secondary: '#4B5162',
     onSecondary: '#FFFFFF',
-    secondaryContainer: '#E1E0F9',
-    onSecondaryContainer: '#191A2C',
+    secondaryContainer: '#F0F1F4',
+    onSecondaryContainer: '#14161C',
 
-    background: '#FBF8FF',
-    surface: '#FBF8FF',
-    surfaceContainerLow: '#F4F0FA',
-    surfaceContainer: '#EEEAF6',
-    surfaceContainerHigh: '#E8E4F0',
+    background: '#FBFBFC',
+    surface: '#FFFFFF',
+    surfaceContainerLow: '#F6F7F9',
+    surfaceContainer: '#F0F1F4',
+    surfaceContainerHigh: '#E5E7EC',
 
     text: {
-      primary: '#1B1B21',
-      secondary: '#46464F',
-      disabled: 'rgba(27, 27, 33, 0.38)',
-      placeholder: '#5F5F69',
-      inverse: '#FFFFFF'
+      primary: '#10121B',
+      secondary: '#5A6072',
+      disabled: 'rgba(16, 18, 27, 0.5)',
+      placeholder: '#5C6274',
+      inverse: '#F6F7F9'
     },
 
-    border: '#C7C5D0',
-    borderStrong: '#767680',
-    borderLight: '#F0ECF9',
+    border: '#E2E4EA',
+    borderStrong: '#7B8194',
+    borderLight: '#EDEEF2',
 
     error: '#BA1A1A',
     onError: '#FFFFFF',
@@ -51,19 +51,19 @@ export const lightTheme = {
     infoContainer: '#C9E6FF',
     onInfoContainer: '#001E31',
 
-    inverseSurface: '#303036',
-    inverseOnSurface: '#F2EFF7',
-    inversePrimary: '#BEC2FF',
+    inverseSurface: '#14161C',
+    inverseOnSurface: '#F6F7F9',
+    inversePrimary: '#A5B4FC',
 
-    overlay: 'rgba(27, 27, 33, 0.4)',
-    codeBackground: '#1E1E26'
+    overlay: 'rgba(16, 18, 27, 0.5)',
+    codeBackground: '#14161C'
   },
 
   shadows: {
     none: 'none',
-    sm: '0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15)',
-    md: '0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15)',
-    lg: '0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 8px 3px rgba(0, 0, 0, 0.15)',
-    xl: '0 2px 3px rgba(0, 0, 0, 0.3), 0 6px 10px 4px rgba(0, 0, 0, 0.15)'
+    sm: '0 1px 2px 0 rgb(16 18 27 / 0.06), 0 1px 1px 0 rgb(16 18 27 / 0.04)',
+    md: '0 4px 10px -2px rgb(16 18 27 / 0.08), 0 2px 4px -2px rgb(16 18 27 / 0.06)',
+    lg: '0 12px 24px -6px rgb(16 18 27 / 0.12), 0 4px 8px -4px rgb(16 18 27 / 0.06)',
+    xl: '0 24px 48px -12px rgb(16 18 27 / 0.18), 0 8px 16px -8px rgb(16 18 27 / 0.08)'
   }
 } satisfies ModeTokens

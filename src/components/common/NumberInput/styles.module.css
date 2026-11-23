@@ -43,7 +43,7 @@
 }
 
 :where(.input[data-has-steppers]) {
-  padding-inline-end: calc(max(24px, var(--enchase-hit-size, 40px)) * 2 + var(--enchase-space-xs) + var(--enchase-space-sm) * 2);
+  padding-inline-end: calc(max(24px, var(--enchase-hit-size, 2rem)) * 2 + var(--enchase-space-xs) + var(--enchase-space-sm) * 2);
 }
 
 .input:focus {
@@ -97,7 +97,7 @@
 }
 
 .input[data-has-steppers] ~ .label {
-  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2 - max(24px, var(--enchase-hit-size, 40px)) * 2);
+  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2 - max(24px, var(--enchase-hit-size, 2rem)) * 2);
 }
 
 .input:focus ~ .label,
@@ -192,7 +192,7 @@
 }
 
 .input:focus ~ .outline {
-  border-width: var(--enchase-border-width-strong, 2px);
+  border-width: var(--enchase-border-width-strong, 1px);
   border-color: var(--enchase-input-outline-border-color-focus, var(--enchase-color-primary));
   box-shadow: var(--enchase-input-outline-shadow-focus, var(--enchase-input-outline-shadow, none));
 }
@@ -203,7 +203,7 @@
 
 @media (forced-colors: active) {
   .input:focus ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
   }
 }
 
@@ -247,8 +247,8 @@
 }
 
 :where(.stepper) {
-  inline-size: max(24px, var(--enchase-hit-size, 40px));
-  block-size: max(24px, var(--enchase-hit-size, 40px));
+  inline-size: max(24px, var(--enchase-hit-size, 2rem));
+  block-size: max(24px, var(--enchase-hit-size, 2rem));
   min-inline-size: 24px;
   min-block-size: 24px;
   border-radius: var(--enchase-number-input-stepper-radius, var(--enchase-radius-button));
@@ -395,7 +395,7 @@
 .wrapper[data-variant='filled'] .input:focus ~ .outline,
 .wrapper[data-variant='underlined'] .input:focus ~ .outline {
   border-width: 0;
-  border-block-end-width: var(--enchase-border-width-strong, 2px);
+  border-block-end-width: var(--enchase-border-width-strong, 1px);
 }
 
 .wrapper[data-variant='borderless'] .input:focus ~ .outline {
@@ -411,7 +411,7 @@
 @media (forced-colors: active) {
   .wrapper[data-variant='filled'] .input:focus ~ .outline,
   .wrapper[data-variant='underlined'] .input:focus ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
     border-block-start-width: 0;
     border-inline-width: 0;
   }

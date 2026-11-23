@@ -3,6 +3,7 @@ import { assertShapePreset, assertValidRadius, shapePresets } from './shape.ts'
 import { isRecord, mergeTokens } from './merge.ts'
 import { mergeMotion, motionTransitions } from './motion.ts'
 import { baseTokens, darkTheme, lightTheme } from '../tokens/index.ts'
+import { defaultColorHooks, defaultHooks } from '../tokens/defaultHooks.ts'
 import { assertValidColor } from './color.ts'
 import { assertStyle } from './style.ts'
 import { brandPalette } from './brand.ts'
@@ -94,7 +95,7 @@ const base = (fonts: BaseTokens['fonts'], motion: BaseTokens['motion'], borderRa
 }
 
 const resolveRadius = (shape: ShapePreset | undefined, overrides: RadiusOverrides | undefined, styled: RadiusOverrides | undefined): RadiusTokens => {
-  const preset = shape === undefined ? overlay(shapePresets.pill, styled) : shapePresets[assertShapePreset(shape)]
+  const preset = shape === undefined ? overlay(baseTokens.borderRadius, styled) : shapePresets[assertShapePreset(shape)]
 
   if (overrides === undefined) return preset
 
@@ -103,7 +104,7 @@ const resolveRadius = (shape: ShapePreset | undefined, overrides: RadiusOverride
   return { none, ...mergeTokens(overridable, overrides, 'radius', assertValidRadius, 'radius') } as RadiusTokens
 }
 
-const noStyle: ThemeStyle = {}
+const noStyle: ThemeStyle = { hooks: defaultHooks, colorHooks: defaultColorHooks, brand: ['primary', 'onPrimary', 'primaryHover', 'inversePrimary'], defaults: { labelPlacement: 'stacked' } }
 
 const resolveStyle = (style: unknown): ThemeStyle => {
   if (style === undefined || style === null) return noStyle

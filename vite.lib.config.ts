@@ -65,6 +65,7 @@ export default defineConfig({
         'experimental/accordion': resolve(root, 'lib/experimental/accordion.ts'),
         'experimental/slider': resolve(root, 'lib/experimental/slider.ts'),
         'styles/enchase': resolve(root, 'lib/styles/enchase.ts'),
+        'styles/material3': resolve(root, 'lib/styles/material3.ts'),
         'styles/shadcn': resolve(root, 'lib/styles/shadcn.ts'),
         'styles/workbench': resolve(root, 'lib/styles/workbench.ts')
       },

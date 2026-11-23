@@ -283,7 +283,7 @@
 
 .select:focus ~ .outline,
 .select:open ~ .outline {
-  border-width: var(--enchase-border-width-strong, 2px);
+  border-width: var(--enchase-border-width-strong, 1px);
   border-color: var(--enchase-input-outline-border-color-focus, var(--enchase-color-primary));
   box-shadow: var(--enchase-input-outline-shadow-focus, var(--enchase-input-outline-shadow, none));
 }
@@ -296,7 +296,7 @@
 @media (forced-colors: active) {
   .select:focus ~ .outline,
   .select:open ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
   }
 }
 
@@ -462,7 +462,7 @@
 
 .wrapper:is([data-variant='filled'], [data-variant='underlined']) .select:is(:focus, :open) ~ .outline {
   border-width: 0;
-  border-block-end-width: var(--enchase-border-width-strong, 2px);
+  border-block-end-width: var(--enchase-border-width-strong, 1px);
 }
 
 .wrapper[data-variant='borderless'] .select:is(:focus, :open) ~ .outline {
@@ -478,7 +478,7 @@
 
 @media (forced-colors: active) {
   .wrapper:is([data-variant='filled'], [data-variant='underlined']) .select:is(:focus, :open) ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
     border-block-start-width: 0;
     border-inline-width: 0;
   }

@@ -14,7 +14,7 @@
 
 :where(.option) {
   gap: var(--enchase-combobox-option-gap, var(--enchase-space-sm));
-  min-block-size: max(24px, var(--enchase-hit-size, 40px));
+  min-block-size: max(24px, var(--enchase-hit-size, 2rem));
   padding-block: var(--enchase-combobox-option-padding-block, var(--enchase-space-xs));
   padding-inline: var(--enchase-combobox-option-padding-inline, var(--enchase-space-md));
   font-size: var(--enchase-combobox-option-font-size, var(--enchase-font-size-base));
@@ -69,7 +69,7 @@
 }
 
 :where(.message) {
-  min-block-size: max(24px, var(--enchase-hit-size, 40px));
+  min-block-size: max(24px, var(--enchase-hit-size, 2rem));
   padding-block: var(--enchase-combobox-message-padding-block, var(--enchase-space-xs));
   padding-inline: var(--enchase-combobox-message-padding-inline, var(--enchase-space-md));
   font-size: var(--enchase-combobox-message-font-size, var(--enchase-font-size-base));

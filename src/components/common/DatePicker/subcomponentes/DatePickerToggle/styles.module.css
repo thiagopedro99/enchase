@@ -23,8 +23,8 @@
 }
 
 :where(.toggle) {
-  inline-size: max(24px, var(--enchase-hit-size, 40px));
-  block-size: max(24px, var(--enchase-hit-size, 40px));
+  inline-size: max(24px, var(--enchase-hit-size, 2rem));
+  block-size: max(24px, var(--enchase-hit-size, 2rem));
   min-inline-size: 24px;
   min-block-size: 24px;
   border-radius: var(--enchase-date-picker-toggle-radius, var(--enchase-radius-button));

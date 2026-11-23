@@ -60,39 +60,39 @@ export const baseTokens = {
   borderRadius: {
     none: '0',
     xs: '0.25rem',
-    sm: '0.5rem',
-    md: '0.75rem',
-    lg: '1rem',
-    xl: '1.5rem',
-    '2xl': '1.75rem',
-    control: '0.5rem',
-    button: 'var(--enchase-radius-full)',
+    sm: '0.375rem',
+    md: '0.5rem',
+    lg: '0.75rem',
+    xl: '1rem',
+    '2xl': '1.25rem',
+    control: '0.625rem',
+    button: '0.625rem',
     full: '9999px'
   },
 
   control: {
-    height: { sm: '2rem', md: '2.5rem', lg: '3rem' }
+    height: { sm: '2rem', md: '2.25rem', lg: '2.5rem' }
   },
 
   focus: {
     width: '2px',
     offset: '2px',
     offsetInset: '-2px',
-    offsetSelector: '3px'
+    offsetSelector: '2px'
   },
 
   border: {
     width: '1px',
-    widthStrong: '2px'
+    widthStrong: '1px'
   },
 
   halo: {
-    size: '10px',
-    sizeSwitch: '0.5rem'
+    size: '0px',
+    sizeSwitch: '0px'
   },
 
   hit: {
-    size: '40px',
+    size: '2rem',
     sizeLg: '44px'
   },
 

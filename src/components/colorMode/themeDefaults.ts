@@ -4,7 +4,7 @@ import { shared } from '@utils/shared.ts'
 
 import type { FieldVariant, LabelPlacement, ThemeDefaults } from '@styles/tokens/types.ts'
 
-export const defaultThemeDefaults: ThemeDefaults = { labelPlacement: 'floating' }
+export const defaultThemeDefaults: ThemeDefaults = { labelPlacement: 'stacked' }
 
 export const ThemeDefaultsContext = shared('themeDefaultsContext.v1', () => createContext<ThemeDefaults>(defaultThemeDefaults))
 

@@ -42,7 +42,7 @@
 }
 
 :where(.input[data-has-toggle]) {
-  padding-inline-end: calc(var(--enchase-space-sm) * 2 + max(24px, var(--enchase-hit-size, 40px)));
+  padding-inline-end: calc(var(--enchase-space-sm) * 2 + max(24px, var(--enchase-hit-size, 2rem)));
 }
 
 .input:focus {
@@ -189,7 +189,7 @@
 }
 
 .input:focus ~ .outline {
-  border-width: var(--enchase-border-width-strong, 2px);
+  border-width: var(--enchase-border-width-strong, 1px);
   border-color: var(--enchase-input-outline-border-color-focus, var(--enchase-color-primary));
   box-shadow: var(--enchase-input-outline-shadow-focus, var(--enchase-input-outline-shadow, none));
 }
@@ -200,7 +200,7 @@
 
 @media (forced-colors: active) {
   .input:focus ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
   }
 }
 
@@ -233,8 +233,8 @@
 }
 
 :where(.toggle) {
-  inline-size: max(24px, var(--enchase-hit-size, 40px));
-  block-size: max(24px, var(--enchase-hit-size, 40px));
+  inline-size: max(24px, var(--enchase-hit-size, 2rem));
+  block-size: max(24px, var(--enchase-hit-size, 2rem));
   min-inline-size: 24px;
   min-block-size: 24px;
   border-radius: var(--enchase-input-toggle-radius, var(--enchase-radius-button));
@@ -377,7 +377,7 @@
 .wrapper[data-variant='filled'] .input:focus ~ .outline,
 .wrapper[data-variant='underlined'] .input:focus ~ .outline {
   border-width: 0;
-  border-block-end-width: var(--enchase-border-width-strong, 2px);
+  border-block-end-width: var(--enchase-border-width-strong, 1px);
 }
 
 .wrapper[data-variant='borderless'] .input:focus ~ .outline {
@@ -393,7 +393,7 @@
 @media (forced-colors: active) {
   .wrapper[data-variant='filled'] .input:focus ~ .outline,
   .wrapper[data-variant='underlined'] .input:focus ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
     border-block-start-width: 0;
     border-inline-width: 0;
   }

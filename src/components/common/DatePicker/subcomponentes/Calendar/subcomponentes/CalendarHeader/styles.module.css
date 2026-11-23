@@ -51,8 +51,8 @@
 }
 
 :where(.nav) {
-  inline-size: max(24px, var(--enchase-hit-size, 40px));
-  block-size: max(24px, var(--enchase-hit-size, 40px));
+  inline-size: max(24px, var(--enchase-hit-size, 2rem));
+  block-size: max(24px, var(--enchase-hit-size, 2rem));
   border-radius: var(--enchase-date-picker-calendar-nav-radius, var(--enchase-radius-button));
 }
 

@@ -1,10 +1,17 @@
 import { baseTokens } from './base.ts'
 import { lightTheme } from './light.ts'
 import { darkTheme } from './dark.ts'
+import { defaultColorHooks, defaultHooks } from './defaultHooks.ts'
 
 import type { ThemeSet } from './types.ts'
 
-export const defaultTheme: ThemeSet = { base: baseTokens, light: lightTheme, dark: darkTheme }
+export const defaultTheme: ThemeSet = {
+  base: baseTokens,
+  light: { ...lightTheme, hooks: defaultColorHooks },
+  dark: { ...darkTheme, hooks: defaultColorHooks },
+  hooks: defaultHooks,
+  defaults: { labelPlacement: 'stacked' }
+}
 
 export const breakpoints = baseTokens.breakpoints
 

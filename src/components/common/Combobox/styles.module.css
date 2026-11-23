@@ -33,7 +33,7 @@
   min-block-size: var(--enchase-input-height, 3.5rem);
   padding-block: 0;
   padding-inline-start: var(--enchase-input-padding-inline, var(--enchase-space-md));
-  padding-inline-end: calc(max(24px, var(--enchase-hit-size, 40px)) + var(--enchase-space-sm) * 2);
+  padding-inline-end: calc(max(24px, var(--enchase-hit-size, 2rem)) + var(--enchase-space-sm) * 2);
   gap: var(--enchase-combobox-control-gap, var(--enchase-space-xs));
   border-radius: var(--enchase-combobox-control-radius, var(--enchase-radius-control));
 }
@@ -92,7 +92,7 @@
   position: absolute;
   inset-inline-start: var(--enchase-input-padding-inline, var(--enchase-space-md));
   inset-block-start: calc(var(--enchase-input-height, 3.5rem) / 2);
-  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2 - max(24px, var(--enchase-hit-size, 40px)));
+  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2 - max(24px, var(--enchase-hit-size, 2rem)));
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -208,7 +208,7 @@
 }
 
 .field:focus-within > .outline {
-  border-width: var(--enchase-border-width-strong, 2px);
+  border-width: var(--enchase-border-width-strong, 1px);
   border-color: var(--enchase-input-outline-border-color-focus, var(--enchase-color-primary));
   box-shadow: var(--enchase-input-outline-shadow-focus, var(--enchase-input-outline-shadow, none));
 }
@@ -219,7 +219,7 @@
 
 @media (forced-colors: active) {
   .field:focus-within > .outline {
-    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
   }
 }
 
@@ -358,7 +358,7 @@
 .wrapper[data-variant='filled'] .field:focus-within > .outline,
 .wrapper[data-variant='underlined'] .field:focus-within > .outline {
   border-width: 0;
-  border-block-end-width: var(--enchase-border-width-strong, 2px);
+  border-block-end-width: var(--enchase-border-width-strong, 1px);
 }
 
 .wrapper[data-variant='borderless'] .field:focus-within > .outline {
@@ -373,7 +373,7 @@
 @media (forced-colors: active) {
   .wrapper[data-variant='filled'] .field:focus-within > .outline,
   .wrapper[data-variant='underlined'] .field:focus-within > .outline {
-    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
     border-block-start-width: 0;
     border-inline-width: 0;
   }

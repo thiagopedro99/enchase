@@ -22,12 +22,12 @@
 }
 
 :where(.group[data-size='md']) {
-  min-block-size: var(--enchase-control-height-md, 2.5rem);
+  min-block-size: var(--enchase-control-height-md, 2.25rem);
 }
 
 :where(.group[data-size='lg']) {
   border-radius: var(--enchase-segmented-control-radius-lg, var(--enchase-segmented-control-radius, var(--enchase-radius-button)));
-  min-block-size: var(--enchase-control-height-lg, 3rem);
+  min-block-size: var(--enchase-control-height-lg, 2.5rem);
 }
 
 :where(.group[data-full-width]) {
