@@ -144,7 +144,7 @@ export const Preview = (props: PreviewProps) => {
                 <th scope="row" style={{ textAlign: 'start', paddingInlineEnd: '1.5rem', fontWeight: 500 }}>
                   Field label
                 </th>
-                <td>{theme.defaults?.labelPlacement ?? 'floating'}</td>
+                <td>{theme.defaults?.labelPlacement ?? 'stacked'}</td>
               </tr>
               <tr>
                 <th scope="row" style={{ textAlign: 'start', paddingInlineEnd: '1.5rem', fontWeight: 500 }}>

@@ -1348,7 +1348,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-accordion-panel-padding-block-end` | `1rem` (`--enchase-space-md`) | `padding-block-end` |
 | `--enchase-accordion-panel-padding-block-start` | `0` | `padding-block-start` |
 | `--enchase-accordion-panel-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-accordion-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-accordion-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-accordion-trigger-background` | `transparent` | `background-color` |
 | `--enchase-accordion-trigger-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-accordion-trigger-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
@@ -1374,7 +1374,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-alert-border-color-success` | `transparent` (`--enchase-alert-border-color`) | `border-color` |
 | `--enchase-alert-border-color-warning` | `transparent` (`--enchase-alert-border-color`) | `border-color` |
 | `--enchase-alert-border-width` | `0` | `border` |
-| `--enchase-alert-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-alert-close-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-alert-color-error` | `var(--enchase-color-on-error-container)` | `color` |
 | `--enchase-alert-color-info` | `var(--enchase-color-on-info-container)` | `color` |
 | `--enchase-alert-color-success` | `var(--enchase-color-on-success-container)` | `color` |
@@ -1391,7 +1391,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-alert-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
 | `--enchase-alert-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
 | `--enchase-alert-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-alert-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-alert-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-alert-row-height` | `2rem` | `--alert-row-size` |
 | `--enchase-alert-title-color-error` | `inherit` | `color` |
 | `--enchase-alert-title-color-info` | `inherit` | `color` |
@@ -1415,7 +1415,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-layout-header-height` | `64px` | `block-size` |
 | `--enchase-layout-header-menu-button-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-layout-header-menu-button-color-hover` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-layout-header-menu-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-layout-header-menu-button-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-layout-header-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 
 ### Avatar
@@ -1467,7 +1467,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-badge-min-height-sm` | `1.25rem` | `min-block-size` |
 | `--enchase-badge-padding-inline-md` | `0.625rem` | `padding-inline` |
 | `--enchase-badge-padding-inline-sm` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
-| `--enchase-badge-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-badge-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 
 ### Brand
 
@@ -1486,7 +1486,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-brand-mark-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-brand-mark-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
 | `--enchase-brand-mark-height` | `32px` | `block-size` |
-| `--enchase-brand-mark-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-brand-mark-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-brand-mark-width` | `32px` | `inline-size` |
 
 ### Breadcrumbs
@@ -1502,7 +1502,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-breadcrumbs-ellipsis-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
 | `--enchase-breadcrumbs-ellipsis-min-height` | `28px` | `min-block-size` |
 | `--enchase-breadcrumbs-ellipsis-min-width` | `32px` | `min-inline-size` |
-| `--enchase-breadcrumbs-ellipsis-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-breadcrumbs-ellipsis-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-breadcrumbs-item-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-breadcrumbs-item-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-breadcrumbs-item-min-width` | `3rem` | `min-inline-size` |
@@ -1512,7 +1512,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-breadcrumbs-link-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-breadcrumbs-link-min-height` | `28px` | `line-height`, `min-block-size` |
 | `--enchase-breadcrumbs-link-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
-| `--enchase-breadcrumbs-link-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-breadcrumbs-link-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-breadcrumbs-list-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-breadcrumbs-separator-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-breadcrumbs-text-color` | `var(--enchase-color-text-secondary)` | `color` |
@@ -1585,7 +1585,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-padding-inline-lg` | `2rem` (`--enchase-space-xl`) | `padding-inline` |
 | `--enchase-button-padding-inline-md` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
 | `--enchase-button-padding-inline-sm` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-button-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-button-radius-lg` | `var(--enchase-button-radius, var(--enchase-radius-button))` | `border-radius` |
 | `--enchase-button-radius-md` | `var(--enchase-button-radius, var(--enchase-radius-button))` | `border-radius` |
 | `--enchase-button-radius-sm` | `var(--enchase-button-radius, var(--enchase-radius-button))` | `border-radius` |
@@ -1621,9 +1621,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-date-picker-calendar-day-color-selected` | `var(--enchase-color-on-primary)` | `color` |
 | `--enchase-date-picker-calendar-day-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-date-picker-calendar-day-font-weight` | `400` (`--enchase-font-weight-regular`) | `font-weight` |
-| `--enchase-date-picker-calendar-day-inner-size` | `var(--enchase-date-picker-calendar-day-size, max(24px, var(--enchase-hit-size, 40px)))` | `inline-size`, `block-size` |
-| `--enchase-date-picker-calendar-day-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
-| `--enchase-date-picker-calendar-day-size` | `max(24px, var(--enchase-hit-size, 40px))` | `inline-size`, `block-size` |
+| `--enchase-date-picker-calendar-day-inner-size` | `var(--enchase-date-picker-calendar-day-size, max(24px, var(--enchase-hit-size, 2rem)))` | `inline-size`, `block-size` |
+| `--enchase-date-picker-calendar-day-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-date-picker-calendar-day-size` | `max(24px, var(--enchase-hit-size, 2rem))` | `inline-size`, `block-size` |
 | `--enchase-date-picker-calendar-weekday-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-date-picker-calendar-weekday-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-date-picker-calendar-weekday-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
@@ -1640,7 +1640,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-date-picker-calendar-nav-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-date-picker-calendar-nav-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-date-picker-calendar-nav-color-hover` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-date-picker-calendar-nav-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-date-picker-calendar-nav-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-date-picker-calendar-title-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-date-picker-calendar-title-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-date-picker-calendar-title-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
@@ -1668,7 +1668,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-card-header-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
 | `--enchase-card-header-padding-inline` | `1.5rem` (`--enchase-space-lg`) | `padding-inline` |
 | `--enchase-card-padding` | `1.5rem` (`--enchase-space-lg`) | `padding` |
-| `--enchase-card-radius` | `1.5rem` (`--enchase-radius-xl`) | `border-radius` |
+| `--enchase-card-radius` | `1rem` (`--enchase-radius-xl`) | `border-radius` |
 | `--enchase-card-shadow-default` | `none` | `box-shadow` |
 | `--enchase-card-shadow-elevated` | `var(--enchase-shadow-sm)` | `box-shadow` |
 | `--enchase-card-shadow-elevated-hover` | `var(--enchase-shadow-md)` | `box-shadow` |
@@ -1739,7 +1739,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-combobox-control-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-combobox-control-padding-block-multiple` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
-| `--enchase-combobox-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
+| `--enchase-combobox-control-radius` | `0.625rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-combobox-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition`, `transition-duration` (also in ComboboxToggle, ListboxPopup) |
 | `--enchase-combobox-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition`, `transition-timing-function` (also in ComboboxToggle, ListboxPopup) |
 | `--enchase-combobox-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
@@ -1766,7 +1766,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-combobox-option-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
 | `--enchase-combobox-option-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
 | `--enchase-combobox-option-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-combobox-option-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-combobox-option-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 
 ### ComboboxToggle
 
@@ -1775,7 +1775,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-combobox-toggle-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-combobox-toggle-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-combobox-toggle-color-hover` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-combobox-toggle-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-combobox-toggle-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 
 ### Container
 
@@ -1788,7 +1788,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 
 | Hook | Default | Property |
 | --- | --- | --- |
-| `--enchase-date-picker-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
+| `--enchase-date-picker-control-radius` | `0.625rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-date-picker-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` (also in CalendarGrid, CalendarHeader, DatePickerToggle) |
 | `--enchase-date-picker-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` (also in CalendarGrid, CalendarHeader, DatePickerToggle) |
 | `--enchase-date-picker-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
@@ -1802,7 +1802,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-date-picker-toggle-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-date-picker-toggle-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-date-picker-toggle-color-hover` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-date-picker-toggle-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-date-picker-toggle-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 
 ### Divider
 
@@ -1831,7 +1831,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-drawer-close-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-drawer-close-color-active` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-drawer-close-color-hover` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-drawer-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-drawer-close-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-drawer-distance` | `0px` | `transform` |
 | `--enchase-drawer-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition` |
 | `--enchase-drawer-dx` | `0` | `transform` |
@@ -1853,7 +1853,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-drawer-panel-border-color` | `transparent` | `border-inline-end`, `border-inline-start` |
 | `--enchase-drawer-panel-border-width` | `0px` | `border-inline-end`, `border-inline-start` |
 | `--enchase-drawer-panel-color` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-drawer-panel-radius` | `1.75rem` (`--enchase-radius-2xl`) | `border-start-end-radius`, `border-end-end-radius`, `border-start-start-radius`, `border-end-start-radius` |
+| `--enchase-drawer-panel-radius` | `1.25rem` (`--enchase-radius-2xl`) | `border-start-end-radius`, `border-end-end-radius`, `border-start-start-radius`, `border-end-start-radius` |
 | `--enchase-drawer-panel-shadow` | `var(--enchase-shadow-lg)` | `box-shadow` |
 | `--enchase-drawer-panel-width-lg` | `560px` | `inline-size` |
 | `--enchase-drawer-panel-width-md` | `400px` | `inline-size` |
@@ -1930,7 +1930,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-input-field-color` | `var(--enchase-color-text-primary)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-color-disabled` | `var(--enchase-color-text-disabled)` | `color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-field-color-placeholder` | `var(--enchase-color-text-placeholder)` | `color` (also in Combobox, DatePicker, NumberInput, Textarea) |
-| `--enchase-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
+| `--enchase-input-field-radius` | `0.625rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-input-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-gap` | `0.25rem` (`--enchase-space-xs`) | `gap`, `column-gap` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-height` | `3.5rem` | `min-block-size`, `block-size`, `inset-block-start`, `transform` (also in Combobox, ComboboxToggle, DatePicker, NumberInput, Select) |
@@ -1966,7 +1966,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-input-toggle-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-input-toggle-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-input-toggle-color-hover` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-input-toggle-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-input-toggle-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 
 ### layout
 
@@ -1979,7 +1979,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-layout-skip-link-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 | `--enchase-layout-skip-link-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
 | `--enchase-layout-skip-link-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-layout-skip-link-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-layout-skip-link-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
 
 ### Link
 
@@ -1991,7 +1991,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-link-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-link-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-link-line-height` | `inherit` | `line-height` |
-| `--enchase-link-radius` | `0.5rem` (`--enchase-radius-sm`) | `border-radius` |
+| `--enchase-link-radius` | `0.375rem` (`--enchase-radius-sm`) | `border-radius` |
 | `--enchase-link-underline-offset` | `0.2em` | `text-underline-offset` |
 
 ### ListboxPopup
@@ -2048,7 +2048,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-menu-item-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
 | `--enchase-menu-item-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
 | `--enchase-menu-item-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-menu-item-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-menu-item-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-menu-min-width` | `10rem` | `min-inline-size` |
 | `--enchase-menu-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block`, `scroll-margin-block` |
 | `--enchase-menu-padding-inline` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
@@ -2075,7 +2075,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-modal-close-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-modal-close-color-active` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-modal-close-color-hover` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-modal-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-modal-close-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-modal-distance` | `0px` | `transform` |
 | `--enchase-modal-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition` |
 | `--enchase-modal-dx` | `0` | `transform` |
@@ -2098,7 +2098,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-modal-panel-max-width-md` | `600px` | `max-inline-size` |
 | `--enchase-modal-panel-max-width-sm` | `400px` | `max-inline-size` |
 | `--enchase-modal-panel-max-width-xl` | `1000px` | `max-inline-size` |
-| `--enchase-modal-panel-radius` | `1.75rem` (`--enchase-radius-2xl`) | `border-radius` |
+| `--enchase-modal-panel-radius` | `1.25rem` (`--enchase-radius-2xl`) | `border-radius` |
 | `--enchase-modal-panel-shadow` | `var(--enchase-shadow-lg)` | `box-shadow` |
 | `--enchase-modal-scale` | `1` | `transform` |
 | `--enchase-modal-title-color` | `var(--enchase-color-text-primary)` | `color` |
@@ -2127,8 +2127,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-navbar-drawer-header-margin-block-end` | `1rem` (`--enchase-space-md`) | `margin-block-end` |
 | `--enchase-navbar-drawer-nav-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-navbar-drawer-padding` | `1.5rem` (`--enchase-space-lg`) | `padding`, `padding-block-start`, `padding-block-end` |
-| `--enchase-navbar-drawer-radius-end-start` | `1.75rem` (`--enchase-radius-2xl`) | `border-end-start-radius` |
-| `--enchase-navbar-drawer-radius-start-start` | `1.75rem` (`--enchase-radius-2xl`) | `border-start-start-radius` |
+| `--enchase-navbar-drawer-radius-end-start` | `1.25rem` (`--enchase-radius-2xl`) | `border-end-start-radius` |
+| `--enchase-navbar-drawer-radius-start-start` | `1.25rem` (`--enchase-radius-2xl`) | `border-start-start-radius` |
 | `--enchase-navbar-drawer-shadow` | `var(--enchase-shadow-lg)` | `box-shadow` |
 | `--enchase-navbar-drawer-width` | `300px` | `inline-size` |
 | `--enchase-navbar-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
@@ -2145,7 +2145,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-navbar-logo-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 | `--enchase-navbar-logo-letter-spacing` | `-0.01em` (`--enchase-letter-spacing-tight`) | `letter-spacing` |
 | `--enchase-navbar-menu-button-color` | `var(--enchase-color-text-secondary)` | `color` |
-| `--enchase-navbar-menu-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-navbar-menu-button-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-navbar-menu-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 | `--enchase-navbar-menu-link-background-current` | `var(--enchase-color-primary-container)` | `background-color` |
 | `--enchase-navbar-menu-link-color` | `var(--enchase-color-text-secondary)` | `color` |
@@ -2154,9 +2154,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-navbar-menu-link-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-navbar-menu-link-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-navbar-menu-link-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
-| `--enchase-navbar-menu-link-height` | `max(24px, var(--enchase-hit-size, 40px))` | `block-size` |
+| `--enchase-navbar-menu-link-height` | `max(24px, var(--enchase-hit-size, 2rem))` | `block-size` |
 | `--enchase-navbar-menu-link-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-navbar-menu-link-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-navbar-menu-link-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-navbar-mobile-menu-link-min-height` | `52px` | `min-block-size` |
 | `--enchase-navbar-mobile-menu-link-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
 | `--enchase-navbar-overlay-background` | `var(--enchase-color-overlay)` | `background-color` |
@@ -2170,12 +2170,12 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-number-input-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-number-input-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-number-input-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
-| `--enchase-number-input-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
+| `--enchase-number-input-field-radius` | `0.625rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-number-input-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-number-input-stepper-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-number-input-stepper-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-number-input-stepper-color-hover` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-number-input-stepper-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-number-input-stepper-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-number-input-steppers-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
 
 ### Pagination
@@ -2194,7 +2194,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-pagination-control-line-height` | `1` (`--enchase-line-height-none`) | `line-height` |
 | `--enchase-pagination-control-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
 | `--enchase-pagination-control-padding-inline-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
-| `--enchase-pagination-control-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-pagination-control-radius` | `0.625rem` (`--enchase-radius-control`) | `border-radius` |
 | `--enchase-pagination-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-pagination-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-pagination-ellipsis-color` | `var(--enchase-color-text-secondary)` | `color` |
@@ -2213,7 +2213,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-popover-content-color` | `var(--enchase-color-text-primary)` | `color` (also in ListboxPopup) |
 | `--enchase-popover-content-padding-block` | `1rem` (`--enchase-space-md`) | `padding-block` |
 | `--enchase-popover-content-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-popover-content-radius` | `1rem` (`--enchase-radius-lg`) | `border-radius` (also in ListboxPopup) |
+| `--enchase-popover-content-radius` | `0.75rem` (`--enchase-radius-lg`) | `border-radius` (also in ListboxPopup) |
 | `--enchase-popover-content-shadow` | `var(--enchase-shadow-md)` | `box-shadow` (also in ListboxPopup) |
 | `--enchase-popover-duration` | `300ms` (`--enchase-motion-spring-snappy-duration`) | `transition-duration` |
 | `--enchase-popover-ease` | `linear(0, 0.016, 0.056, 0.114, 0.182, 0.257, 0.333, 0.408, 0.48, 0.549, 0.612, 0.669, 0.721, 0.767, 0.807, 0.842, 0.873, 0.898, 0.92, 0.939, 0.954, 0.966, 0.976, 0.984, 0.99, 0.995, 0.999, 1.002, 1.004, 1.005, 1.006, 1.006, 1.006, 1.006, 1.006, 1.006, 1.005, 1.005, 1.004, 1.004, 1.003, 1.003, 1.002, 1.002, 1.002, 1.001, 1.001, 1)` (`--enchase-motion-spring-snappy`) | `transition-timing-function` |
@@ -2330,7 +2330,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-segmented-control-label-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-segmented-control-label-margin-block-end` | `0.5rem` (`--enchase-space-sm`) | `margin-block-end` |
 | `--enchase-segmented-control-padding` | `0` | `padding` |
-| `--enchase-segmented-control-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-segmented-control-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-segmented-control-radius-lg` | `var(--enchase-segmented-control-radius, var(--enchase-radius-button))` | `border-radius` |
 | `--enchase-segmented-control-radius-sm` | `var(--enchase-segmented-control-radius, var(--enchase-radius-button))` | `border-radius` |
 
@@ -2343,7 +2343,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-select-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-select-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-select-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
-| `--enchase-select-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
+| `--enchase-select-field-radius` | `0.625rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-select-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-select-icon-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-select-option-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
@@ -2355,13 +2355,13 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-select-option-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-select-option-padding-block` | `0.75rem` | `padding-block` |
 | `--enchase-select-option-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-select-option-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-select-option-radius` | `0.625rem` (`--enchase-radius-control`) | `border-radius` |
 | `--enchase-select-picker-background` | `var(--enchase-color-surface-container)` | `background-color` |
 | `--enchase-select-picker-border-color` | `transparent` | `border` |
 | `--enchase-select-picker-border-width` | `0` | `border` |
 | `--enchase-select-picker-margin-block` | `0.25rem` (`--enchase-space-xs`) | `margin-block` |
 | `--enchase-select-picker-padding` | `0.25rem` (`--enchase-space-xs`) | `padding` |
-| `--enchase-select-picker-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-select-picker-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-select-picker-shadow` | `var(--enchase-shadow-md)` | `box-shadow` |
 
 ### Sidebar
@@ -2374,7 +2374,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-sidebar-collapse-button-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-sidebar-collapse-button-color-active` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-sidebar-collapse-button-color-hover` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-sidebar-collapse-button-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-collapse-button-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-sidebar-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-sidebar-distance` | `0px` | `transform` |
 | `--enchase-sidebar-duration` | `250ms` (`--enchase-motion-duration-base`) | `transition` |
@@ -2389,14 +2389,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-sidebar-index` | `0` | `transition-delay` |
 | `--enchase-sidebar-indicator-background` | `var(--enchase-sidebar-item-control-background-current, var(--enchase-color-primary-container))` | `background-color` |
 | `--enchase-sidebar-indicator-duration` | `var(--enchase-sidebar-duration, var(--enchase-motion-duration-base))` | `transition` |
-| `--enchase-sidebar-indicator-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-indicator-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-sidebar-item-badge-background` | `var(--enchase-color-secondary-container)` | `background-color` |
 | `--enchase-sidebar-item-badge-color` | `var(--enchase-color-on-secondary-container)` | `color` |
 | `--enchase-sidebar-item-badge-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-sidebar-item-badge-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 | `--enchase-sidebar-item-badge-padding-block` | `2px` | `padding-block` |
 | `--enchase-sidebar-item-badge-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
-| `--enchase-sidebar-item-badge-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-item-badge-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-sidebar-item-control-background-current` | `var(--enchase-color-primary-container)` | `background-color` |
 | `--enchase-sidebar-item-control-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-sidebar-item-control-color-active` | `var(--enchase-color-text-primary)` | `color` |
@@ -2408,7 +2408,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-sidebar-item-control-height` | `52px` | `block-size` |
 | `--enchase-sidebar-item-control-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline`, `padding-inline-end` |
 | `--enchase-sidebar-item-control-padding-inline-end` | `var(--enchase-sidebar-item-control-padding-inline, var(--enchase-space-md))` | `padding-inline-end` |
-| `--enchase-sidebar-item-control-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-sidebar-item-control-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-sidebar-item-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-sidebar-item-icon-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-sidebar-item-icon-font-weight` | `700` (`--enchase-font-weight-bold`) | `font-weight` |
@@ -2422,11 +2422,11 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-sidebar-nav-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
 | `--enchase-sidebar-nav-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline`, `inset-inline` |
 | `--enchase-sidebar-overlay-background` | `var(--enchase-color-overlay)` | `background-color` |
-| `--enchase-sidebar-panel-radius-end-end` | `1.75rem` (`--enchase-radius-2xl`) | `border-end-end-radius` |
-| `--enchase-sidebar-panel-radius-start-end` | `1.75rem` (`--enchase-radius-2xl`) | `border-start-end-radius` |
+| `--enchase-sidebar-panel-radius-end-end` | `1.25rem` (`--enchase-radius-2xl`) | `border-end-end-radius` |
+| `--enchase-sidebar-panel-radius-start-end` | `1.25rem` (`--enchase-radius-2xl`) | `border-start-end-radius` |
 | `--enchase-sidebar-panel-shadow` | `var(--enchase-shadow-lg)` | `box-shadow` |
-| `--enchase-sidebar-radius-end-end` | `1rem` (`--enchase-radius-lg`) | `border-end-end-radius` |
-| `--enchase-sidebar-radius-start-end` | `1rem` (`--enchase-radius-lg`) | `border-start-end-radius` |
+| `--enchase-sidebar-radius-end-end` | `0.75rem` (`--enchase-radius-lg`) | `border-end-end-radius` |
+| `--enchase-sidebar-radius-start-end` | `0.75rem` (`--enchase-radius-lg`) | `border-start-end-radius` |
 | `--enchase-sidebar-section-divider-border-color` | `var(--enchase-color-border)` | `border-block-start` |
 | `--enchase-sidebar-section-divider-margin-block` | `0.25rem` (`--enchase-space-xs`) | `margin-block` |
 | `--enchase-sidebar-section-divider-margin-inline` | `1rem` (`--enchase-space-md`) | `margin-inline` |
@@ -2447,8 +2447,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-skeleton-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-skeleton-duration` | `1.5s` | `animation` |
 | `--enchase-skeleton-ease` | `cubic-bezier(0.4, 0, 0.2, 1)` (`--enchase-motion-ease-in-out`) | `animation` |
-| `--enchase-skeleton-radius-rectangular` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
-| `--enchase-skeleton-radius-text` | `0.5rem` (`--enchase-radius-sm`) | `border-radius` |
+| `--enchase-skeleton-radius-rectangular` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-skeleton-radius-text` | `0.375rem` (`--enchase-radius-sm`) | `border-radius` |
 
 ### Slider
 
@@ -2468,9 +2468,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-slider-range-background-hover` | `var(--enchase-slider-range-background, var(--enchase-color-primary))` | `background-color` |
 | `--enchase-slider-thumb-background` | `var(--enchase-color-primary)` | `background-color` |
 | `--enchase-slider-thumb-border-color` | `var(--enchase-color-primary)` | `border` |
-| `--enchase-slider-thumb-border-width` | `2px` (`--enchase-border-width-strong`) | `border`, `border-width` |
-| `--enchase-slider-thumb-border-width-active` | `var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px))` | `border-width` |
-| `--enchase-slider-thumb-border-width-hover` | `var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px))` | `border-width` |
+| `--enchase-slider-thumb-border-width` | `1px` (`--enchase-border-width-strong`) | `border`, `border-width` |
+| `--enchase-slider-thumb-border-width-active` | `var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 1px))` | `border-width` |
+| `--enchase-slider-thumb-border-width-hover` | `var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 1px))` | `border-width` |
 | `--enchase-slider-thumb-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-slider-thumb-size` | `1.25rem` | `padding-inline`, `inline-size`, `block-size` |
 | `--enchase-slider-track-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
@@ -2510,10 +2510,10 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-switch-thumb-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-switch-thumb-scale-off` | `0.667` | `transform` |
 | `--enchase-switch-thumb-shadow` | `none` | `box-shadow` |
-| `--enchase-switch-thumb-shadow-active` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent)` | `box-shadow` |
-| `--enchase-switch-thumb-shadow-checked-active` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent)` | `box-shadow` |
-| `--enchase-switch-thumb-shadow-checked-hover` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)` | `box-shadow` |
-| `--enchase-switch-thumb-shadow-hover` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-active` | `0 0 0 var(--enchase-halo-size-switch, 0px) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-checked-active` | `0 0 0 var(--enchase-halo-size-switch, 0px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-checked-hover` | `0 0 0 var(--enchase-halo-size-switch, 0px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-hover` | `0 0 0 var(--enchase-halo-size-switch, 0px) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)` | `box-shadow` |
 | `--enchase-switch-thumb-size` | `1.5rem` | `--switch-travel`, `inline-size`, `block-size` |
 | `--enchase-switch-track-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-switch-track-background-checked` | `var(--enchase-color-primary)` | `background-color` |
@@ -2553,7 +2553,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-table-header-border-width-end` | `0` | `border-inline-end` |
 | `--enchase-table-header-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-table-header-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
-| `--enchase-table-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-table-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-table-row-background-selected` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-table-row-background-selected-hover` | `var(--enchase-table-row-background-selected, var(--enchase-color-surface-container-high))` | `background-color` |
 | `--enchase-table-row-background-striped` | `var(--enchase-color-surface-container-low)` | `background-color` |
@@ -2567,7 +2567,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-tabs-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-tabs-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-tabs-indicator-color` | `var(--enchase-color-primary)` | `border-block-end` |
-| `--enchase-tabs-indicator-width` | `2px` (`--enchase-border-width-strong`) | `border-block-end`, `block-size` |
+| `--enchase-tabs-indicator-width` | `1px` (`--enchase-border-width-strong`) | `border-block-end`, `block-size` |
 | `--enchase-tabs-list-border-color` | `var(--enchase-color-border)` | `box-shadow`, `border` |
 | `--enchase-tabs-list-gap` | `normal` | `gap` |
 | `--enchase-tabs-list-gap-card` | `0.125rem` | `gap` |
@@ -2588,7 +2588,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-tabs-tab-padding-block-card` | `var(--enchase-tabs-tab-padding-block, var(--enchase-space-sm))` | `padding-block` |
 | `--enchase-tabs-tab-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-tabs-tab-padding-inline-card` | `1rem` (`--enchase-space-md`) | `padding-inline` |
-| `--enchase-tabs-tab-radius` | `0.75rem` (`--enchase-radius-md`) | `border-start-start-radius`, `border-start-end-radius` |
+| `--enchase-tabs-tab-radius` | `0.5rem` (`--enchase-radius-md`) | `border-start-start-radius`, `border-start-end-radius` |
 
 ### Tag
 
@@ -2610,8 +2610,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-tag-padding-inline-end` | `0.125rem` | `padding-inline-end` |
 | `--enchase-tag-padding-inline-md` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-tag-padding-inline-sm` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
-| `--enchase-tag-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
-| `--enchase-tag-remove-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-tag-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-tag-remove-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-tag-remove-size` | `1.5rem` | `inline-size`, `block-size` |
 
 ### Textarea
@@ -2623,7 +2623,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-textarea-error-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-textarea-error-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-textarea-field-line-height` | `1.5` (`--enchase-line-height-normal`) | `line-height` |
-| `--enchase-textarea-field-radius` | `0.5rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
+| `--enchase-textarea-field-radius` | `0.625rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-textarea-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-textarea-min-height` | `3.5rem` | `min-block-size` |
 | `--enchase-textarea-padding-block` | `1rem` (`--enchase-space-md`) | `padding-block`, `transform` |
@@ -2638,7 +2638,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-theme-toggle-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-theme-toggle-icon-height` | `22px` | `block-size` |
 | `--enchase-theme-toggle-icon-width` | `22px` | `inline-size` |
-| `--enchase-theme-toggle-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-theme-toggle-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 
 ### toast
 
@@ -2648,7 +2648,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-toast-action-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
 | `--enchase-toast-action-margin-inline-end` | `0.25rem` (`--enchase-space-xs`) | `margin-inline-end` |
 | `--enchase-toast-action-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
-| `--enchase-toast-action-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-toast-action-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-toast-background-error` | `var(--enchase-color-error-container)` | `background-color` |
 | `--enchase-toast-background-info` | `var(--enchase-color-info-container)` | `background-color` |
 | `--enchase-toast-background-success` | `var(--enchase-color-success-container)` | `background-color` |
@@ -2656,7 +2656,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-toast-body-padding-block` | `0.25rem` (`--enchase-space-xs`) | `padding-block` |
 | `--enchase-toast-border-color` | `transparent` | `border` |
 | `--enchase-toast-border-width` | `0` | `border` |
-| `--enchase-toast-close-radius` | `9999px` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-toast-close-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-toast-color-error` | `var(--enchase-color-on-error-container)` | `color` |
 | `--enchase-toast-color-info` | `var(--enchase-color-on-info-container)` | `color` |
 | `--enchase-toast-color-success` | `var(--enchase-color-on-success-container)` | `color` |
@@ -2679,7 +2679,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-toast-padding-inline` | `var(--enchase-space-md) var(--enchase-space-sm)` | `padding-inline` |
 | `--enchase-toast-progress-height` | `3px` | `block-size` |
 | `--enchase-toast-progress-opacity` | `0.4` | `opacity` |
-| `--enchase-toast-radius` | `0.75rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-toast-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-toast-shadow` | `var(--enchase-shadow-md)` | `box-shadow` |
 | `--enchase-toast-title-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-toast-title-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
