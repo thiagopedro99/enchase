@@ -1,0 +1,15 @@
+.failure {
+  max-inline-size: 44rem;
+  margin-inline: auto;
+}
+
+.text {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--enchase-space-sm);
+  padding-block-start: var(--enchase-space-md);
+}

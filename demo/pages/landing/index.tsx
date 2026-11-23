@@ -1,8 +1,9 @@
 import { Layout, useScrollSpy } from 'enchase'
 import { useEffect } from 'react'
 
-import { brand, footerProps, navigationSections, sectionIds } from './defaultData.ts'
+import { navigationSections, sectionIds } from './defaultData.ts'
 import Playground from './subcomponentes/Playground/index.tsx'
+import { brand, footerProps } from '../../defaultData.ts'
 import Marquee from './subcomponentes/Marquee/index.tsx'
 import Bento from './subcomponentes/Bento/index.tsx'
 import Steps from './subcomponentes/Steps/index.tsx'

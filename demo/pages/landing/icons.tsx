@@ -4,13 +4,6 @@ import type { IconProps } from 'enchase'
 
 type LandingIconProps = Omit<IconProps, 'children' | 'name'>
 
-export const CopyIcon = (props: LandingIconProps) => (
-  <Icon name="copy" {...props}>
-    <rect x="9" y="9" width="11" height="11" rx="2" />
-    <path d="M5 15V6a2 2 0 0 1 2-2h9" />
-  </Icon>
-)
-
 export const AccessibilityIcon = (props: LandingIconProps) => (
   <Icon name="accessibility" {...props}>
     <circle cx="12" cy="5" r="1.5" />

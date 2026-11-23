@@ -1,0 +1,24 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--enchase-space-md);
+}
+
+.search {
+  flex: 1 1 16rem;
+  max-inline-size: 26rem;
+}
+
+.select {
+  flex: 0 1 12rem;
+}
+
+.total {
+  margin: 0;
+  margin-inline-start: auto;
+  padding-block-end: var(--enchase-space-sm);
+  font-size: var(--enchase-font-size-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--enchase-color-text-secondary);
+}

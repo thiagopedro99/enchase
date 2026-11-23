@@ -1,5 +1,5 @@
+import CopyButton from '../../../../components/CopyButton/index.tsx'
 import { installCommand } from '../../defaultData.ts'
-import CopyButton from '../CopyButton/index.tsx'
 import styles from './styles.module.css'
 
 const InstallCommand = () => (

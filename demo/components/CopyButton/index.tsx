@@ -1,6 +1,6 @@
 import { Button, Tooltip, useToast } from 'enchase'
 
-import { CopyIcon } from '../../icons.tsx'
+import { CopyIcon } from '../icons.tsx'
 
 import type { CopyButtonProps } from './types.ts'
 

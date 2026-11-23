@@ -1,0 +1,25 @@
+.cards {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--enchase-space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) and (max-width: 1399.98px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--enchase-space-md);
+  }
+}
+
+.empty {
+  margin: 0;
+  padding: var(--enchase-space-lg) var(--enchase-space-md);
+  border: var(--enchase-border-width) dashed var(--enchase-color-border);
+  border-radius: var(--enchase-radius-lg);
+  font-size: var(--enchase-font-size-sm);
+  text-align: center;
+  color: var(--enchase-color-text-secondary);
+}

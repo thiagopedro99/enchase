@@ -1,0 +1,28 @@
+.current {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--enchase-space-sm);
+  font-size: var(--enchase-font-size-sm);
+  color: var(--enchase-color-text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--enchase-space-2xl);
+  padding-block: clamp(2rem, 1.5rem + 2.5vw, 4rem) clamp(3rem, 2rem + 4vw, 6rem);
+}
+
+@media (min-width: 992px) {
+  .grid {
+    grid-template-columns: 16rem minmax(0, 1fr);
+    gap: clamp(2.5rem, 1rem + 4vw, 5rem);
+  }
+}
+
+.releases {
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+}

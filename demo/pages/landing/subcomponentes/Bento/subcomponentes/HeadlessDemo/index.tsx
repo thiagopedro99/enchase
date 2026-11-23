@@ -1,5 +1,5 @@
+import CodeBlock from '../../../../../../components/CodeBlock/index.tsx'
 import { ejectCode, hookCode } from './defaultData.ts'
-import CodeBlock from '../../../CodeBlock/index.tsx'
 import styles from './styles.module.css'
 
 const HeadlessDemo = () => (

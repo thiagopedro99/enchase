@@ -1,0 +1,24 @@
+.dot {
+  flex: none;
+  inline-size: 0.625rem;
+  block-size: 0.625rem;
+  border-radius: var(--enchase-radius-full);
+  background: var(--enchase-color-text-secondary);
+}
+
+.dot[data-status='analise'] {
+  background: var(--enchase-color-info);
+}
+
+.dot[data-status='desenvolvimento'] {
+  background: var(--enchase-color-warning);
+}
+
+.dot[data-status='lancado'] {
+  background: var(--enchase-color-success);
+}
+
+.dot[data-status='recusado'] {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px var(--enchase-color-text-secondary);
+}

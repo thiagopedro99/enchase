@@ -1,25 +1,17 @@
 import { workbench } from 'enchase/styles/workbench'
 import { shadcn } from 'enchase/styles/shadcn'
 
-import type { ThemeInput, ThemeStyle } from 'enchase/theme'
-import type { FooterProps, SidebarSection } from 'enchase'
-import type { Look, LookStyle } from './types.ts'
+import { pageLinks, repositoryUrl } from '../../defaultData.ts'
 
-export const brand = 'Enchase'
+import type { ThemeInput, ThemeStyle } from 'enchase/theme'
+import type { Look, LookStyle } from './types.ts'
+import type { SidebarSection } from 'enchase'
 
 export const version = '0.23'
 
 export const installCommand = 'npm install enchase'
 
-export const repositoryUrl = 'https://github.com/thiagopedro99/enchase'
-
-export const packageUrl = 'https://www.npmjs.com/package/enchase'
-
 export const stylingGuideUrl = `${repositoryUrl}/blob/main/STYLING.md`
-
-export const changelogUrl = `${repositoryUrl}/blob/main/CHANGELOG.md`
-
-export const docsUrl = import.meta.env.DEV ? 'http://localhost:6006' : '/docs/'
 
 export const sectionIds = ['recursos', 'playground', 'codigo', 'faq']
 
@@ -34,7 +26,7 @@ export const brands = [
 ]
 
 export const defaultLook: Look = {
-  style: 'enchase',
+  style: 'shadcn',
   brand: defaultBrand,
   shape: 'auto',
   compact: false
@@ -58,20 +50,7 @@ export const navigationSections: SidebarSection[] = [
     items: [
       { id: 'recursos', label: 'Recursos', href: '#recursos' },
       { id: 'playground', label: 'Ao vivo', href: '#playground' },
-      { id: 'codigo', label: 'Código', href: '#codigo' },
-      { id: 'faq', label: 'Perguntas', href: '#faq' },
-      { id: 'docs', label: 'Documentação', href: docsUrl, native: true }
+      ...pageLinks
     ]
   }
 ]
-
-export const footerProps: FooterProps = {
-  companyName: brand,
-  notice: 'Licença MIT.',
-  links: [
-    { label: 'Documentação', href: docsUrl },
-    { label: 'GitHub', href: repositoryUrl },
-    { label: 'npm', href: packageUrl },
-    { label: 'Novidades', href: changelogUrl }
-  ]
-}

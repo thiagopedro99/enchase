@@ -1,0 +1,42 @@
+export type Status = 'analise' | 'backlog' | 'desenvolvimento' | 'lancado' | 'recusado'
+
+export type Kind = 'componente' | 'melhoria' | 'correcao'
+
+export type KindFilter = Kind | 'todos'
+
+export type Sort = 'votos' | 'recentes'
+
+export interface Suggestion {
+  id: number
+  url: string
+  title: string
+  text: string
+  kind: Kind
+  area?: string
+  votes: number
+  comments: number
+  status: Status
+  createdAt: string
+  version?: string
+  reason?: string
+}
+
+export interface StatusInfo {
+  value: Status
+  label: string
+  text: string
+}
+
+export interface Column extends StatusInfo {
+  items: Suggestion[]
+}
+
+export interface Filters {
+  query: string
+  kind: KindFilter
+  sort: Sort
+}
+
+export type SuggestionsResult = { ok: true; items: Suggestion[] } | { ok: false; limited: boolean }
+
+export type SuggestionsState = { status: 'loading' } | { status: 'ready'; items: Suggestion[] } | { status: 'error'; limited: boolean }

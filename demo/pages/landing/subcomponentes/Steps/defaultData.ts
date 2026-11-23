@@ -1,6 +1,6 @@
 import { installCommand } from '../../defaultData.ts'
 
-import type { CodeLanguage } from '../CodeBlock/types.ts'
+import type { CodeLanguage } from '../../../../components/CodeBlock/types.ts'
 
 export const steps: { id: string; title: string; text: string; blocks: { label: string; language: CodeLanguage; code: string }[] }[] = [
   {

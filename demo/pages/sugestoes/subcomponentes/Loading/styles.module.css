@@ -1,0 +1,5 @@
+.loading {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: var(--enchase-space-md);
+}

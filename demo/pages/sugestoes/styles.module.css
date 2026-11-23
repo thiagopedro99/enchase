@@ -1,0 +1,10 @@
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: var(--enchase-space-lg);
+  max-inline-size: 104rem;
+  margin-inline: auto;
+  padding-block: var(--enchase-space-lg) clamp(3rem, 2rem + 4vw, 6rem);
+  padding-inline: var(--enchase-space-lg);
+  border-block-start: var(--enchase-border-width) solid var(--enchase-color-border-light);
+}

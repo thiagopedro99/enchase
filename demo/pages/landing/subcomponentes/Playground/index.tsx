@@ -1,9 +1,9 @@
 import { Card, Container, SegmentedControl, Switch } from 'enchase'
 
 import { shapeItems, snippetOf, styleItems } from './defaultData.ts'
+import CodeBlock from '../../../../components/CodeBlock/index.tsx'
 import { brands, defaultBrand } from '../../defaultData.ts'
 import SectionHeading from '../SectionHeading/index.tsx'
-import CodeBlock from '../CodeBlock/index.tsx'
 import Showcase from '../Showcase/index.tsx'
 import styles from './styles.module.css'
 

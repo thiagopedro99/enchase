@@ -4,9 +4,10 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
-import { defaultLook, docsUrl, repositoryUrl } from '@demo/pages/landing/defaultData.ts'
-import { highlight } from '@demo/pages/landing/subcomponentes/CodeBlock/highlight.ts'
 import { steps } from '@demo/pages/landing/subcomponentes/Steps/defaultData.ts'
+import { highlight } from '@demo/components/CodeBlock/highlight.ts'
+import { defaultLook } from '@demo/pages/landing/defaultData.ts'
+import { docsUrl, repositoryUrl } from '@demo/defaultData.ts'
 import Landing from '@demo/pages/landing/index.tsx'
 import App from '@demo/App.tsx'
 
@@ -105,13 +106,13 @@ describe('Landing playground', () => {
     const user = userEvent.setup()
     const { onLookChange } = renderLanding()
 
-    await user.click(within(group('Estilo')).getByRole('radio', { name: 'shadcn' }))
+    await user.click(within(group('Estilo')).getByRole('radio', { name: 'Enchase' }))
     await user.click(within(group('Cor da marca')).getByRole('radio', { name: 'Verde' }))
     await user.click(within(group('Cantos')).getByRole('radio', { name: 'Suave' }))
     await user.click(screen.getByRole('switch', { name: 'Densidade compacta' }))
 
     expect(onLookChange.mock.calls.map(([look]) => look)).toEqual([
-      { ...defaultLook, style: 'shadcn' },
+      { ...defaultLook, style: 'enchase' },
       { ...defaultLook, brand: '#0F766E' },
       { ...defaultLook, shape: 'soft' },
       { ...defaultLook, compact: true }
@@ -259,12 +260,12 @@ describe('App', () => {
 
     const snippet = screen.getByLabelText('O tema que você está vendo')
 
-    expect(snippet).not.toHaveTextContent('style: shadcn')
+    expect(snippet).toHaveTextContent('style: shadcn')
 
-    await user.click(within(group('Estilo')).getByRole('radio', { name: 'shadcn' }))
+    await user.click(within(group('Estilo')).getByRole('radio', { name: 'Workbench' }))
     await user.click(screen.getByRole('switch', { name: 'Densidade compacta' }))
 
-    expect(snippet).toHaveTextContent('style: shadcn')
+    expect(snippet).toHaveTextContent('style: workbench')
     expect(document.documentElement).toHaveAttribute('data-density', 'compact')
 
     await user.click(screen.getByRole('switch', { name: 'Densidade compacta' }))

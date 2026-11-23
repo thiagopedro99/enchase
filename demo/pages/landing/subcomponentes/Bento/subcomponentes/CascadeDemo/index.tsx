@@ -1,6 +1,6 @@
 import { Button } from 'enchase'
 
-import CodeBlock from '../../../CodeBlock/index.tsx'
+import CodeBlock from '../../../../../../components/CodeBlock/index.tsx'
 import styles from './styles.module.css'
 import { code } from './defaultData.ts'
 

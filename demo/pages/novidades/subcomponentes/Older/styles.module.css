@@ -1,0 +1,21 @@
+.older {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--enchase-space-lg);
+  margin-block-start: var(--enchase-space-2xl);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--enchase-font-size-lg);
+  font-weight: var(--enchase-font-weight-semibold);
+  color: var(--enchase-color-text-primary);
+}
+
+.text {
+  margin: 0;
+  padding-block-start: var(--enchase-space-xs);
+  color: var(--enchase-color-text-secondary);
+}

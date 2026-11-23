@@ -1,8 +1,8 @@
 import { Button, Container, Link } from 'enchase'
 
+import CodeBlock from '../../../../components/CodeBlock/index.tsx'
 import SectionHeading from '../SectionHeading/index.tsx'
 import { stylingGuideUrl } from '../../defaultData.ts'
-import CodeBlock from '../CodeBlock/index.tsx'
 import Reveal from '../Reveal/index.tsx'
 import { steps } from './defaultData.ts'
 import styles from './styles.module.css'

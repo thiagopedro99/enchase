@@ -1,0 +1,111 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--enchase-space-sm);
+  block-size: 100%;
+  padding: var(--enchase-space-md);
+  background: var(--enchase-color-surface);
+  text-decoration: none;
+  color: var(--enchase-color-text-primary);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--enchase-space-sm);
+  inline-size: 100%;
+  font-size: var(--enchase-font-size-xs);
+  color: var(--enchase-color-text-secondary);
+}
+
+.kind {
+  font-weight: var(--enchase-font-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.kind[data-kind='componente'] {
+  color: var(--enchase-color-text-primary);
+}
+
+.age {
+  white-space: nowrap;
+}
+
+.title {
+  font-weight: var(--enchase-font-weight-semibold);
+  line-height: var(--enchase-line-height-snug);
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.text {
+  font-size: var(--enchase-font-size-sm);
+  line-height: var(--enchase-line-height-relaxed);
+  overflow-wrap: anywhere;
+  color: var(--enchase-color-text-secondary);
+}
+
+.reason {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  inline-size: 100%;
+  padding: var(--enchase-space-sm) var(--enchase-space-md);
+  border-radius: var(--enchase-radius-md);
+  background: var(--enchase-color-surface-container-low);
+  font-size: var(--enchase-font-size-sm);
+  line-height: var(--enchase-line-height-relaxed);
+  overflow-wrap: anywhere;
+}
+
+.reasonLabel {
+  font-size: var(--enchase-font-size-xs);
+  font-weight: var(--enchase-font-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--enchase-color-text-secondary);
+}
+
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--enchase-space-sm);
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--enchase-space-sm);
+  inline-size: 100%;
+  margin-block-start: auto;
+  padding-block-start: var(--enchase-space-xs);
+  font-size: var(--enchase-font-size-xs);
+  color: var(--enchase-color-text-secondary);
+}
+
+.votes,
+.comments {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.votes {
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--enchase-radius-full);
+  background: var(--enchase-color-surface-container);
+  font-weight: var(--enchase-font-weight-semibold);
+  color: var(--enchase-color-text-primary);
+}
+
+.number {
+  margin-inline-start: auto;
+  font-family: var(--enchase-font-mono);
+  font-variant-numeric: tabular-nums;
+}

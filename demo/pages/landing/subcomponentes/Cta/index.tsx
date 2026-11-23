@@ -1,6 +1,6 @@
 import { ButtonLink, Container } from 'enchase'
 
-import { docsUrl, repositoryUrl } from '../../defaultData.ts'
+import { docsUrl, repositoryUrl } from '../../../../defaultData.ts'
 import InstallCommand from '../InstallCommand/index.tsx'
 import Reveal from '../Reveal/index.tsx'
 import styles from './styles.module.css'
