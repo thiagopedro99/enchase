@@ -1118,7 +1118,7 @@ describe('NumberInput native attributes', () => {
 
     renderWithProviders(<NumberInput label="Preço" />)
 
-    expect(field()).toHaveAttribute('placeholder', ' ')
+    expect(field()).not.toHaveAttribute('placeholder')
   })
 
   it('marks the wrapper when disabled and disables the input', () => {

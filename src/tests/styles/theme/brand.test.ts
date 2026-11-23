@@ -8,6 +8,7 @@ import { createTheme } from '@styles/theme/createTheme.ts'
 import { contrastRatio } from '@styles/theme/contrast.ts'
 import { brandPalette } from '@styles/theme/brand.ts'
 import { parseColor } from '@styles/theme/rgb.ts'
+import { defineStyle } from '@styles/theme/style.ts'
 
 import type { ColorTokens } from '@styles/tokens/types.ts'
 
@@ -61,13 +62,10 @@ describe('createTheme with a brand color', () => {
     expect(createTheme({ brand: '#00F' }).light.colors.primary).toBe('#0000FF')
   })
 
-  it('is close to the built-in indigo theme when the brand is its primary', () => {
-    const { light, dark } = createTheme({ brand: '#4F46E5' })
+  it('keeps the same indigo primary that the built-in light theme has, since both use it as the seed', () => {
+    const { light } = createTheme({ brand: '#4F46E5' })
 
     expect(light.colors.primary).toBe(lightTheme.colors.primary)
-    expect(contrastRatio(light.colors.primaryHover, lightTheme.colors.primaryHover)).toBeLessThan(1.15)
-    expect(contrastRatio(dark.colors.primary, darkTheme.colors.primary)).toBeLessThan(1.1)
-    expect(contrastRatio(dark.colors.surface, darkTheme.colors.surface)).toBeLessThan(1.1)
   })
 
   it('leaves the semantic roles, the shadows, the fonts and the motion as they are', () => {
@@ -108,12 +106,11 @@ describe('createTheme with a brand color', () => {
 
     expect(light.colors.inversePrimary).toBe(dark.colors.primary)
     expect(dark.colors.inversePrimary).toBe(light.colors.primary)
-    expect(dark.colors.text.inverse).toBe(dark.colors.onPrimary)
   })
 
   it('tints the neutrals with the hue of the brand and keeps them gray for a gray brand', () => {
-    const teal = rgbOf(createTheme({ brand: '#0F766E' }).light.colors.surface)
-    const gray = rgbOf(createTheme({ brand: '#808080' }).light.colors.surface)
+    const teal = rgbOf(createTheme({ style: defineStyle({}), brand: '#0F766E' }).light.colors.surface)
+    const gray = rgbOf(createTheme({ style: defineStyle({}), brand: '#808080' }).light.colors.surface)
 
     expect(teal.r).toBeLessThan(teal.g)
     expect(teal.r).toBeLessThan(teal.b)

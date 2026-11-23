@@ -230,7 +230,7 @@ describe('the compact density in the css of the theme', () => {
 
   it('is only css: createTheme takes no density, and the theme set of a style that has none carries none', () => {
     expect(() => createTheme({ density: 'compact' } as never)).toThrow('Unknown theme mode "density"')
-    expect(Object.keys(createTheme())).toEqual(['base', 'light', 'dark'])
+    expect(Object.keys(createTheme())).toEqual(['base', 'light', 'dark', 'hooks', 'defaults'])
     expect(themes.filter(([, theme]) => JSON.stringify(theme).includes('density'))).toEqual([])
   })
 
@@ -293,7 +293,7 @@ describe('the compact density that a style carries, in the css of the theme', ()
     ['empty tokens and hooks', { density: { compact: { tokens: {}, hooks: {} } } }]
   ])('writes the same block and the same theme as without a style for a style with %s', (_, style) => {
     expect(written(style)).toBe(densityRules('compact'))
-    expect(themeCss(createTheme({ style: defineStyle(style) }))).toBe(themeCss(defaultTheme))
+    expect(themeCss(createTheme({ style: defineStyle(style) }))).toBe(themeCss(createTheme({ style: defineStyle({}) })))
   })
 
   it('writes the tokens of the style over the tokens of the default, key by key, then its own tokens and its hooks, all in one rule', () => {

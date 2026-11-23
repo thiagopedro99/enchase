@@ -3,15 +3,12 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 
 import { followedHooks, hookRows, keptHooks, tokenRows } from '@docs/stories/system/Density/defaultData.ts'
-import { collectCssHooks } from '../../../../../../scripts/cssHooks.mjs'
 import { builtInStyles } from '@tests/shared/fixtures/styles.ts'
 import { layoutVariables } from '@styles/css/declarations.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 import { densities } from '@styles/tokens/index.ts'
 
 import type { ThemeSet } from '@styles/tokens/types.ts'
-
-const components = path.resolve(__dirname, '../../../../../components')
 
 const guide = readFileSync(path.resolve(__dirname, '../../../../../../README.pt-BR.md'), 'utf8')
 
@@ -32,8 +29,6 @@ const shadcnVariables = layoutVariables(shadcn.base)
 const workbenchVariables = layoutVariables(workbenchTheme.base)
 
 const workbenchCompactTokens: Record<string, string> = Object.fromEntries(Object.entries({ ...compactTokens, ...workbenchTheme.density?.compact?.tokens }).map(([name, value]) => [name, String(value)]))
-
-const fallbacks = Object.fromEntries(collectCssHooks(components).map(({ name, fallback }) => [name, fallback]))
 
 const declaredBy = (theme: ThemeSet, name: string) => {
   const hooks: Record<string, string> = { ...theme.hooks }
@@ -76,10 +71,10 @@ describe('the density tables of the docs', () => {
     expect(hookRows.map(({ compact }) => compact)).toEqual(Object.values(compactHooks))
   })
 
-  it('write the default of the enchase style: the value of the token, and for a hook the default that the component writes, because the style declares none of them', () => {
+  it('write the default of the enchase style: the value of the token, and the hook as the Lapidado look declares it, the same geometry that the shadcn style has for this block', () => {
     expect(tokenRows.map(({ enchase: value }) => value)).toEqual(tokenRows.map(({ name }) => enchaseVariables[name]))
-    expect(hookRows.map(({ name }) => declaredBy(enchase, name))).toEqual(hookRows.map(() => undefined))
-    expect(hookRows.map(({ enchase: value }) => value)).toEqual(hookRows.map(({ name }) => fallbacks[name]))
+    expect(hookRows.map(({ enchase: value }) => value)).toEqual(hookRows.map(({ name }) => declaredBy(enchase, name)))
+    expect(hookRows.map(({ enchase: value }) => value)).toEqual(hookRows.map(({ shadcn: value }) => value))
   })
 
   it('write the shadcn style as it is: the value of the token, and the hook as the style declares it, which it does for every hook of the block', () => {

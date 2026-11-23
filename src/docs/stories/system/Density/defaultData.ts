@@ -2,10 +2,10 @@ import type { HookRow, SizeGroup, StyleTokenRow } from './types.ts'
 import type { SidebarSection } from 'enchase'
 
 export const tokenRows: StyleTokenRow[] = [
-  { name: '--enchase-hit-size', enchase: '40px', shadcn: '2rem', compact: '32px', workbench: '2rem', workbenchCompact: '1.5rem' },
+  { name: '--enchase-hit-size', enchase: '2rem', shadcn: '2rem', compact: '32px', workbench: '2rem', workbenchCompact: '1.5rem' },
   { name: '--enchase-control-height-sm', enchase: '2rem', shadcn: '2rem', compact: '1.75rem', workbench: '1.5rem', workbenchCompact: '1.5rem' },
-  { name: '--enchase-control-height-md', enchase: '2.5rem', shadcn: '2.25rem', compact: '2rem', workbench: '2rem', workbenchCompact: '1.75rem' },
-  { name: '--enchase-control-height-lg', enchase: '3rem', shadcn: '2.5rem', compact: '2.5rem', workbench: '2.5rem', workbenchCompact: '2.1875rem' },
+  { name: '--enchase-control-height-md', enchase: '2.25rem', shadcn: '2.25rem', compact: '2rem', workbench: '2rem', workbenchCompact: '1.75rem' },
+  { name: '--enchase-control-height-lg', enchase: '2.5rem', shadcn: '2.5rem', compact: '2.5rem', workbench: '2.5rem', workbenchCompact: '2.1875rem' },
   { name: '--enchase-space-sm', enchase: '0.5rem', shadcn: '0.5rem', compact: '0.375rem', workbench: '0.5rem', workbenchCompact: '0.25rem' },
   { name: '--enchase-space-md', enchase: '1rem', shadcn: '1rem', compact: '0.75rem', workbench: '1rem', workbenchCompact: '0.5rem' },
   { name: '--enchase-space-lg', enchase: '1.5rem', shadcn: '1.5rem', compact: '1.125rem', workbench: '1.5rem', workbenchCompact: '1rem' },
@@ -15,16 +15,16 @@ export const tokenRows: StyleTokenRow[] = [
 ]
 
 export const hookRows: HookRow[] = [
-  { name: '--enchase-input-height', enchase: '3.5rem', shadcn: 'var(--enchase-control-height-md)', compact: '2.75rem', shadcnCompact: '2rem', follows: true },
-  { name: '--enchase-textarea-min-height', enchase: '3.5rem', shadcn: '4rem', compact: '2.75rem', shadcnCompact: '4rem', follows: false },
-  { name: '--enchase-tabs-tab-min-height', enchase: '2.75rem', shadcn: 'var(--enchase-control-height-md)', compact: '2.25rem', shadcnCompact: '2rem', follows: true },
-  { name: '--enchase-accordion-trigger-min-height', enchase: '3rem', shadcn: '0px', compact: '2.5rem', shadcnCompact: '0px', follows: false },
-  { name: '--enchase-select-option-padding-block', enchase: '0.75rem', shadcn: '0.375rem', compact: '0.5rem', shadcnCompact: '0.375rem', follows: false },
-  { name: '--enchase-badge-padding-inline-md', enchase: '0.625rem', shadcn: '0.5rem', compact: '0.5rem', shadcnCompact: '0.5rem', follows: false },
-  { name: '--enchase-sidebar-item-control-height', enchase: '52px', shadcn: '2rem', compact: '2.5rem', shadcnCompact: '2rem', follows: false },
-  { name: '--enchase-sidebar-header-min-height', enchase: '72px', shadcn: '3.5rem', compact: '4rem', shadcnCompact: '3.5rem', follows: false },
-  { name: '--enchase-navbar-bar-height', enchase: '64px', shadcn: '3.5rem', compact: '3.5rem', shadcnCompact: '3.5rem', follows: false },
-  { name: '--enchase-layout-header-height', enchase: '64px', shadcn: '3.5rem', compact: '3.5rem', shadcnCompact: '3.5rem', follows: false }
+  { name: '--enchase-input-height', enchase: 'var(--enchase-control-height-md)', shadcn: 'var(--enchase-control-height-md)', compact: '2.75rem', shadcnCompact: '2rem', follows: true },
+  { name: '--enchase-textarea-min-height', enchase: '4rem', shadcn: '4rem', compact: '2.75rem', shadcnCompact: '4rem', follows: false },
+  { name: '--enchase-tabs-tab-min-height', enchase: 'var(--enchase-control-height-md)', shadcn: 'var(--enchase-control-height-md)', compact: '2.25rem', shadcnCompact: '2rem', follows: true },
+  { name: '--enchase-accordion-trigger-min-height', enchase: '0px', shadcn: '0px', compact: '2.5rem', shadcnCompact: '0px', follows: false },
+  { name: '--enchase-select-option-padding-block', enchase: '0.375rem', shadcn: '0.375rem', compact: '0.5rem', shadcnCompact: '0.375rem', follows: false },
+  { name: '--enchase-badge-padding-inline-md', enchase: '0.5rem', shadcn: '0.5rem', compact: '0.5rem', shadcnCompact: '0.5rem', follows: false },
+  { name: '--enchase-sidebar-item-control-height', enchase: '2rem', shadcn: '2rem', compact: '2.5rem', shadcnCompact: '2rem', follows: false },
+  { name: '--enchase-sidebar-header-min-height', enchase: '3.5rem', shadcn: '3.5rem', compact: '4rem', shadcnCompact: '3.5rem', follows: false },
+  { name: '--enchase-navbar-bar-height', enchase: '3.5rem', shadcn: '3.5rem', compact: '3.5rem', shadcnCompact: '3.5rem', follows: false },
+  { name: '--enchase-layout-header-height', enchase: '3.5rem', shadcn: '3.5rem', compact: '3.5rem', shadcnCompact: '3.5rem', follows: false }
 ]
 
 export const followedHooks = hookRows.filter((row) => row.follows)

@@ -17,10 +17,9 @@ describe('the shape presets', () => {
     for (const name of presetNames) expect(Object.keys(shapePresets[name]), name).toEqual(Object.keys(baseTokens.borderRadius))
   })
 
-  it('keep the pill as the look the theme always had, with buttons that follow the full radius', () => {
-    expect(shapePresets.pill).toBe(baseTokens.borderRadius)
-    expect(baseTokens.borderRadius.button).toBe('var(--enchase-radius-full)')
-    expect(baseTokens.borderRadius.full).toBe('9999px')
+  it('keeps the pill as the look the theme always had, with buttons that follow the full radius', () => {
+    expect(shapePresets.pill.button).toBe('var(--enchase-radius-full)')
+    expect(shapePresets.pill.full).toBe('9999px')
   })
 
   it('give every token a length, except the pill button that points to the full radius', () => {
@@ -61,14 +60,12 @@ describe('the shape presets', () => {
 })
 
 describe('createTheme with a shape', () => {
-  it('returns the default theme for the pill and when no shape is given', () => {
-    expect(createTheme({ shape: 'pill' })).toEqual(defaultTheme)
-    expect(createTheme({ shape: 'pill' }).base).toBe(baseTokens)
+  it('returns the base tokens unchanged when no shape is given', () => {
     expect(createTheme({}).base).toBe(baseTokens)
   })
 
-  it('swaps only the radius tokens', () => {
-    for (const name of ['soft', 'square'] as const) {
+  it('swaps only the radius tokens, for the pill too, now that it differs from the default', () => {
+    for (const name of presetNames) {
       const theme = createTheme({ shape: name })
 
       expect(theme.base.borderRadius, name).toEqual(shapePresets[name])
@@ -106,7 +103,7 @@ describe('createTheme with a shape', () => {
     expect(css).toContain('--enchase-radius-button: 0.25rem;')
     expect(css).toContain('--enchase-radius-control: 0.25rem;')
     expect(css).toContain('--enchase-radius-full: 9999px;')
-    expect(themeCss(defaultTheme)).toContain('--enchase-radius-button: var(--enchase-radius-full);')
+    expect(themeCss(defaultTheme)).toContain('--enchase-radius-button: 0.625rem;')
   })
 
   it('declares one variable for the button role, next to the others', () => {
@@ -141,7 +138,7 @@ describe('createTheme with radius overrides', () => {
   })
 
   it('ignores a token that is explicitly undefined', () => {
-    expect(createTheme({ radius: { button: undefined, control: '1rem' } }).base.borderRadius.button).toBe('var(--enchase-radius-full)')
+    expect(createTheme({ radius: { button: undefined, control: '1rem' } }).base.borderRadius.button).toBe(baseTokens.borderRadius.button)
   })
 
   it('throws for a value that is not a radius, naming the token', () => {

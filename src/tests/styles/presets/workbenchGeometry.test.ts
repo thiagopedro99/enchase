@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import { baseTokens, defaultTheme } from '@styles/tokens/index.ts'
+import { baseTokens } from '@styles/tokens/index.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 import { workbench } from '@styles/presets/workbench.ts'
 import { themeCss } from '@styles/css/declarations.ts'
 import { shapePresets } from '@styles/theme/shape.ts'
+import { defineStyle } from '@styles/theme/style.ts'
 
 const geometry = [
   ['--enchase-control-height-sm', '1.5rem', 'control.height.sm'],
@@ -67,7 +68,7 @@ const originalTokens = Object.fromEntries(leaves(baseTokens))
 
 const written = rootVariables(themeCss(theme))
 
-const originalWritten = rootVariables(themeCss(defaultTheme))
+const originalWritten = rootVariables(themeCss(createTheme({ style: defineStyle({}) })))
 
 const listedPaths = new Set<string>(geometry.map(([, , path]) => path))
 

@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import { useLabelPlacement, useThemeDefaults } from '@components/colorMode/themeDefaults.ts'
 import { enchase } from '@styles/presets/enchase.ts'
+import { material3 } from '@styles/presets/material3.ts'
 import { startStyle } from '@tests/shared/fixtures/styles.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
 import { workbench } from '@styles/presets/workbench.ts'
@@ -24,23 +25,31 @@ const Recorder = () => {
 }
 
 describe('the defaults that the theme gives to the components', () => {
-  it('puts the label inside the field when there is no provider', () => {
+  it('puts the label above the field when there is no provider, the Lapidado look', () => {
     render(<Probe />)
 
-    expect(screen.getByTestId('placement')).toHaveTextContent('floating')
+    expect(screen.getByTestId('placement')).toHaveTextContent('stacked')
   })
 
-  it('keeps the floating label for a provider without a style or with the enchase style', () => {
+  it('keeps the stacked label for a provider without a style or with the enchase style, and takes the floating label from material3', () => {
     const { unmount } = render(
       <ColorModeProvider storage={null}>
         <Probe />
       </ColorModeProvider>
     )
 
-    expect(screen.getByTestId('placement')).toHaveTextContent('floating')
+    expect(screen.getByTestId('placement')).toHaveTextContent('stacked')
     unmount()
-    render(
+    const { unmount: second } = render(
       <ColorModeProvider storage={null} theme={{ style: enchase }}>
+        <Probe />
+      </ColorModeProvider>
+    )
+
+    expect(screen.getByTestId('placement')).toHaveTextContent('stacked')
+    second()
+    render(
+      <ColorModeProvider storage={null} theme={{ style: material3 }}>
         <Probe />
       </ColorModeProvider>
     )
@@ -122,7 +131,7 @@ describe('the defaults that the theme gives to the components', () => {
   it('gives a new defaults object when the style changes the placement', () => {
     seen.length = 0
     const { rerender } = render(
-      <ColorModeProvider storage={null} theme={{ style: enchase }}>
+      <ColorModeProvider storage={null} theme={{ style: material3 }}>
         <Recorder />
       </ColorModeProvider>
     )
@@ -144,7 +153,7 @@ describe('the placement of the label that a field really uses', () => {
   it('is the one asked for, or the one of the style, in the outlined variant', () => {
     const { unmount } = render(<Effective variant="outlined" />)
 
-    expect(screen.getByTestId('effective')).toHaveTextContent('floating')
+    expect(screen.getByTestId('effective')).toHaveTextContent('stacked')
     unmount()
 
     const { unmount: second } = render(<Effective variant="outlined" labelPlacement="stacked" />)

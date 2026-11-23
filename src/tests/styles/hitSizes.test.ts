@@ -7,6 +7,8 @@ import { baseTokens } from '@styles/tokens/index.ts'
 
 const floor = 24
 
+const pixels = (value: string) => (value.endsWith('rem') ? Number.parseFloat(value) * 16 : Number.parseFloat(value))
+
 const use = /(max\(24px, )?var\((--enchase-hit-size(?:-lg)?), ([^)]*)\)/g
 
 const defaults = layoutVariables(baseTokens)
@@ -56,8 +58,8 @@ describe('the target sizes of the components', () => {
   })
 
   it('declares default targets that already respect the floor', () => {
-    expect(Number.parseInt(defaults['--enchase-hit-size'], 10)).toBeGreaterThanOrEqual(floor)
-    expect(Number.parseInt(defaults['--enchase-hit-size-lg'], 10)).toBeGreaterThanOrEqual(Number.parseInt(defaults['--enchase-hit-size'], 10))
+    expect(pixels(defaults['--enchase-hit-size'])).toBeGreaterThanOrEqual(floor)
+    expect(pixels(defaults['--enchase-hit-size-lg'])).toBeGreaterThanOrEqual(pixels(defaults['--enchase-hit-size']))
   })
 
   it('only reads the hit tokens, never declares them', () => {

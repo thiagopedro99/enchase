@@ -11,8 +11,10 @@ describe('createTheme', () => {
     const { base, light, dark } = createTheme()
 
     expect(base).toEqual(baseTokens)
-    expect(light).toEqual(lightTheme)
-    expect(dark).toEqual(darkTheme)
+    expect(light.colors).toEqual(lightTheme.colors)
+    expect(light.shadows).toEqual(lightTheme.shadows)
+    expect(dark.colors).toEqual(darkTheme.colors)
+    expect(dark.shadows).toEqual(darkTheme.shadows)
     expect(createTheme({})).toEqual(defaultTheme)
   })
 
@@ -22,7 +24,7 @@ describe('createTheme', () => {
     expect(light.colors.primary).toBe('#0B6BCB')
     expect(light.colors.onPrimary).toBe(lightTheme.colors.onPrimary)
     expect(light.colors.background).toBe(lightTheme.colors.background)
-    expect(dark).toEqual(darkTheme)
+    expect(dark).toEqual(defaultTheme.dark)
   })
 
   it('overrides nested tokens without touching their siblings', () => {
@@ -74,8 +76,8 @@ describe('createTheme', () => {
   it('keeps the same set of tokens in both modes, so every css variable still has a value', () => {
     const { light, dark } = createTheme({ light: { colors: { primary: '#0B6BCB' } }, dark: { colors: { text: { primary: '#FFFFFF' } } } })
 
-    expect(Object.keys(themeVariables(light)).sort()).toEqual(Object.keys(themeVariables(lightTheme)).sort())
-    expect(Object.keys(themeVariables(dark)).sort()).toEqual(Object.keys(themeVariables(darkTheme)).sort())
+    expect(Object.keys(themeVariables(light)).sort()).toEqual(Object.keys(themeVariables(defaultTheme.light)).sort())
+    expect(Object.keys(themeVariables(dark)).sort()).toEqual(Object.keys(themeVariables(defaultTheme.dark)).sort())
   })
 })
 
@@ -88,8 +90,8 @@ describe('createTheme fonts', () => {
     expect(base.fonts.sizes).toEqual(baseTokens.fonts.sizes)
     expect(base.fonts.weights).toEqual(baseTokens.fonts.weights)
     expect(base.spacing).toEqual(baseTokens.spacing)
-    expect(light).toEqual(lightTheme)
-    expect(dark).toEqual(darkTheme)
+    expect(light).toEqual(defaultTheme.light)
+    expect(dark).toEqual(defaultTheme.dark)
   })
 
   it('overrides single sizes and weights without touching their siblings', () => {
@@ -128,7 +130,7 @@ describe('createTheme fonts', () => {
   it('keeps the same css variables when fonts change', () => {
     const { light } = createTheme({ fonts: { primary: 'Arial', sizes: { base: '2rem' } } })
 
-    expect(Object.keys(themeVariables(light)).sort()).toEqual(Object.keys(themeVariables(lightTheme)).sort())
+    expect(Object.keys(themeVariables(light)).sort()).toEqual(Object.keys(themeVariables(defaultTheme.light)).sort())
   })
 
   it('rejects a font token that does not exist, naming where it is', () => {

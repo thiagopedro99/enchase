@@ -8,12 +8,14 @@ import { builtInStyleEntries, builtInStyles } from '@tests/shared/fixtures/style
 import { workbench } from '@styles/presets/workbench.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 import { enchase } from '@styles/presets/enchase.ts'
+import { material3 } from '@styles/presets/material3.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
 import { shapePresets } from '@styles/theme/shape.ts'
 import { validateTheme } from '@styles/theme/validateTheme.ts'
 import { variableGroups } from '@styles/tokens/groups.ts'
 import { assertStyle, defineStyle } from '@styles/theme/style.ts'
 import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
+import { defaultColorHooks, defaultHooks } from '@styles/tokens/defaultHooks.ts'
 
 import type { ThemeSet } from '@styles/tokens/types.ts'
 
@@ -34,9 +36,10 @@ const pixels = (value: string) => (value.endsWith('rem') ? Number.parseFloat(val
 const hooksOf = (style: (typeof builtInStyles)[string]) => [style.hooks, style.colorHooks, style.light?.hooks, style.dark?.hooks].flatMap((record) => Object.keys(record ?? {}))
 
 describe('the built-in styles', () => {
-  it('exports the same three styles that the contract below runs on', () => {
-    expect(Object.keys(builtInStyles)).toEqual(['enchase', 'shadcn', 'workbench'])
+  it('exports the same four styles that the contract below runs on', () => {
+    expect(Object.keys(builtInStyles)).toEqual(['enchase', 'material3', 'shadcn', 'workbench'])
     expect(builtInStyles.enchase).toBe(enchase)
+    expect(builtInStyles.material3).toBe(material3)
     expect(builtInStyles.shadcn).toBe(shadcn)
     expect(builtInStyles.workbench).toBe(workbench)
   })
@@ -118,11 +121,52 @@ describe('the built-in styles', () => {
 })
 
 describe('the enchase style', () => {
-  it('leaves the theme exactly as it is', () => {
+  it('is the Lapidado look, the same one that createTheme() already gives with no style at all', () => {
+    expect(createTheme({ style: enchase })).toEqual(createTheme({}))
     expect(createTheme({ style: enchase })).toEqual(defaultTheme)
     expect(createTheme({ style: enchase }).base).toBe(baseTokens)
-    expect(createTheme({ style: enchase }).hooks).toBeUndefined()
-    expect(createTheme({ style: enchase }).defaults).toBeUndefined()
+    expect(createTheme({ style: enchase }).hooks).toEqual(defaultHooks)
+    expect(createTheme({ style: enchase }).light.hooks).toEqual(defaultColorHooks)
+    expect(createTheme({ style: enchase }).defaults).toEqual({ labelPlacement: 'stacked' })
+  })
+})
+
+describe('the material3 style', () => {
+  const theme = createTheme({ style: material3 })
+
+  it('restores the heights, the focus ring, the borders and the halo that Material 3 had', () => {
+    expect(theme.base.control.height).toEqual({ sm: '2rem', md: '2.5rem', lg: '3rem' })
+    expect(theme.base.focus).toEqual({ width: '2px', offset: '2px', offsetInset: '-2px', offsetSelector: '3px' })
+    expect(theme.base.hit).toEqual({ size: '40px', sizeLg: '44px' })
+    expect(theme.base.border).toEqual({ width: '1px', widthStrong: '2px' })
+    expect(theme.base.halo).toEqual({ size: '10px', sizeSwitch: '0.5rem' })
+  })
+
+  it('restores the radius that Material 3 had, with a fully rounded button', () => {
+    expect(theme.base.borderRadius).toEqual({ none: '0', xs: '0.25rem', sm: '0.5rem', md: '0.75rem', lg: '1rem', xl: '1.5rem', '2xl': '1.75rem', control: '0.5rem', button: '9999px', full: '9999px' })
+  })
+
+  it('sets no hook of its own, so the components keep their own Material 3 fallback', () => {
+    expect(theme.hooks).toBeUndefined()
+    expect(theme.light.hooks).toBeUndefined()
+    expect(theme.dark.hooks).toBeUndefined()
+  })
+
+  it('keeps the indigo primary and the rest of the Material 3 palette in both modes', () => {
+    expect(theme.light.colors.primary).toBe('#4F46E5')
+    expect(theme.light.colors.background).toBe('#FBF8FF')
+    expect(theme.dark.colors.primary).toBe('#BEC2FF')
+    expect(theme.dark.colors.background).toBe('#13131A')
+    expect(theme.light.colors.success).toBe(lightTheme.colors.success)
+  })
+
+  it('puts the label inside the field by default, as Material 3 did', () => {
+    expect(theme.defaults).toEqual({ labelPlacement: 'floating' })
+  })
+
+  it('is not the theme that createTheme() gives with no style, now that the default is the Lapidado look', () => {
+    expect(theme).not.toEqual(defaultTheme)
+    expect(theme.base.borderRadius).not.toEqual(baseTokens.borderRadius)
   })
 })
 
@@ -168,9 +212,9 @@ describe('the shadcn style', () => {
     expect(theme.dark.shadows.sm).not.toBe(theme.light.shadows.sm)
   })
 
-  it('puts the label above the field by default', () => {
+  it('puts the label above the field by default, like the Lapidado look that createTheme() already gives with no style', () => {
     expect(theme.defaults).toEqual({ labelPlacement: 'stacked' })
-    expect(createTheme().defaults).toBeUndefined()
+    expect(createTheme().defaults).toEqual({ labelPlacement: 'stacked' })
   })
 
   it('lets a style built on this one put the label at the start of the control', () => {

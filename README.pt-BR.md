@@ -1024,10 +1024,10 @@ O bloco é de variáveis, em duas camadas de força (1rem são 16px). Os **token
 
 | Token | Padrão (`enchase`) | Padrão (`shadcn`) | `compact` |
 | --- | --- | --- | --- |
-| `--enchase-hit-size` | `40px` | `2rem` | `32px` |
+| `--enchase-hit-size` | `2rem` | `2rem` | `32px` |
 | `--enchase-control-height-sm` | `2rem` | `2rem` | `1.75rem` |
-| `--enchase-control-height-md` | `2.5rem` | `2.25rem` | `2rem` |
-| `--enchase-control-height-lg` | `3rem` | `2.5rem` | `2.5rem` |
+| `--enchase-control-height-md` | `2.25rem` | `2.25rem` | `2rem` |
+| `--enchase-control-height-lg` | `2.5rem` | `2.5rem` | `2.5rem` |
 | `--enchase-space-sm` | `0.5rem` | `0.5rem` | `0.375rem` |
 | `--enchase-space-md` | `1rem` | `1rem` | `0.75rem` |
 | `--enchase-space-lg` | `1.5rem` | `1.5rem` | `1.125rem` |
@@ -1039,16 +1039,16 @@ Os **ganchos** ficam em `:where(:root[data-density='compact'])`, com especificid
 
 | Gancho | Padrão (`enchase`) | `compact` | Declarado pelo `shadcn` | `shadcn` no compact | O `shadcn` segue |
 | --- | --- | --- | --- | --- | --- |
-| `--enchase-input-height` | `3.5rem` | `2.75rem` | `var(--enchase-control-height-md)` | `2rem` | sim |
-| `--enchase-textarea-min-height` | `3.5rem` | `2.75rem` | `4rem` | `4rem` | não |
-| `--enchase-tabs-tab-min-height` | `2.75rem` | `2.25rem` | `var(--enchase-control-height-md)` | `2rem` | sim |
-| `--enchase-accordion-trigger-min-height` | `3rem` | `2.5rem` | `0px` | `0px` | não |
-| `--enchase-select-option-padding-block` | `0.75rem` | `0.5rem` | `0.375rem` | `0.375rem` | não |
-| `--enchase-badge-padding-inline-md` | `0.625rem` | `0.5rem` | `0.5rem` | `0.5rem` | não |
-| `--enchase-sidebar-item-control-height` | `52px` | `2.5rem` | `2rem` | `2rem` | não |
-| `--enchase-sidebar-header-min-height` | `72px` | `4rem` | `3.5rem` | `3.5rem` | não |
-| `--enchase-navbar-bar-height` | `64px` | `3.5rem` | `3.5rem` | `3.5rem` | não |
-| `--enchase-layout-header-height` | `64px` | `3.5rem` | `3.5rem` | `3.5rem` | não |
+| `--enchase-input-height` | `var(--enchase-control-height-md)` | `2.75rem` | `var(--enchase-control-height-md)` | `2rem` | sim |
+| `--enchase-textarea-min-height` | `4rem` | `2.75rem` | `4rem` | `4rem` | não |
+| `--enchase-tabs-tab-min-height` | `var(--enchase-control-height-md)` | `2.25rem` | `var(--enchase-control-height-md)` | `2rem` | sim |
+| `--enchase-accordion-trigger-min-height` | `0px` | `2.5rem` | `0px` | `0px` | não |
+| `--enchase-select-option-padding-block` | `0.375rem` | `0.5rem` | `0.375rem` | `0.375rem` | não |
+| `--enchase-badge-padding-inline-md` | `0.5rem` | `0.5rem` | `0.5rem` | `0.5rem` | não |
+| `--enchase-sidebar-item-control-height` | `2rem` | `2.5rem` | `2rem` | `2rem` | não |
+| `--enchase-sidebar-header-min-height` | `3.5rem` | `4rem` | `3.5rem` | `3.5rem` | não |
+| `--enchase-navbar-bar-height` | `3.5rem` | `3.5rem` | `3.5rem` | `3.5rem` | não |
+| `--enchase-layout-header-height` | `3.5rem` | `3.5rem` | `3.5rem` | `3.5rem` | não |
 
 São duas camadas porque as alturas do `enchase` estão escritas nos componentes: só com tokens, os botões ficariam com 32px dentro de campos de 56px, e com tudo na força dos tokens o `shadcn`, que fixa as próprias medidas, cresceria (o campo de 36 para 44px e o item da sidebar de 32 para 40px). Todo valor fica no nível do de cada estilo embutido ou abaixo dele, então nada cresce. A `Table` já tem uma densidade própria, `size="sm"`, que o compact não duplica: a linha pequena tem 30px nos dois estilos.
 

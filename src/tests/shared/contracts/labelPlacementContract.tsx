@@ -12,8 +12,8 @@ export const describeLabelPlacementContract = ({ name, slot, control, placeholde
   describe(`${name} · contrato do lugar do rótulo`, () => {
     const wrapper = () => document.querySelector(`[data-slot="${slot}"]`) as HTMLElement
 
-    it('floats the label inside the field by default, with the notch drawn from its text', () => {
-      render(ui())
+    it('floats the label inside the field when asked for, with the notch drawn from its text', () => {
+      render(ui('floating'))
 
       const field = document.querySelector(control) as HTMLElement
       const label = screen.getByText('Name', { selector: 'label' })
@@ -23,6 +23,12 @@ export const describeLabelPlacementContract = ({ name, slot, control, placeholde
       expect(wrapper().firstElementChild?.tagName).toBe('DIV')
       expect(label.parentElement).toBe(wrapper().firstElementChild)
       expect(wrapper().querySelector('legend span')).toHaveTextContent('Name')
+    })
+
+    it('puts the label above the field with no provider at all, the Lapidado default', () => {
+      render(ui())
+
+      expect(wrapper()).toHaveAttribute('data-label-placement', 'stacked')
     })
 
     it('puts the label above the field when it is stacked, with no notch and the placeholder visible', () => {

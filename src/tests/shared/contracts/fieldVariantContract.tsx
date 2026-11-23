@@ -33,7 +33,7 @@ export const describeFieldVariantContract = ({ name, slot, control, render: ui }
     })
 
     it.each(variants)('draws the label above the control in the %s variant, as if it were stacked, when the placement asked for is floating', (variant) => {
-      render(ui({ variant }))
+      render(ui({ variant, labelPlacement: 'floating' }))
 
       const field = document.querySelector(control) as HTMLElement
       const label = screen.getByText('Name', { selector: 'label' })
@@ -47,7 +47,7 @@ export const describeFieldVariantContract = ({ name, slot, control, render: ui }
     })
 
     it('keeps the floating label in the outlined variant', () => {
-      render(ui({ variant: 'outlined' }))
+      render(ui({ variant: 'outlined', labelPlacement: 'floating' }))
 
       expect(wrapper()).not.toHaveAttribute('data-label-placement')
       expect(document.querySelector(control)).toHaveAttribute('data-has-label')

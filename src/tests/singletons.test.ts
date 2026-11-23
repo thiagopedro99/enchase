@@ -15,7 +15,6 @@ const kinds: [string, RegExp][] = [
 const allowed: Record<string, string> = {
   'src/components/footer/defaultData.ts:defaultLinks': 'an empty default that nothing writes to',
   'src/components/layout/defaultData.ts:defaultNavigationSections': 'an empty default that nothing writes to',
-  'src/styles/theme/createTheme.ts:noStyle': 'an empty style that nothing writes to',
   'src/styles/theme/style.ts:validated': 'a cache of the objects already validated: one for each copy only repeats the work',
   'src/utils/dateFormat.ts:nativeDigits': 'the digits of the locale, found once for each copy',
   'src/utils/dateFormat.ts:formatters': 'a cache of formatters: one for each copy only repeats the work',

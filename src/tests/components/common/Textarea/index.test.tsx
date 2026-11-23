@@ -135,7 +135,7 @@ describe('Textarea', () => {
   })
 
   it('keeps the placeholder blank under a label so the label can float, and the given one otherwise', () => {
-    const { unmount } = renderWithProviders(<Textarea label="Mensagem" />)
+    const { unmount } = renderWithProviders(<Textarea label="Mensagem" labelPlacement="floating" />)
 
     expect(screen.getByLabelText('Mensagem')).toHaveAttribute('placeholder', ' ')
 

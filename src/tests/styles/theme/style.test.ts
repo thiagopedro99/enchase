@@ -139,11 +139,21 @@ describe('defineStyle', () => {
 })
 
 describe('createTheme with a style', () => {
-  it('leaves the default theme as it is without a style, with the empty one or with a null', () => {
+  it('leaves the default theme as it is without a style, or with a null', () => {
     expect(createTheme({ style: undefined })).toEqual(defaultTheme)
     expect(createTheme({ style: null as unknown as undefined })).toEqual(defaultTheme)
-    expect(createTheme({ style: defineStyle({}) })).toEqual(defaultTheme)
-    expect(createTheme({ style: defineStyle({}) }).base).toBe(baseTokens)
+    expect(createTheme()).toEqual(defaultTheme)
+  })
+
+  it('gives a style that explicitly sets nothing the raw tokens, without the hooks and the defaults of the Lapidado look that "no style" now carries', () => {
+    const theme = createTheme({ style: defineStyle({}) })
+
+    expect(theme.base).toBe(baseTokens)
+    expect(theme.light.colors).toEqual(lightTheme.colors)
+    expect(theme.hooks).toBeUndefined()
+    expect(theme.light.hooks).toBeUndefined()
+    expect(theme.defaults).toBeUndefined()
+    expect(theme).not.toEqual(defaultTheme)
   })
 
   it('asks for the style itself when it is given a name, and says where to import it from', () => {
@@ -164,7 +174,7 @@ describe('createTheme with a style', () => {
     expect(theme.base.control.height).toEqual({ ...baseTokens.control.height, md: '3rem' })
     expect(theme.base.focus).toEqual({ ...baseTokens.focus, width: '3px', offsetSelector: '4px' })
     expect(theme.base.hit.size).toBe('36px')
-    expect(theme.base.borderRadius).toEqual({ ...shapePresets.pill, button: '0.25rem', md: '0.375rem' })
+    expect(theme.base.borderRadius).toEqual({ ...baseTokens.borderRadius, button: '0.25rem', md: '0.375rem' })
     expect(theme.base.fonts.sizes.base).toBe('0.9375rem')
     expect(theme.base.fonts.weights.medium).toBe(550)
     expect(theme.base.fonts.lineHeights.normal).toBe(1.6)
@@ -208,14 +218,15 @@ describe('createTheme with a style', () => {
 
   it('takes a step of the spacing scale from the style, keeps the other steps and writes it on the root', () => {
     const theme = createTheme({ style: defineStyle({ base: { spacing: { md: '0.75rem' } } }) })
+    const bare = createTheme({ style: defineStyle({}) })
     const rootRules = (themeCss(theme).match(/:root \{[^}]*\}/g) ?? []).join('\n')
-    const defaultRootRules = (themeCss(defaultTheme).match(/:root \{[^}]*\}/g) ?? []).join('\n')
+    const bareRootRules = (themeCss(bare).match(/:root \{[^}]*\}/g) ?? []).join('\n')
 
     expect(theme.base.spacing).toEqual({ ...baseTokens.spacing, md: '0.75rem' })
     expect({ ...theme.base, spacing: baseTokens.spacing }).toEqual(baseTokens)
     expect(rootRules).toContain('--enchase-space-md: 0.75rem;')
     expect(rootRules).not.toContain('--enchase-space-md: 1rem;')
-    expect(rootRules).toBe(defaultRootRules.replace('--enchase-space-md: 1rem;', '--enchase-space-md: 0.75rem;'))
+    expect(rootRules).toBe(bareRootRules.replace('--enchase-space-md: 1rem;', '--enchase-space-md: 0.75rem;'))
   })
 
   it('leaves the default theme and the base tokens as they are when a style sets the spacing', () => {
@@ -242,7 +253,7 @@ describe('createTheme with a style', () => {
 
   it('takes from a brand only the roles that the style lists', () => {
     const branded = createTheme({ style: defineStyle(full), brand: '#0B6BCB' })
-    const unstyled = createTheme({ brand: '#0B6BCB' })
+    const unstyled = createTheme({ style: defineStyle({}), brand: '#0B6BCB' })
 
     expect(branded.light.colors.primary).not.toBe(lightTheme.colors.primary)
     expect(branded.light.colors.primary).toBe(unstyled.light.colors.primary)
@@ -297,7 +308,7 @@ const makers: [string, (style: ThemeStyle) => ThemeStyle][] = [
 ]
 
 describe.each(makers)('createTheme with a style from %s that leaves a section undefined', (_, make) => {
-  const defaultCss = themeCss(createTheme())
+  const defaultCss = themeCss(createTheme({ style: defineStyle({}) }))
   const themeOf = (style: ThemeStyle) => createTheme({ style: make(style) })
   const cssOf = (style: ThemeStyle) => themeCss(themeOf(style))
 
@@ -399,7 +410,7 @@ describe.each(makers)('createTheme with a style from %s that leaves a section un
     expect(theme.base.focus).toStrictEqual({ ...baseTokens.focus, width: '3px' })
     expect(theme.base.fonts.sizes).toStrictEqual({ ...baseTokens.fonts.sizes, lg: '1.25rem' })
     expect(theme.base.fonts.weights).toStrictEqual({ ...baseTokens.fonts.weights, medium: 550 })
-    expect(theme.base.borderRadius).toStrictEqual({ ...shapePresets.pill, button: '0.25rem' })
+    expect(theme.base.borderRadius).toStrictEqual({ ...baseTokens.borderRadius, button: '0.25rem' })
     expect(theme.light.colors.background).toBe(lightTheme.colors.background)
     expect(theme.light.colors.text).toStrictEqual({ ...lightTheme.colors.text, primary: '#111111' })
     expect(theme.light.shadows).toStrictEqual({ ...lightTheme.shadows, md: '0 2px 4px rgb(0 0 0 / 0.2)' })
@@ -419,7 +430,7 @@ describe.each(makers)('createTheme with a style from %s that leaves a section un
   })
 
   it('takes every role of a brand when the style leaves its list of roles undefined', () => {
-    expect(createTheme({ style: make({ brand: undefined }), brand: '#0B6BCB' })).toStrictEqual(createTheme({ brand: '#0B6BCB' }))
+    expect(createTheme({ style: make({ brand: undefined }), brand: '#0B6BCB' })).toStrictEqual(createTheme({ style: defineStyle({}), brand: '#0B6BCB' }))
   })
 })
 

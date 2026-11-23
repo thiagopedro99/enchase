@@ -100,7 +100,7 @@ describe('DatePicker', () => {
   })
 
   it('keeps a space as the placeholder under a floating label, so the label can rise, and the placeholder of the user otherwise', () => {
-    const { unmount } = renderWithProviders(<DatePicker label="Data" />)
+    const { unmount } = renderWithProviders(<DatePicker label="Data" labelPlacement="floating" />)
 
     expect(field()).toHaveAttribute('placeholder', ' ')
     unmount()
