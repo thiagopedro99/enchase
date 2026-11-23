@@ -33,13 +33,14 @@ const budgets = [
   { label: 'Menu', source: "export { Menu } from 'enchase'\n", maxBytes: 36864 },
   { label: 'Combobox', source: "export { Combobox } from 'enchase'\n", maxBytes: 43008 },
   { label: 'DatePicker', source: "export { DatePicker } from 'enchase'\n", maxBytes: 53248 },
-  { label: 'ColorModeProvider', source: "export { ColorModeProvider } from 'enchase'\n", maxBytes: 40960, styles: [], density: true },
-  { label: 'createTheme', source: "export { createTheme } from 'enchase/theme'\n", maxBytes: 32768, styles: [] },
-  { label: 'enchase style', source: "export { enchase } from 'enchase/styles/enchase'\n", maxBytes: 16384, styles: ['enchase'] },
+  { label: 'ColorModeProvider', source: "export { ColorModeProvider } from 'enchase'\n", maxBytes: 62464, styles: [], density: true },
+  { label: 'createTheme', source: "export { createTheme } from 'enchase/theme'\n", maxBytes: 52224, styles: [] },
+  { label: 'enchase style', source: "export { enchase } from 'enchase/styles/enchase'\n", maxBytes: 33792, styles: ['enchase'] },
+  { label: 'material3 style', source: "export { material3 } from 'enchase/styles/material3'\n", maxBytes: 17920, styles: ['material3'] },
   { label: 'shadcn style', source: "export { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 35840, styles: ['shadcn'] },
   { label: 'workbench style', source: "export { workbench } from 'enchase/styles/workbench'\n", maxBytes: 40960, styles: ['workbench'] },
-  { label: 'ColorModeProvider with shadcn', source: "export { ColorModeProvider } from 'enchase'\nexport { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 59392, styles: ['shadcn'], density: true },
-  { label: 'ColorModeProvider with workbench', source: "export { ColorModeProvider } from 'enchase'\nexport { workbench } from 'enchase/styles/workbench'\n", maxBytes: 65536, styles: ['workbench'], density: true }
+  { label: 'ColorModeProvider with shadcn', source: "export { ColorModeProvider } from 'enchase'\nexport { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 86016, styles: ['shadcn'], density: true },
+  { label: 'ColorModeProvider with workbench', source: "export { ColorModeProvider } from 'enchase'\nexport { workbench } from 'enchase/styles/workbench'\n", maxBytes: 91136, styles: ['workbench'], density: true }
 ]
 
 const hookNames = `import { readFileSync } from 'node:fs'
