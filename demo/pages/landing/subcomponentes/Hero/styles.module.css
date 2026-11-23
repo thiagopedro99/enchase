@@ -42,24 +42,35 @@
 }
 
 .glow {
+  --landing-glow-radius: 13rem;
+  --landing-glow-x: 0px;
+  --landing-glow-y: 0px;
+
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: 0;
-  inline-size: 36rem;
-  block-size: 36rem;
-  margin: -18rem;
-  border-radius: var(--enchase-radius-full);
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--enchase-color-primary) 18%, transparent), transparent);
+  inline-size: calc(var(--landing-glow-radius) * 2);
+  block-size: calc(var(--landing-glow-radius) * 2);
+  margin: calc(var(--landing-glow-radius) * -1);
+  background-image:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--enchase-color-primary) 70%, transparent) 1px, transparent 0),
+    radial-gradient(closest-side, color-mix(in srgb, var(--enchase-color-primary) 7%, transparent), transparent);
+  background-position:
+    calc(var(--landing-glow-radius) - var(--landing-glow-x)) calc(var(--landing-glow-radius) - var(--landing-glow-y)),
+    0 0;
+  background-size:
+    1.75rem 1.75rem,
+    100% 100%;
+  mask-image: radial-gradient(closest-side, black, transparent);
   opacity: 0;
-  translate: var(--landing-glow-x, 50vw) var(--landing-glow-y, 20rem);
-  transition:
-    opacity calc(var(--enchase-motion-duration-slow) * 2) var(--enchase-motion-ease-out),
-    translate calc(var(--enchase-motion-duration-slow) * 2) var(--enchase-motion-ease-out);
+  translate: var(--landing-glow-x) var(--landing-glow-y);
+  transition: opacity calc(var(--enchase-motion-duration-slow) * 2) var(--enchase-motion-ease-out);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .glow[data-active] {
     opacity: 1;
+    transition-duration: var(--enchase-motion-duration-base);
   }
 }
 

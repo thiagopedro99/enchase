@@ -24,8 +24,12 @@ const Hero = ({ look, onLookChange }: HeroProps) => {
     glow.current.dataset.active = ''
   }
 
+  const rest = () => {
+    if (glow.current) delete glow.current.dataset.active
+  }
+
   return (
-    <section className={styles.hero} aria-labelledby="hero-title" onPointerMove={follow}>
+    <section className={styles.hero} aria-labelledby="hero-title" onPointerMove={follow} onPointerLeave={rest}>
       <div className={styles.backdrop} aria-hidden="true">
         <span className={styles.aurora} />
         <span className={styles.dots} />
