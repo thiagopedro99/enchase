@@ -1,22 +1,14 @@
 {
-  "since": "0.22.0",
+  "since": "0.23.0",
   "breaks": [],
   "behavior": [
     {
-      "key": "element-selectors",
-      "note": "an element selector of yours loses to every rule of the library; before 0.23 it could win over the rules that the library wrote inside :where()"
+      "key": "default-style",
+      "note": "the look that createTheme() and the components give with no style at all is the Lapidado look now, not Material 3: import material3 from enchase/styles/material3 and pass it as the style to keep the old look"
     },
     {
-      "key": "rest-class",
-      "note": "a rest class of yours that comes before the library's stylesheet wins over the library's rest rules and over the disabled look of Button, as one that comes after it already did"
-    },
-    {
-      "key": "state-class",
-      "note": "a class of yours that names a state wins over the library's rule for that state, also when it comes before the library's stylesheet"
-    },
-    {
-      "key": "link-states",
-      "note": "a rule of yours on an element state (a:hover, :focus) no longer changes the hover and the press of the Link component, nor the focus ring of the links of Breadcrumbs, Navbar, Sidebar, Footer and Layout"
+      "key": "default-label-placement",
+      "note": "the default labelPlacement of the fields is stacked now, not floating; the material3 style keeps floating, and any style can set its own default with defaults.labelPlacement"
     }
   ]
 }
