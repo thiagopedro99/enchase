@@ -2,7 +2,7 @@
 name: Feature request
 about: A component, an option or a hook that is missing
 title: ''
-labels: ''
+labels: enhancement
 assignees: ''
 ---
 
