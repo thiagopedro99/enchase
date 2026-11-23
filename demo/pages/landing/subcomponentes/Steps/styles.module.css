@@ -38,9 +38,11 @@
 }
 
 .step {
+  --landing-step-gutter: 3.5rem;
+
   position: relative;
   padding-block-end: var(--enchase-space-2xl);
-  padding-inline-start: 3.5rem;
+  padding-inline-start: var(--landing-step-gutter);
 }
 
 .step:last-child {
@@ -62,6 +64,7 @@
 }
 
 .body {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--enchase-space-md);
@@ -70,7 +73,7 @@
 .number {
   position: absolute;
   inset-block-start: 0;
-  inset-inline-start: 0;
+  inset-inline-start: calc(var(--landing-step-gutter) * -1);
   display: grid;
   place-items: center;
   inline-size: 2.25rem;
