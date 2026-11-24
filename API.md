@@ -1337,6 +1337,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 
 | Hook | Default | Property |
 | --- | --- | --- |
+| `--enchase-accordion-background` | `transparent` | `background-color` |
 | `--enchase-accordion-border-color` | `var(--enchase-color-border)` | `border` |
 | `--enchase-accordion-distance` | `6px` | `transform` |
 | `--enchase-accordion-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
@@ -1535,7 +1536,6 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-background-primary-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
 | `--enchase-button-background-secondary` | `var(--enchase-color-primary-container)` | `background-color` |
 | `--enchase-button-background-secondary-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
-| `--enchase-button-background-secondary-hover` | `var(--enchase-button-background-secondary, var(--enchase-color-primary-container))` | `background-color` |
 | `--enchase-button-border-color-danger-disabled` | `transparent` | `border-color` |
 | `--enchase-button-border-color-dashed` | `var(--enchase-button-border-color-outline, var(--enchase-color-border-strong))` | `border-color` |
 | `--enchase-button-border-color-dashed-disabled` | `var(--enchase-button-border-color-outline-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent))` | `border-color` |
@@ -2527,6 +2527,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-switch-track-background-checked` | `var(--enchase-color-primary)` | `background-color` |
 | `--enchase-switch-track-background-checked-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `background-color` |
 | `--enchase-switch-track-background-checked-hover` | `var(--enchase-switch-track-background-checked, var(--enchase-color-primary))` | `background-color` |
+| `--enchase-switch-track-background-disabled` | `var(--enchase-switch-track-background, var(--enchase-color-surface-container-high))` | `background-color` |
 | `--enchase-switch-track-background-hover` | `var(--enchase-switch-track-background, var(--enchase-color-surface-container-high))` | `background-color` |
 | `--enchase-switch-track-border-color` | `var(--enchase-color-border-strong)` | `border` |
 | `--enchase-switch-track-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |

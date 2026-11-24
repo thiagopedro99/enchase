@@ -688,7 +688,8 @@ Onde o `material2` sai do original de propósito, mantendo o matiz e ajustando s
 | Parte | No `material2` | Por quê |
 | --- | --- | --- |
 | `warning` e `info`, no claro | `#B24F00` e `#0071B0` | O original (`#ED6C02` e `#0288D1`) reprova o texto branco sobre eles e o próprio texto sobre a superfície (abaixo de 4,5:1); no escuro o original já passa, sem ajuste |
-| `primary`, `error` e `success`, no claro (`error` também no escuro) | `#066CC8`, `#CF2A2C` e `#2C7B31` no claro; `#F9483A` no escuro | O original reprova por pouco contra os tons mais escuros dos contêineres de superfície |
+| `primary`, `error` e `success`, no claro | `#066CC8`, `#CF2A2C` e `#2C7B31` | O original reprova por pouco contra os tons mais escuros dos contêineres de superfície |
+| `error`, no escuro | `#FF7362` em vez de `#F9483A` | Com os contêineres de superfície do escuro mais claros (`#1E1E1E`/`#272727`/`#2E2E2E`), o original cai a 3,89:1 contra o mais claro deles |
 | Borda do campo | 45% de alfa no claro, 40% no escuro (3:1 ou mais) | A do original tem 0,23 (1,76:1) |
 | Trilha da chave desligada | 45% de alfa no claro, 40% no escuro (3:1 ou mais), a mesma borda forte do tema | A do original tem 0,23 (1,76:1) |
 | Bolinha da chave desligada, no escuro | `#E0E0E0` em vez do branco | O branco do claro é o token de superfície; no escuro, esse token é a própria cor do fundo da página, e a bolinha desaparecia |
