@@ -555,7 +555,7 @@ describe('NumberInput in forced colors', () => {
     const icon = getComputedStyle(part('increase').querySelector('svg') as SVGElement)
 
     expect(border.borderTopColor).not.toBe('rgba(0, 0, 0, 0)')
-    expect(parseFloat(border.borderTopWidth)).toBe(1)
+    expect(parseFloat(border.borderTopWidth)).toBe(2)
     expect(icon.stroke).not.toBe('none')
     expect(icon.stroke).not.toBe('rgba(0, 0, 0, 0)')
   })

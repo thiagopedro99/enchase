@@ -196,12 +196,12 @@ describe('the fields of the shadcn style', () => {
     expect(style('input-label').color).toBe('rgb(210, 0, 0)')
   })
 
-  it.runIf(unlessWebkit('forcedColors'))('thickens the focus border to 1px in forced colors, where the ring made with a shadow is gone', async () => {
+  it.runIf(unlessWebkit('forcedColors'))('thickens the focus border to 2px in forced colors, where the ring made with a shadow is gone', async () => {
     await setForcedColors('active')
     show(<Input label="Email" />)
     part('input-field').focus()
 
-    await becomes(at('input-outline'), 'border-top-width', '1px')
+    await becomes(at('input-outline'), 'border-top-width', '2px')
     expect(style('input-outline').boxShadow).toBe('none')
   })
 
