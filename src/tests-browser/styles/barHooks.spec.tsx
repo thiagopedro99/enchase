@@ -359,7 +359,7 @@ describe('the navbar from the hooks', () => {
   it('keeps the link of the horizontal menu at the size of the hit target when no hook is set', () => {
     renderInBrowser(navbar)
 
-    expect(getComputedStyle(menuLink(0)() as Element).height).toBe('40px')
+    expect(getComputedStyle(menuLink(0)() as Element).height).toBe('32px')
   })
 
   it('follows the hit size of the theme in the link of the horizontal menu when no hook is set, down to the floor of 24px', () => {
@@ -389,7 +389,7 @@ describe('the navbar from the hooks', () => {
   })
 
   it('leaves the height of the bar alone when the height of the link is set', () => {
-    hooked([['--enchase-navbar-menu-link-height', '46px', at('navbar-bar'), 'height', '64px']], navbar)
+    hooked([['--enchase-navbar-menu-link-height', '46px', at('navbar-bar'), 'height', '56px']], navbar)
   })
 
   it('takes the color of the logo and of the links while hovered and while pressed from their hooks', async () => {

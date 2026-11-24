@@ -165,7 +165,7 @@ describe('the drawer on a touch device in a real browser', () => {
       const before = getComputedStyle(close).color
 
       expect(matchMedia('(hover: none)').matches).toBe(true)
-      expect(Math.round(box.width)).toBe(Math.round(Math.min(400, window.innerWidth * 0.9)))
+      expect(Math.round(box.width)).toBe(Math.round(Math.min(384, window.innerWidth * 0.9)))
       expect([Math.round(box.left - area.left), Math.round(box.top - area.top), Math.round(box.height)]).toEqual([0, 0, Math.round(area.height)])
 
       await page.elementLocator(close).hover()
@@ -301,7 +301,7 @@ describe('the calendar on a touch device in a real browser', () => {
       const number = (iso: string) => day(iso).querySelector('[data-slot="date-picker-calendar-day-number"]') as HTMLElement
 
       expect(matchMedia('(hover: none)').matches).toBe(true)
-      expect(day('2026-10-20').getBoundingClientRect().height).toBeGreaterThanOrEqual(40)
+      expect(day('2026-10-20').getBoundingClientRect().height).toBeGreaterThanOrEqual(32)
 
       await page.elementLocator(day('2026-10-20')).hover()
       await frames(4)

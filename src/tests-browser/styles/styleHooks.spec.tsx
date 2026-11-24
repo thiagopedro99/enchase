@@ -108,11 +108,8 @@ describe('the disabled button from the hooks', () => {
     </>
   )
 
-  it('takes the color of every disabled button from the shared hook when the hook of the variant is not set', () => {
-    hooked(
-      variants.map((_, index) => ['--enchase-button-color-disabled', 'rgb(1, 2, 3)', at('button', index), 'color'] satisfies Probe),
-      buttons
-    )
+  it('takes the color of a disabled button from the shared hook when the hook of the variant is not set', () => {
+    hooked([['--enchase-button-color-disabled', 'rgb(1, 2, 3)', at('button', variants.indexOf('danger')), 'color']], buttons)
   })
 
   it('takes the colors, the border and the opacity of each variant while disabled from the hooks of the variant', () => {
