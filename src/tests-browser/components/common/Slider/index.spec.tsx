@@ -158,10 +158,10 @@ describe('Slider in a real browser', () => {
     expect(part('slider-label').getBoundingClientRect().width).toBeGreaterThan(20)
   })
 
-  it('gives the control at least 24 by 24 px of hit area, and 40 by default', () => {
+  it('gives the control at least 24 by 24 px of hit area, and 32 by default', () => {
     renderInBrowser(<Slider ariaLabel="Volume" />)
 
-    expect(control().getBoundingClientRect().height).toBe(40)
+    expect(control().getBoundingClientRect().height).toBe(32)
     document.documentElement.style.setProperty('--enchase-hit-size', '8px')
     expect(control().getBoundingClientRect().height).toBe(24)
   })
@@ -404,7 +404,7 @@ describe('Slider pointer in a real browser', () => {
     expect(value()).toBe(30)
     expect(document.activeElement).not.toBe(thumb())
     expect(style('slider-control').cursor).toBe('not-allowed')
-    expect(style('slider-control').opacity).toBe('0.38')
+    expect(style('slider-control').opacity).toBe('0.5')
   })
 })
 

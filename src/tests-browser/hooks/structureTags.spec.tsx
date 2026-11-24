@@ -109,7 +109,8 @@ describe('the items of a list made with the layout primitives in a real browser'
       </Grid>
     )
     const items = [...document.querySelectorAll('[data-testid="grid"] > li')]
-    const padding = parseFloat(getComputedStyle(items[0]).paddingTop) * 2
+    const style = getComputedStyle(items[0])
+    const padding = (parseFloat(style.paddingTop) + parseFloat(style.borderTopWidth)) * 2
 
     expect(items.map((item) => item.getBoundingClientRect().height)).toEqual([200 + padding, 200 + padding, 200 + padding])
   })

@@ -23,7 +23,7 @@ const flat = { '--enchase-popover-content-background': 'rgb(200, 40, 40)', '--en
 const outlined = { ...flat, '--enchase-popover-content-border-width': '3px', '--enchase-popover-content-border-color': 'rgb(20, 40, 220)', '--enchase-popover-arrow-size': '24px' }
 
 const kinds = {
-  plain: { border: 0, tipInset: 2.5, middleInset: 5 },
+  plain: { border: 1, tipInset: 4, middleInset: 5 },
   outlined: { border: 3, tipInset: 2, middleInset: 9 }
 }
 
@@ -88,7 +88,7 @@ const painted = (placement: string, kind: keyof typeof kinds) => ({
   middle: 'box',
   base: 'box',
   beside: 'page',
-  ...(kind === 'outlined' ? { band: 'border' } : {})
+  band: 'border'
 })
 
 describe.each(placements)('the arrow of a popover placed %s', (placement) => {
