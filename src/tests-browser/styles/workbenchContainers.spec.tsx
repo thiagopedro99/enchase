@@ -42,7 +42,7 @@ const popupShadow = 'rgba(0, 0, 0, 0.08) 0px 6px 16px 0px, rgba(0, 0, 0, 0.12) 0
 
 const cardShadow = 'rgba(0, 0, 0, 0.16) 0px 1px 2px -2px, rgba(0, 0, 0, 0.12) 0px 3px 6px 0px, rgba(0, 0, 0, 0.09) 0px 5px 12px 4px'
 
-const darkShadow = 'rgba(0, 0, 0, 0.5) 0px 1px 2px 0px, rgba(0, 0, 0, 0.3) 0px 2px 6px 2px'
+const darkShadow = 'rgba(0, 0, 0, 0.5) 0px 4px 10px -2px, rgba(0, 0, 0, 0.4) 0px 2px 4px -2px'
 
 const accordion = (
   <Accordion
