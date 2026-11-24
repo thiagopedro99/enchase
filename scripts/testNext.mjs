@@ -43,22 +43,25 @@ const expectations = [
   ['the control radius of the shape preset in the theme variables', '--enchase-radius-control: 0.75rem'],
   ['the focus ring width in the theme variables', '--enchase-focus-width: 2px'],
   ['the offset of the focus ring inside a container in the theme variables', '--enchase-focus-offset-inset: -2px'],
-  ['the strong border width in the theme variables', '--enchase-border-width-strong: 2px'],
+  ['the strong border width in the theme variables', '--enchase-border-width-strong: 1px'],
   ['the pressed state layer in the theme variables', '--enchase-state-pressed: 0.1'],
   ['the disabled state layer in the theme variables', '--enchase-state-disabled-content: 0.38'],
-  ['the halo of the selection controls in the theme variables', '--enchase-halo-size-switch: 0.5rem'],
-  ['the regular target size in the theme variables', '--enchase-hit-size: 40px'],
+  ['the halo of the selection controls in the theme variables', '--enchase-halo-size-switch: 0px'],
+  ['the regular target size in the theme variables', '--enchase-hit-size: 2rem'],
   ['the large target size in the theme variables', '--enchase-hit-size-lg: 44px'],
   ['the tokens of the compact density in the theme variables', ":root[data-density='compact'] {"],
   ['the hooks of the compact density in the theme variables', ":where(:root[data-density='compact']) {"],
   ['the normal line height in the theme variables', '--enchase-line-height-normal: 1.5'],
   ['the control letter spacing in the theme variables', '--enchase-letter-spacing-control: 0.01em'],
-  ['the generated responsive rules', "[data-slot='layout'][data-layout='auto']"]
+  ['the generated responsive rules', "[data-slot='layout'][data-layout='auto']"],
+  ['the label above the field, which is the default placement', 'data-label-placement="stacked"'],
+  ['the hooks of the default style with no specificity', ':where(:root) {'],
+  ['a hook of the default style', '--enchase-button-font-weight: var(--enchase-font-weight-semibold)']
 ]
 
 const forbidden = [
-  ['the label placement of a style on the page without one', 'data-label-placement'],
-  ['a hook of a style on the page without one', '--enchase-input-height: var(--enchase-control-height-md)']
+  ['the neutral surface of a style on the page without one', '--enchase-color-surface-container: #F5F5F5'],
+  ['a hook of a style on the page without one', '--enchase-button-font-weight: var(--enchase-font-weight-medium)']
 ]
 
 const styledExpectations = [
