@@ -24,7 +24,7 @@
 
 :where(.toggle) {
   inset-inline-end: var(--enchase-space-sm);
-  inline-size: max(24px, var(--enchase-hit-size, 2rem));
+  inline-size: max(24px, var(--enchase-hit-size, 40px));
   block-size: var(--enchase-input-height, 3.5rem);
   min-inline-size: 24px;
   min-block-size: 24px;

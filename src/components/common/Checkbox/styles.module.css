@@ -14,7 +14,7 @@
 
 :where(.wrapper) {
   gap: var(--enchase-checkbox-gap, var(--enchase-space-md));
-  min-block-size: max(24px, var(--enchase-hit-size, 2rem));
+  min-block-size: max(24px, var(--enchase-hit-size, 40px));
   min-inline-size: 24px;
 }
 
@@ -55,7 +55,7 @@
   justify-content: center;
   flex-shrink: 0;
   box-sizing: border-box;
-  border: var(--enchase-border-width-strong, 1px) solid var(--enchase-checkbox-box-border-color, var(--enchase-color-border-strong));
+  border: var(--enchase-border-width-strong, 2px) solid var(--enchase-checkbox-box-border-color, var(--enchase-color-border-strong));
   background-color: transparent;
   transition:
     background-color var(--enchase-checkbox-duration, var(--enchase-motion-duration-fast)) var(--enchase-checkbox-ease, var(--enchase-motion-ease-out)),
@@ -104,7 +104,7 @@
 
 .hidden:focus-visible + .box {
   outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
-  outline-offset: var(--enchase-focus-offset-selector, 2px);
+  outline-offset: var(--enchase-focus-offset-selector, 3px);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -124,7 +124,7 @@
   }
 
   .wrapper:hover .hidden:not(:disabled) + .box {
-    box-shadow: 0 0 0 var(--enchase-halo-size, 0px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
+    box-shadow: 0 0 0 var(--enchase-halo-size, 10px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }
 }
 

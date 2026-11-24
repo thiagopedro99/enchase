@@ -59,7 +59,7 @@
 
 :where(.option) {
   gap: var(--enchase-radio-group-option-gap, var(--enchase-space-md));
-  min-block-size: max(24px, var(--enchase-hit-size, 2rem));
+  min-block-size: max(24px, var(--enchase-hit-size, 40px));
   min-inline-size: 24px;
 }
 
@@ -78,7 +78,7 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border: var(--enchase-border-width-strong, 1px) solid var(--enchase-radio-group-control-border-color, var(--enchase-color-border-strong));
+  border: var(--enchase-border-width-strong, 2px) solid var(--enchase-radio-group-control-border-color, var(--enchase-color-border-strong));
   border-radius: var(--enchase-radio-group-control-radius, var(--enchase-radius-full));
   background-color: transparent;
   transition:
@@ -134,7 +134,7 @@
 
 .hidden:focus-visible + .control {
   outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
-  outline-offset: var(--enchase-focus-offset-selector, 2px);
+  outline-offset: var(--enchase-focus-offset-selector, 3px);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -147,7 +147,7 @@
   }
 
   .option:hover .hidden:not(:disabled) + .control {
-    box-shadow: 0 0 0 var(--enchase-halo-size, 0px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
+    box-shadow: 0 0 0 var(--enchase-halo-size, 10px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }
 }
 

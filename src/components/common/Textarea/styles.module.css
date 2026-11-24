@@ -124,13 +124,11 @@
   color: var(--enchase-input-label-color-error, var(--enchase-color-error));
 }
 
-.textarea:focus ~ .label,
-.wrapper[data-label-placement]:has(.textarea:focus) > .label {
+.textarea:focus ~ .label {
   color: var(--enchase-input-label-color-focus, var(--enchase-color-primary));
 }
 
-.textarea:focus ~ .label[data-has-error],
-.wrapper[data-label-placement]:has(.textarea:focus) > .label[data-has-error] {
+.textarea:focus ~ .label[data-has-error] {
   color: var(--enchase-input-label-color-error-focus, var(--enchase-color-error));
 }
 
@@ -147,7 +145,7 @@
   min-inline-size: 0;
   margin: 0;
   padding-block: 0;
-  padding-inline: var(--enchase-space-sm);
+  padding-inline: var(--enchase-input-outline-padding-inline, var(--enchase-space-sm));
   font: inherit;
   text-align: start;
   pointer-events: none;
@@ -210,7 +208,7 @@
 }
 
 .textarea:focus ~ .outline {
-  border-width: var(--enchase-border-width-strong, 1px);
+  border-width: var(--enchase-border-width-strong, 2px);
   border-color: var(--enchase-input-outline-border-color-focus, var(--enchase-color-primary));
   box-shadow: var(--enchase-input-outline-shadow-focus, var(--enchase-input-outline-shadow, none));
 }
@@ -221,7 +219,7 @@
 
 @media (forced-colors: active) {
   .textarea:focus ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 1px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
   }
 }
 
@@ -306,6 +304,7 @@
 
 .wrapper[data-label-placement='start'] > .field {
   grid-area: 1 / 2;
+  align-self: center;
 }
 
 .wrapper[data-label-placement='start'] > .error,
@@ -350,7 +349,7 @@
 .wrapper[data-variant='filled'] .textarea:focus ~ .outline,
 .wrapper[data-variant='underlined'] .textarea:focus ~ .outline {
   border-width: 0;
-  border-block-end-width: var(--enchase-border-width-strong, 1px);
+  border-block-end-width: var(--enchase-border-width-strong, 2px);
 }
 
 .wrapper[data-variant='borderless'] .textarea:focus ~ .outline {
@@ -366,7 +365,7 @@
 @media (forced-colors: active) {
   .wrapper[data-variant='filled'] .textarea:focus ~ .outline,
   .wrapper[data-variant='underlined'] .textarea:focus ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 1px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
     border-block-start-width: 0;
     border-inline-width: 0;
   }

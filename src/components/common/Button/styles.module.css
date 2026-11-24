@@ -55,7 +55,7 @@
 
 :where(.button[data-size='md']) {
   border-radius: var(--enchase-button-radius-md, var(--enchase-button-radius, var(--enchase-radius-button)));
-  min-block-size: var(--enchase-control-height-md, 2.25rem);
+  min-block-size: var(--enchase-control-height-md, 2.5rem);
   padding-block: var(--enchase-button-padding-block-md, var(--enchase-space-xs));
   padding-inline: var(--enchase-button-padding-inline-md, var(--enchase-space-lg));
   font-size: var(--enchase-button-font-size-md, var(--enchase-font-size-sm));
@@ -63,7 +63,7 @@
 
 :where(.button[data-size='lg']) {
   border-radius: var(--enchase-button-radius-lg, var(--enchase-button-radius, var(--enchase-radius-button)));
-  min-block-size: var(--enchase-control-height-lg, 2.5rem);
+  min-block-size: var(--enchase-control-height-lg, 3rem);
   padding-block: var(--enchase-button-padding-block-lg, var(--enchase-space-xs));
   padding-inline: var(--enchase-button-padding-inline-lg, var(--enchase-space-xl));
   font-size: var(--enchase-button-font-size-lg, var(--enchase-font-size-base));
@@ -140,14 +140,14 @@
 }
 
 :where(.button[data-size='md'][data-icon-only]) {
-  min-block-size: max(24px, var(--enchase-control-height-md, 2.25rem));
-  min-inline-size: max(24px, var(--enchase-control-height-md, 2.25rem));
+  min-block-size: max(24px, var(--enchase-control-height-md, 2.5rem));
+  min-inline-size: max(24px, var(--enchase-control-height-md, 2.5rem));
   padding-inline: var(--enchase-button-padding-block-md, var(--enchase-space-xs));
 }
 
 :where(.button[data-size='lg'][data-icon-only]) {
-  min-block-size: max(24px, var(--enchase-control-height-lg, 2.5rem));
-  min-inline-size: max(24px, var(--enchase-control-height-lg, 2.5rem));
+  min-block-size: max(24px, var(--enchase-control-height-lg, 3rem));
+  min-inline-size: max(24px, var(--enchase-control-height-lg, 3rem));
   padding-inline: var(--enchase-button-padding-block-lg, var(--enchase-space-xs));
 }
 

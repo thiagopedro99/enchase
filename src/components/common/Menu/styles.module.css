@@ -18,7 +18,7 @@
   justify-content: flex-start;
   gap: var(--enchase-menu-item-gap, var(--enchase-space-sm));
   inline-size: 100%;
-  min-block-size: max(24px, var(--enchase-hit-size, 2rem));
+  min-block-size: max(24px, var(--enchase-hit-size, 40px));
   margin: 0;
   scroll-margin-block: var(--enchase-menu-padding-block, var(--enchase-space-xs));
   padding-block: var(--enchase-menu-item-padding-block, var(--enchase-space-xs));

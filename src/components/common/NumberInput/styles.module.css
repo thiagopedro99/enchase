@@ -43,7 +43,7 @@
 }
 
 :where(.input[data-has-steppers]) {
-  padding-inline-end: calc(max(24px, var(--enchase-hit-size, 2rem)) * 2 + var(--enchase-space-xs) + var(--enchase-space-sm) * 2);
+  padding-inline-end: calc(max(24px, var(--enchase-hit-size, 40px)) * 2 + var(--enchase-space-xs) + var(--enchase-space-sm) * 2);
 }
 
 .input:focus {
@@ -97,7 +97,7 @@
 }
 
 .input[data-has-steppers] ~ .label {
-  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2 - max(24px, var(--enchase-hit-size, 2rem)) * 2);
+  max-inline-size: calc(100% - var(--enchase-input-padding-inline, var(--enchase-space-md)) * 2 - max(24px, var(--enchase-hit-size, 40px)) * 2);
 }
 
 .input:focus ~ .label,
@@ -109,13 +109,11 @@
   color: var(--enchase-input-label-color-error, var(--enchase-color-error));
 }
 
-.input:focus ~ .label,
-.wrapper[data-label-placement]:has(.input:focus) > .label {
+.input:focus ~ .label {
   color: var(--enchase-input-label-color-focus, var(--enchase-color-primary));
 }
 
-.input:focus ~ .label[data-has-error],
-.wrapper[data-label-placement]:has(.input:focus) > .label[data-has-error] {
+.input:focus ~ .label[data-has-error] {
   color: var(--enchase-input-label-color-error-focus, var(--enchase-color-error));
 }
 
@@ -132,7 +130,7 @@
   min-inline-size: 0;
   margin: 0;
   padding-block: 0;
-  padding-inline: var(--enchase-space-sm);
+  padding-inline: var(--enchase-input-outline-padding-inline, var(--enchase-space-sm));
   font: inherit;
   text-align: start;
   pointer-events: none;
@@ -194,7 +192,7 @@
 }
 
 .input:focus ~ .outline {
-  border-width: var(--enchase-border-width-strong, 1px);
+  border-width: var(--enchase-border-width-strong, 2px);
   border-color: var(--enchase-input-outline-border-color-focus, var(--enchase-color-primary));
   box-shadow: var(--enchase-input-outline-shadow-focus, var(--enchase-input-outline-shadow, none));
 }
@@ -205,7 +203,7 @@
 
 @media (forced-colors: active) {
   .input:focus ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 1px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
   }
 }
 
@@ -249,8 +247,8 @@
 }
 
 :where(.stepper) {
-  inline-size: max(24px, var(--enchase-hit-size, 2rem));
-  block-size: max(24px, var(--enchase-hit-size, 2rem));
+  inline-size: max(24px, var(--enchase-hit-size, 40px));
+  block-size: max(24px, var(--enchase-hit-size, 40px));
   min-inline-size: 24px;
   min-block-size: 24px;
   border-radius: var(--enchase-number-input-stepper-radius, var(--enchase-radius-button));
@@ -355,6 +353,7 @@
 
 .wrapper[data-label-placement='start'] > .field {
   grid-area: 1 / 2;
+  align-self: center;
 }
 
 .wrapper[data-label-placement='start'] > .error,
@@ -399,7 +398,7 @@
 .wrapper[data-variant='filled'] .input:focus ~ .outline,
 .wrapper[data-variant='underlined'] .input:focus ~ .outline {
   border-width: 0;
-  border-block-end-width: var(--enchase-border-width-strong, 1px);
+  border-block-end-width: var(--enchase-border-width-strong, 2px);
 }
 
 .wrapper[data-variant='borderless'] .input:focus ~ .outline {
@@ -415,7 +414,7 @@
 @media (forced-colors: active) {
   .wrapper[data-variant='filled'] .input:focus ~ .outline,
   .wrapper[data-variant='underlined'] .input:focus ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 1px), 2px);
+    border-width: max(var(--enchase-border-width-strong, 2px), 2px);
     border-block-start-width: 0;
     border-inline-width: 0;
   }

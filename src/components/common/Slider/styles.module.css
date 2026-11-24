@@ -56,7 +56,7 @@
 }
 
 :where(.control) {
-  min-block-size: max(24px, var(--enchase-hit-size, 2rem));
+  min-block-size: max(24px, var(--enchase-hit-size, 40px));
   padding-inline: var(--enchase-slider-control-padding-inline, calc(var(--enchase-slider-thumb-size, 1.25rem) / 2));
 }
 
@@ -99,7 +99,7 @@
 .thumb {
   flex-shrink: 0;
   box-sizing: border-box;
-  border: var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 1px)) solid var(--enchase-slider-thumb-border-color, var(--enchase-color-primary));
+  border: var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px)) solid var(--enchase-slider-thumb-border-color, var(--enchase-color-primary));
   border-radius: var(--enchase-slider-thumb-radius, var(--enchase-radius-full));
   background-color: var(--enchase-slider-thumb-background, var(--enchase-color-primary));
   transition: box-shadow var(--enchase-slider-duration, var(--enchase-motion-duration-fast)) var(--enchase-slider-ease, var(--enchase-motion-ease-out));
@@ -112,8 +112,8 @@
 
 .thumb:focus-visible {
   outline: var(--enchase-focus-width, 2px) solid var(--enchase-focus-color, var(--enchase-color-primary));
-  outline-offset: var(--enchase-focus-offset-selector, 2px);
-  scroll-margin: calc(var(--enchase-focus-width, 2px) + var(--enchase-focus-offset-selector, 2px));
+  outline-offset: var(--enchase-focus-offset-selector, 3px);
+  scroll-margin: calc(var(--enchase-focus-width, 2px) + var(--enchase-focus-offset-selector, 3px));
 }
 
 .slider[data-pointer-focus] .thumb:focus-visible {
@@ -122,8 +122,8 @@
 
 @media (hover: hover) and (pointer: fine) {
   .control:hover .thumb:where(:not([aria-disabled='true'])) {
-    border-width: var(--enchase-slider-thumb-border-width-hover, var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 1px)));
-    box-shadow: 0 0 0 var(--enchase-halo-size, 0px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
+    border-width: var(--enchase-slider-thumb-border-width-hover, var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px)));
+    box-shadow: 0 0 0 var(--enchase-halo-size, 10px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent);
   }
 
   :where(.slider:not([data-disabled]) .control:hover) .range {
@@ -133,8 +133,8 @@
 
 .slider:not([data-disabled]) .control:active .thumb,
 .slider[data-dragging] .thumb {
-  border-width: var(--enchase-slider-thumb-border-width-active, var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 1px)));
-  box-shadow: 0 0 0 var(--enchase-halo-size, 0px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
+  border-width: var(--enchase-slider-thumb-border-width-active, var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px)));
+  box-shadow: 0 0 0 var(--enchase-halo-size, 10px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent);
 }
 
 .slider[data-dragging] .range,
