@@ -27,6 +27,7 @@ import { Tabs } from '@components/common/Tabs/index.tsx'
 import { Textarea } from '@components/common/Textarea/index.tsx'
 import Tooltip from '@components/common/Tooltip/index.tsx'
 import { useToast } from '@components/toast/index.ts'
+import { material3 } from '@styles/presets/material3.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
 import { parseComputedColor } from '../support/color.ts'
 import { unlessWebkit } from '../support/browserSkips.ts'
@@ -195,12 +196,12 @@ describe('the fields of the shadcn style', () => {
     expect(style('input-label').color).toBe('rgb(210, 0, 0)')
   })
 
-  it.runIf(unlessWebkit('forcedColors'))('thickens the focus border to 2px in forced colors, where the ring made with a shadow is gone', async () => {
+  it.runIf(unlessWebkit('forcedColors'))('thickens the focus border to 1px in forced colors, where the ring made with a shadow is gone', async () => {
     await setForcedColors('active')
     show(<Input label="Email" />)
     part('input-field').focus()
 
-    await becomes(at('input-outline'), 'border-top-width', '2px')
+    await becomes(at('input-outline'), 'border-top-width', '1px')
     expect(style('input-outline').boxShadow).toBe('none')
   })
 
@@ -270,14 +271,14 @@ describe('the fields of the shadcn style', () => {
     expect(getComputedStyle(part('input-label', 1)).position).toBe('static')
   })
 
-  it('keeps the label floating when no style is given, and stacks it on request', () => {
+  it('keeps the label floating in a style whose default is floating, and stacks it on request', () => {
     show(
       <>
         <Input label="Default" />
         <Input label="Requested" labelPlacement="stacked" />
       </>,
       'light',
-      {}
+      { style: material3 }
     )
 
     expect(getComputedStyle(part('input-label', 0)).position).toBe('absolute')

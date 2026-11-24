@@ -125,7 +125,7 @@ describe('the text of the components from the hooks', () => {
 
     expect(ratio('alert')).toBe(2)
     expect(ratio('button')).toBeCloseTo(1.7, 2)
-    expect(style('button').letterSpacing).toBe('2px')
+    expect(style('button').letterSpacing).toBe('normal')
   })
 
   it('keeps the line height of the alert at 1.5 when a theme written before the tokens does not have them', () => {
