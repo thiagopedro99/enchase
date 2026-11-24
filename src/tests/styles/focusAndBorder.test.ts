@@ -6,7 +6,8 @@ import { layoutVariables } from '@styles/css/declarations.ts'
 import { baseTokens } from '@styles/tokens/index.ts'
 
 const glyphs: Record<string, string[]> = {
-  'common/Select/styles.module.css': ['border-inline-start: 5px solid transparent', 'border-inline-end: 5px solid transparent', 'border-block-start: 5px solid currentColor']
+  'common/Select/styles.module.css': ['border-inline-start: 5px solid transparent', 'border-inline-end: 5px solid transparent', 'border-block-start: 5px solid currentColor'],
+  'common/Pagination/styles.module.css': ['border-width: calc(var(--enchase-border-width, 1px) + 1px)']
 }
 
 const defaults = layoutVariables(baseTokens)
