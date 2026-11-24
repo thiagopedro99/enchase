@@ -24,6 +24,8 @@ const runLimit = 120000
 const combinations = [
   { name: 'light:enchase', theme: 'light', style: 'enchase' },
   { name: 'dark:enchase', theme: 'dark', style: 'enchase' },
+  { name: 'light:material3', theme: 'light', style: 'material3' },
+  { name: 'dark:material3', theme: 'dark', style: 'material3' },
   { name: 'light:shadcn', theme: 'light', style: 'shadcn' },
   { name: 'dark:shadcn', theme: 'dark', style: 'shadcn' },
   { name: 'light:workbench', theme: 'light', style: 'workbench' },
@@ -177,7 +179,7 @@ const readLook = () => {
 
   return {
     theme: document.documentElement.dataset.theme || null,
-    radius: style.getPropertyValue('--enchase-radius-md').trim(),
+    radius: style.getPropertyValue('--enchase-radius-button').trim(),
     background: style.getPropertyValue('--enchase-color-background').trim(),
     error: message ? message.textContent.trim().slice(0, 240) : ''
   }
@@ -385,6 +387,7 @@ const lookProblems = async (context, origin) => {
   return [
     ...looks.filter(({ combination, look }) => look.theme !== combination.theme).map(({ combination, look }) => `${combination.name} rendered as ${look.theme}`),
     ...(lookOf('light:enchase').background === lookOf('dark:enchase').background ? ['the light and the dark themes have the same background'] : []),
+    ...(lookOf('light:enchase').radius === lookOf('light:material3').radius ? ['the enchase and the material3 styles have the same radius'] : []),
     ...(lookOf('light:enchase').radius === lookOf('light:shadcn').radius ? ['the enchase and the shadcn styles have the same radius'] : []),
     ...(lookOf('light:enchase').radius === lookOf('light:workbench').radius ? ['the enchase and the workbench styles have the same radius'] : [])
   ]
