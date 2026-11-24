@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { shadcn } from '@styles/presets/shadcn.ts'
-import { baseTokens, darkTheme, lightTheme } from '@styles/tokens/index.ts'
+import { darkTheme, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
 import { oklchToHex, rgbToOklch } from '@styles/theme/oklch.ts'
 import { validateTheme } from '@styles/theme/validateTheme.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
@@ -76,11 +76,11 @@ describe('createTheme with a brand color', () => {
       expect(theme.dark.colors[`${role}Container`]).toBe(darkTheme.colors[`${role}Container`])
     }
 
-    expect(theme.light.shadows).toEqual(lightTheme.shadows)
-    expect(theme.dark.shadows).toEqual(darkTheme.shadows)
-    expect(theme.light.colors.overlay).toBe(lightTheme.colors.overlay)
-    expect(theme.dark.colors.text.disabled).toBe(darkTheme.colors.text.disabled)
-    expect(theme.base).toEqual(baseTokens)
+    expect(theme.light.shadows).toEqual(defaultTheme.light.shadows)
+    expect(theme.dark.shadows).toEqual(defaultTheme.dark.shadows)
+    expect(theme.light.colors.overlay).toBe(defaultTheme.light.colors.overlay)
+    expect(theme.dark.colors.text.disabled).toBe(defaultTheme.dark.colors.text.disabled)
+    expect(theme.base).toEqual(defaultTheme.base)
   })
 
   it('keeps the same set of tokens as the built-in themes in both modes', () => {

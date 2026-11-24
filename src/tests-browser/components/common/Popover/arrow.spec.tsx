@@ -109,14 +109,14 @@ describe.each(placements)('the arrow of a popover placed %s', (placement) => {
 
 describe('the arrow of a popover in the other conditions', () => {
   it('is painted with the colors of the dark theme', async () => {
-    onRoot({ '--enchase-popover-content-shadow': 'none' })
+    onRoot(flat)
     renderInBrowser(opened('bottom'), 'never', 'dark')
 
     await expect.poll(() => sample('plain'), { timeout: 5000 }).toEqual(painted('bottom', 'plain'))
   })
 
   it('is painted with the colors of the light theme', async () => {
-    onRoot({ '--enchase-popover-content-shadow': 'none' })
+    onRoot(flat)
     renderInBrowser(opened('top'), 'never', 'light')
 
     await expect.poll(() => sample('plain'), { timeout: 5000 }).toEqual(painted('top', 'plain'))

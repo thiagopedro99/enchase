@@ -70,10 +70,10 @@ describe('the regular target size from the token', () => {
     expect(box(part('number-input-increase'))).toEqual({ width: 24, height: 24 })
   })
 
-  it('keeps the 32px target when a theme written before the token does not have it', () => {
+  it('keeps the 40px target when a theme written before the token does not have it', () => {
     render(<Checkbox label="Terms" />)
 
-    expect(minimum(part('checkbox')).height).toBe('32px')
+    expect(minimum(part('checkbox')).height).toBe('40px')
   })
 })
 

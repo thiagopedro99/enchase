@@ -198,7 +198,7 @@ describe('createTheme with a style', () => {
 
     expect(theme.density).toBe(defined.density)
     expect(theme.density).toEqual(full.density)
-    expect('density' in createTheme()).toBe(false)
+    expect('density' in createTheme()).toBe(true)
     expect('density' in createTheme({ style: defineStyle({}) })).toBe(false)
     expect('density' in createTheme({ style: defineStyle({ hooks: { '--enchase-button-font-weight': '500' } }) })).toBe(false)
     expect('density' in createTheme({ style: shadcn })).toBe(false)
@@ -237,7 +237,7 @@ describe('createTheme with a style', () => {
     expect(theme.base.spacing).toEqual({ ...baseTokens.spacing, xs: '0.125rem', md: '0.75rem', '3xl': '5rem' })
     expect(theme.base.spacing).not.toBe(baseTokens.spacing)
     expect(JSON.stringify([baseTokens, defaultTheme])).toBe(before)
-    expect(createTheme().base).toBe(baseTokens)
+    expect(createTheme().base).toEqual(defaultTheme.base)
     expect(themeCss(createTheme())).toBe(themeCss(defaultTheme))
   })
 

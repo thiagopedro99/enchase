@@ -63,14 +63,17 @@ const ruleOf = (selector: string, record: Record<string, string>) =>
     .map(([name, value]) => `  ${name}: ${value};`)
     .join('\n')}\n}`
 
-const withoutDensity = ({ base, light, dark, hooks }: ThemeSet) =>
-  [
+const withoutDensity = ({ base, light, dark, hooks, hooksSpecificity }: ThemeSet) => {
+  const low = hooksSpecificity === 'zero'
+
+  return [
     fontVariablesRule(':root', base.fonts),
-    layoutVariablesRule(':root', base, hooks),
-    cssVariablesRule(":root, [data-theme='light']", light),
-    cssVariablesRule("[data-theme='dark']", dark),
-    `@media (prefers-color-scheme: dark) {\n${indent(cssVariablesRule(':root:not([data-theme])', dark))}\n}`
+    layoutVariablesRule(':root', base, hooks, low),
+    cssVariablesRule(":root, [data-theme='light']", light, low),
+    cssVariablesRule("[data-theme='dark']", dark, low),
+    `@media (prefers-color-scheme: dark) {\n${indent(cssVariablesRule(':root:not([data-theme])', dark, low))}\n}`
   ].join('\n\n')
+}
 
 const themes: Array<[string, ThemeSet]> = [
   ['the default theme', defaultTheme],
@@ -85,32 +88,39 @@ const themes: Array<[string, ThemeSet]> = [
 
 describe('the compact density in the css of the theme', () => {
   const css = themeCss(defaultTheme)
-  const tokens = declaredBy(css, tokensSelector)
+  const merged = declaredBy(css, tokensSelector)
+  const tokens = merged.filter(({ name }) => isToken(name))
+  const redeclared = merged.filter(({ name }) => !isToken(name))
   const hooks = declaredBy(css, hooksSelector)
   const entries = (record: Record<string, string>) => Object.entries(record).map(([name, value]) => ({ name, value }))
+  const compactOf = (theme: ThemeSet) => densityRules('compact', theme.density?.compact)
 
-  it('writes the tokens and then the hooks, right after the layout variables and before the colors', () => {
+  it('writes the tokens right after the layout variables and before the colors, with no rule left at 0,0,0 because the enchase style redeclares every hook of the default', () => {
     expect(rulesOf(css).map(({ selector }) => selector)).toEqual([
       ':root',
       ':root',
+      ':where(:root)',
       tokensSelector,
-      hooksSelector,
       ":root, [data-theme='light']",
+      ":where(:root, [data-theme='light'])",
       "[data-theme='dark']",
-      ':root:not([data-theme])'
+      ":where([data-theme='dark'])",
+      ':root:not([data-theme])',
+      ':where(:root:not([data-theme]))'
     ])
-    expect(css).toContain(`\n\n${densityRules('compact')}\n\n`)
+    expect(css).toContain(`\n\n${compactOf(defaultTheme)}\n\n`)
   })
 
-  it('writes what the data says, one declaration per entry and in the same order', () => {
+  it('writes the tokens as the data says, next to every hook it redeclares, and leaves no hooks block because the style redeclares them all', () => {
     expect(tokens).toEqual(entries(densities.compact.tokens))
-    expect(hooks).toEqual(entries(densities.compact.hooks))
+    expect(redeclared).toEqual(entries(defaultTheme.density?.compact?.hooks ?? {}))
+    expect(redeclared.map(({ name }) => name).sort()).toEqual(Object.keys(densities.compact.hooks).sort())
+    expect(hooks).toEqual([])
     expect(tokens.length).toBeGreaterThan(0)
-    expect(hooks.length).toBeGreaterThan(0)
   })
 
-  it('starts every selector of the block with the root and the attribute, so the same attribute on any other element does nothing', () => {
-    expect(blockOf(css)).toHaveLength(2)
+  it('starts the one selector of the block with the root and the attribute, so the same attribute on any other element does nothing', () => {
+    expect(blockOf(css)).toHaveLength(1)
 
     for (const { selector } of blockOf(css)) expect(selector).toMatch(/^(?::where\()?:root\[data-density=/)
   })
@@ -120,14 +130,8 @@ describe('the compact density in the css of the theme', () => {
     const inner = page.body.appendChild(page.createElement('div'))
     const elements = [page.documentElement, page.body, inner]
     const matched = () => blockOf(css).map(({ selector }) => elements.map((element) => element.matches(selector)))
-    const nowhere = [
-      [false, false, false],
-      [false, false, false]
-    ]
-    const onRoot = [
-      [true, false, false],
-      [true, false, false]
-    ]
+    const nowhere = [[false, false, false]]
+    const onRoot = [[true, false, false]]
 
     expect(matched()).toEqual(nowhere)
 
@@ -151,7 +155,7 @@ describe('the compact density in the css of the theme', () => {
   it('declares only css variables, never a property of an element', () => {
     const names = blockOf(css).flatMap(({ declarations }) => declarations.map(({ name }) => name))
 
-    expect(names).toHaveLength(tokens.length + hooks.length)
+    expect(names).toHaveLength(tokens.length + redeclared.length + hooks.length)
     expect(names.filter((name) => !/^--enchase-[a-z0-9-]+$/.test(name))).toEqual([])
   })
 
@@ -219,30 +223,33 @@ describe('the compact density in the css of the theme', () => {
       const layered = themeCss(defaultTheme, { layer })
 
       expect(layered).toBe(`@layer ${layer} {\n${indent(css)}\n}`)
-      expect(blockOf(layered).map(({ selector }) => selector)).toEqual([tokensSelector, hooksSelector])
+      expect(blockOf(layered).map(({ selector }) => selector)).toEqual([tokensSelector])
     }
   })
 
   it('is part of the static default theme', () => {
     expect(defaultThemeCss).toBe(css)
-    expect(defaultThemeCss.split(densityRules('compact'))).toHaveLength(2)
+    expect(defaultThemeCss.split(compactOf(defaultTheme))).toHaveLength(2)
   })
 
   it('is only css: createTheme takes no density, and the theme set of a style that has none carries none', () => {
     expect(() => createTheme({ density: 'compact' } as never)).toThrow('Unknown theme mode "density"')
-    expect(Object.keys(createTheme())).toEqual(['base', 'light', 'dark', 'hooks', 'defaults'])
-    expect(themes.filter(([, theme]) => JSON.stringify(theme).includes('density'))).toEqual([])
+    expect(Object.keys(createTheme())).toEqual(['base', 'light', 'dark', 'hooks', 'density', 'defaults', 'hooksSpecificity'])
+
+    const withoutOwnDensity = themes.filter(([, theme]) => theme.density === undefined)
+
+    expect(withoutOwnDensity.length).toBeGreaterThan(0)
+    expect(withoutOwnDensity.filter(([, theme]) => JSON.stringify(theme).includes('density'))).toEqual([])
   })
 
   describe.each(themes)('in the css of %s', (_, theme) => {
-    it('is written once, the same for every theme', () => {
-      expect(themeCss(theme).split(densityRules('compact'))).toHaveLength(2)
-      expect(blockOf(themeCss(theme))).toEqual(blockOf(css))
+    it('is written once, with the density that its own style carries', () => {
+      expect(themeCss(theme).split(compactOf(theme))).toHaveLength(2)
     })
 
     it('leaves everything else as the theme wrote it before the density, with and without a layer', () => {
-      expect(themeCss(theme).replace(`${densityRules('compact')}\n\n`, '')).toBe(withoutDensity(theme))
-      expect(themeCss(theme, { layer: 'app' }).replace(`${indent(densityRules('compact'))}\n\n`, '')).toBe(`@layer app {\n${indent(withoutDensity(theme))}\n}`)
+      expect(themeCss(theme).replace(`${compactOf(theme)}\n\n`, '')).toBe(withoutDensity(theme))
+      expect(themeCss(theme, { layer: 'app' }).replace(`${indent(compactOf(theme))}\n\n`, '')).toBe(`@layer app {\n${indent(withoutDensity(theme))}\n}`)
     })
   })
 })

@@ -15,7 +15,7 @@ import { validateTheme } from '@styles/theme/validateTheme.ts'
 import { variableGroups } from '@styles/tokens/groups.ts'
 import { assertStyle, defineStyle } from '@styles/theme/style.ts'
 import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
-import { defaultColorHooks, defaultHooks } from '@styles/tokens/defaultHooks.ts'
+import { enchaseStyle } from '@styles/tokens/enchase.ts'
 
 import type { ThemeSet } from '@styles/tokens/types.ts'
 
@@ -95,7 +95,7 @@ describe('the built-in styles', () => {
 
     it('puts the hooks that read a color or a shadow where the mode is, never on the root', () => {
       const css = themeCss(theme)
-      const rootRules = (css.match(/:root \{[^}]*\}/g) ?? []).join('\n')
+      const rootRules = (css.match(/(?::where\(:root\)|:root) \{[^}]*\}/g) ?? []).join('\n')
 
       for (const [name, value] of Object.entries(style.hooks ?? {})) {
         expect(value, name).not.toMatch(/var\(--enchase-(?:color|shadow)-/)
@@ -124,9 +124,9 @@ describe('the enchase style', () => {
   it('is the Lapidado look, the same one that createTheme() already gives with no style at all', () => {
     expect(createTheme({ style: enchase })).toEqual(createTheme({}))
     expect(createTheme({ style: enchase })).toEqual(defaultTheme)
-    expect(createTheme({ style: enchase }).base).toBe(baseTokens)
-    expect(createTheme({ style: enchase }).hooks).toEqual(defaultHooks)
-    expect(createTheme({ style: enchase }).light.hooks).toEqual(defaultColorHooks)
+    expect(createTheme({ style: enchase }).base).toEqual(defaultTheme.base)
+    expect(createTheme({ style: enchase }).hooks).toEqual(enchaseStyle.hooks)
+    expect(createTheme({ style: enchase }).light.hooks).toEqual(enchaseStyle.colorHooks)
     expect(createTheme({ style: enchase }).defaults).toEqual({ labelPlacement: 'stacked' })
   })
 })
@@ -143,7 +143,7 @@ describe('the material3 style', () => {
   })
 
   it('restores the radius that Material 3 had, with a fully rounded button', () => {
-    expect(theme.base.borderRadius).toEqual({ none: '0', xs: '0.25rem', sm: '0.5rem', md: '0.75rem', lg: '1rem', xl: '1.5rem', '2xl': '1.75rem', control: '0.5rem', button: '9999px', full: '9999px' })
+    expect(theme.base.borderRadius).toEqual({ none: '0', xs: '0.25rem', sm: '0.5rem', md: '0.75rem', lg: '1rem', xl: '1.5rem', '2xl': '1.75rem', control: '0.5rem', button: 'var(--enchase-radius-full)', full: '9999px' })
   })
 
   it('sets no hook of its own, so the components keep their own Material 3 fallback', () => {
@@ -166,7 +166,6 @@ describe('the material3 style', () => {
 
   it('is not the theme that createTheme() gives with no style, now that the default is the Lapidado look', () => {
     expect(theme).not.toEqual(defaultTheme)
-    expect(theme.base.borderRadius).not.toEqual(baseTokens.borderRadius)
   })
 })
 

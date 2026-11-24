@@ -27,6 +27,7 @@ import { at, becomes, expectHooks, hooked, onRoot, part, parts, setHooks } from 
 import { pressMouse, releaseMouse } from '../support/pointer.ts'
 
 import type { Probe } from '../support/hookProbes.ts'
+import type { LabelPlacement } from '@styles/tokens/types.ts'
 import type { CSSProperties, ReactElement, ReactNode } from 'react'
 
 afterEach(async () => {
@@ -321,11 +322,11 @@ const options = [
   { value: 'b', label: 'B' }
 ]
 
-const fields: { name: string; placeholder: boolean; ui: (error?: string) => ReactElement }[] = [
-  { name: 'input', placeholder: true, ui: (error) => <Input label="Name" placeholder="Type" error={error} /> },
-  { name: 'number-input', placeholder: true, ui: (error) => <NumberInput label="Amount" placeholder="0" error={error} /> },
-  { name: 'select', placeholder: false, ui: (error) => <Select label="Pick" options={options} error={error} /> },
-  { name: 'textarea', placeholder: true, ui: (error) => <Textarea label="Notes" placeholder="Type" error={error} /> }
+const fields: { name: string; placeholder: boolean; ui: (error?: string, labelPlacement?: LabelPlacement) => ReactElement }[] = [
+  { name: 'input', placeholder: true, ui: (error, labelPlacement) => <Input label="Name" placeholder="Type" error={error} labelPlacement={labelPlacement} /> },
+  { name: 'number-input', placeholder: true, ui: (error, labelPlacement) => <NumberInput label="Amount" placeholder="0" error={error} labelPlacement={labelPlacement} /> },
+  { name: 'select', placeholder: false, ui: (error, labelPlacement) => <Select label="Pick" options={options} error={error} labelPlacement={labelPlacement} /> },
+  { name: 'textarea', placeholder: true, ui: (error, labelPlacement) => <Textarea label="Notes" placeholder="Type" error={error} labelPlacement={labelPlacement} /> }
 ]
 
 describe.each(fields)('the $name field from the shared hooks', ({ name, placeholder, ui }) => {
@@ -341,7 +342,7 @@ describe.each(fields)('the $name field from the shared hooks', ({ name, placehol
 
   it('takes the colors of the label and of the outline while focused from their hooks', async () => {
     onRoot({ '--enchase-input-label-color-focus': 'rgb(1, 2, 3)', '--enchase-input-outline-border-color-focus': 'rgb(4, 5, 6)' })
-    renderInBrowser(ui())
+    renderInBrowser(ui(undefined, 'floating'))
     field().focus()
 
     await becomes(label, 'color', 'rgb(1, 2, 3)')
@@ -350,7 +351,7 @@ describe.each(fields)('the $name field from the shared hooks', ({ name, placehol
 
   it('takes the colors of the label and of the outline of a field with an error while focused from their hooks', async () => {
     onRoot({ '--enchase-input-label-color-error-focus': 'rgb(1, 2, 3)', '--enchase-input-outline-border-color-error-focus': 'rgb(4, 5, 6)' })
-    renderInBrowser(ui('Wrong'))
+    renderInBrowser(ui('Wrong', 'floating'))
     field().focus()
 
     await becomes(label, 'color', 'rgb(1, 2, 3)')

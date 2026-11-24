@@ -7,15 +7,15 @@ import { baseTokens, defaultTheme } from '@styles/tokens/index.ts'
 import { isToken } from '../../../scripts/cssHooks.mjs'
 import { hookUses, withoutHooks, withoutVariables } from './hooks.ts'
 
-const notch = ['padding-inline: var(--enchase-space-sm)', 'max-inline-size: 0.01px', 'block-size: 11px', 'padding-inline: var(--enchase-space-sm)']
+const notch = ['max-inline-size: 0.01px', 'block-size: 11px', 'padding-inline: var(--enchase-space-sm)']
 
 const fixed: Record<string, string[]> = {
-  'common/DatePicker/styles.module.css': ['padding-inline-end: calc(var(--enchase-space-sm) * 2 + max(24px, var(--enchase-hit-size, 2rem)))', ...notch],
-  'common/Combobox/styles.module.css': ['padding-inline-end: calc(max(24px, var(--enchase-hit-size, 2rem)) + var(--enchase-space-sm) * 2)', ...notch],
+  'common/DatePicker/styles.module.css': ['padding-inline-end: calc(var(--enchase-space-sm) * 2 + max(24px, var(--enchase-hit-size, 40px)))', ...notch],
+  'common/Combobox/styles.module.css': ['padding-inline-end: calc(max(24px, var(--enchase-hit-size, 40px)) + var(--enchase-space-sm) * 2)', ...notch],
   'common/Alert/styles.module.css': ['padding-block: calc((var(--alert-row-size) - 1.5em) / 2)'],
-  'common/Input/styles.module.css': ['padding-inline-end: calc(var(--enchase-space-sm) * 2 + max(24px, var(--enchase-hit-size, 2rem)))', ...notch],
+  'common/Input/styles.module.css': ['padding-inline-end: calc(var(--enchase-space-sm) * 2 + max(24px, var(--enchase-hit-size, 40px)))', ...notch],
   'common/Modal/styles.module.css': ['inline-size: min(90%, 100% - 2rem)'],
-  'common/NumberInput/styles.module.css': ['padding-inline-end: calc(max(24px, var(--enchase-hit-size, 2rem)) * 2 + var(--enchase-space-xs) + var(--enchase-space-sm) * 2)', ...notch],
+  'common/NumberInput/styles.module.css': ['padding-inline-end: calc(max(24px, var(--enchase-hit-size, 40px)) * 2 + var(--enchase-space-xs) + var(--enchase-space-sm) * 2)', ...notch],
   'common/Select/styles.module.css': ['padding-inline: var(--enchase-input-padding-inline, var(--enchase-space-md)) 2.75rem', 'max-inline-size: calc(100% - 4rem)', ...notch],
   'common/Tabs/styles.module.css': ['inline-size: 1px'],
   'common/Textarea/styles.module.css': notch,

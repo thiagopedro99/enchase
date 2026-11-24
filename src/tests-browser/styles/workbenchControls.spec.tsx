@@ -208,7 +208,7 @@ describe('the buttons of the workbench style', () => {
     await userEvent.hover(part('button'))
     await waitForSettled(at('button'))
 
-    expect(style('button').boxShadow).toBe('rgba(0, 0, 0, 0.4) 0px 1px 2px 0px')
+    expect(style('button').boxShadow).toBe('rgba(0, 0, 0, 0.5) 0px 1px 2px 0px, rgba(0, 0, 0, 0.3) 0px 1px 3px 1px')
   })
 
   it('gives the ghost button 7px of inline padding in the small size and 15px in the others, as the original does', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
+import { baseTokens, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
 import { themeVariables } from '@styles/css/declarations.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 
@@ -10,11 +10,11 @@ describe('createTheme', () => {
   it('returns the built-in light and dark themes when nothing is customized', () => {
     const { base, light, dark } = createTheme()
 
-    expect(base).toEqual(baseTokens)
-    expect(light.colors).toEqual(lightTheme.colors)
-    expect(light.shadows).toEqual(lightTheme.shadows)
-    expect(dark.colors).toEqual(darkTheme.colors)
-    expect(dark.shadows).toEqual(darkTheme.shadows)
+    expect(base).toEqual(defaultTheme.base)
+    expect(light.colors).toEqual(defaultTheme.light.colors)
+    expect(light.shadows).toEqual(defaultTheme.light.shadows)
+    expect(dark.colors).toEqual(defaultTheme.dark.colors)
+    expect(dark.shadows).toEqual(defaultTheme.dark.shadows)
     expect(createTheme({})).toEqual(defaultTheme)
   })
 
@@ -22,8 +22,8 @@ describe('createTheme', () => {
     const { light, dark } = createTheme({ light: { colors: { primary: '#0B6BCB' } } })
 
     expect(light.colors.primary).toBe('#0B6BCB')
-    expect(light.colors.onPrimary).toBe(lightTheme.colors.onPrimary)
-    expect(light.colors.background).toBe(lightTheme.colors.background)
+    expect(light.colors.onPrimary).toBe(defaultTheme.light.colors.onPrimary)
+    expect(light.colors.background).toBe(defaultTheme.light.colors.background)
     expect(dark).toEqual(defaultTheme.dark)
   })
 
@@ -31,8 +31,8 @@ describe('createTheme', () => {
     const { light } = createTheme({ light: { colors: { text: { primary: '#101010' } } } })
 
     expect(light.colors.text.primary).toBe('#101010')
-    expect(light.colors.text.secondary).toBe(lightTheme.colors.text.secondary)
-    expect(light.colors.text.placeholder).toBe(lightTheme.colors.text.placeholder)
+    expect(light.colors.text.secondary).toBe(defaultTheme.light.colors.text.secondary)
+    expect(light.colors.text.placeholder).toBe(defaultTheme.light.colors.text.placeholder)
   })
 
   it('customizes the two modes independently', () => {
@@ -61,9 +61,9 @@ describe('createTheme', () => {
   it('keeps the parts of the theme that are not colors', () => {
     const { base, light, dark } = createTheme({ light: { colors: { primary: '#0B6BCB' } }, dark: { colors: { primary: '#CCDDFF' } } })
 
-    expect(base).toEqual(baseTokens)
-    expect(light.shadows).toEqual(lightTheme.shadows)
-    expect(dark.shadows).toEqual(darkTheme.shadows)
+    expect(base).toEqual(defaultTheme.base)
+    expect(light.shadows).toEqual(defaultTheme.light.shadows)
+    expect(dark.shadows).toEqual(defaultTheme.dark.shadows)
   })
 
   it('ignores a token that is explicitly undefined', () => {
@@ -108,7 +108,7 @@ describe('createTheme fonts', () => {
 
     expect(light.colors.primary).toBe('#0B6BCB')
     expect(base.fonts.primary).toBe('Arial')
-    expect(dark.colors).toEqual(darkTheme.colors)
+    expect(dark.colors).toEqual(defaultTheme.dark.colors)
   })
 
   it('ignores a font token that is explicitly undefined', () => {

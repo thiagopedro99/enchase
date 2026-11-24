@@ -80,8 +80,8 @@ describe('the geometry of the fields', () => {
     const input = files.find(([file]) => file.startsWith('Input/'))?.[1] ?? ''
     const number = files.find(([file]) => file.startsWith('NumberInput/'))?.[1] ?? ''
 
-    expect(input).toContain('padding-inline-end: calc(var(--enchase-space-sm) * 2 + max(24px, var(--enchase-hit-size, 2rem)))')
-    expect(number).toContain('padding-inline-end: calc(max(24px, var(--enchase-hit-size, 2rem)) * 2 + var(--enchase-space-xs) + var(--enchase-space-sm) * 2)')
+    expect(input).toContain('padding-inline-end: calc(var(--enchase-space-sm) * 2 + max(24px, var(--enchase-hit-size, 40px)))')
+    expect(number).toContain('padding-inline-end: calc(max(24px, var(--enchase-hit-size, 40px)) * 2 + var(--enchase-space-xs) + var(--enchase-space-sm) * 2)')
     expect(number).not.toContain('80px')
     expect(number).not.toContain('7rem')
   })

@@ -61,7 +61,7 @@ describe('the shape presets', () => {
 
 describe('createTheme with a shape', () => {
   it('returns the base tokens unchanged when no shape is given', () => {
-    expect(createTheme({}).base).toBe(baseTokens)
+    expect(createTheme({}).base).toEqual(defaultTheme.base)
   })
 
   it('swaps only the radius tokens, for the pill too, now that it differs from the default', () => {
@@ -128,7 +128,7 @@ describe('createTheme with radius overrides', () => {
 
     expect(theme.base.borderRadius.button).toBe('0.5rem')
     expect(theme.base.borderRadius.xl).toBe('2rem')
-    expect(theme.base.borderRadius.md).toBe(baseTokens.borderRadius.md)
+    expect(theme.base.borderRadius.md).toBe(defaultTheme.base.borderRadius.md)
   })
 
   it('accepts zero, rem, em, px and percent', () => {
@@ -138,7 +138,7 @@ describe('createTheme with radius overrides', () => {
   })
 
   it('ignores a token that is explicitly undefined', () => {
-    expect(createTheme({ radius: { button: undefined, control: '1rem' } }).base.borderRadius.button).toBe(baseTokens.borderRadius.button)
+    expect(createTheme({ radius: { button: undefined, control: '1rem' } }).base.borderRadius.button).toBe(defaultTheme.base.borderRadius.button)
   })
 
   it('throws for a value that is not a radius, naming the token', () => {

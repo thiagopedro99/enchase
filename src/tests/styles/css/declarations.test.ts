@@ -118,17 +118,17 @@ describe('layoutVariables', () => {
     expect(variables['--enchase-motion-ease-out']).toBe('cubic-bezier(0.2, 0, 0, 1)')
     expect(variables['--enchase-motion-ease-in-out']).toBe('cubic-bezier(0.4, 0, 0.2, 1)')
     expect(variables['--enchase-motion-distance-sm']).toBe('12px')
-    expect(variables['--enchase-control-height-md']).toBe('2.25rem')
-    expect(variables['--enchase-radius-control']).toBe('0.625rem')
+    expect(variables['--enchase-control-height-md']).toBe('2.5rem')
+    expect(variables['--enchase-radius-control']).toBe('0.5rem')
   })
 
   it('declares the focus ring and the border width tokens the components read', () => {
     expect(variables['--enchase-focus-width']).toBe('2px')
     expect(variables['--enchase-focus-offset']).toBe('2px')
     expect(variables['--enchase-focus-offset-inset']).toBe('-2px')
-    expect(variables['--enchase-focus-offset-selector']).toBe('2px')
+    expect(variables['--enchase-focus-offset-selector']).toBe('3px')
     expect(variables['--enchase-border-width']).toBe('1px')
-    expect(variables['--enchase-border-width-strong']).toBe('1px')
+    expect(variables['--enchase-border-width-strong']).toBe('2px')
   })
 
   it('declares the state layers and the halos the components read', () => {
@@ -137,12 +137,12 @@ describe('layoutVariables', () => {
     expect(variables['--enchase-state-row-hover']).toBe('0.06')
     expect(variables['--enchase-state-disabled-container']).toBe('0.12')
     expect(variables['--enchase-state-disabled-content']).toBe('0.38')
-    expect(variables['--enchase-halo-size']).toBe('0px')
-    expect(variables['--enchase-halo-size-switch']).toBe('0px')
+    expect(variables['--enchase-halo-size']).toBe('10px')
+    expect(variables['--enchase-halo-size-switch']).toBe('0.5rem')
   })
 
   it('declares the target sizes the components keep above the 24px floor', () => {
-    expect(variables['--enchase-hit-size']).toBe('2rem')
+    expect(variables['--enchase-hit-size']).toBe('40px')
     expect(variables['--enchase-hit-size-lg']).toBe('44px')
   })
 

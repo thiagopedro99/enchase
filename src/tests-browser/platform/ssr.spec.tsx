@@ -7,7 +7,7 @@ import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
 import Layout from '@components/layout/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
-import { darkTheme, lightTheme } from '@styles/tokens/index.ts'
+import { defaultTheme } from '@styles/tokens/index.ts'
 
 import type { UIProviderProps } from '@components/uiProvider/types.ts'
 import type { ReactElement } from 'react'
@@ -135,14 +135,14 @@ describe('server html before any javascript runs', () => {
     await setScheme('dark')
     const host = mount()
 
-    expect(backgroundOf(host)).toBe(toRgb(darkTheme.colors.background))
+    expect(backgroundOf(host)).toBe(toRgb(defaultTheme.dark.colors.background))
   })
 
   it('paints the light colors when the system prefers light', async () => {
     await setScheme('light')
     const host = mount()
 
-    expect(backgroundOf(host)).toBe(toRgb(lightTheme.colors.background))
+    expect(backgroundOf(host)).toBe(toRgb(defaultTheme.light.colors.background))
   })
 
   it('lets an explicit data-theme beat the system preference', async () => {
@@ -150,6 +150,6 @@ describe('server html before any javascript runs', () => {
     document.documentElement.dataset.theme = 'light'
     const host = mount()
 
-    expect(backgroundOf(host)).toBe(toRgb(lightTheme.colors.background))
+    expect(backgroundOf(host)).toBe(toRgb(defaultTheme.light.colors.background))
   })
 })

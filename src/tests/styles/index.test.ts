@@ -4,7 +4,8 @@ import * as styles from '@styles/index.ts'
 
 describe('styles public entry', () => {
   it('exposes the tokens, the theme builders and the css generators', () => {
-    expect(styles.defaultTheme.base).toBe(styles.baseTokens)
+    expect(styles.defaultTheme.base).not.toBe(styles.baseTokens)
+    expect(styles.defaultTheme.base.fonts).toBe(styles.baseTokens.fonts)
     expect(styles.breakpoints).toBe(styles.baseTokens.breakpoints)
     expect(styles.themeModes).toEqual(['light', 'dark'])
     expect(typeof styles.createTheme).toBe('function')

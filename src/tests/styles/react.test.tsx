@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 
 import { defaultThemeCss, themeCss } from '@styles/css/declarations.ts'
-import { baseTokens, darkTheme, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
+import { baseTokens, defaultTheme, lightTheme } from '@styles/tokens/index.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 import { GlobalStyles, ThemeVariables } from '@styles/react.tsx'
 
@@ -19,7 +19,7 @@ const renderCss = (set: ThemeSet = defaultTheme) => {
 describe('ThemeVariables', () => {
   const css = renderCss()
   const lightStart = css.indexOf('--enchase-color-primary:' + lightTheme.colors.primary)
-  const darkStart = css.indexOf('--enchase-color-primary:' + darkTheme.colors.primary)
+  const darkStart = css.indexOf('--enchase-color-primary:' + defaultTheme.dark.colors.primary)
 
   it('writes the light values for the default and for the light selector', () => {
     expect(lightStart).toBeGreaterThan(-1)
@@ -36,10 +36,10 @@ describe('ThemeVariables', () => {
   })
 
   it('writes the colors and the shadows of each mode', () => {
-    expect(css).toContain('--enchase-color-background:' + lightTheme.colors.background)
-    expect(css).toContain('--enchase-color-background:' + darkTheme.colors.background)
-    expect(css).toContain('--enchase-shadow-md:' + lightTheme.shadows.md.replace(/\s+/g, ''))
-    expect(css).toContain('--enchase-shadow-md:' + darkTheme.shadows.md.replace(/\s+/g, ''))
+    expect(css).toContain('--enchase-color-background:' + defaultTheme.light.colors.background)
+    expect(css).toContain('--enchase-color-background:' + defaultTheme.dark.colors.background)
+    expect(css).toContain('--enchase-shadow-md:' + defaultTheme.light.shadows.md.replace(/\s+/g, ''))
+    expect(css).toContain('--enchase-shadow-md:' + defaultTheme.dark.shadows.md.replace(/\s+/g, ''))
   })
 })
 
