@@ -43,7 +43,7 @@ const Hero = ({ look, onLookChange }: HeroProps) => {
             <Badge variant="primary" size="sm">
               Novo na {version}
             </Badge>
-            <span>Lapidado, o novo visual padrão</span>
+            <span>Material 2, o quinto estilo</span>
             <ChevronRightIcon size={16} />
           </Link>
 

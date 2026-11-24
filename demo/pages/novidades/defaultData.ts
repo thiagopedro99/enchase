@@ -10,6 +10,33 @@ export const anchorOf = (version: string) => `v-${version.replace(/\./g, '-')}`
 
 export const releases: ReleaseNote[] = [
   {
+    version: '0.25.0',
+    previous: '0.24.0',
+    date: '24 de novembro de 2026',
+    shortDate: '24 nov',
+    title: 'Material 2, o quinto estilo',
+    summary: 'O estilo novo `material2` deixa o kit com a cara do tema padrão do Material UI: cantos de 4 px, botões em maiúsculas com elevação e campos com rótulo flutuante. É opcional: quem não importa o estilo continua com o visual que tem.',
+    behavior: true,
+    groups: [
+      {
+        kind: 'novo',
+        items: [
+          'Estilo `material2`, em `enchase/styles/material2`: próximo do tema padrão do Material UI v5, no claro e no escuro, com o contraste que a biblioteca exige.',
+          'Com uma cor de marca, o contêiner primário do `material2` acompanha a marca.',
+          'Dez ganchos novos, todos com o valor de antes como padrão: caixa e largura mínima do botão, caixa e espaçamento das abas, tamanho dos itens da paginação, fundo e sombra do acordeão, sombra da barra de navegação e trilho do switch desabilitado.'
+        ]
+      },
+      {
+        kind: 'mudou',
+        items: ['Um `ButtonLink` dentro de um elemento com `text-transform` não herda mais a caixa desse elemento. O `Button` não muda.']
+      }
+    ],
+    migration: {
+      text: 'Para usar o estilo novo, passe `material2` ao tema. Ele não embute a Roboto: carregue a fonte no app e passe em `fonts`. Se um `ButtonLink` seu dependia do `text-transform` do elemento em volta, defina `--enchase-button-text-transform` nesse elemento.',
+      blocks: [{ label: 'main.tsx', language: 'tsx', code: "import { ColorModeProvider } from 'enchase'\nimport { material2 } from 'enchase/styles/material2'\n\n<ColorModeProvider theme={{ style: material2 }}>\n  <App />\n</ColorModeProvider>" }]
+    }
+  },
+  {
     version: '0.24.0',
     previous: '0.23.0',
     date: '24 de novembro de 2026',

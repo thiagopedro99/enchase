@@ -1,14 +1,10 @@
 {
-  "since": "0.23.0",
+  "since": "0.24.0",
   "breaks": [],
   "behavior": [
     {
-      "key": "default-style",
-      "note": "the look that createTheme() and the components give with no style at all is the Lapidado look now, not Material 3: import material3 from enchase/styles/material3 and pass it as the style to keep the old look"
-    },
-    {
-      "key": "default-label-placement",
-      "note": "the default labelPlacement of the fields is stacked now, not floating; the material3 style keeps floating, and any style can set its own default with defaults.labelPlacement"
+      "key": "button-text-transform",
+      "note": "the Button and the ButtonLink set text-transform from the hook --enchase-button-text-transform, which falls back to none: a ButtonLink, which is an anchor, no longer inherits the text-transform of the element around it; set the hook on that element to keep it"
     }
   ]
 }
