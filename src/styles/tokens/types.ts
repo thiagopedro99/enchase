@@ -84,4 +84,5 @@ export type ThemeSet = {
   hooks?: HookValues | undefined
   density?: ThemeDensity | undefined
   defaults?: Partial<ThemeDefaults> | undefined
+  hooksSpecificity?: 'zero' | undefined
 }

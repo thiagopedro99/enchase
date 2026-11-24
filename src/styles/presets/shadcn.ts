@@ -384,6 +384,7 @@ const colorHooks: HookValues = {
   '--enchase-tabs-indicator-color': 'var(--enchase-color-text-primary)',
 
   '--enchase-table-header-color': 'var(--enchase-color-text-primary)',
+  '--enchase-table-header-background-sticky': 'var(--enchase-color-surface)',
 
   '--enchase-modal-panel-background': 'var(--enchase-color-background)',
   '--enchase-modal-panel-border-color': 'var(--enchase-color-border)',

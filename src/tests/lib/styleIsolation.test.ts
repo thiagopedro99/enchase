@@ -45,7 +45,7 @@ describe('each style is an entry of its own', () => {
 
   it('keeps each style as data, which imports only defineStyle and the types it is made of', () => {
     for (const file of sourcesIn('src/styles/presets')) {
-      expect(specifiersOf(file).filter((specifier) => !['../theme/style.ts', '../tokens/types.ts'].includes(specifier)), file).toEqual([])
+      expect(specifiersOf(file).filter((specifier) => !['../theme/style.ts', '../tokens/types.ts', '../tokens/enchase.ts'].includes(specifier)), file).toEqual([])
     }
   })
 

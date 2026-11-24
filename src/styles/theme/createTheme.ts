@@ -3,7 +3,7 @@ import { assertShapePreset, assertValidRadius, shapePresets } from './shape.ts'
 import { isRecord, mergeTokens } from './merge.ts'
 import { mergeMotion, motionTransitions } from './motion.ts'
 import { baseTokens, darkTheme, lightTheme } from '../tokens/index.ts'
-import { defaultColorHooks, defaultHooks } from '../tokens/defaultHooks.ts'
+import { enchaseStyle } from '../tokens/enchase.ts'
 import { assertValidColor } from './color.ts'
 import { assertStyle } from './style.ts'
 import { brandPalette } from './brand.ts'
@@ -95,7 +95,7 @@ const base = (fonts: BaseTokens['fonts'], motion: BaseTokens['motion'], borderRa
 }
 
 const resolveRadius = (shape: ShapePreset | undefined, overrides: RadiusOverrides | undefined, styled: RadiusOverrides | undefined): RadiusTokens => {
-  const preset = shape === undefined ? overlay(baseTokens.borderRadius, styled) : shapePresets[assertShapePreset(shape)]
+  const preset = shape === undefined ? overlay(shapePresets.pill, styled) : shapePresets[assertShapePreset(shape)]
 
   if (overrides === undefined) return preset
 
@@ -104,7 +104,7 @@ const resolveRadius = (shape: ShapePreset | undefined, overrides: RadiusOverride
   return { none, ...mergeTokens(overridable, overrides, 'radius', assertValidRadius, 'radius') } as RadiusTokens
 }
 
-const noStyle: ThemeStyle = { hooks: defaultHooks, colorHooks: defaultColorHooks, brand: ['primary', 'onPrimary', 'primaryHover', 'inversePrimary'], defaults: { labelPlacement: 'stacked' } }
+const noStyle: ThemeStyle = enchaseStyle
 
 const resolveStyle = (style: unknown): ThemeStyle => {
   if (style === undefined || style === null) return noStyle
@@ -137,6 +137,7 @@ export const createTheme = (input: ThemeInput = {}): ThemeSet => {
     dark: mergeMode(withBrand(withStyle(darkTheme, definition.dark, definition.colorHooks), brandOf(palette?.dark, definition.brand), 'dark'), input.dark, 'dark'),
     ...(definition.hooks === undefined ? {} : { hooks: definition.hooks }),
     ...(definition.density === undefined ? {} : { density: definition.density }),
-    ...(definition.defaults === undefined ? {} : { defaults: overlay({}, definition.defaults) })
+    ...(definition.defaults === undefined ? {} : { defaults: overlay({}, definition.defaults) }),
+    ...(definition.hooksSpecificity === undefined ? {} : { hooksSpecificity: definition.hooksSpecificity })
   }
 }

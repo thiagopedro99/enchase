@@ -55,11 +55,19 @@ const variablesRule = (selector: string, variables: Record<string, string | numb
   return `${selector} {\n${declarations.join('\n')}\n}`
 }
 
-export const cssVariablesRule = (selector: string, theme: ThemeTokens) => variablesRule(selector, themeVariables(theme))
+export const cssVariablesRule = (selector: string, theme: ThemeTokens, lowSpecificity?: boolean) => {
+  if (!lowSpecificity || theme.hooks === undefined || Object.keys(theme.hooks).length === 0) return variablesRule(selector, themeVariables(theme))
+
+  return [variablesRule(selector, { ...colorVariables(theme.colors), ...shadowVariables(theme.shadows) }), variablesRule(`:where(${selector})`, theme.hooks)].join('\n\n')
+}
 
 export const fontVariablesRule = (selector: string, fonts: FontTokens) => variablesRule(selector, fontVariables(fonts))
 
-export const layoutVariablesRule = (selector: string, theme: LayoutTokens, hooks?: HookValues) => variablesRule(selector, { ...layoutVariables(theme), ...hooks })
+export const layoutVariablesRule = (selector: string, theme: LayoutTokens, hooks?: HookValues, lowSpecificity?: boolean) => {
+  if (!lowSpecificity || hooks === undefined || Object.keys(hooks).length === 0) return variablesRule(selector, { ...layoutVariables(theme), ...hooks })
+
+  return [variablesRule(selector, layoutVariables(theme)), variablesRule(`:where(${selector})`, hooks)].join('\n\n')
+}
 
 export const densityRules = (name: keyof typeof densities, own?: ThemeDensity['compact']) => {
   const selector = `:root[data-density='${name}']`
@@ -84,14 +92,15 @@ const indent = (css: string) =>
     .map((line) => (line ? `  ${line}` : line))
     .join('\n')
 
-export const themeCss = ({ base, light, dark, hooks, density }: ThemeSet, { layer }: ThemeCssOptions = {}) => {
+export const themeCss = ({ base, light, dark, hooks, density, hooksSpecificity }: ThemeSet, { layer }: ThemeCssOptions = {}) => {
+  const low = hooksSpecificity === 'zero'
   const rules = [
     fontVariablesRule(':root', base.fonts),
-    layoutVariablesRule(':root', base, hooks),
+    layoutVariablesRule(':root', base, hooks, low),
     densityRules('compact', density?.compact),
-    cssVariablesRule(":root, [data-theme='light']", light),
-    cssVariablesRule("[data-theme='dark']", dark),
-    `@media (prefers-color-scheme: dark) {\n${indent(cssVariablesRule(':root:not([data-theme])', dark))}\n}`
+    cssVariablesRule(":root, [data-theme='light']", light, low),
+    cssVariablesRule("[data-theme='dark']", dark, low),
+    `@media (prefers-color-scheme: dark) {\n${indent(cssVariablesRule(':root:not([data-theme])', dark, low))}\n}`
   ].join('\n\n')
 
   return layer ? `@layer ${layer} {\n${indent(rules)}\n}` : rules

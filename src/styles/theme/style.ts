@@ -33,9 +33,10 @@ export type ThemeStyle = {
   dark?: ThemeStyleMode | undefined
   density?: ThemeDensity | undefined
   defaults?: Partial<ThemeDefaults> | undefined
+  hooksSpecificity?: 'zero' | undefined
 }
 
-const styleSections = ['base', 'fonts', 'radius', 'hooks', 'colorHooks', 'brand', ...themeModes, 'density', 'defaults']
+const styleSections = ['base', 'fonts', 'radius', 'hooks', 'colorHooks', 'brand', ...themeModes, 'density', 'defaults', 'hooksSpecificity']
 
 const modeSections = ['colors', 'shadows', 'hooks']
 
@@ -161,6 +162,10 @@ const checkDefaults = (defaults: unknown) => {
   }
 }
 
+const checkHooksSpecificity = (hooksSpecificity: unknown) => {
+  if (hooksSpecificity !== undefined && hooksSpecificity !== 'zero') throw new Error(`Invalid value for "style.hooksSpecificity": ${JSON.stringify(hooksSpecificity)}`)
+}
+
 export const assertStyle = (style: unknown): ThemeStyle => {
   if (typeof style === 'object' && style !== null && validated.has(style)) return style as ThemeStyle
 
@@ -182,6 +187,7 @@ export const assertStyle = (style: unknown): ThemeStyle => {
   checkMode(style.dark, 'style.dark')
   checkDensity(style.density)
   checkDefaults(style.defaults)
+  checkHooksSpecificity(style.hooksSpecificity)
 
   return style as ThemeStyle
 }

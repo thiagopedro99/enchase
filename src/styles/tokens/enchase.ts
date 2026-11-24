@@ -12,6 +12,7 @@ const fields: HookValues = {
   '--enchase-input-height': 'var(--enchase-control-height-md)',
   '--enchase-input-font-size': 'var(--enchase-font-size-sm)',
   '--enchase-input-padding-inline': '0.75rem',
+  '--enchase-input-outline-padding-inline': 'calc(var(--enchase-input-padding-inline) - var(--enchase-space-sm))',
   '--enchase-input-gap': '0.5rem',
   '--enchase-input-outline-shadow': edge,
   '--enchase-input-opacity-disabled': '0.5',
@@ -207,9 +208,7 @@ const navigation: HookValues = {
   '--enchase-sidebar-indicator-radius': 'var(--enchase-radius-md)'
 }
 
-export const defaultHooks: HookValues = { ...fields, ...controls, ...containers, ...navigation }
-
-export const defaultColorHooks: HookValues = {
+const colorHooks: HookValues = {
   '--enchase-button-border-color-outline': 'var(--enchase-color-border)',
   '--enchase-button-color-outline': 'var(--enchase-color-text-primary)',
   '--enchase-button-color-outline-hover': 'var(--enchase-color-text-primary)',
@@ -241,7 +240,6 @@ export const defaultColorHooks: HookValues = {
   '--enchase-radio-group-dot-border-color-disabled': 'var(--enchase-color-primary)',
   '--enchase-radio-group-label-color-disabled': 'var(--enchase-color-text-primary)',
   '--enchase-radio-group-legend-color': 'var(--enchase-color-text-primary)',
-  '--enchase-segmented-control-border-color': 'var(--enchase-color-border)',
   '--enchase-segmented-control-item-border-color': 'var(--enchase-color-border)',
   '--enchase-segmented-control-item-background-selected': 'var(--enchase-color-surface-container)',
   '--enchase-segmented-control-item-color-selected': 'var(--enchase-color-text-primary)',
@@ -295,6 +293,7 @@ export const defaultColorHooks: HookValues = {
   '--enchase-tabs-indicator-color': 'var(--enchase-color-text-primary)',
 
   '--enchase-table-header-color': 'var(--enchase-color-text-primary)',
+  '--enchase-table-header-background-sticky': 'var(--enchase-color-surface)',
 
   '--enchase-modal-panel-background': 'var(--enchase-color-background)',
   '--enchase-modal-panel-border-color': 'var(--enchase-color-border)',
@@ -326,4 +325,121 @@ export const defaultColorHooks: HookValues = {
   '--enchase-sidebar-border-color': 'var(--enchase-color-border)',
 
   '--enchase-skeleton-background': 'var(--enchase-color-surface-container)'
+}
+
+const ownCompactHooks: HookValues = {
+  '--enchase-input-height': 'var(--enchase-control-height-md)',
+  '--enchase-textarea-min-height': '4rem',
+  '--enchase-tabs-tab-min-height': 'var(--enchase-control-height-md)',
+  '--enchase-accordion-trigger-min-height': '0px',
+  '--enchase-select-option-padding-block': '0.375rem',
+  '--enchase-badge-padding-inline-md': '0.5rem',
+  '--enchase-sidebar-item-control-height': '2rem',
+  '--enchase-sidebar-header-min-height': '3.5rem',
+  '--enchase-navbar-bar-height': '3.5rem',
+  '--enchase-layout-header-height': '3.5rem'
+}
+
+export const enchaseStyle = {
+  base: {
+    control: { height: { sm: '2rem', md: '2.25rem', lg: '2.5rem' } },
+    focus: { offsetSelector: '2px' },
+    border: { widthStrong: '1px' },
+    halo: { size: '0px', sizeSwitch: '0px' },
+    hit: { size: '2rem' }
+  },
+  radius: { xs: '0.25rem', sm: '0.375rem', md: '0.5rem', lg: '0.75rem', xl: '1rem', '2xl': '1.25rem', control: '0.625rem', button: '0.625rem' },
+  hooks: { ...fields, ...controls, ...containers, ...navigation },
+  colorHooks,
+  brand: ['primary', 'onPrimary', 'primaryHover', 'inversePrimary'] as const,
+  light: {
+    colors: {
+      primaryContainer: '#EEF0FF',
+      onPrimaryContainer: '#312E81',
+
+      secondary: '#4B5162',
+      onSecondary: '#FFFFFF',
+      secondaryContainer: '#F0F1F4',
+      onSecondaryContainer: '#14161C',
+
+      background: '#FBFBFC',
+      surface: '#FFFFFF',
+      surfaceContainerLow: '#F6F7F9',
+      surfaceContainer: '#F0F1F4',
+      surfaceContainerHigh: '#E5E7EC',
+
+      text: {
+        primary: '#10121B',
+        secondary: '#5A6072',
+        disabled: 'rgba(16, 18, 27, 0.5)',
+        placeholder: '#5C6274',
+        inverse: '#F6F7F9'
+      },
+
+      border: '#E2E4EA',
+      borderStrong: '#7B8194',
+      borderLight: '#EDEEF2',
+
+      inverseSurface: '#14161C',
+      inverseOnSurface: '#F6F7F9',
+      inversePrimary: '#A5B4FC',
+
+      overlay: 'rgba(16, 18, 27, 0.5)',
+      codeBackground: '#14161C'
+    },
+    shadows: {
+      sm: '0 1px 2px 0 rgb(16 18 27 / 0.06), 0 1px 1px 0 rgb(16 18 27 / 0.04)',
+      md: '0 4px 10px -2px rgb(16 18 27 / 0.08), 0 2px 4px -2px rgb(16 18 27 / 0.06)',
+      lg: '0 12px 24px -6px rgb(16 18 27 / 0.12), 0 4px 8px -4px rgb(16 18 27 / 0.06)',
+      xl: '0 24px 48px -12px rgb(16 18 27 / 0.18), 0 8px 16px -8px rgb(16 18 27 / 0.08)'
+    }
+  },
+  dark: {
+    colors: {
+      primary: '#A5ABFF',
+      onPrimary: '#14143D',
+      primaryHover: '#BCC0FF',
+      primaryContainer: '#23254A',
+      onPrimaryContainer: '#E0E2FF',
+
+      secondary: '#B4B9C8',
+      onSecondary: '#14161C',
+      secondaryContainer: '#22252D',
+      onSecondaryContainer: '#F2F3F6',
+
+      background: '#0C0D11',
+      surface: '#121419',
+      surfaceContainerLow: '#16181E',
+      surfaceContainer: '#1C1F26',
+      surfaceContainerHigh: '#272A33',
+
+      text: {
+        primary: '#F2F3F6',
+        secondary: '#A3A9B8',
+        disabled: 'rgba(242, 243, 246, 0.5)',
+        placeholder: '#9399AA',
+        inverse: '#14161C'
+      },
+
+      border: '#2A2D37',
+      borderStrong: '#80879A',
+      borderLight: '#1E2128',
+
+      inverseSurface: '#F2F3F6',
+      inverseOnSurface: '#14161C',
+      inversePrimary: '#4F46E5',
+
+      overlay: 'rgba(0, 0, 0, 0.6)',
+      codeBackground: '#07080A'
+    },
+    shadows: {
+      sm: '0 1px 2px 0 rgb(0 0 0 / 0.4)',
+      md: '0 4px 10px -2px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.4)',
+      lg: '0 12px 24px -6px rgb(0 0 0 / 0.55), 0 4px 8px -4px rgb(0 0 0 / 0.4)',
+      xl: '0 24px 48px -12px rgb(0 0 0 / 0.65), 0 8px 16px -8px rgb(0 0 0 / 0.45)'
+    }
+  },
+  defaults: { labelPlacement: 'stacked' as const },
+  density: { compact: { hooks: ownCompactHooks } },
+  hooksSpecificity: 'zero' as const
 }
