@@ -36,13 +36,13 @@ const budgets = [
   { label: 'ColorModeProvider', source: "export { ColorModeProvider } from 'enchase'\n", maxBytes: 62464, styles: [], density: true },
   { label: 'createTheme', source: "export { createTheme } from 'enchase/theme'\n", maxBytes: 52224, styles: [] },
   { label: 'enchase style', source: "export { enchase } from 'enchase/styles/enchase'\n", maxBytes: 37120, styles: ['enchase'] },
-  { label: 'material2 style', source: "export { material2 } from 'enchase/styles/material2'\n", maxBytes: 25600, styles: ['material2'] },
+  { label: 'material2 style', source: "export { material2 } from 'enchase/styles/material2'\n", maxBytes: 28672, styles: ['material2'] },
   { label: 'material3 style', source: "export { material3 } from 'enchase/styles/material3'\n", maxBytes: 17920, styles: ['material3'] },
   { label: 'shadcn style', source: "export { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 35840, styles: ['shadcn'] },
   { label: 'workbench style', source: "export { workbench } from 'enchase/styles/workbench'\n", maxBytes: 40960, styles: ['workbench'] },
   { label: 'ColorModeProvider with shadcn', source: "export { ColorModeProvider } from 'enchase'\nexport { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 86016, styles: ['shadcn'], density: true },
   { label: 'ColorModeProvider with workbench', source: "export { ColorModeProvider } from 'enchase'\nexport { workbench } from 'enchase/styles/workbench'\n", maxBytes: 91136, styles: ['workbench'], density: true },
-  { label: 'ColorModeProvider with material2', source: "export { ColorModeProvider } from 'enchase'\nexport { material2 } from 'enchase/styles/material2'\n", maxBytes: 73728, styles: ['material2'], density: true }
+  { label: 'ColorModeProvider with material2', source: "export { ColorModeProvider } from 'enchase'\nexport { material2 } from 'enchase/styles/material2'\n", maxBytes: 75776, styles: ['material2'], density: true }
 ]
 
 const hookNames = `import { readFileSync } from 'node:fs'

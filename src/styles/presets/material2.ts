@@ -32,28 +32,23 @@ const buttons: HookValues = {
   '--enchase-button-padding-inline-sm': '0.625rem',
   '--enchase-button-padding-inline-md': '1rem',
   '--enchase-button-padding-inline-lg': '1.375rem',
-  '--enchase-button-radius-sm': '0.25rem',
-  '--enchase-button-radius-md': '0.25rem',
-  '--enchase-button-radius-lg': '0.25rem',
-  '--enchase-button-shadow-primary': elevation2
+  '--enchase-button-shadow-primary': elevation2,
+  '--enchase-button-shadow-secondary': elevation2
 }
 
 const fields: HookValues = {
   '--enchase-input-height': '3.5rem',
   '--enchase-input-padding-inline': '0.875rem',
-  '--enchase-input-field-radius': '0.25rem',
-  '--enchase-select-field-radius': '0.25rem',
-  '--enchase-textarea-field-radius': '0.25rem',
-  '--enchase-number-input-field-radius': '0.25rem',
-  '--enchase-date-picker-control-radius': '0.25rem',
-  '--enchase-combobox-control-radius': '0.25rem',
-  '--enchase-select-picker-radius': '0.25rem',
   '--enchase-select-option-padding-block': '0.375rem',
   '--enchase-select-option-padding-inline': '1rem',
   '--enchase-select-option-radius': '0px',
   '--enchase-combobox-option-padding-block': '0.375rem',
   '--enchase-combobox-option-padding-inline': '1rem',
-  '--enchase-combobox-option-radius': '0px'
+  '--enchase-combobox-option-radius': '0px',
+  '--enchase-input-toggle-radius': 'var(--enchase-radius-full)',
+  '--enchase-number-input-stepper-radius': 'var(--enchase-radius-full)',
+  '--enchase-combobox-toggle-radius': 'var(--enchase-radius-full)',
+  '--enchase-date-picker-toggle-radius': 'var(--enchase-radius-full)'
 }
 
 const selection: HookValues = {
@@ -69,10 +64,7 @@ const selection: HookValues = {
   '--enchase-switch-thumb-shadow-checked-active': elevation1,
   '--enchase-switch-track-border-color': 'transparent',
   '--enchase-switch-track-border-color-disabled': 'transparent',
-  '--enchase-segmented-control-background': 'transparent',
-  '--enchase-segmented-control-radius': '0.25rem',
-  '--enchase-segmented-control-radius-sm': '0.25rem',
-  '--enchase-segmented-control-radius-lg': '0.25rem'
+  '--enchase-segmented-control-background': 'transparent'
 }
 
 const navigation: HookValues = {
@@ -89,33 +81,38 @@ const navigation: HookValues = {
   '--enchase-pagination-control-radius': 'var(--enchase-radius-full)',
   '--enchase-menu-item-padding-block': '0.375rem',
   '--enchase-menu-item-padding-inline': '1rem',
-  '--enchase-menu-item-radius': '0px'
+  '--enchase-menu-item-radius': '0px',
+  '--enchase-sidebar-border-width': '1px'
 }
 
 const containers: HookValues = {
-  '--enchase-card-radius': '0.25rem',
-  '--enchase-modal-panel-radius': '0.25rem',
   '--enchase-modal-title-font-size': '1.25rem',
   '--enchase-modal-header-padding-block': '1rem 0',
   '--enchase-drawer-panel-radius': '0px',
   '--enchase-drawer-panel-shadow': elevation16,
+  '--enchase-drawer-title-font-size': '1.25rem',
+  '--enchase-drawer-title-font-weight': 'var(--enchase-font-weight-medium)',
   '--enchase-accordion-trigger-padding-block': '0',
   '--enchase-table-header-font-weight': 'var(--enchase-font-weight-medium)',
   '--enchase-table-cell-padding-block': '1rem',
   '--enchase-table-cell-padding-block-sm': '0.375rem',
   '--enchase-table-cell-padding-inline-sm': '1rem',
-  '--enchase-popover-content-radius': '0.25rem'
+  '--enchase-table-element-font-size-md': '0.875rem',
+  '--enchase-table-header-background': 'transparent'
 }
 
 const feedback: HookValues = {
-  '--enchase-alert-radius': '0.25rem',
   '--enchase-tooltip-bubble-font-size': '0.6875rem',
   '--enchase-tooltip-bubble-font-weight': 'var(--enchase-font-weight-medium)',
   '--enchase-toast-min-height': '3rem',
   '--enchase-toast-shadow': elevation6,
   '--enchase-progress-track-height-md': '0.25rem',
   '--enchase-progress-thickness': '3.6',
-  '--enchase-skeleton-radius-rectangular': '0.25rem'
+  '--enchase-tag-radius': 'var(--enchase-radius-full)',
+  '--enchase-tag-remove-radius': 'var(--enchase-radius-full)',
+  '--enchase-badge-radius': 'var(--enchase-radius-full)',
+  '--enchase-tag-min-height-sm': '1.5rem',
+  '--enchase-tag-font-size-md': '0.8125rem'
 }
 
 const colorHooks: HookValues = {
@@ -129,29 +126,31 @@ const colorHooks: HookValues = {
   '--enchase-combobox-option-background-selected': primaryLayer,
   '--enchase-sidebar-item-control-background-current': primaryLayer,
   '--enchase-table-row-background-selected': primaryLayer,
-  '--enchase-switch-thumb-background': 'var(--enchase-color-surface)',
   '--enchase-switch-thumb-background-checked': 'var(--enchase-color-primary)',
+  '--enchase-switch-track-background': 'var(--enchase-color-border-strong)',
   '--enchase-switch-track-background-checked': 'color-mix(in srgb, var(--enchase-color-primary) 50%, var(--enchase-color-surface))',
   '--enchase-card-shadow-default': 'var(--enchase-shadow-sm)',
   '--enchase-card-shadow-elevated': 'var(--enchase-shadow-sm)',
   '--enchase-accordion-shadow': 'var(--enchase-shadow-sm)',
   '--enchase-modal-panel-shadow': 'var(--enchase-shadow-xl)',
   '--enchase-popover-content-shadow': 'var(--enchase-shadow-lg)',
+  '--enchase-select-picker-shadow': 'var(--enchase-shadow-lg)',
+  '--enchase-navbar-shadow': 'var(--enchase-shadow-md)',
   '--enchase-button-shadow-primary-hover': 'var(--enchase-shadow-md)',
+  '--enchase-button-shadow-secondary-hover': 'var(--enchase-shadow-md)',
+  '--enchase-button-background-secondary': 'var(--enchase-color-secondary-container)',
+  '--enchase-button-color-secondary': 'var(--enchase-color-on-secondary-container)',
   '--enchase-avatar-background': '#767676',
   '--enchase-avatar-color': '#FFFFFF',
-  '--enchase-alert-color-info': 'var(--enchase-color-text-primary)',
-  '--enchase-alert-color-success': 'var(--enchase-color-text-primary)',
-  '--enchase-alert-color-warning': 'var(--enchase-color-text-primary)',
-  '--enchase-alert-color-error': 'var(--enchase-color-text-primary)',
   '--enchase-alert-icon-color-info': 'var(--enchase-color-info)',
   '--enchase-alert-icon-color-success': 'var(--enchase-color-success)',
   '--enchase-alert-icon-color-warning': 'var(--enchase-color-warning)',
   '--enchase-alert-icon-color-error': 'var(--enchase-color-error)',
-  '--enchase-alert-border-color-info': 'var(--enchase-color-info)',
-  '--enchase-alert-border-color-success': 'var(--enchase-color-success)',
-  '--enchase-alert-border-color-warning': 'var(--enchase-color-warning)',
-  '--enchase-alert-border-color-error': 'var(--enchase-color-error)'
+  '--enchase-sidebar-background': 'var(--enchase-color-surface)',
+  '--enchase-sidebar-border-color': 'var(--enchase-color-border)',
+  '--enchase-table-header-background-sticky': 'var(--enchase-color-surface)',
+  '--enchase-table-header-color': 'var(--enchase-color-text-primary)',
+  '--enchase-tag-border-color': 'transparent'
 }
 
 const compactHooks: HookValues = {
@@ -219,7 +218,18 @@ const light: ThemeStyleMode = {
   shadows: { sm: elevation1, md: elevation4, lg: elevation8, xl: elevation24 },
   hooks: {
     '--enchase-button-border-color-outline': 'color-mix(in srgb, var(--enchase-color-primary) 75%, transparent)',
-    '--enchase-skeleton-background': 'rgba(0, 0, 0, 0.11)'
+    '--enchase-skeleton-background': 'rgba(0, 0, 0, 0.11)',
+    '--enchase-card-background-default': 'var(--enchase-color-surface)',
+    '--enchase-card-background-elevated': 'var(--enchase-color-surface)',
+    '--enchase-modal-panel-background': 'var(--enchase-color-surface)',
+    '--enchase-drawer-panel-background': 'var(--enchase-color-surface)',
+    '--enchase-popover-content-background': 'var(--enchase-color-surface)',
+    '--enchase-select-picker-background': 'var(--enchase-color-surface)',
+    '--enchase-navbar-background-solid': 'var(--enchase-color-surface)',
+    '--enchase-accordion-trigger-background': 'var(--enchase-color-surface)',
+    '--enchase-switch-thumb-background': 'var(--enchase-color-surface)',
+    '--enchase-button-background-secondary-hover': '#D5D5D5',
+    '--enchase-tag-background': selectedLayer
   }
 }
 
@@ -233,8 +243,8 @@ const dark: ThemeStyleMode = {
 
     secondary: '#CE93D8',
     onSecondary: 'rgba(0, 0, 0, 0.87)',
-    secondaryContainer: '#302732',
-    onSecondaryContainer: '#CE93D8',
+    secondaryContainer: '#424242',
+    onSecondaryContainer: '#FFFFFF',
 
     background: '#121212',
     surface: '#121212',
@@ -284,7 +294,18 @@ const dark: ThemeStyleMode = {
   shadows: { sm: elevation1, md: elevation4, lg: elevation8, xl: elevation24 },
   hooks: {
     '--enchase-button-border-color-outline': 'color-mix(in srgb, var(--enchase-color-primary) 50%, transparent)',
-    '--enchase-skeleton-background': 'rgba(255, 255, 255, 0.13)'
+    '--enchase-skeleton-background': 'rgba(255, 255, 255, 0.13)',
+    '--enchase-card-background-default': '#1E1E1E',
+    '--enchase-card-background-elevated': '#1E1E1E',
+    '--enchase-accordion-trigger-background': '#1E1E1E',
+    '--enchase-navbar-background-solid': '#272727',
+    '--enchase-popover-content-background': '#2E2E2E',
+    '--enchase-select-picker-background': '#2E2E2E',
+    '--enchase-drawer-panel-background': '#363636',
+    '--enchase-modal-panel-background': '#383838',
+    '--enchase-switch-thumb-background': '#E0E0E0',
+    '--enchase-button-background-secondary-hover': '#4F4F4F',
+    '--enchase-tag-background': 'color-mix(in srgb, var(--enchase-color-text-primary) 16%, var(--enchase-color-surface))'
   }
 }
 
@@ -293,6 +314,7 @@ export const material2 = defineStyle({
     control: { height: { sm: '1.875rem', md: '2.25rem', lg: '2.625rem' } },
     state: { hover: '0.04', focus: '0.12', pressed: '0.12', rowHover: '0.04', disabledContainer: '0.12', disabledContent: '0.38' }
   },
+  radius: { xs: '0.125rem', sm: '0.25rem', md: '0.25rem', lg: '0.25rem', xl: '0.25rem', '2xl': '0.25rem', control: '0.25rem', button: '0.25rem' },
   hooks: { ...buttons, ...fields, ...selection, ...navigation, ...containers, ...feedback },
   colorHooks,
   brand: ['primary', 'onPrimary', 'primaryHover'],
