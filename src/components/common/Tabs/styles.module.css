@@ -34,6 +34,8 @@
   font-family: inherit;
   font-weight: var(--enchase-tabs-tab-font-weight, var(--enchase-font-weight-medium));
   line-height: var(--enchase-tabs-tab-line-height, var(--enchase-line-height-tight, 1.2));
+  letter-spacing: var(--enchase-tabs-tab-letter-spacing, normal);
+  text-transform: var(--enchase-tabs-tab-text-transform, none);
   color: var(--enchase-tabs-tab-color, var(--enchase-color-text-secondary));
   white-space: nowrap;
   background-color: transparent;
