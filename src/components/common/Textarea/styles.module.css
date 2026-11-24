@@ -232,11 +232,13 @@
   font-size: var(--enchase-textarea-error-font-size, var(--enchase-font-size-xs));
   color: var(--enchase-input-error-color, var(--enchase-color-error));
   font-weight: var(--enchase-textarea-error-font-weight, var(--enchase-font-weight-medium));
+  overflow-wrap: anywhere;
 }
 
 .helper {
   font-size: var(--enchase-textarea-helper-font-size, var(--enchase-font-size-xs));
   color: var(--enchase-input-helper-color, var(--enchase-color-text-secondary));
+  overflow-wrap: anywhere;
 }
 
 .required {
