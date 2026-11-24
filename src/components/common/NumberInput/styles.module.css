@@ -109,11 +109,13 @@
   color: var(--enchase-input-label-color-error, var(--enchase-color-error));
 }
 
-.input:focus ~ .label {
+.input:focus ~ .label,
+.wrapper[data-label-placement]:has(.input:focus) > .label {
   color: var(--enchase-input-label-color-focus, var(--enchase-color-primary));
 }
 
-.input:focus ~ .label[data-has-error] {
+.input:focus ~ .label[data-has-error],
+.wrapper[data-label-placement]:has(.input:focus) > .label[data-has-error] {
   color: var(--enchase-input-label-color-error-focus, var(--enchase-color-error));
 }
 

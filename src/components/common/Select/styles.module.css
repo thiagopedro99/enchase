@@ -197,12 +197,16 @@
 }
 
 .select:focus ~ .label,
-.select:open ~ .label {
+.select:open ~ .label,
+.wrapper[data-label-placement]:has(.select:focus) > .label,
+.wrapper[data-label-placement]:has(.select:open) > .label {
   color: var(--enchase-input-label-color-focus, var(--enchase-color-primary));
 }
 
 .select:focus ~ .label[data-has-error],
-.select:open ~ .label[data-has-error] {
+.select:open ~ .label[data-has-error],
+.wrapper[data-label-placement]:has(.select:focus) > .label[data-has-error],
+.wrapper[data-label-placement]:has(.select:open) > .label[data-has-error] {
   color: var(--enchase-input-label-color-error-focus, var(--enchase-color-error));
 }
 

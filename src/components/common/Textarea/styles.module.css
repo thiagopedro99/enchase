@@ -124,11 +124,13 @@
   color: var(--enchase-input-label-color-error, var(--enchase-color-error));
 }
 
-.textarea:focus ~ .label {
+.textarea:focus ~ .label,
+.wrapper[data-label-placement]:has(.textarea:focus) > .label {
   color: var(--enchase-input-label-color-focus, var(--enchase-color-primary));
 }
 
-.textarea:focus ~ .label[data-has-error] {
+.textarea:focus ~ .label[data-has-error],
+.wrapper[data-label-placement]:has(.textarea:focus) > .label[data-has-error] {
   color: var(--enchase-input-label-color-error-focus, var(--enchase-color-error));
 }
 
