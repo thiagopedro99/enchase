@@ -457,13 +457,14 @@ console.log(JSON.stringify(differing))`
   }
 
   const packedTheme = readFileSync(join(consumer, 'node_modules', 'enchase', 'dist-lib', 'theme.css'), 'utf8')
-  const tokensRule = ":root[data-density='compact'] {"
-  const hooksRule = ":where(:root[data-density='compact']) {"
+  const densityRules = [
+    ":root[data-density='compact'] {",
+    ":where(:root[data-density='compact']) {"
+  ]
 
-  if (packedTheme.split(tokensRule).length !== 2) throw new Error(`the packed theme.css must carry the compact density block once, as the rule ${tokensRule}`)
-  if (packedTheme.includes(hooksRule)) throw new Error(`the packed theme.css must carry no rule at ${hooksRule}, since the enchase style redeclares every hook that the compact density would otherwise keep there`)
+  if (densityRules.some((rule) => packedTheme.split(rule).length !== 2)) throw new Error(`the packed theme.css must carry the compact density block once, as the rules ${densityRules.join(' and ')}`)
 
-  console.log('the packed theme.css carries the compact density block once, fully redeclared by the enchase style, with no rule left at 0,0,0')
+  console.log('the packed theme.css carries the compact density block once')
 
   const cssFolder = join(consumer, 'node_modules', 'enchase', 'dist-lib', 'css')
   const cssMap = JSON.parse(readFileSync(join(cssFolder, 'index.json'), 'utf8'))

@@ -127,12 +127,12 @@ describe('the way out of the compact density in a theme without a layer, for a t
 })
 
 describe('a hook of the app, against the hooks of the compact density', () => {
-  it.each(orders)('loses to the compact density of the enchase style on :root in a theme without a layer, because the style redeclares --enchase-input-height at 0,2,0 under the attribute, the same way any style with its own compact hooks does, with the css of the app %s the theme', (where) => {
+  it.each(orders)('wins on :root in a theme without a layer, because 0,1,0 is stronger than the 0,0,0 of the compact hooks, with the css of the app %s the theme', (where) => {
     setDensity('compact')
     show(form)
     addStyle(appHook, where)
 
-    expect(readings()).toMatchObject({ token: '32px', checkbox: 32, field: 32 })
+    expect(readings()).toMatchObject({ token: '32px', checkbox: 32, field: 48 })
   })
 
   it.each(orders)('wins on :root in a theme in a layer, because css without a layer beats every layer, with the css of the app %s the theme', (where) => {

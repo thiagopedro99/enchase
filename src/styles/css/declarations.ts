@@ -69,17 +69,18 @@ export const layoutVariablesRule = (selector: string, theme: LayoutTokens, hooks
   return [variablesRule(selector, layoutVariables(theme)), variablesRule(`:where(${selector})`, hooks)].join('\n\n')
 }
 
-export const densityRules = (name: keyof typeof densities, own?: ThemeDensity['compact']) => {
+export const densityRules = (name: keyof typeof densities, own?: ThemeDensity['compact'], lowSpecificity?: boolean) => {
   const selector = `:root[data-density='${name}']`
   const { tokens, hooks } = densities[name]
   const redeclared = { ...own?.hooks }
   const styled = Object.fromEntries(Object.entries({ ...own?.tokens }).filter(([, value]) => value !== undefined))
   const kept = Object.fromEntries(Object.entries(hooks).filter(([hook]) => !(hook in redeclared)))
-  const rule = variablesRule(selector, { ...tokens, ...styled, ...redeclared })
+  const rule = variablesRule(selector, { ...tokens, ...styled, ...(lowSpecificity ? {} : redeclared) })
+  const whereHooks = lowSpecificity ? { ...kept, ...redeclared } : kept
 
-  if (Object.keys(kept).length === 0) return rule
+  if (Object.keys(whereHooks).length === 0) return rule
 
-  return [rule, variablesRule(`:where(${selector})`, kept)].join('\n\n')
+  return [rule, variablesRule(`:where(${selector})`, whereHooks)].join('\n\n')
 }
 
 export type ThemeCssOptions = {
@@ -97,7 +98,7 @@ export const themeCss = ({ base, light, dark, hooks, density, hooksSpecificity }
   const rules = [
     fontVariablesRule(':root', base.fonts),
     layoutVariablesRule(':root', base, hooks, low),
-    densityRules('compact', density?.compact),
+    densityRules('compact', density?.compact, low),
     cssVariablesRule(":root, [data-theme='light']", light, low),
     cssVariablesRule("[data-theme='dark']", dark, low),
     `@media (prefers-color-scheme: dark) {\n${indent(cssVariablesRule(':root:not([data-theme])', dark, low))}\n}`

@@ -169,7 +169,7 @@ for (const file of ['dist-lib/styles.css', 'dist-lib/styles.layer.css']) {
 }
 
 const themeFile = 'dist-lib/theme.css'
-const densitySelectors = [':root[data-density=compact]']
+const densitySelectors = [':root[data-density=compact]', ':where(:root[data-density=compact])']
 
 const themeStylesheets = [
   [themeFile, readFileSync(join(root, themeFile), 'utf8')],
