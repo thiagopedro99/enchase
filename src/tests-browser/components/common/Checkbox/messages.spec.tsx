@@ -10,7 +10,7 @@ import { contrastRatio } from '@styles/theme/contrast.ts'
 
 import type { ReactElement } from 'react'
 
-const typography = { enchase: { size: 14, weight: '400' }, material3: { size: 12, weight: '500' }, shadcn: { size: 14, weight: '400' }, workbench: { size: 12, weight: '500' } } as const
+const typography = { enchase: { size: 14, weight: '400' }, material2: { size: 12, weight: '500' }, material3: { size: 12, weight: '500' }, shadcn: { size: 14, weight: '400' }, workbench: { size: 12, weight: '500' } } as const
 
 const surfaces = ['surface', 'background'] as const
 

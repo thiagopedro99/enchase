@@ -8,6 +8,7 @@ import { builtInStyleEntries, builtInStyles } from '@tests/shared/fixtures/style
 import { workbench } from '@styles/presets/workbench.ts'
 import { createTheme } from '@styles/theme/createTheme.ts'
 import { enchase } from '@styles/presets/enchase.ts'
+import { material2 } from '@styles/presets/material2.ts'
 import { material3 } from '@styles/presets/material3.ts'
 import { shadcn } from '@styles/presets/shadcn.ts'
 import { shapePresets } from '@styles/theme/shape.ts'
@@ -36,9 +37,10 @@ const pixels = (value: string) => (value.endsWith('rem') ? Number.parseFloat(val
 const hooksOf = (style: (typeof builtInStyles)[string]) => [style.hooks, style.colorHooks, style.light?.hooks, style.dark?.hooks].flatMap((record) => Object.keys(record ?? {}))
 
 describe('the built-in styles', () => {
-  it('exports the same four styles that the contract below runs on', () => {
-    expect(Object.keys(builtInStyles)).toEqual(['enchase', 'material3', 'shadcn', 'workbench'])
+  it('exports the same five styles that the contract below runs on', () => {
+    expect(Object.keys(builtInStyles)).toEqual(['enchase', 'material2', 'material3', 'shadcn', 'workbench'])
     expect(builtInStyles.enchase).toBe(enchase)
+    expect(builtInStyles.material2).toBe(material2)
     expect(builtInStyles.material3).toBe(material3)
     expect(builtInStyles.shadcn).toBe(shadcn)
     expect(builtInStyles.workbench).toBe(workbench)
@@ -243,5 +245,46 @@ describe('the shadcn style', () => {
     for (const name of Object.keys(theme.hooks ?? {})) expect(rootRules).toContain(`${name}:`)
 
     for (const mode of ['light', 'dark'] as const) for (const name of Object.keys(theme[mode].hooks ?? {})) expect(css).toContain(`${name}:`)
+  })
+})
+
+describe('the material2 style', () => {
+  const theme = createTheme({ style: material2 })
+
+  it('sets the three MUI button heights and the state-layer opacities', () => {
+    expect(theme.base.control.height).toEqual({ sm: '1.875rem', md: '2.25rem', lg: '2.625rem' })
+    expect(theme.base.state).toEqual({ hover: '0.04', focus: '0.12', pressed: '0.12', rowHover: '0.04', disabledContainer: '0.12', disabledContent: '0.38' })
+  })
+
+  it('takes the MUI light palette, with the hue of warning and info kept but darkened to clear the minimum contrast', () => {
+    expect(theme.light.colors.primary).toBe('#066CC8')
+    expect(theme.light.colors.background).toBe('#FFFFFF')
+    expect(theme.light.colors.surfaceContainer).toBe('#F5F5F5')
+    expect(theme.light.colors.secondary).toBe('#9C27B0')
+    expect(theme.light.colors.warning).not.toBe('#ED6C02')
+    expect(theme.light.colors.info).not.toBe('#0288D1')
+  })
+
+  it('takes the MUI dark palette unchanged, since it already clears the minimum contrast', () => {
+    expect(theme.dark.colors.primary).toBe('#90CAF9')
+    expect(theme.dark.colors.background).toBe('#121212')
+    expect(theme.dark.colors.warning).toBe('#FFA726')
+    expect(theme.dark.colors.info).toBe('#29B6F6')
+  })
+
+  it('puts the label inside the field by default, as MUI does', () => {
+    expect(theme.defaults).toEqual({ labelPlacement: 'floating' })
+  })
+
+  it('takes only primary, onPrimary and primaryHover from the brand color, like shadcn and workbench', () => {
+    expect(material2.brand).toEqual(['primary', 'onPrimary', 'primaryHover'])
+  })
+
+  it('is not the theme that createTheme() gives with no style, now that the default is the Lapidado look', () => {
+    expect(theme).not.toEqual(defaultTheme)
+  })
+
+  it('shrinks the field to the MUI "small" height in the compact density, and nothing else', () => {
+    expect(theme.density?.compact?.hooks).toEqual({ '--enchase-input-height': '2.5rem' })
   })
 })

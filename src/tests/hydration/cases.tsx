@@ -1,6 +1,7 @@
 import { HomeIcon } from '@tests/shared/fixtures/exampleIcons.tsx'
 
 import { shadcn } from '@styles/presets/shadcn.ts'
+import { material2 } from '@styles/presets/material2.ts'
 import { workbench } from '@styles/presets/workbench.ts'
 
 import { ColorModeProvider, ColorModeScript } from '@components/colorMode/index.tsx'
@@ -184,6 +185,19 @@ export const hydrationCases: HydrationCase[] = [
         <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} />
         <Textarea label="Message" error="Too short" />
         <Input label="Floating" labelPlacement="floating" />
+      </ColorModeProvider>
+    ),
+    bare: true
+  },
+  {
+    name: 'ColorModeProvider with the material2 style and its floating labels',
+    element: (
+      <ColorModeProvider theme={{ style: material2 }}>
+        <Input label="Email" helperText="Never shared" />
+        <NumberInput label="Amount" defaultValue={3} />
+        <Select label="Country" placeholder="Choose" options={[{ value: 'br', label: 'Brazil' }]} />
+        <Textarea label="Message" error="Too short" />
+        <Input label="Stacked" labelPlacement="stacked" />
       </ColorModeProvider>
     ),
     bare: true

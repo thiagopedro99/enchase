@@ -7,6 +7,7 @@ import * as main from 'enchase'
 import * as icons from 'enchase/icons'
 import * as locales from 'enchase/locales'
 import * as enchaseStyle from 'enchase/styles/enchase'
+import * as material2Style from 'enchase/styles/material2'
 import * as material3Style from 'enchase/styles/material3'
 import * as shadcnStyle from 'enchase/styles/shadcn'
 import * as workbenchStyle from 'enchase/styles/workbench'
@@ -48,6 +49,7 @@ describe('public entries', () => {
 
   it('exports each style from an entry of its own, with that style and nothing else', () => {
     expect(Object.keys(enchaseStyle)).toEqual(['enchase'])
+    expect(Object.keys(material2Style)).toEqual(['material2'])
     expect(Object.keys(material3Style)).toEqual(['material3'])
     expect(Object.keys(shadcnStyle)).toEqual(['shadcn'])
     expect(Object.keys(workbenchStyle)).toEqual(['workbench'])
@@ -58,6 +60,7 @@ describe('public entries', () => {
       expect(entry).not.toHaveProperty('shadcn')
       expect(entry).not.toHaveProperty('workbench')
       expect(entry).not.toHaveProperty('enchase')
+      expect(entry).not.toHaveProperty('material2')
       expect(entry).not.toHaveProperty('material3')
     }
   })
@@ -96,7 +99,7 @@ describe('public entries', () => {
   })
 
   it('keeps the headless hooks out of every other entry', () => {
-    for (const entry of [main, theme, icons, locales, enchaseStyle, material3Style, shadcnStyle, workbenchStyle]) {
+    for (const entry of [main, theme, icons, locales, enchaseStyle, material2Style, material3Style, shadcnStyle, workbenchStyle]) {
       for (const name of ['useTabs', 'usePagination', 'useSegmentedControl', 'useAccordion', 'useSlider']) expect(entry).not.toHaveProperty(name)
     }
   })
