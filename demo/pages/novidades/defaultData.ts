@@ -10,6 +10,44 @@ export const anchorOf = (version: string) => `v-${version.replace(/\./g, '-')}`
 
 export const releases: ReleaseNote[] = [
   {
+    version: '0.24.0',
+    previous: '0.23.0',
+    date: '24 de novembro de 2026',
+    shortDate: '24 nov',
+    title: 'Lapidado, o novo visual padrão',
+    summary: 'Quem não escolhe um estilo passa a receber o Lapidado: superfícies neutras, bordas precisas e a cor da marca só onde há ação, seleção ou foco. O visual anterior continua disponível, igual ao que era, como o estilo `material3`.',
+    behavior: true,
+    groups: [
+      {
+        kind: 'novo',
+        items: [
+          'Estilo `material3`, em `enchase/styles/material3`: o visual padrão da 0.23, com o mesmo tema de antes.',
+          'Um gancho seu declarado em `:root` vence o estilo padrão em qualquer ordem de CSS, também com a densidade compacta.',
+          'Ganchos novos: `--enchase-table-header-background-sticky` e `--enchase-input-outline-padding-inline`.'
+        ]
+      },
+      {
+        kind: 'mudou',
+        items: [
+          'Sem `style`, o visual é o Lapidado, não mais o Material 3: cantos de 10 px nos controles e 16 px nos cards, borda de 1 px com sombra curta e controles um pouco mais baixos.',
+          'O rótulo dos campos fica em cima por padrão (`stacked`). No `material3` ele continua flutuante.'
+        ]
+      },
+      {
+        kind: 'corrigido',
+        items: [
+          'Texto longo sem espaços na ajuda e no erro dos campos quebra a linha em vez de alargar a página.',
+          'O rótulo ao lado do campo fica centralizado com ele quando quebra em duas linhas.',
+          'No estilo shadcn, o cabeçalho fixo da `Table` deixa de mostrar as linhas que rolam por trás.'
+        ]
+      }
+    ],
+    migration: {
+      text: 'Para manter o visual da 0.23, passe o estilo `material3` ao tema. É a única mudança.',
+      blocks: [{ label: 'main.tsx', language: 'tsx', code: "import { ColorModeProvider } from 'enchase'\nimport { material3 } from 'enchase/styles/material3'\n\n<ColorModeProvider theme={{ style: material3 }}>\n  <App />\n</ColorModeProvider>" }]
+    }
+  },
+  {
     version: '0.23.0',
     previous: '0.22.0',
     date: '12 de novembro de 2026',

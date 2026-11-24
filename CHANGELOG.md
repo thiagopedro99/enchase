@@ -1,5 +1,43 @@
 # Changelog
 
+## v0.24.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.23.0...v0.24.0)
+
+### Enhancements
+
+- **demo:** Add the release notes and suggestions pages and start in the shadcn style ([79412c4](https://github.com/thiagopedro99/enchase/commit/79412c4))
+- **styles:** Swap the default look for Lapidado and add material3 ([5c63b64](https://github.com/thiagopedro99/enchase/commit/5c63b64))
+- **demo:** Add the material3 style to the landing pickers ([779499b](https://github.com/thiagopedro99/enchase/commit/779499b))
+
+### Fixes
+
+- **demo:** Keep the landing step numbers in place during the reveal ([1d7a50d](https://github.com/thiagopedro99/enchase/commit/1d7a50d))
+- Wrap long unbroken helper and error text in field components ([8a9f4fe](https://github.com/thiagopedro99/enchase/commit/8a9f4fe))
+- Paint the sticky table header opaque ([0623862](https://github.com/thiagopedro99/enchase/commit/0623862))
+- Keep the current page visibly thicker in forced colors ([4f421ad](https://github.com/thiagopedro99/enchase/commit/4f421ad))
+- Revert the component css to the base tokens, fix the notch, sticky header and label alignment ([1e9d708](https://github.com/thiagopedro99/enchase/commit/1e9d708))
+- Keep the compact density hooks of a style overridable by the app ([3fa3e2a](https://github.com/thiagopedro99/enchase/commit/3fa3e2a))
+- **demo:** Wrap the install command instead of scrolling it on narrow phones ([c3da66d](https://github.com/thiagopedro99/enchase/commit/c3da66d))
+
+### Refactors
+
+- Consolidate the Lapidado style into tokens/enchase.ts, revert the base tokens ([4b33856](https://github.com/thiagopedro99/enchase/commit/4b33856))
+
+### Notes
+
+- Two changes in behavior, and none in the API. `npm run check:api` against 0.23.0 reports 23 keys of `exports` (one more, `./styles/material3`) and none removed, 13 stable entries (one more, `enchase/styles/material3`) with 1,124 lines of declarations (4 more than the 1,120 of 0.23.0) and none removed, changed or widened, 1,225 `--enchase-*` names (2 more) and 279 `data-slot` names with none removed, and 861 hooks in the 4 styles (578 in the 3 styles of 0.23.0) with none removed. The look with no style and the place of the label of the fields changed, as `default-style` and `default-label-placement`, which `api-breaks.json` lists under `behavior`; this first bullet cites each one, and `breaks` is empty.
+- The look that the components have with no style is new, and it is called Lapidado: cool neutral surfaces, a 1 px border with a short shadow, the brand color only in action, selection and focus, 10 px corners on controls and 16 px on cards, a light fillet on the filled button, and the label above the field. It is the `enchase` style (`enchase/styles/enchase`), and it is what `createTheme()` with no `style`, the `ColorModeProvider` with no `theme` and `enchase/theme.css` give.
+- `default-style`: the look of 0.23, Material 3, is the new `material3` style, in `enchase/styles/material3`. With it, `createTheme` writes the theme of the default of 0.23, character for character, with and without a `brand` and with `shape: 'pill'`.
+- `default-label-placement`: the label of `Input`, `NumberInput`, `Select`, `Textarea`, `Combobox` and `DatePicker` sits above the field (`stacked`) when neither the field nor the style says where it goes. The `material3` style keeps it floating, a field takes `labelPlacement="floating"`, and a style of your own sets `defaults.labelPlacement`.
+- The `shadcn` and the `workbench` styles write the theme of 0.23, except for one hook that `shadcn` gains, below. A style of your own made with `defineStyle` starts from the same base as in 0.23, so it does not change: `createTheme({ style: defineStyle({}) })` is the default of 0.23. `baseTokens`, `lightTheme` and `darkTheme` of `enchase/theme` are that base and did not change, and `defaultTheme` and `defaultThemeCss` are the new default.
+- The hooks of the default style are written with no specificity, in `:where(:root)`, and the ones of its compact density in `:where(:root[data-density='compact'])`. A hook that your app declares on `:root` wins over them in any order of the stylesheets, with and without the compact density, as it did when the default look declared no hook. `defineStyle` takes `hooksSpecificity: 'zero'` for a style of your own that wants the same, and `shadcn` and `workbench` keep their hooks on `:root`.
+- Two new hooks. `--enchase-table-header-background-sticky` is the background of the header of a `Table` with `stickyHeader`: it falls back to `--enchase-table-header-background`, so nothing changes where the header has a background, and the default and the `shadcn` styles, whose header is transparent, set it to the surface, which keeps the rows from showing through the sticky header (in `shadcn` that is a fix). `--enchase-input-outline-padding-inline` is the inline padding of the outline of the six fields, where the notch of the floating label is cut: it falls back to `--enchase-space-sm`, as before, and the default style derives it from the padding of the field, so the notch stays under the label in the compact density as well.
+- Three fixes show in every style. The helper text and the error of `Input`, `NumberInput`, `Select` and `Textarea` break a long word instead of widening the page (`overflow-wrap: anywhere`, which the selection controls already had). A field with the label at the `start` is centered with a label that wraps to more lines. And the current page of the `Pagination` keeps a border 1 px thicker than the other pages in forced colors, whatever the strong border of the style.
+- Weight: the package goes from 1,049 to 1,056 files and from 482.9 kB packed (482,887 bytes) to 492.1 kB (492,132 bytes). The seven new files are the `material3` entry and its preset (`dist-lib/styles/material3.js`, `dist-lib/styles/presets/material3.js` and their two `.d.ts`), the data of the default style (`dist-lib/styles/tokens/enchase.js` and its `.d.ts`) and `docs/migration/0.24.md`. `theme.css` goes from 11,926 to 45,296 bytes, and from 2,326 to 4,849 bytes in gzip at level 9 (`zlib.gzipSync`), because the default theme declares the hooks of Lapidado now. `styles.css` goes from 297,932 to 298,788 bytes and from 28,553 to 28,591 in gzip, which is the two new hooks and the fixes of the fields. The 47 files of `enchase/css` have 298,822 bytes (297,966 before) and 55,089 in gzip (54,959 before), and `index.json` has 11,330 bytes (11,329 before). In `test:size` the rows that carry the theme grew, because the default style is part of the code of the theme: `ColorModeProvider` has 61,577 bytes minified and 15,901 in gzip (budget of 62,464, which was 40,960), `createTheme` 50,916 and 12,471 (52,224, which was 32,768), the `enchase` style 36,183 and 8,217 (37,120, which was 16,384), `ColorModeProvider` with `shadcn` 82,469 and 18,822 (86,016, which was 59,392) and with `workbench` 87,286 and 19,859 (91,136, which was 65,536), and the new row of the `material3` style has 14,511 and 5,145 (17,920). The kit of `enchase eject` has the same 304 files, and 10 of them have new content: the css of the six fields, of the `Pagination` and of the `Table`, `themeDefaults.ts` and the types of the tokens.
+- Checked: lint, `docs:api:check`, the build, the 5,520 jsdom tests, `build:lib`, `check:api` against 0.23.0, `pack:check` (publint and attw, with the 23 keys of `exports`), `test:size`, `test:consumer`, `test:next` (83 checks of the server render and 3 in a real browser), `test:eject` and the accessibility audit of the stories (382 stories in the four styles and the two color modes, 3,072 runs) pass, and so do the whole browser suites in real Chromium, Firefox and WebKit (3,052, 3,015 and 3,003 tests).
+- Screen readers: nothing changed in the roles, the names and the states that the components render, and the README still says that nothing was tested with NVDA, JAWS or VoiceOver. What 1.0 asks for stays in `ACCESSIBILITY.md`: NVDA with Firefox on Windows and VoiceOver with Safari on macOS, run by hand.
+
 ## v0.23.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.22.0...v0.23.0)

@@ -2,7 +2,7 @@ import { Badge, ButtonLink, Container, Link } from 'enchase'
 import { ChevronRightIcon } from 'enchase/icons'
 import { useRef } from 'react'
 
-import { docsUrl, repositoryUrl } from '../../../../defaultData.ts'
+import { docsUrl, repositoryUrl, routes } from '../../../../defaultData.ts'
 import InstallCommand from '../InstallCommand/index.tsx'
 import { version } from '../../defaultData.ts'
 import BrandDial from '../BrandDial/index.tsx'
@@ -39,11 +39,11 @@ const Hero = ({ look, onLookChange }: HeroProps) => {
 
       <Container maxWidth="xl" className={styles.content}>
         <div className={styles.copy}>
-          <Link href="#codigo" className={styles.announcement}>
+          <Link href={routes.news} className={styles.announcement}>
             <Badge variant="primary" size="sm">
               Novo na {version}
             </Badge>
-            <span>A sua classe vence o CSS da biblioteca</span>
+            <span>Lapidado, o novo visual padrão</span>
             <ChevronRightIcon size={16} />
           </Link>
 
