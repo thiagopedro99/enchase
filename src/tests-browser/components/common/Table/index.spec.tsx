@@ -321,7 +321,7 @@ describe('Table scrolling in a real browser', () => {
 
     expect(part('table').hasAttribute('tabindex')).toBe(false)
 
-    part('table-cell', 1).textContent = 'bartholomew.fitzgerald@northwind-industries-holdings.example.com'
+    part('table-cell', 1).textContent = 'bartholomewfitzgerald'.repeat(4)
 
     await expect.poll(() => part('table').getAttribute('tabindex')).toBe('0')
   })

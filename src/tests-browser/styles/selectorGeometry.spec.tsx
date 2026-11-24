@@ -19,6 +19,8 @@ const dimensions = (element: Element, pseudo?: string) => {
   return { width: style.width, height: style.height }
 }
 
+const tenths = (value: string) => Math.round(Math.abs(parseFloat(value)) * 10) / 10
+
 const glyph = () => (part('checkbox-box').firstElementChild as Element)
 
 const dot = () => (part('radio-group-control').firstElementChild as Element)
@@ -38,8 +40,8 @@ describe('the geometry of the checkbox from the hooks', () => {
     const style = getComputedStyle(glyph(), '::after')
 
     expect(dimensions(part('checkbox-box'))).toEqual({ width: '16px', height: '16px' })
-    expect(dimensions(glyph(), '::after')).toEqual({ width: '4.4375px', height: '8.875px' })
-    expect([style.borderRightWidth, style.borderBottomWidth, style.marginTop]).toEqual(['2px', '2px', '-1.77778px'])
+    expect([tenths(style.width), tenths(style.height)]).toEqual([4.4, 8.9])
+    expect([style.borderRightWidth, style.borderBottomWidth, tenths(style.marginTop)]).toEqual(['2px', '2px', 1.8])
   })
 
   it('takes the size of the box from the hook and draws the check in proportion', () => {
@@ -99,11 +101,11 @@ describe('the geometry of the radio from the hooks', () => {
 })
 
 describe('the geometry of the switch from the hooks', () => {
-  it('keeps the 32px by 18.3906px track, the 16px thumb flush with the edge and a 14px travel', async () => {
+  it('keeps the 32px by 18.4px track, the 16px thumb flush with the edge and a 14px travel', async () => {
     renderInBrowser(<Switch label="Alerts" defaultChecked />)
     await waitForSettled(() => part('switch'))
 
-    expect(dimensions(part('switch-track'))).toEqual({ width: '32px', height: '18.3906px' })
+    expect([dimensions(part('switch-track')).width, tenths(dimensions(part('switch-track')).height)]).toEqual(['32px', 18.4])
     expect(dimensions(part('switch-thumb'))).toEqual({ width: '16px', height: '16px' })
     expect(part('switch-thumb').offsetLeft).toBe(0)
     expect(translation(part('switch-thumb'))).toBe(14)

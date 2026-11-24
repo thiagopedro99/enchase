@@ -523,7 +523,7 @@ describe('NumberInput colors and focus in a real browser', () => {
     renderInBrowser(<NumberInput label="Quantidade" defaultValue={3} disabled />)
 
     expect(getComputedStyle(input()).cursor).toBe('not-allowed')
-    expect(getComputedStyle(input()).color).not.toBe(getComputedStyle(document.body).color)
+    expect(getComputedStyle(input()).opacity).toBe('0.5')
     expect((part('increase') as HTMLButtonElement).disabled).toBe(true)
   })
 })

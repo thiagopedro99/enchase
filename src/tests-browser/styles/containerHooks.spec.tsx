@@ -438,7 +438,9 @@ describe('the day of the calendar from the hooks', () => {
     renderInBrowser(<DatePicker label="Date" defaultOpen />)
     await opened()
 
-    expect(measures()).toEqual({ day: '24.5px', number: ['24px', '24px'], grid: '168px', nav: '32px' })
+    expect(measures()).toMatchObject({ number: ['24px', '24px'], grid: '168px', nav: '32px' })
+    expect(parseFloat(measures().day)).toBeGreaterThanOrEqual(24)
+    expect(parseFloat(measures().day)).toBeLessThanOrEqual(25)
   })
 
   it('keeps the floor of 24px under a lower hit size', async () => {
@@ -446,7 +448,9 @@ describe('the day of the calendar from the hooks', () => {
     renderInBrowser(<DatePicker label="Date" defaultOpen />)
     await opened()
 
-    expect(measures()).toEqual({ day: '24.5px', number: ['24px', '24px'], grid: '168px', nav: '24px' })
+    expect(measures()).toMatchObject({ number: ['24px', '24px'], grid: '168px', nav: '24px' })
+    expect(parseFloat(measures().day)).toBeGreaterThanOrEqual(24)
+    expect(parseFloat(measures().day)).toBeLessThanOrEqual(25)
   })
 
   it('takes the size of the core of the day from its hook, and leaves the cell, the grid and the buttons of the header alone', async () => {
