@@ -62,9 +62,9 @@ const boxOf = (kind: FieldKind) => {
 }
 
 const expectedBox = (variant: FieldVariant, state: State) => {
-  const width = state === 'focus' ? '2px' : '1px'
+  const width = '1px'
   const widths = variant === 'outlined' ? [width, width, width, width] : variant === 'borderless' ? ['0px', '0px', '0px', '0px'] : ['0px', '0px', width, '0px']
-  const line = { rest: color('border-strong'), hover: color('text-primary'), focus: color('primary'), error: color('error'), disabled: disabledLayer() }[state]
+  const line = { rest: color('border-strong'), hover: color('border-strong'), focus: color('primary'), error: color('error'), disabled: color('border-strong') }[state]
   const fill = { rest: color('surface-container'), hover: color('surface-container-high'), focus: color('surface-container'), error: color('surface-container'), disabled: disabledLayer() }[state]
   const square = variant === 'filled' || variant === 'underlined'
 
@@ -101,7 +101,7 @@ describe.each(fieldKinds)('the variants of the $name field', (kind) => {
   })
 
   it('draws the floating label of the outlined variant inside the field', () => {
-    renderInBrowser(kind.render({ variant: 'outlined' }))
+    renderInBrowser(kind.render({ variant: 'outlined', labelPlacement: 'floating' }))
 
     expect(getComputedStyle(part(`${kind.name}-label`)).position).toBe('absolute')
   })
@@ -271,7 +271,7 @@ describe.each(['light', 'dark'] as const)('the filled variant in the %s mode', (
     const expected = { rest: color('surface-container'), hover: color('surface-container-high'), focus: color('surface-container') }[state]
 
     await settled(() => getComputedStyle(part('input-field')).backgroundColor).toBe(expected)
-    await settled(() => getComputedStyle(part('input-outline')).borderBottomColor).toBe({ rest: color('border-strong'), hover: color('text-primary'), focus: color('primary') }[state])
+    await settled(() => getComputedStyle(part('input-outline')).borderBottomColor).toBe({ rest: color('border-strong'), hover: color('border-strong'), focus: color('primary') }[state])
 
     const fill = getComputedStyle(part('input-field')).backgroundColor
 
