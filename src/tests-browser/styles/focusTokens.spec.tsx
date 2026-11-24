@@ -77,11 +77,11 @@ describe('the focus ring from the tokens', () => {
     expect(ring(part('tabs-tab')).offset).toBe('-4px')
   })
 
-  it('keeps the ring of the switch 3px away from its track, and moves it with the selector offset token', async () => {
+  it('keeps the ring of the switch 2px away from its track, and moves it with the selector offset token', async () => {
     const { unmount } = renderInBrowser(<Switch label="Alerts" />)
 
     await userEvent.tab()
-    expect(ring(part('switch-track'))).toEqual({ width: '2px', style: 'solid', offset: '3px', color: 'rgb(79, 70, 229)' })
+    expect(ring(part('switch-track'))).toEqual({ width: '2px', style: 'solid', offset: '2px', color: 'rgb(79, 70, 229)' })
     unmount()
 
     renderInBrowser(scoped({ '--enchase-focus-offset-selector': '6px' }, <Switch label="Alerts" />))
@@ -99,25 +99,25 @@ describe('the focus ring and the border without the theme variables of the token
     expect(borderWidth(part('button'))).toBe('1px')
   })
 
-  it('keeps the 1px outline of the field, thickened to 2px with the focus, and the ring of the tab, without the tokens', async () => {
+  it('keeps the 1px outline of the field, at rest and with the focus, and the ring of the tab, without the tokens', async () => {
     render(scoped({ '--enchase-color-primary': 'rgb(0, 0, 255)', '--enchase-color-border-strong': 'rgb(120, 120, 120)' }, <><Input label="Name" /><Tabs items={items} ariaLabel="Sections" /></>))
 
     expect(borderWidth(part('input-outline'))).toBe('1px')
     await userEvent.tab()
-    expect(borderWidth(part('input-outline'))).toBe('2px')
+    expect(borderWidth(part('input-outline'))).toBe('1px')
     await userEvent.tab()
     expect(ring(part('tabs-tab'))).toEqual({ width: '2px', style: 'solid', offset: '-2px', color: 'rgb(0, 0, 255)' })
   })
 })
 
 describe('the border width from the tokens', () => {
-  it('keeps the 1px outline of the field, thickened to 2px while it has the focus', async () => {
+  it('keeps the 1px outline of the field, at rest and while it has the focus', async () => {
     renderInBrowser(<Input label="Name" />)
 
     expect(borderWidth(part('input-outline'))).toBe('1px')
 
     await userEvent.tab()
-    expect(borderWidth(part('input-outline'))).toBe('2px')
+    expect(borderWidth(part('input-outline'))).toBe('1px')
   })
 
   it('takes the width of the outline of the field from the tokens, at rest and with the focus', async () => {
@@ -129,17 +129,17 @@ describe('the border width from the tokens', () => {
     expect(borderWidth(part('input-outline'))).toBe('4px')
   })
 
-  it('takes the border of the table and the thickness of the underline of the tabs from the tokens', () => {
+  it('takes the border of the table from the tokens, but not the thickness of the underline of the tabs, which the enchase style now fixes at 2px', () => {
     renderInBrowser(scoped({ '--enchase-border-width': '3px', '--enchase-border-width-strong': '5px' }, <><Table columns={columns} rows={rows} /><Tabs items={items} ariaLabel="Sections" /></>))
 
     expect(borderWidth(part('table'))).toBe('3px')
-    expect(getComputedStyle(part('tabs-indicator')).blockSize).toBe('5px')
+    expect(getComputedStyle(part('tabs-indicator')).blockSize).toBe('2px')
   })
 
   it('keeps the borders of the table and the track of the switch at their widths without the tokens set', () => {
     renderInBrowser(<><Table columns={columns} rows={rows} /><Switch label="Alerts" /></>)
 
     expect(borderWidth(part('table'))).toBe('1px')
-    expect(borderWidth(part('switch-track'))).toBe('2px')
+    expect(borderWidth(part('switch-track'))).toBe('1px')
   })
 })

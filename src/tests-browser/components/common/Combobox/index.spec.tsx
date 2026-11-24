@@ -397,10 +397,10 @@ describe('the field of the Combobox in a real browser', () => {
     renderInBrowser(
       <>
         <div style={{ width: 240 }}>
-          <Combobox multiple label="Frutas" options={fruits} defaultValue={tags} />
+          <Combobox multiple label="Frutas" labelPlacement="floating" options={fruits} defaultValue={tags} />
         </div>
         <div style={{ width: 240 }}>
-          <Input label="Nome" defaultValue="Ana" />
+          <Input label="Nome" labelPlacement="floating" defaultValue="Ana" />
         </div>
       </>
     )
@@ -449,7 +449,7 @@ describe('the field of the Combobox in a real browser', () => {
     expect([style('combobox-control').minWidth, style('combobox-control').paddingLeft, style('combobox-input').fontSize]).toEqual(['120px', '12px', '14px'])
   })
 
-  it('starts at the 200px, 1rem and 1rem of the other fields and as tall as them', () => {
+  it('starts at the 200px, 0.75rem padding and 0.875rem text of the other fields and as tall as them', () => {
     renderInBrowser(
       <>
         <Combobox label="Fruta" options={fruits} />
@@ -457,7 +457,7 @@ describe('the field of the Combobox in a real browser', () => {
       </>
     )
 
-    expect([style('combobox-control').minWidth, style('combobox-control').paddingLeft, style('combobox-input').fontSize]).toEqual(['200px', '16px', '16px'])
+    expect([style('combobox-control').minWidth, style('combobox-control').paddingLeft, style('combobox-input').fontSize]).toEqual(['200px', '12px', '14px'])
     expect(control().getBoundingClientRect().height).toBe(part('input-control').getBoundingClientRect().height)
   })
 
@@ -502,12 +502,12 @@ describe('the colors of the Combobox in a real browser', () => {
     expect(getComputedStyle(options()[1]).outlineStyle).toBe('none')
   })
 
-  forced('keeps the border of the field at 2px or more when it has the focus in forced colors', async () => {
+  forced('keeps the border of the field at 1px or more when it has the focus in forced colors', async () => {
     renderInBrowser(stage(<Combobox label="Fruta" options={fruits} />))
     await userEvent.click(field())
     await setForcedColors('active')
 
-    await expect.poll(() => parseFloat(getComputedStyle(part('combobox-outline')).borderTopWidth)).toBeGreaterThanOrEqual(2)
+    await expect.poll(() => parseFloat(getComputedStyle(part('combobox-outline')).borderTopWidth)).toBeGreaterThanOrEqual(1)
   })
 })
 

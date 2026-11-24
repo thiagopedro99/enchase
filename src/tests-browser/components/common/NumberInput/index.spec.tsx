@@ -358,14 +358,14 @@ describe('NumberInput layout in a real browser', () => {
     renderInBrowser(<NumberInput label="Quantidade" defaultValue={3} />)
     const control = rect(part('control'))
 
-    expect(rect(input()).height).toBeCloseTo(56, 0)
+    expect(rect(input()).height).toBeCloseTo(36, 0)
     expect(rect(input()).width).toBeGreaterThanOrEqual(200)
 
     for (const name of ['increase', 'decrease']) {
       const box = rect(part(name))
 
-      expect(box.width, name).toBeCloseTo(40, 0)
-      expect(box.height, name).toBeCloseTo(40, 0)
+      expect(box.width, name).toBeCloseTo(32, 0)
+      expect(box.height, name).toBeCloseTo(32, 0)
       expect(box.top, name).toBeGreaterThanOrEqual(control.top)
       expect(box.bottom, name).toBeLessThanOrEqual(control.bottom)
       expect(box.right, name).toBeLessThanOrEqual(control.right)
@@ -402,8 +402,8 @@ describe('NumberInput layout in a real browser', () => {
   it('lifts the label above the value when the field is focused or filled', async () => {
     renderInBrowser(
       <>
-        <NumberInput label="Vazio" />
-        <NumberInput label="Cheio" defaultValue={4} />
+        <NumberInput label="Vazio" labelPlacement="floating" />
+        <NumberInput label="Cheio" defaultValue={4} labelPlacement="floating" />
       </>
     )
     const label = (index: number) => rect(part('label', index))
@@ -420,7 +420,7 @@ describe('NumberInput layout in a real browser', () => {
   it('shortens a long label before it reaches the buttons', () => {
     renderInBrowser(
       <div style={{ inlineSize: 220 }}>
-        <NumberInput label="Um rótulo muito comprido que não cabe no campo" fullWidth />
+        <NumberInput label="Um rótulo muito comprido que não cabe no campo" fullWidth labelPlacement="floating" />
       </div>
     )
     const label = part('label')
@@ -431,7 +431,7 @@ describe('NumberInput layout in a real browser', () => {
 
   it('puts the buttons at the start and the label at the right in right-to-left text', () => {
     document.documentElement.setAttribute('dir', 'rtl')
-    renderInBrowser(<NumberInput label="Quantidade" defaultValue={3} />)
+    renderInBrowser(<NumberInput label="Quantidade" defaultValue={3} labelPlacement="floating" />)
     const control = rect(part('control'))
 
     expect(rect(part('increase')).left).toBeLessThan(control.left + control.width / 2)
@@ -473,7 +473,7 @@ describe('NumberInput colors and focus in a real browser', () => {
     }
   })
 
-  it('draws a thicker primary border around the focused field', async () => {
+  it('draws a 1px primary border around the focused field, same width as at rest', async () => {
     renderInBrowser(<NumberInput label="Quantidade" defaultValue={3} />)
     const beforeColor = getComputedStyle(part('outline')).borderTopColor
 
@@ -483,7 +483,7 @@ describe('NumberInput colors and focus in a real browser', () => {
     await waitForSettled(() => part('control'))
     const after = getComputedStyle(part('outline'))
 
-    expect(parseFloat(after.borderTopWidth)).toBe(2)
+    expect(parseFloat(after.borderTopWidth)).toBe(1)
     expect(after.borderTopColor).not.toBe(beforeColor)
 
     for (const name of surfaces) expect(contrastRatio(after.borderTopColor, surface(name)), name).toBeGreaterThanOrEqual(3)
@@ -555,7 +555,7 @@ describe('NumberInput in forced colors', () => {
     const icon = getComputedStyle(part('increase').querySelector('svg') as SVGElement)
 
     expect(border.borderTopColor).not.toBe('rgba(0, 0, 0, 0)')
-    expect(parseFloat(border.borderTopWidth)).toBe(2)
+    expect(parseFloat(border.borderTopWidth)).toBe(1)
     expect(icon.stroke).not.toBe('none')
     expect(icon.stroke).not.toBe('rgba(0, 0, 0, 0)')
   })

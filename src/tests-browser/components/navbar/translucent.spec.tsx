@@ -59,12 +59,12 @@ describe('Navbar without translucent', () => {
 })
 
 describe('Navbar translucent', () => {
-  translucentIt('shows 80% of the surface of the theme over a blur of 12px, with a hairline at the bottom', () => {
+  translucentIt('shows 95% of the surface of the theme over a blur of 12px, with a hairline at the bottom', () => {
     renderInBrowser(<Navbar sections={sections} translucent />)
     const surface = surfaceOf()
 
-    expect(surface.a).toBeCloseTo(0.8, 2)
-    expect([surface.r, surface.g, surface.b]).toEqual([238, 234, 246])
+    expect(surface.a).toBeCloseTo(0.95, 2)
+    expect([surface.r, surface.g, surface.b]).toEqual([251, 251, 252])
     expect(backdropOf(header())).toBe('blur(12px)')
     expect(getComputedStyle(header()).boxShadow).toContain('inset')
     expect(getComputedStyle(header()).position).toBe('sticky')
@@ -74,8 +74,8 @@ describe('Navbar translucent', () => {
     renderInBrowser(<Navbar sections={sections} translucent />, 'never', 'dark')
     const surface = surfaceOf()
 
-    expect(surface.a).toBeCloseTo(0.8, 2)
-    expect([surface.r, surface.g, surface.b]).toEqual([31, 31, 39])
+    expect(surface.a).toBeCloseTo(0.95, 2)
+    expect([surface.r, surface.g, surface.b]).toEqual([12, 13, 17])
     expect(backdropOf(header())).toBe('blur(12px)')
   })
 
@@ -146,14 +146,14 @@ describe('Navbar translucent falls back to the solid surface', () => {
   contrast('when the system prefers more contrast', async () => {
     renderInBrowser(<Navbar sections={sections} translucent />)
 
-    expect(surfaceOf().a).toBeCloseTo(0.8, 2)
+    expect(surfaceOf().a).toBeCloseTo(0.95, 2)
 
     await setContrast('more')
     await expectSolid()
-    expect([surfaceOf().r, surfaceOf().g, surfaceOf().b]).toEqual([238, 234, 246])
+    expect([surfaceOf().r, surfaceOf().g, surfaceOf().b]).toEqual([251, 251, 252])
 
     await setContrast('no-preference')
-    await expect.poll(() => surfaceOf().a).toBeCloseTo(0.8, 2)
+    await expect.poll(() => surfaceOf().a).toBeCloseTo(0.95, 2)
   })
 
   const forced = supportsTranslucency && unlessWebkit('forcedColors') ? it : it.skip
@@ -177,7 +177,7 @@ describe('Navbar translucent falls back to the solid surface', () => {
     await setReducedTransparency('reduce')
     expect(window.matchMedia('(prefers-reduced-transparency: reduce)').matches).toBe(true)
     await expectSolid()
-    expect([surfaceOf().r, surfaceOf().g, surfaceOf().b]).toEqual([238, 234, 246])
+    expect([surfaceOf().r, surfaceOf().g, surfaceOf().b]).toEqual([251, 251, 252])
 
     await setReducedTransparency('no-preference')
     await expect.poll(() => surfaceOf().a).toBeCloseTo(0.5, 2)

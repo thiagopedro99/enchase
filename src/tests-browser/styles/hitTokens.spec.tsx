@@ -27,7 +27,7 @@ const box = (element: HTMLElement) => {
 const numberField = <NumberInput label="Amount" defaultValue={1} />
 
 describe('the regular target size from the token', () => {
-  it('keeps a form control 40px tall and the steppers of a number field 40px square', () => {
+  it('keeps a form control 32px tall and the steppers of a number field 32px square', () => {
     renderInBrowser(
       <>
         <Checkbox label="Terms" />
@@ -35,9 +35,9 @@ describe('the regular target size from the token', () => {
       </>
     )
 
-    expect(minimum(part('checkbox')).height).toBe('40px')
-    expect(box(part('number-input-increase'))).toEqual({ width: 40, height: 40 })
-    expect(box(part('number-input-decrease'))).toEqual({ width: 40, height: 40 })
+    expect(minimum(part('checkbox')).height).toBe('32px')
+    expect(box(part('number-input-increase'))).toEqual({ width: 32, height: 32 })
+    expect(box(part('number-input-decrease'))).toEqual({ width: 32, height: 32 })
   })
 
   it('takes the size from the token set on a container', () => {
@@ -70,10 +70,10 @@ describe('the regular target size from the token', () => {
     expect(box(part('number-input-increase'))).toEqual({ width: 24, height: 24 })
   })
 
-  it('keeps the 40px target when a theme written before the token does not have it', () => {
+  it('keeps the 32px target when a theme written before the token does not have it', () => {
     render(<Checkbox label="Terms" />)
 
-    expect(minimum(part('checkbox')).height).toBe('40px')
+    expect(minimum(part('checkbox')).height).toBe('32px')
   })
 })
 
@@ -96,7 +96,7 @@ describe('the large target size from the token', () => {
     )
 
     expect(minimum(part('theme-toggle'))).toEqual({ width: '30px', height: '30px' })
-    expect(minimum(part('checkbox')).height).toBe('40px')
+    expect(minimum(part('checkbox')).height).toBe('32px')
   })
 
   it('never goes under the 24px floor either', () => {

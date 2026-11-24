@@ -51,7 +51,7 @@ afterEach(async () => {
 describe('Calendar in a real browser', () => {
   it('lays out seven columns of one hit target each, with six rows of the same height under the weekdays', () => {
     renderInBrowser(calendar())
-    const hit = 40
+    const hit = 32
     const columns = [...document.querySelectorAll('thead th')].map((header) => box(header))
 
     expect(columns).toHaveLength(7)
@@ -73,8 +73,8 @@ describe('Calendar in a real browser', () => {
     const circle = box(number('2026-10-15'))
     const day = box(cell('2026-10-15'))
 
-    expect(Math.round(circle.width)).toBe(40)
-    expect(Math.round(circle.height)).toBe(40)
+    expect(Math.round(circle.width)).toBe(32)
+    expect(Math.round(circle.height)).toBe(32)
     expect(Math.abs(circle.left + circle.width / 2 - (day.left + day.width / 2))).toBeLessThanOrEqual(0.5)
     expect(Math.abs(circle.top + circle.height / 2 - (day.top + day.height / 2))).toBeLessThanOrEqual(0.5)
     expect(style('date-picker-calendar-day-number').borderTopLeftRadius).not.toBe('0px')
@@ -91,7 +91,7 @@ describe('Calendar in a real browser', () => {
   it('keeps the seven columns in a container that is narrower than the grid', () => {
     renderInBrowser(<div style={{ width: 200, overflow: 'hidden' }}>{calendar()}</div>)
 
-    expect(Math.round(box(part('date-picker-calendar-grid')).width)).toBe(280)
+    expect(Math.round(box(part('date-picker-calendar-grid')).width)).toBe(224)
     expect(cells()).toHaveLength(42)
   })
 
@@ -102,7 +102,7 @@ describe('Calendar in a real browser', () => {
 
     expect(previous.right).toBeLessThanOrEqual(heading.left + 1)
     expect(heading.right).toBeLessThanOrEqual(next.left + 1)
-    expect(Math.round(previous.width)).toBe(40)
+    expect(Math.round(previous.width)).toBe(32)
     expect(Math.abs(previous.top + previous.height / 2 - (heading.top + heading.height / 2))).toBeLessThanOrEqual(1)
   })
 

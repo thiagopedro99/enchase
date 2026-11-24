@@ -91,6 +91,6 @@ describe('the weight of the headings of the global styles from the hook', () => 
       </>
     )
 
-    expect([getComputedStyle(document.querySelector('h2') as Element).fontWeight, getComputedStyle(part('modal-title')).fontWeight]).toEqual(['700', '500'])
+    expect([getComputedStyle(document.querySelector('h2') as Element).fontWeight, getComputedStyle(part('modal-title')).fontWeight]).toEqual(['700', '600'])
   })
 })

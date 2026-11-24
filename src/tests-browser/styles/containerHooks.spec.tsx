@@ -189,7 +189,7 @@ describe('the badge from the hooks', () => {
     )
 
     expect([style('badge', 0).backgroundColor, style('badge', 0).color, style('badge', 0).minHeight]).toEqual(['rgb(1, 2, 3)', 'rgb(4, 5, 6)', '31px'])
-    expect([style('badge', 1).paddingLeft, style('badge', 1).minHeight, style('badge', 1).columnGap]).toEqual(['17px', '24px', '5px'])
+    expect([style('badge', 1).paddingLeft, style('badge', 1).minHeight, style('badge', 1).columnGap]).toEqual(['17px', '20px', '5px'])
   })
 })
 
@@ -363,7 +363,7 @@ describe('the accordion from the hooks', () => {
   it('keeps the panel without padding at the top when no hook is set', () => {
     renderInBrowser(<Accordion items={[{ value: 'a', title: 'A', content: 'First' }]} defaultValue={['a']} />)
 
-    expect(paddings('accordion-panel')).toEqual(['0px', '16px', '16px', '16px'])
+    expect(paddings('accordion-panel')).toEqual(['0px', '0px', '16px', '0px'])
   })
 
   it('takes the padding at the top of every panel from its hook, and keeps the bottom and the sides', () => {
@@ -382,13 +382,13 @@ describe('the accordion from the hooks', () => {
     )
 
     expect(parts('accordion-panel').map((panel) => getComputedStyle(panel).paddingTop)).toEqual(['17px', '17px'])
-    expect(paddings('accordion-panel', 1)).toEqual(['17px', '16px', '16px', '16px'])
+    expect(paddings('accordion-panel', 1)).toEqual(['17px', '0px', '16px', '0px'])
   })
 
   it('lets the hook of the bottom padding of the panel move on its own', () => {
     renderInBrowser(scoped({ '--enchase-accordion-panel-padding-block-start': '17px', '--enchase-accordion-panel-padding-block-end': '9px' }, <Accordion items={[{ value: 'a', title: 'A', content: 'First' }]} defaultValue={['a']} />))
 
-    expect(paddings('accordion-panel')).toEqual(['17px', '16px', '9px', '16px'])
+    expect(paddings('accordion-panel')).toEqual(['17px', '0px', '9px', '0px'])
   })
 })
 
@@ -406,7 +406,7 @@ describe('the day of the calendar from the hooks', () => {
     renderInBrowser(<DatePicker label="Date" defaultOpen />)
     await opened()
 
-    expect(measures()).toEqual({ day: '40px', number: ['40px', '40px'], grid: '280px', nav: '40px' })
+    expect(measures()).toEqual({ day: '32px', number: ['32px', '32px'], grid: '224px', nav: '32px' })
   })
 
   it('follows the hit size of the page when no hook is set', async () => {
@@ -422,7 +422,7 @@ describe('the day of the calendar from the hooks', () => {
     renderInBrowser(<DatePicker label="Date" defaultOpen />)
     await opened()
 
-    expect(measures()).toEqual({ day: '36px', number: ['36px', '36px'], grid: '252px', nav: '40px' })
+    expect(measures()).toEqual({ day: '36px', number: ['36px', '36px'], grid: '252px', nav: '32px' })
   })
 
   it('lets the hook win over the hit size of the page', async () => {
@@ -438,7 +438,7 @@ describe('the day of the calendar from the hooks', () => {
     renderInBrowser(<DatePicker label="Date" defaultOpen />)
     await opened()
 
-    expect(measures()).toEqual({ day: '24px', number: ['24px', '24px'], grid: '168px', nav: '40px' })
+    expect(measures()).toEqual({ day: '24px', number: ['24px', '24px'], grid: '168px', nav: '32px' })
   })
 
   it('keeps the floor of 24px under a lower hit size', async () => {
@@ -454,7 +454,7 @@ describe('the day of the calendar from the hooks', () => {
     renderInBrowser(<DatePicker label="Date" defaultOpen />)
     await opened()
 
-    expect(measures()).toEqual({ day: '40px', number: ['28px', '28px'], grid: '280px', nav: '40px' })
+    expect(measures()).toEqual({ day: '32px', number: ['28px', '28px'], grid: '224px', nav: '32px' })
   })
 
   it('lets the hook of the core win over the hook of the cell, which keeps the cell and the grid', async () => {
@@ -462,7 +462,7 @@ describe('the day of the calendar from the hooks', () => {
     renderInBrowser(<DatePicker label="Date" defaultOpen />)
     await opened()
 
-    expect(measures()).toEqual({ day: '36px', number: ['26px', '26px'], grid: '252px', nav: '40px' })
+    expect(measures()).toEqual({ day: '36px', number: ['26px', '26px'], grid: '252px', nav: '32px' })
   })
 
   it('keeps the floor of 24px under a hook of the core that is lower', async () => {
@@ -470,7 +470,7 @@ describe('the day of the calendar from the hooks', () => {
     renderInBrowser(<DatePicker label="Date" defaultOpen />)
     await opened()
 
-    expect(measures()).toEqual({ day: '40px', number: ['24px', '24px'], grid: '280px', nav: '40px' })
+    expect(measures()).toEqual({ day: '32px', number: ['24px', '24px'], grid: '224px', nav: '32px' })
   })
 })
 
@@ -483,7 +483,7 @@ describe('the header of the calendar from the hook', () => {
     renderInBrowser(<DatePicker label="Date" defaultOpen />)
     await opened()
 
-    expect(heights()).toEqual(['40px', '40px'])
+    expect(heights()).toEqual(['32px', '32px'])
   })
 
   it('follows the hit size of the page and the border of the header when no hook is set', async () => {
@@ -499,7 +499,7 @@ describe('the header of the calendar from the hook', () => {
     renderInBrowser(<DatePicker label="Date" defaultOpen />)
     await opened()
 
-    expect(heights()).toEqual(['52px', '40px'])
+    expect(heights()).toEqual(['52px', '32px'])
     expect(style('date-picker-calendar-header').borderBottomWidth).toBe('3px')
   })
 })

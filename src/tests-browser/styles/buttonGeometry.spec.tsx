@@ -31,9 +31,9 @@ describe('the geometry of the button from the hooks', () => {
     renderInBrowser(all)
 
     expect(buttons().map(measures)).toEqual([
+      { block: '4px', inline: '12px', size: '14px', weight: '600', gap: '8px' },
       { block: '4px', inline: '16px', size: '14px', weight: '600', gap: '8px' },
       { block: '4px', inline: '24px', size: '14px', weight: '600', gap: '8px' },
-      { block: '4px', inline: '32px', size: '16px', weight: '600', gap: '8px' },
       { block: '4px', inline: '16px', size: '14px', weight: '600', gap: '8px' }
     ])
   })
@@ -42,9 +42,9 @@ describe('the geometry of the button from the hooks', () => {
     renderInBrowser(scoped({ '--enchase-button-padding-inline-md': '10px', '--enchase-button-padding-block-md': '9px' }, all))
 
     expect(buttons().map((button) => [measures(button).block, measures(button).inline])).toEqual([
-      ['4px', '16px'],
+      ['4px', '12px'],
       ['9px', '10px'],
-      ['4px', '32px'],
+      ['4px', '24px'],
       ['9px', '16px']
     ])
   })
@@ -64,7 +64,7 @@ describe('the geometry of the button from the hooks', () => {
 
     expect(buttons().map((button) => [measures(button).block, measures(button).inline])).toEqual([
       ['6px', '11px'],
-      ['4px', '24px'],
+      ['4px', '16px'],
       ['7px', '13px'],
       ['4px', '16px']
     ])
@@ -90,17 +90,17 @@ describe('the geometry of the button from the hooks', () => {
   it('takes the padding of the ghost button from its own hook, whatever its size', () => {
     renderInBrowser(scoped({ '--enchase-button-padding-inline-ghost': '5px' }, all))
 
-    expect(buttons().map((button) => measures(button).inline)).toEqual(['16px', '24px', '32px', '5px'])
+    expect(buttons().map((button) => measures(button).inline)).toEqual(['12px', '16px', '24px', '5px'])
   })
 
   it('follows the scale of the theme when no hook is set', () => {
     renderInBrowser(scoped({ '--enchase-space-lg': '2rem', '--enchase-font-weight-semibold': '700' }, all))
 
     expect(buttons().map((button) => [measures(button).inline, measures(button).weight])).toEqual([
-      ['16px', '700'],
-      ['32px', '700'],
-      ['32px', '700'],
-      ['16px', '700']
+      ['12px', '600'],
+      ['16px', '600'],
+      ['24px', '600'],
+      ['16px', '600']
     ])
   })
 })

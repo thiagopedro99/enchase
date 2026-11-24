@@ -48,9 +48,9 @@ describe('the icon-only button in a real browser', () => {
 
     expect(buttons().map(box)).toEqual([
       [32, 32],
+      [36, 36],
       [40, 40],
-      [48, 48],
-      [expect.any(Number), 40]
+      [expect.any(Number), 36]
     ])
   })
 
@@ -58,7 +58,7 @@ describe('the icon-only button in a real browser', () => {
     onRoot({ '--enchase-button-padding-inline-ghost': '30px' })
     renderInBrowser(<>{squares(variants.map((variant) => ({ variant })))}</>)
 
-    expect(buttons().map(box)).toEqual(variants.map(() => [40, 40]))
+    expect(buttons().map(box)).toEqual(variants.map(() => [36, 36]))
   })
 
   it('has the same padding at the sides as above and below, from the hook of the vertical padding', () => {
@@ -128,7 +128,7 @@ describe('the icon-only button in a real browser', () => {
     const style = getComputedStyle(buttons()[0])
 
     expect(buttons()[0].hasAttribute('data-icon-only')).toBe(false)
-    expect(style.paddingLeft).toBe('24px')
+    expect(style.paddingLeft).toBe('16px')
     expect(box(buttons()[0])[0]).toBeGreaterThan(box(buttons()[0])[1])
   })
 
@@ -143,7 +143,7 @@ describe('the icon-only button in a real browser', () => {
       </Button>
     )
 
-    expect(box(buttons()[0])).toEqual([90, 40])
+    expect(box(buttons()[0])).toEqual([90, 36])
     sheet.remove()
   })
 })

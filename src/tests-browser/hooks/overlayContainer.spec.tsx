@@ -89,7 +89,7 @@ describe.each([
     const panel = slotOf('modal-panel')
 
     expect(where(slotOf('modal'))).toBe(true)
-    expect(getComputedStyle(panel).backgroundColor).toBe(expected('--enchase-color-surface-container-high'))
+    expect(getComputedStyle(panel).backgroundColor).toBe(expected('--enchase-color-background'))
     expect(getComputedStyle(panel).direction).toBe(inside ? 'rtl' : 'ltr')
   })
 
@@ -109,7 +109,7 @@ describe.each([
     const trigger = page.getByRole('button', { name: 'Trigger' }).element().getBoundingClientRect()
 
     expect(where(content)).toBe(true)
-    expect(getComputedStyle(content).backgroundColor).toBe(expected('--enchase-color-surface-container-high'))
+    expect(getComputedStyle(content).backgroundColor).toBe(expected('--enchase-color-surface'))
     expect(content.getBoundingClientRect().top).toBeGreaterThanOrEqual(trigger.bottom)
     expect(content.getBoundingClientRect().top - trigger.bottom).toBeLessThan(40)
   })

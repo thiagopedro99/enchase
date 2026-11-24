@@ -71,9 +71,9 @@ const expectedBox = (variant: FieldVariant, state: State) => {
   return {
     widths,
     line: variant === 'borderless' ? expect.any(String) : line,
-    lineRadii: square ? ['0px', '0px'] : ['8px', '8px'],
+    lineRadii: square ? ['0px', '0px'] : ['10px', '10px'],
     fill: variant === 'filled' ? fill : transparent,
-    radii: variant === 'filled' ? ['8px', '8px', '0px', '0px'] : ['8px', '8px', '8px', '8px'],
+    radii: variant === 'filled' ? ['10px', '10px', '0px', '0px'] : ['10px', '10px', '10px', '10px'],
     ring: variant === 'borderless' && state === 'focus' ? ['solid', '2px'] : ['none']
   }
 }

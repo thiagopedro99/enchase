@@ -54,14 +54,18 @@ afterEach(() => {
 })
 
 describe('the shape of the theme in a real browser', () => {
-  it('keeps the pills, the 8px fields, the 24px cards and the round switch of the default look', async () => {
+  it('keeps the round switch and radio, the 8px badge and link, the 10px fields and buttons and the 16px cards of the Lapidado default', async () => {
     await show()
     const found = radii()
 
-    for (const name of ['button', 'badge', 'stepper', 'link', 'track', 'radio'] as const) expect(found[name], name).toBeGreaterThanOrEqual(1000)
-    expect(found.input).toBe(8)
-    expect(found.number).toBe(8)
-    expect(found.card).toBe(24)
+    for (const name of ['track', 'radio'] as const) expect(found[name], name).toBeGreaterThanOrEqual(1000)
+    expect(found.badge).toBe(8)
+    expect(found.link).toBe(8)
+    expect(found.button).toBe(10)
+    expect(found.stepper).toBe(10)
+    expect(found.input).toBe(10)
+    expect(found.number).toBe(10)
+    expect(found.card).toBe(16)
   })
 
   it('rounds the buttons, the fields and the cards a little in the soft shape, and keeps the switch and the radio round', async () => {
@@ -69,9 +73,9 @@ describe('the shape of the theme in a real browser', () => {
     const found = radii()
 
     expect(found.button).toBe(12)
-    expect(found.badge).toBe(12)
+    expect(found.badge).toBe(10)
     expect(found.stepper).toBe(12)
-    expect(found.link).toBe(12)
+    expect(found.link).toBe(10)
     expect(found.menuButton).toBe(12)
     expect(found.input).toBe(12)
     expect(found.number).toBe(12)
@@ -110,8 +114,8 @@ describe('the shape of the theme in a real browser', () => {
 
     expect(found.button).toBe(8)
     expect(found.badge).toBe(8)
-    expect(found.input).toBe(8)
-    expect(found.card).toBe(24)
+    expect(found.input).toBe(10)
+    expect(found.card).toBe(16)
     expect(found.track).toBeGreaterThanOrEqual(1000)
   })
 
@@ -127,7 +131,7 @@ describe('the shape of the theme in a real browser', () => {
     expect(radiusOf('[data-slot="badge"]')).toBe(4)
   })
 
-  it('still follows an override of the full radius made in the css of the app, as before the button role', async () => {
+  it('no longer follows an override of the full radius for the button role, which is its own value now, but still follows it for the round switch', async () => {
     await show()
     const sheet = document.createElement('style')
 
@@ -135,8 +139,8 @@ describe('the shape of the theme in a real browser', () => {
     sheet.textContent = ':root { --enchase-radius-full: 6px; }'
     document.body.append(sheet)
 
-    expect(radiusOf('[data-slot="button"]')).toBe(6)
-    expect(radiusOf('[data-slot="navbar-menu-button"]')).toBe(6)
+    expect(radiusOf('[data-slot="button"]')).toBe(10)
+    expect(radiusOf('[data-slot="navbar-menu-button"]')).toBe(10)
     expect(radiusOf('[data-slot="switch-track"]')).toBe(6)
   })
 
@@ -152,6 +156,6 @@ describe('the shape of the theme in a real browser', () => {
     )
     await expect.poll(() => document.querySelector('[data-slot="modal-panel"]')).toBeTruthy()
 
-    expect(radiusOf('[data-slot="modal-panel"]')).toBe(8)
+    expect(radiusOf('[data-slot="modal-panel"]')).toBe(4)
   })
 })

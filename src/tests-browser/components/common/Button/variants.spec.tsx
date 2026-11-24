@@ -55,8 +55,8 @@ describe('the dashed button in a real browser', () => {
     expect(style('button', 0).borderTopStyle).toBe('solid')
     expect(['top', 'right', 'bottom', 'left'].map((side) => style('button', 1).getPropertyValue(`border-${side}-style`))).toEqual(['dashed', 'dashed', 'dashed', 'dashed'])
     expect(look(1)).toEqual(look(0))
-    expect(style('button', 1).borderTopColor).toBe(role('border-strong'))
-    expect(style('button', 1).color).toBe(role('primary'))
+    expect(style('button', 1).borderTopColor).toBe(role('border'))
+    expect(style('button', 1).color).toBe(role('text-primary'))
   })
 
   it('takes the background, the border, the text and the shadow of the outline hooks', () => {

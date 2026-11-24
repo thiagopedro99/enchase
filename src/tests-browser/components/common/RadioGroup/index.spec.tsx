@@ -92,13 +92,13 @@ describe('RadioGroup in a real browser', () => {
     }
   })
 
-  it('draws a 20 px ring with a 10 px dot centered inside it only on the selected option', () => {
+  it('draws a 16 px ring with an 8 px dot centered inside it only on the selected option', () => {
     renderInBrowser(<RadioGroup label="Plano" options={plans} defaultValue="pro" />)
     const dot = (index: number) => part('radio-group-control', index).firstElementChild as HTMLElement
 
-    expect(part('radio-group-control', 1).getBoundingClientRect().width).toBeCloseTo(20, 0)
-    expect(part('radio-group-control', 1).getBoundingClientRect().height).toBeCloseTo(20, 0)
-    expect(dot(1).getBoundingClientRect().width).toBeCloseTo(10, 0)
+    expect(part('radio-group-control', 1).getBoundingClientRect().width).toBeCloseTo(16, 0)
+    expect(part('radio-group-control', 1).getBoundingClientRect().height).toBeCloseTo(16, 0)
+    expect(dot(1).getBoundingClientRect().width).toBeCloseTo(8, 0)
     expect(centerOf(dot(1)).x).toBeCloseTo(centerOf(part('radio-group-control', 1)).x, 0)
     expect(centerOf(dot(1)).y).toBeCloseTo(centerOf(part('radio-group-control', 1)).y, 0)
     expect(getComputedStyle(dot(1)).opacity).toBe('1')

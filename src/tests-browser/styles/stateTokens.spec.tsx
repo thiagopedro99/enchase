@@ -128,7 +128,7 @@ describe('the pressed layer from the tokens', () => {
 })
 
 describe('the disabled layers from the tokens', () => {
-  it('dims the outline of a disabled field to 12% and the track of a disabled switch to 38%', () => {
+  it('gives the outline of a disabled field the solid border-strong color, and fades the whole track of a disabled switch to 50% opacity, both from their own hooks now, not the disabled state tokens', () => {
     renderInBrowser(
       <>
         <Input label="Name" disabled />
@@ -136,11 +136,11 @@ describe('the disabled layers from the tokens', () => {
       </>
     )
 
-    expect(alphaOf(getComputedStyle(part('input-outline')).borderTopColor)).toBeCloseTo(0.12, 3)
-    expect(alphaOf(getComputedStyle(part('switch-track')).borderTopColor)).toBeCloseTo(0.38, 3)
+    expect(getComputedStyle(part('input-outline')).borderTopColor).toBe('rgb(123, 129, 148)')
+    expect(getComputedStyle(part('switch-track')).opacity).toBe('0.5')
   })
 
-  it('takes both strengths from the disabled tokens set on a container', () => {
+  it('leaves the field and the switch alone when the disabled state tokens are set on a container, because both now have their own fixed hook for this', () => {
     renderInBrowser(
       scoped(
         { '--enchase-state-disabled-container': '0.5', '--enchase-state-disabled-content': '0.7' },
@@ -151,13 +151,13 @@ describe('the disabled layers from the tokens', () => {
       )
     )
 
-    expect(alphaOf(getComputedStyle(part('input-outline')).borderTopColor)).toBeCloseTo(0.5, 3)
-    expect(alphaOf(getComputedStyle(part('switch-track')).borderTopColor)).toBeCloseTo(0.7, 3)
+    expect(getComputedStyle(part('input-outline')).borderTopColor).toBe('rgb(123, 129, 148)')
+    expect(getComputedStyle(part('switch-track')).opacity).toBe('0.5')
   })
 })
 
 describe('the halo of the selection controls from the tokens', () => {
-  it('surrounds a hovered checkbox with a 10px halo and the thumb of a hovered switch with an 8px one', async () => {
+  it('surrounds a hovered checkbox and the thumb of a hovered switch with no halo, because the Lapidado default has none', async () => {
     renderInBrowser(
       <>
         <Checkbox label="Terms" />
@@ -167,11 +167,11 @@ describe('the halo of the selection controls from the tokens', () => {
 
     await userEvent.hover(part('checkbox'))
     await waitForSettled(() => part('checkbox'))
-    expect(shadowOf(getComputedStyle(part('checkbox-box')).boxShadow)).toMatchObject({ spread: 10 })
+    expect(shadowOf(getComputedStyle(part('checkbox-box')).boxShadow)).toMatchObject({ spread: 0 })
 
     await userEvent.hover(part('switch'))
     await waitForSettled(() => part('switch'))
-    expect(shadowOf(getComputedStyle(part('switch-thumb')).boxShadow)).toMatchObject({ spread: 8 })
+    expect(shadowOf(getComputedStyle(part('switch-thumb')).boxShadow)).toMatchObject({ spread: 0 })
   })
 
   it('takes the size of each halo from its token, and no halo at all from a size of zero', async () => {

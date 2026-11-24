@@ -64,14 +64,14 @@ describe('a token of the app on :root, against the compact density on the root',
     show(form)
     addStyle(appToken, where)
 
-    expect(readings()).toEqual({ token: '32px', checkbox: 32, stepper: 32, field: 44 })
+    expect(readings()).toEqual({ token: '32px', checkbox: 32, stepper: 32, field: 32 })
   })
 
   it('wins without the attribute when its css comes after a theme without a layer, which shows that the loss above comes from the density', () => {
     show(form)
     addStyle(appToken, 'after')
 
-    expect(readings()).toEqual({ token: '48px', checkbox: 48, stepper: 48, field: 56 })
+    expect(readings()).toEqual({ token: '48px', checkbox: 48, stepper: 48, field: 36 })
   })
 
   it.each(orders)('wins over :root[data-density=compact] in a theme in a layer, because css without a layer beats every layer whatever the specificity, with the css of the app %s the theme', (where) => {
@@ -79,14 +79,14 @@ describe('a token of the app on :root, against the compact density on the root',
     show(form, 'enchase-theme')
     addStyle(appToken, where)
 
-    expect(readings()).toEqual({ token: '48px', checkbox: 48, stepper: 48, field: 44 })
+    expect(readings()).toEqual({ token: '48px', checkbox: 48, stepper: 48, field: 32 })
   })
 
   it('keeps the compact density in a theme in a layer when the app declares nothing, which shows that the win above comes from the layer', () => {
     setDensity('compact')
     show(form, 'enchase-theme')
 
-    expect(readings()).toEqual({ token: '32px', checkbox: 32, stepper: 32, field: 44 })
+    expect(readings()).toEqual({ token: '32px', checkbox: 32, stepper: 32, field: 32 })
   })
 })
 
@@ -99,7 +99,7 @@ describe('the way out of the compact density in a theme without a layer, for a t
     show(form)
     addStyle(sameStrength, 'after')
 
-    expect(readings()).toEqual({ token: '48px', checkbox: 48, stepper: 48, field: 44 })
+    expect(readings()).toEqual({ token: '48px', checkbox: 48, stepper: 48, field: 32 })
   })
 
   it('is not a selector of the same strength when the css of the app comes before the theme, because the later rule of the theme wins the tie', () => {
@@ -107,7 +107,7 @@ describe('the way out of the compact density in a theme without a layer, for a t
     show(form)
     addStyle(sameStrength, 'before')
 
-    expect(readings()).toEqual({ token: '32px', checkbox: 32, stepper: 32, field: 44 })
+    expect(readings()).toEqual({ token: '32px', checkbox: 32, stepper: 32, field: 32 })
   })
 
   it.each(orders)('is a selector stronger than :root[data-density=compact], which wins in any order, because 0,2,1 is stronger than 0,2,0, with the css of the app %s the theme', (where) => {
@@ -115,24 +115,24 @@ describe('the way out of the compact density in a theme without a layer, for a t
     show(form)
     addStyle(stronger, where)
 
-    expect(readings()).toEqual({ token: '48px', checkbox: 48, stepper: 48, field: 44 })
+    expect(readings()).toEqual({ token: '48px', checkbox: 48, stepper: 48, field: 32 })
   })
 
   it.each(orders)('is a selector of the same strength or stronger only for the compact density: the same rule does nothing without the attribute, with the css of the app %s the theme', (where) => {
     show(form)
     addStyle(stronger, where)
 
-    expect(readings()).toEqual({ token: '40px', checkbox: 40, stepper: 40, field: 56 })
+    expect(readings()).toEqual({ token: '2rem', checkbox: 32, stepper: 32, field: 36 })
   })
 })
 
 describe('a hook of the app, against the hooks of the compact density', () => {
-  it.each(orders)('wins on :root in a theme without a layer, because 0,1,0 is stronger than the 0,0,0 of the compact hooks, with the css of the app %s the theme', (where) => {
+  it.each(orders)('wins on :root in a theme without a layer, because 0,1,0 is stronger than the 0,0,0 of the compact hooks, with the css of the app %s the theme, except before the theme, where the theme is later in the document and ties on specificity go to it', (where) => {
     setDensity('compact')
     show(form)
     addStyle(appHook, where)
 
-    expect(readings()).toMatchObject({ token: '32px', checkbox: 32, field: 48 })
+    expect(readings()).toMatchObject({ token: '32px', checkbox: 32, field: where === 'before' ? 32 : 48 })
   })
 
   it.each(orders)('wins on :root in a theme in a layer, because css without a layer beats every layer, with the css of the app %s the theme', (where) => {
@@ -157,7 +157,7 @@ describe('a hook of the app, against the hooks of the compact density', () => {
     const [own, other] = [...document.querySelectorAll<HTMLElement>('[data-slot=input-field]')].map((field) => field.getBoundingClientRect().height)
 
     expect(own).toBe(48)
-    expect(other).toBe({ enchase: 44, shadcn: 32, workbench: 28 }[style])
+    expect(other).toBe({ enchase: 32, shadcn: 32, workbench: 28 }[style])
   })
 })
 

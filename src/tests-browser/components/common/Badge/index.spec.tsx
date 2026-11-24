@@ -46,7 +46,7 @@ describe('Badge in a real browser', () => {
     expect(backgrounds.size).toBe(variants.length)
   })
 
-  it('is a pill that flows inline with the text and keeps its height by size', () => {
+  it('flows inline with the text, with the corners of the Lapidado radius-md role, and keeps its height by size', () => {
     renderInBrowser(
       <p>
         Estado <Badge size="sm">pequeno</Badge> <Badge size="md">médio</Badge>
@@ -55,9 +55,9 @@ describe('Badge in a real browser', () => {
     const [small, medium] = badges()
 
     expect(getComputedStyle(small).display).toBe('inline-flex')
-    expect(parseFloat(getComputedStyle(small).borderTopLeftRadius)).toBeGreaterThan(100)
+    expect(parseFloat(getComputedStyle(small).borderTopLeftRadius)).toBe(8)
     expect(small.getBoundingClientRect().height).toBeCloseTo(20, 0)
-    expect(medium.getBoundingClientRect().height).toBeCloseTo(24, 0)
+    expect(medium.getBoundingClientRect().height).toBeCloseTo(20, 0)
   })
 
   it('lets the caller class win on layout even when its css loads before the library', () => {

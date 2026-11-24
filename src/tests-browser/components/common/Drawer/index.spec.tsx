@@ -124,7 +124,7 @@ describe('the Drawer in a real browser: where it lands', () => {
 
   it.each([
     ['sm', 320],
-    ['md', 400],
+    ['md', 384],
     ['lg', 560]
   ] as const)('is %s wide at %ipx', async (size, width) => {
     renderInBrowser(<DrawerPage size={size} />)
@@ -138,7 +138,7 @@ describe('the Drawer in a real browser: where it lands', () => {
     await openIt()
 
     expect(panel().getAttribute('data-size')).toBe('md')
-    expect(Math.round(panel().getBoundingClientRect().width)).toBe(400)
+    expect(Math.round(panel().getBoundingClientRect().width)).toBe(384)
   })
 
   it('never takes more than 90% of a narrow screen', async () => {

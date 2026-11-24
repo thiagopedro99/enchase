@@ -96,31 +96,31 @@ describe('the top bar of the Layout while the page scrolls', () => {
 })
 
 describe('the translucent top bar of the Layout', () => {
-  translucentIt('shows 80% of the surface under the app bar, with its border and a blur of 12px', () => {
+  translucentIt('shows 95% of the surface under the app bar, with its border and a blur of 12px', () => {
     renderInBrowser(translucentLayout('sidebar'))
     const bar = barOf('sidebar')
 
-    expect(surfaceOf(bar).a).toBeCloseTo(0.8, 2)
-    expect(surfaceRgb(bar)).toEqual([251, 248, 255])
+    expect(surfaceOf(bar).a).toBeCloseTo(0.95, 2)
+    expect(surfaceRgb(bar)).toEqual([251, 251, 252])
     expect(backdropOf(bar)).toBe('blur(12px)')
     expect(getComputedStyle(bar).borderBlockEndWidth).toBe('1px')
     expect(getComputedStyle(bar).position).toBe('sticky')
   })
 
-  translucentIt('shows 80% of the surface of the navbar under the navbar navigation', () => {
+  translucentIt('shows 95% of the surface of the navbar under the navbar navigation', () => {
     renderInBrowser(translucentLayout('navbar'))
     const bar = barOf('navbar')
 
-    expect(surfaceOf(bar).a).toBeCloseTo(0.8, 2)
-    expect(surfaceRgb(bar)).toEqual([238, 234, 246])
+    expect(surfaceOf(bar).a).toBeCloseTo(0.95, 2)
+    expect(surfaceRgb(bar)).toEqual([251, 251, 252])
     expect(backdropOf(bar)).toBe('blur(12px)')
   })
 
   translucentIt('follows the dark surfaces in the dark mode', () => {
     renderInBrowser(translucentLayout('sidebar'), 'never', 'dark')
 
-    expect(surfaceRgb(barOf('sidebar'))).toEqual([19, 19, 26])
-    expect(surfaceOf(barOf('sidebar')).a).toBeCloseTo(0.8, 2)
+    expect(surfaceRgb(barOf('sidebar'))).toEqual([12, 13, 17])
+    expect(surfaceOf(barOf('sidebar')).a).toBeCloseTo(0.95, 2)
   })
 
   translucentIt('keeps the height of the opaque bar in both navigations, so the page below does not move', () => {
@@ -204,7 +204,7 @@ describe('the translucent app bar falls back to the solid surface', () => {
     await expect.poll(() => surfaceOf(barOf('sidebar')).a).toBe(1)
 
     expect(backdropOf(barOf('sidebar'))).toBe('none')
-    expect(surfaceRgb(barOf('sidebar'))).toEqual([251, 248, 255])
+    expect(surfaceRgb(barOf('sidebar'))).toEqual([251, 251, 252])
   }
 
   const withContrast = supportsTranslucency && unlessFirefox('contrastEmulation') ? it : it.skip
@@ -215,7 +215,7 @@ describe('the translucent app bar falls back to the solid surface', () => {
     await setContrast('more')
     await expectSolid()
     await setContrast('no-preference')
-    await expect.poll(() => surfaceOf(barOf('sidebar')).a).toBeCloseTo(0.8, 2)
+    await expect.poll(() => surfaceOf(barOf('sidebar')).a).toBeCloseTo(0.95, 2)
   })
 
   const withForcedColors = supportsTranslucency && unlessWebkit('forcedColors') ? it : it.skip

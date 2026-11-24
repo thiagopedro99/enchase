@@ -26,10 +26,10 @@ const names = ['input', 'number-input', 'select', 'textarea']
 
 const all = (
   <>
-    <Input label="Name" />
-    <NumberInput label="Amount" defaultValue={1} />
-    <Select label="Plan" options={options} />
-    <Textarea label="Notes" />
+    <Input label="Name" labelPlacement="floating" />
+    <NumberInput label="Amount" defaultValue={1} labelPlacement="floating" />
+    <Select label="Plan" options={options} labelPlacement="floating" />
+    <Textarea label="Notes" labelPlacement="floating" />
   </>
 )
 
@@ -38,7 +38,7 @@ const translation = (element: Element) => new DOMMatrixReadOnly(getComputedStyle
 const raise = (label: HTMLElement) => translation(label) + label.offsetHeight / 2
 
 describe('the text box of the fields from the hooks', () => {
-  it('keeps the 200px width, the 1rem padding and the 1rem text of every field', () => {
+  it('keeps the 200px width, the 0.75rem padding and the 0.875rem text of every field', () => {
     renderInBrowser(all)
 
     expect(
@@ -48,10 +48,10 @@ describe('the text box of the fields from the hooks', () => {
         return [style.minWidth, style.paddingLeft, style.fontSize]
       })
     ).toEqual([
-      ['200px', '16px', '16px'],
-      ['200px', '16px', '16px'],
-      ['200px', '16px', '16px'],
-      ['200px', '16px', '16px']
+      ['200px', '12px', '14px'],
+      ['200px', '12px', '14px'],
+      ['200px', '12px', '14px'],
+      ['200px', '12px', '14px']
     ])
   })
 
@@ -84,15 +84,15 @@ describe('the text box of the fields from the hooks', () => {
       scoped(
         style,
         <div style={{ inlineSize: '300px' }}>
-          <Input label={label} />
-          <NumberInput label={label} defaultValue={1} steppers={false} />
-          <Textarea label={label} />
+          <Input label={label} labelPlacement="floating" />
+          <NumberInput label={label} defaultValue={1} steppers={false} labelPlacement="floating" />
+          <Textarea label={label} labelPlacement="floating" />
         </div>
       )
     const widths = () => ['input', 'number-input', 'textarea'].map((name) => labelOf(name).offsetWidth)
 
     renderInBrowser(narrow({}))
-    expect(widths()).toEqual([268, 268, 268])
+    expect(widths()).toEqual([276, 276, 276])
 
     document.body.innerHTML = ''
     renderInBrowser(narrow({ '--enchase-input-padding-inline': '8px' }))
@@ -108,34 +108,34 @@ describe('the text box of the fields from the hooks', () => {
   })
 
   it('takes the vertical padding of the textarea from its own hook and keeps the label at the first line', () => {
-    renderInBrowser(<Textarea label="Notes" />)
+    renderInBrowser(<Textarea label="Notes" labelPlacement="floating" />)
 
     expect([getComputedStyle(fieldOf('textarea')).paddingTop, translation(labelOf('textarea'))]).toEqual(['16px', 16])
 
     document.body.innerHTML = ''
-    renderInBrowser(scoped({ '--enchase-textarea-padding-block': '8px' }, <Textarea label="Notes" />))
+    renderInBrowser(scoped({ '--enchase-textarea-padding-block': '8px' }, <Textarea label="Notes" labelPlacement="floating" />))
 
     expect([getComputedStyle(fieldOf('textarea')).paddingTop, translation(labelOf('textarea'))]).toEqual(['8px', 8])
   })
 })
 
 describe('the floating label from the height of the field', () => {
-  it('lifts the label by half of the height of the field, 28px for the 3.5rem it has by default', async () => {
+  it('lifts the label by half of the height of the field, 18px for the 2.25rem it has by default', async () => {
     renderInBrowser(
       <>
-        <Input label="Name" />
-        <Select label="Plan" options={options} />
+        <Input label="Name" labelPlacement="floating" />
+        <Select label="Plan" options={options} labelPlacement="floating" />
       </>
     )
     ;(fieldOf('input') as HTMLInputElement).focus()
     await waitForSettled(() => labelOf('input'))
 
-    expect(raise(labelOf('input'))).toBeCloseTo(-28, 1)
+    expect(raise(labelOf('input'))).toBeCloseTo(-18, 1)
 
     ;(fieldOf('select') as HTMLSelectElement).focus()
     await waitForSettled(() => labelOf('select'))
 
-    expect(raise(labelOf('select'))).toBeCloseTo(-28, 1)
+    expect(raise(labelOf('select'))).toBeCloseTo(-18, 1)
   })
 
   it('lifts the label by half of the new height when the height of the field changes', async () => {
@@ -143,9 +143,9 @@ describe('the floating label from the height of the field', () => {
       scoped(
         { '--enchase-input-height': '4rem' },
         <>
-          <Input label="Name" />
-          <NumberInput label="Amount" defaultValue={1} />
-          <Select label="Plan" options={options} />
+          <Input label="Name" labelPlacement="floating" />
+          <NumberInput label="Amount" defaultValue={1} labelPlacement="floating" />
+          <Select label="Plan" options={options} labelPlacement="floating" />
         </>
       )
     )
@@ -163,7 +163,7 @@ describe('the floating label from the height of the field', () => {
 describe('the room of the buttons inside a field from the target size', () => {
   const room = (name: string) => getComputedStyle(fieldOf(name)).paddingRight
 
-  it('keeps 56px for the button of the password and 100px for the steppers of the number field', () => {
+  it('keeps 48px for the button of the password and 84px for the steppers of the number field', () => {
     renderInBrowser(
       <>
         <Input label="Password" type="password" />
@@ -171,7 +171,7 @@ describe('the room of the buttons inside a field from the target size', () => {
       </>
     )
 
-    expect([room('input'), room('number-input')]).toEqual(['56px', '100px'])
+    expect([room('input'), room('number-input')]).toEqual(['48px', '84px'])
   })
 
   it('grows the room with the target size, so a bigger button does not cover the text', () => {
@@ -206,17 +206,17 @@ describe('the room of the buttons inside a field from the target size', () => {
 
   it('keeps a long label of the number field away from the steppers, and follows the target size', () => {
     const label = 'A label long enough to run under the steppers of the field'
-    const narrow = (style: Record<string, string>) => scoped(style, <div style={{ inlineSize: '300px' }}><NumberInput label={label} defaultValue={1} /></div>)
+    const narrow = (style: Record<string, string>) => scoped(style, <div style={{ inlineSize: '300px' }}><NumberInput label={label} defaultValue={1} labelPlacement="floating" /></div>)
 
     renderInBrowser(narrow({}))
-    expect(labelOf('number-input').offsetWidth).toBe(188)
+    expect(labelOf('number-input').offsetWidth).toBe(212)
 
     document.body.innerHTML = ''
     renderInBrowser(narrow({ '--enchase-hit-size': '48px' }))
-    expect(labelOf('number-input').offsetWidth).toBe(172)
+    expect(labelOf('number-input').offsetWidth).toBe(180)
 
     document.body.innerHTML = ''
     renderInBrowser(narrow({ '--enchase-input-padding-inline': '8px' }))
-    expect(labelOf('number-input').offsetWidth).toBe(204)
+    expect(labelOf('number-input').offsetWidth).toBe(220)
   })
 })

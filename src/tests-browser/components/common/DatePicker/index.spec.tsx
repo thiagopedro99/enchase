@@ -62,8 +62,8 @@ describe('DatePicker in a real browser', () => {
 
     expect(outline.height).toBe(reference.height)
     expect(outline.width).toBe(reference.width)
-    expect(button.width).toBe(40)
-    expect(button.height).toBe(40)
+    expect(button.width).toBe(32)
+    expect(button.height).toBe(32)
     expect(Math.abs(box.right - 8 - button.right)).toBeLessThanOrEqual(1)
     expect(Math.abs(box.top + box.height / 2 - (button.top + button.height / 2))).toBeLessThanOrEqual(1)
   })
@@ -110,7 +110,7 @@ describe('DatePicker in a real browser', () => {
   })
 
   it('follows the field when the page scrolls', async () => {
-    renderInBrowser(<div style={{ minHeight: 3000 }}>{stage(<DatePicker label="Data" defaultValue="2026-10-15" />, 200)}</div>)
+    renderInBrowser(<div style={{ minHeight: 3000 }}>{stage(<DatePicker label="Data" defaultValue="2026-10-15" labelPlacement="floating" />, 200)}</div>)
     window.scrollTo(0, 0)
     await open()
     const gap = rect(popup()).top - rect(control()).bottom
@@ -154,7 +154,7 @@ describe('DatePicker in a real browser', () => {
     )
 
     expect(Math.abs(rect(part('date-picker-outline')).left + 8 - rect(toggle()).left)).toBeLessThanOrEqual(1)
-    expect(parseFloat(style('date-picker-input').paddingLeft)).toBe(56)
+    expect(parseFloat(style('date-picker-input').paddingLeft)).toBe(48)
   })
 })
 
@@ -282,8 +282,8 @@ describe('the field of the DatePicker next to the Input in a real browser', () =
   it('floats the label when there is a date, and opens the notch of the outline for it', () => {
     renderInBrowser(
       <div style={{ display: 'grid', gap: 24, padding: 24, width: 320 }}>
-        <DatePicker label="Vazio" />
-        <DatePicker label="Cheio" defaultValue="2026-10-15" />
+        <DatePicker label="Vazio" labelPlacement="floating" />
+        <DatePicker label="Cheio" defaultValue="2026-10-15" labelPlacement="floating" />
       </div>
     )
     const [empty, filled] = [0, 1].map((index) => part('date-picker-label', index).getBoundingClientRect())

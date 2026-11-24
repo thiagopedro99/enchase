@@ -48,7 +48,7 @@ describe('the danger button in a real browser', () => {
 
     expect([style().backgroundColor, style().color]).toEqual([role('error'), role('on-error')])
     expect(style().borderTopColor).toBe('rgba(0, 0, 0, 0)')
-    expect(style().boxShadow).toBe('none')
+    expect(style().boxShadow).toBe(resolved('boxShadow', 'var(--enchase-button-shadow-danger)'))
     expect(layerOf()).toBe(0)
   })
 
@@ -84,7 +84,7 @@ describe('the danger button in a real browser', () => {
     expect(layerOf()).toBeCloseTo(0.08, 3)
     expect(style().color).toBe(role('on-error'))
     expect(style().backgroundColor).toBe(role('error'))
-    expect(style().boxShadow).toBe(resolved('boxShadow', 'var(--enchase-shadow-sm)'))
+    expect(style().boxShadow).toBe(resolved('boxShadow', 'var(--enchase-button-shadow-danger-hover)'))
   })
 
   it('lays the pressed layer of the state token over the button while the mouse is down', async () => {
@@ -115,21 +115,18 @@ describe('the danger button in a real browser', () => {
     expect(dangerRing).toEqual(['solid', '2px', role('primary'), '2px'])
   })
 
-  it('takes the colors of a disabled button from the shared hook, as the primary variant does, and not from the error color', () => {
+  it('takes the colors of a disabled button from the shared, generic fallback, because it has no color hook of its own for the state, and not from the error color', () => {
     renderInBrowser(
-      <>
-        <Button variant="danger" disabled>
-          Delete
-        </Button>
-        <Button variant="primary" disabled>
-          Save
-        </Button>
-      </>
+      <Button variant="danger" disabled>
+        Delete
+      </Button>
     )
-    const read = (index: number) => [style(index).backgroundColor, style(index).color, style(index).borderTopColor, style(index).boxShadow, style(index).opacity]
 
-    expect(read(0)).toEqual(read(1))
-    expect(style(0).backgroundColor).not.toBe(role('error'))
-    expect(style(0).cursor).toBe('not-allowed')
+    expect(style().backgroundColor).toBe(resolved('color', 'color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)'))
+    expect(style().backgroundColor).not.toBe(role('error'))
+    expect(style().borderTopColor).toBe('rgba(0, 0, 0, 0)')
+    expect(style().boxShadow).toBe('none')
+    expect(style().opacity).toBe('0.5')
+    expect(style().cursor).toBe('not-allowed')
   })
 })

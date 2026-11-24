@@ -91,7 +91,7 @@ describe('Pagination in a real browser', () => {
     expect(currentPage()).toBe('3')
   })
 
-  it('draws a 40 px square button by default and a 32 px one when small', () => {
+  it('draws a 36 px square button by default and a 32 px one when small', () => {
     renderInBrowser(
       <>
         <Pagination pageCount={5} ariaLabel="Média" />
@@ -101,8 +101,8 @@ describe('Pagination in a real browser', () => {
     const medium = pages()[0]
     const small = pages()[5]
 
-    expect(rect(medium).width).toBeCloseTo(40, 0)
-    expect(rect(medium).height).toBeCloseTo(40, 0)
+    expect(rect(medium).width).toBeCloseTo(36, 0)
+    expect(rect(medium).height).toBeCloseTo(36, 0)
     expect(rect(small).width).toBeCloseTo(32, 0)
     expect(rect(small).height).toBeCloseTo(32, 0)
     expect(rect(part('pagination-previous', 1)).height).toBeCloseTo(32, 0)
@@ -123,12 +123,12 @@ describe('Pagination in a real browser', () => {
     const other = getComputedStyle(part('pagination-page', 0))
 
     expect(part('pagination-page', 2).getAttribute('aria-current')).toBe('page')
-    expect(contrastRatio(current.color, current.backgroundColor), 'current page').toBeGreaterThanOrEqual(4.5)
+    expect(current.backgroundColor).toBe('rgba(0, 0, 0, 0)')
 
     for (const name of surfaces) {
       expect(contrastRatio(other.color, surface(name)), `page on ${name}`).toBeGreaterThanOrEqual(4.5)
       expect(contrastRatio(getComputedStyle(part('pagination-ellipsis')).color, surface(name)), `ellipsis on ${name}`).toBeGreaterThanOrEqual(4.5)
-      expect(contrastRatio(current.backgroundColor, surface(name)), `current page fill on ${name}`).toBeGreaterThanOrEqual(3)
+      expect(contrastRatio(current.color, surface(name)), `current page on ${name}`).toBeGreaterThanOrEqual(4.5)
     }
   })
 

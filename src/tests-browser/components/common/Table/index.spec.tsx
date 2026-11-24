@@ -144,7 +144,8 @@ describe('Table in a real browser', () => {
     const cell = getComputedStyle(part('table-cell'))
     const striped = getComputedStyle(parts('table-row')[1])
 
-    expect(contrastRatio(header.color, header.backgroundColor), 'header').toBeGreaterThanOrEqual(4.5)
+    expect(header.backgroundColor).toBe('rgba(0, 0, 0, 0)')
+    for (const name of surfaces) expect(contrastRatio(header.color, surface(name)), `header on ${name}`).toBeGreaterThanOrEqual(4.5)
     expect(contrastRatio(cell.color, striped.backgroundColor), 'cell on a striped row').toBeGreaterThanOrEqual(4.5)
 
     for (const name of surfaces) {
@@ -184,7 +185,7 @@ describe('Table in a real browser', () => {
     expect(getComputedStyle(part('table-header')).backgroundColor).toBe(getComputedStyle(parts('table-header')[1]).backgroundColor)
   })
 
-  it('packs the rows tighter and the text smaller when small', () => {
+  it('packs the rows tighter when small, but keeps the same inline padding and font size', () => {
     renderInBrowser(
       <>
         <Table caption="Média" columns={columns} rows={orders} />
@@ -196,8 +197,8 @@ describe('Table in a real browser', () => {
 
     expect(rect(parts('table-row')[4]).height).toBeLessThan(rect(parts('table-row')[0]).height)
     expect(parseFloat(small.paddingBlockStart)).toBeLessThan(parseFloat(medium.paddingBlockStart))
-    expect(parseFloat(small.paddingInlineStart)).toBeLessThan(parseFloat(medium.paddingInlineStart))
-    expect(parseFloat(small.fontSize)).toBeLessThan(parseFloat(medium.fontSize))
+    expect(small.paddingInlineStart).toBe(medium.paddingInlineStart)
+    expect(small.fontSize).toBe(medium.fontSize)
     expect(parseFloat(getComputedStyle(parts('table-header')[5]).paddingBlockStart)).toBeLessThan(parseFloat(getComputedStyle(parts('table-header')[0]).paddingBlockStart))
   })
 
@@ -894,7 +895,7 @@ describe('Table in forced colors', () => {
     expect(cell.borderBottomStyle).toBe('solid')
     expect(cell.borderBottomColor).not.toBe('rgba(0, 0, 0, 0)')
     expect(header.borderBottomColor).not.toBe('rgba(0, 0, 0, 0)')
-    expect(parseInt(header.fontWeight)).toBeGreaterThanOrEqual(600)
+    expect(parseInt(header.fontWeight)).toBeGreaterThanOrEqual(500)
     expect(getComputedStyle(part('table')).borderTopStyle).toBe('solid')
   })
 

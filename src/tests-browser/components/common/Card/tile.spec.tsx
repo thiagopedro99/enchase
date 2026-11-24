@@ -79,7 +79,7 @@ describe.each(builtInStyleEntries)('a clickable tile in the %s style, in a real 
       { style }
     )
 
-    expect(computed('tile').opacity).toBe(name === 'shadcn' ? '0.5' : '0.38')
+    expect(computed('tile').opacity).toBe(name === 'shadcn' || name === 'enchase' ? '0.5' : '0.38')
   })
 
   describe.each(tiles)('%s', (slot, make) => {
@@ -262,10 +262,10 @@ describe.each(tiles)('the states of %s in a real browser', (slot, make) => {
 describe('a disabled CardButton in a real browser', () => {
   const disabled = () => renderInBrowser(<CardButton disabled variant="elevated" data-testid="tile">Soon</CardButton>, 'auto')
 
-  it('fades to the content opacity of the state tokens and shows that it does not work', () => {
+  it('fades to the opacity of its own disabled hook and shows that it does not work', () => {
     disabled()
 
-    expect(computed('tile').opacity).toBe('0.38')
+    expect(computed('tile').opacity).toBe('0.5')
     expect(computed('tile').cursor).toBe('not-allowed')
     expect(computed('tile').boxShadow).toBe('none')
   })

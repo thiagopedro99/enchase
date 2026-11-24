@@ -3,6 +3,7 @@ import { userEvent } from 'vitest/browser'
 
 import { Sidebar } from '@components/common/Sidebar/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
+import { builtInStyles } from '@tests/shared/fixtures/styles.ts'
 import { renderInBrowser } from '../support/harness.tsx'
 import { letGoOfTheMouse, parkMouse, pressMouse } from '../support/pointer.ts'
 import { frames, waitForSettled } from '../support/settle.ts'
@@ -63,17 +64,17 @@ const measure = async () => {
   return { rest, hover, pressed }
 }
 
-describe('the current item of the sidebar in a real browser, with the values of 0.22.0', () => {
+describe('the current item of the sidebar in the material3 style, with the values of 0.22.0', () => {
   it('keeps its colors at rest, under the pointer and under the press', async () => {
-    renderInBrowser(<Sidebar variant="permanent" sections={sections} activeSectionId="recursos" />)
+    renderInBrowser(<Sidebar variant="permanent" sections={sections} activeSectionId="recursos" />, 'never', 'light', { style: builtInStyles.material3 })
 
     expect(await measure()).toEqual(sidebarCurrent)
   })
 })
 
-describe('the current item of the navbar in a real browser, with the values of 0.22.0', () => {
+describe('the current item of the navbar in the material3 style, with the values of 0.22.0', () => {
   it('keeps its colors at rest, under the pointer and under the press', async () => {
-    renderInBrowser(<Navbar sections={sections} activeSectionId="recursos" />)
+    renderInBrowser(<Navbar sections={sections} activeSectionId="recursos" />, 'never', 'light', { style: builtInStyles.material3 })
 
     expect(await measure()).toEqual(navbarCurrent)
   })

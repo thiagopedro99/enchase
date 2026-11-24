@@ -14,7 +14,7 @@ afterEach(() => {
 
 const column = 144
 
-const gap = 8
+const gap = 16
 
 const variants: FieldVariant[] = ['outlined', 'filled', 'borderless', 'underlined']
 

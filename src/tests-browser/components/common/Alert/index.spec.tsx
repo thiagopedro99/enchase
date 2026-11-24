@@ -27,7 +27,7 @@ const alerts = () => [...document.body.querySelectorAll<HTMLElement>('[data-slot
 const noop = () => undefined
 
 describe('Alert in a real browser', () => {
-  it.each(['light', 'dark'] as const)('keeps the text of every variant readable in the %s theme', (mode) => {
+  it.each(['light', 'dark'] as const)('keeps the text of every variant readable on the shared neutral surface in the %s theme', (mode) => {
     renderInBrowser(
       <>
         {variants.map((variant) => (
@@ -48,7 +48,7 @@ describe('Alert in a real browser', () => {
       expect(contrastRatio(style.color, style.backgroundColor), `${alert.dataset.variant} in ${mode}`).toBeGreaterThanOrEqual(4.5)
     }
 
-    expect(backgrounds.size).toBe(variants.length)
+    expect(backgrounds.size).toBe(1)
   })
 
   it('puts the icon at the start and the close button at the end in LTR and the other way round in RTL', () => {

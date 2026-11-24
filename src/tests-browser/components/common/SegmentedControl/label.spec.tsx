@@ -39,7 +39,7 @@ describe('the label of the segmented control in a real browser', () => {
     renderInBrowser(<SegmentedControl label="Visão" items={views} />)
     const label = style('segmented-control-label')
 
-    expect(label.fontSize).toBe('16px')
+    expect(label.fontSize).toBe('14px')
     expect(label.fontWeight).toBe('500')
     expect(label.marginBlockEnd).toBe('8px')
   })

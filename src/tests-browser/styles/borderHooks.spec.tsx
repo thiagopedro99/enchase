@@ -30,16 +30,16 @@ const variants = ['neutral', 'primary', 'success', 'warning', 'error', 'info'] a
 const alertVariants = ['info', 'success', 'warning', 'error'] as const
 
 const textOf = {
-  light: { neutral: 'rgb(27, 27, 33)', primary: 'rgb(20, 16, 110)', success: 'rgb(0, 33, 10)', warning: 'rgb(43, 23, 0)', error: 'rgb(65, 0, 2)', info: 'rgb(0, 30, 49)' },
-  dark: { neutral: 'rgb(229, 225, 236)', primary: 'rgb(225, 224, 255)', success: 'rgb(183, 242, 191)', warning: 'rgb(255, 221, 181)', error: 'rgb(255, 218, 214)', info: 'rgb(201, 230, 255)' }
+  light: { neutral: 'rgb(16, 18, 27)', primary: 'rgb(255, 255, 255)', success: 'rgb(0, 33, 10)', warning: 'rgb(43, 23, 0)', error: 'rgb(255, 255, 255)', info: 'rgb(0, 30, 49)' },
+  dark: { neutral: 'rgb(242, 243, 246)', primary: 'rgb(20, 20, 61)', success: 'rgb(183, 242, 191)', warning: 'rgb(255, 221, 181)', error: 'rgb(105, 0, 5)', info: 'rgb(201, 230, 255)' }
 }
 
 const headerOf = {
-  light: { text: 'rgb(70, 70, 79)', line: 'rgb(199, 197, 208)' },
-  dark: { text: 'rgb(200, 197, 208)', line: 'rgb(70, 70, 79)' }
+  light: { text: 'rgb(16, 18, 27)', line: 'rgb(226, 228, 234)' },
+  dark: { text: 'rgb(242, 243, 246)', line: 'rgb(42, 45, 55)' }
 }
 
-const calendarText = { light: 'rgb(27, 27, 33)', dark: 'rgb(229, 225, 236)' }
+const calendarText = { light: 'rgb(16, 18, 27)', dark: 'rgb(242, 243, 246)' }
 
 const columns: TableColumn<{ id: string; name: string; city: string }>[] = [
   { key: 'id', header: 'Id', rowHeader: true },
@@ -107,7 +107,7 @@ describe.each(['light', 'dark'] as const)('the borders of today, with no border 
     expect(bordersOf(calendar())).toEqual(absent(calendarText[mode]))
   })
 
-  it('keeps the border of zero width and solid style on an alert, with a transparent color', () => {
+  it('draws a 1px solid border on an alert, in the border color of the theme', () => {
     renderInBrowser(
       <>
         {alertVariants.map((variant) => (
@@ -120,7 +120,7 @@ describe.each(['light', 'dark'] as const)('the borders of today, with no border 
       mode
     )
 
-    expect(parts('alert').map(bordersOf)).toEqual(alertVariants.map(() => ({ width: all('0px'), style: all('solid'), color: all('rgba(0, 0, 0, 0)') })))
+    expect(parts('alert').map(bordersOf)).toEqual(alertVariants.map(() => ({ width: all('1px'), style: all('solid'), color: all(headerOf[mode].line) })))
   })
 })
 

@@ -33,11 +33,13 @@ const ratio = (name: string) => Number.parseFloat(style(name).lineHeight) / Numb
 
 describe('the corners of the components from the hooks', () => {
   it('follows the scale of the theme when no hook is set, and the hook wins over the scale', () => {
-    renderInBrowser(scoped({ '--enchase-radius-md': '5px' }, <Alert>Saved</Alert>))
+    onRoot({ '--enchase-radius-lg': '5px' })
+    renderInBrowser(<Alert>Saved</Alert>)
     expect(style('alert').borderTopLeftRadius).toBe('5px')
 
     document.body.innerHTML = ''
-    renderInBrowser(scoped({ '--enchase-radius-md': '5px', '--enchase-alert-radius': '3px' }, <Alert>Saved</Alert>))
+    onRoot({ '--enchase-radius-lg': '5px', '--enchase-alert-radius': '3px' })
+    renderInBrowser(<Alert>Saved</Alert>)
     expect(style('alert').borderTopLeftRadius).toBe('3px')
   })
 

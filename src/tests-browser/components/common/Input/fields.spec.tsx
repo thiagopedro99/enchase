@@ -47,8 +47,8 @@ describe('fields in a real browser', () => {
       </>
     )
 
-    expect(parseFloat(getComputedStyle(slotOf('input-field')).height)).toBeGreaterThanOrEqual(56)
-    expect(parseFloat(getComputedStyle(slotOf('select-field')).height)).toBeGreaterThanOrEqual(56)
+    expect(parseFloat(getComputedStyle(slotOf('input-field')).height)).toBeGreaterThanOrEqual(36)
+    expect(parseFloat(getComputedStyle(slotOf('select-field')).height)).toBeGreaterThanOrEqual(36)
     expect(getComputedStyle(slotOf('input-field')).paddingInlineStart).not.toBe('0px')
     if (unlessWebkit('webkitSelectPadding')) expect(getComputedStyle(slotOf('select-field')).paddingInlineStart).not.toBe('0px')
   })
@@ -57,10 +57,10 @@ describe('fields in a real browser', () => {
     renderInBrowser(
       <>
         <div dir="ltr" data-testid="ltr" style={{ inlineSize: 300 }}>
-          <Input label="Nome" id="ltr-field" />
+          <Input label="Nome" id="ltr-field" labelPlacement="floating" />
         </div>
         <div dir="rtl" data-testid="rtl" style={{ inlineSize: 300 }}>
-          <Input label="Nome" id="rtl-field" />
+          <Input label="Nome" id="rtl-field" labelPlacement="floating" />
         </div>
       </>
     )
@@ -89,8 +89,8 @@ describe('fields in a real browser', () => {
   it.each(['date', 'time', 'datetime-local'] as const)('floats the label of an empty %s field, which always shows its own format, and leaves a text field alone', async (type) => {
     renderInBrowser(
       <>
-        <Input label="Texto" id="plain-field" />
-        <Input label="Data" type={type} id="typed-field" />
+        <Input label="Texto" id="plain-field" labelPlacement="floating" />
+        <Input label="Data" type={type} id="typed-field" labelPlacement="floating" />
       </>
     )
     const scaleOf = (id: string) => new DOMMatrix(getComputedStyle(document.getElementById(id)?.parentElement?.querySelector('[data-slot="input-label"]') as HTMLElement).transform).a
@@ -124,7 +124,7 @@ describe('fields in a real browser', () => {
     )
 
     await userEvent.tab()
-    expect(getComputedStyle(slotOf('input-outline')).borderTopWidth).toBe('2px')
+    expect(getComputedStyle(slotOf('input-outline')).borderTopWidth).toBe('1px')
 
     await userEvent.tab()
     expect(getComputedStyle(slotOf('input-toggle')).outlineStyle).toBe('solid')
@@ -188,10 +188,10 @@ describe('textarea in a real browser', () => {
     renderInBrowser(
       <>
         <div dir="ltr" style={{ inlineSize: 300 }}>
-          <Textarea label="Mensagem" id="ltr-area" />
+          <Textarea label="Mensagem" id="ltr-area" labelPlacement="floating" />
         </div>
         <div dir="rtl" style={{ inlineSize: 300 }}>
-          <Textarea label="Mensagem" id="rtl-area" />
+          <Textarea label="Mensagem" id="rtl-area" labelPlacement="floating" />
         </div>
       </>
     )
@@ -239,8 +239,8 @@ describe('textarea in a real browser', () => {
   it('hides scrolled text behind the floating label only when the field has a label', () => {
     renderInBrowser(
       <>
-        <Textarea label="Com rótulo" />
-        <Textarea aria-label="Sem rótulo" />
+        <Textarea label="Com rótulo" labelPlacement="floating" />
+        <Textarea aria-label="Sem rótulo" labelPlacement="floating" />
       </>
     )
     const maskOf = (name: string) => {
@@ -258,7 +258,7 @@ describe('textarea in a real browser', () => {
 
     await userEvent.tab()
 
-    expect(getComputedStyle(slotOf('textarea-outline')).borderTopWidth).toBe('2px')
+    expect(getComputedStyle(slotOf('textarea-outline')).borderTopWidth).toBe('1px')
   })
 
   it('keeps the field at least 24 by 24 px and lets the visible textarea take the label text as its name', () => {

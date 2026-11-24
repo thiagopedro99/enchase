@@ -58,7 +58,7 @@ describe('Switch in a real browser', () => {
 
     for (const name of surfaces) {
       expect(surface(name), name).not.toBe('')
-      expect(contrastRatio(off.track.borderTopColor, surface(name)), `off track border on ${name}`).toBeGreaterThanOrEqual(3)
+      expect(contrastRatio(off.track.backgroundColor, surface(name)), `off track background on ${name}`).toBeGreaterThanOrEqual(3)
       expect(contrastRatio(on.track.backgroundColor, surface(name)), `on track on ${name}`).toBeGreaterThanOrEqual(3)
     }
 
@@ -76,17 +76,17 @@ describe('Switch in a real browser', () => {
       return thumb.left >= track.left && thumb.right <= track.right
     }
 
-    expect(thumbOffset()).toBeCloseTo(16, 0)
+    expect(thumbOffset()).toBeCloseTo(9, 0)
     expect(inside()).toBe(true)
 
     await userEvent.click(page.getByText('Ligar'))
 
-    expect(thumbOffset()).toBeCloseTo(36, 0)
+    expect(thumbOffset()).toBeCloseTo(23, 0)
     expect(inside()).toBe(true)
 
     await userEvent.click(part('switch-track'))
 
-    expect(thumbOffset()).toBeCloseTo(16, 0)
+    expect(thumbOffset()).toBeCloseTo(9, 0)
   })
 
   it('toggles with a pointer on the track as well as on the label', async () => {
@@ -120,7 +120,7 @@ describe('Switch in a real browser', () => {
     await userEvent.keyboard(' ')
 
     expect((page.getByRole('switch').element() as HTMLInputElement).checked).toBe(true)
-    expect(thumbOffset()).toBeCloseTo(36, 0)
+    expect(thumbOffset()).toBeCloseTo(23, 0)
   })
 
   it('keeps the control at least 24 by 24 px with and without a label', () => {
@@ -137,8 +137,8 @@ describe('Switch in a real browser', () => {
 
       expect(root.width).toBeGreaterThanOrEqual(24)
       expect(root.height).toBeGreaterThanOrEqual(24)
-      expect(track.width).toBeCloseTo(52, 0)
-      expect(track.height).toBeCloseTo(32, 0)
+      expect(track.width).toBeCloseTo(32, 0)
+      expect(track.height).toBeCloseTo(18.3906, 0)
     }
   })
 
@@ -177,7 +177,7 @@ describe('Switch motion in a real browser', () => {
     await expect.poll(() => started).toContain('transform')
     await expect.poll(() => trackStarted).toContain('background-color')
     await waitForSettled(() => part('switch'))
-    expect(thumbOffset()).toBeCloseTo(36, 0)
+    expect(thumbOffset()).toBeCloseTo(23, 0)
   })
 
   it('takes the duration from the animation tuning', () => {
@@ -196,10 +196,10 @@ describe('Switch motion in a real browser', () => {
 
     expect(part('switch').getAnimations({ subtree: true })).toEqual([])
     expect(parseFloat(getComputedStyle(part('switch-thumb')).transitionDuration)).toBe(0)
-    expect(thumbOffset()).toBeCloseTo(36, 0)
+    expect(thumbOffset()).toBeCloseTo(23, 0)
   })
 
-  it('stops moving the thumb under reduced motion but still fades its color', async () => {
+  it('stops moving the thumb under reduced motion but still fades its shadow, because its background is the same in both states', async () => {
     await setReducedMotion('reduce')
     renderInBrowser(<Switch label="Ligar" />, 'auto')
     const thumb = part('switch-thumb')
@@ -208,9 +208,9 @@ describe('Switch motion in a real browser', () => {
     await userEvent.click(page.getByText('Ligar'))
 
     expect(getComputedStyle(thumb).transitionProperty).not.toContain('transform')
-    await expect.poll(() => started).toContain('background-color')
+    await expect.poll(() => started).toContain('box-shadow')
     expect(started).not.toContain('transform')
-    expect(thumbOffset()).toBeCloseTo(36, 0)
+    expect(thumbOffset()).toBeCloseTo(23, 0)
   })
 })
 

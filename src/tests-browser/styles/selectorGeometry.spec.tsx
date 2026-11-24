@@ -32,14 +32,14 @@ const options = [{ value: 'a', label: 'A' }]
 const radio = <RadioGroup label="Plan" options={options} defaultValue="a" />
 
 describe('the geometry of the checkbox from the hooks', () => {
-  it('keeps the 18px box with a 5px by 10px check and a 2px stroke', () => {
+  it('keeps the 16px box with its check and a 2px stroke', () => {
     renderInBrowser(<Checkbox label="Terms" defaultChecked />)
 
     const style = getComputedStyle(glyph(), '::after')
 
-    expect(dimensions(part('checkbox-box'))).toEqual({ width: '18px', height: '18px' })
-    expect(dimensions(glyph(), '::after')).toEqual({ width: '5px', height: '10px' })
-    expect([style.borderRightWidth, style.borderBottomWidth, style.marginTop]).toEqual(['2px', '2px', '-2px'])
+    expect(dimensions(part('checkbox-box'))).toEqual({ width: '16px', height: '16px' })
+    expect(dimensions(glyph(), '::after')).toEqual({ width: '4.4375px', height: '8.875px' })
+    expect([style.borderRightWidth, style.borderBottomWidth, style.marginTop]).toEqual(['2px', '2px', '-1.77778px'])
   })
 
   it('takes the size of the box from the hook and draws the check in proportion', () => {
@@ -56,7 +56,7 @@ describe('the geometry of the checkbox from the hooks', () => {
     const style = getComputedStyle(glyph(), '::after')
 
     expect([style.borderRightWidth, style.borderBottomWidth]).toEqual(['3px', '3px'])
-    expect(dimensions(part('checkbox-box'))).toEqual({ width: '18px', height: '18px' })
+    expect(dimensions(part('checkbox-box'))).toEqual({ width: '16px', height: '16px' })
   })
 
   it('keeps the 18px box when a theme written before the hooks does not have them', () => {
@@ -67,12 +67,12 @@ describe('the geometry of the checkbox from the hooks', () => {
 })
 
 describe('the geometry of the radio from the hooks', () => {
-  it('keeps the 20px control with a 10px dot', () => {
+  it('keeps the 16px control with an 8px dot', () => {
     renderInBrowser(radio)
 
-    expect(dimensions(part('radio-group-control'))).toEqual({ width: '20px', height: '20px' })
-    expect(dimensions(dot())).toEqual({ width: '10px', height: '10px' })
-    expect(getComputedStyle(dot()).borderTopWidth).toBe('5px')
+    expect(dimensions(part('radio-group-control'))).toEqual({ width: '16px', height: '16px' })
+    expect(dimensions(dot())).toEqual({ width: '8px', height: '8px' })
+    expect(getComputedStyle(dot()).borderTopWidth).toBe('4px')
   })
 
   it('takes the size of the control from the hook and keeps the dot at half of it', () => {
@@ -86,7 +86,7 @@ describe('the geometry of the radio from the hooks', () => {
   it('takes the size of the dot from its own hook, leaving the control alone', () => {
     renderInBrowser(scoped({ '--enchase-radio-group-control-dot-size': '8px' }, radio))
 
-    expect(dimensions(part('radio-group-control'))).toEqual({ width: '20px', height: '20px' })
+    expect(dimensions(part('radio-group-control'))).toEqual({ width: '16px', height: '16px' })
     expect(dimensions(dot())).toEqual({ width: '8px', height: '8px' })
     expect(getComputedStyle(dot()).borderTopWidth).toBe('4px')
   })
@@ -99,20 +99,20 @@ describe('the geometry of the radio from the hooks', () => {
 })
 
 describe('the geometry of the switch from the hooks', () => {
-  it('keeps the 52px by 32px track, the 24px thumb 2px from the edge and a 20px travel', async () => {
+  it('keeps the 32px by 18.3906px track, the 16px thumb flush with the edge and a 14px travel', async () => {
     renderInBrowser(<Switch label="Alerts" defaultChecked />)
     await waitForSettled(() => part('switch'))
 
-    expect(dimensions(part('switch-track'))).toEqual({ width: '52px', height: '32px' })
-    expect(dimensions(part('switch-thumb'))).toEqual({ width: '24px', height: '24px' })
-    expect(part('switch-thumb').offsetLeft).toBe(2)
-    expect(translation(part('switch-thumb'))).toBe(20)
+    expect(dimensions(part('switch-track'))).toEqual({ width: '32px', height: '18.3906px' })
+    expect(dimensions(part('switch-thumb'))).toEqual({ width: '16px', height: '16px' })
+    expect(part('switch-thumb').offsetLeft).toBe(0)
+    expect(translation(part('switch-thumb'))).toBe(14)
   })
 
-  it('keeps the thumb at two thirds of its size while the switch is off', () => {
+  it('keeps the thumb at full size while the switch is off, because the style asks for that scale', () => {
     renderInBrowser(<Switch label="Alerts" />)
 
-    expect(scale(part('switch-thumb'))).toBeCloseTo(0.667, 3)
+    expect(scale(part('switch-thumb'))).toBe(1)
     expect(translation(part('switch-thumb'))).toBe(0)
   })
 
@@ -121,7 +121,7 @@ describe('the geometry of the switch from the hooks', () => {
     await waitForSettled(() => part('switch'))
 
     expect(dimensions(part('switch-track')).width).toBe('100px')
-    expect(translation(part('switch-thumb'))).toBe(68)
+    expect(translation(part('switch-thumb'))).toBe(82)
   })
 
   it('takes the height of the track from its hook', () => {
@@ -136,7 +136,7 @@ describe('the geometry of the switch from the hooks', () => {
 
     expect(dimensions(part('switch-thumb'))).toEqual({ width: '16px', height: '16px' })
     expect(part('switch-thumb').offsetLeft).toBe(3)
-    expect(translation(part('switch-thumb'))).toBe(26)
+    expect(translation(part('switch-thumb'))).toBe(8)
   })
 
   it('takes the scale of the thumb while the switch is off from the hook, so a full size thumb is possible', () => {
@@ -153,7 +153,7 @@ describe('the geometry of the switch from the hooks', () => {
     )
     await waitForSettled(() => part('switch'))
 
-    expect(translation(part('switch-thumb'))).toBe(-20)
+    expect(translation(part('switch-thumb'))).toBe(-14)
   })
 
   it('keeps the 52px by 32px track when a theme written before the hooks does not have them', () => {

@@ -24,7 +24,7 @@ const overflow = (element: Element) => {
 
 const openNarrow = async (dir: 'ltr' | 'rtl' = 'ltr') => {
   renderInBrowser(
-    <div dir={dir} style={{ inlineSize: 220 }}>
+    <div dir={dir} style={{ inlineSize: 150 }}>
       <SegmentedControl ariaLabel="Visão" items={options} />
     </div>
   )

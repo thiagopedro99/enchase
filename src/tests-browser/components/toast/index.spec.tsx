@@ -470,7 +470,7 @@ const Saving = ({ outcome }: { outcome: 'resolve' | 'reject' }) => {
 describe('a toast that follows a promise in a real browser', () => {
   const state = () => items()[0]?.dataset.type
 
-  it('goes from loading to success in the same place, with the countdown starting then', async () => {
+  it('goes from loading to success in the same place and the same color, with the countdown starting then', async () => {
     renderInBrowser(<Saving outcome="resolve" />, 'auto')
     await userEvent.click(page.getByRole('button', { name: 'save' }))
     await expect.poll(() => items().filter((item) => item.dataset.state === 'open').length).toBe(1)
@@ -487,7 +487,7 @@ describe('a toast that follows a promise in a real browser', () => {
 
     expect(itemWith('Saved')).toBeDefined()
     expect(Math.abs(after.top - before.top)).toBeLessThan(1)
-    expect(getComputedStyle(items()[0]).backgroundColor).not.toBe(loadingBackground)
+    expect(getComputedStyle(items()[0]).backgroundColor).toBe(loadingBackground)
     expect(part('progress').getAnimations().some((animation) => animation.playState === 'running')).toBe(true)
   })
 

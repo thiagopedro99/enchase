@@ -55,8 +55,8 @@ describe('the icon-only link in a real browser', () => {
 
     expect(links().map(box)).toEqual([
       [32, 32],
-      [40, 40],
-      [48, 48]
+      [36, 36],
+      [40, 40]
     ])
     expect(links().map(box)).toEqual(buttons().map(box))
   })
@@ -65,7 +65,7 @@ describe('the icon-only link in a real browser', () => {
     onRoot({ '--enchase-button-padding-inline-ghost': '30px' })
     renderInBrowser(<>{squares(variants.map((variant) => ({ variant })))}</>)
 
-    expect(links().map(box)).toEqual(variants.map(() => [40, 40]))
+    expect(links().map(box)).toEqual(variants.map(() => [36, 36]))
   })
 
   it('keeps the box and draws no external icon when it opens a new tab, and the warning text takes no room', () => {
@@ -80,7 +80,7 @@ describe('the icon-only link in a real browser', () => {
     const room = warning.getBoundingClientRect()
 
     expect(box(external)).toEqual(box(plain))
-    expect(box(external)).toEqual([40, 40])
+    expect(box(external)).toEqual([36, 36])
     expect(external.querySelectorAll('svg')).toHaveLength(1)
     expect(external.querySelector('[data-slot="button-link-icon"]')).toBeNull()
     expect(warning.textContent).toBe('(abre em nova aba)')
@@ -133,7 +133,7 @@ describe('the icon-only link in a real browser', () => {
 
     expect(link.hasAttribute('data-icon-only')).toBe(false)
     expect(link.querySelector('[data-slot="button-link-icon"]')).not.toBeNull()
-    expect(getComputedStyle(link).paddingLeft).toBe('24px')
+    expect(getComputedStyle(link).paddingLeft).toBe('16px')
     expect(width).toBeGreaterThan(height)
   })
 })
