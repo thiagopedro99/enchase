@@ -292,8 +292,8 @@ const buildModel = async () => {
     const isFunction = ({ symbol }) => Boolean(callSignatureOf(themeEntry.checker, symbol))
     const iconExports = valueExports(icons).filter(({ name, symbol }) => /^[A-Z]/.test(name) && callSignatureOf(icons.checker, symbol))
     const { fontVariables, layoutVariables } = await server.ssrLoadModule('/src/styles/css/declarations.ts')
-    const { baseTokens } = await server.ssrLoadModule('/src/styles/tokens/index.ts')
-    const tokens = { ...fontVariables(baseTokens.fonts), ...layoutVariables(baseTokens) }
+    const { defaultTheme } = await server.ssrLoadModule('/src/styles/tokens/index.ts')
+    const tokens = { ...fontVariables(defaultTheme.base.fonts), ...layoutVariables(defaultTheme.base) }
     const [firstIcon] = iconExports
     const { props, element } = componentDoc(icons.checker, firstIcon.name, firstIcon.symbol, docs.get('Icon') ?? { argTypes: {} })
 

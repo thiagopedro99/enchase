@@ -1621,9 +1621,9 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-date-picker-calendar-day-color-selected` | `var(--enchase-color-on-primary)` | `color` |
 | `--enchase-date-picker-calendar-day-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-date-picker-calendar-day-font-weight` | `400` (`--enchase-font-weight-regular`) | `font-weight` |
-| `--enchase-date-picker-calendar-day-inner-size` | `var(--enchase-date-picker-calendar-day-size, max(24px, var(--enchase-hit-size, 2rem)))` | `inline-size`, `block-size` |
+| `--enchase-date-picker-calendar-day-inner-size` | `var(--enchase-date-picker-calendar-day-size, max(24px, var(--enchase-hit-size, 40px)))` | `inline-size`, `block-size` |
 | `--enchase-date-picker-calendar-day-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
-| `--enchase-date-picker-calendar-day-size` | `max(24px, var(--enchase-hit-size, 2rem))` | `inline-size`, `block-size` |
+| `--enchase-date-picker-calendar-day-size` | `max(24px, var(--enchase-hit-size, 40px))` | `inline-size`, `block-size` |
 | `--enchase-date-picker-calendar-weekday-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-date-picker-calendar-weekday-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-date-picker-calendar-weekday-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
@@ -2155,7 +2155,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-navbar-menu-link-color-hover` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-navbar-menu-link-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
 | `--enchase-navbar-menu-link-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
-| `--enchase-navbar-menu-link-height` | `max(24px, var(--enchase-hit-size, 2rem))` | `block-size` |
+| `--enchase-navbar-menu-link-height` | `max(24px, var(--enchase-hit-size, 40px))` | `block-size` |
 | `--enchase-navbar-menu-link-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-navbar-menu-link-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 | `--enchase-navbar-mobile-menu-link-min-height` | `52px` | `min-block-size` |
@@ -2470,8 +2470,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-slider-thumb-background` | `var(--enchase-color-primary)` | `background-color` |
 | `--enchase-slider-thumb-border-color` | `var(--enchase-color-primary)` | `border` |
 | `--enchase-slider-thumb-border-width` | `1px` (`--enchase-border-width-strong`) | `border`, `border-width` |
-| `--enchase-slider-thumb-border-width-active` | `var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 1px))` | `border-width` |
-| `--enchase-slider-thumb-border-width-hover` | `var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 1px))` | `border-width` |
+| `--enchase-slider-thumb-border-width-active` | `var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px))` | `border-width` |
+| `--enchase-slider-thumb-border-width-hover` | `var(--enchase-slider-thumb-border-width, var(--enchase-border-width-strong, 2px))` | `border-width` |
 | `--enchase-slider-thumb-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-slider-thumb-size` | `1.25rem` | `padding-inline`, `inline-size`, `block-size` |
 | `--enchase-slider-track-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
@@ -2511,10 +2511,10 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-switch-thumb-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-switch-thumb-scale-off` | `0.667` | `transform` |
 | `--enchase-switch-thumb-shadow` | `none` | `box-shadow` |
-| `--enchase-switch-thumb-shadow-active` | `0 0 0 var(--enchase-halo-size-switch, 0px) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent)` | `box-shadow` |
-| `--enchase-switch-thumb-shadow-checked-active` | `0 0 0 var(--enchase-halo-size-switch, 0px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent)` | `box-shadow` |
-| `--enchase-switch-thumb-shadow-checked-hover` | `0 0 0 var(--enchase-halo-size-switch, 0px) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)` | `box-shadow` |
-| `--enchase-switch-thumb-shadow-hover` | `0 0 0 var(--enchase-halo-size-switch, 0px) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-active` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-checked-active` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-pressed, 0.1) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-checked-hover` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)` | `box-shadow` |
+| `--enchase-switch-thumb-shadow-hover` | `0 0 0 var(--enchase-halo-size-switch, 0.5rem) color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-hover, 0.08) * 100%), transparent)` | `box-shadow` |
 | `--enchase-switch-thumb-size` | `1.5rem` | `--switch-travel`, `inline-size`, `block-size` |
 | `--enchase-switch-track-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-switch-track-background-checked` | `var(--enchase-color-primary)` | `background-color` |
@@ -2549,7 +2549,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-table-empty-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-table-empty-padding` | `1.5rem` (`--enchase-space-lg`) | `padding` |
 | `--enchase-table-header-background` | `var(--enchase-color-surface-container-low)` | `background-color` |
-| `--enchase-table-header-background-sticky` | `var(--enchase-color-surface)` | `background-color` |
+| `--enchase-table-header-background-sticky` | `var(--enchase-table-header-background, var(--enchase-color-surface-container-low))` | `background-color` |
 | `--enchase-table-header-border-color-end` | `currentColor` | `border-inline-end` |
 | `--enchase-table-header-border-style-end` | `none` | `border-inline-end` |
 | `--enchase-table-header-border-width-end` | `0` | `border-inline-end` |
