@@ -689,10 +689,13 @@ Onde o `material2` sai do original de propósito, mantendo o matiz e ajustando s
 | --- | --- | --- |
 | `warning` e `info`, no claro | `#B24F00` e `#0071B0` | O original (`#ED6C02` e `#0288D1`) reprova o texto branco sobre eles e o próprio texto sobre a superfície (abaixo de 4,5:1); no escuro o original já passa, sem ajuste |
 | `primary`, `error` e `success`, no claro (`error` também no escuro) | `#066CC8`, `#CF2A2C` e `#2C7B31` no claro; `#F9483A` no escuro | O original reprova por pouco contra os tons mais escuros dos contêineres de superfície |
-| Borda do campo e trilha da chave desligada | 45% de alfa no claro, 40% no escuro (3:1 ou mais) | A do original tem 0,23 (1,76:1) |
+| Borda do campo | 45% de alfa no claro, 40% no escuro (3:1 ou mais) | A do original tem 0,23 (1,76:1) |
+| Trilha da chave desligada | 45% de alfa no claro, 40% no escuro (3:1 ou mais), a mesma borda forte do tema | A do original tem 0,23 (1,76:1) |
+| Bolinha da chave desligada, no escuro | `#E0E0E0` em vez do branco | O branco do claro é o token de superfície; no escuro, esse token é a própria cor do fundo da página, e a bolinha desaparecia |
 | Placeholder | 60% de alfa | O original (42% sobre o texto) fica perto de 3:1; o Enchase pede 4,5:1 por ser texto |
 | Fundo do `Avatar` | `#767676` com texto branco | O cinza do original (`#BDBDBD`) não dá 4,5:1 com texto branco |
 | Borda do botão `outline` | 75% de alfa do `primary` no claro, 50% no escuro | A metade do original só passa de 3:1 no escuro, onde o `primary` já é claro |
+| `secondaryContainer` e `onSecondaryContainer`, no escuro | `#424242` e branco | O original é um roxo escuro (`#302732`/`#CE93D8`); o claro já usa um cinza neutro (`#E0E0E0`), e o escuro passa a seguir o mesmo critério |
 
 O que o estilo não reproduz (limites conhecidos): o `Toast` continua com as quatro cores por tipo (`info`, `success`, `warning`, `error`) em vez do `Snackbar` cinza-neutro do original, porque o componente não tem uma variante sem tipo, e criar uma mudaria o contrato dele; a `Navbar` e a barra do `Layout` ficam na superfície, com sombra, em vez do `primary` sólido do `AppBar`, porque o anel de foco do link e do botão de menu usa a cor `primary` por padrão, que ficaria invisível sobre um fundo `primary`; o botão não baixa a sombra ao ser pressionado, só no hover. Como nenhum estilo embute uma família de fonte, a Roboto não vem com o `material2`: carregue-a por fora (`@fontsource/roboto`, por exemplo) e passe-a pelo `fonts` do `createTheme`, que já existe para qualquer estilo: `createTheme({ style: material2, fonts: { primary: "'Roboto', sans-serif" } })`.
 

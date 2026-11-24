@@ -1535,6 +1535,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-background-primary-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
 | `--enchase-button-background-secondary` | `var(--enchase-color-primary-container)` | `background-color` |
 | `--enchase-button-background-secondary-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `background-color` |
+| `--enchase-button-background-secondary-hover` | `var(--enchase-button-background-secondary, var(--enchase-color-primary-container))` | `background-color` |
 | `--enchase-button-border-color-danger-disabled` | `transparent` | `border-color` |
 | `--enchase-button-border-color-dashed` | `var(--enchase-button-border-color-outline, var(--enchase-color-border-strong))` | `border-color` |
 | `--enchase-button-border-color-dashed-disabled` | `var(--enchase-button-border-color-outline-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent))` | `border-color` |
@@ -2164,6 +2165,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-navbar-mobile-menu-link-min-height` | `52px` | `min-block-size` |
 | `--enchase-navbar-mobile-menu-link-padding-block` | `0.5rem` (`--enchase-space-sm`) | `padding-block` |
 | `--enchase-navbar-overlay-background` | `var(--enchase-color-overlay)` | `background-color` |
+| `--enchase-navbar-shadow` | `none` | `box-shadow` |
 | `--enchase-navbar-stagger` | `30ms` | `--enchase-navbar-enter-delay` |
 
 ### NumberInput
