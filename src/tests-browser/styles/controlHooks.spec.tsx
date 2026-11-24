@@ -127,15 +127,15 @@ describe('the corners of the button from the hooks', () => {
     onRoot({ '--enchase-button-radius-md': '7px' })
     renderInBrowser(buttons)
 
-    expect(cornerOf('button', 0)).toBeGreaterThanOrEqual(1000)
+    expect(cornerOf('button', 0)).toBe(10)
     expect(cornerOf('button', 1)).toBe(7)
-    expect(cornerOf('button', 2)).toBeGreaterThanOrEqual(1000)
+    expect(cornerOf('button', 2)).toBe(10)
   })
 
   it('keeps the corners the theme gives to the button in every size when no hook is set', () => {
     renderInBrowser(buttons)
 
-    expect(buttonSizes.map((_, index) => cornerOf('button', index) >= 1000)).toEqual([true, true, true])
+    expect(buttonSizes.map((_, index) => cornerOf('button', index))).toEqual([10, 10, 10])
   })
 
   it('keeps the corners of a shape preset in every size, and a size hook wins over it', () => {
@@ -185,8 +185,8 @@ describe('the corners of the button from the hooks', () => {
     )
 
     expect(cornerOf('button')).toBe(1)
-    expect(['badge', 'tag'].map((name) => cornerOf(name) >= 1000)).toEqual([true, true])
-    expect(cornerOf('pagination-page')).toBe(8)
+    expect(['badge', 'tag'].map((name) => cornerOf(name))).toEqual([8, 10])
+    expect(cornerOf('pagination-page')).toBe(10)
   })
 })
 
@@ -251,6 +251,19 @@ describe('the inline padding of the ghost button from the hooks', () => {
     return space
   }
 
+  const paddingInlineOf = (size: 'sm' | 'md' | 'lg') => {
+    const probe = document.createElement('span')
+
+    probe.style.paddingLeft = `var(--enchase-button-padding-inline-${size}, var(--enchase-space-${size === 'sm' ? 'md' : size === 'md' ? 'lg' : 'xl'}))`
+    document.body.append(probe)
+
+    const padding = getComputedStyle(probe).paddingLeft
+
+    probe.remove()
+
+    return padding
+  }
+
   const buttons = (variant: 'ghost' | 'primary', iconOnly = false) => (
     <>
       {sizes.map((size) => (
@@ -291,7 +304,7 @@ describe('the inline padding of the ghost button from the hooks', () => {
     unmount()
     renderInBrowser(buttons('ghost', true))
 
-    expect(filled).toEqual([spaceOf('md'), spaceOf('lg'), spaceOf('xl')].map((space) => [space, space]))
+    expect(filled).toEqual([paddingInlineOf('sm'), paddingInlineOf('md'), paddingInlineOf('lg')].map((space) => [space, space]))
     expect([0, 1, 2].map(paddingOf)).toEqual([0, 1, 2].map(() => [spaceOf('xs'), spaceOf('xs')]))
   })
 
