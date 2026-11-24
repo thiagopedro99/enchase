@@ -19,7 +19,7 @@ const dimensions = (element: Element, pseudo?: string) => {
   return { width: style.width, height: style.height }
 }
 
-const tenths = (value: string) => Math.round(Math.abs(parseFloat(value)) * 10) / 10
+const size = (value: string) => Math.abs(parseFloat(value))
 
 const glyph = () => (part('checkbox-box').firstElementChild as Element)
 
@@ -40,8 +40,10 @@ describe('the geometry of the checkbox from the hooks', () => {
     const style = getComputedStyle(glyph(), '::after')
 
     expect(dimensions(part('checkbox-box'))).toEqual({ width: '16px', height: '16px' })
-    expect([tenths(style.width), tenths(style.height)]).toEqual([4.4, 8.9])
-    expect([style.borderRightWidth, style.borderBottomWidth, tenths(style.marginTop)]).toEqual(['2px', '2px', 1.8])
+    expect(size(style.width)).toBeCloseTo(4.44, 1)
+    expect(size(style.height)).toBeCloseTo(8.88, 1)
+    expect([style.borderRightWidth, style.borderBottomWidth]).toEqual(['2px', '2px'])
+    expect(size(style.marginTop)).toBeCloseTo(1.77, 1)
   })
 
   it('takes the size of the box from the hook and draws the check in proportion', () => {
@@ -105,7 +107,8 @@ describe('the geometry of the switch from the hooks', () => {
     renderInBrowser(<Switch label="Alerts" defaultChecked />)
     await waitForSettled(() => part('switch'))
 
-    expect([dimensions(part('switch-track')).width, tenths(dimensions(part('switch-track')).height)]).toEqual(['32px', 18.4])
+    expect(dimensions(part('switch-track')).width).toBe('32px')
+    expect(size(dimensions(part('switch-track')).height)).toBeCloseTo(18.39, 1)
     expect(dimensions(part('switch-thumb'))).toEqual({ width: '16px', height: '16px' })
     expect(part('switch-thumb').offsetLeft).toBe(0)
     expect(translation(part('switch-thumb'))).toBe(14)
