@@ -25,7 +25,7 @@ describe('the tabs of the material2 style', () => {
   it('stands the tab at 48px with 12px of block padding, the text upper case at the weight and letter-spacing of the button', () => {
     show(
       <Tabs
-        label="Account"
+        ariaLabel="Account"
         items={[
           { value: 'profile', label: 'Profile', content: 'Profile content' },
           { value: 'billing', label: 'Billing', content: 'Billing content' }
@@ -45,7 +45,7 @@ describe('the tabs of the material2 style', () => {
   it('colors the selected tab and its indicator with the primary color, the unselected tab with the secondary text', () => {
     show(
       <Tabs
-        label="Account"
+        ariaLabel="Account"
         items={[
           { value: 'profile', label: 'Profile', content: 'Profile content' },
           { value: 'billing', label: 'Billing', content: 'Billing content' }
@@ -96,7 +96,9 @@ describe('the pagination of the material2 style', () => {
 describe('the menu of the material2 style', () => {
   const opened = async () => {
     show(
-      <Menu trigger={<button type="button">Open</button>} items={[{ value: 'a', label: 'Action A' }, { value: 'b', label: 'Action B' }]} defaultOpen />
+      <Menu label="Actions" items={[{ id: 'a', label: 'Action A' }, { id: 'b', label: 'Action B' }]} defaultOpen>
+        <button type="button">Open</button>
+      </Menu>
     )
     await waitForSettled(() => part('menu-item'))
   }

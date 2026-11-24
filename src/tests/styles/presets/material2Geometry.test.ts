@@ -16,7 +16,15 @@ const geometry = [
   ['--enchase-state-pressed', '0.12', 'state.pressed'],
   ['--enchase-state-row-hover', '0.04', 'state.rowHover'],
   ['--enchase-state-disabled-container', '0.12', 'state.disabledContainer'],
-  ['--enchase-state-disabled-content', '0.38', 'state.disabledContent']
+  ['--enchase-state-disabled-content', '0.38', 'state.disabledContent'],
+  ['--enchase-radius-xs', '0.125rem', 'borderRadius.xs'],
+  ['--enchase-radius-sm', '0.25rem', 'borderRadius.sm'],
+  ['--enchase-radius-md', '0.25rem', 'borderRadius.md'],
+  ['--enchase-radius-lg', '0.25rem', 'borderRadius.lg'],
+  ['--enchase-radius-xl', '0.25rem', 'borderRadius.xl'],
+  ['--enchase-radius-2xl', '0.25rem', 'borderRadius.2xl'],
+  ['--enchase-radius-control', '0.25rem', 'borderRadius.control'],
+  ['--enchase-radius-button', '0.25rem', 'borderRadius.button']
 ] as const
 
 const leaves = (value: unknown, path: string[] = []): Array<[string, string | number]> => {
@@ -48,7 +56,7 @@ const listedVariables = new Set<string>(geometry.map(([variable]) => variable))
 
 describe('the geometry of the material2 style', () => {
   it('lists each token of the table once, and each one is a token of the theme set and a variable of the css', () => {
-    expect(geometry).toHaveLength(9)
+    expect(geometry).toHaveLength(17)
     expect(listedPaths.size).toBe(geometry.length)
     expect(listedVariables.size).toBe(geometry.length)
     expect(geometry.filter(([, , path]) => tokens[path] === undefined)).toEqual([])
@@ -63,7 +71,7 @@ describe('the geometry of the material2 style', () => {
     expect(written[variable]).toBe(String(value))
   })
 
-  it('keeps every other token of the theme set as the default theme has it, including the radius', () => {
+  it('keeps every other token of the theme set as the default theme has it', () => {
     const others = Object.keys(tokens).filter((path) => !listedPaths.has(path))
 
     expect(Object.keys(tokens).sort()).toEqual(Object.keys(originalTokens).sort())
@@ -95,7 +103,7 @@ describe('the geometry of the material2 style', () => {
 
   it('lets the caller choose a shape, a radius and the fonts over the style', () => {
     expect(createTheme({ style: material2, shape: 'soft' }).base.borderRadius).toEqual(shapePresets.soft)
-    expect(createTheme({ style: material2, radius: { button: '9999px' } }).base.borderRadius).toMatchObject({ button: '9999px', control: baseTokens.borderRadius.control })
+    expect(createTheme({ style: material2, radius: { button: '9999px' } }).base.borderRadius).toMatchObject({ button: '9999px', control: '0.25rem' })
     expect(createTheme({ style: material2, fonts: { sizes: { base: '1rem' } } }).base.fonts).toMatchObject({ sizes: { base: '1rem', sm: '0.875rem' } })
   })
 })

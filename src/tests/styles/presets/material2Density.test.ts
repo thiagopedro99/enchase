@@ -49,7 +49,7 @@ describe('the compact density of the material2 style', () => {
   })
 
   it('keeps every other hook of the generic compact block at 0,0,0, untouched', () => {
-    const { ['--enchase-input-height']: _omitted, ...kept } = densities.compact.hooks
+    const kept = Object.fromEntries(Object.entries(densities.compact.hooks).filter(([key]) => key !== '--enchase-input-height'))
 
     expect(Object.keys(kept).length).toBeGreaterThan(0)
     expect(hooks).toEqual(kept)

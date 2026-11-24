@@ -9,12 +9,23 @@ import { part, style } from '../support/hookProbes.ts'
 import { material2 } from '@styles/presets/material2.ts'
 import { parseComputedColor } from '../support/color.ts'
 import { renderInBrowser } from '../support/harness.tsx'
+import { waitForSettled } from '../support/settle.ts'
+import { contrastRatio } from '@styles/theme/contrast.ts'
 
 import type { ReactElement } from 'react'
 
 const styled = { style: material2 } as const
 
 const show = (ui: ReactElement) => renderInBrowser(ui, 'never', 'light', styled)
+
+const showIn = (ui: ReactElement, mode: 'light' | 'dark') => renderInBrowser(ui, 'never', mode, styled)
+
+const background = () => getComputedStyle(document.documentElement).getPropertyValue('--enchase-color-background').trim()
+
+const settled = async (mode: 'light' | 'dark') => {
+  await expect.poll(() => document.documentElement.dataset.theme).toBe(mode)
+  await waitForSettled(() => document.body)
+}
 
 const px = (value: string) => parseFloat(value)
 
@@ -90,6 +101,20 @@ describe('the switch of the material2 style', () => {
     show(<Switch label="Notify" />)
 
     expect(style('switch-thumb').boxShadow).toContain('rgba(0, 0, 0, 0.2) 0px 2px 1px -1px')
+  })
+
+  it.each(['light', 'dark'] as const)('keeps the off-state track at the component-contrast minimum against the %s page', async (mode) => {
+    showIn(<Switch label="Off" defaultChecked={false} />, mode)
+    await settled(mode)
+
+    expect(contrastRatio(style('switch-track').backgroundColor, background())).toBeGreaterThanOrEqual(3)
+  })
+
+  it('keeps the off-state thumb from disappearing into the dark page background', async () => {
+    showIn(<Switch label="Off" defaultChecked={false} />, 'dark')
+    await settled('dark')
+
+    expect(contrastRatio(style('switch-thumb').backgroundColor, background())).toBeGreaterThanOrEqual(1.3)
   })
 })
 

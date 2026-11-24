@@ -103,6 +103,32 @@ describe('the buttons of the material2 style', () => {
 
     expect([border.r, border.g, border.b, border.a]).toEqual([144, 202, 249, 0.5])
   })
+
+  it('fills the secondary button with the secondary-container colors and casts elevation 2 under it, not the primary tint', () => {
+    show(<Button variant="secondary">Cancel</Button>)
+    const button = style('button')
+
+    expect(button.backgroundColor).toBe('rgb(224, 224, 224)')
+    expect(button.color).toBe('rgba(0, 0, 0, 0.87)')
+    expect(button.boxShadow).toContain('rgba(0, 0, 0, 0.2) 0px 3px 1px -2px')
+  })
+
+  it('raises the secondary button to a darker fill and elevation 4 under the pointer', async () => {
+    show(<Button variant="secondary">Cancel</Button>)
+    await userEvent.hover(part('button'))
+    await waitForSettled(at('button'))
+
+    expect(style('button').backgroundColor).toBe('rgb(213, 213, 213)')
+    expect(style('button').boxShadow).toContain('rgba(0, 0, 0, 0.2) 0px 2px 4px -1px')
+  })
+
+  it('fills the secondary button with a neutral dark-mode grey, not the purple-tinted secondary container', async () => {
+    await showDark(<Button variant="secondary">Cancel</Button>)
+    const button = style('button')
+
+    expect(button.backgroundColor).toBe('rgb(66, 66, 66)')
+    expect(button.color).toBe('rgb(255, 255, 255)')
+  })
 })
 
 describe('the fields of the material2 style', () => {
