@@ -27,7 +27,7 @@ const Playground = ({ look, onLookChange }: PlaygroundProps) => {
         <SectionHeading
           id="playground-title"
           eyebrow="Ao vivo"
-          title="Um kit, quatro visuais. Troque agora."
+          title="Um kit, cinco visuais. Troque agora."
           lead="Os controles mudam o tema desta página inteira: estilo, cor da marca, cantos e densidade. É o mesmo tema que você passa ao seu app."
         />
 

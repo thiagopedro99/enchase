@@ -1,9 +1,10 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
+import { describe, expect, it, onTestFinished, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
+import StylePicker from '@demo/pages/landing/subcomponentes/StylePicker/index.tsx'
 import { steps } from '@demo/pages/landing/subcomponentes/Steps/defaultData.ts'
 import { highlight } from '@demo/components/CodeBlock/highlight.ts'
 import { defaultLook } from '@demo/pages/landing/defaultData.ts'
@@ -14,6 +15,23 @@ import App from '@demo/App.tsx'
 const renderLanding = (onLookChange = vi.fn()) => ({ ...renderWithProviders(<Landing look={defaultLook} onLookChange={onLookChange} />, { toasts: true }), onLookChange })
 
 const group = (name: string) => screen.getByRole('radiogroup', { name })
+
+const observerOf = (width: number) =>
+  class {
+    private readonly notify: ResizeObserverCallback
+
+    constructor(notify: ResizeObserverCallback) {
+      this.notify = notify
+    }
+
+    observe() {
+      this.notify([{ contentRect: { width } } as ResizeObserverEntry], this as unknown as ResizeObserver)
+    }
+
+    unobserve() {}
+
+    disconnect() {}
+  }
 
 const headingLevels = () => screen.getAllByRole('heading').map((heading) => Number(heading.tagName.slice(1)))
 
@@ -57,7 +75,7 @@ describe('Landing page', () => {
       'Componentes React lapidados para o seu produto',
       '48 componentes, um import',
       'O trabalho chato já vem feito',
-      'Um kit, quatro visuais. Troque agora.',
+      'Um kit, cinco visuais. Troque agora.',
       'Da instalação ao primeiro botão em três passos',
       'Antes de instalar',
       'Instale e monte a primeira tela hoje'
@@ -121,13 +139,13 @@ describe('Landing playground', () => {
 })
 
 describe('Landing style picker', () => {
-  it('lists the four styles in both pickers of the page', () => {
+  it('lists the five styles in both pickers of the page', () => {
     renderLanding()
 
-    for (const name of ['Estilo', 'Estilo visual da página']) expect(within(group(name)).getAllByRole('radio').map((radio) => radio.textContent)).toEqual(['Enchase', 'Material 3', 'shadcn', 'Workbench'])
+    for (const name of ['Estilo', 'Estilo visual da página']) expect(within(group(name)).getAllByRole('radio').map((radio) => radio.textContent)).toEqual(['Enchase', 'Material 2', 'Material 3', 'shadcn', 'Workbench'])
   })
 
-  it('becomes a select on a narrow screen, where four options do not fit in a row', async () => {
+  it('becomes a select on a narrow screen, where five options do not fit in a row', async () => {
     const user = userEvent.setup()
     const width = window.innerWidth
 
@@ -143,6 +161,19 @@ describe('Landing style picker', () => {
     expect(onLookChange.mock.calls.map(([look]) => look.style)).toEqual(['material3', 'workbench'])
 
     window.innerWidth = width
+  })
+
+  it.each([
+    { width: 320, role: 'combobox' },
+    { width: 520, role: 'radiogroup' }
+  ])('follows its own width, not the width of the screen: $width px gives a $role', ({ width, role }) => {
+    vi.stubGlobal('ResizeObserver', observerOf(width))
+    onTestFinished(() => void vi.unstubAllGlobals())
+
+    renderWithProviders(<StylePicker name="Estilo" value="shadcn" onChange={vi.fn()} />)
+
+    expect(screen.getByRole(role, { name: 'Estilo' })).toBeInTheDocument()
+    expect(screen.queryByRole(role === 'combobox' ? 'radiogroup' : 'combobox', { name: 'Estilo' })).not.toBeInTheDocument()
   })
 })
 

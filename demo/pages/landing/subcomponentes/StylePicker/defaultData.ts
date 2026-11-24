@@ -4,8 +4,11 @@ export const defaultLabelled = false
 
 export const defaultSize = 'md'
 
+export const segmentedMinWidth = 480
+
 export const styleOptions: { value: LookStyle; label: string }[] = [
   { value: 'enchase', label: 'Enchase' },
+  { value: 'material2', label: 'Material 2' },
   { value: 'material3', label: 'Material 3' },
   { value: 'shadcn', label: 'shadcn' },
   { value: 'workbench', label: 'Workbench' }

@@ -28,6 +28,12 @@
   }
 }
 
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+  }
+}
+
 .controls {
   --enchase-segmented-control-item-padding-inline-sm: var(--enchase-space-sm);
   --enchase-segmented-control-item-padding-inline-md: var(--enchase-space-sm);

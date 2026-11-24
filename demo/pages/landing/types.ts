@@ -1,7 +1,7 @@
 import type { ShapePreset } from 'enchase/theme'
 import type { RevealOrigin } from './reveal.ts'
 
-export type LookStyle = 'enchase' | 'material3' | 'shadcn' | 'workbench'
+export type LookStyle = 'enchase' | 'material2' | 'material3' | 'shadcn' | 'workbench'
 
 export type LookShape = ShapePreset | 'auto'
 

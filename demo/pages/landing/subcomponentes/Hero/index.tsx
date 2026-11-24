@@ -51,7 +51,7 @@ const Hero = ({ look, onLookChange }: HeroProps) => {
             Componentes React <span className={styles.accent}>lapidados</span> para o seu produto
           </h1>
 
-          <p className={styles.lead}>48 componentes acessíveis, quatro estilos visuais e um tema inteiro por tokens. Sem CSS-in-JS e sem brigar com a cascata.</p>
+          <p className={styles.lead}>48 componentes acessíveis, cinco estilos visuais e um tema inteiro por tokens. Sem CSS-in-JS e sem brigar com a cascata.</p>
 
           <div className={styles.actions}>
             <ButtonLink href={docsUrl} size="lg" native>
