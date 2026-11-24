@@ -227,7 +227,6 @@
   }
 
   .button[data-variant='secondary']:hover:not(:disabled) {
-    background-color: var(--enchase-button-background-secondary-hover, var(--enchase-button-background-secondary, var(--enchase-color-primary-container)));
     color: var(--enchase-button-color-secondary-hover, var(--enchase-color-on-primary-container));
     box-shadow: var(--enchase-button-shadow-secondary-hover, var(--enchase-shadow-sm));
   }

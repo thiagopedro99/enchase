@@ -4,6 +4,7 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
+  background-color: var(--enchase-accordion-background, transparent);
   border: var(--enchase-border-width, 1px) solid var(--enchase-accordion-border-color, var(--enchase-color-border));
   border-radius: var(--enchase-accordion-radius, var(--enchase-radius-md));
   box-shadow: var(--enchase-accordion-shadow, none);

@@ -82,6 +82,7 @@
 
 .hidden:disabled + .track {
   border-color: var(--enchase-switch-track-border-color-disabled, color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent));
+  background-color: var(--enchase-switch-track-background-disabled, var(--enchase-switch-track-background, var(--enchase-color-surface-container-high)));
   cursor: not-allowed;
   opacity: var(--enchase-switch-opacity-disabled, 1);
 }

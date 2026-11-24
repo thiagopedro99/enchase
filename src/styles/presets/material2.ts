@@ -82,7 +82,9 @@ const navigation: HookValues = {
   '--enchase-menu-item-padding-block': '0.375rem',
   '--enchase-menu-item-padding-inline': '1rem',
   '--enchase-menu-item-radius': '0px',
-  '--enchase-sidebar-border-width': '1px'
+  '--enchase-sidebar-border-width': '1px',
+  '--enchase-sidebar-radius-start-end': '0px',
+  '--enchase-sidebar-radius-end-end': '0px'
 }
 
 const containers: HookValues = {
@@ -129,6 +131,8 @@ const colorHooks: HookValues = {
   '--enchase-switch-thumb-background-checked': 'var(--enchase-color-primary)',
   '--enchase-switch-track-background': 'var(--enchase-color-border-strong)',
   '--enchase-switch-track-background-checked': 'color-mix(in srgb, var(--enchase-color-primary) 50%, var(--enchase-color-surface))',
+  '--enchase-switch-track-background-disabled': 'color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent)',
+  '--enchase-switch-track-background-checked-disabled': 'color-mix(in srgb, var(--enchase-color-text-primary) 12%, transparent)',
   '--enchase-card-shadow-default': 'var(--enchase-shadow-sm)',
   '--enchase-card-shadow-elevated': 'var(--enchase-shadow-sm)',
   '--enchase-accordion-shadow': 'var(--enchase-shadow-sm)',
@@ -226,9 +230,10 @@ const light: ThemeStyleMode = {
     '--enchase-popover-content-background': 'var(--enchase-color-surface)',
     '--enchase-select-picker-background': 'var(--enchase-color-surface)',
     '--enchase-navbar-background-solid': 'var(--enchase-color-surface)',
-    '--enchase-accordion-trigger-background': 'var(--enchase-color-surface)',
+    '--enchase-accordion-background': 'var(--enchase-color-surface)',
     '--enchase-switch-thumb-background': 'var(--enchase-color-surface)',
-    '--enchase-button-background-secondary-hover': '#D5D5D5',
+    '--enchase-switch-thumb-background-disabled': '#F5F5F5',
+    '--enchase-switch-thumb-background-disabled-checked': '#F5F5F5',
     '--enchase-tag-background': selectedLayer
   }
 }
@@ -248,9 +253,9 @@ const dark: ThemeStyleMode = {
 
     background: '#121212',
     surface: '#121212',
-    surfaceContainerLow: '#1D1D1D',
-    surfaceContainer: '#1E1E1E',
-    surfaceContainerHigh: '#232323',
+    surfaceContainerLow: '#1E1E1E',
+    surfaceContainer: '#272727',
+    surfaceContainerHigh: '#2E2E2E',
 
     text: {
       primary: '#FFFFFF',
@@ -264,7 +269,7 @@ const dark: ThemeStyleMode = {
     borderStrong: 'rgba(255, 255, 255, 0.4)',
     borderLight: 'rgba(255, 255, 255, 0.08)',
 
-    error: '#F9483A',
+    error: '#FF7362',
     onError: 'rgba(0, 0, 0, 0.87)',
     errorContainer: '#160B0B',
     onErrorContainer: '#F4C7C7',
@@ -297,14 +302,15 @@ const dark: ThemeStyleMode = {
     '--enchase-skeleton-background': 'rgba(255, 255, 255, 0.13)',
     '--enchase-card-background-default': '#1E1E1E',
     '--enchase-card-background-elevated': '#1E1E1E',
-    '--enchase-accordion-trigger-background': '#1E1E1E',
+    '--enchase-accordion-background': '#1E1E1E',
     '--enchase-navbar-background-solid': '#272727',
     '--enchase-popover-content-background': '#2E2E2E',
     '--enchase-select-picker-background': '#2E2E2E',
     '--enchase-drawer-panel-background': '#363636',
     '--enchase-modal-panel-background': '#383838',
     '--enchase-switch-thumb-background': '#E0E0E0',
-    '--enchase-button-background-secondary-hover': '#4F4F4F',
+    '--enchase-switch-thumb-background-disabled': '#757575',
+    '--enchase-switch-thumb-background-disabled-checked': '#757575',
     '--enchase-tag-background': 'color-mix(in srgb, var(--enchase-color-text-primary) 16%, var(--enchase-color-surface))'
   }
 }
@@ -317,7 +323,7 @@ export const material2 = defineStyle({
   radius: { xs: '0.125rem', sm: '0.25rem', md: '0.25rem', lg: '0.25rem', xl: '0.25rem', '2xl': '0.25rem', control: '0.25rem', button: '0.25rem' },
   hooks: { ...buttons, ...fields, ...selection, ...navigation, ...containers, ...feedback },
   colorHooks,
-  brand: ['primary', 'onPrimary', 'primaryHover'],
+  brand: ['primary', 'onPrimary', 'primaryHover', 'primaryContainer', 'onPrimaryContainer'],
   light,
   dark,
   density: {
