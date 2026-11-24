@@ -1957,6 +1957,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-input-outline-border-color-error-hover` | `var(--enchase-color-error)` | `border-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-outline-border-color-focus` | `var(--enchase-color-primary)` | `border-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-outline-border-color-hover` | `var(--enchase-color-text-primary)` | `border-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-outline-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-outline-shadow` | `none` | `box-shadow` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-outline-shadow-focus` | `none` (`--enchase-input-outline-shadow`) | `box-shadow` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline-start`, `inset-inline-start`, `max-inline-size`, `padding-inline` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
