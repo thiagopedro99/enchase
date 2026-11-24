@@ -16,7 +16,7 @@ const token = (name: string) => `var(--enchase-${name}, ${defaults[`--enchase-${
 
 const fieldFiles = ['common/Input', 'common/NumberInput', 'common/Select', 'common/Textarea', 'common/Combobox', 'common/DatePicker'].map((name) => `${name}/styles.module.css`)
 
-const forcedColorsFloor = `border-width: max(${token('border-width-strong')}, ${defaults['--enchase-border-width-strong']})`
+const forcedColorsFloor = `border-width: max(${token('border-width-strong')}, 2px)`
 
 const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 

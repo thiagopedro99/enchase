@@ -221,7 +221,7 @@
 
 @media (forced-colors: active) {
   .textarea:focus ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 2px);
   }
 }
 
@@ -366,7 +366,7 @@
 @media (forced-colors: active) {
   .wrapper[data-variant='filled'] .textarea:focus ~ .outline,
   .wrapper[data-variant='underlined'] .textarea:focus ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 2px);
     border-block-start-width: 0;
     border-inline-width: 0;
   }

@@ -300,7 +300,7 @@
 @media (forced-colors: active) {
   .select:focus ~ .outline,
   .select:open ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 2px);
   }
 }
 
@@ -484,7 +484,7 @@
 
 @media (forced-colors: active) {
   .wrapper:is([data-variant='filled'], [data-variant='underlined']) .select:is(:focus, :open) ~ .outline {
-    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 2px);
     border-block-start-width: 0;
     border-inline-width: 0;
   }

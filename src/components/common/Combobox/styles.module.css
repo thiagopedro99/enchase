@@ -219,7 +219,7 @@
 
 @media (forced-colors: active) {
   .field:focus-within > .outline {
-    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 2px);
   }
 }
 
@@ -373,7 +373,7 @@
 @media (forced-colors: active) {
   .wrapper[data-variant='filled'] .field:focus-within > .outline,
   .wrapper[data-variant='underlined'] .field:focus-within > .outline {
-    border-width: max(var(--enchase-border-width-strong, 1px), 1px);
+    border-width: max(var(--enchase-border-width-strong, 1px), 2px);
     border-block-start-width: 0;
     border-inline-width: 0;
   }
