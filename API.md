@@ -2548,6 +2548,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-table-empty-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-table-empty-padding` | `1.5rem` (`--enchase-space-lg`) | `padding` |
 | `--enchase-table-header-background` | `var(--enchase-color-surface-container-low)` | `background-color` |
+| `--enchase-table-header-background-sticky` | `var(--enchase-color-surface)` | `background-color` |
 | `--enchase-table-header-border-color-end` | `currentColor` | `border-inline-end` |
 | `--enchase-table-header-border-style-end` | `none` | `border-inline-end` |
 | `--enchase-table-header-border-width-end` | `0` | `border-inline-end` |
