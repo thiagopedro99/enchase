@@ -38,6 +38,12 @@
   min-inline-size: 0;
 }
 
+@media (max-width: 359.98px) {
+  .controls {
+    --enchase-segmented-control-item-padding-inline-sm: var(--enchase-space-xs);
+  }
+}
+
 .swatch {
   display: block;
   inline-size: 1rem;

@@ -1,4 +1,5 @@
 import { workbench } from 'enchase/styles/workbench'
+import { material3 } from 'enchase/styles/material3'
 import { shadcn } from 'enchase/styles/shadcn'
 
 import { pageLinks, repositoryUrl } from '../../defaultData.ts'
@@ -34,6 +35,7 @@ export const defaultLook: Look = {
 
 const styles: Record<LookStyle, ThemeStyle | undefined> = {
   enchase: undefined,
+  material3,
   shadcn,
   workbench
 }

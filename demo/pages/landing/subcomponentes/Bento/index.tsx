@@ -41,7 +41,7 @@ const Bento = ({ look, onLookChange }: BentoProps) => (
           <Cell title="Leve de verdade" text="Todo o CSS com gzip, ou só o do componente que você usa. Nenhuma dependência além do React.">
             <WeightDemo />
           </Cell>
-          <Cell title="Três estilos, uma API" text="Troque o estilo e veja esta página inteira mudar. Nos seus componentes, nenhuma linha muda.">
+          <Cell title="Quatro estilos, uma API" text="Troque o estilo e veja esta página inteira mudar. Nos seus componentes, nenhuma linha muda.">
             <StylesDemo look={look} onLookChange={onLookChange} />
           </Cell>
           <Cell title="Molas em CSS puro" text="Movimento por tokens, com linear() no lugar de uma biblioteca de animação. Quem pede movimento reduzido é respeitado.">

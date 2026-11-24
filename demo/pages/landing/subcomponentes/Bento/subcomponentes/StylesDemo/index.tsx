@@ -1,10 +1,9 @@
-import { Badge, Button, SegmentedControl, Switch } from 'enchase'
+import { Badge, Button, Switch } from 'enchase'
 
 import { useRevealOrigin } from '../../../../useRevealOrigin.ts'
-import { styleItems } from '../../../Playground/defaultData.ts'
+import StylePicker from '../../../StylePicker/index.tsx'
 import styles from './styles.module.css'
 
-import type { LookStyle } from '../../../../types.ts'
 import type { StylesDemoProps } from './types.ts'
 
 const StylesDemo = ({ look, onLookChange }: StylesDemoProps) => {
@@ -12,7 +11,7 @@ const StylesDemo = ({ look, onLookChange }: StylesDemoProps) => {
 
   return (
     <div className={styles.demo} {...handlers}>
-      <SegmentedControl ariaLabel="Estilo visual da página" items={styleItems} value={look.style} onValueChange={(style: string) => onLookChange({ ...look, style: style as LookStyle }, origin())} size="sm" fullWidth />
+      <StylePicker name="Estilo visual da página" value={look.style} onChange={(style) => onLookChange({ ...look, style }, origin())} size="sm" />
       <div className={styles.preview}>
         <Button size="sm">Salvar</Button>
         <Button size="sm" variant="outline">

@@ -3,12 +3,6 @@ import { defaultBrand } from '../../defaultData.ts'
 import type { SegmentedControlItem } from 'enchase'
 import type { Look } from '../../types.ts'
 
-export const styleItems: SegmentedControlItem[] = [
-  { value: 'enchase', label: 'Enchase' },
-  { value: 'shadcn', label: 'shadcn' },
-  { value: 'workbench', label: 'Workbench' }
-]
-
 export const shapeItems: SegmentedControlItem[] = [
   { value: 'auto', label: 'Padrão' },
   { value: 'pill', label: 'Pílula' },

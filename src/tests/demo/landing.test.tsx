@@ -57,7 +57,7 @@ describe('Landing page', () => {
       'Componentes React lapidados para o seu produto',
       '48 componentes, um import',
       'O trabalho chato já vem feito',
-      'Um kit, três visuais. Troque agora.',
+      'Um kit, quatro visuais. Troque agora.',
       'Da instalação ao primeiro botão em três passos',
       'Antes de instalar',
       'Instale e monte a primeira tela hoje'
@@ -117,6 +117,32 @@ describe('Landing playground', () => {
       { ...defaultLook, shape: 'soft' },
       { ...defaultLook, compact: true }
     ])
+  })
+})
+
+describe('Landing style picker', () => {
+  it('lists the four styles in both pickers of the page', () => {
+    renderLanding()
+
+    for (const name of ['Estilo', 'Estilo visual da página']) expect(within(group(name)).getAllByRole('radio').map((radio) => radio.textContent)).toEqual(['Enchase', 'Material 3', 'shadcn', 'Workbench'])
+  })
+
+  it('becomes a select on a narrow screen, where four options do not fit in a row', async () => {
+    const user = userEvent.setup()
+    const width = window.innerWidth
+
+    window.innerWidth = 390
+
+    const { onLookChange } = renderLanding()
+
+    expect(screen.queryByRole('radiogroup', { name: 'Estilo' })).not.toBeInTheDocument()
+
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Estilo' }), 'Material 3')
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Estilo visual da página' }), 'Workbench')
+
+    expect(onLookChange.mock.calls.map(([look]) => look.style)).toEqual(['material3', 'workbench'])
+
+    window.innerWidth = width
   })
 })
 
@@ -266,6 +292,15 @@ describe('App', () => {
     await user.click(screen.getByRole('switch', { name: 'Densidade compacta' }))
 
     expect(snippet).toHaveTextContent('style: workbench')
+
+    await user.click(within(group('Estilo')).getByRole('radio', { name: 'Material 3' }))
+
+    expect(snippet).toHaveTextContent("import { material3 } from 'enchase/styles/material3'")
+    expect(snippet).toHaveTextContent('style: material3')
+
+    await user.click(within(group('Estilo')).getByRole('radio', { name: 'Enchase' }))
+
+    expect(snippet).not.toHaveTextContent('style:')
     expect(document.documentElement).toHaveAttribute('data-density', 'compact')
 
     await user.click(screen.getByRole('switch', { name: 'Densidade compacta' }))
