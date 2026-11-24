@@ -29,7 +29,7 @@ const shadowOf = (value: string) => {
   return computed
 }
 
-const halo = (color: 'text-primary' | 'primary', strength: number) => shadowOf(`0 0 0 0.5rem color-mix(in srgb, var(--enchase-color-${color}) ${strength}%, transparent)`)
+const halo = (color: 'text-primary' | 'primary', strength: number) => shadowOf(`0 0 0 var(--enchase-halo-size-switch, 0px) color-mix(in srgb, var(--enchase-color-${color}) ${strength}%, transparent)`)
 
 const colorOf = (value: string) => {
   const probe = document.createElement('span')
@@ -340,7 +340,7 @@ describe('the track of the switch under the pointer from the hooks', () => {
       expect(track(index)).toBe(rest[index])
     }
 
-    expect(rest.slice(0, 2)).toEqual([role('surface-container-high'), role('primary')])
+    expect(rest.slice(0, 2)).toEqual([role('border-strong'), role('primary')])
   })
 
   it('takes the track of an off switch under the pointer from its hook, gives it back at rest when the pointer leaves, and leaves an on switch its own', async () => {
@@ -545,7 +545,7 @@ describe('the thumb and the range of the slider under the pointer from the hooks
     expect(look()).toEqual(rest)
     await press()
     expect(look()).toEqual(rest)
-    expect(rest).toEqual(['2px', role('primary')])
+    expect(rest).toEqual(['1px', role('primary')])
   })
 
   it('takes the width of the border of the thumb and the fill of the range under the pointer from their hooks, and gives the look at rest back when the pointer leaves', async () => {
@@ -615,7 +615,7 @@ describe('the corners of the segmented control from the hooks of each size', () 
   it('keeps the corners the theme gives to the track in every size when no hook is set', () => {
     renderInBrowser(groups)
 
-    expect(sizes.map((_, index) => cornerOf(index) >= 1000)).toEqual([true, true, true])
+    expect(sizes.map((_, index) => cornerOf(index))).toEqual([10, 10, 10])
   })
 
   it('takes the corners of the small and of the large track from their own hooks, and leaves the medium one the corners of the theme', () => {
@@ -627,7 +627,7 @@ describe('the corners of the segmented control from the hooks of each size', () 
       groups
     )
 
-    expect(cornerOf(1)).toBeGreaterThanOrEqual(1000)
+    expect(cornerOf(1)).toBe(10)
   })
 
   it('has no hook for the medium size, which keeps the hook of the track', () => {
@@ -690,7 +690,7 @@ describe('the corners of the segmented control from the hooks of each size', () 
       onRoot({ '--enchase-segmented-control-item-radius-sm': '3px', '--enchase-segmented-control-item-radius-lg': '5px' })
       renderInBrowser(groups)
 
-      expect(sizes.map((_, index) => cornerOf(index) >= 1000)).toEqual([true, true, true])
+      expect(sizes.map((_, index) => cornerOf(index))).toEqual([10, 10, 10])
     })
   })
 })
