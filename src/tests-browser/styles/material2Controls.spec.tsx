@@ -113,12 +113,13 @@ describe('the buttons of the material2 style', () => {
     expect(button.boxShadow).toContain('rgba(0, 0, 0, 0.2) 0px 3px 1px -2px')
   })
 
-  it('raises the secondary button to a darker fill and elevation 4 under the pointer', async () => {
+  it('darkens the secondary button on hover only through the shared state layer, not a dedicated fill', async () => {
     show(<Button variant="secondary">Cancel</Button>)
     await userEvent.hover(part('button'))
     await waitForSettled(at('button'))
 
-    expect(style('button').backgroundColor).toBe('rgb(213, 213, 213)')
+    expect(style('button').backgroundColor).toBe('rgb(224, 224, 224)')
+    expect(getComputedStyle(part('button'), '::after').opacity).toBe('0.04')
     expect(style('button').boxShadow).toContain('rgba(0, 0, 0, 0.2) 0px 2px 4px -1px')
   })
 

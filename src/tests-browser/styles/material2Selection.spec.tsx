@@ -116,6 +116,29 @@ describe('the switch of the material2 style', () => {
 
     expect(contrastRatio(style('switch-thumb').backgroundColor, background())).toBeGreaterThanOrEqual(1.3)
   })
+
+  it.each([
+    ['light', 3.35],
+    ['dark', 3.83]
+  ] as const)('weakens the disabled off-track well below the %s enabled one, not the other way around', async (mode, enabledContrast) => {
+    showIn(<Switch label="Off" defaultChecked={false} disabled />, mode)
+    await settled(mode)
+    const track = parseComputedColor(style('switch-track').backgroundColor)
+
+    expect(contrastRatio(`rgba(${track.r}, ${track.g}, ${track.b}, ${track.a})`, background())).toBeLessThan(enabledContrast)
+  })
+
+  it.each([
+    ['light', false, 'rgb(245, 245, 245)'],
+    ['light', true, 'rgb(245, 245, 245)'],
+    ['dark', false, 'rgb(117, 117, 117)'],
+    ['dark', true, 'rgb(117, 117, 117)']
+  ] as const)('lightens the disabled thumb in the %s mode (checked=%s), instead of the stronger grey it inherited from the enabled track', async (mode, checked, thumbColor) => {
+    showIn(<Switch label="Switch" defaultChecked={checked} disabled />, mode)
+    await settled(mode)
+
+    expect(style('switch-thumb').backgroundColor).toBe(thumbColor)
+  })
 })
 
 describe('the segmented control of the material2 style', () => {

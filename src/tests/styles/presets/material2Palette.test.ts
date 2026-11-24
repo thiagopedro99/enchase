@@ -12,7 +12,7 @@ import type { ColorTokens } from '@styles/tokens/types.ts'
 
 const modes = ['light', 'dark'] as const
 
-const accentRoles = ['primary', 'onPrimary', 'primaryHover']
+const accentRoles = ['primary', 'onPrimary', 'primaryHover', 'primaryContainer', 'onPrimaryContainer']
 
 const palette = [
   ['primary', '#066CC8', '#90CAF9'],
@@ -26,9 +26,9 @@ const palette = [
   ['onSecondaryContainer', 'rgba(0, 0, 0, 0.87)', '#FFFFFF'],
   ['background', '#FFFFFF', '#121212'],
   ['surface', '#FFFFFF', '#121212'],
-  ['surfaceContainerLow', '#FAFAFA', '#1D1D1D'],
-  ['surfaceContainer', '#F5F5F5', '#1E1E1E'],
-  ['surfaceContainerHigh', '#EEEEEE', '#232323'],
+  ['surfaceContainerLow', '#FAFAFA', '#1E1E1E'],
+  ['surfaceContainer', '#F5F5F5', '#272727'],
+  ['surfaceContainerHigh', '#EEEEEE', '#2E2E2E'],
   ['text.primary', 'rgba(0, 0, 0, 0.87)', '#FFFFFF'],
   ['text.secondary', 'rgba(0, 0, 0, 0.6)', 'rgba(255, 255, 255, 0.7)'],
   ['text.disabled', 'rgba(0, 0, 0, 0.38)', 'rgba(255, 255, 255, 0.5)'],
@@ -37,7 +37,7 @@ const palette = [
   ['border', 'rgba(0, 0, 0, 0.12)', 'rgba(255, 255, 255, 0.12)'],
   ['borderStrong', 'rgba(0, 0, 0, 0.45)', 'rgba(255, 255, 255, 0.4)'],
   ['borderLight', 'rgba(0, 0, 0, 0.08)', 'rgba(255, 255, 255, 0.08)'],
-  ['error', '#CF2A2C', '#F9483A'],
+  ['error', '#CF2A2C', '#FF7362'],
   ['onError', '#FFFFFF', 'rgba(0, 0, 0, 0.87)'],
   ['errorContainer', '#FDEDED', '#160B0B'],
   ['onErrorContainer', '#5F2120', '#F4C7C7'],
@@ -195,6 +195,16 @@ describe('the material2 style', () => {
       expect(branded.dark.colors.inversePrimary).toBe('#BCE1FF')
       expect(branded.light.colors.surfaceContainerHigh).toBe('#EEEEEE')
       expect(branded.dark.colors.inverseSurface).toBe('rgba(97, 97, 97, 0.92)')
+    })
+
+    it.each(brands)('carries the %s brand %s into the primary container too, not just the accent itself', (_name, brand) => {
+      const branded = createTheme({ style: material2, brand })
+
+      for (const mode of modes) {
+        expect(branded[mode].colors.primaryContainer).not.toBe(theme[mode].colors.primaryContainer)
+        expect(branded[mode].colors.onPrimaryContainer).not.toBe(theme[mode].colors.onPrimaryContainer)
+        expect(contrastRatio(branded[mode].colors.onPrimaryContainer, branded[mode].colors.primaryContainer)).toBeGreaterThanOrEqual(textContrast)
+      }
     })
   })
 })

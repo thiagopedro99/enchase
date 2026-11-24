@@ -124,11 +124,12 @@ describe('the accordion of the material2 style', () => {
   it.each([
     ['light', 'rgb(255, 255, 255)'],
     ['dark', 'rgb(30, 30, 30)']
-  ] as const)('tints the trigger in the %s mode at the same 1dp level as the card', async (mode, background) => {
+  ] as const)('tints the whole accordion in the %s mode at the same 1dp level as the card, not just the trigger', async (mode, background) => {
     show(<Accordion items={[{ value: 'a', title: 'Question', content: 'Answer' }]} />, mode)
     await settled(mode)
 
-    expect(style('accordion-trigger').backgroundColor).toBe(background)
+    expect(style('accordion').backgroundColor).toBe(background)
+    expect(style('accordion-trigger').backgroundColor).toBe('rgba(0, 0, 0, 0)')
   })
 })
 

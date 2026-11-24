@@ -276,8 +276,8 @@ describe('the material2 style', () => {
     expect(theme.defaults).toEqual({ labelPlacement: 'floating' })
   })
 
-  it('takes only primary, onPrimary and primaryHover from the brand color, like shadcn and workbench', () => {
-    expect(material2.brand).toEqual(['primary', 'onPrimary', 'primaryHover'])
+  it('takes primary, onPrimary, primaryHover and the primary container from the brand color, unlike shadcn and workbench', () => {
+    expect(material2.brand).toEqual(['primary', 'onPrimary', 'primaryHover', 'primaryContainer', 'onPrimaryContainer'])
   })
 
   it('is not the theme that createTheme() gives with no style, now that the default is the Lapidado look', () => {
