@@ -1349,6 +1349,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-accordion-panel-padding-block-start` | `0` | `padding-block-start` |
 | `--enchase-accordion-panel-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-accordion-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-accordion-shadow` | `none` | `box-shadow` |
 | `--enchase-accordion-trigger-background` | `transparent` | `background-color` |
 | `--enchase-accordion-trigger-color` | `var(--enchase-color-text-primary)` | `color` |
 | `--enchase-accordion-trigger-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
@@ -1574,6 +1575,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-button-letter-spacing` | `0.01em` (`--enchase-letter-spacing-control`) | `letter-spacing` |
 | `--enchase-button-line-height` | `1.2` (`--enchase-line-height-tight`) | `line-height` |
+| `--enchase-button-min-width` | `24px` | `min-inline-size` |
 | `--enchase-button-opacity-disabled` | `1` | `opacity` |
 | `--enchase-button-padding-block-lg` | `0.25rem` (`--enchase-space-xs`) | `padding-block`, `padding-inline` |
 | `--enchase-button-padding-block-md` | `0.25rem` (`--enchase-space-xs`) | `padding-block`, `padding-inline` |
@@ -1600,6 +1602,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-shadow-secondary` | `none` | `box-shadow` |
 | `--enchase-button-shadow-secondary-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
 | `--enchase-button-text-decoration-link-hover` | `underline` | `text-decoration` |
+| `--enchase-button-text-transform` | `none` | `text-transform` |
 
 ### Calendar
 
@@ -2196,6 +2199,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-pagination-control-padding-inline` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
 | `--enchase-pagination-control-padding-inline-sm` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
 | `--enchase-pagination-control-radius` | `0.625rem` (`--enchase-radius-control`) | `border-radius` |
+| `--enchase-pagination-control-size` | `2.25rem` (`--enchase-control-height-md`) | `min-inline-size`, `min-block-size` |
+| `--enchase-pagination-control-size-sm` | `2rem` (`--enchase-control-height-sm`) | `min-inline-size`, `min-block-size` |
 | `--enchase-pagination-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
 | `--enchase-pagination-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
 | `--enchase-pagination-ellipsis-color` | `var(--enchase-color-text-secondary)` | `color` |
@@ -2583,6 +2588,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-tabs-tab-color-selected` | `var(--enchase-color-primary)` | `color` |
 | `--enchase-tabs-tab-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-tabs-tab-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-tabs-tab-letter-spacing` | `normal` | `letter-spacing` |
 | `--enchase-tabs-tab-line-height` | `1.2` (`--enchase-line-height-tight`) | `line-height` |
 | `--enchase-tabs-tab-min-height` | `2.75rem` | `min-block-size` |
 | `--enchase-tabs-tab-min-height-card` | `2.75rem` (`--enchase-tabs-tab-min-height`) | `min-block-size` |
@@ -2591,6 +2597,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-tabs-tab-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-tabs-tab-padding-inline-card` | `1rem` (`--enchase-space-md`) | `padding-inline` |
 | `--enchase-tabs-tab-radius` | `0.5rem` (`--enchase-radius-md`) | `border-start-start-radius`, `border-start-end-radius` |
+| `--enchase-tabs-tab-text-transform` | `none` | `text-transform` |
 
 ### Tag
 

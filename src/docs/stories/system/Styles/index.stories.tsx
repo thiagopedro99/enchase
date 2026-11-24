@@ -11,14 +11,14 @@ const meta = {
     layout: 'padded',
     docs: {
       description: {
-        component: 'The `style` of `createTheme` (and of the `theme` prop of the `ColorModeProvider`) changes the look of the whole kit: the palette, the radii, the heights, the font weights, the borders, the shadows and the placement of the field label. Each style is an object that you import from its own entry, `enchase/styles/<name>` (`import { shadcn } from \'enchase/styles/shadcn\'`), and pass in `createTheme({ style: shadcn })`: only whoever imports a style gets its data. `enchase` is the usual look, the Lapidado look, and the one that `createTheme` already gives with no style at all; `material3` is the Material 3 look that was the default before; `shadcn` brings the kit closer to shadcn/ui, without giving up the contrast of the library; `workbench` is a neutral, dense look for work screens, with a blue primary, light shadows and a compact density of its own, with the same contrast. What you pass in `brand`, `shape`, `radius`, `fonts`, `motion`, `light` and `dark` wins over the style. The Style item of the Storybook toolbar switches the style of all the stories.'
+        component: 'The `style` of `createTheme` (and of the `theme` prop of the `ColorModeProvider`) changes the look of the whole kit: the palette, the radii, the heights, the font weights, the borders, the shadows and the placement of the field label. Each style is an object that you import from its own entry, `enchase/styles/<name>` (`import { shadcn } from \'enchase/styles/shadcn\'`), and pass in `createTheme({ style: shadcn })`: only whoever imports a style gets its data. `enchase` is the usual look, the Lapidado look, and the one that `createTheme` already gives with no style at all; `material2` brings the kit close to the default theme of Material UI v5 (Material Design 2), with a floating label; `material3` is the Material 3 look that was the default before; `shadcn` brings the kit closer to shadcn/ui, without giving up the contrast of the library; `workbench` is a neutral, dense look for work screens, with a blue primary, light shadows and a compact density of its own, with the same contrast. What you pass in `brand`, `shape`, `radius`, `fonts`, `motion`, `light` and `dark` wins over the style. The Style item of the Storybook toolbar switches the style of all the stories.'
       }
     }
   },
   args: { style: defaultStyle, brand: '', shape: '', labelPlacement: '' },
   argTypes: {
     style: {
-      description: 'Visual style, imported from `enchase/styles/<name>` and passed in `createTheme({ style })`: `enchase` (the Lapidado look, the default) `material3` (the Material 3 look that was the default before, with a floating label) `shadcn` (neutral palette, borders instead of shadows, 36px controls, 0.5rem corners, label above the field) or `workbench` (neutral and dense: controls of 24, 32 and 40px, a blue primary, borders of 1px, label above the field).',
+      description: 'Visual style, imported from `enchase/styles/<name>` and passed in `createTheme({ style })`: `enchase` (the Lapidado look, the default) `material2` (close to the default theme of Material UI v5, with a floating label) `material3` (the Material 3 look that was the default before, with a floating label) `shadcn` (neutral palette, borders instead of shadows, 36px controls, 0.5rem corners, label above the field) or `workbench` (neutral and dense: controls of 24, 32 and 40px, a blue primary, borders of 1px, label above the field).',
       control: 'inline-radio',
       options: styles
     },
@@ -32,7 +32,7 @@ const meta = {
       options: shapes
     },
     labelPlacement: {
-      description: 'Where the field label goes (`labelPlacement` prop of the `Input`, the `NumberInput`, the `Select` and the `Textarea`), on top of the style. Empty uses the one of the style: `stacked` in `enchase`, `shadcn` and `workbench`, and `floating` in `material3`.',
+      description: 'Where the field label goes (`labelPlacement` prop of the `Input`, the `NumberInput`, the `Select` and the `Textarea`), on top of the style. Empty uses the one of the style: `stacked` in `enchase`, `shadcn` and `workbench`, and `floating` in `material2` and `material3`.',
       control: { type: 'inline-radio', labels: placementLabels },
       options: placements
     }
@@ -45,6 +45,10 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Playground: Story = {}
+
+export const Material2: Story = {
+  args: { style: 'material2' }
+}
 
 export const Material3: Story = {
   args: { style: 'material3' }
