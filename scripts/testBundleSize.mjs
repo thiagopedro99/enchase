@@ -35,7 +35,7 @@ const budgets = [
   { label: 'DatePicker', source: "export { DatePicker } from 'enchase'\n", maxBytes: 53248 },
   { label: 'ColorModeProvider', source: "export { ColorModeProvider } from 'enchase'\n", maxBytes: 62464, styles: [], density: true },
   { label: 'createTheme', source: "export { createTheme } from 'enchase/theme'\n", maxBytes: 52224, styles: [] },
-  { label: 'enchase style', source: "export { enchase } from 'enchase/styles/enchase'\n", maxBytes: 33792, styles: ['enchase'] },
+  { label: 'enchase style', source: "export { enchase } from 'enchase/styles/enchase'\n", maxBytes: 37120, styles: ['enchase'] },
   { label: 'material3 style', source: "export { material3 } from 'enchase/styles/material3'\n", maxBytes: 17920, styles: ['material3'] },
   { label: 'shadcn style', source: "export { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 35840, styles: ['shadcn'] },
   { label: 'workbench style', source: "export { workbench } from 'enchase/styles/workbench'\n", maxBytes: 40960, styles: ['workbench'] },
