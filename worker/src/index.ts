@@ -1,70 +1,56 @@
-import { readSuggestions } from '../../demo/pages/sugestoes/github.ts'
-import { forget, githubHeaders, tokenFor } from './token.ts'
+import { suggestions, suggestionsPath } from './suggestions.ts'
+import { json, sameOrigin, unavailable } from './http.ts'
+import { callback, login, logout } from './auth.ts'
+import { session, unvote, vote } from './votes.ts'
 
-import type { Context, Env } from './types.ts'
+import type { Account, AccountHandler, Call, Context, Env, Handler } from './types.ts'
 
-const route = '/api/suggestions'
+type Methods = Partial<Record<string, Handler>>
 
-const cacheName = 'suggestions'
+const votePath = /^\/api\/suggestions\/([1-9]\d{0,8})\/vote$/
 
-const life = 60
+const safe = ['GET', 'HEAD']
 
-const pause = 15 * 1000
+const notFound = () => json({ error: 'not found' }, 404)
 
-const state = { failedAt: 0 }
+const configured = (env: Env): env is Account => Boolean(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET && env.SESSIONS)
 
-const json = (body: unknown, status: number, headers: Record<string, string> = {}) =>
-  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store', ...headers } })
+const account =
+  (handler: AccountHandler): Handler =>
+  ({ env, ...call }, id) =>
+    configured(env) ? handler({ ...call, env }, id) : Promise.resolve(notFound())
 
-const unavailable = () => json({ error: 'unavailable' }, 502)
-
-const read = async (env: Env) => {
-  const token = await tokenFor(env)
-
-  return readSuggestions(async (url) => {
-    const response = await fetch(url, { headers: { ...githubHeaders, Authorization: `Bearer ${token}` } })
-
-    if (response.status === 401) forget()
-
-    return response
-  })
+const routes: Record<string, Methods> = {
+  [suggestionsPath]: { GET: suggestions, HEAD: suggestions },
+  '/api/session': { GET: account(session) },
+  '/api/auth/login': { GET: account(login) },
+  '/api/auth/callback': { GET: account(callback) },
+  '/api/auth/logout': { POST: account(logout) }
 }
 
-const suggestions = async (env: Env) => {
-  if (Date.now() - state.failedAt < pause) return unavailable()
+const voteMethods: Methods = { PUT: account(vote), DELETE: account(unvote) }
 
-  try {
-    const result = await read(env)
+const answer = async (call: Call) => {
+  const { request, env, url } = call
+  const [, id] = votePath.exec(url.pathname) ?? []
+  const methods = id ? voteMethods : routes[url.pathname]
+  const handler = methods?.[request.method]
 
-    if (result.ok) return json({ items: result.items }, 200, { 'Cache-Control': `public, max-age=${life}` })
+  if (!methods || (methods !== routes[suggestionsPath] && !configured(env))) return notFound()
+  if (!handler) return json({ error: 'method not allowed' }, 405, { Allow: Object.keys(methods).join(', ') })
+  if (!safe.includes(request.method) && !sameOrigin(request)) return json({ error: 'forbidden' }, 403)
 
-    console.error('suggestions: github refused the read')
-  } catch (error) {
-    console.error('suggestions:', error instanceof Error ? error.message : 'unknown failure')
-  }
-
-  state.failedAt = Date.now()
-
-  return unavailable()
+  return handler(call, Number(id ?? 0))
 }
 
 const handle = async (request: Request, env: Env, context: Context) => {
-  const url = new URL(request.url)
+  try {
+    return await answer({ request, env, context, url: new URL(request.url) })
+  } catch (error) {
+    console.error('api:', error instanceof Error ? error.message : 'unknown failure')
 
-  if (url.pathname !== route) return json({ error: 'not found' }, 404)
-  if (request.method !== 'GET' && request.method !== 'HEAD') return json({ error: 'method not allowed' }, 405, { Allow: 'GET, HEAD' })
-
-  const cache = await caches.open(cacheName)
-  const key = new Request(new URL(route, url.origin), { method: 'GET' })
-  const stored = await cache.match(key)
-
-  if (stored) return stored
-
-  const response = await suggestions(env)
-
-  if (response.ok) context.waitUntil(cache.put(key, response.clone()))
-
-  return response
+    return unavailable()
+  }
 }
 
 export default { fetch: handle }

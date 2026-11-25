@@ -6,3 +6,15 @@ routes = [{ pattern = "enchase.othiagosilva.com.br/api/*", zone_name = "othiagos
 
 [vars]
 GITHUB_APP_ID = "5926239"
+GITHUB_CLIENT_ID = ""
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+
+[[ratelimits]]
+name = "LIMITER"
+namespace_id = "1001"
+
+  [ratelimits.simple]
+  limit = 30
+  period = 60

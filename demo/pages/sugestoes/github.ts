@@ -27,7 +27,9 @@ export type Requester = (url: string) => Promise<Response>
 
 export const repository = 'thiagopedro99/enchase'
 
-const query = `repo:${repository} is:issue label:enhancement,bug`
+export const boardLabels = ['enhancement', 'bug']
+
+export const query = `repo:${repository} is:issue label:${boardLabels.join(',')}`
 
 export const issuesEndpoint = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}&per_page=100`
 

@@ -58,3 +58,86 @@ export const refused = (status: number) => () => reply({ message: 'refused' }, s
 export const callsTo = (fetcher: ReturnType<typeof github>, url: string) => fetcher.mock.calls.filter(([input]) => String(input) === url)
 
 export const headerOf = (fetcher: ReturnType<typeof github>, url: string, name: string) => new Headers(callsTo(fetcher, url)[0]?.[1]?.headers).get(name) ?? ''
+
+export const site = 'https://enchase.othiagosilva.com.br'
+
+export const oauthEndpoint = 'https://github.com/login/oauth/access_token'
+
+export const userEndpoint = 'https://api.github.com/user'
+
+export const graphqlEndpoint = 'https://api.github.com/graphql'
+
+export const revokeEndpoint = 'https://api.github.com/applications/Iv23client/token'
+
+export const userToken = 'ghu_usertoken'
+
+export const keyValue = () => {
+  const stored = new Map<string, { value: string; ttl: number | undefined }>()
+
+  return {
+    stored,
+    get: async (key: string) => stored.get(key)?.value ?? null,
+    put: async (key: string, value: string, options?: { expirationTtl?: number }) => void stored.set(key, { value, ttl: options?.expirationTtl }),
+    delete: async (key: string) => void stored.delete(key)
+  }
+}
+
+export const limiter = (allowed = true) => {
+  const keys: string[] = []
+  const state = { allowed }
+
+  return { keys, refuse: () => void (state.allowed = false), limit: async ({ key }: { key: string }) => ({ success: keys.push(key) > 0 && state.allowed }) }
+}
+
+export const accountEnv = (sessions = keyValue(), limit = limiter()) => ({ ...env, GITHUB_CLIENT_ID: 'Iv23client', GITHUB_CLIENT_SECRET: 'secret-of-the-app', SESSIONS: sessions, LIMITER: limit })
+
+export const board = () => ({
+  issues: new Map([
+    [1, { id: 'I_one', labels: ['enhancement'] }],
+    [2, { id: 'I_two', labels: ['Bug', 'area: Table'] }],
+    [3, { id: 'I_three', labels: ['question'] }]
+  ]),
+  voted: new Set<number>([2])
+})
+
+const group = (voted: boolean) => [
+  { content: 'THUMBS_UP', viewerHasReacted: voted },
+  { content: 'HEART', viewerHasReacted: true }
+]
+
+export const account = (overrides: Record<string, (init?: RequestInit) => Promise<Response>> = {}, state = board()) => {
+  const numberOf = (id: string) => Array.from(state.issues).find(([, issue]) => issue.id === id)?.[0] ?? 0
+
+  const graphql = (init?: RequestInit) => {
+    const { query, variables }: { query: string; variables: { number?: number; id?: string } } = JSON.parse(String(init?.body))
+    const issue = state.issues.get(variables.number ?? 0)
+
+    if (query.includes('search(')) return reply({ data: { search: { nodes: [...Array.from(state.issues.keys(), (number) => ({ number, reactionGroups: group(state.voted.has(number)) })), {}] } } })
+    if (query.includes('issue(number')) return issue ? reply({ data: { repository: { issue: { id: issue.id, labels: { nodes: issue.labels.map((name) => ({ name })) }, reactionGroups: group(state.voted.has(variables.number ?? 0)) } } } }) : reply({ data: { repository: { issue: null } }, errors: [{ type: 'NOT_FOUND' }] })
+    if (query.includes('addReaction')) return reply({ data: { addReaction: { clientMutationId: null } } }).finally(() => state.voted.add(numberOf(variables.id ?? '')))
+    if (query.includes('removeReaction')) return reply({ data: { removeReaction: { clientMutationId: null } } }).finally(() => state.voted.delete(numberOf(variables.id ?? '')))
+
+    return reply({ errors: [{ message: 'unknown' }] })
+  }
+
+  const answers: Record<string, (init?: RequestInit) => Promise<Response>> = {
+    [oauthEndpoint]: () => reply({ access_token: userToken, expires_in: 28800, refresh_token: 'ghr_refresh', refresh_token_expires_in: 15897600, token_type: 'bearer', scope: '' }),
+    [userEndpoint]: () => reply({ id: 9001, login: 'visitor', avatar_url: 'https://avatars.githubusercontent.com/u/9001?v=4', email: 'hidden@example.com' }),
+    [graphqlEndpoint]: graphql,
+    [revokeEndpoint]: () => Promise.resolve(new Response(null, { status: 204 })),
+    ...overrides
+  }
+  const fetcher = vi.fn<(input: RequestInfo | URL, init?: RequestInit) => Promise<Response>>((input, init) => answers[String(input)]?.(init) ?? reply({ message: 'Not Found' }, 404))
+
+  return Object.assign(fetcher, { state })
+}
+
+export const bodyOf = (fetcher: ReturnType<typeof github>, url: string, index = 0) => JSON.parse(String(callsTo(fetcher, url)[index]?.[1]?.body))
+
+export const queriesOf = (fetcher: ReturnType<typeof github>) => callsTo(fetcher, graphqlEndpoint).map(([, init]) => String(JSON.parse(String(init?.body)).query).split(/[ ({]/)[0] + (String(init?.body).includes('addReaction') ? ':add' : String(init?.body).includes('removeReaction') ? ':remove' : String(init?.body).includes('search(') ? ':search' : ':issue'))
+
+export const cookiesOf = (response: Response) => Object.fromEntries(response.headers.getSetCookie().map((value) => [value.slice(0, value.indexOf('=')), value]))
+
+export const valueOf = (cookie = '') => cookie.slice(cookie.indexOf('=') + 1, cookie.indexOf(';'))
+
+export const answered = (body: unknown, status = 200) => () => reply(body, status)
