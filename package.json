@@ -125,6 +125,11 @@
       "import": "./dist-lib/experimental/slider.js",
       "default": "./dist-lib/experimental/slider.js"
     },
+    "./experimental/board": {
+      "types": "./dist-lib/types/lib/experimental/board.d.ts",
+      "import": "./dist-lib/experimental/board.js",
+      "default": "./dist-lib/experimental/board.js"
+    },
     "./styles/enchase": {
       "types": "./dist-lib/types/lib/styles/enchase.d.ts",
       "import": "./dist-lib/styles/enchase.js",

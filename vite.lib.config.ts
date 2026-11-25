@@ -64,6 +64,7 @@ export default defineConfig({
         'experimental/segmented-control': resolve(root, 'lib/experimental/segmented-control.ts'),
         'experimental/accordion': resolve(root, 'lib/experimental/accordion.ts'),
         'experimental/slider': resolve(root, 'lib/experimental/slider.ts'),
+        'experimental/board': resolve(root, 'lib/experimental/board.ts'),
         'styles/enchase': resolve(root, 'lib/styles/enchase.ts'),
         'styles/material2': resolve(root, 'lib/styles/material2.ts'),
         'styles/material3': resolve(root, 'lib/styles/material3.ts'),
