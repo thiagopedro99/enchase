@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 const circles: Record<string, number> = {
   'common/Avatar/styles.module.css': 1,
+  'common/Board/subcomponentes/Column/styles.module.css': 1,
   'common/Progress/styles.module.css': 1,
   'common/Slider/styles.module.css': 2,
   'common/Switch/styles.module.css': 2,
@@ -13,6 +14,7 @@ const circles: Record<string, number> = {
 const buttons = [
   'common/Button/styles.module.css',
   'common/Badge/styles.module.css',
+  'common/Board/subcomponentes/Column/styles.module.css',
   'common/Tag/styles.module.css',
   'common/Alert/styles.module.css',
   'common/Breadcrumbs/styles.module.css',

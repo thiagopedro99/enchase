@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 const prefixes: Record<string, string> = {
   'common/Alert/styles.module.css': 'alert',
+  'common/Board/subcomponentes/Column/styles.module.css': 'board',
   'common/Breadcrumbs/styles.module.css': 'breadcrumbs',
   'common/Button/styles.module.css': 'button',
   'common/Card/styles.module.css': 'card',
