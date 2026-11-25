@@ -1,13 +1,14 @@
 import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useUIConfig } from '@hooks/useUIConfig.ts'
-import { defaultReadOnly, defaultSortable, dragThreshold, edgeScrollSpeed, edgeScrollZone } from './defaultData.ts'
+import { boardLabelsFor } from './locales.ts'
+import { defaultReadOnly, defaultSortable, dragThreshold, edgeScrollZone, edgeScrollSpeed } from './defaultData.ts'
 
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent, ReactNode, RefCallback } from 'react'
-import type { UILabels } from '../../uiProvider/types.ts'
+import type { BoardLabels } from './locales.ts'
 import type { BoardColumn, BoardItem, BoardMoveState, BoardPosition, BoardProps } from './types.ts'
 
-type UseBoardOptions<Item extends BoardItem> = Pick<BoardProps<Item>, 'columns' | 'items' | 'onMove' | 'getItemLabel' | 'sortable' | 'readOnly'>
+type UseBoardOptions<Item extends BoardItem> = Pick<BoardProps<Item>, 'columns' | 'items' | 'onMove' | 'getItemLabel' | 'sortable' | 'readOnly' | 'labels'>
 
 type DragState = {
   pointerId: number
@@ -17,6 +18,7 @@ type DragState = {
   startY: number
   offsetX: number
   offsetY: number
+  width: number
   thresholdCrossed: boolean
 }
 
@@ -43,6 +45,8 @@ export type BoardMenuEntry =
   | { kind: 'separator'; id: string }
   | { kind: 'move'; id: string; label: string; disabled: boolean; onSelect: () => void }
 
+const draggingAttribute = 'data-enchase-board-dragging'
+
 const labelForColumn = (columns: BoardColumn[], columnId: string) => {
   const column = columns.find((candidate) => candidate.id === columnId)
   if (!column) return ''
@@ -61,10 +65,18 @@ const groupByColumn = <Item extends BoardItem>(columns: BoardColumn[], items: It
   return map
 }
 
+const resolveTarget = <Item extends BoardItem>(hit: BoardPosition, from: BoardPosition, sortable: boolean, itemsByColumn: Map<string, Item[]>, excludeId: string): BoardPosition => {
+  if (sortable) return hit
+  if (hit.columnId === from.columnId) return from
+  const length = (itemsByColumn.get(hit.columnId) ?? []).filter((item) => item.id !== excludeId).length
+  return { columnId: hit.columnId, index: length }
+}
+
 export type UseBoardResult<Item extends BoardItem> = ReturnType<typeof useBoard<Item>>
 
-export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getItemLabel, sortable = defaultSortable, readOnly = defaultReadOnly }: UseBoardOptions<Item>) => {
-  const { labels, dir } = useUIConfig()
+export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getItemLabel, sortable = defaultSortable, readOnly = defaultReadOnly, labels: labelOverrides }: UseBoardOptions<Item>) => {
+  const { dir, locale } = useUIConfig()
+  const labels = useMemo(() => boardLabelsFor(locale, labelOverrides), [locale, labelOverrides])
   const [activeMove, setActiveMove] = useState<BoardMoveState | null>(null)
   const [announcement, setAnnouncement] = useState('')
   const instructionsId = useId()
@@ -80,6 +92,8 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
   const pointerRef = useRef({ x: 0, y: 0 })
   const suppressClickRef = useRef<string | null>(null)
   const scrollFrameRef = useRef<number | null>(null)
+  const activeMoveRef = useRef(activeMove)
+  activeMoveRef.current = activeMove
 
   const itemsByColumn = useMemo(() => groupByColumn(columns, items), [columns, items])
 
@@ -89,26 +103,21 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     return map
   }, [itemsByColumn])
 
-  const latest = useRef({ columns, itemsByColumn, items, onMove, getItemLabel, labels })
-  latest.current = { columns, itemsByColumn, items, onMove, getItemLabel, labels }
+  const latest = useRef({ columns, itemsByColumn, items, onMove, getItemLabel, labels, sortable })
+  latest.current = { columns, itemsByColumn, items, onMove, getItemLabel, labels, sortable }
 
   const columnLengthWith = useCallback((columnId: string, itemId: string) => lengthWithItem(itemsByColumn, columnId, itemId), [itemsByColumn])
 
   const columnLabel = useCallback((columnId: string) => labelForColumn(columns, columnId), [columns])
 
-  const announceCancel = useCallback((itemId: string, from: BoardPosition, allLabels: UILabels, allItems: Item[], allColumns: BoardColumn[]) => {
-    const item = allItems.find((candidate) => candidate.id === itemId)
-    if (!item) return
-    setAnnouncement(allLabels.boardCancelled?.(getItemLabel(item), labelForColumn(allColumns, from.columnId)) ?? '')
-  }, [getItemLabel])
-
   const cancel = useCallback(() => {
-    setActiveMove((current) => {
-      if (!current) return null
-      announceCancel(current.itemId, current.from, latest.current.labels, latest.current.items, latest.current.columns)
-      return null
-    })
-  }, [announceCancel])
+    const current = activeMoveRef.current
+    if (!current) return
+    const item = items.find((candidate) => candidate.id === current.itemId)
+    if (item) setAnnouncement(labels.boardCancelled(getItemLabel(item), columnLabel(current.from.columnId)))
+    if (current.to.columnId !== current.from.columnId) pendingFocusRef.current = { id: current.itemId, kind: 'handle' }
+    setActiveMove(null)
+  }, [items, labels, getItemLabel, columnLabel])
 
   const stopAutoScroll = useCallback(() => {
     if (scrollFrameRef.current !== null) {
@@ -117,17 +126,11 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     }
   }, [])
 
-  const runAutoScroll = useCallback(() => {
-    const { x, y } = pointerRef.current
+  const withinTrack = useCallback((x: number, y: number) => {
     const track = trackRef.current
-    if (track) {
-      const rect = track.getBoundingClientRect()
-      if (x - rect.left < edgeScrollZone) track.scrollLeft -= edgeScrollSpeed
-      else if (rect.right - x < edgeScrollZone) track.scrollLeft += edgeScrollSpeed
-    }
-    if (y < edgeScrollZone) window.scrollBy(0, -edgeScrollSpeed)
-    else if (window.innerHeight - y < edgeScrollZone) window.scrollBy(0, edgeScrollSpeed)
-    scrollFrameRef.current = requestAnimationFrame(runAutoScroll)
+    if (!track) return true
+    const rect = track.getBoundingClientRect()
+    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
   }, [])
 
   const hitTest = useCallback((x: number, y: number, excludeId: string): BoardPosition | null => {
@@ -169,12 +172,56 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     return { columnId: targetColumnId, index }
   }, [])
 
-  const withinTrack = useCallback((x: number, y: number) => {
+  const updateTarget = useCallback((x: number, y: number) => {
+    const drag = dragRef.current
+    if (!drag) return
+
+    if (!withinTrack(x, y)) {
+      setActiveMove((current) => (current && current.withinTrack ? { ...current, withinTrack: false } : current))
+      return
+    }
+
+    const { sortable: currentSortable, itemsByColumn: currentItemsByColumn } = latest.current
+    const hit = hitTest(x, y, drag.itemId)
+    if (!hit) return
+
+    const next = resolveTarget(hit, drag.from, currentSortable, currentItemsByColumn, drag.itemId)
+
+    setActiveMove((current) => {
+      if (!current) return current
+      if (current.withinTrack && current.to.columnId === next.columnId && current.to.index === next.index) return current
+      return { ...current, to: next, withinTrack: true }
+    })
+  }, [withinTrack, hitTest])
+
+  const runAutoScroll = useCallback(() => {
+    const { x, y } = pointerRef.current
     const track = trackRef.current
-    if (!track) return true
-    const rect = track.getBoundingClientRect()
-    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
-  }, [])
+    let scrolled = false
+
+    if (track) {
+      const rect = track.getBoundingClientRect()
+      if (x - rect.left < edgeScrollZone) {
+        track.scrollLeft -= edgeScrollSpeed
+        scrolled = true
+      } else if (rect.right - x < edgeScrollZone) {
+        track.scrollLeft += edgeScrollSpeed
+        scrolled = true
+      }
+    }
+
+    if (y < edgeScrollZone) {
+      window.scrollBy(0, -edgeScrollSpeed)
+      scrolled = true
+    } else if (window.innerHeight - y < edgeScrollZone) {
+      window.scrollBy(0, edgeScrollSpeed)
+      scrolled = true
+    }
+
+    if (scrolled) updateTarget(x, y)
+
+    scrollFrameRef.current = requestAnimationFrame(runAutoScroll)
+  }, [updateTarget])
 
   const stableHandlers = useRef({
     onPointerMove: (event: PointerEvent) => stableHandlers.current.onPointerMoveImpl(event),
@@ -191,7 +238,7 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     window.removeEventListener('pointermove', stableHandlers.current.onPointerMove)
     window.removeEventListener('pointerup', stableHandlers.current.onPointerUp)
     window.removeEventListener('pointercancel', stableHandlers.current.onPointerCancel)
-    window.removeEventListener('keydown', stableHandlers.current.onDragKeyDown)
+    window.removeEventListener('keydown', stableHandlers.current.onDragKeyDown, true)
   }, [])
 
   const finishPointerDrag = useCallback((forceCancel: boolean) => {
@@ -201,35 +248,30 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     detachDragListeners()
     copyRef.current?.style.removeProperty('--board-drag-x')
     copyRef.current?.style.removeProperty('--board-drag-y')
-    document.body.style.removeProperty('user-select')
+    copyRef.current?.style.removeProperty('--board-drag-width')
+    document.documentElement.removeAttribute(draggingAttribute)
 
-    if (!drag || !drag.thresholdCrossed) {
-      setActiveMove(null)
+    const current = activeMoveRef.current
+    setActiveMove(null)
+
+    if (!drag || !drag.thresholdCrossed || !current) return
+
+    const { items: allItems, onMove: notify, getItemLabel: label, labels: allLabels, columns: allColumns, itemsByColumn: byColumn } = latest.current
+    const cancelled = forceCancel || !current.withinTrack
+    const item = allItems.find((candidate) => candidate.id === drag.itemId)
+    const changed = current.to.columnId !== current.from.columnId || current.to.index !== current.from.index
+
+    if (!item) return
+
+    if (cancelled || !changed) {
+      setAnnouncement(allLabels.boardCancelled(label(item), labelForColumn(allColumns, current.from.columnId)))
       return
     }
 
-    const { items: allItems, onMove: notify, getItemLabel: label, labels: allLabels, columns: allColumns, itemsByColumn: byColumn } = latest.current
-
-    setActiveMove((current) => {
-      if (!current) return null
-
-      const cancelled = forceCancel || !withinTrack(pointerRef.current.x, pointerRef.current.y)
-      const item = allItems.find((candidate) => candidate.id === drag.itemId)
-      const changed = current.to.columnId !== current.from.columnId || current.to.index !== current.from.index
-
-      if (!item) return null
-
-      if (cancelled || !changed) {
-        setAnnouncement(allLabels.boardCancelled?.(label(item), labelForColumn(allColumns, current.from.columnId)) ?? '')
-        return null
-      }
-
-      notify({ item, from: current.from, to: current.to })
-      const total = lengthWithItem(byColumn, current.to.columnId, drag.itemId)
-      setAnnouncement(allLabels.boardDropped?.(label(item), current.to.index + 1, total, labelForColumn(allColumns, current.to.columnId)) ?? '')
-      return null
-    })
-  }, [stopAutoScroll, detachDragListeners, withinTrack])
+    notify({ item, from: current.from, to: current.to })
+    const total = lengthWithItem(byColumn, current.to.columnId, drag.itemId)
+    setAnnouncement(allLabels.boardDropped(label(item), current.to.index + 1, total, labelForColumn(allColumns, current.to.columnId)))
+  }, [stopAutoScroll, detachDragListeners])
 
   stableHandlers.current.onPointerMoveImpl = (event: PointerEvent) => {
     const drag = dragRef.current
@@ -241,24 +283,18 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       if (Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) < dragThreshold) return
       drag.thresholdCrossed = true
       suppressClickRef.current = drag.itemId
-      document.body.style.setProperty('user-select', 'none')
-      setActiveMove({ itemId: drag.itemId, from: drag.from, to: drag.from, via: 'pointer' })
+      document.documentElement.setAttribute(draggingAttribute, '')
+      setActiveMove({ itemId: drag.itemId, from: drag.from, to: drag.from, via: 'pointer', withinTrack: true })
       scrollFrameRef.current = requestAnimationFrame(runAutoScroll)
     }
 
     if (copyRef.current) {
       copyRef.current.style.setProperty('--board-drag-x', `${event.clientX - drag.offsetX}px`)
       copyRef.current.style.setProperty('--board-drag-y', `${event.clientY - drag.offsetY}px`)
+      copyRef.current.style.setProperty('--board-drag-width', `${drag.width}px`)
     }
 
-    const next = hitTest(event.clientX, event.clientY, drag.itemId)
-    if (!next) return
-
-    setActiveMove((current) => {
-      if (!current) return current
-      if (current.to.columnId === next.columnId && current.to.index === next.index) return current
-      return { ...current, to: next }
-    })
+    updateTarget(event.clientX, event.clientY)
   }
 
   stableHandlers.current.onPointerUpImpl = (event: PointerEvent) => {
@@ -274,6 +310,7 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
   stableHandlers.current.onDragKeyDownImpl = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && dragRef.current) {
       event.preventDefault()
+      event.stopPropagation()
       finishPointerDrag(true)
     }
   }
@@ -294,6 +331,7 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       startY: event.clientY,
       offsetX: rect ? event.clientX - rect.left : 0,
       offsetY: rect ? event.clientY - rect.top : 0,
+      width: rect?.width ?? 0,
       thresholdCrossed: false
     }
     pointerRef.current = { x: event.clientX, y: event.clientY }
@@ -301,14 +339,14 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     window.addEventListener('pointermove', stableHandlers.current.onPointerMove)
     window.addEventListener('pointerup', stableHandlers.current.onPointerUp)
     window.addEventListener('pointercancel', stableHandlers.current.onPointerCancel)
-    window.addEventListener('keydown', stableHandlers.current.onDragKeyDown)
+    window.addEventListener('keydown', stableHandlers.current.onDragKeyDown, true)
   }, [readOnly, positionById])
 
   const announceStep = useCallback((itemId: string, position: BoardPosition) => {
     const item = items.find((candidate) => candidate.id === itemId)
     if (!item) return
     const total = columnLengthWith(position.columnId, itemId)
-    setAnnouncement(labels.boardStep?.(getItemLabel(item), position.index + 1, total, columnLabel(position.columnId)) ?? '')
+    setAnnouncement(labels.boardStep(getItemLabel(item), position.index + 1, total, columnLabel(position.columnId)))
   }, [items, columnLengthWith, labels, getItemLabel, columnLabel])
 
   const pickUp = useCallback((itemId: string) => {
@@ -317,72 +355,71 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     const item = items.find((candidate) => candidate.id === itemId)
     if (!from || !item) return
 
-    setActiveMove({ itemId, from, to: from, via: 'keyboard' })
+    setActiveMove({ itemId, from, to: from, via: 'keyboard', withinTrack: true })
     const total = itemsByColumn.get(from.columnId)?.length ?? 0
-    const pickedUp = labels.boardPickedUp?.(getItemLabel(item), from.index + 1, total, columnLabel(from.columnId)) ?? ''
-    setAnnouncement(`${pickedUp} ${labels.boardInstructions ?? ''}`.trim())
+    const pickedUp = labels.boardPickedUp(getItemLabel(item), from.index + 1, total, columnLabel(from.columnId))
+    setAnnouncement(`${pickedUp} ${labels.boardPickedUpInstructions}`.trim())
   }, [readOnly, positionById, items, itemsByColumn, labels, getItemLabel, columnLabel])
 
   const moveWithinColumn = useCallback((step: number) => {
-    setActiveMove((current) => {
-      if (!current || current.via !== 'keyboard') return current
-      const list = itemsByColumn.get(current.to.columnId) ?? []
-      const nextIndex = Math.min(Math.max(current.to.index + step, 0), Math.max(list.length - 1, 0))
-      if (nextIndex === current.to.index) return current
-      const next = { columnId: current.to.columnId, index: nextIndex }
-      announceStep(current.itemId, next)
-      return { ...current, to: next }
-    })
-  }, [itemsByColumn, announceStep])
+    const current = activeMoveRef.current
+    if (!current || current.via !== 'keyboard') return
+    const length = columnLengthWith(current.to.columnId, current.itemId)
+    const nextIndex = Math.min(Math.max(current.to.index + step, 0), Math.max(length - 1, 0))
+    if (nextIndex === current.to.index) return
+    const next = { columnId: current.to.columnId, index: nextIndex }
+    announceStep(current.itemId, next)
+    setActiveMove({ ...current, to: next })
+  }, [columnLengthWith, announceStep])
 
   const jumpWithinColumn = useCallback((edge: 'start' | 'end') => {
-    setActiveMove((current) => {
-      if (!current || current.via !== 'keyboard') return current
-      const list = itemsByColumn.get(current.to.columnId) ?? []
-      const nextIndex = edge === 'start' ? 0 : Math.max(list.length - 1, 0)
-      if (nextIndex === current.to.index) return current
-      const next = { columnId: current.to.columnId, index: nextIndex }
-      announceStep(current.itemId, next)
-      return { ...current, to: next }
-    })
-  }, [itemsByColumn, announceStep])
+    const current = activeMoveRef.current
+    if (!current || current.via !== 'keyboard') return
+    const length = columnLengthWith(current.to.columnId, current.itemId)
+    const nextIndex = edge === 'start' ? 0 : Math.max(length - 1, 0)
+    if (nextIndex === current.to.index) return
+    const next = { columnId: current.to.columnId, index: nextIndex }
+    announceStep(current.itemId, next)
+    setActiveMove({ ...current, to: next })
+  }, [columnLengthWith, announceStep])
 
   const moveToAdjacentColumn = useCallback((step: 1 | -1) => {
-    setActiveMove((current) => {
-      if (!current || current.via !== 'keyboard') return current
-      const order = columns.map((column) => column.id)
-      const fromIndex = order.indexOf(current.to.columnId)
-      const targetIndex = fromIndex + step
-      if (targetIndex < 0 || targetIndex >= order.length) return current
+    const current = activeMoveRef.current
+    if (!current || current.via !== 'keyboard') return
+    const order = columns.map((column) => column.id)
+    const fromIndex = order.indexOf(current.to.columnId)
+    const targetIndex = fromIndex + step
+    if (targetIndex < 0 || targetIndex >= order.length) return
 
-      const targetColumnId = order[targetIndex]
-      const nativeLength = itemsByColumn.get(targetColumnId)?.length ?? 0
-      const nextIndex = sortable ? Math.min(current.to.index, nativeLength) : nativeLength
-      const next = { columnId: targetColumnId, index: nextIndex }
+    const targetColumnId = order[targetIndex]
+    const nativeLength = itemsByColumn.get(targetColumnId)?.length ?? 0
+    const nextIndex = sortable ? Math.min(current.to.index, nativeLength) : nativeLength
+    const next = { columnId: targetColumnId, index: nextIndex }
 
-      pendingFocusRef.current = { id: current.itemId, kind: 'handle' }
-      announceStep(current.itemId, next)
-      return { ...current, to: next }
-    })
+    pendingFocusRef.current = { id: current.itemId, kind: 'handle' }
+    announceStep(current.itemId, next)
+    setActiveMove({ ...current, to: next })
   }, [columns, itemsByColumn, sortable, announceStep])
 
   const drop = useCallback(() => {
-    setActiveMove((current) => {
-      if (!current || current.via !== 'keyboard') return current
-      const item = items.find((candidate) => candidate.id === current.itemId)
-      if (!item) return null
+    const current = activeMoveRef.current
+    if (!current || current.via !== 'keyboard') return
+    const item = items.find((candidate) => candidate.id === current.itemId)
+    if (!item) {
+      setActiveMove(null)
+      return
+    }
 
-      const changed = current.to.columnId !== current.from.columnId || current.to.index !== current.from.index
+    const changed = current.to.columnId !== current.from.columnId || current.to.index !== current.from.index
 
-      if (changed) {
-        if (current.from.columnId !== current.to.columnId) pendingFocusRef.current = { id: current.itemId, kind: 'handle' }
-        onMove({ item, from: current.from, to: current.to })
-      }
+    if (changed) {
+      if (current.from.columnId !== current.to.columnId) pendingFocusRef.current = { id: current.itemId, kind: 'handle' }
+      onMove({ item, from: current.from, to: current.to })
+    }
 
-      const total = columnLengthWith(current.to.columnId, current.itemId)
-      setAnnouncement(labels.boardDropped?.(getItemLabel(item), current.to.index + 1, total, columnLabel(current.to.columnId)) ?? '')
-      return null
-    })
+    const total = columnLengthWith(current.to.columnId, current.itemId)
+    setAnnouncement(labels.boardDropped(getItemLabel(item), current.to.index + 1, total, columnLabel(current.to.columnId)))
+    setActiveMove(null)
   }, [items, onMove, columnLengthWith, labels, getItemLabel, columnLabel])
 
   const moveViaMenu = useCallback((itemId: string, targetColumnId: string) => {
@@ -390,12 +427,13 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     const item = items.find((candidate) => candidate.id === itemId)
     if (!from || !item || from.columnId === targetColumnId) return
 
-    const to = { columnId: targetColumnId, index: 0 }
+    const targetLength = itemsByColumn.get(targetColumnId)?.length ?? 0
+    const to = { columnId: targetColumnId, index: sortable ? 0 : targetLength }
     pendingFocusRef.current = { id: itemId, kind: 'menu' }
     onMove({ item, from, to })
     const total = columnLengthWith(targetColumnId, itemId)
-    setAnnouncement(labels.boardMovedByMenu?.(getItemLabel(item), 1, total, columnLabel(targetColumnId)) ?? '')
-  }, [positionById, items, onMove, columnLengthWith, labels, getItemLabel, columnLabel])
+    setAnnouncement(labels.boardMovedByMenu(getItemLabel(item), to.index + 1, total, columnLabel(targetColumnId)))
+  }, [positionById, items, itemsByColumn, sortable, onMove, columnLengthWith, labels, getItemLabel, columnLabel])
 
   const moveBySteps = useCallback((itemId: string, step: number) => {
     const from = positionById.get(itemId)
@@ -408,7 +446,7 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
 
     const to = { columnId: from.columnId, index }
     onMove({ item, from, to })
-    setAnnouncement(labels.boardMovedByMenu?.(getItemLabel(item), index + 1, list.length, columnLabel(from.columnId)) ?? '')
+    setAnnouncement(labels.boardMovedByMenu(getItemLabel(item), index + 1, list.length, columnLabel(from.columnId)))
   }, [positionById, items, itemsByColumn, onMove, labels, getItemLabel, columnLabel])
 
   useLayoutEffect(() => {
@@ -449,6 +487,7 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       drop()
     } else if (event.key === 'Escape') {
       event.preventDefault()
+      event.stopPropagation()
       cancel()
     } else if (event.key === 'ArrowUp' && sortable) {
       event.preventDefault()
@@ -472,8 +511,10 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
   }, [readOnly, activeMove, dir, sortable, pickUp, drop, cancel, moveWithinColumn, jumpWithinColumn, moveToAdjacentColumn])
 
   const handleBlur = useCallback((itemId: string) => () => {
-    if (activeMove?.itemId === itemId && activeMove.via === 'keyboard') cancel()
-  }, [activeMove, cancel])
+    if (pendingFocusRef.current) return
+    const current = activeMoveRef.current
+    if (current?.itemId === itemId && current.via === 'keyboard') cancel()
+  }, [cancel])
 
   const getHandleRef = useCallback((itemId: string): RefCallback<HTMLButtonElement> => (node) => {
     if (node) handleRefs.current.set(itemId, node)
@@ -542,14 +583,14 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       entries.push({
         kind: 'move',
         id: '__move-up__',
-        label: labels.boardMoveUp ?? '',
+        label: labels.boardMoveUp,
         disabled: position.index === 0,
         onSelect: () => moveBySteps(itemId, -1)
       })
       entries.push({
         kind: 'move',
         id: '__move-down__',
-        label: labels.boardMoveDown ?? '',
+        label: labels.boardMoveDown,
         disabled: position.index === list.length - 1,
         onSelect: () => moveBySteps(itemId, 1)
       })
@@ -577,8 +618,10 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       }
     }
 
+    const isDropTarget = activeMove !== null && activeMove.withinTrack && column.id === activeMove.to.columnId
+
     let linePosition: number | null = null
-    if (activeMove?.via === 'pointer' && column.id === activeMove.to.columnId) {
+    if (activeMove?.via === 'pointer' && activeMove.withinTrack && sortable && column.id === activeMove.to.columnId) {
       let count = 0
       linePosition = cards.length
       for (let i = 0; i < cards.length; i += 1) {
@@ -591,13 +634,8 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       }
     }
 
-    return {
-      column,
-      cards,
-      isDropTarget: activeMove !== null && column.id === activeMove.to.columnId,
-      linePosition
-    }
-  }), [columns, itemsByColumn, items, activeMove])
+    return { column, cards, isDropTarget, linePosition }
+  }), [columns, itemsByColumn, items, activeMove, sortable])
 
   const getColumnListRef = useCallback((columnId: string): RefCallback<HTMLUListElement> => (node) => {
     if (node) columnListRefs.current.set(columnId, node)
@@ -612,8 +650,8 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     dragging: activeMove?.via === 'pointer',
     readOnly,
     sortable,
+    labels: labels satisfies BoardLabels,
     instructionsId,
-    instructionsText: labels.boardInstructions ?? '',
     liveRegionText: announcement,
     draggingItem,
     columns: columnViews,
