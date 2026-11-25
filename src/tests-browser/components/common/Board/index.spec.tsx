@@ -283,11 +283,12 @@ describe('Board in a real browser', () => {
     )
 
     const track = part('board-track').getBoundingClientRect()
+    const doingColumn = part('board-column', 1).getBoundingClientRect()
 
     await pressMouse('[data-slot="board-handle"]')
-    await moveMouse(track.left + 100, track.top + 40, 6)
+    await moveMouse(doingColumn.left + 20, doingColumn.top + 40, 6)
     await frames(2)
-    expect(part('board-column', 0).hasAttribute('data-target')).toBe(true)
+    expect(part('board-column', 1).hasAttribute('data-target')).toBe(true)
 
     await moveMouse(track.left + 100, track.bottom + 200, 6)
     await frames(2)
@@ -298,5 +299,42 @@ describe('Board in a real browser', () => {
     await frames(2)
     expect(onMove).not.toHaveBeenCalled()
     expect(cardTitle(0)).toBe('Revisar PR')
+  })
+
+  it('does not highlight the origin column when sortable is false, since dropping there never moves the card', async () => {
+    renderInBrowser(<TestBoard sortable={false} />)
+
+    const target = cards()[1].getBoundingClientRect()
+    await pressMouse('[data-slot="board-handle"]')
+    await moveMouse(target.left + target.width / 2, target.top + 10, 6)
+    await frames(2)
+
+    expect(document.querySelector('[data-target]')).toBeFalsy()
+  })
+
+  it('keeps the card content the same width in the drag copy, so it wraps the same way', async () => {
+    renderInBrowser(<TestBoard />)
+    const originalWidth = part('board-card-content').getBoundingClientRect().width
+
+    await pressMouse('[data-slot="board-handle"]')
+    await moveMouse(200, 160, 6)
+    await frames(2)
+
+    const copyContent = document.querySelector('[data-slot="board-drag-copy-content"]') as HTMLElement
+    expect(Math.abs(copyContent.getBoundingClientRect().width - originalWidth)).toBeLessThan(3)
+  })
+
+  it('cleans up the window listeners, the auto-scroll loop and the dragging attribute when it unmounts mid-drag', async () => {
+    const { unmount } = renderInBrowser(<TestBoard />)
+
+    await pressMouse('[data-slot="board-handle"]')
+    await moveMouse(200, 160, 6)
+    await frames(2)
+    expect(document.documentElement.hasAttribute('data-enchase-board-dragging')).toBe(true)
+
+    unmount()
+    await frames(2)
+
+    expect(document.documentElement.hasAttribute('data-enchase-board-dragging')).toBe(false)
   })
 })
