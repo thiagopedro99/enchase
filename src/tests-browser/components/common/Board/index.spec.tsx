@@ -71,7 +71,14 @@ const cardTitle = (index: number) => cards()[index].textContent
 
 afterEach(async () => {
   await setForcedColors('none')
+  await letGoOfTheMouse()
 })
+
+const selectionIsOff = () => {
+  const style = getComputedStyle(document.documentElement)
+
+  return style.userSelect === 'none' || style.getPropertyValue('-webkit-user-select') === 'none'
+}
 
 describe('Board in a real browser', () => {
   it('drags a card below another one within its own column', async () => {
@@ -240,17 +247,18 @@ describe('Board in a real browser', () => {
 
     expect(getComputedStyle(cards()[0]).cursor).toBe('grab')
     expect(getComputedStyle(cards()[0]).userSelect).not.toBe('none')
+    expect(selectionIsOff()).toBe(false)
 
     await pressMouse('[data-slot="board-handle"]')
     await moveMouse(200, 160, 6)
     await frames(2)
 
-    expect(getComputedStyle(cards()[0]).userSelect).toBe('none')
-    expect(getComputedStyle(cards()[1]).userSelect).toBe('none')
+    expect(selectionIsOff()).toBe(true)
 
     await releaseMouse()
     await frames(2)
 
+    expect(selectionIsOff()).toBe(false)
     expect(getComputedStyle(cards()[0]).userSelect).not.toBe('none')
   })
 
