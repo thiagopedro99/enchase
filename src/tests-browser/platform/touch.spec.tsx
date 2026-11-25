@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { describe, expect } from 'vitest'
 import { page } from 'vitest/browser'
 
+import { Board } from '@components/common/Board/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import { Card } from '@components/common/Card/index.tsx'
 import { CardButton } from '@components/common/CardButton/index.tsx'
@@ -471,6 +472,101 @@ describe('the sort buttons of the table on a touch device in a real browser', ()
       await page.elementLocator(second).click()
 
       await expect.poll(() => calls).toEqual([{ key: 'customer', direction: 'ascending' }])
+    } finally {
+      await disableTouch()
+    }
+  })
+})
+
+describe('the board on a touch device in a real browser', () => {
+  type Item = { id: string; columnId: string; title: string }
+
+  const columns = [
+    { id: 'todo', title: 'A fazer' },
+    { id: 'doing', title: 'Em andamento' }
+  ]
+
+  const initialItems: Item[] = [
+    { id: '1', columnId: 'todo', title: 'Revisar PR' },
+    { id: '2', columnId: 'todo', title: 'Escrever testes' }
+  ]
+
+  const BoardPage = () => {
+    const [items, setItems] = useState(initialItems)
+
+    return (
+      <Board<Item>
+        columns={columns}
+        items={items}
+        onMove={(move) =>
+          setItems((current) => {
+            const without = current.filter((item) => item.id !== move.item.id)
+            const target = without.filter((item) => item.columnId === move.to.columnId)
+            const rest = without.filter((item) => item.columnId !== move.to.columnId)
+            target.splice(move.to.index, 0, { ...move.item, columnId: move.to.columnId })
+            return move.to.columnId === move.from.columnId ? target : [...rest, ...target]
+          })
+        }
+        renderCard={(item) => <p>{item.title}</p>}
+        getItemLabel={(item) => item.title}
+      />
+    )
+  }
+
+  const cardTitle = (index: number) => parts('board-card')[index].textContent
+
+  touchCapable('touchEmulation')('only the handle has touch-action none, so the card body can still be scrolled', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(<BoardPage />)
+
+      expect(getComputedStyle(part('board-handle')).touchAction).toBe('none')
+      expect(getComputedStyle(part('board-card')).touchAction).toBe('auto')
+    } finally {
+      await disableTouch()
+    }
+  })
+
+  chromiumOnly('touchEmulation')('drags a card with a finger on the handle', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(<BoardPage />)
+      const handleBox = part('board-handle').getBoundingClientRect()
+      const targetBox = parts('board-card')[1].getBoundingClientRect()
+
+      await dragFinger([
+        { x: handleBox.left + handleBox.width / 2, y: handleBox.top + handleBox.height / 2 },
+        { x: targetBox.left + targetBox.width / 2, y: targetBox.top + 4 },
+        { x: targetBox.left + targetBox.width / 2, y: targetBox.top + targetBox.height - 2 }
+      ])
+      await frames(2)
+
+      expect(cardTitle(0)).toBe('Escrever testes')
+      expect(cardTitle(1)).toBe('Revisar PR')
+    } finally {
+      await disableTouch()
+    }
+  })
+
+  chromiumOnly('touchEmulation')('leaves the card alone when a finger swipes up the page from its body, and the page scrolls', async () => {
+    await enableTouch()
+    try {
+      renderInBrowser(
+        <div style={{ blockSize: 3000, paddingBlockStart: 400 }}>
+          <BoardPage />
+        </div>
+      )
+      window.scrollTo(0, 300)
+      await frames(2)
+
+      const body = part('board-card-content').getBoundingClientRect()
+      const start = { x: body.left + body.width / 2, y: body.top + body.height / 2 }
+
+      await dragFinger([start, { x: start.x + 2, y: start.y - 30 }, { x: start.x + 4, y: start.y - 90 }, { x: start.x + 4, y: start.y - 160 }])
+      await frames(4)
+
+      expect(cardTitle(0)).toBe('Revisar PR')
+      expect(window.scrollY).toBeGreaterThan(300)
     } finally {
       await disableTouch()
     }
