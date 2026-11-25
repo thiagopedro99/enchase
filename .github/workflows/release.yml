@@ -21,7 +21,7 @@ jobs:
       tag: ${{ steps.decide.outputs.tag }}
       prerelease: ${{ steps.decide.outputs.prerelease }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v5
         with:
           node-version: 24
@@ -51,7 +51,7 @@ jobs:
       PRERELEASE: ${{ needs.decide.outputs.prerelease }}
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v5
         with:
           node-version: 24
