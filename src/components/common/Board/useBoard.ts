@@ -1,4 +1,4 @@
-import { useCallback, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
 
 import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { boardLabelsFor } from './locales.ts'
@@ -19,6 +19,7 @@ type DragState = {
   offsetX: number
   offsetY: number
   width: number
+  menuWidth: number
   thresholdCrossed: boolean
 }
 
@@ -249,6 +250,7 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     copyRef.current?.style.removeProperty('--board-drag-x')
     copyRef.current?.style.removeProperty('--board-drag-y')
     copyRef.current?.style.removeProperty('--board-drag-width')
+    copyRef.current?.style.removeProperty('--board-drag-menu-width')
     document.documentElement.removeAttribute(draggingAttribute)
 
     const current = activeMoveRef.current
@@ -292,6 +294,7 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       copyRef.current.style.setProperty('--board-drag-x', `${event.clientX - drag.offsetX}px`)
       copyRef.current.style.setProperty('--board-drag-y', `${event.clientY - drag.offsetY}px`)
       copyRef.current.style.setProperty('--board-drag-width', `${drag.width}px`)
+      copyRef.current.style.setProperty('--board-drag-menu-width', `${drag.menuWidth}px`)
     }
 
     updateTarget(event.clientX, event.clientY)
@@ -322,6 +325,7 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
 
     const cardNode = cardRefs.current.get(itemId)
     const rect = cardNode?.getBoundingClientRect()
+    const menuWidth = menuButtonRefs.current.get(itemId)?.getBoundingClientRect().width ?? 0
 
     dragRef.current = {
       pointerId: event.pointerId,
@@ -332,6 +336,7 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       offsetX: rect ? event.clientX - rect.left : 0,
       offsetY: rect ? event.clientY - rect.top : 0,
       width: rect?.width ?? 0,
+      menuWidth,
       thresholdCrossed: false
     }
     pointerRef.current = { x: event.clientX, y: event.clientY }
@@ -466,6 +471,13 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       pendingFocusRef.current = null
     }
   })
+
+  useEffect(() => () => {
+    if (!dragRef.current) return
+    stopAutoScroll()
+    detachDragListeners()
+    document.documentElement.removeAttribute(draggingAttribute)
+  }, [stopAutoScroll, detachDragListeners])
 
   const handleKeyDown = useCallback((itemId: string) => (event: ReactKeyboardEvent<HTMLButtonElement>) => {
     if (readOnly) return
@@ -618,10 +630,11 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       }
     }
 
-    const isDropTarget = activeMove !== null && activeMove.withinTrack && column.id === activeMove.to.columnId
+    const movedFromStart = activeMove !== null && (activeMove.to.columnId !== activeMove.from.columnId || activeMove.to.index !== activeMove.from.index)
+    const isDropTarget = activeMove !== null && activeMove.withinTrack && movedFromStart && column.id === activeMove.to.columnId
 
     let linePosition: number | null = null
-    if (activeMove?.via === 'pointer' && activeMove.withinTrack && sortable && column.id === activeMove.to.columnId) {
+    if (activeMove?.via === 'pointer' && activeMove.withinTrack && movedFromStart && sortable && column.id === activeMove.to.columnId) {
       let count = 0
       linePosition = cards.length
       for (let i = 0; i < cards.length; i += 1) {
