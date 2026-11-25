@@ -9,6 +9,8 @@ import { renderInBrowser } from '../../../support/harness.tsx'
 import { part, parts } from '../../../support/hookProbes.ts'
 import { letGoOfTheMouse, moveMouse, parkMouse, pressMouse, releaseMouse } from '../../../support/pointer.ts'
 import { frames } from '../../../support/settle.ts'
+import { setForcedColors } from '../../../support/media.ts'
+import { unlessWebkit } from '../../../support/browserSkips.ts'
 
 import type { BoardColumn, BoardMove } from '@components/common/Board/types.ts'
 
@@ -141,6 +143,21 @@ describe('Board in a real browser', () => {
     expect(onMove).not.toHaveBeenCalled()
     expect(root().hasAttribute('data-dragging')).toBe(false)
     expect(cardTitle(0)).toBe('Revisar PR')
+  })
+
+  const forcedColors = unlessWebkit('forcedColors') ? it : it.skip
+
+  forcedColors('keeps the picked handle distinguishable in forced colors', async () => {
+    renderInBrowser(<TestBoard />)
+
+    handle(0).focus()
+    await userEvent.keyboard(' ')
+    const before = getComputedStyle(handle(0)).backgroundColor
+
+    await setForcedColors('active')
+    await frames(2)
+
+    expect(getComputedStyle(handle(0)).backgroundColor).not.toBe(before)
   })
 
   it('reverses the arrow keys for a column swap in RTL', async () => {
