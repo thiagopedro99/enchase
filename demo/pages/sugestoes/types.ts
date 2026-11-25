@@ -40,3 +40,22 @@ export interface Filters {
 export type SuggestionsResult = { ok: true; items: Suggestion[] } | { ok: false; limited: boolean }
 
 export type SuggestionsState = { status: 'loading' } | { status: 'ready'; items: Suggestion[] } | { status: 'error'; limited: boolean }
+
+export interface Viewer {
+  login: string
+  avatarUrl: string
+}
+
+export type AccountState = { status: 'unavailable' } | { status: 'anonymous' } | { status: 'signed'; user: Viewer; voted: number[] }
+
+export type VoteResult = 'ok' | 'signedOut' | 'limited' | 'failed'
+
+export type VotingMode = 'off' | 'anonymous' | 'signed'
+
+export interface Voting {
+  mode: VotingMode
+  voted: number[]
+  deltas: Record<number, number>
+  pending: number[]
+  onVote: (suggestion: Suggestion) => void
+}

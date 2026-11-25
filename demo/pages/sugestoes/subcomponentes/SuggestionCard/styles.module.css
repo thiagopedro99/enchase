@@ -1,3 +1,7 @@
+.item {
+  position: relative;
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -97,11 +101,19 @@
 }
 
 .votes {
-  padding: 0.125rem 0.5rem;
+  box-sizing: border-box;
+  min-block-size: 1.75rem;
+  padding: 0.125rem 0.625rem;
+  border: var(--enchase-border-width) solid transparent;
   border-radius: var(--enchase-radius-full);
   background: var(--enchase-color-surface-container);
   font-weight: var(--enchase-font-weight-semibold);
+  line-height: 1.5;
   color: var(--enchase-color-text-primary);
+}
+
+.votes[data-covered] {
+  visibility: hidden;
 }
 
 .number {

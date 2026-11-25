@@ -2,7 +2,9 @@ import { Badge, CardLink, Tag, VisuallyHidden } from 'enchase'
 import { useId } from 'react'
 
 import { CommentIcon, ThumbsUpIcon } from '../../../../components/icons.tsx'
-import { kindLabels } from '../../defaultData.ts'
+import { kindLabels, votable } from '../../defaultData.ts'
+import VoteButton from '../VoteButton/index.tsx'
+import { useVoting } from '../../voting.ts'
 import styles from './styles.module.css'
 import { ageOf } from '../../columns.ts'
 
@@ -12,12 +14,16 @@ const count = (value: number, one: string, many: string) => `${value} ${value ==
 
 const details = (votes: number, comments: number, id: number) => `${count(votes, 'voto', 'votos')}, ${count(comments, 'comentário', 'comentários')}, issue ${id}`
 
-const SuggestionCard = ({ suggestion: { id, url, title, text, kind, area, votes, comments, createdAt, version, reason } }: SuggestionCardProps) => {
+const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
+  const { id, url, title, text, kind, area, comments, status, createdAt, version, reason } = suggestion
+  const { mode, voted, deltas, pending, onVote } = useVoting()
   const titleId = useId()
   const detailsId = useId()
+  const votes = Math.max(0, suggestion.votes + (deltas[id] ?? 0))
+  const canVote = mode !== 'off' && votable.includes(status)
 
   return (
-    <li>
+    <li className={styles.item}>
       <CardLink href={url} target="_blank" variant="outlined" padding="0" className={styles.card} aria-labelledby={titleId} aria-describedby={detailsId}>
         <span className={styles.meta}>
           <span className={styles.kind} data-kind={kind}>
@@ -46,7 +52,7 @@ const SuggestionCard = ({ suggestion: { id, url, title, text, kind, area, votes,
           </span>
         )}
         <span className={styles.footer} aria-hidden="true">
-          <span className={styles.votes}>
+          <span className={styles.votes} {...(canVote ? { 'data-covered': '' } : {})}>
             <ThumbsUpIcon size={14} />
             {votes}
           </span>
@@ -58,6 +64,7 @@ const SuggestionCard = ({ suggestion: { id, url, title, text, kind, area, votes,
         </span>
         <VisuallyHidden id={detailsId}>{details(votes, comments, id)}</VisuallyHidden>
       </CardLink>
+      {canVote && <VoteButton title={title} votes={votes} voted={voted.includes(id)} signed={mode === 'signed'} pending={pending.includes(id)} onVote={() => onVote(suggestion)} />}
     </li>
   )
 }

@@ -8,23 +8,34 @@ const cacheKey = 'enchase-suggestions'
 
 const cacheLife = 5 * 60 * 1000
 
-const readCache = (): Suggestion[] | null => {
+const readStored = (): { at: number; items: Suggestion[] } | null => {
   try {
     const stored = window.sessionStorage.getItem(cacheKey)
     const { at, items } = stored ? JSON.parse(stored) : { at: 0, items: null }
 
-    return Array.isArray(items) && Date.now() - at < cacheLife ? items : null
+    return Array.isArray(items) && Date.now() - at < cacheLife ? { at, items } : null
   } catch {
     return null
   }
 }
 
-const writeCache = (items: Suggestion[]) => {
+const readCache = () => readStored()?.items ?? null
+
+const writeCache = (items: Suggestion[], at = Date.now()) => {
   try {
-    window.sessionStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), items }))
+    window.sessionStorage.setItem(cacheKey, JSON.stringify({ at, items }))
   } catch {
     return
   }
+}
+
+export const patchVotes = (id: number, delta: number) => {
+  const stored = readStored()
+
+  if (stored) writeCache(
+    stored.items.map((item) => (item.id === id ? { ...item, votes: Math.max(0, item.votes + delta) } : item)),
+    stored.at
+  )
 }
 
 const isJson = (response: Response) => response.ok && (response.headers.get('Content-Type') ?? '').includes('application/json')

@@ -6,6 +6,7 @@ import { axe } from '@tests/axe.ts'
 
 import { commentsEndpoint, issuesEndpoint, plainText, reasonsOf, toSuggestion } from '@demo/pages/sugestoes/github.ts'
 import { apiEndpoint } from '@demo/pages/sugestoes/loadSuggestions.ts'
+import { sessionEndpoint } from '@demo/pages/sugestoes/account.ts'
 import { ageOf, columnsOf, totalOf } from '@demo/pages/sugestoes/columns.ts'
 import { defaultFilters } from '@demo/pages/sugestoes/defaultData.ts'
 import Sugestoes from '@demo/pages/sugestoes/index.tsx'
@@ -66,7 +67,9 @@ const serve = (items: GithubIssue[] = issues) =>
     return reply({}, 404)
   })
 
-const renderPage = () => renderWithProviders(<Sugestoes />, { route: '/sugestoes' })
+const asked = (fetcher: { mock: { calls: unknown[][] } }) => fetcher.mock.calls.map(([input]) => String(input)).filter((url) => url !== sessionEndpoint)
+
+const renderPage = () => renderWithProviders(<Sugestoes />, { route: '/sugestoes', toasts: true })
 
 const openTab = async (user: ReturnType<typeof userEvent.setup>, name: RegExp) => user.click(await screen.findByRole('tab', { name }))
 
@@ -139,7 +142,7 @@ describe('Suggestions page', () => {
 
     expect(await screen.findByRole('link', { name: 'Code block' })).toBeInTheDocument()
     expect(screen.getByText('2 sugestões')).toBeInTheDocument()
-    expect(fetcher.mock.calls.map(([input]) => String(input))).toEqual([apiEndpoint])
+    expect(asked(fetcher)).toEqual([apiEndpoint])
   })
 
   it.each([
@@ -156,14 +159,14 @@ describe('Suggestions page', () => {
 
     expect(await screen.findByRole('link', { name: 'Code block' })).toBeInTheDocument()
     expect(screen.getByText('8 sugestões')).toBeInTheDocument()
-    expect(fetcher.mock.calls.map(([input]) => String(input))).toEqual([apiEndpoint, issuesEndpoint, commentsEndpoint])
+    expect(asked(fetcher)).toEqual([apiEndpoint, issuesEndpoint, commentsEndpoint])
   })
 
   it('announces the loading and then draws the board', async () => {
     vi.stubGlobal('fetch', serve())
     renderPage()
 
-    expect(screen.getByRole('status')).toHaveTextContent('Carregando as sugestões')
+    expect(screen.getByText('Carregando as sugestões').closest('[role="status"]')).toBeInTheDocument()
     expect(await screen.findByRole('tab', { name: /Em análise/ })).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByRole('link', { name: 'Code block' })).toHaveAttribute('href', 'https://github.com/thiagopedro99/enchase/issues/1')
     expect(screen.getByText('8 sugestões')).toBeInTheDocument()
@@ -245,7 +248,7 @@ describe('Suggestions page', () => {
     vi.stubGlobal('fetch', fetcher)
     renderPage()
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('O GitHub limitou as consultas')
+    expect((await screen.findByText(/O GitHub limitou as consultas/)).closest('[role="alert"]')).toBeInTheDocument()
 
     fetcher.mockImplementation(serve())
     await user.click(screen.getByRole('button', { name: 'Tentar de novo' }))
@@ -260,7 +263,7 @@ describe('Suggestions page', () => {
     )
     renderPage()
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('A consulta ao GitHub falhou')
+    expect((await screen.findByText(/A consulta ao GitHub falhou/)).closest('[role="alert"]')).toBeInTheDocument()
   })
 
   it('asks GitHub once and reuses the answer for the next visit', async () => {

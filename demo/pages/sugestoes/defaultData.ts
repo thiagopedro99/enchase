@@ -1,4 +1,4 @@
-import type { Filters, Kind, KindFilter, Sort, StatusInfo } from './types.ts'
+import type { Filters, Kind, KindFilter, Sort, Status, StatusInfo, VoteResult } from './types.ts'
 
 export const statuses: StatusInfo[] = [
   { value: 'analise', label: 'Em análise', text: 'Chegou e ainda vamos avaliar.' },
@@ -37,3 +37,12 @@ export const steps = [
   { title: 'Vote com 👍', text: 'As mais votadas sobem dentro de cada coluna.' },
   { title: 'Acompanhe o card', text: 'Ele anda de Em análise até Lançado, ou recebe o motivo da recusa.' }
 ]
+
+export const votable: Status[] = ['analise', 'backlog', 'desenvolvimento']
+
+export const voteMessages: Record<Exclude<VoteResult, 'ok'> | 'logout', string> = {
+  signedOut: 'Sua sessão terminou. Entre de novo para votar.',
+  limited: 'Muitos votos em pouco tempo. Espere um minuto e tente de novo.',
+  failed: 'Não foi possível registrar o voto. Tente de novo.',
+  logout: 'Não foi possível sair. Tente de novo.'
+}
