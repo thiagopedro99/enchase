@@ -39,7 +39,25 @@ export const ptBR: Locale = {
     previousMonth: 'Mês anterior',
     nextMonth: 'Próximo mês',
     openCalendar: 'Abrir calendário',
-    chooseDate: 'Escolher data'
+    chooseDate: 'Escolher data',
+    board: 'Quadro',
+    boardMoveCard: (card: string) => `Mover ${card}`,
+    boardMoveCardTo: (card: string) => `Mover ${card} para`,
+    boardInstructions: 'Setas movem, espaço solta, Esc cancela.',
+    boardMoveUp: 'Subir uma posição',
+    boardMoveDown: 'Descer uma posição',
+    boardEmptyColumn: 'Solte um cartão aqui',
+    boardEmptyColumnReadOnly: 'Nenhum cartão',
+    boardCardCount: (count: number) => `${count} ${count === 1 ? 'cartão' : 'cartões'}`,
+    boardPickedUp: (card: string, position: number, total: number, column: string) =>
+      `${card} pego, posição ${position} de ${total} em ${column}.`,
+    boardStep: (card: string, position: number, total: number, column: string) =>
+      `${card}: posição ${position} de ${total} em ${column}.`,
+    boardDropped: (card: string, position: number, total: number, column: string) =>
+      `${card} solto: posição ${position} de ${total} em ${column}.`,
+    boardCancelled: (card: string, column: string) => `Movimento cancelado. ${card} voltou para ${column}.`,
+    boardMovedByMenu: (card: string, position: number, total: number, column: string) =>
+      `${card} movido: posição ${position} de ${total} em ${column}.`
   }
 }
 
