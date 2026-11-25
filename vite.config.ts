@@ -29,6 +29,7 @@ export default defineConfig({
       '@motion': resolve(__dirname, './src/motion'),
       '@tests': resolve(__dirname, './src/tests'),
       '@demo': resolve(__dirname, './demo'),
+      '@worker': resolve(__dirname, './worker/src'),
       '@docs': resolve(__dirname, './src/docs'),
       '@locales': resolve(__dirname, './src/locales'),
     },

@@ -62,15 +62,15 @@ The CI (`package.yml` and `browser-tests.yml`) runs on every push to `dev` and o
 
 ## Suggestions board
 
-The page `/sugestoes` of the site reads the issues of this repository from the public GitHub API and draws one card per issue. Nothing is stored on the site: you move a card by changing the issue.
+The page `/sugestoes` of the site reads the issues of this repository and draws one card per issue. Nothing is stored on the site: you move a card by changing the issue.
 
 - **What goes on the board:** every issue with the label `enhancement` or `bug`. The two issue templates add the label on their own.
-- **Column:** an open issue is under analysis; the label `backlog` moves it to the backlog and the label `in progress` to in development. Closing it as completed moves it to released, and closing it as not planned, or the label `wontfix`, moves it to the column of what will not be done. The labels `backlog` and `in progress` do not come with a new repository: create them once.
+- **Column:** an open issue is under analysis; the label `backlog` moves it to the backlog and the label `in progress` to in development. A closed issue with a milestone is released, and the label `wontfix` moves an issue, open or closed, to the column of what will not be done. A closed issue with neither leaves the board: the author of an issue can close it, but only a maintainer sets a milestone or a label, so closing an issue is never enough to move its card. The labels `backlog` and `in progress` do not come with a new repository: create them once.
 - **Card:** the label `component` marks a request for a new component, `bug` marks a fix, and anything else is an improvement. A label that starts with `area:`, such as `area: Table`, names the component on the card. The votes are the 👍 reactions of the issue.
-- **Released in:** the milestone of a closed issue, such as `v0.23.0`, is the version that the card shows.
+- **Released in:** the milestone of a closed issue, such as `v0.23.0`, is the version that the card shows, so set it before you close the issue.
 - **Reason:** a card of what will not be done shows the latest comment that a maintainer wrote on the issue, so say why in a comment when you close it.
 
-The site asks GitHub once every five minutes for each visitor and keeps the answer for the tab. Without a token, GitHub allows a limited number of requests per hour from each network address, and the page says so when the limit is reached.
+The page asks the API of the site first, `GET /api/suggestions`: a Cloudflare Worker, in `worker/`, that reads GitHub as a GitHub App and keeps the answer for one minute. When the API does not answer with the list, the page reads the public GitHub API from the browser. Without a token, GitHub allows a limited number of requests per hour from each network address, and the page says so when the limit is reached. Either way, the tab keeps the answer for five minutes. `worker/README.md` says how to set the Worker up and how to deploy it.
 
 The page `/novidades` is written by hand in `demo/pages/novidades/defaultData.ts`, in Portuguese, from the notes of `CHANGELOG.md`. A test fails when the version of `package.json` has no entry there, so write the entry in the release commit.
 

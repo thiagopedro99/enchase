@@ -35,3 +35,6 @@ storybook-static
 .vitest/
 eject
 .eject-contract
+
+.wrangler
+.dev.vars
