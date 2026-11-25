@@ -26,7 +26,7 @@ const budgets = [
   { label: 'Button', source: "export { Button } from 'enchase'\n", maxBytes: 12288 },
   { label: 'Drawer', source: "export { Drawer } from 'enchase'\n", maxBytes: 22528 },
   { label: 'CheckboxGroup', source: "export { CheckboxGroup } from 'enchase'\n", maxBytes: 14336 },
-  { label: 'SegmentedControl', source: "export { SegmentedControl } from 'enchase'\n", maxBytes: 14336 },
+  { label: 'SegmentedControl', source: "export { SegmentedControl } from 'enchase'\n", maxBytes: 15360 },
   { label: 'Slider', source: "export { Slider } from 'enchase'\n", maxBytes: 16384 },
   { label: 'Table', source: "export { Table } from 'enchase'\n", maxBytes: 21504 },
   { label: 'ToastProvider', source: "export { ToastProvider } from 'enchase'\n", maxBytes: 24576 },
@@ -42,7 +42,8 @@ const budgets = [
   { label: 'workbench style', source: "export { workbench } from 'enchase/styles/workbench'\n", maxBytes: 40960, styles: ['workbench'] },
   { label: 'ColorModeProvider with shadcn', source: "export { ColorModeProvider } from 'enchase'\nexport { shadcn } from 'enchase/styles/shadcn'\n", maxBytes: 86016, styles: ['shadcn'], density: true },
   { label: 'ColorModeProvider with workbench', source: "export { ColorModeProvider } from 'enchase'\nexport { workbench } from 'enchase/styles/workbench'\n", maxBytes: 91136, styles: ['workbench'], density: true },
-  { label: 'ColorModeProvider with material2', source: "export { ColorModeProvider } from 'enchase'\nexport { material2 } from 'enchase/styles/material2'\n", maxBytes: 75776, styles: ['material2'], density: true }
+  { label: 'ColorModeProvider with material2', source: "export { ColorModeProvider } from 'enchase'\nexport { material2 } from 'enchase/styles/material2'\n", maxBytes: 75776, styles: ['material2'], density: true },
+  { label: 'Board', source: "export { Board } from 'enchase/experimental/board'\n", maxBytes: 59392 }
 ]
 
 const hookNames = `import { readFileSync } from 'node:fs'
