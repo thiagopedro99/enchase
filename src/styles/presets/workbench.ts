@@ -518,7 +518,7 @@ export const workbench = defineStyle({
   radius: { xs: '0.125rem', sm: '0.25rem', md: '0.375rem', lg: '0.5rem', xl: '0.5rem', '2xl': '0.5rem', control: '0.375rem', button: '0.375rem' },
   hooks: { ...buttons, ...fields, ...selection, ...navigation, ...containers, ...feedback },
   colorHooks,
-  brand: ['primary', 'onPrimary', 'primaryHover'],
+  brand: ['primary', 'onPrimary', 'primaryHover', 'primaryContainer', 'onPrimaryContainer'],
   light,
   dark,
   density: {

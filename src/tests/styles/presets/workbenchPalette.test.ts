@@ -12,7 +12,7 @@ import type { ColorTokens } from '@styles/tokens/types.ts'
 
 const modes = ['light', 'dark'] as const
 
-const accentRoles = ['primary', 'onPrimary', 'primaryHover']
+const accentRoles = ['primary', 'onPrimary', 'primaryHover', 'primaryContainer', 'onPrimaryContainer']
 
 const palette = [
   ['primary', '#0958D9', '#65A9F3'],
@@ -186,6 +186,23 @@ describe('the workbench style', () => {
       expect(branded.dark.colors.inversePrimary).toBe('#8DC5F8')
       expect(branded.light.colors.surfaceContainerHigh).toBe('#F0F0F0')
       expect(branded.dark.colors.inverseSurface).toBe('#424242')
+    })
+
+    it.each(brands)('carries the %s brand %s into the primary container too, not just the accent itself', (_name, brand) => {
+      const branded = createTheme({ style: workbench, brand })
+
+      for (const mode of modes) {
+        expect(branded[mode].colors.primaryContainer).not.toBe(theme[mode].colors.primaryContainer)
+        expect(branded[mode].colors.onPrimaryContainer).not.toBe(theme[mode].colors.onPrimaryContainer)
+        expect(contrastRatio(branded[mode].colors.onPrimaryContainer, branded[mode].colors.primaryContainer)).toBeGreaterThanOrEqual(textContrast)
+      }
+    })
+
+    it('keeps the primary container of the style when the app gives no brand', () => {
+      expect(theme.light.colors.primaryContainer).toBe('#E6F4FF')
+      expect(theme.light.colors.onPrimaryContainer).toBe('#0958D9')
+      expect(theme.dark.colors.primaryContainer).toBe('#15325B')
+      expect(theme.dark.colors.onPrimaryContainer).toBe('#8DC5F8')
     })
   })
 })
