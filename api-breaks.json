@@ -1,10 +1,5 @@
 {
-  "since": "0.25.0",
+  "since": "0.25.1",
   "breaks": [],
-  "behavior": [
-    {
-      "key": "workbench-brand-container",
-      "note": "with a brand, the workbench style derives primaryContainer and onPrimaryContainer from it, as it does primary; they kept the blue of the style before. Pass them in light.colors and dark.colors to keep the old pair"
-    }
-  ]
+  "behavior": []
 }

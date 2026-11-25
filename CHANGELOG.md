@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.26.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.25.1...v0.26.0)
+
+### Enhancements
+
+- Add Board component (hook, subcomponents, styles, icons) ([7b9299d](https://github.com/thiagopedro99/enchase/commit/7b9299d))
+- Wire Board's experimental public entry ([7bc5b67](https://github.com/thiagopedro99/enchase/commit/7bc5b67))
+
+### Notes
+
+- No breaking change, and the stable API did not change. `npm run check:api` against 0.25.1 reports 25 keys of `exports` (one more, `./experimental/board`) and none removed, the same 14 stable entries with 1,125 lines of declarations, 1,286 `--enchase-*` names (51 more, the hooks of the `Board`) and 294 `data-slot` names (15 more, its parts) with none removed, and the same 990 hooks in the 5 styles. `api-breaks.json` lists no break and no change in behavior.
+- A new component, `Board`, in `enchase/experimental/board`: a Kanban board, with columns of cards that change column and position by dragging, from the keyboard and from a menu. It is controlled: you pass `columns` and `items`, and it calls `onMove` once for each move, when the card is dropped, with the card and the positions it left and reached. While a card is picked up or dragged the board only shows a preview, and Escape, a drop outside the board and a blur discard it without a call, so each call can be one write to your server. It is also one call under `StrictMode`.
+- `sortable={false}` leaves the order inside each column to you: a move only changes the column, the card enters at the end of the target one, and dragging inside its own column does nothing. `readOnly` draws the same board with no handle, no menu and no dragging, for who may look and not move.
+- Three ways to move a card, and the one without dragging is part of the component, as WCAG 2.2 asks in 2.5.7. With the mouse the whole card drags, and by touch only its handle, so the page still scrolls from the body of the card. On the handle, Space picks the card up, the arrows move it between positions and columns, Home and End go to the ends, Space drops and Escape cancels, with the focus kept on the handle. And the menu of each card lists the columns and, when the board is `sortable`, one position up and one down.
+- A live region announces each step, and the texts come in English and in Portuguese, chosen by the `locale` of the `UIProvider`. The `labels` prop takes the texts of any other language, typed as `BoardLabels`. They live in the component and not in `UILabels`, so the stable types and the size of the other components did not change.
+- It is experimental: the entry may change or go away in a minor version, as `VERSIONING.md` says, and the notes will list every change. It is not in the kit of `enchase eject`, and it leaves `enchase/experimental` for the stable entry when it has stayed the same for two minor versions.
+- Its css is in `enchase/styles.css` and in `enchase/css/board.css`, with 51 hooks `--enchase-board-*`, each with a fallback. The five styles declare none of them and write the themes of 0.25.1. Inside a `Modal`, the Escape that cancels a move does not close the dialog.
+- Weight: the package goes from 1,061 to 1,080 files and from 497.4 kB packed (497,399 bytes) to 513.8 kB (513,822 bytes). The 19 new files are the `Board` (7 of JavaScript and 8 of declarations, under `dist-lib/components/common/Board` and its types), its entry (`dist-lib/experimental/board.js` and its `.d.ts`), `dist-lib/css/board.css` and `docs/migration/0.26.md`. `styles.css` goes from 299,627 to 309,914 bytes, and from 28,716 to 30,295 bytes in gzip at level 9 (`zlib.gzipSync`), which is the css of the `Board`, and `theme.css` keeps its 45,296 bytes. The 48 files of `enchase/css` have 309,949 bytes (the 47 of 0.25.1 had 299,661) and 56,965 in gzip (55,178 before), `board.css` has 10,288 bytes and 1,787 in gzip, and `index.json` has 11,694 bytes (11,330 before). Five files of other components change by 16 bytes each with the same code, `Popover`, `Navbar`, the list of the `Combobox`, the content of the `Sidebar` and the context of the `Toast`: the bundler renames their import of `Fragment`, because the `Board` imports one too. In `test:size` there is one new row and no other changed: the `Board` has 57,145 bytes minified and 17,600 in gzip (budget of 59,392), with the `Menu`, the `Popover` and the `Button` that it uses.
+- Checked: lint, `docs:api:check`, the build, the 5,738 jsdom tests, `build:lib`, `check:api` against 0.25.1, `pack:check` (publint and attw, with the 25 keys of `exports`), `test:size`, `test:consumer`, `test:next`, `test:eject` and the accessibility audit of the stories (388 stories in the five styles and the two color modes, 3,900 runs) pass, and so do the whole browser suites in real Chromium (3,196 tests), Firefox and WebKit, with the touch project that drags a card by its handle and scrolls the page from its body.
+- Screen readers: the `Board` was tested with axe and in the three engines, and not with NVDA, JAWS or VoiceOver, as the README says of the whole library. What 1.0 asks for stays in `ACCESSIBILITY.md`: NVDA with Firefox on Windows and VoiceOver with Safari on macOS, run by hand.
+
 ## v0.25.1
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.25.0...v0.25.1)

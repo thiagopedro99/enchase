@@ -10,6 +10,36 @@ export const anchorOf = (version: string) => `v-${version.replace(/\./g, '-')}`
 
 export const releases: ReleaseNote[] = [
   {
+    version: '0.26.0',
+    previous: '0.25.1',
+    date: '25 de novembro de 2026',
+    shortDate: '25 nov',
+    title: 'Board, o quadro Kanban experimental',
+    summary: 'Um componente novo, o `Board`: colunas com cartões que mudam de lugar por arrastar, pelo teclado ou por um menu. Ele chega como experimental, em `enchase/experimental/board`, e nada do que já existia mudou.',
+    behavior: false,
+    groups: [
+      {
+        kind: 'novo',
+        items: [
+          '`Board`, em `enchase/experimental/board`: você entrega as colunas e os cartões, e ele avisa cada movimento uma única vez, ao soltar.',
+          'Três jeitos de mover: arrastar (o cartão inteiro no mouse, a alça no toque), teclado (espaço pega, setas movem, Esc cancela) e o menu "Mover para" de cada cartão.',
+          '`sortable={false}` mantém a ordem de cada coluna com você, e `readOnly` mostra o quadro sem alça nem menu.',
+          'Os anúncios para leitor de tela saem em português ou em inglês conforme o idioma do `UIProvider`, e a prop `labels` aceita outras línguas.'
+        ]
+      }
+    ],
+    migration: {
+      text: 'Nada a mudar no que você já usa. Por ser experimental, o `Board` pode mudar entre versões menores, e cada mudança sai nas notas.',
+      blocks: [
+        {
+          label: 'Quadro.tsx',
+          language: 'tsx',
+          code: "import { Board } from 'enchase/experimental/board'\n\n<Board\n  columns={colunas}\n  items={cartoes}\n  getItemLabel={(cartao) => cartao.titulo}\n  renderCard={(cartao) => <span>{cartao.titulo}</span>}\n  onMove={({ item, to }) => salvar(item.id, to.columnId, to.index)}\n/>"
+        }
+      ]
+    }
+  },
+  {
     version: '0.25.1',
     previous: '0.25.0',
     date: '25 de novembro de 2026',
