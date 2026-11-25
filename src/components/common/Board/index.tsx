@@ -40,7 +40,8 @@ export const Board = <Item extends BoardItem>({ columns, items, onMove, renderCa
           <span className={styles.copyHandle}>
             <BoardHandleIcon size={16} />
           </span>
-          <div className={styles.copyContent}>{renderCard(board.draggingItem)}</div>
+          <div {...slot('board', 'drag-copy-content')} className={styles.copyContent}>{renderCard(board.draggingItem)}</div>
+          <span className={styles.copySpacer} />
         </div>
       )}
     </div>

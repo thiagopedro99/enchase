@@ -38,7 +38,7 @@
   inset-block-start: 0;
   z-index: var(--enchase-z-tooltip);
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   align-items: start;
   gap: var(--enchase-board-card-gap, var(--enchase-space-sm));
   inline-size: var(--board-drag-width, auto);
@@ -75,4 +75,8 @@
 
 :where(.copyContent) {
   min-inline-size: 0;
+}
+
+:where(.copySpacer) {
+  inline-size: var(--board-drag-menu-width, 0px);
 }
