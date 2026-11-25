@@ -10,6 +10,31 @@ export const anchorOf = (version: string) => `v-${version.replace(/\./g, '-')}`
 
 export const releases: ReleaseNote[] = [
   {
+    version: '0.25.1',
+    previous: '0.25.0',
+    date: '25 de novembro de 2026',
+    shortDate: '25 nov',
+    title: 'A cor da marca no estilo workbench',
+    summary: 'Uma correção no estilo `workbench`: com uma cor de marca, o contêiner primário passa a acompanhar a marca. Sem cor de marca, nada muda.',
+    behavior: true,
+    groups: [
+      {
+        kind: 'corrigido',
+        items: ['No `workbench` com `brand`, o contêiner primário ficava no azul do estilo. Badge primário, botão secundário, item atual da navegação e linhas selecionadas agora saem na cor da marca.']
+      }
+    ],
+    migration: {
+      text: 'Só muda quem usa `workbench` com `brand`. Para manter o par azul de antes, passe as duas cores ao tema.',
+      blocks: [
+        {
+          label: 'main.tsx',
+          language: 'tsx',
+          code: "import { ColorModeProvider } from 'enchase'\nimport { workbench } from 'enchase/styles/workbench'\n\nconst theme = {\n  style: workbench,\n  brand: '#BE123C',\n  light: { colors: { primaryContainer: '#E6F4FF', onPrimaryContainer: '#0958D9' } },\n  dark: { colors: { primaryContainer: '#15325B', onPrimaryContainer: '#8DC5F8' } }\n}\n\n<ColorModeProvider theme={theme}>\n  <App />\n</ColorModeProvider>"
+        }
+      ]
+    }
+  },
+  {
     version: '0.25.0',
     previous: '0.24.0',
     date: '24 de novembro de 2026',

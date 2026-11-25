@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.25.1
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.25.0...v0.25.1)
+
+### Fixes
+
+- Carry the brand color into the primary container of the workbench style ([ba3b06b](https://github.com/thiagopedro99/enchase/commit/ba3b06b))
+
+### Notes
+
+- One change in behavior, and none in the API. `npm run check:api` against 0.25.0 reports the same 24 keys of `exports`, the same 14 stable entries with 1,125 lines of declarations, the same 1,235 `--enchase-*` names and 279 `data-slot` names, and the same 990 hooks in the 5 styles, with nothing removed, changed or widened. With a `brand`, the `workbench` style paints the primary container with it, as `workbench-brand-container`, which `api-breaks.json` lists under `behavior`; this first bullet cites it, and `breaks` is empty.
+- `workbench-brand-container`: with a `brand`, the `workbench` style derives `primaryContainer` and `onPrimaryContainer` from it, as it already did `primary`, `onPrimary` and `primaryHover`. Before, the two kept the blue of the style whatever the brand (`#E6F4FF` and `#0958D9` in the light mode, `#15325B` and `#8DC5F8` in the dark one), so in an app with a red brand the primary `Badge`, the `secondary` button, the current item of the `Navbar`, the checked option of the `Select` and the selected row of the `Table` stayed blue. With `brand: '#BE123C'` the pair is `#FDDADA` and `#4E0012` in the light mode and `#642028` and `#FDDADA` in the dark one. To keep the old pair with a brand, pass it in `light.colors` and `dark.colors`, which win over what the brand generates.
+- Without a `brand`, `workbench` writes the theme of 0.25.0, character for character, and so do the other four styles with and without one: of 90 combinations of style, brand and shape that were compared, the 12 that changed are `workbench` with a brand, in those two tokens only. The `inversePrimary` of `workbench` stays the one of the style, as before.
+- A guard keeps it in place: `src/tests/styles/presets/workbenchPalette.test.ts` checks, for each brand of its list and in both modes, that the two tokens leave the value of the style and that the text has 4.5:1 on the container, and that without a brand the pair is the one of the style.
+- Weight: the package keeps its 1,061 files and its 497.4 kB packed (497,391 to 497,399 bytes). Three files differ from 0.25.0: `dist-lib/styles/presets/workbench.js`, which goes from 25,919 to 25,965 bytes, `eject/index.json`, in its `version`, and `package.json`. `styles.css`, `styles.layer.css` and `theme.css` are byte for byte those of 0.25.0. In `test:size`, the `workbench` style goes from 39,938 to 39,984 bytes minified (budget of 40,960) and `ColorModeProvider` with `workbench` from 87,286 to 87,332 (91,136), and every other row is the same.
+- Checked: lint, `docs:api:check`, the build, the 5,706 jsdom tests, `build:lib`, `check:api` against 0.25.0, `pack:check` (publint and attw, with the 24 keys of `exports`), `test:size`, `test:consumer`, `test:next` (83 checks of the server render and 3 in a real browser), `test:eject` and the accessibility audit of the stories (382 stories in the five styles and the two color modes, 3,840 runs) pass, and so do the whole browser suites in real Chromium (3,175 tests), Firefox and WebKit.
+- Screen readers: nothing changed in what the components render, only two colors of one style with a brand, and the README still says that nothing was tested with NVDA, JAWS or VoiceOver. What 1.0 asks for stays in `ACCESSIBILITY.md`: NVDA with Firefox on Windows and VoiceOver with Safari on macOS, run by hand.
+
 ## v0.25.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.24.0...v0.25.0)
