@@ -1477,10 +1477,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-board-card-background` | `var(--enchase-color-surface)` | `background-color` (also in Column) |
 | `--enchase-board-card-border-color-dragging` | `var(--enchase-color-primary)` | `border` |
+| `--enchase-board-card-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` (also in Column) |
 | `--enchase-board-card-padding` | `0.5rem` (`--enchase-space-sm`) | `padding` (also in Column) |
 | `--enchase-board-card-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` (also in Column) |
 | `--enchase-board-card-shadow-dragging` | `var(--enchase-shadow-lg)` | `box-shadow` |
 | `--enchase-board-drag-rotate` | `1.5deg` | `transform` |
+| `--enchase-board-handle-color` | `var(--enchase-color-text-secondary)` | `color` (also in Column) |
+| `--enchase-board-handle-radius` | `0.375rem` (`--enchase-radius-sm`) | `border-radius` (also in Column) |
+| `--enchase-board-handle-size` | `28px` | `inline-size`, `block-size` (also in Column) |
 | `--enchase-board-track-gap` | `1rem` (`--enchase-space-md`) | `gap`, `scroll-padding-inline` |
 
 ### Brand
@@ -1755,7 +1759,6 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | --- | --- | --- |
 | `--enchase-board-card-border-color` | `var(--enchase-color-border)` | `border` |
 | `--enchase-board-card-border-color-picked` | `var(--enchase-color-primary)` | `border-color`, `box-shadow` |
-| `--enchase-board-card-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-board-card-opacity-dimmed` | `0.4` | `opacity` |
 | `--enchase-board-card-padding-read-only` | `1rem` (`--enchase-space-md`) | `padding` |
 | `--enchase-board-card-shadow` | `var(--enchase-shadow-sm)` | `box-shadow` |
@@ -1789,10 +1792,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-board-empty-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
 | `--enchase-board-handle-background-hover` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-board-handle-background-picked` | `var(--enchase-color-primary)` | `background-color` |
-| `--enchase-board-handle-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-board-handle-color-picked` | `var(--enchase-color-on-primary)` | `color` |
-| `--enchase-board-handle-radius` | `0.375rem` (`--enchase-radius-sm`) | `border-radius` |
-| `--enchase-board-handle-size` | `28px` | `inline-size`, `block-size` |
 | `--enchase-board-line-background` | `var(--enchase-color-primary)` | `background-color` |
 | `--enchase-board-line-height` | `2px` | `block-size` |
 | `--enchase-board-line-margin-block` | `-3px` | `margin-block` |
