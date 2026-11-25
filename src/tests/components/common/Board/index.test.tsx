@@ -243,6 +243,21 @@ describe('Board', () => {
     expect(screen.getByText('Revisar PR')).toBeInTheDocument()
   })
 
+  it('uses the column label, not the title node, in announcements when the title is not plain text', async () => {
+    const user = userEvent.setup()
+    const onMove = vi.fn()
+    const nodeColumns: BoardColumn[] = [
+      { id: 'todo', title: <strong>A fazer</strong>, label: 'A fazer' },
+      { id: 'doing', title: <strong>Em andamento</strong>, label: 'Em andamento' }
+    ]
+    renderWithProviders(<TestBoard boardColumns={nodeColumns} onMove={onMove} />)
+
+    handle('Revisar PR').focus()
+    await user.keyboard(' ')
+
+    expect(screen.getByText(/pego, posição 1 de 2 em A fazer\./)).toBeInTheDocument()
+  })
+
   it('names the board group from the labels by default', () => {
     const { container } = renderWithProviders(<TestBoard />)
 
