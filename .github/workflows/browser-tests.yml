@@ -9,6 +9,12 @@ on:
       - .snyk
       - .github/dependabot.yml
       - .github/ISSUE_TEMPLATE/**
+      - .github/workflows/site.yml
+      - demo/**
+      - worker/**
+      - src/tests/demo/**
+      - src/tests/worker/**
+      - tsconfig.worker.json
   push:
     branches: [dev]
     paths-ignore:
@@ -18,6 +24,12 @@ on:
       - .snyk
       - .github/dependabot.yml
       - .github/ISSUE_TEMPLATE/**
+      - .github/workflows/site.yml
+      - demo/**
+      - worker/**
+      - src/tests/demo/**
+      - src/tests/worker/**
+      - tsconfig.worker.json
   workflow_call:
 
 concurrency:
