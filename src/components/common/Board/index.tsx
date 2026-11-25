@@ -1,22 +1,21 @@
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { VisuallyHidden } from '../VisuallyHidden/index.tsx'
-import { useUIConfig } from '@hooks/useUIConfig.ts'
+import { BoardHandleIcon } from './icons.tsx'
 import { Column } from './subcomponentes/Column/index.tsx'
 import { useBoard } from './useBoard.ts'
 import styles from './styles.module.css'
 
 import type { BoardItem, BoardProps } from './types.ts'
 
-export const Board = <Item extends BoardItem>({ columns, items, onMove, renderCard, getItemLabel, ariaLabel, ariaLabelledBy, sortable, readOnly, className, style, ref }: BoardProps<Item>) => {
-  const { labels } = useUIConfig()
-  const board = useBoard({ columns, items, onMove, getItemLabel, sortable, readOnly })
+export const Board = <Item extends BoardItem>({ columns, items, onMove, renderCard, getItemLabel, ariaLabel, ariaLabelledBy, sortable, readOnly, labels: labelOverrides, className, style, ref }: BoardProps<Item>) => {
+  const board = useBoard({ columns, items, onMove, getItemLabel, sortable, readOnly, labels: labelOverrides })
 
   const root = mergeProps(
     {
       ...slot('board'),
       className: styles.board,
       role: 'group',
-      'aria-label': ariaLabelledBy ? undefined : ariaLabel ?? labels.board,
+      'aria-label': ariaLabelledBy ? undefined : ariaLabel ?? board.labels.board,
       'aria-labelledby': ariaLabelledBy,
       'data-dragging': board.dragging ? '' : undefined
     },
@@ -25,7 +24,7 @@ export const Board = <Item extends BoardItem>({ columns, items, onMove, renderCa
 
   return (
     <div {...root} ref={ref}>
-      <VisuallyHidden id={board.instructionsId}>{board.instructionsText}</VisuallyHidden>
+      <VisuallyHidden id={board.instructionsId}>{board.labels.boardInstructions}</VisuallyHidden>
       <VisuallyHidden aria-live="polite" aria-atomic="true">
         {board.liveRegionText}
       </VisuallyHidden>
@@ -38,7 +37,10 @@ export const Board = <Item extends BoardItem>({ columns, items, onMove, renderCa
 
       {board.draggingItem && (
         <div ref={board.copyRef} {...slot('board', 'drag-copy')} className={styles.copy} aria-hidden="true">
-          {renderCard(board.draggingItem)}
+          <span className={styles.copyHandle}>
+            <BoardHandleIcon size={16} />
+          </span>
+          <div className={styles.copyContent}>{renderCard(board.draggingItem)}</div>
         </div>
       )}
     </div>

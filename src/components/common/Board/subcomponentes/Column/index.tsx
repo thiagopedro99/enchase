@@ -3,7 +3,6 @@ import { Fragment, useId } from 'react'
 import { CheckIcon } from '../../../Icon/icons/CheckIcon.tsx'
 import { BoardHandleIcon, BoardMenuIcon } from '../../icons.tsx'
 import { VisuallyHidden } from '../../../VisuallyHidden/index.tsx'
-import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { Button } from '../../../Button/index.tsx'
 import { Menu } from '../../../Menu/index.tsx'
 import { slot } from '@utils/mergeProps.ts'
@@ -14,7 +13,7 @@ import type { BoardItem } from '../../types.ts'
 import type { BoardCardProps, ColumnProps } from './types.ts'
 
 const BoardCard = <Item extends BoardItem>({ item, dimmed, picked, renderCard, getItemLabel, board }: BoardCardProps<Item>) => {
-  const { labels } = useUIConfig()
+  const labels = board.labels
   const label = getItemLabel(item)
   const readOnly = board.readOnly
 
@@ -29,7 +28,7 @@ const BoardCard = <Item extends BoardItem>({ item, dimmed, picked, renderCard, g
   return (
     <li {...slot('board', 'card')} className={styles.card} data-dimmed={dimmed ? '' : undefined} data-picked={picked ? '' : undefined} data-read-only={readOnly ? '' : undefined} {...board.getCardProps(item.id)}>
       {!readOnly && (
-        <button {...slot('board', 'handle')} className={styles.handle} aria-label={labels.boardMoveCard?.(label) ?? ''} {...board.getHandleProps(item.id)}>
+        <button {...slot('board', 'handle')} className={styles.handle} aria-label={labels.boardMoveCard(label)} {...board.getHandleProps(item.id)}>
           <BoardHandleIcon size={16} />
         </button>
       )}
@@ -40,8 +39,8 @@ const BoardCard = <Item extends BoardItem>({ item, dimmed, picked, renderCard, g
 
       {!readOnly && (
         <span {...slot('board', 'menu-button')} className={styles.menuButton}>
-          <Menu items={menuEntries} label={labels.boardMoveCardTo?.(label) ?? ''}>
-            <Button variant="ghost" size="sm" iconOnly aria-label={labels.boardMoveCardTo?.(label) ?? ''} {...board.getMenuButtonProps(item.id)}>
+          <Menu items={menuEntries} label={labels.boardMoveCardTo(label)}>
+            <Button variant="ghost" size="sm" iconOnly aria-label={labels.boardMoveCardTo(label)} {...board.getMenuButtonProps(item.id)}>
               <BoardMenuIcon size={16} />
             </Button>
           </Menu>
@@ -52,7 +51,7 @@ const BoardCard = <Item extends BoardItem>({ item, dimmed, picked, renderCard, g
 }
 
 export const Column = <Item extends BoardItem>({ view, renderCard, getItemLabel, board }: ColumnProps<Item>) => {
-  const { labels } = useUIConfig()
+  const labels = board.labels
   const titleId = useId()
   const empty = view.cards.length === 0
   const readOnly = board.readOnly
@@ -60,13 +59,13 @@ export const Column = <Item extends BoardItem>({ view, renderCard, getItemLabel,
   return (
     <div {...slot('board', 'column')} className={styles.column} role="region" aria-labelledby={titleId} data-target={view.isDropTarget ? '' : undefined}>
       <div {...slot('board', 'column-header')} className={styles.header}>
-        <h3 id={titleId} {...slot('board', 'column-title')} className={styles.title}>
+        <div id={titleId} {...slot('board', 'column-title')} className={styles.title}>
           {view.column.title}
-        </h3>
+        </div>
         <span {...slot('board', 'column-count')} className={styles.count} aria-hidden="true">
           {view.cards.length}
         </span>
-        <VisuallyHidden>{labels.boardCardCount?.(view.cards.length) ?? ''}</VisuallyHidden>
+        <VisuallyHidden>{labels.boardCardCount(view.cards.length)}</VisuallyHidden>
       </div>
 
       <ul ref={board.getColumnListRef(view.column.id)} {...slot('board', 'column-list')} className={styles.list}>
@@ -84,6 +83,7 @@ export const Column = <Item extends BoardItem>({ view, renderCard, getItemLabel,
           {readOnly ? labels.boardEmptyColumnReadOnly : labels.boardEmptyColumn}
         </p>
       )}
+
     </div>
   )
 }

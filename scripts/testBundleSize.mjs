@@ -26,7 +26,7 @@ const budgets = [
   { label: 'Button', source: "export { Button } from 'enchase'\n", maxBytes: 12288 },
   { label: 'Drawer', source: "export { Drawer } from 'enchase'\n", maxBytes: 22528 },
   { label: 'CheckboxGroup', source: "export { CheckboxGroup } from 'enchase'\n", maxBytes: 14336 },
-  { label: 'SegmentedControl', source: "export { SegmentedControl } from 'enchase'\n", maxBytes: 15360 },
+  { label: 'SegmentedControl', source: "export { SegmentedControl } from 'enchase'\n", maxBytes: 14336 },
   { label: 'Slider', source: "export { Slider } from 'enchase'\n", maxBytes: 16384 },
   { label: 'Table', source: "export { Table } from 'enchase'\n", maxBytes: 21504 },
   { label: 'ToastProvider', source: "export { ToastProvider } from 'enchase'\n", maxBytes: 24576 },

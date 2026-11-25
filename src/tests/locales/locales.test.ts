@@ -10,44 +10,14 @@ describe('locales', () => {
   it('has no empty message', () => {
     for (const locale of [en, ptBR]) {
       for (const [key, value] of Object.entries(locale.messages)) {
-        const resolved = typeof value === 'function' ? (value as (...args: (string | number)[]) => string)('x', 1, 2, 'y') : value
-        expect((resolved ?? '').trim(), `${locale.locale}.${key}`).not.toBe('')
+        expect((value ?? '').trim(), `${locale.locale}.${key}`).not.toBe('')
       }
     }
   })
 
-  it('defines the pagination, number input, tag, table selection, combobox and board texts in every locale, which are optional in the type', () => {
+  it('defines the pagination, number input, tag, table selection and combobox texts in every locale, which are optional in the type', () => {
     for (const locale of [en, ptBR]) {
-      for (const key of [
-        'pagination',
-        'previousPage',
-        'nextPage',
-        'increaseValue',
-        'decreaseValue',
-        'removeTag',
-        'selectRow',
-        'selectAllRows',
-        'noResults',
-        'showOptions',
-        'previousMonth',
-        'nextMonth',
-        'openCalendar',
-        'chooseDate',
-        'board',
-        'boardMoveCard',
-        'boardMoveCardTo',
-        'boardInstructions',
-        'boardMoveUp',
-        'boardMoveDown',
-        'boardEmptyColumn',
-        'boardEmptyColumnReadOnly',
-        'boardCardCount',
-        'boardPickedUp',
-        'boardStep',
-        'boardDropped',
-        'boardCancelled',
-        'boardMovedByMenu'
-      ] as const) expect(locale.messages[key], `${locale.locale}.${key}`).toBeTruthy()
+      for (const key of ['pagination', 'previousPage', 'nextPage', 'increaseValue', 'decreaseValue', 'removeTag', 'selectRow', 'selectAllRows', 'noResults', 'showOptions', 'previousMonth', 'nextMonth', 'openCalendar', 'chooseDate'] as const) expect(locale.messages[key], `${locale.locale}.${key}`).toBeTruthy()
     }
   })
 

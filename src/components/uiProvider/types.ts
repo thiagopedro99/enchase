@@ -46,20 +46,6 @@ export type UILabels = {
   nextMonth?: string | undefined
   openCalendar?: string | undefined
   chooseDate?: string | undefined
-  board?: string | undefined
-  boardMoveCard?: ((card: string) => string) | undefined
-  boardMoveCardTo?: ((card: string) => string) | undefined
-  boardInstructions?: string | undefined
-  boardMoveUp?: string | undefined
-  boardMoveDown?: string | undefined
-  boardEmptyColumn?: string | undefined
-  boardEmptyColumnReadOnly?: string | undefined
-  boardCardCount?: ((count: number) => string) | undefined
-  boardPickedUp?: ((card: string, position: number, total: number, column: string) => string) | undefined
-  boardStep?: ((card: string, position: number, total: number, column: string) => string) | undefined
-  boardDropped?: ((card: string, position: number, total: number, column: string) => string) | undefined
-  boardCancelled?: ((card: string, column: string) => string) | undefined
-  boardMovedByMenu?: ((card: string, position: number, total: number, column: string) => string) | undefined
 }
 
 export type UIConfig = {

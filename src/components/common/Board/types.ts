@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode, Ref } from 'react'
+import type { BoardLabels } from './locales.ts'
 
 export type BoardColumn = {
   id: string
@@ -29,6 +30,7 @@ export interface BoardProps<Item extends BoardItem> {
   ariaLabelledBy?: string | undefined
   sortable?: boolean | undefined
   readOnly?: boolean | undefined
+  labels?: Partial<BoardLabels> | undefined
   className?: string | undefined
   style?: CSSProperties | undefined
   ref?: Ref<HTMLDivElement> | undefined
@@ -41,4 +43,5 @@ export type BoardMoveState = {
   from: BoardPosition
   to: BoardPosition
   via: BoardMoveSource
+  withinTrack: boolean
 }
