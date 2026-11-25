@@ -1,5 +1,5 @@
 import { StrictMode, useState } from 'react'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
 import { Board } from '@components/common/Board/index.tsx'
@@ -68,6 +68,10 @@ const root = () => part('board')
 const cards = () => parts('board-card')
 const handle = (index: number) => parts('board-handle')[index]
 const cardTitle = (index: number) => cards()[index].textContent
+
+afterEach(async () => {
+  await setForcedColors('none')
+})
 
 describe('Board in a real browser', () => {
   it('drags a card below another one within its own column', async () => {

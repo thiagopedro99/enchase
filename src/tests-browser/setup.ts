@@ -1,4 +1,4 @@
-import { setReducedMotion } from './support/media.ts'
+import { setForcedColors, setReducedMotion } from './support/media.ts'
 import { cleanup } from '@testing-library/react'
 import { parkMouse } from './support/pointer.ts'
 import { afterEach } from 'vitest'
@@ -13,6 +13,7 @@ afterEach(async () => {
   window.localStorage.clear()
   window.scrollTo(0, 0)
   await setReducedMotion('no-preference')
+  await setForcedColors('none')
   await parkMouse()
   await page.viewport(1280, 800)
 })
