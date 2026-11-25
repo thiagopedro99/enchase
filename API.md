@@ -1471,6 +1471,18 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-badge-padding-inline-sm` | `0.5rem` (`--enchase-space-sm`) | `padding-inline` |
 | `--enchase-badge-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
 
+### Board
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-board-card-background` | `var(--enchase-color-surface)` | `background-color` (also in Column) |
+| `--enchase-board-card-border-color-dragging` | `var(--enchase-color-primary)` | `border` |
+| `--enchase-board-card-padding` | `0.5rem` (`--enchase-space-sm`) | `padding` (also in Column) |
+| `--enchase-board-card-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` (also in Column) |
+| `--enchase-board-card-shadow-dragging` | `var(--enchase-shadow-lg)` | `box-shadow` |
+| `--enchase-board-drag-rotate` | `1.5deg` | `transform` |
+| `--enchase-board-track-gap` | `1rem` (`--enchase-space-md`) | `gap`, `scroll-padding-inline` |
+
 ### Brand
 
 | Hook | Default | Property |
@@ -1736,6 +1748,55 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-checkbox-group-legend-margin-block-end` | `0.5rem` (`--enchase-space-sm`) | `margin-block-end` |
 | `--enchase-checkbox-group-options-column-gap-horizontal` | `1.5rem` (`--enchase-space-lg`) | `column-gap` |
 | `--enchase-checkbox-group-options-gap` | `0.25rem` (`--enchase-space-xs`) | `gap` |
+
+### Column
+
+| Hook | Default | Property |
+| --- | --- | --- |
+| `--enchase-board-card-border-color` | `var(--enchase-color-border)` | `border` |
+| `--enchase-board-card-border-color-picked` | `var(--enchase-color-primary)` | `border-color`, `box-shadow` |
+| `--enchase-board-card-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-board-card-opacity-dimmed` | `0.4` | `opacity` |
+| `--enchase-board-card-padding-read-only` | `1rem` (`--enchase-space-md`) | `padding` |
+| `--enchase-board-card-shadow` | `var(--enchase-shadow-sm)` | `box-shadow` |
+| `--enchase-board-card-shadow-picked` | `var(--enchase-shadow-md)` | `box-shadow` |
+| `--enchase-board-column-background` | `var(--enchase-color-surface-container-low)` | `background-color` |
+| `--enchase-board-column-border-color` | `var(--enchase-color-border-light)` | `border` |
+| `--enchase-board-column-border-color-target` | `var(--enchase-color-primary)` | `border-color` |
+| `--enchase-board-column-count-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-board-column-count-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-board-column-count-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
+| `--enchase-board-column-count-min-width` | `1.5rem` | `min-inline-size` |
+| `--enchase-board-column-count-padding-inline` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
+| `--enchase-board-column-count-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-board-column-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-board-column-header-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-board-column-header-padding-inline` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
+| `--enchase-board-column-list-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
+| `--enchase-board-column-list-min-height` | `2rem` | `min-block-size` |
+| `--enchase-board-column-min-width` | `15.5rem` | `flex`, `min-inline-size` |
+| `--enchase-board-column-padding` | `0.5rem` (`--enchase-space-sm`) | `padding` |
+| `--enchase-board-column-radius` | `0.75rem` (`--enchase-radius-lg`) | `border-radius` |
+| `--enchase-board-column-title-color` | `var(--enchase-color-text-primary)` | `color` |
+| `--enchase-board-column-title-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-board-column-title-font-weight` | `600` (`--enchase-font-weight-semibold`) | `font-weight` |
+| `--enchase-board-duration` | `150ms` (`--enchase-motion-duration-fast`) | `transition` |
+| `--enchase-board-ease` | `cubic-bezier(0.2, 0, 0, 1)` (`--enchase-motion-ease-out`) | `transition` |
+| `--enchase-board-empty-border-color` | `var(--enchase-color-border-strong)` | `border` |
+| `--enchase-board-empty-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-board-empty-font-size` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-board-empty-padding` | `1rem` (`--enchase-space-md`) | `padding` |
+| `--enchase-board-empty-radius` | `0.5rem` (`--enchase-radius-md`) | `border-radius` |
+| `--enchase-board-handle-background-hover` | `var(--enchase-color-surface-container-high)` | `background-color` |
+| `--enchase-board-handle-background-picked` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-board-handle-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-board-handle-color-picked` | `var(--enchase-color-on-primary)` | `color` |
+| `--enchase-board-handle-radius` | `0.375rem` (`--enchase-radius-sm`) | `border-radius` |
+| `--enchase-board-handle-size` | `28px` | `inline-size`, `block-size` |
+| `--enchase-board-line-background` | `var(--enchase-color-primary)` | `background-color` |
+| `--enchase-board-line-height` | `2px` | `block-size` |
+| `--enchase-board-line-margin-block` | `-3px` | `margin-block` |
+| `--enchase-board-line-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 
 ### Combobox
 
