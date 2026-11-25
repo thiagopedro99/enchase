@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import ts from 'typescript'
@@ -28,7 +28,9 @@ const names = readdirSync(join(declarations, 'experimental'))
 
 if (names.length === 0) throw new Error('the package declares no experimental entry to deprecate')
 
-for (const name of names) {
+const aliased = names.filter((name) => existsSync(join(declarations, 'headless', `${name}.d.ts`)))
+
+for (const name of aliased) {
   const headless = join(declarations, 'headless', `${name}.d.ts`)
   const exported = exportsOf(readFileSync(headless, 'utf8'))
   const generic = genericTypes(headless, exported.types)
@@ -38,4 +40,4 @@ for (const name of names) {
   writeFileSync(join(declarations, 'experimental', `${name}.d.ts`), wrapperOf(name, exported))
 }
 
-console.log(`deprecated declarations written: ${names.length} experimental entries now alias the headless ones with @deprecated`)
+console.log(`deprecated declarations written: ${aliased.length} experimental entries now alias the headless ones with @deprecated (${names.length - aliased.length} left untouched: new components with no headless counterpart)`)

@@ -73,28 +73,33 @@ for (const [key, value] of jsEntries) {
       const name = pascal(kebab)
       const hook = `dist-lib/components/common/${name}/use${name}.js`
       const own = [entry, `dist-lib/headless/${kebab}.js`]
-      const components = files.filter((file) => file === 'dist-lib/index.js' || /^dist-lib\/components\/.+\/index\.js$/.test(file))
-      const siblings = files.filter((file) => /^dist-lib\/(headless|experimental)\//.test(file) && !own.includes(file))
-      const stylesheets = files.filter((file) => importsOf(join(root, file)).some((specifier) => specifier.endsWith('.css')))
+      const isNewComponent = hookPrefix === experimentalPrefix && !existsSync(join(root, own[1]))
 
       if (!/^["']use client["'];?\r?\n/.test(readFileSync(join(root, value.import), 'utf8'))) leaks.push(`${key} must start with the "use client" directive, like the main entry, or a hook that is imported in a Server Component fails with a message that does not say why`)
-      if (!files.includes(hook)) leaks.push(`${key} does not reach its hook (${hook})`)
-      if (components.length > 0) leaks.push(`${key} reaches a component (${components.join(', ')}): a hook must not pull the markup of the library, which is what it replaces`)
-      if (siblings.length > 0) leaks.push(`${key} reaches another hook entry (${siblings.join(', ')}), so the hooks would not be independent`)
 
-      if (hookPrefix === experimentalPrefix) {
-        const headlessFile = join(root, own[1])
-        const alias = existsSync(headlessFile) && (readFileSync(join(root, value.import), 'utf8') === readFileSync(headlessFile, 'utf8') || importsOf(join(root, value.import)).includes(`../headless/${kebab}.js`))
+      if (!isNewComponent) {
+        const components = files.filter((file) => file === 'dist-lib/index.js' || /^dist-lib\/components\/.+\/index\.js$/.test(file))
+        const siblings = files.filter((file) => /^dist-lib\/(headless|experimental)\//.test(file) && !own.includes(file))
+        const stylesheets = files.filter((file) => importsOf(join(root, file)).some((specifier) => specifier.endsWith('.css')))
 
-        if (!alias) leaks.push(`${key} is not an alias of ${headlessPrefix}${kebab}: it must export what that entry exports, from the same modules, or the old path would drift from the new one`)
+        if (!files.includes(hook)) leaks.push(`${key} does not reach its hook (${hook})`)
+        if (components.length > 0) leaks.push(`${key} reaches a component (${components.join(', ')}): a hook must not pull the markup of the library, which is what it replaces`)
+        if (siblings.length > 0) leaks.push(`${key} reaches another hook entry (${siblings.join(', ')}), so the hooks would not be independent`)
 
-        const headlessTypes = join(root, 'dist-lib', 'types', 'lib', 'headless', `${kebab}.d.ts`)
-        const oldTypes = join(root, value.types ?? '')
+        if (hookPrefix === experimentalPrefix) {
+          const headlessFile = join(root, own[1])
+          const alias = existsSync(headlessFile) && (readFileSync(join(root, value.import), 'utf8') === readFileSync(headlessFile, 'utf8') || importsOf(join(root, value.import)).includes(`../headless/${kebab}.js`))
 
-        if (!existsSync(headlessTypes) || !existsSync(oldTypes)) leaks.push(`${key} or ${headlessPrefix}${kebab} has no declaration file`)
-        else deprecationGaps(readFileSync(headlessTypes, 'utf8'), readFileSync(oldTypes, 'utf8')).forEach((gap) => leaks.push(`${key}: ${gap}, and every export of the old entry must carry @deprecated so that the editor and tsc point to ${headlessPrefix}${kebab}`))
+          if (!alias) leaks.push(`${key} is not an alias of ${headlessPrefix}${kebab}: it must export what that entry exports, from the same modules, or the old path would drift from the new one`)
+
+          const headlessTypes = join(root, 'dist-lib', 'types', 'lib', 'headless', `${kebab}.d.ts`)
+          const oldTypes = join(root, value.types ?? '')
+
+          if (!existsSync(headlessTypes) || !existsSync(oldTypes)) leaks.push(`${key} or ${headlessPrefix}${kebab} has no declaration file`)
+          else deprecationGaps(readFileSync(headlessTypes, 'utf8'), readFileSync(oldTypes, 'utf8')).forEach((gap) => leaks.push(`${key}: ${gap}, and every export of the old entry must carry @deprecated so that the editor and tsc point to ${headlessPrefix}${kebab}`))
+        }
+        if (stylesheets.length > 0) leaks.push(`${key} imports a stylesheet (${stylesheets.join(', ')}): a hook carries no css`)
       }
-      if (stylesheets.length > 0) leaks.push(`${key} imports a stylesheet (${stylesheets.join(', ')}): a hook carries no css`)
     }
 
     continue
@@ -126,7 +131,10 @@ for (const prefix of hookPrefixes) {
   if (built.length === 0) leaks.push(`the package builds no ${prefix.slice('./'.length, -1)} entry`)
 }
 
-if (builtHooks(headlessPrefix).join() !== builtHooks(experimentalPrefix).join()) leaks.push('the headless and the experimental entries are not the same hooks, and each hook of the old path must have its new one')
+const headlessHookNames = builtHooks(headlessPrefix)
+const aliasedHookNames = builtHooks(experimentalPrefix).filter((name) => headlessHookNames.includes(name))
+
+if (headlessHookNames.join() !== aliasedHookNames.join()) leaks.push('the headless and the experimental entries are not the same hooks, and each hook of the old path must have its new one')
 
 const presetsDir = join(root, 'dist-lib', 'styles', 'presets')
 const builtStyles = existsSync(presetsDir) ? readdirSync(presetsDir).filter((file) => file.endsWith('.js')).map((file) => file.slice(0, -'.js'.length)) : []
