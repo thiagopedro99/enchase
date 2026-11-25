@@ -58,7 +58,7 @@ Work goes into `dev`. `main` takes no direct commits: it only moves forward by f
 
 While a version is being prepared on `dev`, `main` stays on the last published commit and only moves with the release commit. If an urgent bug shows up in that period, the hotfix comes from `main`: create a branch from it, make the fix and the `chore(release)` commit of the fix version, and push the result to `main` by fast-forward (`git push origin <branch>:main`). Then bring the hotfix back with `git merge main` on `dev`, never with a rebase: `dev` is not rewritten, it keeps containing `main`, and the next release goes forward by fast-forward.
 
-The CI (`package.yml` and `browser-tests.yml`) runs on every push to `dev` and `main` and on every pull request. A new push cancels the previous run of the same branch or pull request, so two matrices of browsers are not queued. On `main` no run is canceled, because the publication waits for the CI of the commit.
+The CI (`package.yml` and `browser-tests.yml`) runs on every push to `dev` and on every pull request, except when the push or the pull request only touches files of the site and of the repository tooling that the package does not read (`Dockerfile`, `.dockerignore`, `nginx.conf`, `.snyk`, `.github/dependabot.yml` and the issue templates). A new push cancels the previous run of the same branch or pull request, so two matrices of browsers are not queued. A push to `main` does not run them on its own: `main` only receives what `dev` has already run, and `release.yml` calls both on that commit before it publishes, where no run is canceled, because the publication waits for them. Dependabot opens its pull requests against `dev`, grouped, weekly for the Docker images and monthly for the actions.
 
 ## Suggestions board
 

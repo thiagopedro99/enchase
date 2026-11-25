@@ -2,8 +2,22 @@ name: package
 
 on:
   push:
-    branches: [main, dev]
+    branches: [dev]
+    paths-ignore:
+      - Dockerfile
+      - .dockerignore
+      - nginx.conf
+      - .snyk
+      - .github/dependabot.yml
+      - .github/ISSUE_TEMPLATE/**
   pull_request:
+    paths-ignore:
+      - Dockerfile
+      - .dockerignore
+      - nginx.conf
+      - .snyk
+      - .github/dependabot.yml
+      - .github/ISSUE_TEMPLATE/**
   workflow_call:
 
 concurrency:
