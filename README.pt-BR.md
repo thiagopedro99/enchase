@@ -106,6 +106,7 @@ O `GlobalStyles` é opcional. Ele acrescenta uma folha pequena, em `@layer encha
 | `enchase/icons` | Os 20 ícones que os componentes usam por dentro, um componente por ícone. Funciona em Server Components. |
 | `enchase/headless/<nome>` | Um hook sem markup por entrada (`tabs`, `pagination`, `segmented-control`, `accordion` e `slider`), com os tipos. Para Client Components, sem CSS e sem componente. |
 | `enchase/experimental/<nome>` | O caminho antigo dos mesmos cinco hooks: um alias deprecado, removido na 1.0. Use `enchase/headless/<nome>`. |
+| `enchase/experimental/board` | `Board`, novo e ainda fora da API estável. Veja "Experimental". |
 | `enchase/styles.css` | CSS dos componentes. |
 | `enchase/styles.layer.css` | O mesmo CSS dentro de `@layer enchase`. |
 | `enchase/css/<nome>.css` | O CSS de um componente, cortado de `enchase/styles.css`. O `enchase/css/index.json` é o mapa: o arquivo de cada componente e os arquivos de que ele precisa. |
@@ -1027,6 +1028,40 @@ export const MinhasAbas = () => {
 ```
 
 Cada hook devolve o estado e um getter por parte (`getTabProps(value, props?)`, `getPageProps(page, props?)`): você espalha o resultado no seu elemento e passa as suas props no segundo argumento, onde os seus handlers rodam primeiro (e o do hook roda depois, mesmo que o seu chame `preventDefault()`), o seu `ref` é mantido e o seu `id` vence. O estado que o seu CSS precisa (`data-state`, `data-open`) é seu: o hook devolve o estado e você escolhe o atributo. A entrada começa com `'use client'`, não traz CSS nem componente e não lê o `UIProvider`, então todo texto de rótulo é seu, e a direção (RTL) vem do `dir` de um elemento acima. Os caminhos antigos, `enchase/experimental/<nome>`, continuam funcionando como aliases deprecados (o editor e o `tsc` avisam) e saem na 1.0; o [HEADLESS.md](HEADLESS.md), em inglês, tem as regras e um exemplo de cada hook.
+
+## Experimental
+
+`enchase/experimental/<nome>` também guarda componentes novos, ainda fora da API estável, e não só os aliases deprecados dos hooks acima: a forma deles ainda pode mudar fora do semver. O [VERSIONING.md](VERSIONING.md), em inglês, tem as regras. Hoje tem um, o `Board`, um quadro kanban:
+
+```tsx
+'use client'
+
+import { Board } from 'enchase/experimental/board'
+
+const colunas = [
+  { id: 'fazer', title: 'A fazer' },
+  { id: 'feito', title: 'Feito' }
+]
+
+const cartoes = [
+  { id: '1', columnId: 'fazer' },
+  { id: '2', columnId: 'feito' }
+]
+
+export const MeuQuadro = () => (
+  <Board
+    columns={colunas}
+    items={cartoes}
+    getItemLabel={(cartao) => `Cartão ${cartao.id}`}
+    renderCard={(cartao) => <span>Cartão {cartao.id}</span>}
+    onMove={({ item, to }) => salvarPosicaoDoCartao(item.id, to)}
+  />
+)
+```
+
+O `Board` é controlado: nunca reordena `items` por conta própria, e chama `onMove` exatamente uma vez por movimento, quando o cartão é solto na posição nova, nunca enquanto está só sendo arrastado por cima de outro lugar. Trate essa chamada como o momento de persistir o movimento, mesmo que em um servidor, e atualize `items` de acordo; se `items` não mudar, o cartão volta para onde estava. `sortable` (`true` por padrão) permite reordenar dentro de uma coluna; com `false`, um movimento só troca de coluna, e o cartão sempre cai no fim da coluna de destino. `readOnly` desliga a alça, o arrasto e o menu de mover, e deixa o quadro como uma lista só de leitura.
+
+A alça de cada cartão é um botão: espaço ou Enter pega o cartão, as setas movem (para cima e para baixo dentro da coluna, para a esquerda e para a direita para a coluna anterior ou a próxima, espelhadas com `dir="rtl"`), Home e End vão para o topo ou o fim da coluna, espaço ou Enter solta de novo, e Esc cancela. Um menu por cartão, "Mover {cartão} para", move do mesmo jeito sem nenhum arrasto, que é também o que o critério 2.5.7 (Movimentos de Arrastar) da WCAG 2.2 exige de toda interface com arrastar-e-soltar.
 
 ## Densidade
 

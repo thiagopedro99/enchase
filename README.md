@@ -209,6 +209,40 @@ export const MyTabs = () => {
 
 Each hook has an entry of its own, `enchase/headless/tabs`, `pagination`, `segmented-control`, `accordion` and `slider`, which starts with `'use client'` and brings no CSS and no component. The old `enchase/experimental/<name>` paths still work, flagged as deprecated, and go away in 1.0. A getter takes the value of the item and, as a last argument, your own props, where your handlers run first and your `ref` and your `id` are kept. [HEADLESS.md](HEADLESS.md) has the rules and an example of each hook.
 
+## Experimental
+
+`enchase/experimental/<name>` also holds components that are new and not yet part of the stable API, not only the deprecated hook aliases above: their shape can still change outside semver. [VERSIONING.md](VERSIONING.md#experimental) has the rules. Today there is one, `Board`, a Kanban board:
+
+```tsx
+'use client'
+
+import { Board } from 'enchase/experimental/board'
+
+const columns = [
+  { id: 'todo', title: 'To do' },
+  { id: 'done', title: 'Done' }
+]
+
+const cards = [
+  { id: '1', columnId: 'todo' },
+  { id: '2', columnId: 'done' }
+]
+
+export const MyBoard = () => (
+  <Board
+    columns={columns}
+    items={cards}
+    getItemLabel={(card) => `Card ${card.id}`}
+    renderCard={(card) => <span>Card {card.id}</span>}
+    onMove={({ item, to }) => saveCardPosition(item.id, to)}
+  />
+)
+```
+
+`Board` is controlled: it never reorders `items` on its own, and calls `onMove` exactly once per move, when a card is dropped in its new position, never while it is only being dragged over it. Treat that call as the moment to persist the move, even to a server, and update `items` to match; if `items` doesn't change, the card goes back to where it was. `sortable` (`true` by default) allows reordering inside a column; with `false`, a move only swaps columns, and a card always lands at the end of the target one. `readOnly` turns off the handle, the dragging and the move menu, and leaves the board a plain, readable list.
+
+Each card's handle is a button: Space or Enter picks it up, the arrow keys move it (Up and Down inside the column, Left and Right to the next or previous column, mirrored in `dir="rtl"`), Home and End jump to the ends of the column, Space or Enter drops it again, and Esc cancels. A per-card menu, "Move {card} to", moves it the same way with no dragging at all, which is also what WCAG 2.2's 2.5.7 (Dragging Movements) asks every drag-and-drop interface to offer.
+
 ## Density
 
 `data-density="compact"` on `<html>` tightens the whole kit: shorter controls and bars, 32 px targets and a tighter space scale. It is plain CSS, with no prop and no API of its own.
@@ -247,6 +281,7 @@ The Storybook has a Density item in the toolbar and a System/Density page with t
 | `enchase/icons` | The 20 icons the components use inside, one component per icon. Works in Server Components. |
 | `enchase/headless/<name>` | One headless hook per entry (`tabs`, `pagination`, `segmented-control`, `accordion` and `slider`), with its types. For Client Components, with no CSS and no component. |
 | `enchase/experimental/<name>` | The old path of the same five hooks: a deprecated alias, removed in 1.0. Use `enchase/headless/<name>`. |
+| `enchase/experimental/board` | `Board`, new and not yet part of the stable API. See [Experimental](#experimental). |
 | `enchase/styles.css` | The CSS of the components. |
 | `enchase/styles.layer.css` | The same CSS inside `@layer enchase`. |
 | `enchase/css/<name>.css` | The CSS of one component, cut from `enchase/styles.css`. `enchase/css/index.json` is the map: the file of each component and the files it needs. |
