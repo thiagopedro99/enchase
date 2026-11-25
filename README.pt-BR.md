@@ -1048,6 +1048,8 @@ const cartoes = [
   { id: '2', columnId: 'feito' }
 ]
 
+const salvarPosicaoDoCartao = (id: string, to: { columnId: string; index: number }) => fetch(`/api/cartoes/${id}`, { method: 'PATCH', body: JSON.stringify(to) })
+
 export const MeuQuadro = () => (
   <Board
     columns={colunas}

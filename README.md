@@ -228,6 +228,8 @@ const cards = [
   { id: '2', columnId: 'done' }
 ]
 
+const saveCardPosition = (id: string, to: { columnId: string; index: number }) => fetch(`/api/cards/${id}`, { method: 'PATCH', body: JSON.stringify(to) })
+
 export const MyBoard = () => (
   <Board
     columns={columns}
