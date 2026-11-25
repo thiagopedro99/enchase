@@ -70,7 +70,11 @@ The page `/sugestoes` of the site reads the issues of this repository and draws 
 - **Released in:** the milestone of a closed issue, such as `v0.23.0`, is the version that the card shows, so set it before you close the issue.
 - **Reason:** a card of what will not be done shows the latest comment that a maintainer wrote on the issue, so say why in a comment when you close it.
 
-The page asks the API of the site first, `GET /api/suggestions`: a Cloudflare Worker, in `worker/`, that reads GitHub as a GitHub App and keeps the answer for one minute. When the API does not answer with the list, the page reads the public GitHub API from the browser. Without a token, GitHub allows a limited number of requests per hour from each network address, and the page says so when the limit is reached. Either way, the tab keeps the answer for five minutes. `worker/README.md` says how to set the Worker up and how to deploy it.
+The page asks the API of the site first, `GET /api/suggestions`: a Cloudflare Worker, in `worker/`, that reads GitHub as a GitHub App and keeps the answer for one minute. When the API does not answer with the list, the page reads the public GitHub API from the browser. Without a token, GitHub allows a limited number of requests per hour from each network address, and the page says so when the limit is reached. Either way, the tab keeps the answer for five minutes.
+
+The same Worker signs a visitor in with GitHub and records a vote as the 👍 of that visitor on the issue, so a vote given on the site and a vote given on GitHub are the same thing. Only what is under analysis, in the backlog or in development takes votes on the site. When the Worker does not answer, the page shows the board without the login. `worker/README.md` says how the session is kept, how to set the Worker up and how to deploy it.
+
+The site sends a `Content-Security-Policy` header, in `nginx.conf`, on every page but the Storybook under `/docs/`: scripts and fonts only from the site, images from the site and from the avatars of GitHub, and requests only to the site and to `api.github.com`. A new external address in the site needs a new entry there.
 
 The page `/novidades` is written by hand in `demo/pages/novidades/defaultData.ts`, in Portuguese, from the notes of `CHANGELOG.md`. A test fails when the version of `package.json` has no entry there, so write the entry in the release commit.
 
