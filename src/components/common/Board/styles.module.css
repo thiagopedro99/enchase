@@ -1,0 +1,56 @@
+:where(.board) {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+
+:where(.track) {
+  display: flex;
+  align-items: stretch;
+  gap: var(--enchase-board-track-gap, var(--enchase-space-md));
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: var(--enchase-board-track-gap, var(--enchase-space-md));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    scroll-behavior: auto;
+  }
+}
+
+.board[data-dragging] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+:where(.copy) {
+  position: fixed;
+  inset-inline-start: 0;
+  inset-block-start: 0;
+  z-index: var(--enchase-z-tooltip);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.copy {
+  border-radius: var(--enchase-board-card-radius, var(--enchase-radius-md));
+  background-color: var(--enchase-board-card-background, var(--enchase-color-surface));
+  border: var(--enchase-border-width, 1px) solid var(--enchase-board-card-border-color-dragging, var(--enchase-color-primary));
+  box-shadow: var(--enchase-board-card-shadow-dragging, var(--enchase-shadow-lg));
+  padding: var(--enchase-board-card-padding, var(--enchase-space-sm));
+  cursor: grabbing;
+  transform: translate(var(--board-drag-x, 0px), var(--board-drag-y, 0px)) rotate(var(--enchase-board-drag-rotate, 1.5deg));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .copy {
+    transform: translate(var(--board-drag-x, 0px), var(--board-drag-y, 0px));
+  }
+}
