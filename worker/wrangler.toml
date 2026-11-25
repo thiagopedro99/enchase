@@ -2,19 +2,23 @@ name = "enchase-api"
 main = "src/index.ts"
 compatibility_date = "2026-11-01"
 workers_dev = false
-routes = [{ pattern = "enchase.othiagosilva.com.br/api/*", zone_name = "othiagosilva.com.br" }]
+
+[[routes]]
+pattern = "enchase.othiagosilva.com.br/api/*"
+zone_name = "othiagosilva.com.br"
 
 [vars]
 GITHUB_APP_ID = "5926239"
-GITHUB_CLIENT_ID = ""
+GITHUB_CLIENT_ID = "Iv23lifoA8FRiaVJbSFW"
 
 [[kv_namespaces]]
 binding = "SESSIONS"
+id = "325dc22915cb4d77a1f2f5ac9712ed19"
 
 [[ratelimits]]
 name = "LIMITER"
 namespace_id = "1001"
 
-  [ratelimits.simple]
-  limit = 30
-  period = 60
+[ratelimits.simple]
+limit = 30
+period = 60
