@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { StrictMode, useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
-import { userEvent } from 'vitest/browser'
+import { page, userEvent } from 'vitest/browser'
 
 import { Board } from '@components/common/Board/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
@@ -37,13 +37,15 @@ const applyMove = (items: Item[], move: BoardMove<Item>): Item[] => {
   return [...grouped.values()].flat()
 }
 
-const TestBoard = ({ onMove, dir }: { onMove?: (move: BoardMove<Item>) => void; dir?: 'rtl' }) => {
+const TestBoard = ({ onMove, dir, sortable, readOnly }: { onMove?: (move: BoardMove<Item>) => void; dir?: 'rtl'; sortable?: boolean; readOnly?: boolean }) => {
   const [items, setItems] = useState(defaultItems)
 
   const board = (
     <Board<Item>
       columns={columns}
       items={items}
+      sortable={sortable}
+      readOnly={readOnly}
       onMove={(move) => {
         onMove?.(move)
         setItems((current) => applyMove(current, move))
@@ -109,15 +111,19 @@ describe('Board in a real browser', () => {
     expect(cardTitle(0)).toBe('Revisar PR')
   })
 
-  it('shows data-dragging and a floating copy while dragging, and clears both on drop', async () => {
+  it('shows data-dragging and a floating copy the width and look of the original card, and clears both on drop', async () => {
     renderInBrowser(<TestBoard />)
+    const originalWidth = cards()[0].getBoundingClientRect().width
 
     await pressMouse('[data-slot="board-handle"]')
     await moveMouse(200, 160, 6)
     await frames(2)
 
     expect(root().hasAttribute('data-dragging')).toBe(true)
-    expect(document.querySelector('[data-slot="board-drag-copy"]')).toBeTruthy()
+    const copy = document.querySelector('[data-slot="board-drag-copy"]') as HTMLElement
+    expect(copy).toBeTruthy()
+    expect(Math.abs(copy.getBoundingClientRect().width - originalWidth)).toBeLessThan(3)
+    expect(copy.textContent).toContain('Revisar PR')
 
     await releaseMouse()
     await frames(2)
@@ -171,5 +177,126 @@ describe('Board in a real browser', () => {
 
     expect(onMove).toHaveBeenCalledTimes(1)
     expect(onMove.mock.calls[0][0]).toMatchObject({ to: { columnId: 'doing' } })
+  })
+
+  it('calls onMove exactly once under StrictMode for a pointer drag', async () => {
+    const onMove = vi.fn()
+    renderInBrowser(
+      <StrictMode>
+        <TestBoard onMove={onMove} />
+      </StrictMode>
+    )
+
+    const target = cards()[1].getBoundingClientRect()
+    await userEvent.dragAndDrop(handle(0), cards()[1], { sourcePosition: { x: 10, y: 10 }, targetPosition: { x: target.width / 2, y: target.height - 2 }, steps: 6 })
+    await frames(2)
+
+    expect(onMove).toHaveBeenCalledTimes(1)
+  })
+
+  it('does nothing when dragging within the same column while sortable is false', async () => {
+    const onMove = vi.fn()
+    renderInBrowser(<TestBoard onMove={onMove} sortable={false} />)
+
+    const target = cards()[1].getBoundingClientRect()
+
+    await userEvent.dragAndDrop(handle(0), cards()[1], { sourcePosition: { x: 10, y: 10 }, targetPosition: { x: target.width / 2, y: target.height - 2 }, steps: 6 })
+    await frames(2)
+
+    expect(onMove).not.toHaveBeenCalled()
+    expect(cardTitle(0)).toBe('Revisar PR')
+    expect(cardTitle(1)).toBe('Escrever testes')
+    expect(document.querySelector('[data-slot="board-line"]')).toBeFalsy()
+  })
+
+  it('drags a card to the end of another column regardless of the drop position when sortable is false', async () => {
+    const onMove = vi.fn()
+    renderInBrowser(<TestBoard onMove={onMove} sortable={false} />)
+
+    const todoColumn = part('board-column', 0)
+    const columnBox = todoColumn.getBoundingClientRect()
+
+    await userEvent.dragAndDrop(handle(2), todoColumn, { sourcePosition: { x: 10, y: 10 }, targetPosition: { x: columnBox.width / 2, y: 4 }, steps: 6 })
+    await frames(2)
+
+    expect(onMove).toHaveBeenCalledTimes(1)
+    expect(onMove.mock.calls[0][0]).toMatchObject({ to: { columnId: 'todo', index: 2 } })
+  })
+
+  it('does not scroll the page sideways on a narrow viewport', async () => {
+    await page.viewport(400, 800)
+    renderInBrowser(<TestBoard />)
+    await frames(2)
+
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(document.documentElement.clientWidth)
+  })
+
+  it('shows a grab cursor on a draggable card and disables selection only while dragging', async () => {
+    renderInBrowser(<TestBoard />)
+
+    expect(getComputedStyle(cards()[0]).cursor).toBe('grab')
+    expect(getComputedStyle(cards()[0]).userSelect).not.toBe('none')
+
+    await pressMouse('[data-slot="board-handle"]')
+    await moveMouse(200, 160, 6)
+    await frames(2)
+
+    expect(getComputedStyle(cards()[0]).userSelect).toBe('none')
+    expect(getComputedStyle(cards()[1]).userSelect).toBe('none')
+
+    await releaseMouse()
+    await frames(2)
+
+    expect(getComputedStyle(cards()[0]).userSelect).not.toBe('none')
+  })
+
+  it('does not show a grab cursor and leaves text selectable when read-only', () => {
+    renderInBrowser(<TestBoard readOnly />)
+
+    expect(getComputedStyle(cards()[0]).cursor).not.toBe('grab')
+    expect(getComputedStyle(cards()[0]).userSelect).not.toBe('none')
+  })
+
+  it('does not touch an unrelated existing inline style on the document element while dragging', async () => {
+    document.documentElement.style.setProperty('--consumer-app-marker', 'kept')
+    try {
+      renderInBrowser(<TestBoard />)
+
+      await pressMouse('[data-slot="board-handle"]')
+      await moveMouse(200, 160, 6)
+      await frames(2)
+      await releaseMouse()
+      await frames(2)
+
+      expect(document.documentElement.style.getPropertyValue('--consumer-app-marker')).toBe('kept')
+    } finally {
+      document.documentElement.style.removeProperty('--consumer-app-marker')
+    }
+  })
+
+  it('clears the target highlight and the line, and cancels, when the pointer leaves the track', async () => {
+    const onMove = vi.fn()
+    renderInBrowser(
+      <div style={{ paddingBlockEnd: 400 }}>
+        <TestBoard onMove={onMove} />
+      </div>
+    )
+
+    const track = part('board-track').getBoundingClientRect()
+
+    await pressMouse('[data-slot="board-handle"]')
+    await moveMouse(track.left + 100, track.top + 40, 6)
+    await frames(2)
+    expect(part('board-column', 0).hasAttribute('data-target')).toBe(true)
+
+    await moveMouse(track.left + 100, track.bottom + 200, 6)
+    await frames(2)
+    expect(document.querySelector('[data-target]')).toBeFalsy()
+    expect(document.querySelector('[data-slot="board-line"]')).toBeFalsy()
+
+    await releaseMouse()
+    await frames(2)
+    expect(onMove).not.toHaveBeenCalled()
+    expect(cardTitle(0)).toBe('Revisar PR')
   })
 })

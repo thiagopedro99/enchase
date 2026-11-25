@@ -1,11 +1,12 @@
-import { createRef, useState } from 'react'
+import { createRef, StrictMode, useState } from 'react'
 import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import userEvent from '@testing-library/user-event'
-import { screen } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { axe } from '@tests/axe.ts'
 
 import { Board } from '@components/common/Board/index.tsx'
+import { Modal } from '@components/common/Modal/index.tsx'
 
 import type { BoardColumn, BoardMove } from '@components/common/Board/types.ts'
 
@@ -290,5 +291,121 @@ describe('Board', () => {
 
     const fixedRender = renderWithProviders(<TestBoard sortable={false} />)
     expect(await axe(fixedRender.container)).toHaveNoViolations()
+  })
+
+  it('calls onMove exactly once under StrictMode, for a keyboard move and a menu move', async () => {
+    const user = userEvent.setup()
+    const onMove = vi.fn()
+    renderWithProviders(
+      <StrictMode>
+        <TestBoard onMove={onMove} />
+      </StrictMode>
+    )
+
+    handle('Revisar PR').focus()
+    await user.keyboard(' ')
+    await user.keyboard('{ArrowDown}')
+    await user.keyboard(' ')
+    expect(onMove).toHaveBeenCalledTimes(1)
+
+    onMove.mockClear()
+    await user.click(menuButton('Corrigir bug'))
+    await user.click(screen.getByRole('menuitem', { name: 'Concluído' }))
+    expect(onMove).toHaveBeenCalledTimes(1)
+  })
+
+  it('lets the keyboard reach the end of a column the card is not native to', async () => {
+    const user = userEvent.setup()
+    const customItems: Item[] = [
+      { id: '1', columnId: 'todo', title: 'One' },
+      { id: '2', columnId: 'doing', title: 'Two' },
+      { id: '3', columnId: 'doing', title: 'Three' }
+    ]
+    renderWithProviders(<TestBoard items={customItems} />)
+
+    handle('One').focus()
+    await user.keyboard(' ')
+    await user.keyboard('{ArrowRight}')
+    await user.keyboard('{ArrowDown}')
+    await user.keyboard('{ArrowDown}')
+    await user.keyboard(' ')
+
+    const doing = screen.getByRole('region', { name: 'Em andamento' })
+    const titles = within(doing).getAllByText(/^(One|Two|Three)$/).map((node) => node.textContent)
+    expect(titles).toEqual(['Two', 'Three', 'One'])
+  })
+
+  it('puts the card at the end of the target column through the menu when sortable is false', async () => {
+    const user = userEvent.setup()
+    const onMove = vi.fn()
+    renderWithProviders(<TestBoard onMove={onMove} sortable={false} />)
+
+    await user.click(menuButton('Corrigir bug'))
+    await user.click(screen.getByRole('menuitem', { name: 'A fazer' }))
+
+    expect(onMove.mock.calls[0][0]).toMatchObject({ to: { columnId: 'todo', index: 2 } })
+  })
+
+  it('returns focus to the handle after Escape reverts a cross-column move', async () => {
+    const user = userEvent.setup()
+    const onMove = vi.fn()
+    renderWithProviders(<TestBoard onMove={onMove} />)
+
+    handle('Revisar PR').focus()
+    await user.keyboard(' ')
+    await user.keyboard('{ArrowRight}')
+    await user.keyboard('{Escape}')
+
+    expect(onMove).not.toHaveBeenCalled()
+    expect(handle('Revisar PR')).toHaveFocus()
+    expect(screen.getByRole('region', { name: 'A fazer' })).toContainElement(screen.getByText('Revisar PR'))
+  })
+
+  it('overrides individual board texts through the labels prop, keeping the rest from the locale', () => {
+    renderWithProviders(
+      <Board<Item>
+        columns={columns}
+        items={defaultItems}
+        onMove={() => undefined}
+        renderCard={(item) => <p>{item.title}</p>}
+        getItemLabel={(item) => item.title}
+        labels={{ board: 'Quadro de tarefas' }}
+      />
+    )
+
+    expect(screen.getByRole('group', { name: 'Quadro de tarefas' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Mover Revisar PR' })).toBeInTheDocument()
+  })
+
+  it('does not give the column title a heading role', () => {
+    renderWithProviders(<TestBoard />)
+
+    expect(screen.queryAllByRole('heading')).toHaveLength(0)
+    expect(screen.getByRole('region', { name: 'A fazer' })).toBeInTheDocument()
+  })
+
+  it('describes the handle with instructions that mention how to pick up the card', () => {
+    renderWithProviders(<TestBoard />)
+
+    const described = handle('Revisar PR').getAttribute('aria-describedby')
+    expect(document.getElementById(described as string)).toHaveTextContent('Espaço pega o cartão. Com ele pego, as setas movem, espaço solta e Esc cancela.')
+  })
+
+  it('does not close an ancestor Modal when Escape cancels a move', async () => {
+    const user = userEvent.setup()
+    const onClose = vi.fn()
+    const onMove = vi.fn()
+    renderWithProviders(
+      <Modal isOpen onClose={onClose} title="Quadro">
+        <TestBoard onMove={onMove} />
+      </Modal>
+    )
+
+    handle('Revisar PR').focus()
+    await user.keyboard(' ')
+    await user.keyboard('{Escape}')
+
+    expect(onMove).not.toHaveBeenCalled()
+    expect(onClose).not.toHaveBeenCalled()
   })
 })
