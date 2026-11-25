@@ -1,5 +1,6 @@
 :where(.board) {
   box-sizing: border-box;
+  position: relative;
   display: flex;
   flex-direction: column;
   min-inline-size: 0;
@@ -25,16 +26,22 @@
   }
 }
 
-.board[data-dragging] {
+:where(html[data-enchase-board-dragging]) {
   -webkit-user-select: none;
   user-select: none;
 }
 
 :where(.copy) {
+  box-sizing: border-box;
   position: fixed;
   inset-inline-start: 0;
   inset-block-start: 0;
   z-index: var(--enchase-z-tooltip);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: var(--enchase-board-card-gap, var(--enchase-space-sm));
+  inline-size: var(--board-drag-width, auto);
   pointer-events: none;
   will-change: transform;
 }
@@ -53,4 +60,19 @@
   .copy {
     transform: translate(var(--board-drag-x, 0px), var(--board-drag-y, 0px));
   }
+}
+
+:where(.copyHandle) {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: var(--enchase-board-handle-size, 28px);
+  block-size: var(--enchase-board-handle-size, 28px);
+  border-radius: var(--enchase-board-handle-radius, var(--enchase-radius-sm));
+  color: var(--enchase-board-handle-color, var(--enchase-color-text-secondary));
+}
+
+:where(.copyContent) {
+  min-inline-size: 0;
 }

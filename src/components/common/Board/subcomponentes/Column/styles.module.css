@@ -1,5 +1,6 @@
 :where(.column) {
   box-sizing: border-box;
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1 0 var(--enchase-board-column-min-width, 15.5rem);
@@ -116,8 +117,10 @@
   margin: 0;
   padding: var(--enchase-board-card-padding, var(--enchase-space-sm));
   list-style: none;
-  -webkit-user-select: none;
-  user-select: none;
+}
+
+.card:not([data-read-only]) {
+  cursor: grab;
 }
 
 .card {
