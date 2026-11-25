@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { loadSuggestions } from './github.ts'
+import { loadSuggestions } from './loadSuggestions.ts'
 
 import type { SuggestionsState } from './types.ts'
 

@@ -10,7 +10,6 @@ export interface GithubIssue {
   title: string
   body: string | null
   state: 'open' | 'closed'
-  state_reason: string | null
   comments: number
   created_at: string
   labels: GithubLabel[]
@@ -24,17 +23,15 @@ export interface GithubComment {
   author_association: string
 }
 
-const repository = 'thiagopedro99/enchase'
+export type Requester = (url: string) => Promise<Response>
+
+export const repository = 'thiagopedro99/enchase'
 
 const query = `repo:${repository} is:issue label:enhancement,bug`
 
 export const issuesEndpoint = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}&per_page=100`
 
 export const commentsEndpoint = `https://api.github.com/repos/${repository}/issues/comments?sort=created&direction=desc&per_page=100`
-
-const cacheKey = 'enchase-suggestions'
-
-const cacheLife = 5 * 60 * 1000
 
 const summaryLimit = 150
 
@@ -64,9 +61,13 @@ export const plainText = (body: string | null, limit: number) => {
   return clip(text, limit)
 }
 
-const statusOf = ({ state, state_reason }: GithubIssue, labels: string[]): Status => {
-  if (labels.includes('wontfix') || state_reason === 'not_planned') return 'recusado'
-  if (state === 'closed') return 'lancado'
+const labelsOf = ({ labels }: GithubIssue) => labels.map(({ name }) => name.toLowerCase())
+
+const declined = (issue: GithubIssue) => labelsOf(issue).includes('wontfix')
+
+const statusOf = ({ state, milestone }: GithubIssue, labels: string[]): Status | null => {
+  if (labels.includes('wontfix')) return 'recusado'
+  if (state === 'closed') return milestone ? 'lancado' : null
   if (labels.includes('in progress')) return 'desenvolvimento'
   if (labels.includes('backlog')) return 'backlog'
 
@@ -95,9 +96,12 @@ export const reasonsOf = (comments: GithubComment[]) => {
   return reasons
 }
 
-export const toSuggestion = (issue: GithubIssue, reasons: Map<number, string> = new Map()): Suggestion => {
-  const labels = issue.labels.map(({ name }) => name.toLowerCase())
+export const toSuggestion = (issue: GithubIssue, reasons: Map<number, string> = new Map()): Suggestion | null => {
+  const labels = labelsOf(issue)
   const status = statusOf(issue, labels)
+
+  if (!status) return null
+
   const area = issue.labels.find(({ name }) => name.toLowerCase().startsWith(areaPrefix))?.name.slice(areaPrefix.length).trim()
   const version = status === 'lancado' ? issue.milestone?.title.replace(/^v/, '') : undefined
   const reason = status === 'recusado' ? reasons.get(issue.number) : undefined
@@ -118,50 +122,17 @@ export const toSuggestion = (issue: GithubIssue, reasons: Map<number, string> = 
   }
 }
 
-const readCache = (): Suggestion[] | null => {
-  try {
-    const stored = window.sessionStorage.getItem(cacheKey)
-    const { at, items } = stored ? JSON.parse(stored) : { at: 0, items: null }
-
-    return Array.isArray(items) && Date.now() - at < cacheLife ? items : null
-  } catch {
-    return null
-  }
-}
-
-const writeCache = (items: Suggestion[]) => {
-  try {
-    window.sessionStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), items }))
-  } catch {
-    return
-  }
-}
-
-const headers = { Accept: 'application/vnd.github+json' }
-
 const limited = ({ status }: Response) => status === 403 || status === 429
 
-export const loadSuggestions = async (signal: AbortSignal, fresh = false): Promise<SuggestionsResult> => {
-  const cached = fresh ? null : readCache()
+export const readSuggestions = async (request: Requester): Promise<SuggestionsResult> => {
+  const response = await request(issuesEndpoint)
 
-  if (cached) return { ok: true, items: cached }
+  if (!response.ok) return { ok: false, limited: limited(response) }
 
-  try {
-    const response = await fetch(issuesEndpoint, { headers, signal })
+  const { items: issues }: { items: GithubIssue[] } = await response.json()
+  const reply = issues.some(declined) ? await request(commentsEndpoint) : null
+  const comments: GithubComment[] = reply?.ok ? await reply.json() : []
+  const reasons = reasonsOf(comments)
 
-    if (!response.ok) return { ok: false, limited: limited(response) }
-
-    const { items: issues }: { items: GithubIssue[] } = await response.json()
-    const declined = issues.some((issue) => statusOf(issue, issue.labels.map(({ name }) => name.toLowerCase())) === 'recusado')
-    const reply = declined ? await fetch(commentsEndpoint, { headers, signal }) : null
-    const comments: GithubComment[] = reply?.ok ? await reply.json() : []
-    const reasons = reasonsOf(comments)
-    const items = issues.map((issue) => toSuggestion(issue, reasons))
-
-    writeCache(items)
-
-    return { ok: true, items }
-  } catch {
-    return { ok: false, limited: false }
-  }
+  return { ok: true, items: issues.flatMap((issue) => toSuggestion(issue, reasons) ?? []) }
 }

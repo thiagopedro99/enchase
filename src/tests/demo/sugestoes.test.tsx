@@ -5,12 +5,14 @@ import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
 
 import { commentsEndpoint, issuesEndpoint, plainText, reasonsOf, toSuggestion } from '@demo/pages/sugestoes/github.ts'
+import { apiEndpoint } from '@demo/pages/sugestoes/loadSuggestions.ts'
 import { ageOf, columnsOf, totalOf } from '@demo/pages/sugestoes/columns.ts'
 import { defaultFilters } from '@demo/pages/sugestoes/defaultData.ts'
 import Sugestoes from '@demo/pages/sugestoes/index.tsx'
 import { suggestUrl } from '@demo/defaultData.ts'
 
 import type { GithubComment, GithubIssue } from '@demo/pages/sugestoes/github.ts'
+import type { Suggestion } from '@demo/pages/sugestoes/types.ts'
 
 const day = 24 * 60 * 60 * 1000
 
@@ -24,7 +26,6 @@ const issue = (number: number, title: string, labels: string[], votes: number, o
   title,
   body: `**What you need, and what you do today instead**\n\nText of ${title}.`,
   state: 'open',
-  state_reason: null,
   comments: 2,
   created_at: ago(number),
   labels: labels.map((name) => ({ name })),
@@ -39,10 +40,13 @@ const issues: GithubIssue[] = [
   issue(3, 'Date range', ['enhancement', 'component', 'backlog'], 42),
   issue(4, 'Navbar actions', ['enhancement', 'in progress'], 27),
   issue(5, 'Broken word', ['bug', 'in progress'], 8),
-  issue(6, 'Class wins', ['enhancement'], 56, { state: 'closed', state_reason: 'completed', milestone: { title: 'v0.23.0' } }),
-  issue(7, 'Tailwind classes', ['enhancement'], 19, { state: 'closed', state_reason: 'not_planned' }),
-  issue(8, 'React 18', ['enhancement', 'wontfix'], 14)
+  issue(6, 'Class wins', ['enhancement'], 56, { state: 'closed', milestone: { title: 'v0.23.0' } }),
+  issue(7, 'Tailwind classes', ['enhancement', 'wontfix'], 19, { state: 'closed' }),
+  issue(8, 'React 18', ['enhancement', 'wontfix'], 14),
+  issue(9, 'Closed by the author', ['enhancement'], 3, { state: 'closed' })
 ]
+
+const listed = (items: GithubIssue[] = issues, reasons?: Map<number, string>): Suggestion[] => items.flatMap((item) => toSuggestion(item, reasons) ?? [])
 
 const comments: GithubComment[] = [
   { issue_url: 'https://api.github.com/repos/thiagopedro99/enchase/issues/7', body: 'Me too', author_association: 'NONE' },
@@ -78,7 +82,12 @@ describe('Suggestions data', () => {
   it('places each issue in the column that its state and labels say', () => {
     const reasons = reasonsOf(comments)
 
-    expect(issues.map((item) => toSuggestion(item, reasons).status)).toEqual(['analise', 'analise', 'backlog', 'desenvolvimento', 'desenvolvimento', 'lancado', 'recusado', 'recusado'])
+    expect(listed(issues, reasons).map(({ status }) => status)).toEqual(['analise', 'analise', 'backlog', 'desenvolvimento', 'desenvolvimento', 'lancado', 'recusado', 'recusado'])
+  })
+
+  it('leaves out a closed issue that has neither a milestone nor the wontfix label, so closing an issue is not enough to move its card', () => {
+    expect(toSuggestion(issue(9, 'Closed by the author', ['enhancement'], 3, { state: 'closed' }))).toBeNull()
+    expect(listed().map(({ id }) => id)).toEqual([1, 2, 3, 4, 5, 6, 7, 8])
   })
 
   it('reads the kind, the area, the votes and the version of an issue', () => {
@@ -91,7 +100,7 @@ describe('Suggestions data', () => {
   it('takes the reason of a declined issue from the latest comment of a maintainer', () => {
     const reasons = reasonsOf(comments)
 
-    expect(toSuggestion(issues[6] as GithubIssue, reasons).reason).toBe('Enchase is CSS Modules with tokens. Use enchase eject.')
+    expect(toSuggestion(issues[6] as GithubIssue, reasons)?.reason).toBe('Enchase is CSS Modules with tokens. Use enchase eject.')
     expect(toSuggestion(issues[7] as GithubIssue, reasons)).not.toHaveProperty('reason')
   })
 
@@ -102,7 +111,7 @@ describe('Suggestions data', () => {
   })
 
   it('filters by kind and by text, and sorts by votes or by date', () => {
-    const items = issues.map((item) => toSuggestion(item))
+    const items = listed()
     const byVotes = columnsOf(items, defaultFilters)
 
     expect(totalOf(byVotes)).toBe(items.length)
@@ -122,6 +131,34 @@ describe('Suggestions data', () => {
 })
 
 describe('Suggestions page', () => {
+  it('reads the suggestions from the API of the site and leaves GitHub alone when it answers', async () => {
+    const fetcher = vi.fn((input: RequestInfo | URL) => (String(input) === apiEndpoint ? reply({ items: listed().slice(0, 2) }) : reply({}, 404)))
+
+    vi.stubGlobal('fetch', fetcher)
+    renderPage()
+
+    expect(await screen.findByRole('link', { name: 'Code block' })).toBeInTheDocument()
+    expect(screen.getByText('2 sugestões')).toBeInTheDocument()
+    expect(fetcher.mock.calls.map(([input]) => String(input))).toEqual([apiEndpoint])
+  })
+
+  it.each([
+    ['the page of the site instead of JSON', () => Promise.resolve(new Response('<!doctype html>', { status: 200, headers: { 'Content-Type': 'text/html' } }))],
+    ['an error', () => reply({ error: 'unavailable' }, 502)],
+    ['JSON without the list', () => reply({ items: null })],
+    ['nothing, because the request failed', () => Promise.reject(new Error('offline'))]
+  ])('asks GitHub when the API answers %s', async (_name, answer) => {
+    const github = serve()
+    const fetcher = vi.fn((input: RequestInfo | URL) => (String(input) === apiEndpoint ? answer() : github(input)))
+
+    vi.stubGlobal('fetch', fetcher)
+    renderPage()
+
+    expect(await screen.findByRole('link', { name: 'Code block' })).toBeInTheDocument()
+    expect(screen.getByText('8 sugestões')).toBeInTheDocument()
+    expect(fetcher.mock.calls.map(([input]) => String(input))).toEqual([apiEndpoint, issuesEndpoint, commentsEndpoint])
+  })
+
   it('announces the loading and then draws the board', async () => {
     vi.stubGlobal('fetch', serve())
     renderPage()

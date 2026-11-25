@@ -1,0 +1,62 @@
+import { readSuggestions } from './github.ts'
+
+import type { Suggestion, SuggestionsResult } from './types.ts'
+
+export const apiEndpoint = '/api/suggestions'
+
+const cacheKey = 'enchase-suggestions'
+
+const cacheLife = 5 * 60 * 1000
+
+const readCache = (): Suggestion[] | null => {
+  try {
+    const stored = window.sessionStorage.getItem(cacheKey)
+    const { at, items } = stored ? JSON.parse(stored) : { at: 0, items: null }
+
+    return Array.isArray(items) && Date.now() - at < cacheLife ? items : null
+  } catch {
+    return null
+  }
+}
+
+const writeCache = (items: Suggestion[]) => {
+  try {
+    window.sessionStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), items }))
+  } catch {
+    return
+  }
+}
+
+const isJson = (response: Response) => response.ok && (response.headers.get('Content-Type') ?? '').includes('application/json')
+
+const fromApi = async (signal: AbortSignal): Promise<Suggestion[] | null> => {
+  try {
+    const response = await fetch(apiEndpoint, { headers: { Accept: 'application/json' }, signal })
+    const { items } = isJson(response) ? await response.json() : { items: null }
+
+    return Array.isArray(items) ? items : null
+  } catch {
+    return null
+  }
+}
+
+const fromGithub = async (signal: AbortSignal): Promise<SuggestionsResult> => {
+  try {
+    return await readSuggestions((url) => fetch(url, { headers: { Accept: 'application/vnd.github+json' }, signal }))
+  } catch {
+    return { ok: false, limited: false }
+  }
+}
+
+export const loadSuggestions = async (signal: AbortSignal, fresh = false): Promise<SuggestionsResult> => {
+  const cached = fresh ? null : readCache()
+
+  if (cached) return { ok: true, items: cached }
+
+  const served = await fromApi(signal)
+  const result: SuggestionsResult = served ? { ok: true, items: served } : await fromGithub(signal)
+
+  if (result.ok) writeCache(result.items)
+
+  return result
+}
