@@ -35,4 +35,5 @@ As skills de design e de animação (de `emilkowalski/skills`) ficam fora do git
 - Sempre no padrão **Conventional Commits** (`feat:`, `fix:`, `refactor:`, `docs:`, `chore:`, `style:`, `test:`...).
 - Mensagem **em inglês**, com **descrição curta** (uma linha, imperativo, sem ponto final).
 - **Nunca** adicionar trailer `Co-Authored-By` nem qualquer atribuição ao Claude, nos commits ou nas descrições de PR.
+- O **autor e o committer** de todo commit são o dono do repositório, nunca `Claude <noreply@anthropic.com>`: o GitHub liga esse e-mail à conta `@claude`, que passa a aparecer como contribuidora. Leia o nome e o e-mail do próprio histórico (`git log -1 --author=thiagopedro9 --format='%an <%ae>' origin/main`) e passe-os no commit. Ao trazer commits de outra sessão (cherry-pick), regrave o autor antes de enviar. Não reescreva commits que já foram enviados.
 - Só commitar quando o usuário pedir.
