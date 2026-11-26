@@ -209,7 +209,7 @@ describe('Suggestions form', () => {
 
     expect(await screen.findByText('Sugestão enviada. Ela já está em Em análise.')).toBeInTheDocument()
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
-    expect(screen.getByRole('link', { name: 'Ordenar a tabela pelo teclado' })).toHaveAttribute('href', 'https://github.com/thiagopedro99/enchase/issues/41')
+    expect(screen.getByRole('link', { name: 'Ordenar a tabela pelo teclado' })).toHaveAttribute('href', '?issue=41')
     expect(screen.getByText('4 sugestões')).toBeInTheDocument()
     expect(sent(fetcher)).toEqual([{ kind: 'melhoria', title: 'Ordenar a tabela pelo teclado', need: 'Preciso ordenar as colunas sem usar o mouse.', proposal: '' }])
     expect(fetcher.mock.calls.find(([, init]) => init?.method === 'POST')?.[1]?.headers).toMatchObject({ 'Content-Type': 'application/json' })

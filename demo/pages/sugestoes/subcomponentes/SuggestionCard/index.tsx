@@ -2,21 +2,24 @@ import { Badge, Link, Tag, VisuallyHidden } from 'enchase'
 import { useId } from 'react'
 
 import { CommentIcon, ThumbsUpIcon } from '../../../../components/icons.tsx'
-import { kindLabels, votable } from '../../defaultData.ts'
+import { issueParameter, kindLabels, votable } from '../../defaultData.ts'
 import VoteButton from '../VoteButton/index.tsx'
 import { useVoting } from '../../voting.ts'
 import styles from './styles.module.css'
 import { ageOf } from '../../columns.ts'
 
 import type { SuggestionCardProps } from './types.ts'
+import type { MouseEvent } from 'react'
 
 const count = (value: number, one: string, many: string) => `${value} ${value === 1 ? one : many}`
 
 const details = (votes: number, comments: number, id: number) => `${count(votes, 'voto', 'votos')}, ${count(comments, 'comentário', 'comentários')}, issue ${id}`
 
+const plain = ({ button, metaKey, ctrlKey, shiftKey, altKey }: MouseEvent) => button === 0 && !metaKey && !ctrlKey && !shiftKey && !altKey
+
 const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
   const { id, url, title, text, kind, area, comments, status, createdAt, version, reason } = suggestion
-  const { mode, voted, deltas, pending, onVote } = useVoting()
+  const { mode, voted, deltas, pending, onVote, onOpen } = useVoting()
   const titleId = useId()
   const detailsId = useId()
   const votes = Math.max(0, suggestion.votes + (deltas[id] ?? 0))
@@ -30,9 +33,15 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
         </span>
         <span className={styles.age}>{ageOf(createdAt)}</span>
       </span>
-      <Link href={url} target="_blank" className={styles.title} aria-labelledby={titleId} aria-describedby={detailsId}>
-        <span id={titleId}>{title}</span>
-      </Link>
+      {onOpen ? (
+        <a href={`?${issueParameter}=${id}`} className={styles.title} aria-labelledby={titleId} aria-describedby={detailsId} onClick={(event) => plain(event) && (event.preventDefault(), onOpen(id))}>
+          <span id={titleId}>{title}</span>
+        </a>
+      ) : (
+        <Link href={url} target="_blank" className={styles.title} aria-labelledby={titleId} aria-describedby={detailsId}>
+          <span id={titleId}>{title}</span>
+        </Link>
+      )}
       {text && <span className={styles.text}>{text}</span>}
       {reason && (
         <span className={styles.reason}>

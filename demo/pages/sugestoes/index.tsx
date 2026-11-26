@@ -2,6 +2,7 @@ import { Alert, Container, VisuallyHidden, useToast } from 'enchase'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import PageHeader from '../../components/PageHeader/index.tsx'
+import SuggestionPanel from './subcomponentes/SuggestionPanel/index.tsx'
 import SuggestDialog from './subcomponentes/SuggestDialog/index.tsx'
 import LoginDialog from './subcomponentes/LoginDialog/index.tsx'
 import MoveDialog from './subcomponentes/MoveDialog/index.tsx'
@@ -15,7 +16,8 @@ import { useSuggestions } from './useSuggestions.ts'
 import { useLoginFailure } from './useLoginFailure.ts'
 import Empty from './subcomponentes/Empty/index.tsx'
 import Board from './subcomponentes/Board/index.tsx'
-import { defaultFilters } from './defaultData.ts'
+import { defaultFilters, issueParameter } from './defaultData.ts'
+import { setSearch, useSearch } from '../../router.ts'
 import { takeIntent } from './intent.ts'
 import { VotingContext } from './voting.ts'
 import { useAccount } from './useAccount.ts'
@@ -25,7 +27,11 @@ import styles from './styles.module.css'
 
 const Sugestoes = () => {
   const { state, reload, add } = useSuggestions()
-  const { account, voting, asking, ask, dismiss, expire, leave } = useAccount()
+  const search = useSearch()
+  const openId = Number(new URLSearchParams(search).get(issueParameter)) || null
+  const open = useCallback((id: number) => setSearch(`?${issueParameter}=${id}`), [])
+  const close = useCallback(() => setSearch(''), [])
+  const { account, voting, asking, ask, dismiss, expire, leave } = useAccount(open)
   const [composing, setComposing] = useState(false)
   const loginFailed = useLoginFailure()
   const toast = useToast()
@@ -78,6 +84,9 @@ const Sugestoes = () => {
           )}
           <LoginDialog request={asking} onClose={dismiss} />
           <MoveDialog request={moves.asking} onConfirm={moves.confirm} onClose={moves.cancel} />
+          <VotingContext.Provider value={voting}>
+            <SuggestionPanel id={account.status === 'unavailable' ? null : openId} suggestion={items?.find(({ id }) => id === openId)} account={account} onClose={close} onCommented={add} onSignedOut={expire} />
+          </VotingContext.Provider>
           <SuggestDialog isOpen={composing} items={items ?? []} onClose={() => setComposing(false)} onSent={sent} onSignedOut={expire} />
           </Container>
         </div>

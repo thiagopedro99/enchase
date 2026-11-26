@@ -1,3 +1,5 @@
+import type { Comment, Thread } from './comment.ts'
+
 export type Status = 'analise' | 'backlog' | 'desenvolvimento' | 'lancado' | 'recusado'
 
 export type Kind = 'componente' | 'melhoria' | 'correcao'
@@ -58,6 +60,7 @@ export interface Voting {
   deltas: Record<number, number>
   pending: number[]
   onVote: (suggestion: Suggestion) => void
+  onOpen: ((id: number) => void) | null
 }
 
 export type LoginReason = 'vote' | 'suggest'
@@ -79,3 +82,9 @@ export interface MoveRequest {
   suggestion: Suggestion
   status: Status
 }
+
+export type ThreadState = { status: 'loading' } | { status: 'ready'; thread: Thread } | { status: 'missing' } | { status: 'error' }
+
+export type CommentResult = { status: 'ok'; comment: Comment } | { status: 'invalid' | 'signedOut' | 'limited' | 'daily' | 'locked' | 'failed' }
+
+export type CommentFailure = Exclude<CommentResult['status'], 'ok'>

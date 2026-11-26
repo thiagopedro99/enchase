@@ -43,6 +43,9 @@
 }
 
 .title:focus-visible {
+  outline: var(--enchase-focus-width) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset);
+  border-radius: var(--enchase-radius-sm);
   text-decoration: underline;
 }
 

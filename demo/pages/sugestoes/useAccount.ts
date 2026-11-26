@@ -9,7 +9,7 @@ import type { AccountState, LoginReason, LoginRequest, Voting } from './types.ts
 
 const without = (list: number[], id: number) => list.filter((item) => item !== id)
 
-export const useAccount = () => {
+export const useAccount = (onOpen: (id: number) => void) => {
   const [account, setAccount] = useState<AccountState>({ status: 'unavailable' })
   const [deltas, setDeltas] = useState<Record<number, number>>({})
   const [pending, setPending] = useState<number[]>([])
@@ -67,9 +67,10 @@ export const useAccount = () => {
       voted: voted ?? [],
       deltas,
       pending,
-      onVote: (suggestion) => (voted ? void toggle(suggestion.id, !voted.includes(suggestion.id)) : setAsking({ reason: 'vote', suggestion }))
+      onVote: (suggestion) => (voted ? void toggle(suggestion.id, !voted.includes(suggestion.id)) : setAsking({ reason: 'vote', suggestion })),
+      onOpen: account.status === 'unavailable' ? null : onOpen
     }),
-    [account.status, voted, deltas, pending, toggle]
+    [account.status, voted, deltas, pending, toggle, onOpen]
   )
 
   const leave = useCallback(async () => {

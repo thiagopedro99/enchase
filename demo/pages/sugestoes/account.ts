@@ -1,6 +1,7 @@
 import { apiEndpoint } from './loadSuggestions.ts'
 
-import type { AccountState, MoveResult, SendResult, Suggestion, VoteResult } from './types.ts'
+import type { AccountState, CommentResult, MoveResult, SendResult, Suggestion, ThreadState, VoteResult } from './types.ts'
+import type { Comment, Thread } from './comment.ts'
 import type { Move } from './move.ts'
 import type { Draft } from './draft.ts'
 
@@ -84,6 +85,39 @@ export const sendMove = async (id: number, move: Partial<Move>): Promise<MoveRes
     if (response.status === 422 && typeof body.problems === 'object' && body.problems !== null) return { status: 'invalid', problems: body.problems as Record<string, string> }
 
     return { status: response.status === 429 ? 'limited' : 'failed' }
+  } catch {
+    return { status: 'failed' }
+  }
+}
+
+export const threadEndpoint = (id: number) => `/api/suggestions/${id}/comments`
+
+export const loadThread = async (id: number, signal: AbortSignal): Promise<ThreadState> => {
+  try {
+    const response = await fetch(threadEndpoint(id), { headers, signal })
+
+    if (response.status === 404) return { status: 'missing' }
+
+    const thread: Partial<Thread> = isJson(response) ? await response.json() : {}
+
+    return typeof thread.title === 'string' && Array.isArray(thread.comments) ? { status: 'ready', thread: thread as Thread } : { status: 'error' }
+  } catch {
+    return { status: 'error' }
+  }
+}
+
+export const sendComment = async (id: number, text: string): Promise<CommentResult> => {
+  try {
+    const response = await fetch(threadEndpoint(id), { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) })
+    const body: { comment?: Comment; error?: unknown } = (response.headers.get('Content-Type') ?? '').includes('application/json') ? await response.json() : {}
+
+    if (response.ok && body.comment && typeof body.comment.id === 'number') return { status: 'ok', comment: body.comment }
+    if (response.status === 401) return { status: 'signedOut' }
+    if (response.status === 409) return { status: 'locked' }
+    if (response.status === 422) return { status: 'invalid' }
+    if (response.status === 429) return { status: body.error === 'daily limit' ? 'daily' : 'limited' }
+
+    return { status: 'failed' }
   } catch {
     return { status: 'failed' }
   }

@@ -2,7 +2,7 @@ import { createContext, useContext } from 'react'
 
 import type { Voting } from './types.ts'
 
-export const noVoting: Voting = { mode: 'off', voted: [], deltas: {}, pending: [], onVote: () => undefined }
+export const noVoting: Voting = { mode: 'off', voted: [], deltas: {}, pending: [], onVote: () => undefined, onOpen: null }
 
 export const VotingContext = createContext<Voting>(noVoting)
 

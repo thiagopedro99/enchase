@@ -12,3 +12,9 @@
 .board[data-max-width='full'] {
   max-inline-size: 104rem;
 }
+
+@media (min-width: 1200px) {
+  .board {
+    --enchase-container-padding: clamp(1.5rem, 2.5vw, 3rem);
+  }
+}

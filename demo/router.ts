@@ -45,3 +45,15 @@ export const usePath = () =>
     () => trim(window.location.pathname),
     () => routes.home
   )
+
+export const setSearch = (search: string) => {
+  window.history.pushState(null, '', `${window.location.pathname}${search}`)
+  listeners.forEach((notify) => notify())
+}
+
+export const useSearch = () =>
+  useSyncExternalStore(
+    subscribe,
+    () => window.location.search,
+    () => ''
+  )

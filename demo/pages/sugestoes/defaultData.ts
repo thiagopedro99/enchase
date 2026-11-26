@@ -1,6 +1,8 @@
 import { dailySuggestions, draftLimits } from './draft.ts'
 
-import type { Filters, Kind, KindFilter, LoginReason, MoveFailure, SendFailure, Sort, Status, StatusInfo, VoteResult } from './types.ts'
+import { commentLimits, dailyComments } from './comment.ts'
+
+import type { CommentFailure, Filters, Kind, KindFilter, LoginReason, MoveFailure, SendFailure, Sort, Status, StatusInfo, VoteResult } from './types.ts'
 import type { DraftField, DraftProblem } from './draft.ts'
 
 export const statuses: StatusInfo[] = [
@@ -91,3 +93,14 @@ export const moveMessages: Record<MoveFailure, string> = {
   limited: 'Muitos movimentos em pouco tempo. Espere um minuto e tente de novo.',
   failed: 'Não foi possível mover o cartão. Ele voltou para a coluna de origem.'
 }
+
+export const commentMessages: Record<CommentFailure, string> = {
+  invalid: `Escreva de ${commentLimits.min} a ${commentLimits.max} caracteres.`,
+  signedOut: 'Sua sessão terminou. Entre de novo para comentar: o que você escreveu continua aqui.',
+  limited: 'Muitos comentários em pouco tempo. Espere um minuto e tente de novo.',
+  daily: `Você já enviou ${dailyComments} comentários nas últimas 24 horas. Tente de novo mais tarde.`,
+  locked: 'Os comentários desta sugestão foram fechados no GitHub.',
+  failed: 'Não foi possível enviar o comentário. Tente de novo.'
+}
+
+export const issueParameter = 'issue'
