@@ -1,7 +1,7 @@
 import { generateKeyPairSync } from 'node:crypto'
 import { vi } from 'vitest'
 
-import { commentsEndpoint, issuesEndpoint } from '@demo/pages/sugestoes/github.ts'
+import { commentsEndpoint, listEndpoints } from '@demo/pages/sugestoes/github.ts'
 
 import type { GithubIssue } from '@demo/pages/sugestoes/github.ts'
 import type { Env } from '@worker/types.ts'
@@ -45,7 +45,8 @@ export const github = (overrides: Record<string, () => Promise<Response>> = {}) 
 
       return reply({ token: `ghs_token${minted.count}`, expires_at: new Date(Date.now() + hour).toISOString() }, 201)
     },
-    [issuesEndpoint]: () => reply({ total_count: issues.length, items: issues }),
+    [listEndpoints[0] as string]: () => reply([...issues, { ...issues[0], number: 99, title: 'A pull request', pull_request: {} }]),
+    [listEndpoints[1] as string]: () => reply([issues[1]]),
     [commentsEndpoint]: () => reply(comments),
     ...overrides
   }

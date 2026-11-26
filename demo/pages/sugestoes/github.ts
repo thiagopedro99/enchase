@@ -18,6 +18,8 @@ export interface GithubIssue {
   reactions?: { '+1'?: number }
 }
 
+export type ListedIssue = GithubIssue & { pull_request?: unknown }
+
 export interface GithubComment {
   issue_url: string
   body: string | null
@@ -33,6 +35,8 @@ export const boardLabels = ['enhancement', 'bug']
 export const query = `repo:${repository} is:issue label:${boardLabels.join(',')}`
 
 export const issuesEndpoint = `https://api.github.com/search/issues?q=${encodeURIComponent(query)}&per_page=100`
+
+export const listEndpoints = boardLabels.map((label) => `https://api.github.com/repos/${repository}/issues?state=all&labels=${encodeURIComponent(label)}&per_page=100`)
 
 export const commentsEndpoint = `https://api.github.com/repos/${repository}/issues/comments?sort=created&direction=desc&per_page=100`
 
@@ -127,12 +131,33 @@ export const toSuggestion = (issue: GithubIssue, reasons: Map<number, string> = 
 
 const limited = ({ status }: Response) => status === 403 || status === 429
 
-export const readSuggestions = async (request: Requester): Promise<SuggestionsResult> => {
+const searched = async (request: Requester): Promise<GithubIssue[] | Response> => {
   const response = await request(issuesEndpoint)
 
-  if (!response.ok) return { ok: false, limited: limited(response) }
+  if (!response.ok) return response
 
-  const { items: issues }: { items: GithubIssue[] } = await response.json()
+  const { items }: { items: GithubIssue[] } = await response.json()
+
+  return items
+}
+
+const listed = async (request: Requester): Promise<GithubIssue[] | Response> => {
+  const responses = await Promise.all(listEndpoints.map(request))
+  const refused = responses.find((response) => !response.ok)
+
+  if (refused) return refused
+
+  const pages: ListedIssue[][] = await Promise.all(responses.map((response) => response.json()))
+  const issues = new Map(pages.flatMap((page) => page.filter((issue) => !issue.pull_request).map((issue) => [issue.number, issue] as const)))
+
+  return Array.from(issues.values())
+}
+
+export const readSuggestions = async (request: Requester, direct = false): Promise<SuggestionsResult> => {
+  const issues = await (direct ? listed(request) : searched(request))
+
+  if (issues instanceof Response) return { ok: false, limited: limited(issues) }
+
   const reply = issues.some(declined) ? await request(commentsEndpoint) : null
   const comments: GithubComment[] = reply?.ok ? await reply.json() : []
   const reasons = reasonsOf(comments)

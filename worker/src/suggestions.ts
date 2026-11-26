@@ -1,6 +1,6 @@
 import { readSuggestions } from '../../demo/pages/sugestoes/github.ts'
 import { forget, githubHeaders, tokenFor } from './token.ts'
-import { json, unavailable } from './http.ts'
+import { json, unavailable, uncached } from './http.ts'
 
 import type { Env, Handler } from './types.ts'
 
@@ -8,7 +8,7 @@ export const suggestionsPath = '/api/suggestions'
 
 const cacheName = 'suggestions'
 
-const life = 60
+const life = 20
 
 const pause = 15 * 1000
 
@@ -25,7 +25,7 @@ const read = async (env: Env) => {
     if (response.status === 401) forget()
 
     return response
-  })
+  }, true)
 }
 
 const fresh = async (env: Env) => {
@@ -57,11 +57,11 @@ export const suggestions: Handler = async ({ env, context, url }) => {
   const key = keyOf(url)
   const stored = await cache.match(key)
 
-  if (stored) return stored
+  if (stored) return uncached(stored)
 
   const response = await fresh(env)
 
   if (response.ok) context.waitUntil(cache.put(key, response.clone()))
 
-  return response
+  return uncached(response)
 }

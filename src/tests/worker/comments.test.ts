@@ -52,7 +52,7 @@ describe('Worker comments, read', () => {
     const response = await call({ ...accountEnv(), GITHUB_CLIENT_ID: '' }, path)
 
     expect(response.status).toBe(200)
-    expect(response.headers.get('Cache-Control')).toBe('public, max-age=60')
+    expect(response.headers.get('Cache-Control')).toBe('no-store')
     expect(await response.json()).toEqual({
       id: 7,
       title: 'Sticky columns',
@@ -79,6 +79,7 @@ describe('Worker comments, read', () => {
 
     expect(callsTo(fetcher, graphqlEndpoint)).toHaveLength(1)
     expect(Array.from(stored.keys())).toEqual([`${site}${path}`])
+    expect(stored.get(`${site}${path}`)?.headers.get('Cache-Control')).toBe('public, max-age=20')
   })
 
   it.each([

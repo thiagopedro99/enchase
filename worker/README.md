@@ -23,7 +23,8 @@ Any other path answers 404, and a method that the path does not take answers 405
 
 The Worker reads the issues of this repository as a GitHub App, so the visitors of the site do not share the limit that GitHub puts on requests without a token. The mapping from an issue to a card is the one of the site, in `demo/pages/sugestoes/github.ts`, and the rules are in the section "Suggestions board" of `CONTRIBUTING.md`.
 
-- The answer is kept for one minute, at the edge and by the visitor. The query string is ignored, so it cannot be used to skip the cache. A vote drops the copy of the edge that took it.
+- The answer is kept for twenty seconds at the edge, and the browser is told not to keep it, so loading the page again always asks the Worker. The query string is ignored, so it cannot be used to skip the cache. A vote, a suggestion, a move and a comment drop the copy of the edge that took them.
+- The Worker reads the issues from the list of the repository, one request for each label of the board, and not from the search: the list has no indexing delay and a much larger limit. The pull requests that carry those labels are left out.
 - When GitHub refuses or fails, the answer is 502 and the Worker leaves GitHub alone for fifteen seconds. The site then reads the public GitHub API from the browser, as it did before the Worker.
 - To read, the Worker asks GitHub for a token that only reads the issues of this repository, whatever the app is allowed to do, and keeps it in memory until five minutes before it expires. The private key never leaves the Worker and nothing of it is logged.
 
@@ -61,7 +62,7 @@ A maintainer moves a card on the site, and the Worker changes the issue as that 
 
 The panel of a suggestion on the site shows the whole text of the issue and its comments, and a signed-in visitor comments from there.
 
-- **Reading** is open to anyone, like the list: the Worker asks GitHub as the app and keeps the answer of each issue for one minute, the "not found" too, so walking through issue numbers does not spend the limit of the app. A new comment drops the copy of that issue.
+- **Reading** is open to anyone, like the list: the Worker asks GitHub as the app and keeps the answer of each issue for twenty seconds at the edge, the "not found" too, so walking through issue numbers does not spend the limit of the app. A new comment drops the copy of that issue.
 - **Plain text only.** The comments come from GitHub already as text, and the body of the issue is cleaned of its Markdown marks. The site renders no HTML that a visitor wrote.
 - **Moderation stays on GitHub:** a comment that a maintainer hides there is left out, a deleted one is gone, and a locked issue takes no comment (the answer is 409).
 - **Writing** is done as the visitor, with the token of the session, so the comment is a comment of that person on GitHub. The text has from 2 to 2,000 characters, in a JSON body of at most 8 KiB.
@@ -90,7 +91,7 @@ Create it once, in Settings, Developer settings, GitHub Apps, New GitHub App:
 1. Turn the webhook off.
 2. Callback URL: `https://enchase.othiagosilva.com.br/api/auth/callback`, without wildcard matching. Keep "Expire user authorization tokens" on, and "Request user authorization (OAuth) during installation" and the device flow off.
 3. Repository permissions: Issues, read and write. Nothing else. The write is what lets a visitor vote and suggest, what lets a maintainer move a card, and what lets the app label a new suggestion.
-4. Where can it be installed: only on this account.
+4. Where can it be installed: any account, which is what makes the app public. Only the owner can sign in through a private app, and GitHub answers 404 to everyone else at the authorization page. An app that already exists is made public in its settings, under Advanced, in the danger zone. Being public also lets other accounts install the app on their own repositories; the Worker never reads them, because it only asks for a token of this repository.
 5. On the page of the app, write down the App ID and the Client ID, generate a private key and generate a client secret.
 6. Install the app on this repository only. After a change of permissions, accept the new permissions on the page of the installation.
 

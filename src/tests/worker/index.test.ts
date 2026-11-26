@@ -1,10 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { commentsEndpoint, issuesEndpoint } from '@demo/pages/sugestoes/github.ts'
+import { commentsEndpoint, listEndpoints } from '@demo/pages/sugestoes/github.ts'
 
 import { callsTo, env, github, headerOf, pkcs1, refused, start, tokenEndpoint } from './defaultData.ts'
 
 const site = 'https://enchase.othiagosilva.com.br'
+
+const [list = '', bugs = ''] = listEndpoints
 
 const stored = new Map<string, Response>()
 
@@ -43,14 +45,15 @@ afterEach(() => {
 })
 
 describe('Worker', () => {
-  it('answers the suggestions as JSON that the visitor and the edge keep for a minute', async () => {
+  it('answers the suggestions as JSON that the edge keeps for twenty seconds and the browser does not keep', async () => {
     vi.stubGlobal('fetch', github())
 
     const response = await ask()
 
     expect(response.status).toBe(200)
     expect(response.headers.get('Content-Type')).toBe('application/json; charset=utf-8')
-    expect(response.headers.get('Cache-Control')).toBe('public, max-age=60')
+    expect(response.headers.get('Cache-Control')).toBe('no-store')
+    expect(stored.get(`${site}/api/suggestions`)?.headers.get('Cache-Control')).toBe('public, max-age=20')
     expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff')
     expect(response.headers.get('Access-Control-Allow-Origin')).toBeNull()
     expect(await response.json()).toEqual({
@@ -67,9 +70,12 @@ describe('Worker', () => {
     vi.stubGlobal('fetch', fetcher)
     await ask()
 
-    expect(headerOf(fetcher, issuesEndpoint, 'Authorization')).toBe('Bearer ghs_token1')
+    expect(headerOf(fetcher, list, 'Authorization')).toBe('Bearer ghs_token1')
+    expect(headerOf(fetcher, bugs, 'Authorization')).toBe('Bearer ghs_token1')
+    expect(list).toBe('https://api.github.com/repos/thiagopedro99/enchase/issues?state=all&labels=enhancement&per_page=100')
+    expect(bugs).toContain('labels=bug')
     expect(headerOf(fetcher, commentsEndpoint, 'Authorization')).toBe('Bearer ghs_token1')
-    expect(headerOf(fetcher, issuesEndpoint, 'User-Agent')).toBe('enchase-suggestions')
+    expect(headerOf(fetcher, list, 'User-Agent')).toBe('enchase-suggestions')
   })
 
   it('serves the next visitors from the cache, whatever the query string', async () => {
@@ -81,7 +87,8 @@ describe('Worker', () => {
     const second = await ask('/api/suggestions?fresh=1')
 
     expect(await second.json()).toEqual(await first.json())
-    expect(callsTo(fetcher, issuesEndpoint)).toHaveLength(1)
+    expect(second.headers.get('Cache-Control')).toBe('no-store')
+    expect(callsTo(fetcher, list)).toHaveLength(1)
     expect(Array.from(stored.keys())).toEqual([`${site}/api/suggestions`])
   })
 
@@ -116,7 +123,7 @@ describe('Worker', () => {
   })
 
   it.each([
-    ['the read', { [issuesEndpoint]: refused(403) }],
+    ['the read', { [list]: refused(403) }],
     ['the token', { [tokenEndpoint]: refused(401) }]
   ])('answers 502 when GitHub refuses %s, keeps nothing and says nothing of the secrets', async (_name, overrides) => {
     const logged = vi.spyOn(console, 'error').mockImplementation(() => undefined)
@@ -148,7 +155,7 @@ describe('Worker', () => {
   it('leaves GitHub alone for fifteen seconds after a failure, then tries again', async () => {
     vi.spyOn(console, 'error').mockImplementation(() => undefined)
 
-    const failing = github({ [issuesEndpoint]: refused(500) })
+    const failing = github({ [list]: refused(500) })
     const worker = await load()
     const get = () => worker.fetch(new Request(`${site}/api/suggestions`), env, context)
 
@@ -174,7 +181,7 @@ describe('Worker', () => {
 
     const worker = await load()
     const get = () => worker.fetch(new Request(`${site}/api/suggestions`), env, context)
-    const expired = github({ [issuesEndpoint]: refused(401) })
+    const expired = github({ [list]: refused(401) })
 
     vi.stubGlobal('fetch', expired)
 

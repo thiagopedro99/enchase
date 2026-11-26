@@ -1,7 +1,7 @@
 import { checkComment, dailyComments } from '../../demo/pages/sugestoes/comment.ts'
 import { boardLabels } from '../../demo/pages/sugestoes/github.ts'
 import { endSession, noSessionCookie, readSession } from './session.ts'
-import { json, jsonOf, signedOut, tooMany, unavailable } from './http.ts'
+import { json, jsonOf, signedOut, tooMany, unavailable, uncached } from './http.ts'
 import { postComment, readIssue, threadOf } from './github.ts'
 import { forgetSuggestions } from './suggestions.ts'
 import { keep, recent, waitOf } from './quota.ts'
@@ -10,7 +10,7 @@ import type { AccountHandler, Handler } from './types.ts'
 
 const cacheName = 'comments'
 
-const life = 60
+const life = 20
 
 const largest = 8 * 1024
 
@@ -27,7 +27,7 @@ export const thread: Handler = async ({ env, context, url }, number) => {
   const key = keyOf(url, number)
   const stored = await cache.match(key)
 
-  if (stored) return stored
+  if (stored) return uncached(stored)
 
   try {
     const { status, data } = await threadOf(env, number)
@@ -38,7 +38,7 @@ export const thread: Handler = async ({ env, context, url }, number) => {
 
     context.waitUntil(cache.put(key, response.clone()))
 
-    return response
+    return uncached(response)
   } catch (error) {
     console.error('comments:', error instanceof Error ? error.message : 'unknown failure')
 

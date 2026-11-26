@@ -29,6 +29,14 @@ export const sameOrigin = (request: Request) => request.headers.get('Origin') ==
 
 export const unavailable = () => json({ error: 'unavailable' }, 502)
 
+export const uncached = (response: Response) => {
+  const headers = new Headers(response.headers)
+
+  headers.set('Cache-Control', 'no-store')
+
+  return new Response(response.body, { status: response.status, headers })
+}
+
 export const signedOut = (cookies: string[] = []) => json({ error: 'signed out' }, 401, {}, cookies)
 
 const sizeOf = (request: Request) => Number(request.headers.get('Content-Length') ?? 0)
