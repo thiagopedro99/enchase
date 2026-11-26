@@ -487,6 +487,7 @@ A page shell: a top bar with the breadcrumb trail and the side menu (permanent o
 | `brandLogo` | `string` | — | URL of an image for the brand of the sidebar, in place of the first letter of the name. The image is decorative, and the name stays as text. |
 | `footerProps` | `FooterProps` | — | companyName, notice, year and links of the footer. |
 | `sidebarFooter` | `SidebarSlot` | — | Fixed content in the footer of the sidebar, above the collapse button. It can be a function that receives { collapsed }. |
+| `actions` | `ReactNode` | — | Extra content for the top bar, such as a sign-in button or the user avatar. With navigation="sidebar" it sits in the `AppBar`, before the theme toggle, on every screen width. With navigation="navbar" it is passed to the `actions` of the `Navbar`: on a wide screen it sits in the bar, before the theme toggle, and on a narrow screen it moves to the bottom of the mobile menu. |
 | `navigationSections` | `SidebarSection[]` | `[]` | Sections of the main menu, as in Sidebar: [{ id, title?, items: [{ id, label, href?, native?, icon?, badge?, onClick? }] }]. |
 | `pageSections` | `SidebarSection[]` | `[]` | Anchor sections added to the menu. |
 | `activePageSectionId` | `string` | — | Id of the anchor item that is on screen (use useScrollSpy): it is marked in the menu (aria-current="location") and becomes the last item of the breadcrumb trail. |
