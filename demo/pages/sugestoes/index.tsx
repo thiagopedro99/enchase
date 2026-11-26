@@ -1,11 +1,10 @@
-import { Alert, Button, ButtonLink, Container, VisuallyHidden, useBreakpoint, useToast } from 'enchase'
+import { Alert, Container, VisuallyHidden, useBreakpoint, useToast } from 'enchase'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import PageHeader from '../../components/PageHeader/index.tsx'
 import SuggestDialog from './subcomponentes/SuggestDialog/index.tsx'
 import LoginDialog from './subcomponentes/LoginDialog/index.tsx'
 import HowItWorks from './subcomponentes/HowItWorks/index.tsx'
-import { issuesUrl, suggestUrl } from '../../defaultData.ts'
 import SitePage from '../../components/SitePage/index.tsx'
 import Failure from './subcomponentes/Failure/index.tsx'
 import Account from './subcomponentes/Account/index.tsx'
@@ -51,28 +50,9 @@ const Sugestoes = () => {
   )
 
   return (
-    <SitePage title="Sugestões">
+    <SitePage title="Sugestões" actions={account.status === 'unavailable' ? undefined : <Account account={account} onLeave={leave} />}>
       <section aria-labelledby="sugestoes-title">
-        <PageHeader
-          id="sugestoes-title"
-          eyebrow="Sugestões"
-          title="O que você quer ver na Enchase?"
-          lead="Sugira um componente ou uma melhoria, vote no que já foi pedido e acompanhe o andamento de cada ideia. Tudo fica registrado no GitHub."
-          aside={<Account account={account} onLeave={leave} />}
-        >
-          {account.status === 'unavailable' ? (
-            <ButtonLink href={suggestUrl} target="_blank" size="lg">
-              Sugerir no GitHub
-            </ButtonLink>
-          ) : (
-            <Button size="lg" onClick={suggest}>
-              Sugerir
-            </Button>
-          )}
-          <ButtonLink href={issuesUrl} target="_blank" variant="outline" size="lg">
-            Ver todas as issues
-          </ButtonLink>
-        </PageHeader>
+        <PageHeader id="sugestoes-title" eyebrow="Sugestões" title="O que você quer ver na Enchase?" lead="Sugira um componente ou uma melhoria, vote no que já foi pedido e acompanhe o andamento de cada ideia. Tudo fica registrado no GitHub." />
 
         <HowItWorks />
 
@@ -90,7 +70,7 @@ const Sugestoes = () => {
           {state.status === 'error' && <Failure limited={state.limited} onRetry={reload} />}
           {items && (
             <VotingContext.Provider value={voting}>
-              {items.length > 0 && <Toolbar filters={filters} total={totalOf(columns)} onFiltersChange={setFilters} />}
+              {items.length > 0 && <Toolbar filters={filters} total={totalOf(columns)} onFiltersChange={setFilters} onSuggest={account.status === 'unavailable' ? undefined : suggest} />}
               <Board columns={columns} {...(items.length === 0 ? { invite: <Empty onSuggest={account.status === 'unavailable' ? undefined : suggest} /> } : {})} />
             </VotingContext.Provider>
           )}

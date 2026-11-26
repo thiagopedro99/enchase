@@ -10,11 +10,11 @@ const Empty = ({ onSuggest }: EmptyProps) => (
     <h3 className={styles.title}>Ainda não há sugestões</h3>
     <p className={styles.text}>Seja a primeira pessoa a sugerir. O card nasce aqui, em análise, e anda pelas colunas até ser lançado.</p>
     {onSuggest ? (
-      <Button variant="outline" size="sm" onClick={onSuggest}>
+      <Button size="sm" onClick={onSuggest}>
         Fazer a primeira sugestão
       </Button>
     ) : (
-      <ButtonLink href={suggestUrl} target="_blank" variant="outline" size="sm">
+      <ButtonLink href={suggestUrl} target="_blank" size="sm">
         Fazer a primeira sugestão
       </ButtonLink>
     )}

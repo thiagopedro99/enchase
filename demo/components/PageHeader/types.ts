@@ -6,5 +6,4 @@ export interface PageHeaderProps {
   title: string
   lead: string
   children?: ReactNode
-  aside?: ReactNode
 }

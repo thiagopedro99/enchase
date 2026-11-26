@@ -4,7 +4,7 @@ import styles from './styles.module.css'
 
 import type { PageHeaderProps } from './types.ts'
 
-const PageHeader = ({ id, eyebrow, title, lead, children, aside }: PageHeaderProps) => (
+const PageHeader = ({ id, eyebrow, title, lead, children }: PageHeaderProps) => (
   <header className={styles.header}>
     <span className={styles.dots} aria-hidden="true" />
     <Container maxWidth="xl" className={styles.content}>
@@ -14,7 +14,6 @@ const PageHeader = ({ id, eyebrow, title, lead, children, aside }: PageHeaderPro
       </h1>
       <p className={styles.lead}>{lead}</p>
       {children && <div className={styles.actions}>{children}</div>}
-      {aside}
     </Container>
   </header>
 )

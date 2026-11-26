@@ -88,7 +88,7 @@ describe('Suggestions account', () => {
     const link = await screen.findByRole('link', { name: 'Entrar com GitHub' })
 
     expect(link).toHaveAttribute('href', loginUrl)
-    expect(screen.getByText(/para sugerir e votar sem sair do site\./)).toBeInTheDocument()
+    expect(link.closest('[data-slot="navbar"]')).toBeInTheDocument()
 
     link.addEventListener('click', (event) => event.preventDefault())
     await userEvent.setup().click(link)
@@ -96,15 +96,17 @@ describe('Suggestions account', () => {
     expect(navigate).not.toHaveBeenCalled()
   })
 
-  it('puts the account next to the actions of the page header, not in a strip of its own', async () => {
+  it('puts the account in the top bar of the site and leaves the page header with the title only', async () => {
     vi.stubGlobal('fetch', serve({ session: signed() }))
     renderPage()
 
-    const header = (await screen.findByText('@visitor')).closest('header')
+    const bar = (await screen.findByText('@visitor')).closest('[data-slot="navbar"]')
+    const header = screen.getByRole('heading', { level: 1 }).closest('header')
 
-    expect(header).toContainElement(screen.getByRole('button', { name: 'Sugerir' }))
-    expect(header).toContainElement(screen.getByRole('button', { name: 'Sair' }))
-    expect(header).toContainElement(screen.getByRole('heading', { level: 1 }))
+    expect(bar).toContainElement(screen.getByRole('button', { name: 'Sair' }))
+    expect(within(header as HTMLElement).queryByRole('button')).not.toBeInTheDocument()
+    expect(within(header as HTMLElement).queryByRole('link')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Sugerir' }).parentElement).toContainElement(screen.getByLabelText('Buscar sugestão'))
   })
 
   it('explains the login in a dialog when a visitor who is not signed in votes, and sends no vote', async () => {

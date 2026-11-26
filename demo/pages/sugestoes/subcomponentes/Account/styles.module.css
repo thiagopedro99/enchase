@@ -1,45 +1,26 @@
+.login {
+  gap: 0.375rem;
+}
+
 .account {
   display: flex;
   align-items: center;
   gap: var(--enchase-space-sm);
   min-inline-size: 0;
-  max-inline-size: 100%;
-  min-block-size: 2rem;
-  margin: 0;
-  font-size: var(--enchase-font-size-sm);
-  line-height: var(--enchase-line-height-relaxed);
-  color: var(--enchase-color-text-secondary);
-}
-
-.account > svg {
-  flex: none;
 }
 
 .avatar {
-  --enchase-avatar-size-sm: 1.5rem;
+  --enchase-avatar-size-sm: 1.75rem;
 
   flex: none;
 }
 
-.login {
-  font-weight: var(--enchase-font-weight-semibold);
-  overflow-wrap: anywhere;
+.name {
+  min-inline-size: 0;
+  overflow: hidden;
+  font-size: var(--enchase-font-size-sm);
+  font-weight: var(--enchase-font-weight-medium);
+  text-overflow: ellipsis;
+  white-space: nowrap;
   color: var(--enchase-color-text-primary);
-}
-
-.separator {
-  flex: none;
-  inline-size: var(--enchase-border-width);
-  block-size: 1rem;
-  background: var(--enchase-color-border);
-}
-
-.link {
-  font-weight: var(--enchase-font-weight-semibold);
-  color: var(--enchase-color-text-primary);
-}
-
-.action {
-  flex: none;
-  font-size: inherit;
 }

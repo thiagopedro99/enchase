@@ -4,4 +4,5 @@ export interface ToolbarProps {
   filters: Filters
   total: number
   onFiltersChange: (filters: Filters) => void
+  onSuggest?: (() => void) | undefined
 }

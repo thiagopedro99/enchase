@@ -6,13 +6,13 @@ import styles from './styles.module.css'
 
 import type { SitePageProps } from './types.ts'
 
-const SitePage = ({ title, children }: SitePageProps) => {
+const SitePage = ({ title, actions, children }: SitePageProps) => {
   useEffect(() => {
     document.title = `${title} · ${brand}`
   }, [title])
 
   return (
-    <Layout className={styles.page} navigation="navbar" translucent maxWidth="full" padding={false} brand={brand} navigationSections={siteNavigation} footerProps={footerProps}>
+    <Layout className={styles.page} navigation="navbar" translucent maxWidth="full" padding={false} brand={brand} navigationSections={siteNavigation} footerProps={footerProps} {...(actions ? { actions } : {})}>
       {children}
     </Layout>
   )
