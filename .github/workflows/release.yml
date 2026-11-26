@@ -15,8 +15,12 @@ jobs:
   decide:
     if: github.repository == 'thiagopedro99/enchase'
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
     outputs:
       action: ${{ steps.decide.outputs.action }}
+      tested: ${{ steps.tested.outputs.tested }}
       version: ${{ steps.decide.outputs.version }}
       tag: ${{ steps.decide.outputs.tag }}
       prerelease: ${{ steps.decide.outputs.prerelease }}
@@ -27,20 +31,33 @@ jobs:
           node-version: 24
       - id: decide
         run: node scripts/release.mjs check
+      - id: tested
+        if: steps.decide.outputs.action == 'publish'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          passed() {
+            gh api "repos/$GITHUB_REPOSITORY/actions/workflows/$1/runs?head_sha=$GITHUB_SHA&branch=dev&event=push&status=success&per_page=1" --jq '.total_count' || echo 0
+          }
+          if [ "$(passed package.yml)" -gt 0 ] && [ "$(passed browser-tests.yml)" -gt 0 ]; then
+            echo "tested=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "tested=false" >> "$GITHUB_OUTPUT"
+          fi
 
   package:
     needs: decide
-    if: needs.decide.outputs.action == 'publish'
+    if: needs.decide.outputs.action == 'publish' && needs.decide.outputs.tested != 'true'
     uses: ./.github/workflows/package.yml
 
   browsers:
     needs: decide
-    if: needs.decide.outputs.action == 'publish'
+    if: needs.decide.outputs.action == 'publish' && needs.decide.outputs.tested != 'true'
     uses: ./.github/workflows/browser-tests.yml
 
   publish:
     needs: [decide, package, browsers]
-    if: ${{ !cancelled() && needs.decide.result == 'success' && ((needs.decide.outputs.action == 'publish' && needs.package.result == 'success' && needs.browsers.result == 'success') || (needs.decide.outputs.action == 'tag' && needs.package.result == 'skipped' && needs.browsers.result == 'skipped')) }}
+    if: ${{ !cancelled() && needs.decide.result == 'success' && ((needs.decide.outputs.action == 'publish' && needs.decide.outputs.tested != 'true' && needs.package.result == 'success' && needs.browsers.result == 'success') || (needs.decide.outputs.action == 'publish' && needs.decide.outputs.tested == 'true' && needs.package.result == 'skipped' && needs.browsers.result == 'skipped') || (needs.decide.outputs.action == 'tag' && needs.package.result == 'skipped' && needs.browsers.result == 'skipped')) }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
