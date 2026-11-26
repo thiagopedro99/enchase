@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { account, accountEnv, answered, board, graphqlEndpoint, headerOf, keyValue, limiter, queriesOf, site, start as startTime, userToken } from './defaultData.ts'
+import { account, accountEnv, answered, board, graphqlEndpoint, headerOf, keyValue, limiter, permissionEndpoint, queriesOf, repositoryEndpoint, site, start as startTime, userToken } from './defaultData.ts'
 import { call, sessionName, signIn } from './support.ts'
 
 const purged: string[] = []
@@ -49,11 +49,41 @@ describe('Worker session', () => {
     const response = await call(env, '/api/session', { cookie: pair })
     const text = await response.text()
 
-    expect(JSON.parse(text)).toEqual({ user: { login: 'visitor', avatarUrl: 'https://avatars.githubusercontent.com/u/9001?v=4' }, voted: [2] })
+    expect(JSON.parse(text)).toEqual({ user: { login: 'visitor', avatarUrl: 'https://avatars.githubusercontent.com/u/9001?v=4' }, voted: [2], canMove: false })
     expect(response.headers.get('Cache-Control')).toBe('no-store')
     expect(text).not.toMatch(/ghu_|9001"|hidden@/)
     expect(headerOf(fetcher, graphqlEndpoint, 'Authorization')).toBe(`Bearer ${userToken}`)
     expect(queriesOf(fetcher)).toEqual(['query:search'])
+  })
+
+  it.each([
+    ['an admin', { permission: 'admin', role_name: 'admin' }, true],
+    ['someone with the maintain role', { permission: 'write', role_name: 'maintain' }, true],
+    ['someone who writes', { permission: 'write', role_name: 'write' }, true],
+    ['someone who triages', { permission: 'read', role_name: 'triage' }, true],
+    ['someone who only reads', { permission: 'read', role_name: 'read' }, false],
+    ['someone with no access', { permission: 'none' }, false],
+    ['an answer without a role', {}, false]
+  ])('says whether %s may move the cards, as GitHub tells the app', async (_name, permission, expected) => {
+    const { env, pair, fetcher } = await signed(account({ [permissionEndpoint]: answered(permission) }))
+
+    expect((await (await call(env, '/api/session', { cookie: pair })).json()).canMove).toBe(expected)
+    expect(headerOf(fetcher, permissionEndpoint, 'Authorization')).toBe('Bearer ghs_writetoken')
+  })
+
+  it('asks GitHub as the visitor when the app may not read the permission, and trusts no one when both fail', async () => {
+    const pusher = await signed(account({ [permissionEndpoint]: answered({ message: 'Forbidden' }, 403), [repositoryEndpoint]: answered({ permissions: { push: true } }) }))
+
+    expect((await (await call(pusher.env, '/api/session', { cookie: pusher.pair })).json()).canMove).toBe(true)
+    expect(headerOf(pusher.fetcher, repositoryEndpoint, 'Authorization')).toBe(`Bearer ${userToken}`)
+
+    const reader = await signed(account({ [permissionEndpoint]: answered({ message: 'Forbidden' }, 403) }))
+
+    expect((await (await call(reader.env, '/api/session', { cookie: reader.pair })).json()).canMove).toBe(false)
+
+    const broken = await signed(account({ [permissionEndpoint]: () => Promise.reject(new Error('network')) }))
+
+    expect((await (await call(broken.env, '/api/session', { cookie: broken.pair })).json()).canMove).toBe(false)
   })
 
   it.each([
@@ -97,7 +127,7 @@ describe('Worker session', () => {
   it('keeps the visitor signed in, with no votes marked, when GitHub fails to list them', async () => {
     const { env, pair, sessions } = await signed(account({ [graphqlEndpoint]: answered({ message: 'down' }, 502) }))
 
-    expect(await (await call(env, '/api/session', { cookie: pair })).json()).toEqual({ user: { login: 'visitor', avatarUrl: 'https://avatars.githubusercontent.com/u/9001?v=4' }, voted: [] })
+    expect(await (await call(env, '/api/session', { cookie: pair })).json()).toEqual({ user: { login: 'visitor', avatarUrl: 'https://avatars.githubusercontent.com/u/9001?v=4' }, voted: [], canMove: false })
     expect(sessions.stored.size).toBe(1)
   })
 })

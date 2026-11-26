@@ -117,3 +117,61 @@ export const labelIssue = async (env: Env, number: number, labels: string[]) => 
     return false
   }
 }
+
+const movers = ['admin', 'maintain', 'write', 'triage']
+
+const asUser = (token: string, json = false) => ({ ...githubHeaders, Authorization: `Bearer ${token}`, ...(json ? { 'Content-Type': 'application/json' } : {}) })
+
+const byRepository = async (token: string) => {
+  const response = await fetch(`${api}/repos/${repository}`, { headers: asUser(token) })
+  const { permissions = {} }: { permissions?: Record<string, boolean> } = response.ok ? await response.json() : {}
+
+  return Boolean(permissions.admin || permissions.maintain || permissions.push || permissions.triage)
+}
+
+export const canMove = async (env: Env, { login }: User, token: string) => {
+  try {
+    const response = await fetch(`${api}/repos/${repository}/collaborators/${encodeURIComponent(login)}/permission`, { headers: asUser(await tokenFor(env)) })
+
+    if (!response.ok) return await byRepository(token)
+
+    const { permission, role_name: role }: { permission?: string; role_name?: string } = await response.json()
+
+    return movers.includes(role ?? permission ?? '')
+  } catch {
+    return false
+  }
+}
+
+export const readIssue = async (token: string, number: number): Promise<Answer<GithubIssue>> => {
+  const response = await fetch(`${api}/repos/${repository}/issues/${number}`, { headers: asUser(token) })
+  const issue: (GithubIssue & { pull_request?: unknown }) | null = response.ok ? await response.json() : null
+
+  return { status: response.status, data: issue && !issue.pull_request && Array.isArray(issue.labels) ? issue : null }
+}
+
+export const milestoneNumber = async (token: string, title: string): Promise<number | null> => {
+  const listed = await fetch(`${api}/repos/${repository}/milestones?state=all&per_page=100`, { headers: asUser(token) })
+  const milestones: { number: number; title: string }[] = listed.ok ? await listed.json() : []
+  const found = milestones.find((milestone) => milestone.title === title)
+
+  if (found || !listed.ok) return found?.number ?? null
+
+  const created = await fetch(`${api}/repos/${repository}/milestones`, { method: 'POST', headers: asUser(token, true), body: JSON.stringify({ title }) })
+  const { number }: { number?: number } = created.ok ? await created.json() : {}
+
+  return typeof number === 'number' ? number : null
+}
+
+export const changeIssue = async (token: string, number: number, changes: object): Promise<Answer<GithubIssue>> => {
+  const response = await fetch(`${api}/repos/${repository}/issues/${number}`, { method: 'PATCH', headers: asUser(token, true), body: JSON.stringify(changes) })
+  const issue: GithubIssue | null = response.ok ? await response.json() : null
+
+  return { status: response.status, data: issue && Array.isArray(issue.labels) ? issue : null }
+}
+
+export const commentIssue = async (token: string, number: number, body: string) => {
+  const response = await fetch(`${api}/repos/${repository}/issues/${number}/comments`, { method: 'POST', headers: asUser(token, true), body: JSON.stringify({ body }) })
+
+  return response.ok
+}

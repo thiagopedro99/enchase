@@ -1,5 +1,5 @@
 import { endSession, noSessionCookie, readSession } from './session.ts'
-import { react, subjectOf, votedBy } from './github.ts'
+import { canMove, react, subjectOf, votedBy } from './github.ts'
 import { json, signedOut, unavailable } from './http.ts'
 import { forgetSuggestions } from './suggestions.ts'
 
@@ -22,7 +22,7 @@ export const session: AccountHandler = async ({ request, env }) => {
 
   if (status === unauthorized) return json({ user: null }, 200, {}, [await expire(env, current)])
 
-  return json({ user: { login: current.user.login, avatarUrl: current.user.avatarUrl }, voted: data ?? [] })
+  return json({ user: { login: current.user.login, avatarUrl: current.user.avatarUrl }, voted: data ?? [], canMove: await canMove(env, current.user, current.token) })
 }
 
 const change =

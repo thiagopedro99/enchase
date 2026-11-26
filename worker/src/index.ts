@@ -3,12 +3,13 @@ import { json, sameOrigin, unavailable } from './http.ts'
 import { callback, login, logout } from './auth.ts'
 import { session, unvote, vote } from './votes.ts'
 import { suggest } from './suggest.ts'
+import { move } from './move.ts'
 
 import type { Account, AccountHandler, Call, Context, Env, Handler } from './types.ts'
 
 type Methods = Partial<Record<string, Handler>>
 
-const votePath = /^\/api\/suggestions\/([1-9]\d{0,8})\/vote$/
+const itemPath = /^\/api\/suggestions\/([1-9]\d{0,8})\/(vote|status)$/
 
 const safe = ['GET', 'HEAD']
 
@@ -33,18 +34,18 @@ const accountRoutes: Record<string, Methods> = {
   '/api/auth/logout': { POST: account(logout) }
 }
 
-const voteMethods: Methods = { PUT: account(vote), DELETE: account(unvote) }
+const itemMethods: Record<string, Methods> = { vote: { PUT: account(vote), DELETE: account(unvote) }, status: { PUT: account(move) } }
 
-const methodsOf = (env: Env, pathname: string, id: string | undefined) => {
+const methodsOf = (env: Env, pathname: string, action: string | undefined) => {
   if (!configured(env)) return publicRoutes[pathname]
 
-  return id ? voteMethods : accountRoutes[pathname]
+  return action ? itemMethods[action] : accountRoutes[pathname]
 }
 
 const answer = async (call: Call) => {
   const { request, env, url } = call
-  const [, id] = votePath.exec(url.pathname) ?? []
-  const methods = methodsOf(env, url.pathname, id)
+  const [, id, action] = itemPath.exec(url.pathname) ?? []
+  const methods = methodsOf(env, url.pathname, action)
   const handler = methods?.[request.method]
 
   if (!methods) return notFound()

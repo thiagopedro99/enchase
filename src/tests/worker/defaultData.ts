@@ -75,6 +75,22 @@ export const issuesCreateEndpoint = 'https://api.github.com/repos/thiagopedro99/
 
 export const labelsEndpoint = (number: number) => `https://api.github.com/repos/thiagopedro99/enchase/issues/${number}/labels`
 
+export const permissionEndpoint = 'https://api.github.com/repos/thiagopedro99/enchase/collaborators/visitor/permission'
+
+export const repositoryEndpoint = 'https://api.github.com/repos/thiagopedro99/enchase'
+
+export const milestonesEndpoint = 'https://api.github.com/repos/thiagopedro99/enchase/milestones'
+
+export const milestonesList = `${milestonesEndpoint}?state=all&per_page=100`
+
+export const issueEndpoint = (number: number) => `https://api.github.com/repos/thiagopedro99/enchase/issues/${number}`
+
+export const commentsOf = (number: number) => `${issueEndpoint(number)}/comments`
+
+export const maintainer = () => reply({ permission: 'admin', role_name: 'admin' })
+
+export const tracked = (number: number, labels: string[], extra: Partial<GithubIssue> = {}): GithubIssue => ({ number, html_url: `https://github.com/thiagopedro99/enchase/issues/${number}`, title: 'Sticky columns', body: 'Keep the first column in place.', state: 'open', comments: 1, created_at: '2026-11-20T12:00:00Z', labels: labels.map((name) => ({ name })), milestone: null, reactions: { '+1': 7 }, ...extra })
+
 export const keyValue = () => {
   const stored = new Map<string, { value: string; ttl: number | undefined }>()
 
@@ -134,7 +150,34 @@ export const account = (overrides: Record<string, (init?: RequestInit) => Promis
     return reply({ number: opened.count, html_url: `https://github.com/thiagopedro99/enchase/issues/${opened.count}`, title, body, state: 'open', comments: 0, created_at: new Date(Date.now()).toISOString(), labels: [{ name: 'ignored' }], milestone: null, reactions: { '+1': 0 }, user: { login: 'visitor' } }, 201)
   }
 
+  const kept = new Map<number, GithubIssue>([
+    [7, tracked(7, ['enhancement', 'area: Table', 'Backlog'])],
+    [8, tracked(8, ['question'])]
+  ])
+
+  const issueOf = (number: number) => (init?: RequestInit) => {
+    const issue = kept.get(number)
+
+    if (!issue) return reply({ message: 'Not Found' }, 404)
+    if (init?.method !== 'PATCH') return reply(issue)
+
+    const { labels, state, milestone }: { labels: string[]; state: 'open' | 'closed'; milestone?: number } = JSON.parse(String(init.body))
+    const changed = { ...issue, state, labels: labels.map((name) => ({ name })), milestone: milestone ? { title: milestone === 3 ? 'v0.26.0' : 'v0.28.0' } : issue.milestone }
+
+    kept.set(number, changed)
+
+    return reply(changed)
+  }
+
   const answers: Record<string, (init?: RequestInit) => Promise<Response>> = {
+    [permissionEndpoint]: () => reply({ permission: 'read', role_name: 'read' }),
+    [repositoryEndpoint]: () => reply({ permissions: { admin: false, maintain: false, push: false, triage: false, pull: true } }),
+    [issueEndpoint(7)]: issueOf(7),
+    [issueEndpoint(8)]: issueOf(8),
+    [issueEndpoint(9)]: issueOf(9),
+    [milestonesList]: () => reply([{ number: 3, title: 'v0.26.0' }]),
+    [milestonesEndpoint]: () => reply({ number: 9, title: 'v0.28.0' }, 201),
+    [commentsOf(7)]: () => reply({ id: 1 }, 201),
     [installationEndpoint]: () => reply({ id: 77 }),
     [tokenEndpoint]: () => reply({ token: 'ghs_writetoken', expires_at: new Date(Date.now() + hour).toISOString() }, 201),
     [issuesCreateEndpoint]: open,

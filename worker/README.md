@@ -8,11 +8,12 @@ A Cloudflare Worker that answers under `https://enchase.othiagosilva.com.br/api/
 | --- | --- |
 | `GET /api/suggestions` | The cards of the page `/sugestoes`, as JSON. |
 | `POST /api/suggestions` | Opens the suggestion of a signed-in visitor as an issue, and answers its card. |
-| `GET /api/session` | Who is signed in and which suggestions that visitor voted for, or `{ "user": null }`. |
+| `GET /api/session` | Who is signed in, which suggestions that visitor voted for and whether that visitor may move the cards, or `{ "user": null }`. |
 | `GET /api/auth/login` | A redirect to GitHub, to sign in. |
 | `GET /api/auth/callback` | Where GitHub sends the visitor back. It opens the session and goes to `/sugestoes`. |
 | `POST /api/auth/logout` | Ends the session and revokes the token on GitHub. |
 | `PUT` and `DELETE /api/suggestions/{number}/vote` | Adds or removes the 👍 of the visitor on that issue. |
+| `PUT /api/suggestions/{number}/status` | Moves the card of that issue to another column, for a maintainer. |
 
 Any other path answers 404, and a method that the path does not take answers 405.
 
@@ -45,7 +46,16 @@ A signed-in visitor sends a kind, a title, what is needed and, optionally, what 
 - **Limits:** three suggestions in twenty-four hours for each visitor, counted in the same store as the sessions, plus the limit of thirty requests a minute. A suggestion that GitHub refuses is not counted.
 - **The body of the request** must be JSON, of at most 16 KiB.
 
-The routes of the session, of the vote and of the suggestion answer 404 or 405 until `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` and the store are configured, and the site then shows the board without the login.
+### The move
+
+A maintainer moves a card on the site, and the Worker changes the issue as that maintainer, with the token of the session, so GitHub records who did it. The rules of a move (`demo/pages/sugestoes/move.ts`) are the same on the site and on the Worker.
+
+- **Who may move:** whoever has the admin, maintain, write or triage role on the repository. The Worker asks GitHub as the app and, when the app may not read it, as the visitor. It asks again on every move: what the page shows or hides is a convenience, never the protection.
+- **What a move does:** it swaps the label of the column (`backlog`, `in progress`, `wontfix`) and keeps every other label. Released closes the issue as completed with the milestone of the version, which is created when it does not exist; it asks for the version. Not planned comments the reason, which is the text that the card shows, and closes the issue as not planned; it asks for the reason. Any other column reopens the issue.
+- **What may be moved:** an issue that has one of the labels of the board.
+- **Order of the steps:** the milestone and the comment come before the change of the issue, so a failure on the way leaves the card in its column.
+
+The routes of the session, of the vote, of the suggestion and of the move answer 404 or 405 until `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` and the store are configured, and the site then shows the board without the login.
 
 ## Configuration
 
@@ -56,7 +66,7 @@ The routes of the session, of the vote and of the suggestion answer 404 or 405 u
 | `GITHUB_APP_PRIVATE_KEY` | secret of the Worker | The private key of the app, as the `.pem` file that GitHub generates. |
 | `GITHUB_CLIENT_SECRET` | secret of the Worker | A client secret, generated on the page of the app. |
 | `SESSIONS` | `[[kv_namespaces]]` of `wrangler.toml` | The store of the sessions and of the count of suggestions of each visitor. Without an `id`, `wrangler deploy` creates the namespace and writes its id back to the file: commit that line. |
-| `LIMITER` | `[[ratelimits]]` of `wrangler.toml` | The limit of votes, of suggestions and of callbacks. |
+| `LIMITER` | `[[ratelimits]]` of `wrangler.toml` | The limit of votes, of suggestions, of moves and of callbacks. |
 
 ## The GitHub App
 
@@ -64,7 +74,7 @@ Create it once, in Settings, Developer settings, GitHub Apps, New GitHub App:
 
 1. Turn the webhook off.
 2. Callback URL: `https://enchase.othiagosilva.com.br/api/auth/callback`, without wildcard matching. Keep "Expire user authorization tokens" on, and "Request user authorization (OAuth) during installation" and the device flow off.
-3. Repository permissions: Issues, read and write. Nothing else. The write is what lets a visitor vote and suggest, and what lets the app label a new suggestion.
+3. Repository permissions: Issues, read and write. Nothing else. The write is what lets a visitor vote and suggest, what lets a maintainer move a card, and what lets the app label a new suggestion.
 4. Where can it be installed: only on this account.
 5. On the page of the app, write down the App ID and the Client ID, generate a private key and generate a client secret.
 6. Install the app on this repository only. After a change of permissions, accept the new permissions on the page of the installation.
