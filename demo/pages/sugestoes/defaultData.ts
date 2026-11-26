@@ -37,10 +37,11 @@ export const defaultFilters: Filters = {
   sort: 'votos'
 }
 
-export const steps: { title: string; text: string; thumb?: boolean }[] = [
+export const steps: { title: string; text: string; icon?: 'vote' | 'comment'; hidden?: string }[] = [
   { title: 'Envie a sugestão', text: 'Um formulário curto: o que você precisa e como imagina.' },
-  { title: 'Vote com', thumb: true, text: 'As mais votadas sobem dentro de cada coluna.' },
-  { title: 'Acompanhe o card', text: 'Ele anda de Em análise até Lançado, ou recebe o motivo da recusa.' }
+  { title: 'Vote', icon: 'vote', hidden: 'com um joinha', text: 'As mais votadas sobem dentro de cada coluna.' },
+  { title: 'Comente', icon: 'comment', text: 'Clique no cartão para ler a sugestão inteira e comentar.' },
+  { title: 'Acompanhe o cartão', text: 'Ele anda de Em análise até Lançado, ou recebe o motivo da recusa.' }
 ]
 
 export const votable: Status[] = ['analise', 'backlog', 'desenvolvimento']

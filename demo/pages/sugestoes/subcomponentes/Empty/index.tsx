@@ -8,7 +8,7 @@ import type { EmptyProps } from './types.ts'
 const Empty = ({ onSuggest }: EmptyProps) => (
   <div className={styles.empty}>
     <h3 className={styles.title}>Ainda não há sugestões</h3>
-    <p className={styles.text}>Seja a primeira pessoa a sugerir. O card nasce aqui, em análise, e anda pelas colunas até ser lançado.</p>
+    <p className={styles.text}>Seja a primeira pessoa a sugerir. O cartão entra em Em análise e anda pelas colunas até ser lançado.</p>
     {onSuggest ? (
       <Button size="sm" onClick={onSuggest}>
         Fazer a primeira sugestão

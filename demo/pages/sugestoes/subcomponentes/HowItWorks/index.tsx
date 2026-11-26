@@ -1,6 +1,6 @@
 import { Container, VisuallyHidden } from 'enchase'
 
-import { ThumbsUpIcon } from '../../../../components/icons.tsx'
+import { CommentIcon, ThumbsUpIcon } from '../../../../components/icons.tsx'
 import { steps } from '../../defaultData.ts'
 import styles from './styles.module.css'
 
@@ -10,7 +10,7 @@ const HowItWorks = () => (
       <h2>Como funciona</h2>
     </VisuallyHidden>
     <ol className={styles.steps}>
-      {steps.map(({ title, text, thumb }, index) => (
+      {steps.map(({ title, text, icon, hidden }, index) => (
         <li key={title} className={styles.step}>
           <span className={styles.number} aria-hidden="true">
             {index + 1}
@@ -18,12 +18,9 @@ const HowItWorks = () => (
           <span>
             <span className={styles.title}>
               {title}
-              {thumb && (
-                <>
-                  <ThumbsUpIcon size={16} className={styles.icon} />
-                  <VisuallyHidden>um joinha</VisuallyHidden>
-                </>
-              )}
+              {icon === 'vote' && <ThumbsUpIcon size={16} className={styles.icon} />}
+              {icon === 'comment' && <CommentIcon size={16} className={styles.icon} />}
+              {hidden && <VisuallyHidden>{hidden}</VisuallyHidden>}
             </span>
             <span className={styles.text}>{text}</span>
           </span>
