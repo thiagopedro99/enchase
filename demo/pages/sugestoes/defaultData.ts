@@ -37,9 +37,9 @@ export const defaultFilters: Filters = {
   sort: 'votos'
 }
 
-export const steps = [
+export const steps: { title: string; text: string; thumb?: boolean }[] = [
   { title: 'Envie a sugestão', text: 'Um formulário curto: o que você precisa e como imagina.' },
-  { title: 'Vote com 👍', text: 'As mais votadas sobem dentro de cada coluna.' },
+  { title: 'Vote com', thumb: true, text: 'As mais votadas sobem dentro de cada coluna.' },
   { title: 'Acompanhe o card', text: 'Ele anda de Em análise até Lançado, ou recebe o motivo da recusa.' }
 ]
 
@@ -79,7 +79,7 @@ export const sendMessages: Record<SendFailure, string> = {
 }
 
 export const loginTexts: Record<LoginReason, { title: string; text: string }> = {
-  vote: { title: 'Entre para votar', text: 'O voto é um 👍 seu na issue do GitHub. Entre com a sua conta para votar daqui mesmo.' },
+  vote: { title: 'Entre para votar', text: 'O voto é um joinha seu na issue do GitHub. Entre com a sua conta para votar daqui mesmo.' },
   suggest: { title: 'Entre para sugerir', text: 'A sugestão vira uma issue pública no GitHub, com o seu usuário. Entre com a sua conta para enviar daqui mesmo.' }
 }
 

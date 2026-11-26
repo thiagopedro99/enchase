@@ -1,4 +1,5 @@
 import { Button, ButtonLink, Input, Select } from 'enchase'
+import { PlusIcon } from 'enchase/icons'
 
 import { kindOptions, sortOptions } from '../../defaultData.ts'
 import { suggestUrl } from '../../../../defaultData.ts'
@@ -16,11 +17,12 @@ const Toolbar = ({ filters, total, onFiltersChange, onSuggest }: ToolbarProps) =
       {total === 1 ? '1 sugestão' : `${total} sugestões`}
     </p>
     {onSuggest ? (
-      <Button className={styles.suggest} onClick={onSuggest}>
+      <Button size="lg" className={styles.suggest} onClick={onSuggest}>
+        <PlusIcon size={18} />
         Sugerir
       </Button>
     ) : (
-      <ButtonLink href={suggestUrl} target="_blank" className={styles.suggest}>
+      <ButtonLink href={suggestUrl} target="_blank" size="lg" className={styles.suggest}>
         Sugerir no GitHub
       </ButtonLink>
     )}

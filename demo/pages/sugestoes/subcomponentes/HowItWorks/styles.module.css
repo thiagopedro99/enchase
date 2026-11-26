@@ -36,7 +36,9 @@
 }
 
 .title {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
   font-weight: var(--enchase-font-weight-semibold);
   color: var(--enchase-color-text-primary);
 }
@@ -47,4 +49,8 @@
   font-size: var(--enchase-font-size-sm);
   line-height: var(--enchase-line-height-relaxed);
   color: var(--enchase-color-text-secondary);
+}
+
+.icon {
+  flex: none;
 }
