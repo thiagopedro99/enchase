@@ -22,6 +22,7 @@ export interface LayoutProps extends Omit<HTMLAttributes<HTMLDivElement>, 'child
   brandLogo?: string | undefined
   footerProps?: FooterProps | undefined
   sidebarFooter?: SidebarSlot | undefined
+  actions?: ReactNode | undefined
   navigationSections?: SidebarSection[] | undefined
   pageSections?: SidebarSection[] | undefined
   activePageSectionId?: string | undefined

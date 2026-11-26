@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
+import { Button } from '@components/common/Button/index.tsx'
+import { ButtonLink } from '@components/common/ButtonLink/index.tsx'
 import { Tooltip } from '@components/common/Tooltip/index.tsx'
 import Layout from '@components/layout/index.tsx'
 import { demoSections } from '@tests/shared/fixtures/layoutBranding.tsx'
@@ -43,6 +45,76 @@ describe('Layout grid in a real browser', () => {
 
     expect(banner.bottom).toBeLessThanOrEqual(main.top + 1)
     expect(main.bottom).toBeLessThanOrEqual(footer.top + 1)
+  })
+})
+
+describe('Layout actions in a real browser', () => {
+  const actions = (
+    <>
+      <ButtonLink href="/entrar" variant="ghost">
+        Entrar
+      </ButtonLink>
+      <Button>Criar conta</Button>
+    </>
+  )
+
+  const withActions = (navigation: 'sidebar' | 'navbar') => (
+    <Layout pageTitle="Teste" brand="Marca" navigation={navigation} navigationSections={demoSections} actions={actions}>
+      <h1>Conteúdo</h1>
+    </Layout>
+  )
+
+  for (const width of [1280, 360]) {
+    it(`keeps the actions inside the app bar, before the theme toggle, at ${width}px`, async () => {
+      await page.viewport(width, 800)
+      const plain = renderInBrowser(layout())
+      const plainHeight = rectOf(document.querySelector('[data-slot="layout-header"]') as HTMLElement).height
+      plain.unmount()
+      renderInBrowser(withActions('sidebar'))
+      const bar = rectOf(document.querySelector('[data-slot="layout-header"]') as HTMLElement)
+      const link = rectOf(page.getByRole('link', { name: 'Entrar' }).element())
+      const button = rectOf(page.getByRole('button', { name: 'Criar conta' }).element())
+      const toggle = rectOf(page.getByRole('button', { name: 'Mudar para tema escuro' }).element())
+      const menu = rectOf(document.querySelector('[data-slot="layout-header-menu-button"]') as HTMLElement)
+
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(document.documentElement.clientWidth)
+      expect(bar.height).toBe(plainHeight)
+      expect(menu.width).toBeGreaterThanOrEqual(40)
+      expect(link.left).toBeGreaterThanOrEqual(menu.right)
+      expect(button.left).toBeGreaterThanOrEqual(link.right)
+      expect(toggle.left).toBeGreaterThanOrEqual(button.right)
+      expect(toggle.right).toBeLessThanOrEqual(bar.right)
+      for (const rect of [link, button, toggle]) {
+        expect(rect.top).toBeGreaterThanOrEqual(bar.top)
+        expect(rect.bottom).toBeLessThanOrEqual(bar.bottom)
+      }
+    })
+  }
+
+  it('shows the actions in the navbar, before the theme toggle, on a wide viewport', async () => {
+    await page.viewport(1280, 800)
+    renderInBrowser(withActions('navbar'))
+    const bar = rectOf(document.querySelector('[data-slot="navbar"]') as HTMLElement)
+    const button = rectOf(page.getByRole('button', { name: 'Criar conta' }).element())
+    const toggle = rectOf(page.getByRole('button', { name: 'Mudar para tema escuro' }).element())
+
+    await expect.element(page.getByRole('link', { name: 'Entrar' })).toBeVisible()
+    expect(toggle.left).toBeGreaterThanOrEqual(button.right)
+    expect(button.bottom).toBeLessThanOrEqual(bar.bottom)
+  })
+
+  it('moves the actions of the navbar into the mobile menu on a narrow viewport', async () => {
+    await page.viewport(360, 800)
+    renderInBrowser(withActions('navbar'))
+
+    expect(page.getByRole('link', { name: 'Entrar' }).elements()).toHaveLength(0)
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(document.documentElement.clientWidth)
+
+    await userEvent.click(page.getByRole('button', { name: 'Abrir menu' }))
+    const dialog = page.getByRole('dialog', { name: 'Navegação mobile' })
+
+    await expect.element(dialog.getByRole('link', { name: 'Entrar' })).toBeVisible()
+    await expect.element(dialog.getByRole('button', { name: 'Criar conta' })).toBeVisible()
   })
 })
 
