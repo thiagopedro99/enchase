@@ -22,3 +22,21 @@
   font-variant-numeric: tabular-nums;
   color: var(--enchase-color-text-secondary);
 }
+
+@media (max-width: 575.98px) {
+  .search {
+    flex-basis: 100%;
+    max-inline-size: none;
+  }
+
+  .select {
+    flex: 1 1 0;
+    min-inline-size: 0;
+  }
+
+  .total {
+    flex-basis: 100%;
+    padding-block-end: 0;
+    text-align: end;
+  }
+}

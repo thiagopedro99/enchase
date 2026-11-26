@@ -6,10 +6,11 @@ import styles from './styles.module.css'
 
 import type { BoardProps } from './types.ts'
 
-const Board = ({ columns }: BoardProps) => {
+const Board = ({ columns, invite }: BoardProps) => {
   const { up } = useBreakpoint()
+  const first = columns[0]?.value
 
-  if (up('xxl')) {
+  if (up('xxl') && !invite) {
     return (
       <div className={styles.lanes}>
         {columns.map(({ value, label, text, items }) => (
@@ -22,7 +23,7 @@ const Board = ({ columns }: BoardProps) => {
               </h3>
               <p className={styles.text}>{text}</p>
             </header>
-            <SuggestionList items={items} />
+            {invite && value === first ? invite : <SuggestionList items={items} />}
           </section>
         ))}
       </div>
@@ -44,7 +45,7 @@ const Board = ({ columns }: BoardProps) => {
         content: (
           <div className={styles.panel}>
             <p className={styles.text}>{text}</p>
-            <SuggestionList items={items} />
+            {invite && value === first ? invite : <SuggestionList items={items} />}
           </div>
         )
       }))}

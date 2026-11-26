@@ -238,7 +238,24 @@ describe('Suggestions page', () => {
 
     expect(await screen.findByRole('heading', { name: 'Ainda não há sugestões' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /^Fazer a primeira sugestão/ })).toHaveAttribute('href', suggestUrl)
-    expect(within(screen.getByRole('list', { name: 'Por onde cada sugestão passa' })).getAllByRole('listitem')).toHaveLength(5)
+    expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toEqual(['Em análise0', 'Backlog0', 'Em desenvolvimento0', 'Lançado0', 'Não vamos fazer0'])
+    expect(screen.queryByRole('searchbox')).not.toBeInTheDocument()
+    expect(screen.queryByLabelText('Buscar sugestão')).not.toBeInTheDocument()
+  })
+
+  it('keeps an empty board in tabs on a wide screen, with the invitation where the first card will be', async () => {
+    const width = window.innerWidth
+
+    window.innerWidth = 1600
+    vi.stubGlobal('fetch', serve([]))
+    renderPage()
+
+    const panel = await screen.findByRole('tabpanel', { name: /Em análise/ })
+
+    expect(within(panel).getByRole('heading', { name: 'Ainda não há sugestões' })).toBeInTheDocument()
+    expect(screen.queryByRole('region', { name: /Backlog/ })).not.toBeInTheDocument()
+
+    window.innerWidth = width
   })
 
   it('explains a rate limit and loads again when asked', async () => {

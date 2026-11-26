@@ -88,12 +88,23 @@ describe('Suggestions account', () => {
     const link = await screen.findByRole('link', { name: 'Entrar com GitHub' })
 
     expect(link).toHaveAttribute('href', loginUrl)
-    expect(screen.getByText('Entre com o GitHub para votar sem sair do site.')).toBeInTheDocument()
+    expect(screen.getByText(/para sugerir e votar sem sair do site\./)).toBeInTheDocument()
 
     link.addEventListener('click', (event) => event.preventDefault())
     await userEvent.setup().click(link)
 
     expect(navigate).not.toHaveBeenCalled()
+  })
+
+  it('puts the account next to the actions of the page header, not in a strip of its own', async () => {
+    vi.stubGlobal('fetch', serve({ session: signed() }))
+    renderPage()
+
+    const header = (await screen.findByText('@visitor')).closest('header')
+
+    expect(header).toContainElement(screen.getByRole('button', { name: 'Sugerir' }))
+    expect(header).toContainElement(screen.getByRole('button', { name: 'Sair' }))
+    expect(header).toContainElement(screen.getByRole('heading', { level: 1 }))
   })
 
   it('explains the login in a dialog when a visitor who is not signed in votes, and sends no vote', async () => {

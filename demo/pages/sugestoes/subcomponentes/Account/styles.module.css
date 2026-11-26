@@ -1,31 +1,45 @@
 .account {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--enchase-space-sm) var(--enchase-space-md);
-  padding: var(--enchase-space-sm) var(--enchase-space-md);
-  border: var(--enchase-border-width) solid var(--enchase-color-border-light);
-  border-radius: var(--enchase-radius-lg);
-  background: var(--enchase-color-surface-container-low);
-}
-
-.user {
-  display: flex;
   align-items: center;
   gap: var(--enchase-space-sm);
   min-inline-size: 0;
-  margin: 0;
-}
-
-.text {
+  max-inline-size: 100%;
+  min-block-size: 2rem;
   margin: 0;
   font-size: var(--enchase-font-size-sm);
-  overflow-wrap: anywhere;
+  line-height: var(--enchase-line-height-relaxed);
   color: var(--enchase-color-text-secondary);
+}
+
+.account > svg {
+  flex: none;
+}
+
+.avatar {
+  --enchase-avatar-size-sm: 1.5rem;
+
+  flex: none;
 }
 
 .login {
   font-weight: var(--enchase-font-weight-semibold);
+  overflow-wrap: anywhere;
   color: var(--enchase-color-text-primary);
+}
+
+.separator {
+  flex: none;
+  inline-size: var(--enchase-border-width);
+  block-size: 1rem;
+  background: var(--enchase-color-border);
+}
+
+.link {
+  font-weight: var(--enchase-font-weight-semibold);
+  color: var(--enchase-color-text-primary);
+}
+
+.action {
+  flex: none;
+  font-size: inherit;
 }

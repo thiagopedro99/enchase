@@ -1,4 +1,4 @@
-import { Alert, Button, ButtonLink, VisuallyHidden, useToast } from 'enchase'
+import { Alert, Button, ButtonLink, Container, VisuallyHidden, useBreakpoint, useToast } from 'enchase'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import PageHeader from '../../components/PageHeader/index.tsx'
@@ -29,6 +29,8 @@ const Sugestoes = () => {
   const loginFailed = useLoginFailure()
   const toast = useToast()
   const signed = account.status === 'signed'
+  const { up } = useBreakpoint()
+  const lanes = up('xxl') && state.status === 'ready' && state.items.length > 0
   const [filters, setFilters] = useState(defaultFilters)
   const items = state.status === 'ready' ? state.items : undefined
   const columns = useMemo(() => columnsOf(items ?? [], filters), [items, filters])
@@ -51,7 +53,13 @@ const Sugestoes = () => {
   return (
     <SitePage title="Sugestões">
       <section aria-labelledby="sugestoes-title">
-        <PageHeader id="sugestoes-title" eyebrow="Sugestões" title="O que você quer ver na Enchase?" lead="Sugira um componente ou uma melhoria, vote no que já foi pedido e acompanhe o andamento de cada ideia. Tudo fica registrado no GitHub.">
+        <PageHeader
+          id="sugestoes-title"
+          eyebrow="Sugestões"
+          title="O que você quer ver na Enchase?"
+          lead="Sugira um componente ou uma melhoria, vote no que já foi pedido e acompanhe o andamento de cada ideia. Tudo fica registrado no GitHub."
+          aside={<Account account={account} onLeave={leave} />}
+        >
           {account.status === 'unavailable' ? (
             <ButtonLink href={suggestUrl} target="_blank" size="lg">
               Sugerir no GitHub
@@ -68,7 +76,8 @@ const Sugestoes = () => {
 
         <HowItWorks />
 
-        <div className={styles.board}>
+        <div className={styles.band}>
+          <Container maxWidth={lanes ? 'full' : 'xl'} className={styles.board}>
           <VisuallyHidden>
             <h2>Quadro de sugestões</h2>
           </VisuallyHidden>
@@ -77,18 +86,17 @@ const Sugestoes = () => {
               Nada foi alterado na sua conta. Tente entrar de novo.
             </Alert>
           )}
-          <Account account={account} onLeave={leave} />
           {state.status === 'loading' && <Loading />}
           {state.status === 'error' && <Failure limited={state.limited} onRetry={reload} />}
-          {items?.length === 0 && <Empty onSuggest={account.status === 'unavailable' ? undefined : suggest} />}
-          {items && items.length > 0 && (
+          {items && (
             <VotingContext.Provider value={voting}>
-              <Toolbar filters={filters} total={totalOf(columns)} onFiltersChange={setFilters} />
-              <Board columns={columns} />
+              {items.length > 0 && <Toolbar filters={filters} total={totalOf(columns)} onFiltersChange={setFilters} />}
+              <Board columns={columns} {...(items.length === 0 ? { invite: <Empty onSuggest={account.status === 'unavailable' ? undefined : suggest} /> } : {})} />
             </VotingContext.Provider>
           )}
           <LoginDialog request={asking} onClose={dismiss} />
           <SuggestDialog isOpen={composing} items={items ?? []} onClose={() => setComposing(false)} onSent={sent} onSignedOut={expire} />
+          </Container>
         </div>
       </section>
     </SitePage>

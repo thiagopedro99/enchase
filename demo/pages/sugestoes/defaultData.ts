@@ -36,7 +36,7 @@ export const defaultFilters: Filters = {
 }
 
 export const steps = [
-  { title: 'Envie a sugestão', text: 'Um formulário curto, aqui no site ou no GitHub: o problema e a ideia.' },
+  { title: 'Envie a sugestão', text: 'Um formulário curto: o que você precisa e como imagina.' },
   { title: 'Vote com 👍', text: 'As mais votadas sobem dentro de cada coluna.' },
   { title: 'Acompanhe o card', text: 'Ele anda de Em análise até Lançado, ou recebe o motivo da recusa.' }
 ]
