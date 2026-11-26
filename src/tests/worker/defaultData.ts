@@ -109,7 +109,7 @@ export const limiter = (allowed = true) => {
   return { keys, refuse: () => void (state.allowed = false), limit: async ({ key }: { key: string }) => ({ success: keys.push(key) > 0 && state.allowed }) }
 }
 
-export const accountEnv = (sessions = keyValue(), limit = limiter(), suggestLimit = limiter()) => ({ ...env, GITHUB_CLIENT_ID: 'Iv23client', GITHUB_CLIENT_SECRET: 'secret-of-the-app', SESSIONS: sessions, LIMITER: limit, SUGGEST_LIMITER: suggestLimit })
+export const accountEnv = (sessions = keyValue(), limit = limiter(), suggestLimit = limiter(), commentLimit = limiter()) => ({ ...env, GITHUB_CLIENT_ID: 'Iv23client', GITHUB_CLIENT_SECRET: 'secret-of-the-app', SESSIONS: sessions, LIMITER: limit, SUGGEST_LIMITER: suggestLimit, COMMENT_LIMITER: commentLimit })
 
 export const board = () => ({
   issues: new Map([
@@ -119,6 +119,23 @@ export const board = () => ({
   ]),
   voted: new Set<number>([2])
 })
+
+export const discussion = {
+  title: 'Sticky columns',
+  body: '**What you need, and what you do today instead**\n\nKeep the first column in place.\n\n<!-- sent from the suggestions page of the site -->',
+  url: 'https://github.com/thiagopedro99/enchase/issues/7',
+  locked: false,
+  labels: { nodes: [{ name: 'Enhancement' }] },
+  comments: {
+    totalCount: 4,
+    nodes: [
+      { databaseId: 11, url: 'https://github.com/thiagopedro99/enchase/issues/7#issuecomment-11', bodyText: 'I need this too.', createdAt: '2026-11-21T10:00:00Z', isMinimized: false, authorAssociation: 'NONE', author: { login: 'ana', avatarUrl: 'https://avatars.githubusercontent.com/u/1?v=4' } },
+      { databaseId: 12, url: 'https://github.com/thiagopedro99/enchase/issues/7#issuecomment-12', bodyText: 'Buy my product', createdAt: '2026-11-21T11:00:00Z', isMinimized: true, authorAssociation: 'NONE', author: { login: 'spam', avatarUrl: '' } },
+      { databaseId: 13, url: 'https://github.com/thiagopedro99/enchase/issues/7#issuecomment-13', bodyText: 'It is on the list.', createdAt: '2026-11-22T10:00:00Z', isMinimized: false, authorAssociation: 'OWNER', author: { login: 'thiagopedro99', avatarUrl: 'https://avatars.githubusercontent.com/u/2?v=4' } },
+      { databaseId: 14, url: 'https://github.com/thiagopedro99/enchase/issues/7#issuecomment-14', bodyText: 'From a deleted account.', createdAt: '2026-11-23T10:00:00Z', isMinimized: false, authorAssociation: 'NONE', author: null }
+    ]
+  }
+}
 
 const group = (voted: boolean) => [
   { content: 'THUMBS_UP', viewerHasReacted: voted },
@@ -132,6 +149,7 @@ export const account = (overrides: Record<string, (init?: RequestInit) => Promis
     const { query, variables }: { query: string; variables: { number?: number; id?: string } } = JSON.parse(String(init?.body))
     const issue = state.issues.get(variables.number ?? 0)
 
+    if (query.includes('comments(last')) return variables.number === 7 ? reply({ data: { repository: { issue: discussion } } }) : reply({ data: { repository: { issue: variables.number === 8 ? { ...discussion, labels: { nodes: [{ name: 'question' }] } } : null } } })
     if (query.includes('search(')) return reply({ data: { search: { nodes: [...Array.from(state.issues.keys(), (number) => ({ number, reactionGroups: group(state.voted.has(number)) })), {}] } } })
     if (query.includes('issue(number')) return issue ? reply({ data: { repository: { issue: { id: issue.id, labels: { nodes: issue.labels.map((name) => ({ name })) }, reactionGroups: group(state.voted.has(variables.number ?? 0)) } } } }) : reply({ data: { repository: { issue: null } }, errors: [{ type: 'NOT_FOUND' }] })
     if (query.includes('addReaction')) return reply({ data: { addReaction: { clientMutationId: null } } }).finally(() => state.voted.add(numberOf(variables.id ?? '')))
@@ -177,7 +195,7 @@ export const account = (overrides: Record<string, (init?: RequestInit) => Promis
     [issueEndpoint(9)]: issueOf(9),
     [milestonesList]: () => reply([{ number: 3, title: 'v0.26.0' }]),
     [milestonesEndpoint]: () => reply({ number: 9, title: 'v0.28.0' }, 201),
-    [commentsOf(7)]: () => reply({ id: 1 }, 201),
+    [commentsOf(7)]: (init) => reply({ id: 501, html_url: 'https://github.com/thiagopedro99/enchase/issues/7#issuecomment-501', body: JSON.parse(String(init?.body)).body, created_at: new Date(Date.now()).toISOString(), author_association: 'NONE', user: { login: 'visitor', avatar_url: 'https://avatars.githubusercontent.com/u/9001?v=4' } }, 201),
     [installationEndpoint]: () => reply({ id: 77 }),
     [tokenEndpoint]: () => reply({ token: 'ghs_writetoken', expires_at: new Date(Date.now() + hour).toISOString() }, 201),
     [issuesCreateEndpoint]: open,

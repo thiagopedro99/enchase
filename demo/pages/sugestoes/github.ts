@@ -14,6 +14,7 @@ export interface GithubIssue {
   created_at: string
   labels: GithubLabel[]
   milestone: { title: string } | null
+  locked?: boolean
   reactions?: { '+1'?: number }
 }
 

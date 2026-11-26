@@ -1,7 +1,10 @@
 import { boardLabels, query as boardQuery, repository } from '../../demo/pages/sugestoes/github.ts'
 import { api, githubHeaders, tokenFor } from './token.ts'
 
+import { fullText, shownComments } from '../../demo/pages/sugestoes/comment.ts'
+
 import type { GithubIssue } from '../../demo/pages/sugestoes/github.ts'
+import type { Comment, Thread } from '../../demo/pages/sugestoes/comment.ts'
 import type { Account, Env, User } from './types.ts'
 
 interface Group {
@@ -188,8 +191,52 @@ export const changeIssue = async (token: string, number: number, changes: object
   return { status: response.status, data: issue && Array.isArray(issue.labels) ? issue : null }
 }
 
-export const commentIssue = async (token: string, number: number, body: string) => {
-  const response = await fetch(`${api}/repos/${repository}/issues/${number}/comments`, { method: 'POST', headers: asUser(token, true), body: JSON.stringify({ body }) })
+interface Posted {
+  id?: number
+  html_url?: string
+  created_at?: string
+  author_association?: string
+  user?: { login?: string; avatar_url?: string } | null
+}
 
-  return response.ok
+const maintainers = ['OWNER', 'MEMBER', 'COLLABORATOR']
+
+export const postComment = async (token: string, number: number, body: string): Promise<Answer<Comment>> => {
+  const response = await fetch(`${api}/repos/${repository}/issues/${number}/comments`, { method: 'POST', headers: asUser(token, true), body: JSON.stringify({ body }) })
+  const { id, html_url: url, created_at: createdAt, author_association: association, user }: Posted = response.ok ? await response.json() : {}
+  const posted = typeof id === 'number' && typeof url === 'string' && typeof createdAt === 'string'
+
+  return { status: response.status, data: posted ? { id, url, author: user?.login ?? 'ghost', avatarUrl: user?.avatar_url ?? '', text: body, createdAt, maintainer: maintainers.includes(association ?? '') } : null }
+}
+
+export const commentIssue = async (token: string, number: number, body: string) => (await postComment(token, number, body)).data !== null
+
+interface Remark {
+  databaseId: number
+  url: string
+  bodyText: string
+  createdAt: string
+  isMinimized: boolean
+  authorAssociation: string
+  author: { login: string; avatarUrl: string } | null
+}
+
+interface Discussion {
+  repository: { issue: { title: string; body: string; url: string; locked: boolean; labels: { nodes: { name: string }[] }; comments: { totalCount: number; nodes: Remark[] } } | null } | null
+}
+
+const threadQuery = `query($owner: String!, $name: String!, $number: Int!) { repository(owner: $owner, name: $name) { issue(number: $number) { title body url locked labels(first: 50) { nodes { name } } comments(last: ${shownComments}) { totalCount nodes { databaseId url bodyText createdAt isMinimized authorAssociation author { login avatarUrl } } } } } }`
+
+export const threadOf = async (env: Env, number: number): Promise<Answer<Thread>> => {
+  const { status, data } = await graphql<Discussion>(await tokenFor(env), threadQuery, { owner, name, number })
+  const issue = data?.repository?.issue
+  const onBoard = issue?.labels.nodes.some((label) => boardLabels.includes(label.name.toLowerCase()))
+
+  if (!issue || !onBoard) return { status, data: null }
+
+  const comments = issue.comments.nodes
+    .filter(({ isMinimized }) => !isMinimized)
+    .map(({ databaseId, url, bodyText, createdAt, authorAssociation, author }) => ({ id: databaseId, url, author: author?.login ?? 'ghost', avatarUrl: author?.avatarUrl ?? '', text: bodyText, createdAt, maintainer: maintainers.includes(authorAssociation) }))
+
+  return { status, data: { id: number, title: issue.title, url: issue.url, text: fullText(issue.body), locked: issue.locked, total: issue.comments.totalCount, comments } }
 }

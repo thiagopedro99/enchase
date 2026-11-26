@@ -30,3 +30,11 @@ namespace_id = "1002"
 [ratelimits.simple]
 limit = 3
 period = 60
+
+[[ratelimits]]
+name = "COMMENT_LIMITER"
+namespace_id = "1003"
+
+[ratelimits.simple]
+limit = 5
+period = 60

@@ -242,7 +242,7 @@ describe('Worker login', () => {
 
     vi.stubGlobal('fetch', fetcher)
 
-    for (const partial of [env, { ...accountEnv(), GITHUB_CLIENT_ID: '' }, { ...accountEnv(), GITHUB_CLIENT_SECRET: undefined }, { ...accountEnv(), SESSIONS: undefined }, { ...accountEnv(), LIMITER: undefined }, { ...accountEnv(), SUGGEST_LIMITER: undefined }]) {
+    for (const partial of [env, { ...accountEnv(), GITHUB_CLIENT_ID: '' }, { ...accountEnv(), GITHUB_CLIENT_SECRET: undefined }, { ...accountEnv(), SESSIONS: undefined }, { ...accountEnv(), LIMITER: undefined }, { ...accountEnv(), SUGGEST_LIMITER: undefined }, { ...accountEnv(), COMMENT_LIMITER: undefined }]) {
       const response = await call(partial as ReturnType<typeof accountEnv>, path, { method })
 
       expect(response.status).toBe(404)

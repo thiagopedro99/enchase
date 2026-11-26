@@ -3,19 +3,20 @@ import { json, sameOrigin, unavailable } from './http.ts'
 import { callback, login, logout } from './auth.ts'
 import { session, unvote, vote } from './votes.ts'
 import { suggest } from './suggest.ts'
+import { comment, thread } from './comments.ts'
 import { move } from './move.ts'
 
 import type { Account, AccountHandler, Call, Context, Env, Handler } from './types.ts'
 
 type Methods = Partial<Record<string, Handler>>
 
-const itemPath = /^\/api\/suggestions\/([1-9]\d{0,8})\/(vote|status)$/
+const itemPath = /^\/api\/suggestions\/([1-9]\d{0,8})\/(vote|status|comments)$/
 
 const safe = ['GET', 'HEAD']
 
 const notFound = () => json({ error: 'not found' }, 404)
 
-const configured = (env: Env): env is Account => Boolean(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET && env.SESSIONS && env.LIMITER && env.SUGGEST_LIMITER)
+const configured = (env: Env): env is Account => Boolean(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET && env.SESSIONS && env.LIMITER && env.SUGGEST_LIMITER && env.COMMENT_LIMITER)
 
 const account =
   (handler: AccountHandler): Handler =>
@@ -34,10 +35,14 @@ const accountRoutes: Record<string, Methods> = {
   '/api/auth/logout': { POST: account(logout) }
 }
 
-const itemMethods: Record<string, Methods> = { vote: { PUT: account(vote), DELETE: account(unvote) }, status: { PUT: account(move) } }
+const discussion: Methods = { GET: thread, HEAD: thread }
+
+const publicItems: Record<string, Methods> = { comments: discussion }
+
+const itemMethods: Record<string, Methods> = { vote: { PUT: account(vote), DELETE: account(unvote) }, status: { PUT: account(move) }, comments: { ...discussion, POST: account(comment) } }
 
 const methodsOf = (env: Env, pathname: string, action: string | undefined) => {
-  if (!configured(env)) return publicRoutes[pathname]
+  if (!configured(env)) return action ? publicItems[action] : publicRoutes[pathname]
 
   return action ? itemMethods[action] : accountRoutes[pathname]
 }

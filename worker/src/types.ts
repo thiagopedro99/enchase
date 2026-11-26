@@ -16,6 +16,7 @@ export interface Env {
   SESSIONS?: KeyValue
   LIMITER?: RateLimit
   SUGGEST_LIMITER?: RateLimit
+  COMMENT_LIMITER?: RateLimit
 }
 
 export interface Account extends Env {
@@ -24,6 +25,7 @@ export interface Account extends Env {
   SESSIONS: KeyValue
   LIMITER: RateLimit
   SUGGEST_LIMITER: RateLimit
+  COMMENT_LIMITER: RateLimit
 }
 
 export interface Context {

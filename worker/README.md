@@ -14,6 +14,8 @@ A Cloudflare Worker that answers under `https://enchase.othiagosilva.com.br/api/
 | `POST /api/auth/logout` | Ends the session and revokes the token on GitHub. |
 | `PUT` and `DELETE /api/suggestions/{number}/vote` | Adds or removes the 👍 of the visitor on that issue. |
 | `PUT /api/suggestions/{number}/status` | Moves the card of that issue to another column, for a maintainer. |
+| `GET /api/suggestions/{number}/comments` | The whole text of that suggestion and its comments, as plain text. |
+| `POST /api/suggestions/{number}/comments` | Posts the comment of a signed-in visitor on that issue. |
 
 Any other path answers 404, and a method that the path does not take answers 405.
 
@@ -55,7 +57,18 @@ A maintainer moves a card on the site, and the Worker changes the issue as that 
 - **What may be moved:** an issue that has one of the labels of the board.
 - **Order of the steps:** the milestone and the comment come before the change of the issue, so a failure on the way leaves the card in its column.
 
-The routes of the session, of the vote, of the suggestion and of the move answer 404 or 405 until `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, the store and the two limiters are configured: a limiter that goes missing turns those routes off, it never turns the limits off, and the site then shows the board without the login.
+### The comments
+
+The panel of a suggestion on the site shows the whole text of the issue and its comments, and a signed-in visitor comments from there.
+
+- **Reading** is open to anyone, like the list: the Worker asks GitHub as the app and keeps the answer of each issue for one minute, the "not found" too, so walking through issue numbers does not spend the limit of the app. A new comment drops the copy of that issue.
+- **Plain text only.** The comments come from GitHub already as text, and the body of the issue is cleaned of its Markdown marks. The site renders no HTML that a visitor wrote.
+- **Moderation stays on GitHub:** a comment that a maintainer hides there is left out, a deleted one is gone, and a locked issue takes no comment (the answer is 409).
+- **Writing** is done as the visitor, with the token of the session, so the comment is a comment of that person on GitHub. The text has from 2 to 2,000 characters, in a JSON body of at most 8 KiB.
+- **Limits:** five comments a minute, in a limiter of their own, and thirty in twenty-four hours for each visitor. A comment that GitHub refuses is not counted.
+- **How many are shown:** the fifty most recent. The panel links to the issue for the rest.
+
+The routes of the session, of the vote, of the suggestion, of the move and of writing a comment answer 404 or 405 until `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, the store and the three limiters are configured: a limiter that goes missing turns those routes off, it never turns the limits off, and the site then shows the board without the login.
 
 ## Configuration
 
@@ -65,9 +78,10 @@ The routes of the session, of the vote, of the suggestion and of the move answer
 | `GITHUB_CLIENT_ID` | `[vars]` of `wrangler.toml` | The Client ID, from the page of the app. It is not a secret. |
 | `GITHUB_APP_PRIVATE_KEY` | secret of the Worker | The private key of the app, as the `.pem` file that GitHub generates. |
 | `GITHUB_CLIENT_SECRET` | secret of the Worker | A client secret, generated on the page of the app. |
-| `SESSIONS` | `[[kv_namespaces]]` of `wrangler.toml` | The store of the sessions and of the count of suggestions of each visitor. Without an `id`, `wrangler deploy` creates the namespace and writes its id back to the file: commit that line. |
+| `SESSIONS` | `[[kv_namespaces]]` of `wrangler.toml` | The store of the sessions and of the counts of suggestions and of comments of each visitor. Without an `id`, `wrangler deploy` creates the namespace and writes its id back to the file: commit that line. |
 | `LIMITER` | `[[ratelimits]]` of `wrangler.toml` | The limit of votes, of moves, of reads of the session and of callbacks: thirty a minute. |
 | `SUGGEST_LIMITER` | `[[ratelimits]]` of `wrangler.toml` | The limit of suggestions: three a minute. |
+| `COMMENT_LIMITER` | `[[ratelimits]]` of `wrangler.toml` | The limit of comments: five a minute. |
 
 ## The GitHub App
 
