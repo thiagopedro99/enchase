@@ -150,19 +150,13 @@ describe('Suggestions account', () => {
   })
 
   it('offers no vote on what was released or declined', async () => {
-    const user = userEvent.setup()
-
     vi.stubGlobal('fetch', serve({ session: signed() }))
     renderPage()
     await screen.findByText('@visitor')
-    await user.click(screen.getByRole('tab', { name: /Lançado/ }))
 
     expect(await screen.findByRole('link', { name: 'Class wins' })).toHaveAccessibleDescription('5 votos, 2 comentários, issue 3')
     expect(screen.queryByRole('button', { name: /Class wins/ })).not.toBeInTheDocument()
-
-    await user.click(screen.getByRole('tab', { name: /Não vamos fazer/ }))
-
-    expect(await screen.findByRole('link', { name: 'React 18' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'React 18' })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /React 18/ })).not.toBeInTheDocument()
   })
 

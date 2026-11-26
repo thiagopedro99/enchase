@@ -1,24 +1,18 @@
-.item {
-  position: relative;
-}
-
 .card {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: var(--enchase-space-sm);
-  block-size: 100%;
-  padding: var(--enchase-space-md);
-  background: var(--enchase-color-surface);
-  text-decoration: none;
+  min-inline-size: 0;
   color: var(--enchase-color-text-primary);
 }
 
 .meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: var(--enchase-space-sm);
+  gap: 0 var(--enchase-space-sm);
   inline-size: 100%;
   font-size: var(--enchase-font-size-xs);
   color: var(--enchase-color-text-secondary);
@@ -28,6 +22,7 @@
   font-weight: var(--enchase-font-weight-semibold);
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .kind[data-kind='componente'] {
@@ -43,6 +38,18 @@
   line-height: var(--enchase-line-height-snug);
   overflow-wrap: anywhere;
   text-wrap: balance;
+  text-decoration: none;
+  color: var(--enchase-color-text-primary);
+}
+
+.title:focus-visible {
+  text-decoration: underline;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .title:hover {
+    text-decoration: underline;
+  }
 }
 
 .text {
@@ -110,10 +117,6 @@
   font-weight: var(--enchase-font-weight-semibold);
   line-height: 1.5;
   color: var(--enchase-color-text-primary);
-}
-
-.votes[data-covered] {
-  visibility: hidden;
 }
 
 .number {

@@ -71,8 +71,6 @@ const asked = (fetcher: { mock: { calls: unknown[][] } }) => fetcher.mock.calls.
 
 const renderPage = () => renderWithProviders(<Sugestoes />, { route: '/sugestoes', toasts: true })
 
-const openTab = async (user: ReturnType<typeof userEvent.setup>, name: RegExp) => user.click(await screen.findByRole('tab', { name }))
-
 beforeEach(() => {
   window.sessionStorage.clear()
 })
@@ -167,7 +165,8 @@ describe('Suggestions page', () => {
     renderPage()
 
     expect(screen.getByText('Carregando as sugestões').closest('[role="status"]')).toBeInTheDocument()
-    expect(await screen.findByRole('tab', { name: /Em análise/ })).toHaveAttribute('aria-selected', 'true')
+    expect(await screen.findByRole('region', { name: /Em análise/ })).toBeInTheDocument()
+    expect(document.querySelectorAll('[data-slot="board-column"]')).toHaveLength(5)
     expect(screen.getByRole('link', { name: 'Code block' })).toHaveAttribute('href', 'https://github.com/thiagopedro99/enchase/issues/1')
     expect(screen.getByText('8 sugestões')).toBeInTheDocument()
   })
@@ -177,24 +176,18 @@ describe('Suggestions page', () => {
 
     const { container } = renderPage()
 
-    await screen.findByRole('tab', { name: /Em análise/ })
+    await screen.findByRole('region', { name: /Em análise/ })
 
     expect(await axe(container)).toHaveNoViolations()
   })
 
   it('shows the version of a released suggestion and the reason of a declined one', async () => {
-    const user = userEvent.setup()
-
     vi.stubGlobal('fetch', serve())
     renderPage()
 
-    await openTab(user, /Lançado/)
-
-    expect(screen.getByRole('link', { name: 'Class wins' })).toHaveTextContent('Lançado na 0.23.0')
-
-    await openTab(user, /Não vamos fazer/)
-
-    expect(screen.getByRole('link', { name: 'Tailwind classes' })).toHaveTextContent('Enchase is CSS Modules with tokens.')
+    expect(within(await screen.findByRole('region', { name: /Lançado/ })).getByText('Lançado na 0.23.0')).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: /Não vamos fazer/ })).getByText('Enchase is CSS Modules with tokens. Use enchase eject.')).toBeInTheDocument()
+    expect(within(screen.getByRole('region', { name: /Não vamos fazer/ })).getByRole('link', { name: 'Tailwind classes' })).toBeInTheDocument()
   })
 
   it('describes each card by its votes and comments', async () => {
@@ -217,19 +210,16 @@ describe('Suggestions page', () => {
     expect(screen.getByRole('link', { name: 'Sticky columns' })).toBeInTheDocument()
   })
 
-  it('draws the five columns side by side on a wide screen', async () => {
-    const width = window.innerWidth
-
-    window.innerWidth = 1600
+  it('draws the five columns with what each one holds, and no way to move for a visitor', async () => {
     vi.stubGlobal('fetch', serve())
     renderPage()
 
     const lane = await screen.findByRole('region', { name: /Em desenvolvimento/ })
 
     expect(within(lane).getAllByRole('link')).toHaveLength(2)
-    expect(screen.getAllByRole('heading', { level: 3 })).toHaveLength(5)
-
-    window.innerWidth = width
+    expect(within(lane).getByText('Sendo feita agora.')).toBeInTheDocument()
+    expect(document.querySelectorAll('[data-slot="board-column"]')).toHaveLength(5)
+    expect(screen.queryByRole('button', { name: /^Mover / })).not.toBeInTheDocument()
   })
 
   it('invites the first suggestion when there is none', async () => {
@@ -238,24 +228,10 @@ describe('Suggestions page', () => {
 
     expect(await screen.findByRole('heading', { name: 'Ainda não há sugestões' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /^Fazer a primeira sugestão/ })).toHaveAttribute('href', suggestUrl)
-    expect(screen.getAllByRole('tab').map((tab) => tab.textContent)).toEqual(['Em análise0', 'Backlog0', 'Em desenvolvimento0', 'Lançado0', 'Não vamos fazer0'])
+    expect(document.querySelectorAll('[data-slot="board-column"]')).toHaveLength(5)
+    expect(screen.getAllByText('Nenhum cartão')).toHaveLength(5)
     expect(screen.queryByRole('searchbox')).not.toBeInTheDocument()
     expect(screen.queryByLabelText('Buscar sugestão')).not.toBeInTheDocument()
-  })
-
-  it('keeps an empty board in tabs on a wide screen, with the invitation where the first card will be', async () => {
-    const width = window.innerWidth
-
-    window.innerWidth = 1600
-    vi.stubGlobal('fetch', serve([]))
-    renderPage()
-
-    const panel = await screen.findByRole('tabpanel', { name: /Em análise/ })
-
-    expect(within(panel).getByRole('heading', { name: 'Ainda não há sugestões' })).toBeInTheDocument()
-    expect(screen.queryByRole('region', { name: /Backlog/ })).not.toBeInTheDocument()
-
-    window.innerWidth = width
   })
 
   it('explains a rate limit and loads again when asked', async () => {

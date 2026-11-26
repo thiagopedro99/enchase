@@ -46,7 +46,7 @@ export interface Viewer {
   avatarUrl: string
 }
 
-export type AccountState = { status: 'unavailable' } | { status: 'anonymous' } | { status: 'signed'; user: Viewer; voted: number[] }
+export type AccountState = { status: 'unavailable' } | { status: 'anonymous' } | { status: 'signed'; user: Viewer; voted: number[]; canMove: boolean }
 
 export type VoteResult = 'ok' | 'signedOut' | 'limited' | 'failed'
 
@@ -70,3 +70,12 @@ export interface LoginRequest {
 export type SendResult = { status: 'ok'; suggestion: Suggestion; listed: boolean } | { status: 'invalid'; problems: Record<string, string> } | { status: 'signedOut' | 'daily' | 'limited' | 'failed' }
 
 export type SendFailure = Exclude<SendResult['status'], 'ok' | 'invalid'>
+
+export type MoveResult = { status: 'ok'; suggestion: Suggestion } | { status: 'invalid'; problems: Record<string, string> } | { status: 'signedOut' | 'forbidden' | 'limited' | 'failed' }
+
+export type MoveFailure = Exclude<MoveResult['status'], 'ok' | 'invalid'>
+
+export interface MoveRequest {
+  suggestion: Suggestion
+  status: Status
+}

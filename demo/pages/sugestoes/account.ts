@@ -1,6 +1,7 @@
 import { apiEndpoint } from './loadSuggestions.ts'
 
-import type { AccountState, SendResult, Suggestion, VoteResult } from './types.ts'
+import type { AccountState, MoveResult, SendResult, Suggestion, VoteResult } from './types.ts'
+import type { Move } from './move.ts'
 import type { Draft } from './draft.ts'
 
 export const sessionEndpoint = '/api/session'
@@ -22,12 +23,12 @@ const numbers = (value: unknown) => (Array.isArray(value) ? value.filter((item):
 export const loadAccount = async (signal: AbortSignal): Promise<AccountState> => {
   try {
     const response = await fetch(sessionEndpoint, { headers, signal })
-    const { user, voted }: { user?: { login?: unknown; avatarUrl?: unknown } | null; voted?: unknown } = isJson(response) ? await response.json() : {}
+    const { user, voted, canMove }: { user?: { login?: unknown; avatarUrl?: unknown } | null; voted?: unknown; canMove?: unknown } = isJson(response) ? await response.json() : {}
 
     if (user === null) return { status: 'anonymous' }
     if (typeof user?.login !== 'string') return unavailable
 
-    return { status: 'signed', user: { login: user.login, avatarUrl: typeof user.avatarUrl === 'string' ? user.avatarUrl : '' }, voted: numbers(voted) }
+    return { status: 'signed', user: { login: user.login, avatarUrl: typeof user.avatarUrl === 'string' ? user.avatarUrl : '' }, voted: numbers(voted), canMove: canMove === true }
   } catch {
     return unavailable
   }
@@ -65,6 +66,24 @@ export const sendSuggestion = async (draft: Draft): Promise<SendResult> => {
     if (response.status === 429) return { status: body.error === 'daily limit' ? 'daily' : 'limited' }
 
     return { status: 'failed' }
+  } catch {
+    return { status: 'failed' }
+  }
+}
+
+export const statusEndpoint = (id: number) => `/api/suggestions/${id}/status`
+
+export const sendMove = async (id: number, move: Partial<Move>): Promise<MoveResult> => {
+  try {
+    const response = await fetch(statusEndpoint(id), { method: 'PUT', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify(move) })
+    const body: { suggestion?: Suggestion; problems?: unknown } = (response.headers.get('Content-Type') ?? '').includes('application/json') ? await response.json() : {}
+
+    if (response.ok && body.suggestion && typeof body.suggestion.id === 'number') return { status: 'ok', suggestion: body.suggestion }
+    if (response.status === 401) return { status: 'signedOut' }
+    if (response.status === 403) return { status: 'forbidden' }
+    if (response.status === 422 && typeof body.problems === 'object' && body.problems !== null) return { status: 'invalid', problems: body.problems as Record<string, string> }
+
+    return { status: response.status === 429 ? 'limited' : 'failed' }
   } catch {
     return { status: 'failed' }
   }

@@ -1,9 +1,10 @@
-import { Alert, Container, VisuallyHidden, useBreakpoint, useToast } from 'enchase'
+import { Alert, Container, VisuallyHidden, useToast } from 'enchase'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import PageHeader from '../../components/PageHeader/index.tsx'
 import SuggestDialog from './subcomponentes/SuggestDialog/index.tsx'
 import LoginDialog from './subcomponentes/LoginDialog/index.tsx'
+import MoveDialog from './subcomponentes/MoveDialog/index.tsx'
 import HowItWorks from './subcomponentes/HowItWorks/index.tsx'
 import SitePage from '../../components/SitePage/index.tsx'
 import Failure from './subcomponentes/Failure/index.tsx'
@@ -18,6 +19,7 @@ import { defaultFilters } from './defaultData.ts'
 import { takeIntent } from './intent.ts'
 import { VotingContext } from './voting.ts'
 import { useAccount } from './useAccount.ts'
+import { useMoves } from './useMoves.ts'
 import { columnsOf, totalOf } from './columns.ts'
 import styles from './styles.module.css'
 
@@ -28,11 +30,10 @@ const Sugestoes = () => {
   const loginFailed = useLoginFailure()
   const toast = useToast()
   const signed = account.status === 'signed'
-  const { up } = useBreakpoint()
-  const lanes = up('xxl') && state.status === 'ready' && state.items.length > 0
+  const moves = useMoves({ onMoved: add, onSignedOut: expire })
   const [filters, setFilters] = useState(defaultFilters)
   const items = state.status === 'ready' ? state.items : undefined
-  const columns = useMemo(() => columnsOf(items ?? [], filters), [items, filters])
+  const columns = useMemo(() => columnsOf((items ?? []).map((item) => ({ ...item, status: moves.placed[item.id] ?? item.status })), filters), [items, filters, moves.placed])
 
   useEffect(() => {
     if (signed && takeIntent()) setComposing(true)
@@ -57,7 +58,7 @@ const Sugestoes = () => {
         <HowItWorks />
 
         <div className={styles.band}>
-          <Container maxWidth={lanes ? 'full' : 'xl'} className={styles.board}>
+          <Container maxWidth="full" className={styles.board}>
           <VisuallyHidden>
             <h2>Quadro de sugestões</h2>
           </VisuallyHidden>
@@ -71,10 +72,12 @@ const Sugestoes = () => {
           {items && (
             <VotingContext.Provider value={voting}>
               {items.length > 0 && <Toolbar filters={filters} total={totalOf(columns)} onFiltersChange={setFilters} onSuggest={account.status === 'unavailable' ? undefined : suggest} />}
-              <Board columns={columns} {...(items.length === 0 ? { invite: <Empty onSuggest={account.status === 'unavailable' ? undefined : suggest} /> } : {})} />
+              {items.length === 0 && <Empty onSuggest={account.status === 'unavailable' ? undefined : suggest} />}
+              <Board columns={columns} canMove={account.status === 'signed' && account.canMove} onMove={moves.request} />
             </VotingContext.Provider>
           )}
           <LoginDialog request={asking} onClose={dismiss} />
+          <MoveDialog request={moves.asking} onConfirm={moves.confirm} onClose={moves.cancel} />
           <SuggestDialog isOpen={composing} items={items ?? []} onClose={() => setComposing(false)} onSent={sent} onSignedOut={expire} />
           </Container>
         </div>

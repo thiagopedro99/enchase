@@ -1,7 +1,4 @@
 .vote {
-  position: absolute;
-  inset-block-end: calc(var(--enchase-space-md) + var(--enchase-border-width));
-  inset-inline-start: calc(var(--enchase-space-md) + var(--enchase-border-width));
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;

@@ -1,6 +1,6 @@
 import { dailySuggestions, draftLimits } from './draft.ts'
 
-import type { Filters, Kind, KindFilter, LoginReason, SendFailure, Sort, Status, StatusInfo, VoteResult } from './types.ts'
+import type { Filters, Kind, KindFilter, LoginReason, MoveFailure, SendFailure, Sort, Status, StatusInfo, VoteResult } from './types.ts'
 import type { DraftField, DraftProblem } from './draft.ts'
 
 export const statuses: StatusInfo[] = [
@@ -84,3 +84,10 @@ export const loginTexts: Record<LoginReason, { title: string; text: string }> = 
 export const intentKey = 'enchase-suggest-intent'
 
 export const draftKey = 'enchase-suggest-draft'
+
+export const moveMessages: Record<MoveFailure, string> = {
+  signedOut: 'Sua sessão terminou. Entre de novo para mover os cartões.',
+  forbidden: 'Você não tem permissão para mover os cartões.',
+  limited: 'Muitos movimentos em pouco tempo. Espere um minuto e tente de novo.',
+  failed: 'Não foi possível mover o cartão. Ele voltou para a coluna de origem.'
+}

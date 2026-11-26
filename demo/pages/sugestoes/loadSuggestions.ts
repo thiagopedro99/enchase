@@ -38,10 +38,12 @@ export const patchVotes = (id: number, delta: number) => {
   )
 }
 
+export const put = (items: Suggestion[], suggestion: Suggestion) => (items.some(({ id }) => id === suggestion.id) ? items.map((item) => (item.id === suggestion.id ? suggestion : item)) : [suggestion, ...items])
+
 export const addToCache = (suggestion: Suggestion) => {
   const stored = readStored()
 
-  if (stored) writeCache([suggestion, ...stored.items.filter(({ id }) => id !== suggestion.id)], stored.at)
+  if (stored) writeCache(put(stored.items, suggestion), stored.at)
 }
 
 const isJson = (response: Response) => response.ok && (response.headers.get('Content-Type') ?? '').includes('application/json')

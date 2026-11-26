@@ -1,7 +1,13 @@
-import type { Column } from '../../types.ts'
-import type { ReactNode } from 'react'
+import type { Column, Status, Suggestion } from '../../types.ts'
 
 export interface BoardProps {
   columns: Column[]
-  invite?: ReactNode
+  canMove: boolean
+  onMove: (suggestion: Suggestion, status: Status) => void
+}
+
+export interface BoardCard {
+  id: string
+  columnId: string
+  suggestion: Suggestion
 }

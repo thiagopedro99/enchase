@@ -1,4 +1,4 @@
-import { Badge, CardLink, Tag, VisuallyHidden } from 'enchase'
+import { Badge, Link, Tag, VisuallyHidden } from 'enchase'
 import { useId } from 'react'
 
 import { CommentIcon, ThumbsUpIcon } from '../../../../components/icons.tsx'
@@ -23,49 +23,52 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
   const canVote = mode !== 'off' && votable.includes(status)
 
   return (
-    <li className={styles.item}>
-      <CardLink href={url} target="_blank" variant="outlined" padding="0" className={styles.card} aria-labelledby={titleId} aria-describedby={detailsId}>
-        <span className={styles.meta}>
-          <span className={styles.kind} data-kind={kind}>
-            {kindLabels[kind]}
-          </span>
-          <span className={styles.age}>{ageOf(createdAt)}</span>
+    <div className={styles.card}>
+      <span className={styles.meta}>
+        <span className={styles.kind} data-kind={kind}>
+          {kindLabels[kind]}
         </span>
-        <span id={titleId} className={styles.title}>
-          {title}
+        <span className={styles.age}>{ageOf(createdAt)}</span>
+      </span>
+      <Link href={url} target="_blank" className={styles.title} aria-labelledby={titleId} aria-describedby={detailsId}>
+        <span id={titleId}>{title}</span>
+      </Link>
+      {text && <span className={styles.text}>{text}</span>}
+      {reason && (
+        <span className={styles.reason}>
+          <span className={styles.reasonLabel}>Motivo</span>
+          {reason}
         </span>
-        {text && <span className={styles.text}>{text}</span>}
-        {reason && (
-          <span className={styles.reason}>
-            <span className={styles.reasonLabel}>Motivo</span>
-            {reason}
-          </span>
-        )}
-        {(area || version) && (
-          <span className={styles.labels}>
-            {area && <Tag size="sm">{area}</Tag>}
-            {version && (
-              <Badge variant="success" size="sm">
-                Lançado na {version}
-              </Badge>
-            )}
-          </span>
-        )}
-        <span className={styles.footer} aria-hidden="true">
-          <span className={styles.votes} {...(canVote ? { 'data-covered': '' } : {})}>
+      )}
+      {(area || version) && (
+        <span className={styles.labels}>
+          {area && <Tag size="sm">{area}</Tag>}
+          {version && (
+            <Badge variant="success" size="sm">
+              Lançado na {version}
+            </Badge>
+          )}
+        </span>
+      )}
+      <span className={styles.footer}>
+        {canVote ? (
+          <VoteButton title={title} votes={votes} voted={voted.includes(id)} signed={mode === 'signed'} pending={pending.includes(id)} onVote={() => onVote(suggestion)} />
+        ) : (
+          <span className={styles.votes} aria-hidden="true">
             <ThumbsUpIcon size={14} />
             {votes}
           </span>
-          <span className={styles.comments}>
-            <CommentIcon size={14} />
-            {comments}
-          </span>
-          <span className={styles.number}>#{id}</span>
+        )}
+        <span className={styles.comments} aria-hidden="true">
+          <CommentIcon size={14} />
+          {comments}
         </span>
-        <VisuallyHidden id={detailsId}>{details(votes, comments, id)}</VisuallyHidden>
-      </CardLink>
-      {canVote && <VoteButton title={title} votes={votes} voted={voted.includes(id)} signed={mode === 'signed'} pending={pending.includes(id)} onVote={() => onVote(suggestion)} />}
-    </li>
+        <span className={styles.number} aria-hidden="true">
+          #{id}
+        </span>
+      </span>
+      <VisuallyHidden id={detailsId}>{details(votes, comments, id)}</VisuallyHidden>
+    </div>
   )
 }
 

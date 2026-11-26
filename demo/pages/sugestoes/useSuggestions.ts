@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { addToCache, loadSuggestions } from './loadSuggestions.ts'
+import { addToCache, loadSuggestions, put } from './loadSuggestions.ts'
 
 import type { Suggestion, SuggestionsState } from './types.ts'
 
@@ -27,7 +27,7 @@ export const useSuggestions = () => {
 
   const add = useCallback((suggestion: Suggestion) => {
     addToCache(suggestion)
-    setState((current) => (current.status === 'ready' ? { status: 'ready', items: [suggestion, ...current.items.filter(({ id }) => id !== suggestion.id)] } : current))
+    setState((current) => (current.status === 'ready' ? { status: 'ready', items: put(current.items, suggestion) } : current))
   }, [])
 
   return { state, reload, add }
