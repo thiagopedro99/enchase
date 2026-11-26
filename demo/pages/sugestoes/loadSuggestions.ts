@@ -38,6 +38,12 @@ export const patchVotes = (id: number, delta: number) => {
   )
 }
 
+export const addToCache = (suggestion: Suggestion) => {
+  const stored = readStored()
+
+  if (stored) writeCache([suggestion, ...stored.items.filter(({ id }) => id !== suggestion.id)], stored.at)
+}
+
 const isJson = (response: Response) => response.ok && (response.headers.get('Content-Type') ?? '').includes('application/json')
 
 const fromApi = async (signal: AbortSignal): Promise<Suggestion[] | null> => {

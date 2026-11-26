@@ -5,7 +5,7 @@ import { loadAccount, sendLogout, sendVote } from './account.ts'
 import { patchVotes } from './loadSuggestions.ts'
 import { voteMessages } from './defaultData.ts'
 
-import type { AccountState, Suggestion, Voting } from './types.ts'
+import type { AccountState, LoginReason, LoginRequest, Voting } from './types.ts'
 
 const without = (list: number[], id: number) => list.filter((item) => item !== id)
 
@@ -13,7 +13,7 @@ export const useAccount = () => {
   const [account, setAccount] = useState<AccountState>({ status: 'unavailable' })
   const [deltas, setDeltas] = useState<Record<number, number>>({})
   const [pending, setPending] = useState<number[]>([])
-  const [asking, setAsking] = useState<Suggestion | null>(null)
+  const [asking, setAsking] = useState<LoginRequest | null>(null)
   const busy = useRef(new Set<number>())
   const toast = useToast()
 
@@ -67,7 +67,7 @@ export const useAccount = () => {
       voted: voted ?? [],
       deltas,
       pending,
-      onVote: (suggestion) => (voted ? void toggle(suggestion.id, !voted.includes(suggestion.id)) : setAsking(suggestion))
+      onVote: (suggestion) => (voted ? void toggle(suggestion.id, !voted.includes(suggestion.id)) : setAsking({ reason: 'vote', suggestion }))
     }),
     [account.status, voted, deltas, pending, toggle]
   )
@@ -79,5 +79,9 @@ export const useAccount = () => {
 
   const dismiss = useCallback(() => setAsking(null), [])
 
-  return { account, voting, asking, dismiss, leave }
+  const ask = useCallback((reason: LoginReason) => setAsking({ reason }), [])
+
+  const expire = useCallback(() => setAccount({ status: 'anonymous' }), [])
+
+  return { account, voting, asking, ask, dismiss, expire, leave }
 }

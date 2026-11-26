@@ -1,6 +1,6 @@
-import type { Suggestion } from '../../types.ts'
+import type { LoginRequest } from '../../types.ts'
 
 export interface LoginDialogProps {
-  suggestion: Suggestion | null
+  request: LoginRequest | null
   onClose: () => void
 }

@@ -59,3 +59,14 @@ export interface Voting {
   pending: number[]
   onVote: (suggestion: Suggestion) => void
 }
+
+export type LoginReason = 'vote' | 'suggest'
+
+export interface LoginRequest {
+  reason: LoginReason
+  suggestion?: Suggestion
+}
+
+export type SendResult = { status: 'ok'; suggestion: Suggestion; listed: boolean } | { status: 'invalid'; problems: Record<string, string> } | { status: 'signedOut' | 'daily' | 'limited' | 'failed' }
+
+export type SendFailure = Exclude<SendResult['status'], 'ok' | 'invalid'>

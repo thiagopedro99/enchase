@@ -1,4 +1,7 @@
-import type { Filters, Kind, KindFilter, Sort, Status, StatusInfo, VoteResult } from './types.ts'
+import { dailySuggestions, draftLimits } from './draft.ts'
+
+import type { Filters, Kind, KindFilter, LoginReason, SendFailure, Sort, Status, StatusInfo, VoteResult } from './types.ts'
+import type { DraftField, DraftProblem } from './draft.ts'
 
 export const statuses: StatusInfo[] = [
   { value: 'analise', label: 'Em análise', text: 'Chegou e ainda vamos avaliar.' },
@@ -33,7 +36,7 @@ export const defaultFilters: Filters = {
 }
 
 export const steps = [
-  { title: 'Abra a sugestão no GitHub', text: 'Um formulário curto: o problema, a ideia e um exemplo de uso.' },
+  { title: 'Envie a sugestão', text: 'Um formulário curto, aqui no site ou no GitHub: o problema e a ideia.' },
   { title: 'Vote com 👍', text: 'As mais votadas sobem dentro de cada coluna.' },
   { title: 'Acompanhe o card', text: 'Ele anda de Em análise até Lançado, ou recebe o motivo da recusa.' }
 ]
@@ -46,3 +49,38 @@ export const voteMessages: Record<Exclude<VoteResult, 'ok'> | 'logout', string> 
   failed: 'Não foi possível registrar o voto. Tente de novo.',
   logout: 'Não foi possível sair. Tente de novo.'
 }
+
+export const draftKinds: { value: Kind; label: string }[] = [
+  { value: 'componente', label: kindLabels.componente },
+  { value: 'melhoria', label: kindLabels.melhoria },
+  { value: 'correcao', label: kindLabels.correcao }
+]
+
+export const draftLabels: Record<Kind, { need: string; proposal: string }> = {
+  componente: { need: 'O que você precisa, e o que faz hoje no lugar', proposal: 'Como você imagina' },
+  melhoria: { need: 'O que você precisa, e o que faz hoje no lugar', proposal: 'Como você imagina' },
+  correcao: { need: 'O que aconteceu, e o que você esperava', proposal: 'Como reproduzir' }
+}
+
+export const draftMessage = (field: DraftField, problem: DraftProblem) => {
+  if (problem === 'missing') return 'Preencha este campo.'
+  if (problem === 'invalid' || field === 'kind') return 'Escolha um dos tipos.'
+
+  return problem === 'short' ? `Escreva pelo menos ${draftLimits[field].min} caracteres.` : `Use no máximo ${draftLimits[field].max} caracteres.`
+}
+
+export const sendMessages: Record<SendFailure, string> = {
+  signedOut: 'Sua sessão terminou. Entre de novo para enviar: o que você escreveu fica guardado.',
+  daily: `Você já enviou ${dailySuggestions} sugestões nas últimas 24 horas. Tente de novo mais tarde.`,
+  limited: 'Muitos envios em pouco tempo. Espere um minuto e tente de novo.',
+  failed: 'Não foi possível enviar a sugestão. Tente de novo.'
+}
+
+export const loginTexts: Record<LoginReason, { title: string; text: string }> = {
+  vote: { title: 'Entre para votar', text: 'O voto é um 👍 seu na issue do GitHub. Entre com a sua conta para votar daqui mesmo.' },
+  suggest: { title: 'Entre para sugerir', text: 'A sugestão vira uma issue pública no GitHub, com o seu usuário. Entre com a sua conta para enviar daqui mesmo.' }
+}
+
+export const intentKey = 'enchase-suggest-intent'
+
+export const draftKey = 'enchase-suggest-draft'

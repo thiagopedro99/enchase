@@ -1,4 +1,7 @@
-import type { AccountState, VoteResult } from './types.ts'
+import { apiEndpoint } from './loadSuggestions.ts'
+
+import type { AccountState, SendResult, Suggestion, VoteResult } from './types.ts'
+import type { Draft } from './draft.ts'
 
 export const sessionEndpoint = '/api/session'
 
@@ -48,5 +51,21 @@ export const sendLogout = async () => {
     return (await fetch(logoutEndpoint, { method: 'POST', headers })).ok
   } catch {
     return false
+  }
+}
+
+export const sendSuggestion = async (draft: Draft): Promise<SendResult> => {
+  try {
+    const response = await fetch(apiEndpoint, { method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' }, body: JSON.stringify(draft) })
+    const body: { suggestion?: Suggestion; listed?: unknown; error?: unknown; problems?: unknown } = (response.headers.get('Content-Type') ?? '').includes('application/json') ? await response.json() : {}
+
+    if (response.ok && body.suggestion && typeof body.suggestion.id === 'number') return { status: 'ok', suggestion: body.suggestion, listed: body.listed !== false }
+    if (response.status === 401) return { status: 'signedOut' }
+    if (response.status === 422 && typeof body.problems === 'object' && body.problems !== null) return { status: 'invalid', problems: body.problems as Record<string, string> }
+    if (response.status === 429) return { status: body.error === 'daily limit' ? 'daily' : 'limited' }
+
+    return { status: 'failed' }
+  } catch {
+    return { status: 'failed' }
   }
 }
