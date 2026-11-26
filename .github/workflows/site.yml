@@ -9,6 +9,9 @@ on:
       - src/tests/demo/**
       - src/tests/worker/**
       - tsconfig.worker.json
+      - CONTRIBUTING.md
+      - CLAUDE.md
+      - skill.md
       - .github/workflows/site.yml
   pull_request:
     paths:
@@ -17,6 +20,9 @@ on:
       - src/tests/demo/**
       - src/tests/worker/**
       - tsconfig.worker.json
+      - CONTRIBUTING.md
+      - CLAUDE.md
+      - skill.md
       - .github/workflows/site.yml
 
 concurrency:
@@ -35,4 +41,4 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run build
-      - run: npx vitest run src/tests/demo src/tests/worker
+      - run: npx vitest run src/tests/demo src/tests/worker src/tests/lib/docsLanguage.test.ts src/tests/lib/ciPaths.test.ts

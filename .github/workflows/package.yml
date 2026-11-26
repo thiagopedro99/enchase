@@ -11,6 +11,9 @@ on:
       - .github/dependabot.yml
       - .github/ISSUE_TEMPLATE/**
       - .github/workflows/site.yml
+      - CONTRIBUTING.md
+      - CLAUDE.md
+      - skill.md
       - demo/**
       - worker/**
       - src/tests/demo/**
@@ -25,6 +28,9 @@ on:
       - .github/dependabot.yml
       - .github/ISSUE_TEMPLATE/**
       - .github/workflows/site.yml
+      - CONTRIBUTING.md
+      - CLAUDE.md
+      - skill.md
       - demo/**
       - worker/**
       - src/tests/demo/**
