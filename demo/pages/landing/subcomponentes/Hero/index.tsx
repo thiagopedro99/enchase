@@ -43,7 +43,7 @@ const Hero = ({ look, onLookChange }: HeroProps) => {
             <Badge variant="primary" size="sm">
               Novo na {version}
             </Badge>
-            <span>Board, o quadro Kanban experimental</span>
+            <span>Ações na barra do topo do Layout</span>
             <ChevronRightIcon size={16} />
           </Link>
 

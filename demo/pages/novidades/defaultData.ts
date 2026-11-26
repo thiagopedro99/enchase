@@ -10,6 +10,35 @@ export const anchorOf = (version: string) => `v-${version.replace(/\./g, '-')}`
 
 export const releases: ReleaseNote[] = [
   {
+    version: '0.27.0',
+    previous: '0.26.0',
+    date: '26 de novembro de 2026',
+    shortDate: '26 nov',
+    title: 'Ações na barra do topo do Layout',
+    summary: 'O `Layout` ganha a prop `actions`, para colocar um botão de login ou o avatar de quem entrou na barra do topo. Nada do que já existia mudou.',
+    behavior: false,
+    groups: [
+      {
+        kind: 'novo',
+        items: [
+          '`actions` no `Layout`: conteúdo extra na barra do topo, antes do botão de tema.',
+          'Com `navigation="sidebar"` ele fica na barra em qualquer largura. Com `navigation="navbar"` vai para a barra em tela larga e para o fim do menu móvel em tela estreita.',
+          'A página de Sugestões deste site já usa a prop: o login com GitHub fica na barra do topo.'
+        ]
+      }
+    ],
+    migration: {
+      text: 'Nada a mudar no que você já usa. Sem a prop, o HTML e o CSS saem iguais aos da 0.26.0.',
+      blocks: [
+        {
+          label: 'App.tsx',
+          language: 'tsx',
+          code: "import { ButtonLink, Layout } from 'enchase'\n\n<Layout\n  navigation=\"navbar\"\n  brand=\"Acme\"\n  navigationSections={secoes}\n  actions={<ButtonLink href=\"/entrar\" size=\"sm\">Entrar</ButtonLink>}\n>\n  {children}\n</Layout>"
+        }
+      ]
+    }
+  },
+  {
     version: '0.26.0',
     previous: '0.25.1',
     date: '25 de novembro de 2026',

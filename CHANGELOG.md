@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.27.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.26.0...v0.27.0)
+
+### Enhancements
+
+- Let the Layout take actions for its top bar ([190d478](https://github.com/thiagopedro99/enchase/commit/190d478))
+
+### Notes
+
+- No breaking change. `npm run check:api` against 0.26.0 reports the same 25 keys of `exports` and none removed, the same 14 stable entries with 1,126 lines of declarations (one more, the new prop) and none removed or changed, the same 1,286 `--enchase-*` names and 294 `data-slot` names with none removed, and the same 990 hooks in the 5 styles. `api-breaks.json` lists nothing for this release.
+- A new prop of the `Layout`, `actions`: extra content for the top bar, such as a sign-in button or the avatar of the user, before the theme toggle. With `navigation="sidebar"` it sits in the `AppBar`, on every screen width. With `navigation="navbar"` it is passed to the `actions` of the `Navbar`, which shows it in the bar on a wide screen and at the end of the mobile menu on a narrow one. The `Navbar` itself did not change.
+- Without the prop nothing changes: the static markup of the two navigation modes is byte for byte the one of 0.26.0, with no empty wrapper, and so are the 51 published stylesheets. `styles.css` stays at 309,914 bytes.
+- The kit of `enchase eject` changes in the two files of the `Layout`, `components/layout/index.tsx` and `components/layout/types.ts`. Copy them again only if you want the prop in an ejected `Layout`.
+- Weight: the package goes from 1,080 to 1,081 files and from 513.8 kB packed (513,822 bytes) to 514.6 kB (514,566 bytes). The new file is `docs/migration/0.27.md`. In `dist-lib`, three files changed: `components/layout/index.js`, which grows by 106 bytes, and the two declarations of the `Layout`.
+- The other commits since 0.26.0 are of the site of the library and of its API, which are not in the package: the suggestions page now signs a visitor in with GitHub, takes votes and suggestions without leaving the site, and uses the new prop for the sign-in in its top bar.
+- Checked: lint, `docs:api:check`, the build, the 5,934 jsdom tests, `build:lib`, `check:api` against 0.26.0, `pack:check` (publint and attw, with the 25 keys of `exports`) and `test:size` pass here, and so do the specs of the `Layout` and of the `Navbar` in real Chromium. The whole browser suites in Chromium, Firefox and WebKit, `test:consumer`, `test:next`, `test:eject` and the accessibility audit of the stories run in the CI, on the commit of this release, before the package is published.
+
 ## v0.26.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.25.1...v0.26.0)
