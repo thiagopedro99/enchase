@@ -319,6 +319,7 @@ const sections = [
 - `collapsed`, `defaultCollapsed`, `onCollapsedChange`, `open`, `defaultOpen` e `onOpenChange` controlam a sidebar e o drawer, controlados ou não. `storageKey` guarda o estado recolhido no `localStorage`, lido só depois de montar.
 - `breadcrumbs`: trilha explícita; sem ela o `Layout` a deriva da rota atual.
 - `brand`, `brandLogo`, `sidebarFooter`, `footerProps` e `hideNavbar` completam a casca.
+- `actions` põe conteúdo extra na barra do topo (um botão de login, o avatar), antes do botão de tema: na `AppBar` com a navegação `sidebar`, e no `actions` da `Navbar` com a navegação `navbar` (na barra em tela larga, no fim do menu móvel em tela estreita).
 - `translucent` deixa a barra do topo semitransparente, a `AppBar` (navegação `sidebar`) ou a `Navbar` (navegação `navbar`); veja a `Navbar` abaixo. Nas duas navegações a barra fica fixa no topo enquanto a página rola.
 
 Cada item de menu pode ser uma rota (`href: '/caminho'`), uma âncora (`href: '#id'`) ou uma ação (`onClick`); `native: true` faz o link sair do app.

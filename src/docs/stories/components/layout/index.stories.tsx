@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Layout } from 'enchase'
+import { Button, ButtonLink, Layout } from 'enchase'
 
 import type { SidebarSection } from 'enchase'
 import type { Meta, StoryObj } from '@storybook/react-vite'
@@ -106,6 +106,11 @@ const meta = {
       description: 'Fixed content in the footer of the sidebar, above the collapse button. It can be a function that receives { collapsed }.',
       control: false
     },
+    actions: {
+      description:
+        'Extra content for the top bar, such as a sign-in button or the user avatar. With navigation="sidebar" it sits in the `AppBar`, before the theme toggle, on every screen width. With navigation="navbar" it is passed to the `actions` of the `Navbar`: on a wide screen it sits in the bar, before the theme toggle, and on a narrow screen it moves to the bottom of the mobile menu.',
+      control: false
+    },
     navigationSections: {
       description: 'Sections of the main menu, as in Sidebar: [{ id, title?, items: [{ id, label, href?, native?, icon?, badge?, onClick? }] }].',
       control: false
@@ -142,6 +147,25 @@ export const Playground: Story = {}
 
 export const WithNavbar: Story = {
   args: { navigation: 'navbar' }
+}
+
+const actions = (
+  <>
+    <ButtonLink href="/sign-in" variant="ghost">
+      Sign in
+    </ButtonLink>
+    <Button variant="primary">Sign up</Button>
+  </>
+)
+
+export const WithActions: Story = {
+  args: { actions },
+  parameters: { docs: { description: { story: 'With the sidebar navigation, the actions sit in the `AppBar`, before the theme toggle.' } } }
+}
+
+export const WithActionsInTheNavbar: Story = {
+  args: { navigation: 'navbar', actions },
+  parameters: { docs: { description: { story: 'With the navbar navigation, the actions go to the `Navbar`: in the bar on a wide screen, and at the bottom of the mobile menu on a narrow one.' } } }
 }
 
 export const CollapsedSidebar: Story = {
