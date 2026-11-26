@@ -26,12 +26,16 @@ import { columnsOf, totalOf } from './columns.ts'
 import styles from './styles.module.css'
 
 const Sugestoes = () => {
-  const { state, reload, add } = useSuggestions()
+  const { state, reload, add, refreshed } = useSuggestions()
   const search = useSearch()
   const openId = Number(new URLSearchParams(search).get(issueParameter)) || null
   const open = useCallback((id: number) => setSearch(`?${issueParameter}=${id}`), [])
   const close = useCallback(() => setSearch(''), [])
-  const { account, voting, asking, ask, dismiss, expire, leave } = useAccount(open)
+  const { account, voting, asking, ask, dismiss, expire, leave, settle } = useAccount(open)
+
+  useEffect(() => {
+    if (refreshed > 0) settle()
+  }, [refreshed, settle])
   const [composing, setComposing] = useState(false)
   const loginFailed = useLoginFailure()
   const toast = useToast()

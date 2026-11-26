@@ -250,6 +250,32 @@ describe('Suggestions account', () => {
     expect(fetcher.mock.calls.filter(([input]) => String(input) === apiEndpoint)).toHaveLength(1)
   })
 
+  it('counts the vote once when the board is read again and already has it', async () => {
+    const user = userEvent.setup()
+    const clock = vi.spyOn(Date, 'now')
+    const start = Date.now()
+    const counted = { votes: 31 }
+    const fetcher = serve({ session: signed(), vote: () => reply({ voted: true }).finally(() => void (counted.votes = 32)) })
+
+    clock.mockReturnValue(start)
+    fetcher.mockImplementation((input, init) => (String(input) === apiEndpoint ? reply({ items: [{ ...items[0], votes: counted.votes }, ...items.slice(1)] }) : serve({ session: signed(), vote: () => reply({ voted: true }).finally(() => void (counted.votes = 32)) })(input, init)))
+    vi.stubGlobal('fetch', fetcher)
+    renderPage()
+    await user.click(await voteButton(/^Votar em Code block, 31 votos$/))
+
+    expect(await voteButton(/^Tirar o voto de Code block, 32 votos$/)).toBeInTheDocument()
+    await waitFor(() => expect(counted.votes).toBe(32))
+
+    clock.mockReturnValue(start + 21 * 1000)
+    document.dispatchEvent(new Event('visibilitychange'))
+
+    await waitFor(() => expect(fetcher.mock.calls.filter(([input]) => String(input) === apiEndpoint)).toHaveLength(2))
+    await waitFor(() => expect(screen.getByRole('link', { name: 'Code block' })).toHaveAccessibleDescription('32 votos, 2 comentários, issue 1'))
+    expect(screen.getByRole('button', { name: /^Tirar o voto de Code block, 32 votos$/ })).toHaveAttribute('aria-pressed', 'true')
+
+    clock.mockRestore()
+  })
+
   it('signs out', async () => {
     const user = userEvent.setup()
     const fetcher = serve({ session: signed() })

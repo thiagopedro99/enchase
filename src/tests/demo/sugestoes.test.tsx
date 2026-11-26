@@ -259,6 +259,42 @@ describe('Suggestions page', () => {
     expect((await screen.findByText(/A consulta ao GitHub falhou/)).closest('[role="alert"]')).toBeInTheDocument()
   })
 
+  it('asks again after the page is loaded again, whatever another load left in the tab', async () => {
+    const fetcher = serve()
+
+    window.sessionStorage.setItem('enchase-suggestions', JSON.stringify({ at: Date.now(), load: 'another-load', items: [] }))
+    vi.stubGlobal('fetch', fetcher)
+    renderPage()
+
+    expect(await screen.findByRole('link', { name: 'Code block' })).toBeInTheDocument()
+    expect(fetcher.mock.calls.filter(([input]) => String(input) === issuesEndpoint)).toHaveLength(1)
+  })
+
+  it('reads the board again when the visitor comes back to the tab, at most once every twenty seconds', async () => {
+    const clock = vi.spyOn(Date, 'now')
+    const start = Date.now()
+    const fetcher = serve()
+
+    clock.mockReturnValue(start)
+    vi.stubGlobal('fetch', fetcher)
+    renderPage()
+    await screen.findByRole('link', { name: 'Code block' })
+
+    fetcher.mockImplementation(serve([...issues, issue(10, 'Arrived meanwhile', ['enhancement'], 1)]))
+    clock.mockReturnValue(start + 19 * 1000)
+    document.dispatchEvent(new Event('visibilitychange'))
+
+    expect(fetcher.mock.calls.filter(([input]) => String(input) === apiEndpoint)).toHaveLength(1)
+
+    clock.mockReturnValue(start + 21 * 1000)
+    document.dispatchEvent(new Event('visibilitychange'))
+
+    expect(await screen.findByRole('link', { name: 'Arrived meanwhile' })).toBeInTheDocument()
+    expect(screen.queryByText('Carregando as sugestões')).not.toBeInTheDocument()
+
+    clock.mockRestore()
+  })
+
   it('asks GitHub once and reuses the answer for the next visit', async () => {
     const fetcher = serve()
 

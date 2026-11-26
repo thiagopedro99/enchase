@@ -80,9 +80,11 @@ export const useAccount = (onOpen: (id: number) => void) => {
 
   const dismiss = useCallback(() => setAsking(null), [])
 
+  const settle = useCallback(() => setDeltas({}), [])
+
   const ask = useCallback((reason: LoginReason) => setAsking({ reason }), [])
 
   const expire = useCallback(() => setAccount({ status: 'anonymous' }), [])
 
-  return { account, voting, asking, ask, dismiss, expire, leave }
+  return { account, voting, asking, ask, dismiss, expire, leave, settle }
 }

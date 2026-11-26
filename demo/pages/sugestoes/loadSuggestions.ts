@@ -6,14 +6,16 @@ export const apiEndpoint = '/api/suggestions'
 
 const cacheKey = 'enchase-suggestions'
 
-const cacheLife = 5 * 60 * 1000
+const cacheLife = 60 * 1000
+
+const pageLoad = Math.random().toString(36).slice(2)
 
 const readStored = (): { at: number; items: Suggestion[] } | null => {
   try {
     const stored = window.sessionStorage.getItem(cacheKey)
-    const { at, items } = stored ? JSON.parse(stored) : { at: 0, items: null }
+    const { at, items, load } = stored ? JSON.parse(stored) : { at: 0, items: null, load: '' }
 
-    return Array.isArray(items) && Date.now() - at < cacheLife ? { at, items } : null
+    return Array.isArray(items) && load === pageLoad && Date.now() - at < cacheLife ? { at, items } : null
   } catch {
     return null
   }
@@ -23,7 +25,7 @@ const readCache = () => readStored()?.items ?? null
 
 const writeCache = (items: Suggestion[], at = Date.now()) => {
   try {
-    window.sessionStorage.setItem(cacheKey, JSON.stringify({ at, items }))
+    window.sessionStorage.setItem(cacheKey, JSON.stringify({ at, items, load: pageLoad }))
   } catch {
     return
   }
