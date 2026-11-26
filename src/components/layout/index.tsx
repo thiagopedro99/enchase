@@ -36,6 +36,7 @@ const Layout = ({
   brandLogo,
   footerProps,
   sidebarFooter,
+  actions,
   navigationSections = defaultNavigationSections,
   pageSections = [],
   activePageSectionId,
@@ -82,14 +83,19 @@ const Layout = ({
           menuControls={navId}
           menuHasPopup={!isDesktop}
           onMenuToggle={isDesktop ? () => setCollapsed((previous) => !previous) : () => setSidebarOpen(true)}
-          actions={<ThemeToggle />}
+          actions={
+            <>
+              {actions}
+              <ThemeToggle />
+            </>
+          }
           translucent={translucent}
         />
       )}
 
       {navigation === 'navbar' && !hideNavbar && (
         <div className={styles.navbarArea} {...slot('layout', 'navbar')}>
-          <Navbar logo={brand} breakpoint={breakpoint} sections={sections} activeSectionId={activePageSectionId} translucent={translucent} />
+          <Navbar logo={brand} breakpoint={breakpoint} sections={sections} activeSectionId={activePageSectionId} actions={actions} translucent={translucent} />
         </div>
       )}
 

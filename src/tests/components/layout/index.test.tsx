@@ -13,6 +13,9 @@ import { ColorModeProvider } from '@components/colorMode/index.tsx'
 import UIProvider from '@components/uiProvider/index.tsx'
 import { brand, brandLogo, demoSections, docsUrl, footerProps } from '@tests/shared/fixtures/layoutBranding.tsx'
 import Layout from '@components/layout/index.tsx'
+import { Button } from '@components/common/Button/index.tsx'
+import { ButtonLink } from '@components/common/ButtonLink/index.tsx'
+import { renderToStaticMarkup } from 'react-dom/server'
 
 import type { DialogContractAdapter } from '@tests/shared/contracts/types.ts'
 
@@ -414,6 +417,81 @@ describe('Layout with navbar option', () => {
     const { container } = renderWithProviders(page({ navigation: 'navbar' }))
 
     expect(await axe(container)).toHaveNoViolations()
+  })
+})
+
+describe('Layout actions', () => {
+  const actions = (
+    <>
+      <ButtonLink href="/entrar">Entrar</ButtonLink>
+      <Button>Criar conta</Button>
+    </>
+  )
+  const follows = (first: Element, second: Element) => Boolean(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING)
+  const staticMarkup = (props: Partial<Parameters<typeof Layout>[0]>) => renderToStaticMarkup(<ColorModeProvider storage={null}>{page(props)}</ColorModeProvider>)
+
+  it('puts them in the navbar, before the theme toggle, on a wide screen', () => {
+    const { container } = renderWithProviders(page({ navigation: 'navbar', actions }))
+    const cta = container.querySelector('[data-slot="navbar-cta"]') as HTMLElement
+    const link = within(cta).getByRole('link', { name: 'Entrar' })
+
+    expect(link).toHaveAttribute('href', '/entrar')
+    expect(within(cta).getByRole('button', { name: 'Criar conta' })).toBeInTheDocument()
+    expect(follows(cta, within(screen.getByRole('banner')).getByRole('button', { name: 'Mudar para tema escuro' }))).toBe(true)
+    expect(screen.getAllByRole('link', { name: 'Entrar' })).toHaveLength(1)
+  })
+
+  it('moves them out of the bar and into the mobile drawer on a narrow screen', async () => {
+    setViewportWidth(500)
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(page({ navigation: 'navbar', actions }))
+
+    expect(container.querySelector('[data-slot="navbar-cta"]')).toBeNull()
+    expect(screen.queryByRole('link', { name: 'Entrar' })).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+    const dialog = await screen.findByRole('dialog', { name: 'Navegação mobile' })
+    const cta = dialog.querySelector('[data-slot="navbar-drawer-cta"]') as HTMLElement
+
+    expect(within(cta).getByRole('link', { name: 'Entrar' })).toBeInTheDocument()
+    expect(within(cta).getByRole('button', { name: 'Criar conta' })).toBeInTheDocument()
+    expect(container.querySelector('[data-slot="navbar"]')?.contains(cta)).toBe(false)
+  })
+
+  it('puts them in the app bar, before the theme toggle, with the sidebar navigation', () => {
+    for (const width of [1280, 500]) {
+      setViewportWidth(width)
+      const { container, unmount } = renderWithProviders(page({ actions }))
+      const slotNode = container.querySelector('[data-slot="layout-header-actions"]') as HTMLElement
+      const toggle = within(slotNode).getByRole('button', { name: 'Mudar para tema escuro' })
+
+      expect(follows(within(slotNode).getByRole('link', { name: 'Entrar' }), toggle), String(width)).toBe(true)
+      expect(follows(within(slotNode).getByRole('button', { name: 'Criar conta' }), toggle), String(width)).toBe(true)
+      expect(slotNode.lastElementChild?.contains(toggle), String(width)).toBe(true)
+      unmount()
+    }
+  })
+
+  it('adds nothing to the markup when there are none', () => {
+    const marker = <span id="only-action" />
+
+    expect(staticMarkup({ actions: marker }).replace(renderToStaticMarkup(marker), '')).toBe(staticMarkup({}))
+    expect(staticMarkup({ navigation: 'navbar', actions: marker })).toContain('navbar-cta')
+    expect(staticMarkup({ navigation: 'navbar' })).not.toContain('navbar-cta')
+    expect(staticMarkup({ navigation: 'navbar' })).not.toContain('only-action')
+
+    const { container } = renderWithProviders(page())
+
+    expect(container.querySelector('[data-slot="layout-header-actions"]')?.children).toHaveLength(1)
+  })
+
+  it('has no axe violations with a link and a button as actions', async () => {
+    for (const navigation of ['sidebar', 'navbar'] as const) {
+      const { container, unmount } = renderWithProviders(page({ navigation, actions }))
+
+      expect(await axe(container), navigation).toHaveNoViolations()
+      unmount()
+    }
   })
 })
 
