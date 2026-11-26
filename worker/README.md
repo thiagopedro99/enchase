@@ -7,6 +7,7 @@ A Cloudflare Worker that answers under `https://enchase.othiagosilva.com.br/api/
 | Route | What it answers |
 | --- | --- |
 | `GET /api/suggestions` | The cards of the page `/sugestoes`, as JSON. |
+| `POST /api/suggestions` | Opens the suggestion of a signed-in visitor as an issue, and answers its card. |
 | `GET /api/session` | Who is signed in and which suggestions that visitor voted for, or `{ "user": null }`. |
 | `GET /api/auth/login` | A redirect to GitHub, to sign in. |
 | `GET /api/auth/callback` | Where GitHub sends the visitor back. It opens the session and goes to `/sugestoes`. |
@@ -21,7 +22,7 @@ The Worker reads the issues of this repository as a GitHub App, so the visitors 
 
 - The answer is kept for one minute, at the edge and by the visitor. The query string is ignored, so it cannot be used to skip the cache. A vote drops the copy of the edge that took it.
 - When GitHub refuses or fails, the answer is 502 and the Worker leaves GitHub alone for fifteen seconds. The site then reads the public GitHub API from the browser, as it did before the Worker.
-- The Worker asks GitHub for a token that only reads the issues of this repository, whatever the app is allowed to do, and keeps it in memory until five minutes before it expires. The private key never leaves the Worker and nothing of it is logged.
+- To read, the Worker asks GitHub for a token that only reads the issues of this repository, whatever the app is allowed to do, and keeps it in memory until five minutes before it expires. The private key never leaves the Worker and nothing of it is logged.
 
 ### The session and the vote
 
@@ -35,7 +36,16 @@ A visitor signs in with GitHub through the same GitHub App, and the vote is a ðŸ
 - **Limits:** thirty votes a minute for each visitor, and thirty callbacks a minute for each network address, counted in each Cloudflare location.
 - **When GitHub says that the token is no longer valid,** the session ends and the site offers the login again.
 
-The routes of the session and of the vote answer 404 until `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` and the store are configured, and the site then shows the board without the login.
+### The suggestion
+
+A signed-in visitor sends a kind, a title, what is needed and, optionally, what it would look like. The rules of the text (`demo/pages/sugestoes/draft.ts`) are the same on the form and on the Worker, which checks them again.
+
+- **Who opens the issue:** the visitor, with the token of the visitor, so GitHub shows the visitor as the author. The body follows the headings of the issue templates.
+- **Who labels it:** the app. GitHub ignores the labels that an author without access sends, and the board only lists what has the labels of the board, so the Worker asks for a second token, that writes issues on this repository, and uses it for one thing: to put the labels of the chosen kind on the issue that it has just opened. When that fails, the issue exists and the answer says that it is not on the board yet: a maintainer labels it.
+- **Limits:** three suggestions in twenty-four hours for each visitor, counted in the same store as the sessions, plus the limit of thirty requests a minute. A suggestion that GitHub refuses is not counted.
+- **The body of the request** must be JSON, of at most 16 KiB.
+
+The routes of the session, of the vote and of the suggestion answer 404 or 405 until `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` and the store are configured, and the site then shows the board without the login.
 
 ## Configuration
 
@@ -45,8 +55,8 @@ The routes of the session and of the vote answer 404 until `GITHUB_CLIENT_ID`, `
 | `GITHUB_CLIENT_ID` | `[vars]` of `wrangler.toml` | The Client ID, from the page of the app. It is not a secret. |
 | `GITHUB_APP_PRIVATE_KEY` | secret of the Worker | The private key of the app, as the `.pem` file that GitHub generates. |
 | `GITHUB_CLIENT_SECRET` | secret of the Worker | A client secret, generated on the page of the app. |
-| `SESSIONS` | `[[kv_namespaces]]` of `wrangler.toml` | The store of the sessions. Without an `id`, `wrangler deploy` creates the namespace and writes its id back to the file: commit that line. |
-| `LIMITER` | `[[ratelimits]]` of `wrangler.toml` | The limit of votes and of callbacks. |
+| `SESSIONS` | `[[kv_namespaces]]` of `wrangler.toml` | The store of the sessions and of the count of suggestions of each visitor. Without an `id`, `wrangler deploy` creates the namespace and writes its id back to the file: commit that line. |
+| `LIMITER` | `[[ratelimits]]` of `wrangler.toml` | The limit of votes, of suggestions and of callbacks. |
 
 ## The GitHub App
 
@@ -54,7 +64,7 @@ Create it once, in Settings, Developer settings, GitHub Apps, New GitHub App:
 
 1. Turn the webhook off.
 2. Callback URL: `https://enchase.othiagosilva.com.br/api/auth/callback`, without wildcard matching. Keep "Expire user authorization tokens" on, and "Request user authorization (OAuth) during installation" and the device flow off.
-3. Repository permissions: Issues, read and write. Nothing else. The write is what lets a visitor vote and, later, suggest; the Worker itself only asks for tokens that read.
+3. Repository permissions: Issues, read and write. Nothing else. The write is what lets a visitor vote and suggest, and what lets the app label a new suggestion.
 4. Where can it be installed: only on this account.
 5. On the page of the app, write down the App ID and the Client ID, generate a private key and generate a client secret.
 6. Install the app on this repository only. After a change of permissions, accept the new permissions on the page of the installation.

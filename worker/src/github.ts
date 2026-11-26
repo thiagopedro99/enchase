@@ -1,7 +1,8 @@
 import { boardLabels, query as boardQuery, repository } from '../../demo/pages/sugestoes/github.ts'
-import { api, githubHeaders } from './token.ts'
+import { api, githubHeaders, tokenFor } from './token.ts'
 
-import type { Account, User } from './types.ts'
+import type { GithubIssue } from '../../demo/pages/sugestoes/github.ts'
+import type { Account, Env, User } from './types.ts'
 
 interface Group {
   content: string
@@ -97,4 +98,22 @@ export const react = async (token: string, id: string, voted: boolean) => {
   const { data } = await graphql<object>(token, voted ? addMutation : removeMutation, { id })
 
   return data !== null
+}
+
+export const openIssue = async (token: string, title: string, body: string): Promise<Answer<GithubIssue>> => {
+  const response = await fetch(`${api}/repos/${repository}/issues`, { method: 'POST', headers: { ...githubHeaders, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ title, body }) })
+  const issue: Partial<GithubIssue> | null = response.ok ? await response.json() : null
+
+  return { status: response.status, data: issue && typeof issue.number === 'number' && typeof issue.html_url === 'string' ? { ...(issue as GithubIssue), labels: [], milestone: null } : null }
+}
+
+export const labelIssue = async (env: Env, number: number, labels: string[]) => {
+  try {
+    const token = await tokenFor(env, 'write')
+    const response = await fetch(`${api}/repos/${repository}/issues/${number}/labels`, { method: 'POST', headers: { ...githubHeaders, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ labels }) })
+
+    return response.ok
+  } catch {
+    return false
+  }
 }

@@ -27,6 +27,8 @@ export interface Context {
   waitUntil: (promise: Promise<unknown>) => void
 }
 
+export type Access = 'read' | 'write'
+
 export interface Held {
   token: string
   expires: number

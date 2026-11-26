@@ -71,6 +71,10 @@ export const revokeEndpoint = 'https://api.github.com/applications/Iv23client/to
 
 export const userToken = 'ghu_usertoken'
 
+export const issuesCreateEndpoint = 'https://api.github.com/repos/thiagopedro99/enchase/issues'
+
+export const labelsEndpoint = (number: number) => `https://api.github.com/repos/thiagopedro99/enchase/issues/${number}/labels`
+
 export const keyValue = () => {
   const stored = new Map<string, { value: string; ttl: number | undefined }>()
 
@@ -120,7 +124,24 @@ export const account = (overrides: Record<string, (init?: RequestInit) => Promis
     return reply({ errors: [{ message: 'unknown' }] })
   }
 
+  const opened = { count: 40 }
+
+  const open = (init?: RequestInit) => {
+    const { title, body }: { title: string; body: string } = JSON.parse(String(init?.body))
+
+    opened.count += 1
+
+    return reply({ number: opened.count, html_url: `https://github.com/thiagopedro99/enchase/issues/${opened.count}`, title, body, state: 'open', comments: 0, created_at: new Date(Date.now()).toISOString(), labels: [{ name: 'ignored' }], milestone: null, reactions: { '+1': 0 }, user: { login: 'visitor' } }, 201)
+  }
+
   const answers: Record<string, (init?: RequestInit) => Promise<Response>> = {
+    [installationEndpoint]: () => reply({ id: 77 }),
+    [tokenEndpoint]: () => reply({ token: 'ghs_writetoken', expires_at: new Date(Date.now() + hour).toISOString() }, 201),
+    [issuesCreateEndpoint]: open,
+    [labelsEndpoint(41)]: () => reply([]),
+    [labelsEndpoint(42)]: () => reply([]),
+    [labelsEndpoint(43)]: () => reply([]),
+    [labelsEndpoint(44)]: () => reply([]),
     [oauthEndpoint]: () => reply({ access_token: userToken, expires_in: 28800, refresh_token: 'ghr_refresh', refresh_token_expires_in: 15897600, token_type: 'bearer', scope: '' }),
     [userEndpoint]: () => reply({ id: 9001, login: 'visitor', avatar_url: 'https://avatars.githubusercontent.com/u/9001?v=4', email: 'hidden@example.com' }),
     [graphqlEndpoint]: graphql,

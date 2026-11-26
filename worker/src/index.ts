@@ -2,6 +2,7 @@ import { suggestions, suggestionsPath } from './suggestions.ts'
 import { json, sameOrigin, unavailable } from './http.ts'
 import { callback, login, logout } from './auth.ts'
 import { session, unvote, vote } from './votes.ts'
+import { suggest } from './suggest.ts'
 
 import type { Account, AccountHandler, Call, Context, Env, Handler } from './types.ts'
 
@@ -20,8 +21,12 @@ const account =
   ({ env, ...call }, id) =>
     configured(env) ? handler({ ...call, env }, id) : Promise.resolve(notFound())
 
-const routes: Record<string, Methods> = {
-  [suggestionsPath]: { GET: suggestions, HEAD: suggestions },
+const reading: Methods = { GET: suggestions, HEAD: suggestions }
+
+const publicRoutes: Record<string, Methods> = { [suggestionsPath]: reading }
+
+const accountRoutes: Record<string, Methods> = {
+  [suggestionsPath]: { ...reading, POST: account(suggest) },
   '/api/session': { GET: account(session) },
   '/api/auth/login': { GET: account(login) },
   '/api/auth/callback': { GET: account(callback) },
@@ -30,13 +35,19 @@ const routes: Record<string, Methods> = {
 
 const voteMethods: Methods = { PUT: account(vote), DELETE: account(unvote) }
 
+const methodsOf = (env: Env, pathname: string, id: string | undefined) => {
+  if (!configured(env)) return publicRoutes[pathname]
+
+  return id ? voteMethods : accountRoutes[pathname]
+}
+
 const answer = async (call: Call) => {
   const { request, env, url } = call
   const [, id] = votePath.exec(url.pathname) ?? []
-  const methods = id ? voteMethods : routes[url.pathname]
+  const methods = methodsOf(env, url.pathname, id)
   const handler = methods?.[request.method]
 
-  if (!methods || (methods !== routes[suggestionsPath] && !configured(env))) return notFound()
+  if (!methods) return notFound()
   if (!handler) return json({ error: 'method not allowed' }, 405, { Allow: Object.keys(methods).join(', ') })
   if (!safe.includes(request.method) && !sameOrigin(request)) return json({ error: 'forbidden' }, 403)
 

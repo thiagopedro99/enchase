@@ -62,6 +62,17 @@ describe('Worker token', () => {
     expect(headerOf(fetcher, installationEndpoint, 'Accept')).toBe('application/vnd.github+json')
   })
 
+  it('asks for a token that writes only when asked, and keeps it apart from the one that reads', async () => {
+    const fetcher = github()
+
+    vi.stubGlobal('fetch', fetcher)
+
+    expect(await tokenFor(env, 'write')).toBe('ghs_token1')
+    expect(await tokenFor(env)).toBe('ghs_token2')
+    expect(await tokenFor(env, 'write')).toBe('ghs_token1')
+    expect(callsTo(fetcher, tokenEndpoint).map(([, init]) => JSON.parse(String(init?.body)).permissions)).toEqual([{ issues: 'write' }, { issues: 'read' }])
+  })
+
   it('keeps the token until five minutes before it expires', async () => {
     const fetcher = github()
 
