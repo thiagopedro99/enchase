@@ -34,7 +34,7 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
         <span className={styles.age}>{ageOf(createdAt)}</span>
       </span>
       {onOpen ? (
-        <a href={`?${issueParameter}=${id}`} className={styles.title} aria-labelledby={titleId} aria-describedby={detailsId} onClick={(event) => plain(event) && (event.preventDefault(), onOpen(id))}>
+        <a href={`?${issueParameter}=${id}`} draggable={false} className={styles.title} aria-labelledby={titleId} aria-describedby={detailsId} onClick={(event) => plain(event) && (event.preventDefault(), onOpen(id))}>
           <span id={titleId}>{title}</span>
         </a>
       ) : (
@@ -68,10 +68,17 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
             {votes}
           </span>
         )}
-        <span className={styles.comments} aria-hidden="true">
-          <CommentIcon size={14} />
-          {comments}
-        </span>
+        {onOpen ? (
+          <button type="button" className={styles.open} aria-label={`Ver ${count(comments, 'comentário', 'comentários')} de ${title}`} onClick={() => onOpen(id)}>
+            <CommentIcon size={14} />
+            {comments}
+          </button>
+        ) : (
+          <span className={styles.comments} aria-hidden="true">
+            <CommentIcon size={14} />
+            {comments}
+          </span>
+        )}
         <span className={styles.number} aria-hidden="true">
           #{id}
         </span>

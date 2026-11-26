@@ -96,6 +96,31 @@ describe('Suggestions panel', () => {
     expect(await axe(document.body)).toHaveNoViolations()
   })
 
+  it('opens the same panel from the comment count of the card, which is a button and not a part of the card that drags', async () => {
+    const user = userEvent.setup()
+
+    vi.stubGlobal('fetch', serve({ signed: false }))
+    renderPage()
+
+    const button = await screen.findByRole('button', { name: 'Ver 2 comentários de Sticky columns' })
+
+    expect(button).toHaveTextContent('2')
+    expect(screen.getByRole('link', { name: 'Sticky columns' })).toHaveAttribute('draggable', 'false')
+
+    await user.click(button)
+
+    expect(await screen.findByRole('dialog', { name: 'Sticky columns' })).toBeInTheDocument()
+    expect(window.location.search).toBe('?issue=1')
+  })
+
+  it('shows the comment count as plain text when the site has no API', async () => {
+    vi.stubGlobal('fetch', serve({ session: () => reply({}, 404) }))
+    renderPage()
+    await screen.findByRole('link', { name: 'Sticky columns' })
+
+    expect(screen.queryByRole('button', { name: /Ver 2 comentários/ })).not.toBeInTheDocument()
+  })
+
   it('asks a visitor to sign in before commenting', async () => {
     const user = userEvent.setup()
 

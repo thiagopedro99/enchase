@@ -127,3 +127,43 @@
   font-family: var(--enchase-font-mono);
   font-variant-numeric: tabular-nums;
 }
+
+.open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-sizing: border-box;
+  min-block-size: 1.75rem;
+  margin: 0;
+  padding: 0.125rem 0.5rem;
+  border: 0;
+  border-radius: var(--enchase-radius-full);
+  background: transparent;
+  font-family: inherit;
+  font-size: var(--enchase-font-size-xs);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  color: var(--enchase-color-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out),
+    color var(--enchase-motion-duration-fast) var(--enchase-motion-ease-out);
+}
+
+.open:focus-visible {
+  outline: var(--enchase-focus-width) solid var(--enchase-focus-color, var(--enchase-color-primary));
+  outline-offset: var(--enchase-focus-offset);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .open:hover {
+    background: var(--enchase-color-surface-container);
+    color: var(--enchase-color-text-primary);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .open {
+    transition: none;
+  }
+}

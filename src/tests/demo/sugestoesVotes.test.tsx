@@ -155,9 +155,9 @@ describe('Suggestions account', () => {
     await screen.findByText('@visitor')
 
     expect(await screen.findByRole('link', { name: 'Class wins' })).toHaveAccessibleDescription('5 votos, 2 comentários, issue 3')
-    expect(screen.queryByRole('button', { name: /Class wins/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /(Votar em|Tirar o voto de) Class wins/ })).not.toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'React 18' })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: /React 18/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /(Votar em|Tirar o voto de) React 18/ })).not.toBeInTheDocument()
   })
 
   it('votes and takes the vote back, counting at once', async () => {
@@ -193,14 +193,14 @@ describe('Suggestions account', () => {
     const button = await voteButton(/^Votar em Code block/)
 
     await user.click(button)
-    await user.click(await voteButton(/Code block/))
+    await user.click(await voteButton(/(Votar em|Tirar o voto de) Code block/))
 
     expect(votesSent(fetcher)).toEqual([`PUT ${voteEndpoint(1)}`])
     expect(await voteButton(/^Tirar o voto de Code block, 32 votos$/)).toHaveAttribute('aria-busy', 'true')
 
     pending.forEach((resolve) => resolve(new Response('{"voted":true}', { status: 200 })))
 
-    await waitFor(() => expect(screen.getByRole('button', { name: /Code block/ })).not.toHaveAttribute('aria-busy'))
+    await waitFor(() => expect(screen.getByRole('button', { name: /(Votar em|Tirar o voto de) Code block/ })).not.toHaveAttribute('aria-busy'))
   })
 
   it.each([
@@ -242,7 +242,7 @@ describe('Suggestions account', () => {
     const first = renderPage()
 
     await user.click(await voteButton(/^Votar em Code block, 31 votos$/))
-    await waitFor(() => expect(screen.getByRole('button', { name: /Code block/ })).not.toHaveAttribute('aria-busy'))
+    await waitFor(() => expect(screen.getByRole('button', { name: /(Votar em|Tirar o voto de) Code block/ })).not.toHaveAttribute('aria-busy'))
     first.unmount()
     renderPage()
 
