@@ -34,7 +34,7 @@ A visitor signs in with GitHub through the same GitHub App, and the vote is a ü
 - **What the token can do:** only what both the visitor and the app can do, on the repositories where the app is installed. The Worker uses it to read which suggestions the visitor voted for and to add or remove the üëç.
 - **Requests that change something** (`POST`, `PUT`, `DELETE`) must carry the `Origin` of the site. The Worker sends no CORS header, so another site cannot read an answer either.
 - **What can be voted:** an issue that has one of the labels of the board. Anything else answers 404.
-- **Limits:** thirty votes a minute for each visitor, and thirty callbacks a minute for each network address, counted in each Cloudflare location.
+- **Limits:** thirty votes a minute and thirty reads of the session a minute for each visitor, and thirty callbacks a minute for each network address, counted in each Cloudflare location. Whether a visitor may move the cards is remembered for five minutes, so the session does not spend the limit of the app on GitHub; a move always asks again.
 - **When GitHub says that the token is no longer valid,** the session ends and the site offers the login again.
 
 ### The suggestion
@@ -43,8 +43,8 @@ A signed-in visitor sends a kind, a title, what is needed and, optionally, what 
 
 - **Who opens the issue:** the visitor, with the token of the visitor, so GitHub shows the visitor as the author. The body follows the headings of the issue templates.
 - **Who labels it:** the app. GitHub ignores the labels that an author without access sends, and the board only lists what has the labels of the board, so the Worker asks for a second token, that writes issues on this repository, and uses it for one thing: to put the labels of the chosen kind on the issue that it has just opened. When that fails, the issue exists and the answer says that it is not on the board yet: a maintainer labels it.
-- **Limits:** three suggestions in twenty-four hours for each visitor, counted in the same store as the sessions, plus the limit of thirty requests a minute. A suggestion that GitHub refuses is not counted.
-- **The body of the request** must be JSON, of at most 16 KiB.
+- **Limits:** three suggestions in twenty-four hours for each visitor, counted in the same store as the sessions, and three a minute in a limiter of their own. The store has no atomic step, so requests that arrive together can pass the count of the day together: the limiter is what bounds that burst. A suggestion that GitHub refuses is not counted.
+- **The body of the request** must be JSON, of at most 16 KiB. A body that says it is larger is refused without being read, and the reading stops as soon as it passes the limit.
 
 ### The move
 
@@ -55,7 +55,7 @@ A maintainer moves a card on the site, and the Worker changes the issue as that 
 - **What may be moved:** an issue that has one of the labels of the board.
 - **Order of the steps:** the milestone and the comment come before the change of the issue, so a failure on the way leaves the card in its column.
 
-The routes of the session, of the vote, of the suggestion and of the move answer 404 or 405 until `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` and the store are configured, and the site then shows the board without the login.
+The routes of the session, of the vote, of the suggestion and of the move answer 404 or 405 until `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, the store and the two limiters are configured: a limiter that goes missing turns those routes off, it never turns the limits off, and the site then shows the board without the login.
 
 ## Configuration
 
@@ -66,7 +66,8 @@ The routes of the session, of the vote, of the suggestion and of the move answer
 | `GITHUB_APP_PRIVATE_KEY` | secret of the Worker | The private key of the app, as the `.pem` file that GitHub generates. |
 | `GITHUB_CLIENT_SECRET` | secret of the Worker | A client secret, generated on the page of the app. |
 | `SESSIONS` | `[[kv_namespaces]]` of `wrangler.toml` | The store of the sessions and of the count of suggestions of each visitor. Without an `id`, `wrangler deploy` creates the namespace and writes its id back to the file: commit that line. |
-| `LIMITER` | `[[ratelimits]]` of `wrangler.toml` | The limit of votes, of suggestions, of moves and of callbacks. |
+| `LIMITER` | `[[ratelimits]]` of `wrangler.toml` | The limit of votes, of moves, of reads of the session and of callbacks: thirty a minute. |
+| `SUGGEST_LIMITER` | `[[ratelimits]]` of `wrangler.toml` | The limit of suggestions: three a minute. |
 
 ## The GitHub App
 

@@ -1,6 +1,6 @@
 import { endSession, noSessionCookie, readSession } from './session.ts'
 import { canMove, react, subjectOf, votedBy } from './github.ts'
-import { json, signedOut, unavailable } from './http.ts'
+import { json, signedOut, tooMany, unavailable } from './http.ts'
 import { forgetSuggestions } from './suggestions.ts'
 
 import type { Account, AccountHandler, Session } from './types.ts'
@@ -17,6 +17,7 @@ export const session: AccountHandler = async ({ request, env }) => {
   const current = await readSession(request, env)
 
   if (!current) return json({ user: null })
+  if (!(await env.LIMITER.limit({ key: `session:${current.user.id}` })).success) return tooMany()
 
   const { status, data } = await votedBy(current.token)
 
@@ -32,9 +33,9 @@ const change =
 
     if (!current) return signedOut()
 
-    const allowed = await env.LIMITER?.limit({ key: `vote:${current.user.id}` })
+    const allowed = await env.LIMITER.limit({ key: `vote:${current.user.id}` })
 
-    if (allowed && !allowed.success) return json({ error: 'too many requests' }, 429, { 'Retry-After': '60' })
+    if (!allowed.success) return tooMany()
 
     const { status, data: subject } = await subjectOf(current.token, number)
 

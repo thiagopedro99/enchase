@@ -24,7 +24,7 @@ afterEach(() => {
 })
 
 const signed = async (fetcher = account(), sessions = keyValue(), limit = limiter()) => {
-  const env = accountEnv(sessions, limit)
+  const env = accountEnv(sessions, limiter(), limit)
 
   vi.stubGlobal('fetch', fetcher)
 
@@ -223,6 +223,48 @@ describe('Worker suggestion', () => {
     expect(listed).toBe(false)
     expect(suggestion).toMatchObject({ id: 41, status: 'analise', title: draft.title })
     expect(quotaOf(sessions)).toEqual([startTime])
+  })
+
+  it('counts the suggestions in a limiter of their own, apart from the votes', async () => {
+    const votes = limiter()
+    const suggestions = limiter()
+    const env = accountEnv(keyValue(), votes, suggestions)
+
+    vi.stubGlobal('fetch', account())
+
+    const { pair } = await signIn(env)
+
+    await send(env, pair)
+
+    expect(suggestions.keys).toEqual(['suggest:9001'])
+    expect(votes.keys).toEqual(['login:'])
+  })
+
+  it('refuses a body that says it is too large without reading it', async () => {
+    const { env, pair, fetcher, sessions } = await signed()
+    const response = await send(env, pair, draft, { headers: { 'Content-Type': 'application/json', 'Content-Length': '20000' } })
+
+    expect(response.status).toBe(422)
+    expect(fetcher).not.toHaveBeenCalled()
+    expect(quotaOf(sessions)).toEqual([])
+  })
+
+  it('stops reading a body that grows past the limit, whatever it said about its size', async () => {
+    const { env, pair, fetcher } = await signed()
+    const pulled = { count: 0 }
+    const stream = new ReadableStream<Uint8Array>({
+      pull: (controller) => {
+        pulled.count += 1
+
+        if (pulled.count > 200) controller.close()
+        else controller.enqueue(new TextEncoder().encode('x'.repeat(1024)))
+      }
+    })
+    const response = await call(env, '/api/suggestions', { method: 'POST', cookie: pair, headers: { 'Content-Type': 'application/json' }, body: stream, duplex: 'half' } as RequestInit & { cookie: string })
+
+    expect(response.status).toBe(422)
+    expect(pulled.count).toBeLessThan(30)
+    expect(fetcher).not.toHaveBeenCalled()
   })
 
   it('never says a token in the answer', async () => {

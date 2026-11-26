@@ -22,3 +22,11 @@ namespace_id = "1001"
 [ratelimits.simple]
 limit = 30
 period = 60
+
+[[ratelimits]]
+name = "SUGGEST_LIMITER"
+namespace_id = "1002"
+
+[ratelimits.simple]
+limit = 3
+period = 60

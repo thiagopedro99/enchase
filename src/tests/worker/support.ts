@@ -1,3 +1,4 @@
+import { forgetPermission } from '@worker/github.ts'
 import worker from '@worker/index.ts'
 
 import { cookiesOf, site, valueOf } from './defaultData.ts'
@@ -37,7 +38,9 @@ export const start = async (env: ReturnType<typeof accountEnv>) => {
   return { response, target, cookie, pair: `${loginName}=${valueOf(cookie)}`, state: target.searchParams.get('state') ?? '' }
 }
 
-export const signIn = async (env: ReturnType<typeof accountEnv>) => {
+export const signIn = async (env: ReturnType<typeof accountEnv>, fresh = true) => {
+  if (fresh) forgetPermission(9001)
+
   const { pair, state } = await start(env)
   const response = await call(env, `/api/auth/callback?code=the-code&state=${state}`, { cookie: pair })
   const cookie = cookiesOf(response)[sessionName] ?? ''

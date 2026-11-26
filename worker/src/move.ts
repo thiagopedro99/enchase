@@ -2,7 +2,7 @@ import { checkMove, labelsAfter, milestoneOf, stateAfter } from '../../demo/page
 import { boardLabels, toSuggestion } from '../../demo/pages/sugestoes/github.ts'
 import { canMove, changeIssue, commentIssue, milestoneNumber, readIssue } from './github.ts'
 import { endSession, noSessionCookie, readSession } from './session.ts'
-import { json, signedOut, unavailable } from './http.ts'
+import { json, jsonOf, signedOut, tooMany, unavailable } from './http.ts'
 import { forgetSuggestions } from './suggestions.ts'
 
 import type { AccountHandler } from './types.ts'
@@ -11,29 +11,19 @@ const largest = 4 * 1024
 
 const unauthorized = 401
 
-const bodyOf = async (request: Request): Promise<unknown> => {
-  const text = (request.headers.get('Content-Type') ?? '').includes('application/json') ? await request.text() : ''
-
-  try {
-    return text !== '' && text.length <= largest ? JSON.parse(text) : null
-  } catch {
-    return null
-  }
-}
-
 export const move: AccountHandler = async ({ request, env, context, url }, number) => {
   const current = await readSession(request, env)
 
   if (!current) return signedOut()
 
-  const checked = checkMove(await bodyOf(request))
+  const checked = checkMove(await jsonOf(request, largest))
 
   if (!checked.ok) return json({ error: 'invalid', problems: checked.problems }, 422)
 
-  const allowed = await env.LIMITER?.limit({ key: `move:${current.user.id}` })
+  const allowed = await env.LIMITER.limit({ key: `move:${current.user.id}` })
 
-  if (allowed && !allowed.success) return json({ error: 'too many requests' }, 429, { 'Retry-After': '60' })
-  if (!(await canMove(env, current.user, current.token))) return json({ error: 'forbidden' }, 403)
+  if (!allowed.success) return tooMany()
+  if (!(await canMove(env, current.user, current.token, true))) return json({ error: 'forbidden' }, 403)
 
   const { status, data: issue } = await readIssue(current.token, number)
 

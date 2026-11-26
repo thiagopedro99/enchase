@@ -109,7 +109,7 @@ export const limiter = (allowed = true) => {
   return { keys, refuse: () => void (state.allowed = false), limit: async ({ key }: { key: string }) => ({ success: keys.push(key) > 0 && state.allowed }) }
 }
 
-export const accountEnv = (sessions = keyValue(), limit = limiter()) => ({ ...env, GITHUB_CLIENT_ID: 'Iv23client', GITHUB_CLIENT_SECRET: 'secret-of-the-app', SESSIONS: sessions, LIMITER: limit })
+export const accountEnv = (sessions = keyValue(), limit = limiter(), suggestLimit = limiter()) => ({ ...env, GITHUB_CLIENT_ID: 'Iv23client', GITHUB_CLIENT_SECRET: 'secret-of-the-app', SESSIONS: sessions, LIMITER: limit, SUGGEST_LIMITER: suggestLimit })
 
 export const board = () => ({
   issues: new Map([

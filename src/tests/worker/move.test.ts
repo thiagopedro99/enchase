@@ -122,6 +122,28 @@ describe('Worker move', () => {
     expect(purged).toEqual([])
   })
 
+  it('asks GitHub for the permission again on every move, whatever the session remembered', async () => {
+    const { env, pair, fetcher } = await signed()
+
+    await call(env, '/api/session', { cookie: pair })
+    await send(env, pair, { status: 'desenvolvimento' })
+    await send(env, pair, { status: 'backlog' })
+
+    expect(callsTo(fetcher, permissionEndpoint)).toHaveLength(3)
+  })
+
+  it('refuses a maintainer who lost the permission since the page was loaded', async () => {
+    const state = { allowed: true }
+    const { env, pair, fetcher } = await signed({ [permissionEndpoint]: () => answered(state.allowed ? { permission: 'admin', role_name: 'admin' } : { permission: 'read', role_name: 'read' })() })
+
+    expect((await (await call(env, '/api/session', { cookie: pair })).json()).canMove).toBe(true)
+
+    state.allowed = false
+
+    expect((await send(env, pair, { status: 'backlog' })).status).toBe(403)
+    expect(patched(fetcher)).toEqual([])
+  })
+
   it('asks a visitor who is not signed in to sign in', async () => {
     const fetcher = account()
 

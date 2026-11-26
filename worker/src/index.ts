@@ -15,7 +15,7 @@ const safe = ['GET', 'HEAD']
 
 const notFound = () => json({ error: 'not found' }, 404)
 
-const configured = (env: Env): env is Account => Boolean(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET && env.SESSIONS)
+const configured = (env: Env): env is Account => Boolean(env.GITHUB_CLIENT_ID && env.GITHUB_CLIENT_SECRET && env.SESSIONS && env.LIMITER && env.SUGGEST_LIMITER)
 
 const account =
   (handler: AccountHandler): Handler =>

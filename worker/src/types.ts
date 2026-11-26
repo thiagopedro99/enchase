@@ -15,12 +15,15 @@ export interface Env {
   GITHUB_CLIENT_SECRET?: string
   SESSIONS?: KeyValue
   LIMITER?: RateLimit
+  SUGGEST_LIMITER?: RateLimit
 }
 
 export interface Account extends Env {
   GITHUB_CLIENT_ID: string
   GITHUB_CLIENT_SECRET: string
   SESSIONS: KeyValue
+  LIMITER: RateLimit
+  SUGGEST_LIMITER: RateLimit
 }
 
 export interface Context {

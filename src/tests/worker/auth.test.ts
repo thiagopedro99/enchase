@@ -237,12 +237,12 @@ describe('Worker login', () => {
     ['/api/auth/logout', 'POST'],
     ['/api/session', 'GET'],
     ['/api/suggestions/1/vote', 'PUT']
-  ])('has no %s while the login of the app is not configured', async (path, method) => {
+  ])('has no %s while the login of the app is not configured, or while a limiter is missing', async (path, method) => {
     const fetcher = account()
 
     vi.stubGlobal('fetch', fetcher)
 
-    for (const partial of [env, { ...accountEnv(), GITHUB_CLIENT_ID: '' }, { ...accountEnv(), GITHUB_CLIENT_SECRET: undefined }, { ...accountEnv(), SESSIONS: undefined }]) {
+    for (const partial of [env, { ...accountEnv(), GITHUB_CLIENT_ID: '' }, { ...accountEnv(), GITHUB_CLIENT_SECRET: undefined }, { ...accountEnv(), SESSIONS: undefined }, { ...accountEnv(), LIMITER: undefined }, { ...accountEnv(), SUGGEST_LIMITER: undefined }]) {
       const response = await call(partial as ReturnType<typeof accountEnv>, path, { method })
 
       expect(response.status).toBe(404)

@@ -1,7 +1,7 @@
 import { createSession, endSession, noSessionCookie, readSession } from './session.ts'
 import { cookie, cookieOf, json, redirect } from './http.ts'
 import { base64url, random, sha256 } from './encoding.ts'
-import { exchange, revoke, userOf } from './github.ts'
+import { exchange, forgetPermission, revoke, userOf } from './github.ts'
 
 import type { AccountHandler } from './types.ts'
 
@@ -40,9 +40,9 @@ export const callback: AccountHandler = async ({ request, env, url }) => {
   if (url.searchParams.get('error') === 'access_denied') return redirect(page, [noLoginCookie()])
   if (state === '' || verifier === '' || code === '' || url.searchParams.get('state') !== state) return redirect(failed, [noLoginCookie()])
 
-  const allowed = await env.LIMITER?.limit({ key: `login:${request.headers.get('CF-Connecting-IP') ?? ''}` })
+  const allowed = await env.LIMITER.limit({ key: `login:${request.headers.get('CF-Connecting-IP') ?? ''}` })
 
-  if (allowed && !allowed.success) return redirect(failed, [noLoginCookie()])
+  if (!allowed.success) return redirect(failed, [noLoginCookie()])
 
   const granted = await exchange(env, code, verifier, callbackOf(url))
   const user = granted ? await userOf(granted.token) : null
@@ -56,6 +56,7 @@ export const logout: AccountHandler = async ({ request, env, context }) => {
   const session = await readSession(request, env)
 
   if (session) {
+    forgetPermission(session.user.id)
     await endSession(env, session.id)
     context.waitUntil(revoke(env, session.token).catch(() => undefined))
   }

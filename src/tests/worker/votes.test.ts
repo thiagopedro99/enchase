@@ -71,6 +71,45 @@ describe('Worker session', () => {
     expect(headerOf(fetcher, permissionEndpoint, 'Authorization')).toBe('Bearer ghs_writetoken')
   })
 
+  it('stops a visitor who asks for the session too fast before reaching GitHub', async () => {
+    const { env, pair, fetcher, limit } = await signed()
+
+    limit.refuse()
+
+    const response = await call(env, '/api/session', { cookie: pair })
+
+    expect(response.status).toBe(429)
+    expect(response.headers.get('Retry-After')).toBe('60')
+    expect(limit.keys).toContain('session:9001')
+    expect(fetcher).not.toHaveBeenCalled()
+  })
+
+  it('remembers for five minutes whether the visitor may move, so the session does not spend the limit of the app', async () => {
+    const { env, pair, fetcher } = await signed(account({ [permissionEndpoint]: answered({ permission: 'admin', role_name: 'admin' }) }))
+
+    expect((await (await call(env, '/api/session', { cookie: pair })).json()).canMove).toBe(true)
+    expect((await (await call(env, '/api/session', { cookie: pair })).json()).canMove).toBe(true)
+    expect(fetcher.mock.calls.filter(([input]) => String(input) === permissionEndpoint)).toHaveLength(1)
+
+    vi.setSystemTime(startTime + 5 * 60 * 1000 + 1)
+    await call(env, '/api/session', { cookie: pair })
+
+    expect(fetcher.mock.calls.filter(([input]) => String(input) === permissionEndpoint)).toHaveLength(2)
+  })
+
+  it('asks again after a logout', async () => {
+    const { env, pair, fetcher } = await signed(account({ [permissionEndpoint]: answered({ permission: 'admin', role_name: 'admin' }) }))
+
+    await call(env, '/api/session', { cookie: pair })
+    await call(env, '/api/auth/logout', { method: 'POST', cookie: pair })
+
+    const again = await signIn(env, false)
+
+    await call(env, '/api/session', { cookie: again.pair })
+
+    expect(fetcher.mock.calls.filter(([input]) => String(input) === permissionEndpoint)).toHaveLength(2)
+  })
+
   it('asks GitHub as the visitor when the app may not read the permission, and trusts no one when both fail', async () => {
     const pusher = await signed(account({ [permissionEndpoint]: answered({ message: 'Forbidden' }, 403), [repositoryEndpoint]: answered({ permissions: { push: true } }) }))
 

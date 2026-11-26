@@ -129,7 +129,11 @@ const byRepository = async (token: string) => {
   return Boolean(permissions.admin || permissions.maintain || permissions.push || permissions.triage)
 }
 
-export const canMove = async (env: Env, { login }: User, token: string) => {
+const permissionLife = 5 * 60 * 1000
+
+const known = new Map<number, { allowed: boolean; until: number }>()
+
+const askPermission = async (env: Env, { login }: User, token: string) => {
   try {
     const response = await fetch(`${api}/repos/${repository}/collaborators/${encodeURIComponent(login)}/permission`, { headers: asUser(await tokenFor(env)) })
 
@@ -141,6 +145,20 @@ export const canMove = async (env: Env, { login }: User, token: string) => {
   } catch {
     return false
   }
+}
+
+export const forgetPermission = (id: number) => known.delete(id)
+
+export const canMove = async (env: Env, user: User, token: string, fresh = false) => {
+  const remembered = known.get(user.id)
+
+  if (!fresh && remembered && remembered.until > Date.now()) return remembered.allowed
+
+  const allowed = await askPermission(env, user, token)
+
+  known.set(user.id, { allowed, until: Date.now() + permissionLife })
+
+  return allowed
 }
 
 export const readIssue = async (token: string, number: number): Promise<Answer<GithubIssue>> => {
