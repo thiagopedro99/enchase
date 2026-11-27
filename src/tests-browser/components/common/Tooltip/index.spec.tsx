@@ -47,7 +47,7 @@ describe('Tooltip layer in a real browser', () => {
     const trigger = page.getByRole('button', { name: 'Alvo' }).element().getBoundingClientRect()
     const box = (bubble() as HTMLElement).getBoundingClientRect()
 
-    expect(bubble()).toHaveAttribute('data-position', 'top')
+    expect(bubble()).toHaveAttribute('data-placement', 'top')
     expect(box.bottom).toBeLessThanOrEqual(trigger.top)
   })
 })
@@ -67,7 +67,7 @@ describe('Tooltip flipping and shifting in a real browser', () => {
     const trigger = page.getByRole('button', { name: 'Alvo' }).element().getBoundingClientRect()
     const box = (bubble() as HTMLElement).getBoundingClientRect()
 
-    expect(bubble()).toHaveAttribute('data-position', 'bottom')
+    expect(bubble()).toHaveAttribute('data-placement', 'bottom')
     expect(box.top).toBeGreaterThanOrEqual(trigger.bottom)
   })
 
@@ -83,7 +83,7 @@ describe('Tooltip flipping and shifting in a real browser', () => {
     await userEvent.hover(page.getByRole('button', { name: 'Alvo' }))
     await expect.poll(bubble).toBeTruthy()
 
-    expect(bubble()).toHaveAttribute('data-position', 'top')
+    expect(bubble()).toHaveAttribute('data-placement', 'top')
     expect((bubble() as HTMLElement).getBoundingClientRect().top).toBeGreaterThanOrEqual(0)
   })
 
@@ -254,7 +254,7 @@ describe('Tooltip in right-to-left in a real browser', () => {
 
     const trigger = page.getByRole('button', { name: 'Alvo' }).element().getBoundingClientRect()
 
-    expect(bubble()).toHaveAttribute('data-position', 'right')
+    expect(bubble()).toHaveAttribute('data-placement', 'right')
     expect((bubble() as HTMLElement).getBoundingClientRect().left).toBeGreaterThanOrEqual(trigger.right)
   })
 
@@ -265,7 +265,7 @@ describe('Tooltip in right-to-left in a real browser', () => {
 
     const trigger = page.getByRole('button', { name: 'Alvo' }).element().getBoundingClientRect()
 
-    expect(bubble()).toHaveAttribute('data-position', 'left')
+    expect(bubble()).toHaveAttribute('data-placement', 'left')
     expect((bubble() as HTMLElement).getBoundingClientRect().right).toBeLessThanOrEqual(trigger.left)
   })
 })

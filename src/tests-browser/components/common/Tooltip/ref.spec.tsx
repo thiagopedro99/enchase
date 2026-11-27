@@ -23,7 +23,7 @@ describe('the ref of the Tooltip in a real browser', () => {
     expect(target.current).toBeNull()
 
     await userEvent.hover(page.getByRole('button', { name: 'Alvo' }))
-    await expect.poll(() => target.current?.dataset.position).toBe('top')
+    await expect.poll(() => target.current?.dataset.placement).toBe('top')
 
     const trigger = page.getByRole('button', { name: 'Alvo' }).element().getBoundingClientRect()
 

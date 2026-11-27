@@ -61,7 +61,7 @@ describe('the arrow of the Tooltip in a real browser', () => {
     const [box, point, reference] = [(bubble() as HTMLElement).getBoundingClientRect(), centerOf((arrow() as HTMLElement).getBoundingClientRect()), centerOf(trigger().getBoundingClientRect())]
     const edge = { top: box.bottom, bottom: box.top, left: box.right, right: box.left }[position]
 
-    expect(bubble()).toHaveAttribute('data-position', position)
+    expect(bubble()).toHaveAttribute('data-placement', position)
     expect(facing[position]).toBeDefined()
     expect(Math.abs((position === 'top' || position === 'bottom' ? point.y : point.x) - edge)).toBeLessThanOrEqual(1)
     expect(Math.abs(position === 'top' || position === 'bottom' ? point.x - reference.x : point.y - reference.y)).toBeLessThanOrEqual(1)
@@ -111,7 +111,7 @@ describe('the arrow of the Tooltip in a real browser', () => {
     await reveal()
     const [box, point] = [(bubble() as HTMLElement).getBoundingClientRect(), centerOf((arrow() as HTMLElement).getBoundingClientRect())]
 
-    expect(bubble()).toHaveAttribute('data-position', 'bottom')
+    expect(bubble()).toHaveAttribute('data-placement', 'bottom')
     expect(Math.abs(point.y - box.top)).toBeLessThanOrEqual(1)
   })
 
@@ -131,7 +131,7 @@ describe('the arrow of the Tooltip in a real browser', () => {
     await reveal()
     const [box, point] = [(bubble() as HTMLElement).getBoundingClientRect(), centerOf((arrow() as HTMLElement).getBoundingClientRect())]
 
-    expect(bubble()).toHaveAttribute('data-position', side)
+    expect(bubble()).toHaveAttribute('data-placement', side)
     expect(Math.abs(point.x - (side === 'right' ? box.left : box.right))).toBeLessThanOrEqual(1)
   })
 

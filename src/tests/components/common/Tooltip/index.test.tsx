@@ -314,7 +314,7 @@ describe('Tooltip contract', () => {
 
     expect(container.querySelector('[data-slot="tooltip-trigger"]')).toBeInTheDocument()
     expect(bubble).toHaveAttribute('data-slot', 'tooltip-bubble')
-    expect(bubble).toHaveAttribute('data-position', 'bottom')
+    expect(bubble).toHaveAttribute('data-placement', 'bottom')
     await waitFor(() => expect(bubble).toHaveAttribute('data-state', 'open'))
   })
 
@@ -353,7 +353,7 @@ describe('Tooltip contract', () => {
 
     await hoverSave(user)
 
-    expect(await bubbleOf()).toHaveAttribute('data-position', placement)
+    expect(await bubbleOf()).toHaveAttribute('data-placement', placement)
   })
 
   it('waits for openDelay before showing', async () => {

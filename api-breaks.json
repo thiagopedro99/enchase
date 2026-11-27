@@ -50,6 +50,10 @@
     {
       "key": "segmented-control-nowrap",
       "note": "the SegmentedControl no longer breaks a label, and scrolls sideways when the options do not fit: it used to break the labels anywhere, also inside a word, and grow taller. With fullWidth, an option whose label does not fit in an equal share takes the width of its label, and the others share the rest"
+    },
+    {
+      "key": "tooltip-data-placement",
+      "note": "the bubble of the Tooltip says its side in data-placement, as the Popover does, and no longer in data-position: rename the attribute in a selector of yours that styles the bubble by its side"
     }
   ]
 }

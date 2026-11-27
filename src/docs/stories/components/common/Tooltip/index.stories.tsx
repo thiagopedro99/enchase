@@ -64,7 +64,7 @@ const meta = {
       control: 'text'
     },
     bubbleClassName: {
-      description: 'Class of the tooltip (data-slot="tooltip-bubble"). You can also style it by data-slot, data-position and data-state.',
+      description: 'Class of the tooltip (data-slot="tooltip-bubble"). You can also style it by data-slot, data-placement and data-state.',
       control: 'text'
     },
     children: { description: 'The trigger. It sits inside a div (data-slot="tooltip-trigger") and, with describe on, receives aria-describedby.', control: false },

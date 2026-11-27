@@ -339,7 +339,7 @@ describe('Sidebar contract', () => {
 
     await user.tab()
 
-    expect(await screen.findByText('Início', { selector: '[aria-hidden="true"]' })).toHaveAttribute('data-position', 'right')
+    expect(await screen.findByText('Início', { selector: '[aria-hidden="true"]' })).toHaveAttribute('data-placement', 'right')
   })
 
   it('puts className and style on the modal panel and names the modal parts', async () => {

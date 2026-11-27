@@ -109,7 +109,7 @@ export const Tooltip = ({
 
       bubble.style.left = `${result.x}px`
       bubble.style.top = `${result.y}px`
-      bubble.dataset.position = result.placement.split('-')[0]
+      bubble.dataset.placement = result.placement.split('-')[0]
 
       if (pointer) {
         pointer.style.left = result.arrow?.x === undefined ? '' : `${result.arrow.x}px`

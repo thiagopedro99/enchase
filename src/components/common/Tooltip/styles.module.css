@@ -36,19 +36,19 @@
   transition: none;
 }
 
-.bubble:where([data-position='top']) {
+.bubble:where([data-placement='top']) {
   transform-origin: 50% 100%;
 }
 
-.bubble:where([data-position='bottom']) {
+.bubble:where([data-placement='bottom']) {
   transform-origin: 50% 0;
 }
 
-.bubble:where([data-position='left']) {
+.bubble:where([data-placement='left']) {
   transform-origin: 100% 50%;
 }
 
-.bubble:where([data-position='right']) {
+.bubble:where([data-placement='right']) {
   transform-origin: 0 50%;
 }
 
@@ -65,19 +65,19 @@
   block-size: var(--enchase-tooltip-arrow-size, 8px);
 }
 
-.bubble:where([data-position='top']) > .arrow {
+.bubble:where([data-placement='top']) > .arrow {
   inset-block-end: calc(var(--enchase-tooltip-arrow-size, 8px) / -2);
 }
 
-.bubble:where([data-position='bottom']) > .arrow {
+.bubble:where([data-placement='bottom']) > .arrow {
   inset-block-start: calc(var(--enchase-tooltip-arrow-size, 8px) / -2);
 }
 
-.bubble:where([data-position='left']) > .arrow {
+.bubble:where([data-placement='left']) > .arrow {
   right: calc(var(--enchase-tooltip-arrow-size, 8px) / -2);
 }
 
-.bubble:where([data-position='right']) > .arrow {
+.bubble:where([data-placement='right']) > .arrow {
   left: calc(var(--enchase-tooltip-arrow-size, 8px) / -2);
 }
 
