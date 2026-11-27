@@ -1,7 +1,7 @@
 import type { StructureTag } from '@utils/structureTag.ts'
 import type { HTMLAttributes, Ref } from 'react'
 
-export type ContainerMaxWidth = 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | '2xl' | 'full'
+export type ContainerMaxWidth = 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'full'
 
 export interface ContainerProps extends HTMLAttributes<HTMLElement> {
   as?: StructureTag | undefined

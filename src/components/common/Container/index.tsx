@@ -8,9 +8,8 @@ import type { ContainerProps } from './types.ts'
 
 export const Container = ({ as: Tag = defaultTag, children, maxWidth = 'lg', padding = true, center = true, ...props }: ContainerProps) => {
   const { breakpoints } = useUIConfig()
-  const size = maxWidth === '2xl' ? 'xxl' : maxWidth
   const variables = {
-    ...(size === 'full' ? {} : { '--enchase-container-max': breakpoints[size] }),
+    ...(maxWidth === 'full' ? {} : { '--enchase-container-max': breakpoints[maxWidth] }),
     ...(typeof padding === 'string' ? { '--enchase-container-padding': padding } : {})
   } as CSSProperties
   const own = {
@@ -18,7 +17,7 @@ export const Container = ({ as: Tag = defaultTag, children, maxWidth = 'lg', pad
     className: styles.container,
     style: Object.keys(variables).length > 0 ? variables : undefined,
     role: roleOf(Tag),
-    'data-max-width': size,
+    'data-max-width': maxWidth,
     'data-padding': padding === false ? 'none' : undefined,
     'data-center': center ? undefined : 'false'
   }

@@ -786,7 +786,7 @@ Um `locale` tem a forma `{ locale, dir, messages }`; use `dir: 'rtl'` para líng
 
 ## Responsividade
 
-Os breakpoints seguem o Bootstrap 5 (mobile-first, `min-width`): `xs` 0, `sm` 576 px, `md` 768 px, `lg` 992 px, `xl` 1200 px e `xxl` 1400 px.
+Os breakpoints seguem o Bootstrap 5 (mobile-first, `min-width`): `xs` 0, `sm` 576 px, `md` 768 px, `lg` 992 px, `xl` 1200 px e `xxl` 1400 px. Breakpoint se escreve `xxl`, também no `maxWidth` do `Container` (`sm`, `md`, `lg`, `xl`, `xxl` ou `full`); `2xl` e `3xl` são tamanhos de escala (fonte, espaço, raio), não breakpoints.
 
 ```tsx
 <UIProvider breakpoints={{ md: '1000px' }}>

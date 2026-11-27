@@ -25,7 +25,7 @@ const meta = {
   argTypes: {
     as: asArgType,
     maxWidth: {
-      description: 'Maximum width, taken from the breakpoints of the UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px by default). full sets no limit. 2xl is still accepted as an alias of xxl.',
+      description: 'Maximum width, taken from the breakpoints of the UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px by default). full sets no limit. The widest breakpoint is written xxl: 2xl and 3xl are sizes of a scale (font, space, radius), not breakpoints.',
       control: 'inline-radio',
       options: ['sm', 'md', 'lg', 'xl', 'xxl', 'full'],
       table: { defaultValue: { summary: 'lg' } }

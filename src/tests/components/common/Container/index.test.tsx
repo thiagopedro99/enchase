@@ -7,6 +7,8 @@ import UIProvider from '@components/uiProvider/index.tsx'
 import { structureTags } from '@utils/structureTag.ts'
 import { axe } from '@tests/axe.ts'
 
+import type { ContainerMaxWidth } from '@components/common/Container/types.ts'
+
 describe('Container', () => {
   it('marks its root with a slot and the default width', () => {
     render(<Container data-testid="c">Conteúdo</Container>)
@@ -48,11 +50,11 @@ describe('Container', () => {
     expect(screen.getByTestId('c')).toHaveAttribute('data-max-width', 'xxl')
   })
 
-  it('accepts the old 2xl name as xxl', () => {
-    render(<Container data-testid="c" maxWidth="2xl" />)
+  it('names the widest breakpoint xxl only: the type refuses 2xl, which is a size of a scale', () => {
+    const refused: '2xl' extends ContainerMaxWidth ? never : true = true
+    const accepted: 'xxl' extends ContainerMaxWidth ? true : never = true
 
-    expect(screen.getByTestId('c')).toHaveAttribute('data-max-width', 'xxl')
-    expect(screen.getByTestId('c').style.getPropertyValue('--enchase-container-max')).toBe('1400px')
+    expect([refused, accepted]).toEqual([true, true])
   })
 
   it('follows the breakpoints given to the provider', () => {
