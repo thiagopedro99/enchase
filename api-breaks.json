@@ -1,6 +1,79 @@
 {
   "since": "0.28.0",
-  "breaks": [],
+  "breaks": [
+    {
+      "key": "changed enchase ContainerMaxWidth",
+      "note": "use maxWidth=\"xxl\": the same width"
+    },
+    {
+      "key": "removed css hook --enchase-checkbox-box-border-color-invalid",
+      "note": "renamed to --enchase-checkbox-box-border-color-error"
+    },
+    {
+      "key": "removed css hook --enchase-checkbox-group-legend-color-invalid",
+      "note": "renamed to --enchase-checkbox-group-legend-color-error"
+    },
+    {
+      "key": "removed css hook --enchase-radio-group-control-border-color-invalid",
+      "note": "renamed to --enchase-radio-group-control-border-color-error"
+    },
+    {
+      "key": "removed css hook --enchase-radio-group-legend-color-invalid",
+      "note": "renamed to --enchase-radio-group-legend-color-error"
+    },
+    {
+      "key": "removed css hook --enchase-select-option-background-checked",
+      "note": "renamed to --enchase-select-option-background-selected"
+    },
+    {
+      "key": "removed css hook --enchase-select-option-color-checked",
+      "note": "renamed to --enchase-select-option-color-selected"
+    },
+    {
+      "key": "removed css hook --enchase-select-option-font-weight-checked",
+      "note": "renamed to --enchase-select-option-font-weight-selected"
+    },
+    {
+      "key": "removed style enchase --enchase-select-option-background-checked",
+      "note": "renamed to --enchase-select-option-background-selected"
+    },
+    {
+      "key": "removed style enchase --enchase-select-option-color-checked",
+      "note": "renamed to --enchase-select-option-color-selected"
+    },
+    {
+      "key": "removed style enchase --enchase-select-option-font-weight-checked",
+      "note": "renamed to --enchase-select-option-font-weight-selected"
+    },
+    {
+      "key": "removed style material2 --enchase-select-option-background-checked",
+      "note": "renamed to --enchase-select-option-background-selected"
+    },
+    {
+      "key": "removed style shadcn --enchase-select-option-background-checked",
+      "note": "renamed to --enchase-select-option-background-selected"
+    },
+    {
+      "key": "removed style shadcn --enchase-select-option-color-checked",
+      "note": "renamed to --enchase-select-option-color-selected"
+    },
+    {
+      "key": "removed style shadcn --enchase-select-option-font-weight-checked",
+      "note": "renamed to --enchase-select-option-font-weight-selected"
+    },
+    {
+      "key": "removed style workbench --enchase-select-option-background-checked",
+      "note": "renamed to --enchase-select-option-background-selected"
+    },
+    {
+      "key": "removed style workbench --enchase-select-option-color-checked",
+      "note": "renamed to --enchase-select-option-color-selected"
+    },
+    {
+      "key": "removed style workbench --enchase-select-option-font-weight-checked",
+      "note": "renamed to --enchase-select-option-font-weight-selected"
+    }
+  ],
   "behavior": [
     {
       "key": "tabs-scrollbar-hidden",

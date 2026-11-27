@@ -280,7 +280,7 @@ Limits the width of the content using the breakpoints of the `UIProvider`, with 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `as` | `'div' \| 'section' \| 'article' \| 'aside' \| 'nav' \| 'header' \| 'footer' \| 'main' \| 'ul' \| 'ol' \| 'li'` | `'div'` | HTML tag that the root renders, only among the structure tags that the type lists. With `ul` or `ol`, the root loses bullets, margin and indent and gains `role="list"`, which keeps the list semantics in Safari (the `role` of whoever uses it wins). Links and buttons do not go here: use `ButtonLink`, `CardLink` or `CardButton`. |
-| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Maximum width, taken from the breakpoints of the UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px by default). full sets no limit. 2xl is still accepted as an alias of xxl. |
+| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| 'full'` | `'lg'` | Maximum width, taken from the breakpoints of the UIProvider (sm 576, md 768, lg 992, xl 1200, xxl 1400 px by default). full sets no limit. The widest breakpoint is written xxl: 2xl and 3xl are sizes of a scale (font, space, radius), not breakpoints. |
 | `padding` | `boolean \| string` | `true` | true uses the default spacing on the sides, false removes it, and a CSS string sets the value (variable --enchase-container-padding). |
 | `center` | `boolean` | `true` | Centers the container. With false it stays at the start, and in RTL on the right side. |
 | `ref` | `Ref<HTMLElement>` | — | Ref of the root element, which is the `as` tag (a `<div>` by default). |
@@ -480,7 +480,7 @@ A page shell: a top bar with the breadcrumb trail and the side menu (permanent o
 | --- | --- | --- | --- |
 | `children` | `ReactNode` | *required* | Content of the page. It sits in `<main id="main-content">`, inside a `Container`, and it is the target of the skip-to-content link. |
 | `pageTitle` | `string` | — | Title of the page. It goes into the breadcrumb trail when no menu item matches the current page. The Layout does not change document.title. |
-| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| '2xl' \| 'full'` | `'lg'` | Maximum width of the content, taken from the breakpoints. |
+| `maxWidth` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| 'full'` | `'lg'` | Maximum width of the content, taken from the breakpoints. |
 | `padding` | `boolean \| string` | `true` | Side spacing of the content, as in the Container: true uses the default, false removes it, and a CSS string sets the value. |
 | `hideNavbar` | `boolean` | `false` | Hides the navigation (the top bar, the sidebar and the navbar). |
 | `hideFooter` | `boolean` | `false` | Hides the footer. |
@@ -1730,8 +1730,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-checkbox-box-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-checkbox-box-border-color-checked-disabled` | `transparent` | `border-color` |
 | `--enchase-checkbox-box-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
-| `--enchase-checkbox-box-border-color-hover` | `var(--enchase-checkbox-box-border-color, var(--enchase-color-border-strong))` | `border-color` |
 | `--enchase-checkbox-box-border-color-error` | `var(--enchase-color-error)` | `border-color` |
+| `--enchase-checkbox-box-border-color-hover` | `var(--enchase-checkbox-box-border-color, var(--enchase-color-border-strong))` | `border-color` |
 | `--enchase-checkbox-box-check-width` | `2px` | `border-width` |
 | `--enchase-checkbox-box-radius` | `2px` | `border-radius` |
 | `--enchase-checkbox-box-size` | `18px` | `inline-size`, `block-size`, `margin-block-start`, `margin-inline-start` |
@@ -2349,8 +2349,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-radio-group-control-border-color` | `var(--enchase-color-border-strong)` | `border`, `border-color` |
 | `--enchase-radio-group-control-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-radio-group-control-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
-| `--enchase-radio-group-control-border-color-hover` | `var(--enchase-radio-group-control-border-color, var(--enchase-color-border-strong))` | `border-color` |
 | `--enchase-radio-group-control-border-color-error` | `var(--enchase-color-error)` | `border-color` |
+| `--enchase-radio-group-control-border-color-hover` | `var(--enchase-radio-group-control-border-color, var(--enchase-color-border-strong))` | `border-color` |
 | `--enchase-radio-group-control-dot-size` | `calc(var(--enchase-radio-group-control-size, 1.25rem) / 2)` | `--radio-dot-size` |
 | `--enchase-radio-group-control-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-radio-group-control-size` | `1.25rem` | `--radio-dot-size`, `inline-size`, `block-size` |
@@ -2435,8 +2435,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-select-option-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
 | `--enchase-select-option-background-selected` | `var(--enchase-color-secondary-container)` | `background-color` |
 | `--enchase-select-option-color` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-select-option-color-selected` | `var(--enchase-color-on-secondary-container)` | `color` |
 | `--enchase-select-option-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
+| `--enchase-select-option-color-selected` | `var(--enchase-color-on-secondary-container)` | `color` |
 | `--enchase-select-option-font-weight-selected` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-select-option-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-select-option-padding-block` | `0.75rem` | `padding-block` |
