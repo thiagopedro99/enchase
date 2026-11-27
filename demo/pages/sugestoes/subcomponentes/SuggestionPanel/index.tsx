@@ -131,8 +131,8 @@ const SuggestionPanel = ({ id, suggestion, account, onClose, onCommented, onSign
                     </Alert>
                   )}
                   <Textarea name="comment" label="Seu comentário" fullWidth rows={3} maxLength={commentLimits.max} value={text} onChange={({ target }) => setText(target.value)} helperText="Vira um comentário público na issue do GitHub, com o seu usuário." />
-                  <Button type="submit" className={styles.send} {...(sending ? { 'aria-busy': true, 'aria-disabled': true } : {})}>
-                    {sending ? 'Enviando…' : 'Comentar'}
+                  <Button type="submit" className={styles.send} loading={sending} loadingText="Enviando…">
+                    Comentar
                   </Button>
                 </form>
               )}

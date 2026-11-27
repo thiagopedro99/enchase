@@ -34,7 +34,7 @@ const SuggestionCard = ({ suggestion }: SuggestionCardProps) => {
         <span className={styles.age}>{ageOf(createdAt)}</span>
       </span>
       {onOpen ? (
-        <a href={`?${issueParameter}=${id}`} draggable={false} className={styles.title} aria-labelledby={titleId} aria-describedby={detailsId} onClick={(event) => plain(event) && (event.preventDefault(), onOpen(id))}>
+        <a href={`?${issueParameter}=${id}`} className={styles.title} aria-labelledby={titleId} aria-describedby={detailsId} onClick={(event) => plain(event) && (event.preventDefault(), onOpen(id))}>
           <span id={titleId}>{title}</span>
         </a>
       ) : (

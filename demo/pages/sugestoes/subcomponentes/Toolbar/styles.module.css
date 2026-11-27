@@ -40,12 +40,6 @@
     max-inline-size: none;
   }
 
-  .select {
-    --enchase-input-min-width: 0;
-
-    min-inline-size: 0;
-  }
-
   .total {
     align-self: center;
     margin-inline-start: 0;

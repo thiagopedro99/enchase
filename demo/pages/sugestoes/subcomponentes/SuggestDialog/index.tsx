@@ -77,8 +77,8 @@ const SuggestDialog = ({ isOpen, items, onClose, onSent, onSignedOut }: SuggestD
           <Button variant="ghost" onClick={onClose}>
             Cancelar
           </Button>
-          <Button type="submit" form={formId} {...(sending ? { 'aria-busy': true, 'aria-disabled': true } : {})}>
-            {sending ? 'Enviando…' : 'Enviar sugestão'}
+          <Button type="submit" form={formId} loading={sending} loadingText="Enviando…">
+            Enviar sugestão
           </Button>
         </>
       }

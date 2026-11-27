@@ -2,24 +2,10 @@
   min-inline-size: 0;
 }
 
-.title {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  min-inline-size: 0;
-}
-
 .name {
   display: inline-flex;
   align-items: center;
   gap: var(--enchase-space-sm);
   font-weight: var(--enchase-font-weight-semibold);
   color: var(--enchase-color-text-primary);
-}
-
-.text {
-  font-size: var(--enchase-font-size-xs);
-  font-weight: var(--enchase-font-weight-regular);
-  line-height: var(--enchase-line-height-snug);
-  color: var(--enchase-color-text-secondary);
 }

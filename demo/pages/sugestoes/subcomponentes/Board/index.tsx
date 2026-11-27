@@ -15,14 +15,12 @@ const Board = ({ columns, canMove, onMove }: BoardProps) => {
         id: value,
         label,
         title: (
-          <span className={styles.title}>
-            <span className={styles.name}>
-              <StatusDot status={value} />
-              {label}
-            </span>
-            <span className={styles.text}>{text}</span>
+          <span className={styles.name}>
+            <StatusDot status={value} />
+            {label}
           </span>
-        )
+        ),
+        description: text
       })),
     [columns]
   )

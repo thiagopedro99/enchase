@@ -105,7 +105,6 @@ describe('Suggestions panel', () => {
     const button = await screen.findByRole('button', { name: 'Ver 2 comentários de Sticky columns' })
 
     expect(button).toHaveTextContent('2')
-    expect(screen.getByRole('link', { name: 'Sticky columns' })).toHaveAttribute('draggable', 'false')
 
     await user.click(button)
 
