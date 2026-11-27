@@ -822,7 +822,7 @@ describe('DatePicker calendar', () => {
     const user = userEvent.setup()
     const onClose = vi.fn()
     renderWithProviders(
-      <Modal isOpen onClose={onClose} title="Agenda">
+      <Modal open onClose={onClose} title="Agenda">
         <DatePicker label="Data" />
       </Modal>
     )

@@ -41,7 +41,7 @@ const overlays: Overlay[] = [
     panel: 'modal-panel',
     body: 'modal-body',
     ui: (
-      <Modal isOpen onClose={noop} title="Terms" footer={<button type="button">Accept</button>}>
+      <Modal open onClose={noop} title="Terms" footer={<button type="button">Accept</button>}>
         {fields}
       </Modal>
     )

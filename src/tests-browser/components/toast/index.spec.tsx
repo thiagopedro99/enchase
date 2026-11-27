@@ -287,7 +287,7 @@ const ModalThatToasts = () => {
   return (
     <>
       <button onClick={() => setOpen(true)}>Abrir</button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Título">
+      <Modal open={open} onClose={() => setOpen(false)} title="Título">
         <button onClick={() => toast.error('Falha ao salvar', 60000)}>Disparar</button>
       </Modal>
     </>

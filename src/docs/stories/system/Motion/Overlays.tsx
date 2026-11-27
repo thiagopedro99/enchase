@@ -10,7 +10,7 @@ export const ModalDemo = () => {
   return (
     <Demo title="Modal" hint="Enters with the pop recipe and the gentle spring; exits faster. Esc closes it.">
       <Button onClick={() => setOpen(true)}>Open modal</Button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Edit profile">
+      <Modal open={open} onClose={() => setOpen(false)} title="Edit profile">
         The panel emerges from the center with a 0.96 scale and a fade.
       </Modal>
     </Demo>

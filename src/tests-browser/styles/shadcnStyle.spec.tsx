@@ -472,7 +472,7 @@ describe('the containers of the shadcn style', () => {
 
   it('draws the dialog with a border, 10px corners, a 512px width and 14px text', async () => {
     show(
-      <Modal isOpen onClose={() => undefined} title="Title">
+      <Modal open onClose={() => undefined} title="Title">
         Body
       </Modal>
     )

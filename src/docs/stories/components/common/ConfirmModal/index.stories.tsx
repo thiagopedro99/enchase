@@ -15,7 +15,7 @@ const ConfirmDemo = ({ label, ...args }: ConfirmDemoProps) => {
       <Button variant="outline" onClick={() => setOpen(true)}>
         {label}
       </Button>
-      <ConfirmModal {...args} isOpen={open} onClose={() => setOpen(false)} />
+      <ConfirmModal {...args} open={open} onClose={() => setOpen(false)} />
     </>
   )
 }
@@ -24,14 +24,14 @@ const meta = {
   title: 'Components/ConfirmModal',
   component: ConfirmModal,
   args: {
-    isOpen: false,
+    open: false,
     onClose: () => undefined,
     onConfirm: () => undefined,
     message: 'This action cannot be undone.',
     confirmVariant: 'primary'
   },
   argTypes: {
-    isOpen: {
+    open: {
       description: 'Opens and closes the confirmation. Like the Modal, it is always controlled: you keep the state and change it in onClose.',
       control: false
     },

@@ -14,7 +14,7 @@ const ModalDemo = ({ label, ...args }: ModalDemoProps) => {
   return (
     <>
       <Button onClick={() => setOpen(true)}>{label}</Button>
-      <Modal {...args} isOpen={open} onClose={() => setOpen(false)} />
+      <Modal {...args} open={open} onClose={() => setOpen(false)} />
     </>
   )
 }
@@ -23,7 +23,7 @@ const meta = {
   title: 'Components/Modal',
   component: Modal,
   args: {
-    isOpen: false,
+    open: false,
     onClose: () => undefined,
     title: 'Edit profile',
     children: 'The focus stays trapped in the panel, the page behind it is inert and Esc returns the focus to the button.',
@@ -36,12 +36,12 @@ const meta = {
     docs: {
       description: {
         component:
-          'A modal dialog rendered in a portal: the focus stays trapped in the panel, the page behind it is inert, and Esc or a click on the backdrop closes it. It enters and exits with animation. It is always controlled by `isOpen` and `onClose`. When the content is taller than the panel, the body scrolls and becomes a focusable region named by the title (or by `ariaLabel`), so a keyboard user can scroll it.'
+          'A modal dialog rendered in a portal: the focus stays trapped in the panel, the page behind it is inert, and Esc or a click on the backdrop closes it. It enters and exits with animation. It is always controlled by `open` and `onClose`. When the content is taller than the panel, the body scrolls and becomes a focusable region named by the title (or by `ariaLabel`), so a keyboard user can scroll it.'
       }
     }
   },
   argTypes: {
-    isOpen: {
+    open: {
       description: 'Opens and closes the modal. It is always controlled: you keep the state and change it in onClose. It renders in a portal on the body, only after mounting, and stays mounted until the exit animation ends.',
       control: false
     },

@@ -39,7 +39,7 @@ const FeedbackDemo = () => {
       </div>
 
       <Modal
-        isOpen={open}
+        open={open}
         onClose={close}
         title="Publicar a versão 2.4?"
         size="sm"

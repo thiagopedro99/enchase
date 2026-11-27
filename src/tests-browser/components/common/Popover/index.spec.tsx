@@ -328,7 +328,7 @@ describe('Popover focus and dismissal in a real browser', () => {
       const [open, setOpen] = useState(true)
 
       return (
-        <Modal isOpen={open} onClose={() => setOpen(false)} title="Modal">
+        <Modal open={open} onClose={() => setOpen(false)} title="Modal">
           <Popover content={<button>Dentro</button>}>
             <button>Abrir</button>
           </Popover>
@@ -353,7 +353,7 @@ describe('Popover focus and dismissal in a real browser', () => {
       const [open, setOpen] = useState(true)
 
       return (
-        <Modal isOpen={open} onClose={() => setOpen(false)} title="Modal">
+        <Modal open={open} onClose={() => setOpen(false)} title="Modal">
           <Popover content={<button>Dentro</button>}>
             <button>Abrir</button>
           </Popover>
@@ -383,7 +383,7 @@ describe('Popover focus and dismissal in a real browser', () => {
           <Popover content={<button onClick={() => setModal(true)}>Abrir modal</button>}>
             <button>Abrir</button>
           </Popover>
-          <Modal isOpen={modal} onClose={() => setModal(false)} title="Aberto">
+          <Modal open={modal} onClose={() => setModal(false)} title="Aberto">
             <p>Conteúdo</p>
           </Modal>
         </>
@@ -401,7 +401,7 @@ describe('Popover focus and dismissal in a real browser', () => {
 
   it('is not inert while the page behind the modal is', async () => {
     renderInBrowser(
-      <Modal isOpen onClose={() => undefined} title="Modal">
+      <Modal open onClose={() => undefined} title="Modal">
         <Popover content={<button>Dentro</button>}>
           <button>Abrir</button>
         </Popover>

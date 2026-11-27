@@ -396,7 +396,7 @@ describe('Board', () => {
     const onClose = vi.fn()
     const onMove = vi.fn()
     renderWithProviders(
-      <Modal isOpen onClose={onClose} title="Quadro">
+      <Modal open onClose={onClose} title="Quadro">
         <TestBoard onMove={onMove} />
       </Modal>
     )

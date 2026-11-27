@@ -114,7 +114,7 @@ const ModalDialog = ({
 const modalBase = { distance: 0, spring: 'gentle' } as const
 
 export const Modal = ({
-  isOpen,
+  open,
   role = 'dialog',
   showCloseButton = true,
   closeOnOverlayClick = true,
@@ -125,7 +125,7 @@ export const Modal = ({
 }: ModalProps) => {
   const motionStyle = useMotionStyle('pop', 'modal', props.animation, undefined, modalBase)
   const target = usePortalContainer(container)
-  const { mounted, state, ref } = usePresence<HTMLDivElement>(isOpen)
+  const { mounted, state, ref } = usePresence<HTMLDivElement>(open)
 
   if (!target) return null
 
@@ -137,7 +137,7 @@ export const Modal = ({
         closeOnOverlayClick={closeOnOverlayClick}
         closeOnEsc={closeOnEsc}
         size={size}
-        open={isOpen}
+        open={open}
         state={state}
         panelRef={ref}
         motionStyle={motionStyle}
@@ -149,7 +149,7 @@ export const Modal = ({
 }
 
 export const ConfirmModal = ({
-  isOpen,
+  open,
   onClose,
   onConfirm,
   title,
@@ -172,7 +172,7 @@ export const ConfirmModal = ({
 
   return (
     <Modal
-      isOpen={isOpen}
+      open={open}
       onClose={onClose}
       title={title ?? labels.confirmAction}
       role="alertdialog"

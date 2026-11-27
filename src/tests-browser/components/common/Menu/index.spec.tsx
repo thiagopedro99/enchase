@@ -276,7 +276,7 @@ describe('Menu inside a modal', () => {
     const [open, setOpen] = useState(true)
 
     return (
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Settings">
+      <Modal open={open} onClose={() => setOpen(false)} title="Settings">
         <Menu label="Actions" items={entries()}>
           <button>Open</button>
         </Menu>

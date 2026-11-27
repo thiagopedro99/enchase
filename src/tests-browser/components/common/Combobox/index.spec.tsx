@@ -516,7 +516,7 @@ describe('Combobox inside a modal in a real browser', () => {
     const [shown, setShown] = useState(true)
 
     return (
-      <Modal isOpen={shown} onClose={() => setShown(false)} title="Pedido">
+      <Modal open={shown} onClose={() => setShown(false)} title="Pedido">
         <Combobox label="Fruta" options={fruits} />
       </Modal>
     )

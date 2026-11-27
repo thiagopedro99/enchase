@@ -13,7 +13,7 @@ const LoginDialog = ({ request, onClose }: LoginDialogProps) => {
 
   return (
     <Modal
-      isOpen={request !== null}
+      open={request !== null}
       onClose={onClose}
       title={loginTexts[reason].title}
       size="sm"

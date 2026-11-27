@@ -401,7 +401,7 @@ describe('Sidebar contract', () => {
     render(
       <>
         <Sidebar sections={sections} variant="modal" open onClose={closeDrawer} />
-        <Modal isOpen onClose={closeModal} title="Sobre o menu">
+        <Modal open onClose={closeModal} title="Sobre o menu">
           <p>conteúdo</p>
         </Modal>
       </>

@@ -1111,7 +1111,7 @@ describe('Combobox in a dialog', () => {
     const user = userEvent.setup()
     const onClose = vi.fn()
     renderWithProviders(
-      <Modal isOpen onClose={onClose} title="Pick">
+      <Modal open onClose={onClose} title="Pick">
         <Combobox label="Fruit" options={fruits} />
       </Modal>
     )
@@ -1133,7 +1133,7 @@ describe('Combobox in a dialog', () => {
       const [host, setHost] = useState<HTMLElement | null>(null)
 
       return (
-        <Modal isOpen onClose={vi.fn()} title="Pick">
+        <Modal open onClose={vi.fn()} title="Pick">
           <div ref={setHost}>
             <Combobox label="Fruit" options={fruits} container={host} />
           </div>

@@ -414,7 +414,7 @@ describe('Navbar contract', () => {
         <>
           <Navbar sections={sections} />
           <button onClick={() => setModal(true)}>Abrir modal</button>
-          <Modal isOpen={modal} onClose={() => setModal(false)} title="Sobre o menu">
+          <Modal open={modal} onClose={() => setModal(false)} title="Sobre o menu">
             <p>conteúdo</p>
           </Modal>
         </>

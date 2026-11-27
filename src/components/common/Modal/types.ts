@@ -8,7 +8,7 @@ export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 export type ModalRole = 'dialog' | 'alertdialog'
 
 export interface ModalProps {
-  isOpen: boolean
+  open: boolean
   onClose: () => void
   title?: string | undefined
   ariaLabel?: string | undefined
@@ -27,10 +27,10 @@ export interface ModalProps {
 }
 
 export type ModalDialogProps = Required<Pick<ModalProps, 'role' | 'showCloseButton' | 'closeOnOverlayClick' | 'closeOnEsc' | 'size'>> &
-  Omit<ModalProps, 'isOpen' | 'role' | 'showCloseButton' | 'closeOnOverlayClick' | 'closeOnEsc' | 'size' | 'container'>
+  Omit<ModalProps, 'open' | 'role' | 'showCloseButton' | 'closeOnOverlayClick' | 'closeOnEsc' | 'size' | 'container'>
 
 export interface ConfirmModalProps {
-  isOpen: boolean
+  open: boolean
   onClose: () => void
   onConfirm: () => void
   title?: string | undefined

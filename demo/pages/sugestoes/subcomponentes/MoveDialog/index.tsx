@@ -42,7 +42,7 @@ const MoveDialog = ({ request, onConfirm, onClose }: MoveDialogProps) => {
 
   return (
     <Modal
-      isOpen={request !== null}
+      open={request !== null}
       onClose={close}
       title={releasing ? 'Em qual versão saiu?' : 'Por que não vamos fazer?'}
       size="sm"

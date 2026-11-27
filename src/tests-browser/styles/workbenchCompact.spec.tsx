@@ -216,7 +216,7 @@ describe('the compact density of the workbench style, in the containers', () => 
 
   it('pads the modal by 16px on every side, as the original does, with 4px between the header and the body and 8px between the body and the footer', async () => {
     show(
-      <Modal isOpen onClose={() => undefined} title="Title" footer={<Button>Save</Button>}>
+      <Modal open onClose={() => undefined} title="Title" footer={<Button>Save</Button>}>
         Body
       </Modal>,
       'compact'
@@ -229,7 +229,7 @@ describe('the compact density of the workbench style, in the containers', () => 
   })
 
   it('gives the confirm modal the same compact padding', async () => {
-    show(<ConfirmModal isOpen onClose={() => undefined} onConfirm={() => undefined} title="Delete" message="Sure?" />, 'compact')
+    show(<ConfirmModal open onClose={() => undefined} onConfirm={() => undefined} title="Delete" message="Sure?" />, 'compact')
     await waitForSettled(() => part('modal-panel'))
 
     expect([px(style('modal-header').paddingTop), px(style('modal-footer').paddingBottom)]).toEqual([16, 16])

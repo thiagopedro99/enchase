@@ -57,7 +57,7 @@ const ModalDemo = () => {
   return (
     <>
       <Button onClick={() => setOpen(true)}>Open the dialog</Button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Edit profile">
+      <Modal open={open} onClose={() => setOpen(false)} title="Edit profile">
         <Flex direction="column" align="start" gap="1rem">
           <p>The page behind this dialog is inert. The notifications stay in view and keep working.</p>
           <Button onClick={() => toast.success('Profile saved', 6000)}>Save</Button>

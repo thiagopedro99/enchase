@@ -19,7 +19,7 @@ const Page = ({ className, animation }: { className?: string; animation?: Motion
     <>
       <button onClick={() => setOpen(true)}>Abrir</button>
       <button onClick={() => setOpen(false)}>Fechar fora</button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Título" className={className} animation={animation}>
+      <Modal open={open} onClose={() => setOpen(false)} title="Título" className={className} animation={animation}>
         <p>Corpo</p>
       </Modal>
     </>

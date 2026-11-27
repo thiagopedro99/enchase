@@ -19,7 +19,7 @@ const modalAdapter: DialogContractAdapter = {
   render: () => (
     <ControlledDialog>
       {({ open, close }) => (
-        <Modal isOpen={open} onClose={close} title="Edit profile" footer={<button>Save</button>}>
+        <Modal open={open} onClose={close} title="Edit profile" footer={<button>Save</button>}>
           <input aria-label="Name" />
         </Modal>
       )}
@@ -33,7 +33,7 @@ const confirmAdapter: DialogContractAdapter = {
   triggerName: 'Open',
   dialogName: 'Confirmar ação',
   render: () => (
-    <ControlledDialog>{({ open, close }) => <ConfirmModal isOpen={open} onClose={close} onConfirm={vi.fn()} message="Delete this item?" />}</ControlledDialog>
+    <ControlledDialog>{({ open, close }) => <ConfirmModal open={open} onClose={close} onConfirm={vi.fn()} message="Delete this item?" />}</ControlledDialog>
   )
 }
 
@@ -44,7 +44,7 @@ describePortalContainerContract({
   name: 'Modal',
   slot: 'modal',
   render: (container) => (
-    <Modal isOpen onClose={vi.fn()} title="Inside" container={container}>
+    <Modal open onClose={vi.fn()} title="Inside" container={container}>
       <p>content</p>
     </Modal>
   )
@@ -53,17 +53,17 @@ describePortalContainerContract({
 describePortalContainerContract({
   name: 'ConfirmModal',
   slot: 'modal',
-  render: (container) => <ConfirmModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" container={container} />
+  render: (container) => <ConfirmModal open onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" container={container} />
 })
 
 describe('Modal', () => {
   it('gives each modal a unique title id', async () => {
     renderWithProviders(
       <>
-        <Modal isOpen onClose={vi.fn()} title="First">
+        <Modal open onClose={vi.fn()} title="First">
           <p>a</p>
         </Modal>
-        <Modal isOpen onClose={vi.fn()} title="Second">
+        <Modal open onClose={vi.fn()} title="Second">
           <p>b</p>
         </Modal>
       </>
@@ -77,7 +77,7 @@ describe('Modal', () => {
   it('follows the focus order close button, content and footer, wrapping around', async () => {
     const user = userEvent.setup()
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Edit profile" footer={<button>Save</button>}>
+      <Modal open onClose={vi.fn()} title="Edit profile" footer={<button>Save</button>}>
         <input aria-label="Name" />
       </Modal>
     )
@@ -98,7 +98,7 @@ describe('Modal', () => {
     const user = userEvent.setup()
     const onClose = vi.fn()
     renderWithProviders(
-      <Modal isOpen onClose={onClose} title="Locked" closeOnEsc={false}>
+      <Modal open onClose={onClose} title="Locked" closeOnEsc={false}>
         <p>content</p>
       </Modal>
     )
@@ -113,7 +113,7 @@ describe('Modal', () => {
     const user = userEvent.setup()
     const onClose = vi.fn()
     renderWithProviders(
-      <Modal isOpen onClose={onClose} title="Backdrop">
+      <Modal open onClose={onClose} title="Backdrop">
         <p>content</p>
       </Modal>
     )
@@ -127,7 +127,7 @@ describe('Modal', () => {
 
   it('uses the aria-label fallback when there is no title', async () => {
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} ariaLabel="Image preview">
+      <Modal open onClose={vi.fn()} ariaLabel="Image preview">
         <p>content</p>
       </Modal>
     )
@@ -137,7 +137,7 @@ describe('Modal', () => {
 
   it('uses configurable labels from the UI provider', async () => {
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Custom">
+      <Modal open onClose={vi.fn()} title="Custom">
         <p>content</p>
       </Modal>,
       { labels: { closeModal: 'Close dialog' } }
@@ -150,7 +150,7 @@ describe('Modal', () => {
 describe('Modal contract', () => {
   it('merges className and style on the panel and exposes the slots and state', async () => {
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Slots" className="mine" style={{ color: 'red' }} footer={<button>Ok</button>}>
+      <Modal open onClose={vi.fn()} title="Slots" className="mine" style={{ color: 'red' }} footer={<button>Ok</button>}>
         <p>content</p>
       </Modal>
     )
@@ -168,7 +168,7 @@ describe('Modal contract', () => {
 
   it('turns the presence variables to zero when the animation is off', async () => {
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Still" animation={false}>
+      <Modal open onClose={vi.fn()} title="Still" animation={false}>
         <p>content</p>
       </Modal>
     )
@@ -181,7 +181,7 @@ describe('Modal contract', () => {
 
   it('scales in from the centre with the spring duration, without travelling, by default', async () => {
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Pop">
+      <Modal open onClose={vi.fn()} title="Pop">
         <p>content</p>
       </Modal>
     )
@@ -200,7 +200,7 @@ describe('Modal contract', () => {
       return (
         <>
           <button onClick={() => setOpen(false)}>Close</button>
-          <Modal isOpen={open} onClose={() => setOpen(false)} title="Exit">
+          <Modal open={open} onClose={() => setOpen(false)} title="Exit">
             <p>content</p>
           </Modal>
         </>
@@ -224,7 +224,7 @@ describe('Modal contract', () => {
       setOpenOutside = setOpen
 
       return (
-        <Modal isOpen={open} onClose={() => setOpen(false)} title="Again">
+        <Modal open={open} onClose={() => setOpen(false)} title="Again">
           <p>content</p>
         </Modal>
       )
@@ -246,10 +246,10 @@ describe('Modal contract', () => {
     const closeTop = vi.fn()
     render(
       <>
-        <Modal isOpen onClose={closeBottom} title="Bottom">
+        <Modal open onClose={closeBottom} title="Bottom">
           <p>bottom</p>
         </Modal>
-        <Modal isOpen onClose={closeTop} title="Top">
+        <Modal open onClose={closeTop} title="Top">
           <p>top</p>
         </Modal>
       </>
@@ -268,7 +268,7 @@ describe('ConfirmModal', () => {
     const onConfirm = vi.fn()
     const onClose = vi.fn()
     const user = userEvent.setup()
-    renderWithProviders(<ConfirmModal isOpen onClose={onClose} onConfirm={onConfirm} message="Delete this item?" />)
+    renderWithProviders(<ConfirmModal open onClose={onClose} onConfirm={onConfirm} message="Delete this item?" />)
 
     const dialog = await screen.findByRole('alertdialog', { name: 'Confirmar ação' })
     expect(dialog).toHaveAccessibleDescription('Delete this item?')
@@ -281,14 +281,14 @@ describe('ConfirmModal', () => {
   })
 
   it('gives the confirm button the variant it receives, the danger one included, and keeps the cancel button as an outline', async () => {
-    renderWithProviders(<ConfirmModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" confirmVariant="danger" />)
+    renderWithProviders(<ConfirmModal open onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" confirmVariant="danger" />)
 
     expect(await screen.findByRole('button', { name: 'Confirmar' })).toHaveAttribute('data-variant', 'danger')
     expect(screen.getByRole('button', { name: 'Cancelar' })).toHaveAttribute('data-variant', 'outline')
   })
 
   it('confirms with the primary variant when none is given', async () => {
-    renderWithProviders(<ConfirmModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" />)
+    renderWithProviders(<ConfirmModal open onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" />)
 
     expect(await screen.findByRole('button', { name: 'Confirmar' })).toHaveAttribute('data-variant', 'primary')
   })
@@ -333,7 +333,7 @@ describe('Modal body scrolling', () => {
   it('has no tab stop, role or label while the content fits', async () => {
     mockOverflow(300, 300)
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Terms">
+      <Modal open onClose={vi.fn()} title="Terms">
         <p>content</p>
       </Modal>
     )
@@ -345,7 +345,7 @@ describe('Modal body scrolling', () => {
   it('becomes a focusable region named by the title when the content is taller than the panel', async () => {
     mockOverflow(900, 300)
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Terms">
+      <Modal open onClose={vi.fn()} title="Terms">
         <p>content</p>
       </Modal>
     )
@@ -361,7 +361,7 @@ describe('Modal body scrolling', () => {
   it('names the region with the aria label of the modal when there is no title', async () => {
     mockOverflow(900, 300)
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} ariaLabel="Image preview">
+      <Modal open onClose={vi.fn()} ariaLabel="Image preview">
         <p>content</p>
       </Modal>
     )
@@ -377,7 +377,7 @@ describe('Modal body scrolling', () => {
   it('is only focusable, without a role or a name, when the modal has neither a title nor an aria label', async () => {
     mockOverflow(900, 300)
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()}>
+      <Modal open onClose={vi.fn()}>
         <p>content</p>
       </Modal>
     )
@@ -391,7 +391,7 @@ describe('Modal body scrolling', () => {
     vi.stubGlobal('ResizeObserver', FakeResizeObserver)
     mockOverflow(300, 300)
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Terms">
+      <Modal open onClose={vi.fn()} title="Terms">
         <p>content</p>
       </Modal>
     )
@@ -415,7 +415,7 @@ describe('Modal body scrolling', () => {
     const user = userEvent.setup()
     mockOverflow(900, 300)
     const { unmount } = renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Terms" footer={<button>Accept</button>}>
+      <Modal open onClose={vi.fn()} title="Terms" footer={<button>Accept</button>}>
         <p>content</p>
       </Modal>
     )
@@ -439,7 +439,7 @@ describe('Modal body scrolling', () => {
 
     mockOverflow(300, 300)
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Terms" footer={<button>Accept</button>}>
+      <Modal open onClose={vi.fn()} title="Terms" footer={<button>Accept</button>}>
         <p>content</p>
       </Modal>
     )
@@ -456,7 +456,7 @@ describe('Modal body scrolling', () => {
     const onClose = vi.fn()
     mockOverflow(900, 300)
     renderWithProviders(
-      <Modal isOpen onClose={onClose} title="Terms">
+      <Modal open onClose={onClose} title="Terms">
         <p>content</p>
       </Modal>
     )
@@ -472,7 +472,7 @@ describe('Modal body scrolling', () => {
 
   it('keeps the message as the description of an alertdialog whose body scrolls', async () => {
     mockOverflow(900, 300)
-    renderWithProviders(<ConfirmModal isOpen onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" />)
+    renderWithProviders(<ConfirmModal open onClose={vi.fn()} onConfirm={vi.fn()} message="Delete this item?" />)
 
     const dialog = await screen.findByRole('alertdialog', { name: 'Confirmar ação' })
 
@@ -486,7 +486,7 @@ describe('Modal body scrolling', () => {
   ] as const)('has no axe violations when the content %s', async (_, scroll) => {
     mockOverflow(scroll, 300)
     renderWithProviders(
-      <Modal isOpen onClose={vi.fn()} title="Terms" footer={<button>Accept</button>}>
+      <Modal open onClose={vi.fn()} title="Terms" footer={<button>Accept</button>}>
         <p>content</p>
       </Modal>
     )
@@ -502,7 +502,7 @@ describe('Modal ref', () => {
     renderWithProviders(
       <ControlledDialog>
         {({ open, close }) => (
-          <Modal isOpen={open} onClose={close} title="Edit profile" ref={ref}>
+          <Modal open={open} onClose={close} title="Edit profile" ref={ref}>
             <input aria-label="Name" />
           </Modal>
         )}
@@ -529,7 +529,7 @@ describe('Modal ref', () => {
       <ControlledDialog>
         {({ open, close }) => (
           <Modal
-            isOpen={open}
+            open={open}
             onClose={close}
             title="Edit profile"
             ref={(node) => {
@@ -555,7 +555,7 @@ describe('Modal ref', () => {
   it('gives the ref of the confirmation dialog the same panel', async () => {
     const user = userEvent.setup()
     const ref = createRef<HTMLDivElement>()
-    renderWithProviders(<ControlledDialog>{({ open, close }) => <ConfirmModal isOpen={open} onClose={close} onConfirm={vi.fn()} message="Delete this item?" ref={ref} />}</ControlledDialog>)
+    renderWithProviders(<ControlledDialog>{({ open, close }) => <ConfirmModal open={open} onClose={close} onConfirm={vi.fn()} message="Delete this item?" ref={ref} />}</ControlledDialog>)
 
     expect(ref.current).toBeNull()
 

@@ -117,7 +117,7 @@ describe('minimum target size in a real browser', () => {
   it('gives the modal close button and the sidebar items at least 24x24', async () => {
     renderInBrowser(
       <>
-        <Modal isOpen onClose={() => undefined} title="Título">
+        <Modal open onClose={() => undefined} title="Título">
           <p>Texto</p>
         </Modal>
         <Layout pageTitle="Teste" navigationSections={demoSections}>

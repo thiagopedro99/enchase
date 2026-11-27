@@ -29,7 +29,7 @@ const ModalWithAwkwardContent = () => {
   return (
     <>
       <button onClick={() => setOpen(true)}>Abrir</button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Título">
+      <Modal open={open} onClose={() => setOpen(false)} title="Título">
         <form>
           <input type="hidden" name="token" value="x" />
           <button type="button" data-testid="a">

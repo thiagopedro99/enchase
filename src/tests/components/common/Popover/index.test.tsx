@@ -220,7 +220,7 @@ describe('Popover', () => {
     const user = userEvent.setup()
     const onClose = vi.fn()
     renderWithProviders(
-      <Modal isOpen onClose={onClose} title="Modal">
+      <Modal open onClose={onClose} title="Modal">
         <Popover label="Pop" content={<button>Dentro</button>}>
           <button>Abrir</button>
         </Popover>
@@ -242,7 +242,7 @@ describe('Popover', () => {
     const user = userEvent.setup()
     const onClose = vi.fn()
     renderWithProviders(
-      <Modal isOpen onClose={onClose} title="Modal">
+      <Modal open onClose={onClose} title="Modal">
         <Popover label="Pop" content={<button>Dentro</button>}>
           <button>Abrir</button>
         </Popover>
@@ -271,7 +271,7 @@ describe('Popover', () => {
           <Popover defaultOpen label="Pop" content={<button onClick={() => setModal(true)}>Abrir modal</button>}>
             <button>Abrir</button>
           </Popover>
-          <Modal isOpen={modal} onClose={() => setModal(false)} title="Aberto">
+          <Modal open={modal} onClose={() => setModal(false)} title="Aberto">
             <p>Conteúdo</p>
           </Modal>
         </>

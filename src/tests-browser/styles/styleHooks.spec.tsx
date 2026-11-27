@@ -187,7 +187,7 @@ describe('the borders of the surfaces from the hooks', () => {
 
     setHooks(probes)
     renderInBrowser(
-      <Modal isOpen onClose={() => undefined} title="Title">
+      <Modal open onClose={() => undefined} title="Title">
         Body
       </Modal>
     )

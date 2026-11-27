@@ -197,8 +197,8 @@ export const Refs = () => {
       <Tag ref={tag}>React</Tag>
       <ThemeToggle ref={themeToggle} />
       <VisuallyHidden ref={hidden}>Only for screen readers</VisuallyHidden>
-      <Modal ref={modal} isOpen={false} onClose={() => undefined}>Body</Modal>
-      <ConfirmModal ref={confirm} isOpen={false} onClose={() => undefined} onConfirm={() => undefined} message="Delete it?" />
+      <Modal ref={modal} open={false} onClose={() => undefined}>Body</Modal>
+      <ConfirmModal ref={confirm} open={false} onClose={() => undefined} onConfirm={() => undefined} message="Delete it?" />
       <Drawer ref={drawer} open={false} onClose={() => undefined}>Body</Drawer>
       <Sidebar ref={sidebar} sections={sections} />
       <Popover ref={popover} content="More"><Button>Open</Button></Popover>
@@ -273,7 +273,7 @@ export const App = () => (
         <Link href="/about#team" native>
           About
         </Link>
-        <Modal isOpen onClose={() => undefined} title="Title">
+        <Modal open onClose={() => undefined} title="Title">
           Body
         </Modal>
       </Layout>

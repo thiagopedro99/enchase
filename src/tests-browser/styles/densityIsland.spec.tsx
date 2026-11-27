@@ -55,7 +55,7 @@ const overlays: Overlay[] = [
   { name: 'the popover', ui: <Popover defaultOpen content={<p>Hello there</p>}><Button>Open</Button></Popover>, target: '[data-slot=popover-content]' },
   { name: 'the list of the combobox', ui: <Combobox defaultOpen label="Fruit" options={fruits} />, target: '[data-slot=combobox-option]' },
   { name: 'the calendar of the date picker', ui: <DatePicker defaultOpen label="Date" />, target: '[data-slot=date-picker-calendar-day]' },
-  { name: 'the modal', ui: <Modal isOpen onClose={noop} title="Title">Body</Modal>, target: '[data-slot=modal-close]' },
+  { name: 'the modal', ui: <Modal open onClose={noop} title="Title">Body</Modal>, target: '[data-slot=modal-close]' },
   { name: 'the drawer', ui: <Drawer open onClose={noop} title="Title">Body</Drawer>, target: '[data-slot=drawer-close]' },
   { name: 'the toast', ui: <Notifier />, target: '[data-slot=toast-close]' }
 ]

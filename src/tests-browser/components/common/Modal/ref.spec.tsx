@@ -16,7 +16,7 @@ const ModalPage = ({ target }: { target: RefObject<HTMLDivElement | null> }) => 
       <main>
         <button>Atrás</button>
       </main>
-      <Modal ref={target} title="Título" isOpen={open} onClose={() => setOpen(false)}>
+      <Modal ref={target} title="Título" open={open} onClose={() => setOpen(false)}>
         <input aria-label="Nome" />
       </Modal>
     </>

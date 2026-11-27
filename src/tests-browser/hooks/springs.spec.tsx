@@ -94,7 +94,7 @@ const ModalPage = ({ bouncy }: { bouncy?: boolean }) => {
   return (
     <>
       <button onClick={() => setOpen(true)}>Abrir</button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Título" style={bouncy ? ({ '--enchase-modal-ease': 'var(--enchase-motion-spring-bouncy)' } as never) : undefined}>
+      <Modal open={open} onClose={() => setOpen(false)} title="Título" style={bouncy ? ({ '--enchase-modal-ease': 'var(--enchase-motion-spring-bouncy)' } as never) : undefined}>
         <p>Corpo</p>
       </Modal>
     </>

@@ -522,7 +522,7 @@ describe('the modal from the hooks', () => {
       '--enchase-modal-close-color': 'rgb(16, 17, 18)'
     })
     renderInBrowser(
-      <Modal isOpen onClose={() => undefined} title="Title" footer={<span>Footer</span>}>
+      <Modal open onClose={() => undefined} title="Title" footer={<span>Footer</span>}>
         Body
       </Modal>
     )
@@ -536,7 +536,7 @@ describe('the modal from the hooks', () => {
   it('takes the vertical padding of the footer from its hook', () => {
     onRoot({ '--enchase-modal-footer-padding-block': '17px' })
     renderInBrowser(
-      <Modal isOpen onClose={() => undefined} title="Title" footer={<span>Footer</span>}>
+      <Modal open onClose={() => undefined} title="Title" footer={<span>Footer</span>}>
         Body
       </Modal>
     )
@@ -547,7 +547,7 @@ describe('the modal from the hooks', () => {
   it('takes the color of the close button while hovered and while pressed from their hooks', async () => {
     onRoot({ '--enchase-modal-close-color-hover': 'rgb(1, 2, 3)', '--enchase-modal-close-color-active': 'rgb(4, 5, 6)' })
     renderInBrowser(
-      <Modal isOpen onClose={() => undefined} title="Title">
+      <Modal open onClose={() => undefined} title="Title">
         Body
       </Modal>
     )
@@ -567,7 +567,7 @@ describe('the modal from the hooks', () => {
     renderInBrowser(
       <>
         {(['sm', 'lg', 'xl'] as const).map((size) => (
-          <Modal key={size} isOpen onClose={() => undefined} title={size} size={size}>
+          <Modal key={size} open onClose={() => undefined} title={size} size={size}>
             Body
           </Modal>
         ))}

@@ -110,7 +110,7 @@ const ModalLauncher = () => {
   return (
     <>
       <button onClick={() => setOpen(true)}>Abrir</button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title={`${worstCase.longTitle} ${worstCase.uuid}`}>
+      <Modal open={open} onClose={() => setOpen(false)} title={`${worstCase.longTitle} ${worstCase.uuid}`}>
         <p>{worstCase.longUrl}</p>
         <p>{worstCase.fileName}</p>
       </Modal>

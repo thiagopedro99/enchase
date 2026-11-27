@@ -52,7 +52,7 @@ describe('the card of the material2 style', () => {
 
 describe('the modal of the material2 style', () => {
   const opened = async (mode: 'light' | 'dark' = 'light') => {
-    show(<Modal isOpen title="Confirm" onClose={() => undefined}>Content</Modal>, mode)
+    show(<Modal open title="Confirm" onClose={() => undefined}>Content</Modal>, mode)
     await waitForSettled(() => part('modal-panel'))
   }
 

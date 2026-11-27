@@ -31,7 +31,7 @@ export const LiveStrip = () => {
       </div>
 
       <Modal
-        isOpen={modalOpen}
+        open={modalOpen}
         onClose={() => setModalOpen(false)}
         title="Edit profile"
         footer={

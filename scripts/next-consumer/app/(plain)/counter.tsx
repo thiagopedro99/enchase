@@ -14,7 +14,7 @@ export default function Counter() {
       <p data-testid="state">{`${resolvedMode} ${current}`}</p>
       <Button onClick={() => setOpen(true)}>Open</Button>
       <Button onClick={() => toast.success('Saved')}>Toast</Button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Title">
+      <Modal open={open} onClose={() => setOpen(false)} title="Title">
         Body
       </Modal>
     </div>

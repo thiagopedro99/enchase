@@ -85,7 +85,7 @@ describe('the weight of the headings of the global styles from the hook', () => 
     renderInBrowser(
       <>
         <h2>Page</h2>
-        <Modal isOpen onClose={() => undefined} title="Title">
+        <Modal open onClose={() => undefined} title="Title">
           Body
         </Modal>
       </>

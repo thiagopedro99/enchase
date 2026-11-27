@@ -64,7 +64,7 @@ const OpenModal = ({ inside, style }: { inside: boolean; style?: CSSProperties }
           <>
             <button onClick={() => setOpen(true)}>Open</button>
             <button>Beside</button>
-            <Modal isOpen={open} onClose={() => setOpen(false)} title="Inside" container={container}>
+            <Modal open={open} onClose={() => setOpen(false)} title="Inside" container={container}>
               <p>Body</p>
             </Modal>
           </>
@@ -189,7 +189,7 @@ const ModalThatFires = () => {
   return (
     <>
       <button onClick={() => setOpen(true)}>Open</button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Over the toast">
+      <Modal open={open} onClose={() => setOpen(false)} title="Over the toast">
         <button onClick={() => toast.info('Saved', 0)}>Fire</button>
       </Modal>
     </>
@@ -268,7 +268,7 @@ describe('A container given as a function that finds an element of the same tree
   it('puts a modal that is open from the first render inside the element', async () => {
     renderInBrowser(
       <div data-island="">
-        <Modal isOpen onClose={() => undefined} title="Already open" container={byQuery}>
+        <Modal open onClose={() => undefined} title="Already open" container={byQuery}>
           <p>Body</p>
         </Modal>
       </div>

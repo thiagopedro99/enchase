@@ -198,7 +198,7 @@ const overlays: Part[] = [
   { name: 'the popup of the date picker', ui: <DatePicker defaultOpen label="Date" />, target: '[data-slot=popover-content]', enchase: '266x306 > 258x296', shadcn: '266x306 > 258x296', workbench: '284x329 > 284x312' },
   { name: 'the day of the date picker', ui: <DatePicker defaultOpen label="Date" />, target: '[data-slot=date-picker-calendar-day]', enchase: '32x32 > 32x32', shadcn: '32x32 > 32x32', workbench: '36x36 > 36x36' },
   { name: 'the popover', ui: <Popover defaultOpen content={<p>Hello there</p>}><Button>Open</Button></Popover>, target: '[data-slot=popover-content]', enchase: '58 > 50', shadcn: '58 > 50', workbench: '46 > 46' },
-  { name: 'the close button of the modal', ui: <Modal isOpen onClose={noop} title="Title">Body</Modal>, target: '[data-slot=modal-close]', enchase: '32x32 > 32x32', shadcn: '32x32 > 32x32', workbench: '32x32 > 24x24' },
+  { name: 'the close button of the modal', ui: <Modal open onClose={noop} title="Title">Body</Modal>, target: '[data-slot=modal-close]', enchase: '32x32 > 32x32', shadcn: '32x32 > 32x32', workbench: '32x32 > 24x24' },
   { name: 'the close button of the drawer', ui: <Drawer open onClose={noop} title="Title">Body</Drawer>, target: '[data-slot=drawer-close]', enchase: '32x32 > 32x32', shadcn: '32x32 > 32x32', workbench: '32x32 > 24x24' },
   { name: 'the close button of the toast', ui: <Notifier />, target: '[data-slot=toast-close]', enchase: '32x32 > 32x32', shadcn: '32x32 > 32x32', workbench: '32x32 > 24x24' }
 ]

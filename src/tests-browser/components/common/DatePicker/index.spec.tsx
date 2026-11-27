@@ -345,7 +345,7 @@ describe('the colors of the DatePicker in a real browser', () => {
 describe('DatePicker inside a modal in a real browser', () => {
   it('opens above the modal with the focus on its day, and closes with Escape before the modal does', async () => {
     renderInBrowser(
-      <Modal isOpen onClose={() => undefined} title="Agenda">
+      <Modal open onClose={() => undefined} title="Agenda">
         <DatePicker label="Data" defaultValue="2026-10-15" />
       </Modal>
     )

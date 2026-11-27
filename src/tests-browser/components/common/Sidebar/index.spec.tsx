@@ -65,7 +65,7 @@ const NavbarModalPage = () => {
       <main>
         <button>Atrás</button>
       </main>
-      <Modal isOpen={modal} onClose={() => setModal(false)} title="Sobre o menu">
+      <Modal open={modal} onClose={() => setModal(false)} title="Sobre o menu">
         <input aria-label="Nome" />
       </Modal>
       <button onClick={() => setModal(true)}>Abrir modal</button>

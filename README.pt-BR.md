@@ -149,8 +149,8 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `Avatar` | `<Avatar name="Ana Souza" src="/ana.png" />`: sem `src`, ou se a imagem falhar, mostra as iniciais do nome |
 | `Alert` | `<Alert variant="warning" title="Atenção" onClose={fechar}>O prazo termina hoje.</Alert>` |
 | `Container`, `Flex`, `Grid` | `<Grid as="ul" minColumnWidth="14rem" gap="1rem">...</Grid>` |
-| `Modal` | `<Modal isOpen={open} onClose={close} title="Editar">...</Modal>` |
-| `ConfirmModal` | `<ConfirmModal isOpen={open} onClose={close} onConfirm={apagar} message="Apagar item?" />` |
+| `Modal` | `<Modal open={open} onClose={close} title="Editar">...</Modal>` |
+| `ConfirmModal` | `<ConfirmModal open={open} onClose={close} onConfirm={apagar} message="Apagar item?" />` |
 | `Drawer` | `<Drawer open={open} onClose={close} title="Filtros" side="end">...</Drawer>`: painel que desliza de uma borda da página, com portal, `container`, foco preso e a página inerte, como o `Modal`; `side` (`start` ou `end`) acompanha a direção da página |
 | `Tooltip` | `<Tooltip text="Ajuda"><button>?</button></Tooltip>` |
 | `Popover` | `<Popover label="Detalhes" content={<p>Conteúdo</p>}><button>Abrir</button></Popover>` |
@@ -234,7 +234,7 @@ Os componentes repetem o mesmo vocabulário. A lista completa de cada um está n
 | `padding` | `Card`, `CardButton`, `CardLink` | Espaço interno, um valor CSS fixo (`0`, `1rem`). Vai numa variável do card, e não num `padding` inline: uma classe sua ainda vence, e um card dentro deste não herda o valor. Para um valor que muda com o tamanho da tela, use o gancho `--enchase-card-padding` (`--enchase-card-body-padding` no corpo de um card com `header`) no seu CSS, com uma media query. |
 | `className`, `style` | Toda raiz | A classe de quem usa vence a da biblioteca. Nos campos, vão para o controle nativo, e `wrapperClassName` e `wrapperStyle` para o contêiner. No `RadioGroup` e no `CheckboxGroup`, vão para o `<fieldset>`, que é a raiz. |
 | `ref` | Os componentes que desenham um elemento | O elemento da raiz (nos campos, o controle nativo). Nas camadas flutuantes (`Modal`, `ConfirmModal`, `Drawer`, `Popover`, `Menu`, `Tooltip` e a `Sidebar` modal) é o painel, que só existe aberto: vale `null` enquanto a camada está fechada. |
-| `isOpen` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
+| `open` e `onClose` | `Modal`, `ConfirmModal` | Sempre controlados. |
 | `open` e `onClose` | `Drawer` | Sempre controlados. |
 | `value`, `defaultValue` e `onValueChange` | `RadioGroup`, `SegmentedControl`, `Tabs`, `Accordion` | Valor da opção marcada, da aba escolhida ou, no `Accordion` e no `SegmentedControl` com `multiple`, a lista dos itens abertos ou pressionados (`string[]`), controlado ou não. `onValueChange` recebe o valor que o usuário acabou de escolher. |
 | `value`, `defaultValue` e `onValueChange` (lista) | `CheckboxGroup` | A lista (`string[]`) dos valores marcados, controlada ou não. `onValueChange` recebe a lista inteira, na ordem das opções, a cada marca ou desmarca; uma opção desabilitada que está marcada continua na lista. |
@@ -832,7 +832,7 @@ Quatro níveis de configuração, do mais amplo ao mais específico:
 
 ```tsx
 <UIProvider motion={{ mode: 'auto', preset: 'subtle', recipes: { slide: { distance: 48 } } }}>
-  <Modal animation={{ recipe: 'fade' }} isOpen={open} onClose={close} />
+  <Modal animation={{ recipe: 'fade' }} open={open} onClose={close} />
   <Button animation={false}>Sem animação</Button>
 </UIProvider>
 ```
@@ -967,7 +967,7 @@ const [island, setIsland] = useState<HTMLElement | null>(null)
 
 return (
   <section data-theme="dark" ref={setIsland}>
-    <Modal isOpen={open} onClose={close} title="Settings" container={island}>
+    <Modal open={open} onClose={close} title="Settings" container={island}>
       ...
     </Modal>
   </section>

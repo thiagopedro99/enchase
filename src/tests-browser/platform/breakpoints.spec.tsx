@@ -110,7 +110,7 @@ describe('intrinsic layouts without media queries in a real browser', () => {
   it('fits the Modal inside a 320px viewport', async () => {
     await page.viewport(320, 640)
     renderInBrowser(
-      <Modal isOpen onClose={() => undefined} title="Título" size="xl">
+      <Modal open onClose={() => undefined} title="Título" size="xl">
         <p>Conteúdo</p>
       </Modal>
     )

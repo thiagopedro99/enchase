@@ -45,7 +45,7 @@ const ModalPage = ({ body = 'Texto' }: { body?: string }) => {
   return (
     <>
       <button onClick={() => setOpen(true)}>Abrir</button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Título">
+      <Modal open={open} onClose={() => setOpen(false)} title="Título">
         <p>{body}</p>
       </Modal>
     </>

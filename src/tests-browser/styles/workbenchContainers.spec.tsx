@@ -72,7 +72,7 @@ const table = <Table columns={columns} rows={rows} getRowKey={(row) => row.name}
 const plainTable = <Table columns={columns} rows={rows} getRowKey={(row) => row.name} ariaLabel="People" />
 
 const modal = (
-  <Modal isOpen onClose={() => undefined} title="Title" footer={<Button>Save</Button>}>
+  <Modal open onClose={() => undefined} title="Title" footer={<Button>Save</Button>}>
     Body
   </Modal>
 )
@@ -342,7 +342,7 @@ describe('the modal of the workbench style', () => {
   })
 
   it('gives the confirm modal the same panel, 520px wide where the original confirm is 416px because both read one width hook', async () => {
-    show(<ConfirmModal isOpen onClose={() => undefined} onConfirm={() => undefined} title="Delete" message="Sure?" />)
+    show(<ConfirmModal open onClose={() => undefined} onConfirm={() => undefined} title="Delete" message="Sure?" />)
     await waitForSettled(at('modal-panel'))
 
     expect(part('modal-panel').getBoundingClientRect().width).toBe(520)

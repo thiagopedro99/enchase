@@ -147,7 +147,7 @@ describe('the shape of the theme in a real browser', () => {
   it('reaches the surfaces that open over the page, like the dialog', async () => {
     await page.viewport(1280, 800)
     renderInBrowser(
-      <Modal isOpen onClose={() => undefined} title="Title">
+      <Modal open onClose={() => undefined} title="Title">
         Body
       </Modal>,
       'never',

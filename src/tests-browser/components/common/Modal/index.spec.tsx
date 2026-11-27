@@ -22,7 +22,7 @@ const ModalPage = ({ children = <input aria-label="Nome" />, footer = <button>Sa
         <button>Atrás</button>
         <div style={{ height: 3000 }}>Conteúdo longo</div>
       </main>
-      <Modal title="Título" {...props} footer={footer} isOpen={open} onClose={() => setOpen(false)}>
+      <Modal title="Título" {...props} footer={footer} open={open} onClose={() => setOpen(false)}>
         {children}
       </Modal>
     </>

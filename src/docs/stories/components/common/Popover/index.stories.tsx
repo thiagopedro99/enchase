@@ -151,7 +151,7 @@ const ModalDemo = (args: ComponentProps<typeof Popover>) => {
   return (
     <>
       <Button onClick={() => setOpen(true)}>Open modal</Button>
-      <Modal isOpen={open} onClose={() => setOpen(false)} title="Modal with popover">
+      <Modal open={open} onClose={() => setOpen(false)} title="Modal with popover">
         <Popover {...args}>
           <Button variant="outline">Open popover</Button>
         </Popover>

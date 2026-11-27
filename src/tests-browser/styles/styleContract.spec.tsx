@@ -176,7 +176,7 @@ describe.each(builtInStyleEntries)('the contract of the %s style in a real brows
   it.each(['light', 'dark'] as const)('keeps the overlays above the contrast floor in the %s mode', async (mode) => {
     paintPage()
     show(
-      <Modal isOpen onClose={() => undefined} title="Title" footer={<Button>Save</Button>}>
+      <Modal open onClose={() => undefined} title="Title" footer={<Button>Save</Button>}>
         <Input label="Name" />
       </Modal>,
       mode

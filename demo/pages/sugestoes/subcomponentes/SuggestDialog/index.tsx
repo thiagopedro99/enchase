@@ -68,7 +68,7 @@ const SuggestDialog = ({ isOpen, items, onClose, onSent, onSignedOut }: SuggestD
 
   return (
     <Modal
-      isOpen={isOpen}
+      open={isOpen}
       onClose={onClose}
       title="Sugerir"
       size="md"

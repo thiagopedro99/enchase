@@ -165,7 +165,7 @@ describe('the corners of the button from the hooks', () => {
     renderInBrowser(
       <>
         <ButtonLink href="/docs">Docs</ButtonLink>
-        <ConfirmModal isOpen onClose={() => undefined} onConfirm={() => undefined} message="Sure?" />
+        <ConfirmModal open onClose={() => undefined} onConfirm={() => undefined} message="Sure?" />
       </>
     )
     await expect.poll(() => parts('modal-footer').length).toBe(1)
@@ -565,7 +565,7 @@ describe('the modal, the popover and the tooltip from the hooks', () => {
   it('takes the gap of the buttons of a confirmation from its hook', () => {
     hooked(
       [['--enchase-modal-footer-gap', '17px', () => part('modal-footer')?.querySelector('[data-slot="flex"]'), 'column-gap']],
-      <ConfirmModal isOpen onClose={() => undefined} onConfirm={() => undefined} message="Sure?" />
+      <ConfirmModal open onClose={() => undefined} onConfirm={() => undefined} message="Sure?" />
     )
   })
 
