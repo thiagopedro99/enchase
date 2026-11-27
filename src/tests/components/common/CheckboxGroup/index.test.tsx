@@ -444,20 +444,30 @@ describe('CheckboxGroup required', () => {
     expect(requiredBoxes()).toHaveLength(3)
   })
 
-  it('does not listen to the reset of the form again on every render with a new defaultValue array of the same size', () => {
+  it('does not listen to the reset of the form again on every render with a new defaultValue array of the same size', async () => {
+    const user = userEvent.setup()
     const add = vi.spyOn(HTMLFormElement.prototype, 'addEventListener')
-    const form = (label: string) => (
-      <form>
-        <CheckboxGroup label={label} options={topics} defaultValue={['news']} required />
-      </form>
-    )
-    const { rerender } = renderWithProviders(form('Assuntos'))
+    const Host = () => {
+      const [count, setCount] = useState(0)
+
+      return (
+        <form>
+          <CheckboxGroup label={`Assuntos ${count}`} options={topics} defaultValue={['news']} required />
+          <button type="button" onClick={() => setCount(count + 1)}>
+            Render
+          </button>
+        </form>
+      )
+    }
+
+    renderWithProviders(<Host />)
     const resets = () => add.mock.calls.filter(([type]) => type === 'reset').length
     const before = resets()
 
-    rerender(form('Temas'))
-    rerender(form('Tópicos'))
+    await user.click(screen.getByRole('button', { name: 'Render' }))
+    await user.click(screen.getByRole('button', { name: 'Render' }))
 
+    expect(screen.getByRole('group', { name: 'Assuntos 2' })).toBeInTheDocument()
     expect(before).toBeGreaterThan(0)
     expect(resets()).toBe(before)
     add.mockRestore()
