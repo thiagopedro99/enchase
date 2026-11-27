@@ -80,6 +80,10 @@ const meta = {
       description: 'Called with the values of all the checked options, in the order of the options, each time the user checks or unchecks one. A disabled option that is checked stays in the list.',
       control: false
     },
+    required: {
+      description: 'Requires at least one checked option when the form is submitted: while none is checked, every checkbox is required (the native attribute, which screen readers announce), and once one is checked none of them is.',
+      control: 'boolean'
+    },
     error: {
       description: 'Error message. Marks every checkbox as invalid (aria-invalid), paints the title and the unchecked boxes red and is announced as an alert. It replaces the helperText. See the Validated story.',
       control: 'text'
@@ -127,6 +131,11 @@ export const WithHelperText: Story = {
 
 export const WithError: Story = {
   args: { error: 'Choose at least one topic' }
+}
+
+export const Required: Story = {
+  args: { required: true, helperText: 'Choose at least one topic' },
+  parameters: { docs: { description: { story: 'While no option is checked, the browser blocks the submission of the form and screen readers announce each checkbox as required.' } } }
 }
 
 export const DisabledOption: Story = {

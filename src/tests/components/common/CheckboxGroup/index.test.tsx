@@ -395,3 +395,81 @@ describe('CheckboxGroup contract', () => {
     expect([...off.container.querySelectorAll<HTMLElement>('[data-slot="checkbox"]')].map((box) => box.style.getPropertyValue('--enchase-checkbox-duration'))).toEqual(['0ms', '0ms', '0ms'])
   })
 })
+
+describe('CheckboxGroup required', () => {
+  const requiredBoxes = () => screen.getAllByRole('checkbox').filter((box) => (box as HTMLInputElement).required)
+
+  it('requires every checkbox while none is checked, and none once one is', async () => {
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(
+      <form>
+        <CheckboxGroup label="Assuntos" name="topics" options={topics} required />
+      </form>
+    )
+    const form = container.querySelector('form') as HTMLFormElement
+
+    expect(requiredBoxes()).toHaveLength(3)
+    expect(form.checkValidity()).toBe(false)
+
+    await user.click(screen.getByRole('checkbox', { name: 'Ofertas' }))
+
+    expect(requiredBoxes()).toHaveLength(0)
+    expect(form.checkValidity()).toBe(true)
+
+    await user.click(screen.getByRole('checkbox', { name: 'Ofertas' }))
+
+    expect(requiredBoxes()).toHaveLength(3)
+    expect(form.checkValidity()).toBe(false)
+  })
+
+  it('starts satisfied with a defaultValue and asks again after the form is reset to an empty one', async () => {
+    const user = userEvent.setup()
+    const filled = renderWithProviders(<CheckboxGroup label="Assuntos" options={topics} defaultValue={['news']} required />)
+
+    expect(requiredBoxes()).toHaveLength(0)
+    filled.unmount()
+
+    renderWithProviders(
+      <form>
+        <CheckboxGroup label="Assuntos" options={topics} required />
+        <button type="reset">Limpar</button>
+      </form>
+    )
+
+    await user.click(screen.getByRole('checkbox', { name: 'Eventos' }))
+    expect(requiredBoxes()).toHaveLength(0)
+
+    await user.click(screen.getByRole('button', { name: 'Limpar' }))
+    expect(checked()).toEqual([])
+    expect(requiredBoxes()).toHaveLength(3)
+  })
+
+  it('follows the value when it is controlled', () => {
+    const { rerender } = renderWithProviders(<CheckboxGroup label="Assuntos" options={topics} value={[]} required />)
+
+    expect(requiredBoxes()).toHaveLength(3)
+
+    rerender(<CheckboxGroup label="Assuntos" options={topics} value={['events']} required />)
+
+    expect(requiredBoxes()).toHaveLength(0)
+  })
+
+  it('adds nothing to the markup without the prop', async () => {
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<CheckboxGroup label="Assuntos" options={topics} />)
+    const before = container.innerHTML
+
+    expect(container.querySelector('[required], [aria-required]')).toBeNull()
+
+    await user.click(screen.getByRole('checkbox', { name: 'Ofertas' }))
+    await user.click(screen.getByRole('checkbox', { name: 'Ofertas' }))
+
+    expect(container.innerHTML).toBe(before)
+  })
+
+  it('has no axe violations when it is required', async () => {
+    const { container } = renderWithProviders(<CheckboxGroup label="Assuntos" options={topics} required error="Escolha ao menos um" />)
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})

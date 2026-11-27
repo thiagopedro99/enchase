@@ -14,6 +14,7 @@ export interface CheckboxGroupProps extends Omit<FieldsetHTMLAttributes<HTMLFiel
   value?: string[] | undefined
   defaultValue?: string[] | undefined
   onValueChange?: ((value: string[]) => void) | undefined
+  required?: boolean | undefined
   error?: string | undefined
   helperText?: string | undefined
   orientation?: 'vertical' | 'horizontal' | undefined
