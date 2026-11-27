@@ -278,3 +278,130 @@ describe('Button ref', () => {
     expect(ref.current).toBeNull()
   })
 })
+
+describe('Button loading', () => {
+  it('is busy and aria-disabled, keeps the focus and its name, and draws the spinner over the hidden content', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<Button loading>Save</Button>)
+    const button = screen.getByRole('button', { name: 'Save' })
+
+    expect(button).toHaveAttribute('aria-busy', 'true')
+    expect(button).toHaveAttribute('aria-disabled', 'true')
+    expect(button).not.toBeDisabled()
+    expect(button).toHaveAttribute('data-loading', '')
+    expect(button.querySelector('[data-slot="button-spinner"]')).toHaveAttribute('aria-hidden', 'true')
+    expect(button.querySelector('[data-slot="button-spinner"]')).toHaveAttribute('data-overlay', '')
+    expect(button.querySelector('[data-slot="button-content"]')).toHaveTextContent('Save')
+
+    await user.tab()
+    expect(button).toHaveFocus()
+  })
+
+  it('does not call onClick by pointer or by keyboard', async () => {
+    const user = userEvent.setup()
+    const onClick = vi.fn()
+    renderWithProviders(
+      <Button loading onClick={onClick}>
+        Save
+      </Button>
+    )
+
+    await user.click(screen.getByRole('button'))
+    await user.keyboard('{Enter}')
+    await user.keyboard(' ')
+
+    expect(onClick).not.toHaveBeenCalled()
+  })
+
+  it('does not submit the form, by the button or by Enter in a field', async () => {
+    const user = userEvent.setup()
+    const onSubmit = vi.fn((event: { preventDefault: () => void }) => event.preventDefault())
+    renderWithProviders(
+      <form onSubmit={onSubmit}>
+        <input aria-label="Name" />
+        <Button type="submit" loading>
+          Save
+        </Button>
+      </form>
+    )
+
+    await user.click(screen.getByRole('button'))
+    await user.type(screen.getByLabelText('Name'), 'Ana{Enter}')
+
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('submits again once it stops loading', async () => {
+    const user = userEvent.setup()
+    const onSubmit = vi.fn((event: { preventDefault: () => void }) => event.preventDefault())
+    const form = (loading: boolean) => (
+      <form onSubmit={onSubmit}>
+        <Button type="submit" loading={loading}>
+          Save
+        </Button>
+      </form>
+    )
+    const { rerender } = renderWithProviders(form(true))
+
+    rerender(form(false))
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(onSubmit).toHaveBeenCalledTimes(1)
+    expect(screen.getByRole('button')).not.toHaveAttribute('aria-busy')
+  })
+
+  it('shows loadingText in place of the content, next to the spinner', () => {
+    renderWithProviders(
+      <Button loading loadingText="Saving">
+        Save
+      </Button>
+    )
+    const button = screen.getByRole('button', { name: 'Saving' })
+
+    expect(button).not.toHaveTextContent('Save ')
+    expect(button.querySelector('[data-slot="button-content"]')).toBeNull()
+    expect(button.querySelector('[data-slot="button-spinner"]')).not.toHaveAttribute('data-overlay')
+  })
+
+  it('stays disabled when it is both disabled and loading', () => {
+    renderWithProviders(
+      <Button loading disabled>
+        Save
+      </Button>
+    )
+
+    expect(screen.getByRole('button')).toBeDisabled()
+  })
+
+  it('adds nothing to the markup without the prop, and ignores loadingText when it is not loading', () => {
+    const plain = renderWithProviders(<Button onClick={() => undefined}>Save</Button>)
+    const markup = plain.container.innerHTML
+
+    plain.unmount()
+
+    const withText = renderWithProviders(
+      <Button loading={false} loadingText="Saving" onClick={() => undefined}>
+        Save
+      </Button>
+    )
+
+    expect(withText.container.innerHTML).toBe(markup)
+    expect(markup).not.toMatch(/aria-busy|aria-disabled|data-loading|button-spinner|button-content/)
+  })
+
+  it('has no axe violations while loading, with and without loadingText', async () => {
+    const { container } = renderWithProviders(
+      <>
+        <Button loading>Save</Button>
+        <Button loading loadingText="Sending">
+          Send
+        </Button>
+        <Button loading iconOnly aria-label="Refresh">
+          <svg aria-hidden="true" width="16" height="16" />
+        </Button>
+      </>
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})

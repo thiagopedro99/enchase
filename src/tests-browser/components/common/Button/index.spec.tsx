@@ -4,6 +4,7 @@ import { page } from 'vitest/browser'
 
 import { Button } from '@components/common/Button/index.tsx'
 import { ButtonLink } from '@components/common/ButtonLink/index.tsx'
+import { renderInBrowser } from '../../../support/harness.tsx'
 
 const addStyle = (css: string, where: 'start' | 'end') => {
   const style = document.createElement('style')
@@ -140,5 +141,67 @@ describe('Button hover in a real browser', () => {
     await button.hover()
 
     expect(parseFloat(getComputedStyle(button.element(), '::after').opacity)).toBeGreaterThan(0)
+  })
+})
+
+describe('Button loading in a real browser', () => {
+  const icon = <svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="8" r="6" /></svg>
+
+  const cases = [
+    { name: 'text', props: {}, children: 'Salvar alterações' },
+    { name: 'small outline', props: { size: 'sm', variant: 'outline' }, children: 'Ok' },
+    { name: 'large with an icon', props: { size: 'lg', variant: 'secondary' }, children: <>{icon} Enviar</> },
+    { name: 'icon only', props: { iconOnly: true, 'aria-label': 'Atualizar' }, children: icon },
+    { name: 'full width', props: { fullWidth: true }, children: 'Continuar' }
+  ] as const
+
+  for (const { name, props, children } of cases) {
+    it(`keeps the size of the ${name} button and centers the spinner in it`, () => {
+      const idle = renderInBrowser(<div style={{ inlineSize: 320 }}><Button {...props}>{children}</Button></div>)
+      const before = (idle.container.querySelector('button') as HTMLElement).getBoundingClientRect()
+
+      idle.unmount()
+
+      const busy = renderInBrowser(<div style={{ inlineSize: 320 }}><Button {...props} loading>{children}</Button></div>)
+      const button = busy.container.querySelector('button') as HTMLElement
+      const box = button.getBoundingClientRect()
+      const spinner = (button.querySelector('[data-slot="button-spinner"]') as HTMLElement).getBoundingClientRect()
+
+      expect([box.width, box.height]).toEqual([before.width, before.height])
+      expect(Math.abs(spinner.left + spinner.width / 2 - (box.left + box.width / 2))).toBeLessThanOrEqual(0.5)
+      expect(Math.abs(spinner.top + spinner.height / 2 - (box.top + box.height / 2))).toBeLessThanOrEqual(0.5)
+      expect(spinner.width).toBeGreaterThanOrEqual(12)
+    })
+  }
+
+  it('hides the content without taking it from the accessibility tree, and spins', () => {
+    const view = renderInBrowser(<Button loading>{icon} Salvar</Button>, 'auto')
+    const button = view.container.querySelector('button') as HTMLElement
+    const content = button.querySelector('[data-slot="button-content"]') as HTMLElement
+    const spinner = button.querySelector('[data-slot="button-spinner"]') as HTMLElement
+
+    expect(getComputedStyle(content).color).toBe('rgba(0, 0, 0, 0)')
+    expect(getComputedStyle(content.querySelector('svg') as SVGElement).opacity).toBe('0')
+    expect(getComputedStyle(spinner).borderTopColor).toBe(getComputedStyle(button).color)
+    expect(getComputedStyle(spinner).animationName).not.toBe('none')
+    expect(getComputedStyle(button).cursor).toBe('progress')
+    expect(page.getByRole('button', { name: 'Salvar' }).elements()).toHaveLength(1)
+  })
+
+  it('does not spin with the motion off', () => {
+    const view = renderInBrowser(<Button loading animation={false}>Salvar</Button>, 'auto')
+
+    expect(getComputedStyle(view.container.querySelector('[data-slot="button-spinner"]') as HTMLElement).animationName).toBe('none')
+  })
+
+  it('puts the spinner before loadingText, in the flow, with the gap of the button', () => {
+    const view = renderInBrowser(<Button loading loadingText="Salvando">Salvar</Button>)
+    const button = view.container.querySelector('button') as HTMLElement
+    const spinner = (button.querySelector('[data-slot="button-spinner"]') as HTMLElement).getBoundingClientRect()
+    const box = button.getBoundingClientRect()
+
+    expect(button.textContent).toBe('Salvando')
+    expect(spinner.left).toBeGreaterThan(box.left)
+    expect(spinner.right).toBeLessThan(box.left + box.width / 2)
   })
 })

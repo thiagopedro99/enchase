@@ -12,4 +12,6 @@ export const defaultIconOnly = false
 
 export const defaultDisabled = false
 
+export const defaultLoading = false
+
 export const defaultRecipe: RecipeName = 'press'

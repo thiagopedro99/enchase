@@ -122,7 +122,7 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 
 | Componente | Exemplo mínimo |
 | --- | --- |
-| `Button` | `<Button variant="primary">Salvar</Button>` |
+| `Button` | `<Button variant="primary">Salvar</Button>`; `<Button loading={salvando} loadingText="Salvando">Salvar</Button>` mostra um spinner e ignora o clique e o envio do formulário enquanto carrega (sem `loadingText`, o botão não muda de tamanho) |
 | `ButtonLink` | `<ButtonLink href="/docs">Documentação</ButtonLink>` |
 | `Link` | `<Link href="/sobre">Sobre</Link>` |
 | `Input` | `<Input label="E-mail" type="email" error="Informe um e-mail" />` |

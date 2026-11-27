@@ -267,3 +267,74 @@
     transform: none;
   }
 }
+
+.button:where([data-loading]:not(:disabled)) {
+  cursor: progress;
+}
+
+.button[data-loading]:not(:disabled)::after {
+  opacity: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button[data-loading][data-motion]:hover:not(:disabled) {
+    transform: none;
+  }
+}
+
+.button[data-loading][data-motion]:active:not(:disabled) {
+  transform: none;
+}
+
+.spinner {
+  flex: none;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: currentColor;
+  border-inline-end-color: transparent;
+}
+
+:where(.spinner) {
+  inline-size: var(--enchase-button-spinner-size, 1em);
+  block-size: var(--enchase-button-spinner-size, 1em);
+  border-width: var(--enchase-button-spinner-border-width, 2px);
+}
+
+.spinner[data-overlay] {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+.button:not([data-motion='off']) > .spinner {
+  animation: spin var(--enchase-button-spinner-duration, 0.8s) linear infinite;
+}
+
+.content {
+  display: contents;
+  color: transparent;
+  forced-color-adjust: none;
+}
+
+.content > * {
+  opacity: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:not([data-motion='off']) > .spinner {
+    animation: pulse 1.6s var(--enchase-button-spinner-ease, var(--enchase-motion-ease-in-out)) infinite;
+  }
+}

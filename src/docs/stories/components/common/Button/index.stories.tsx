@@ -48,6 +48,16 @@ const meta = {
       control: 'boolean',
       table: { defaultValue: { summary: String(defaultIconOnly) } }
     },
+    loading: {
+      description:
+        'Shows that the action is running: a spinner takes the place of the content, which keeps its room, so the button does not change size. The button is aria-busy and aria-disabled, keeps the focus and its name, and ignores the click and the submit of its form until it stops loading.',
+      control: 'boolean',
+      table: { defaultValue: { summary: 'false' } }
+    },
+    loadingText: {
+      description: 'Text shown next to the spinner while loading, in place of the content. With it, the button takes the size of this text.',
+      control: 'text'
+    },
     disabled: {
       description: 'Disables the button and blocks the click.',
       control: 'boolean',
@@ -140,6 +150,15 @@ export const LinkVariant: Story = {
       }
     }
   }
+}
+
+export const Loading: Story = {
+  args: { loading: true, children: 'Save changes' },
+  parameters: { docs: { description: { story: 'The button keeps its size while it loads: the content stays in place, hidden, under the spinner.' } } }
+}
+
+export const LoadingWithText: Story = {
+  args: { loading: true, loadingText: 'Saving', children: 'Save changes' }
 }
 
 export const IconOnly: Story = {
