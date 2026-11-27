@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { Button, Icon, Navbar } from 'enchase'
+import { Avatar, Button, Icon, Navbar } from 'enchase'
 
 import type { SidebarSection } from 'enchase'
 import type { NavbarProps } from 'enchase'
@@ -77,6 +77,11 @@ const meta = {
         'Actions next to the menu, such as a call-to-action button. On wide screens they stay in the bar, between the menu and the theme button (data-slot="navbar-cta"). On narrow screens they go into the drawer, below the links (data-slot="navbar-drawer-cta"), and a click on a link inside them closes the drawer. The node is rendered in one place at a time.',
       control: false
     },
+    persistentActions: {
+      description:
+        'Actions that stay in the bar on every screen width, such as the sign-in button or the avatar of the user: after the actions and before the theme button (data-slot="navbar-persistent"). They never go into the drawer, so keep them small: on a narrow screen they share the line with the logo, the theme button and the menu button.',
+      control: false
+    },
     translucent: {
       description:
         'Makes the background of the bar semitransparent, blurring what passes behind it. The background comes from `--enchase-navbar-background` (default: the color `--enchase-navbar-background-solid`, which is the `surfaceContainer` of the theme, at `--enchase-navbar-background-alpha`, 0.8) and the blur from `--enchase-navbar-blur` (default `12px`), which you change in the `style` or in the CSS. With `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, forced colors or without `backdrop-filter`, the background is opaque. With the default theme, the text of the brand and of the menu keeps 4.5:1 even over pure black or white (3:1 on the accent color of the brand on hover); check the contrast if you change the color or the theme.',
@@ -99,6 +104,21 @@ export const Playground: Story = {}
 
 export const WithAction: Story = {
   args: { actions: <Button variant="primary">Get started</Button> }
+}
+
+export const WithPersistentActions: Story = {
+  args: {
+    actions: <Button variant="primary">Get started</Button>,
+    persistentActions: (
+      <>
+        <Button variant="ghost" size="sm">
+          Sign in
+        </Button>
+        <Avatar name="Ada Lovelace" size="xs" />
+      </>
+    )
+  },
+  parameters: { docs: { description: { story: 'Narrow the window: "Get started" goes into the menu, and the sign-in button and the avatar stay in the bar.' } } }
 }
 
 export const LogoWithImage: Story = {

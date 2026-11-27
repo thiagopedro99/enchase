@@ -433,3 +433,51 @@ describe('Navbar contract', () => {
     expect(screen.getByRole('dialog', { name: 'Navegação mobile', hidden: true })).toHaveAttribute('data-state', 'open')
   })
 })
+
+describe('Navbar persistent actions', () => {
+  afterEach(() => setViewportWidth(1024))
+
+  const enter = <button type="button">Entrar</button>
+  const account = <button type="button">Conta</button>
+  const follows = (first: Element, second: Element) => Boolean(first.compareDocumentPosition(second) & Node.DOCUMENT_POSITION_FOLLOWING)
+
+  it('keeps them in the bar on a wide screen, after the actions and before the theme toggle', () => {
+    setViewportWidth(1280)
+    const { container } = renderWithProviders(<Navbar sections={sections} actions={enter} persistentActions={account} />)
+    const persistent = container.querySelector('[data-slot="navbar-persistent"]') as HTMLElement
+
+    expect(within(persistent).getByRole('button', { name: 'Conta' })).toBeInTheDocument()
+    expect(follows(container.querySelector('[data-slot="navbar-cta"]') as HTMLElement, persistent)).toBe(true)
+    expect(follows(persistent, screen.getByRole('button', { name: 'Mudar para tema escuro' }))).toBe(true)
+  })
+
+  it('keeps them in the bar on a compact screen, and out of the drawer, while the actions go into it', async () => {
+    setViewportWidth(500)
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<Navbar sections={sections} actions={enter} persistentActions={account} />)
+    const bar = container.querySelector('[data-slot="navbar-bar"]') as HTMLElement
+
+    expect(within(bar).getByRole('button', { name: 'Conta' })).toBeInTheDocument()
+    expect(within(bar).queryByRole('button', { name: 'Entrar' })).not.toBeInTheDocument()
+    expect(follows(within(bar).getByRole('button', { name: 'Conta' }), within(bar).getByRole('button', { name: 'Abrir menu' }))).toBe(true)
+
+    await user.click(screen.getByRole('button', { name: 'Abrir menu' }))
+    const dialog = await screen.findByRole('dialog', { name: 'Navegação mobile' })
+
+    expect(within(dialog).getByRole('button', { name: 'Entrar' })).toBeInTheDocument()
+    expect(within(dialog).queryByRole('button', { name: 'Conta' })).not.toBeInTheDocument()
+  })
+
+  it('renders no container for them without the prop', () => {
+    const { container } = renderWithProviders(<Navbar sections={sections} actions={enter} />)
+
+    expect(container.querySelector('[data-slot="navbar-persistent"]')).toBeNull()
+  })
+
+  it('has no axe violations with them in the bar on a compact screen', async () => {
+    setViewportWidth(500)
+    const { container } = renderWithProviders(<Navbar sections={sections} persistentActions={account} />)
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})

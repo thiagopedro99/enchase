@@ -111,6 +111,11 @@ const meta = {
         'Extra content for the top bar, such as a sign-in button or the user avatar. With navigation="sidebar" it sits in the `AppBar`, before the theme toggle, on every screen width. With navigation="navbar" it is passed to the `actions` of the `Navbar`: on a wide screen it sits in the bar, before the theme toggle, and on a narrow screen it moves to the bottom of the mobile menu.',
       control: false
     },
+    persistentActions: {
+      description:
+        'Extra content for the top bar that stays in it on every screen width. With navigation="navbar" it is passed to the `persistentActions` of the `Navbar`, which keeps it in the bar on a narrow screen, where `actions` goes into the mobile menu. With navigation="sidebar" it sits in the `AppBar` after `actions`, which also stays in the bar.',
+      control: false
+    },
     navigationSections: {
       description: 'Sections of the main menu, as in Sidebar: [{ id, title?, items: [{ id, label, href?, native?, icon?, badge?, onClick? }] }].',
       control: false

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
+import { Avatar } from '@components/common/Avatar/index.tsx'
 import { Button } from '@components/common/Button/index.tsx'
 import Navbar from '@components/navbar/index.tsx'
 import { renderInBrowser } from '../../support/harness.tsx'
@@ -74,5 +75,48 @@ describe('Navbar actions in a real browser', () => {
 
     await expect.poll(() => page.getByRole('dialog').elements().length).toBe(0)
     await expect.poll(() => document.activeElement).toBe(trigger.element())
+  })
+})
+
+describe('Navbar persistent actions in a real browser', () => {
+  const account = (
+    <>
+      <Button variant="ghost" size="sm">
+        Entrar
+      </Button>
+      <Avatar name="Ana Souza" size="xs" />
+    </>
+  )
+
+  it('fits the logo, the persistent actions, the theme toggle and the menu button in one line at 360px', async () => {
+    await page.viewport(360, 800)
+    renderInBrowser(<Navbar logo="Enchase" sections={sections} actions={start} persistentActions={account} />)
+    const bar = slotOf('navbar-bar').getBoundingClientRect()
+    const logo = slotOf('navbar-logo').getBoundingClientRect()
+    const persistent = slotOf('navbar-persistent').getBoundingClientRect()
+    const toggle = page.getByRole('button', { name: 'Mudar para tema escuro' }).element().getBoundingClientRect()
+    const menu = page.getByRole('button', { name: 'Abrir menu' }).element().getBoundingClientRect()
+    const middle = (rect: DOMRect) => rect.top + rect.height / 2
+
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(document.documentElement.clientWidth)
+    expect(logo.width).toBeGreaterThan(40)
+    expect(persistent.left).toBeGreaterThanOrEqual(logo.right)
+    expect(toggle.left).toBeGreaterThanOrEqual(persistent.right)
+    expect(menu.left).toBeGreaterThanOrEqual(toggle.right)
+    expect(menu.right).toBeLessThanOrEqual(bar.right + 0.5)
+    for (const rect of [logo, persistent, toggle, menu]) expect(Math.abs(middle(rect) - middle(bar))).toBeLessThanOrEqual(2)
+    expect(document.querySelector('[data-slot="navbar-cta"]')).toBeNull()
+    await expect.element(page.getByRole('button', { name: 'Entrar' })).toBeVisible()
+  })
+
+  it('keeps them between the actions and the theme toggle on a wide viewport', async () => {
+    await page.viewport(1280, 800)
+    renderInBrowser(<Navbar logo="Enchase" sections={sections} actions={start} persistentActions={account} />)
+    const cta = slotOf('navbar-cta').getBoundingClientRect()
+    const persistent = slotOf('navbar-persistent').getBoundingClientRect()
+    const toggle = page.getByRole('button', { name: 'Mudar para tema escuro' }).element().getBoundingClientRect()
+
+    expect(persistent.left).toBeGreaterThanOrEqual(cta.right)
+    expect(persistent.right).toBeLessThanOrEqual(toggle.left + 1)
   })
 })

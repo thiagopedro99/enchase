@@ -90,6 +90,12 @@
   display: flex;
 }
 
+:where(.persistent) {
+  display: flex;
+  align-items: center;
+  gap: var(--enchase-navbar-cta-gap, var(--enchase-space-sm));
+}
+
 :where(.menuLink, .mobileMenuLink) {
   flex-shrink: 0;
   display: flex;

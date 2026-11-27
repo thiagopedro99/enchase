@@ -37,6 +37,7 @@ const Layout = ({
   footerProps,
   sidebarFooter,
   actions,
+  persistentActions,
   navigationSections = defaultNavigationSections,
   pageSections = [],
   activePageSectionId,
@@ -86,6 +87,7 @@ const Layout = ({
           actions={
             <>
               {actions}
+              {persistentActions}
               <ThemeToggle />
             </>
           }
@@ -95,7 +97,7 @@ const Layout = ({
 
       {navigation === 'navbar' && !hideNavbar && (
         <div className={styles.navbarArea} {...slot('layout', 'navbar')}>
-          <Navbar logo={brand} breakpoint={breakpoint} sections={sections} activeSectionId={activePageSectionId} actions={actions} translucent={translucent} />
+          <Navbar logo={brand} breakpoint={breakpoint} sections={sections} activeSectionId={activePageSectionId} actions={actions} persistentActions={persistentActions} translucent={translucent} />
         </div>
       )}
 

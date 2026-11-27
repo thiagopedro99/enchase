@@ -79,7 +79,7 @@ const MobileDrawer = ({ layout, id, items, activeSectionId, actions, open, state
   )
 }
 
-const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = 'md', sections = defaultSections, activeSectionId, actions, translucent = defaultTranslucent, className, style }: NavbarProps) => {
+const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = 'md', sections = defaultSections, activeSectionId, actions, persistentActions, translucent = defaultTranslucent, className, style }: NavbarProps) => {
   const [mobileOpen, setMobileOpen] = useState(false)
   const drawerId = useId()
   const { labels, breakpoints } = useUIConfig()
@@ -127,6 +127,12 @@ const Navbar = ({ logo = defaultLogo, logoHref = defaultLogoHref, breakpoint = '
               {showBarActions ? (
                 <div {...slot('navbar', 'cta')} className={styles.cta}>
                   {actions}
+                </div>
+              ) : null}
+
+              {persistentActions ? (
+                <div {...slot('navbar', 'persistent')} className={styles.persistent}>
+                  {persistentActions}
                 </div>
               ) : null}
 

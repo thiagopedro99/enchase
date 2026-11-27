@@ -485,6 +485,24 @@ describe('Layout actions', () => {
     expect(container.querySelector('[data-slot="layout-header-actions"]')?.children).toHaveLength(1)
   })
 
+  it('passes persistentActions to the navbar, where they stay in the bar on a narrow screen', () => {
+    setViewportWidth(500)
+    const { container } = renderWithProviders(page({ navigation: 'navbar', actions, persistentActions: <Button>Conta</Button> }))
+    const bar = container.querySelector('[data-slot="navbar-bar"]') as HTMLElement
+
+    expect(within(bar).getByRole('button', { name: 'Conta' })).toBeInTheDocument()
+    expect(within(bar).queryByRole('link', { name: 'Entrar' })).not.toBeInTheDocument()
+  })
+
+  it('puts persistentActions in the app bar, after the actions and before the theme toggle', () => {
+    const { container } = renderWithProviders(page({ actions, persistentActions: <Button>Conta</Button> }))
+    const slotNode = container.querySelector('[data-slot="layout-header-actions"]') as HTMLElement
+    const account = within(slotNode).getByRole('button', { name: 'Conta' })
+
+    expect(follows(within(slotNode).getByRole('button', { name: 'Criar conta' }), account)).toBe(true)
+    expect(follows(account, within(slotNode).getByRole('button', { name: 'Mudar para tema escuro' }))).toBe(true)
+  })
+
   it('has no axe violations with a link and a button as actions', async () => {
     for (const navigation of ['sidebar', 'navbar'] as const) {
       const { container, unmount } = renderWithProviders(page({ navigation, actions }))
