@@ -19,6 +19,7 @@ export interface DrawerProps {
   showCloseButton?: boolean | undefined
   closeOnOverlayClick?: boolean | undefined
   closeOnEsc?: boolean | undefined
+  initialFocus?: RefObject<HTMLElement | null> | undefined
   container?: PortalContainer | undefined
   animation?: MotionOverride | undefined
   className?: string | undefined
@@ -45,6 +46,7 @@ export interface DrawerLayerProps {
   onClose?: (() => void) | undefined
   closeOnOverlayClick?: boolean | undefined
   closeOnEsc?: boolean | undefined
+  initialFocus?: RefObject<HTMLElement | null> | undefined
   root: DrawerPart
   overlay: DrawerPart
   panel: DrawerPart

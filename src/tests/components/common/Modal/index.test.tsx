@@ -6,7 +6,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
-import { createRef, useState } from 'react'
+import { createRef, useRef, useState } from 'react'
 
 import { ConfirmModal, Modal } from '@components/common/Modal/index.tsx'
 
@@ -563,5 +563,97 @@ describe('Modal ref', () => {
 
     expect(ref.current).toBe(screen.getByRole('alertdialog'))
     expect(ref.current).toBe(document.querySelector('[data-slot="modal-panel"]'))
+  })
+})
+
+describe('Modal initial focus', () => {
+  const Form = ({ target, marked = false }: { target: 'email' | 'outside' | 'none'; marked?: boolean }) => {
+    const email = useRef<HTMLInputElement>(null)
+    const outside = useRef<HTMLButtonElement>(null)
+    const refs = { email, outside, none: undefined }
+
+    return (
+      <>
+        <button ref={outside}>Outside</button>
+        <Modal open onClose={vi.fn()} title="Sign in" initialFocus={refs[target]} footer={<button data-autofocus={marked ? '' : undefined}>Save</button>}>
+          <input aria-label="Name" />
+          <input ref={email} aria-label="Email" />
+        </Modal>
+      </>
+    )
+  }
+
+  it('focuses the element of initialFocus when the dialog opens', () => {
+    renderWithProviders(<Form target="email" />)
+
+    expect(screen.getByLabelText('Email')).toHaveFocus()
+  })
+
+  it('prefers initialFocus to an element marked with data-autofocus', () => {
+    renderWithProviders(<Form target="email" marked />)
+
+    expect(screen.getByLabelText('Email')).toHaveFocus()
+  })
+
+  it('focuses the element marked with data-autofocus when there is no initialFocus', () => {
+    renderWithProviders(<Form target="none" marked />)
+
+    expect(screen.getByRole('button', { name: 'Save' })).toHaveFocus()
+  })
+
+  it('keeps the first tabbable element without the prop and without the mark', () => {
+    renderWithProviders(<Form target="none" />)
+
+    expect(screen.getByRole('button', { name: 'Fechar modal' })).toHaveFocus()
+  })
+
+  it('ignores an initialFocus that is outside the dialog', () => {
+    renderWithProviders(<Form target="outside" />)
+
+    expect(screen.getByRole('button', { name: 'Fechar modal' })).toHaveFocus()
+  })
+
+  it('still gives the focus back to the trigger when it closes', async () => {
+    const user = userEvent.setup()
+    const Controlled = () => {
+      const [open, setOpen] = useState(false)
+      const email = useRef<HTMLInputElement>(null)
+
+      return (
+        <>
+          <button onClick={() => setOpen(true)}>Open</button>
+          <Modal open={open} onClose={() => setOpen(false)} title="Sign in" initialFocus={email} animation={false}>
+            <input ref={email} aria-label="Email" />
+          </Modal>
+        </>
+      )
+    }
+
+    renderWithProviders(<Controlled />)
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+    expect(screen.getByLabelText('Email')).toHaveFocus()
+
+    await user.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+    expect(screen.getByRole('button', { name: 'Open' })).toHaveFocus()
+  })
+})
+
+describe('ConfirmModal initial focus', () => {
+  it('starts on the cancel button, and on the element of initialFocus when one is given', () => {
+    const first = renderWithProviders(<ConfirmModal open onClose={vi.fn()} onConfirm={vi.fn()} message="Delete it?" />)
+
+    expect(screen.getByRole('button', { name: 'Cancelar' })).toHaveFocus()
+    first.unmount()
+
+    const WithRef = () => {
+      const panel = useRef<HTMLDivElement>(null)
+
+      return <ConfirmModal ref={panel} open onClose={vi.fn()} onConfirm={vi.fn()} message="Delete it?" initialFocus={panel} />
+    }
+
+    renderWithProviders(<WithRef />)
+
+    expect(screen.getByRole('alertdialog')).toHaveFocus()
   })
 })

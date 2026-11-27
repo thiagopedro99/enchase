@@ -13,14 +13,15 @@ const triggerToRestore = () => {
   return lastInteractionTarget()
 }
 
-export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, active: boolean) => {
+export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, active: boolean, initialFocus?: RefObject<HTMLElement | null>) => {
   useEffect(() => {
     const container = containerRef.current
     if (!active || !container) return
 
     const trigger = triggerToRestore()
 
-    const initialTarget = container.querySelector<HTMLElement>('[data-autofocus]')
+    const chosen = initialFocus?.current
+    const initialTarget = chosen && container.contains(chosen) ? chosen : container.querySelector<HTMLElement>('[data-autofocus]')
 
     if (initialTarget) initialTarget.focus({ preventScroll: true })
     else if (!focusInOrder(tabbablesIn(container), 0, 1)) container.focus({ preventScroll: true })
@@ -53,5 +54,5 @@ export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, active
 
       trigger.focus({ preventScroll: true })
     }
-  }, [active, containerRef])
+  }, [active, containerRef, initialFocus])
 }

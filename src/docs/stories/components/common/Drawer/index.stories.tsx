@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button, Drawer, Flex } from 'enchase'
+import { useRef, useState } from 'react'
+import { Button, Drawer, Flex, Input } from 'enchase'
 import { containerArgType } from '@docs/shared/argTypes.ts'
 import { defaultCloseOnEsc, defaultCloseOnOverlayClick, defaultShowCloseButton, defaultSide, defaultSize, filters, sides, sizes } from './defaultData.ts'
 
@@ -87,6 +87,7 @@ const meta = {
     showCloseButton: { description: 'Shows the close button in the header.', control: 'boolean', table: { defaultValue: { summary: String(defaultShowCloseButton) } } },
     closeOnOverlayClick: { description: 'Closes when the overlay is clicked.', control: 'boolean', table: { defaultValue: { summary: String(defaultCloseOnOverlayClick) } } },
     closeOnEsc: { description: 'Closes with Esc. With stacked overlays, only the top one closes.', control: 'boolean', table: { defaultValue: { summary: String(defaultCloseOnEsc) } } },
+    initialFocus: { description: 'Ref of the element that takes the focus when it opens, inside the panel. Without it, the focus goes to the first element marked with the data-autofocus attribute, or else to the first control that Tab reaches (the close button, when there is one). A ref that is not inside the panel is ignored.', control: false },
     className: { description: 'Class of the panel. It wins over the library class without !important.', control: false },
     style: { description: 'Style of the panel, merged with the library style (yours wins).', control: false },
     container: containerArgType,
@@ -136,6 +137,26 @@ export const LongContent: Story = {
       </ul>
     </DrawerDemo>
   )
+}
+
+const InitialFocusDemo = (args: ComponentProps<typeof Drawer>) => {
+  const [open, setOpen] = useState(false)
+  const search = useRef<HTMLInputElement>(null)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open with the focus on the field</Button>
+      <Drawer {...args} open={open} onClose={() => setOpen(false)} initialFocus={search} footer={<Button>Apply filters</Button>}>
+        <Input ref={search} label="Search" fullWidth />
+      </Drawer>
+    </>
+  )
+}
+
+export const InitialFocus: Story = {
+  args: { title: 'Filters' },
+  parameters: { controls: { disable: true }, docs: { description: { story: 'The drawer opens with the focus on the field, not on the close button: `initialFocus` takes the ref of the element. The attribute `data-autofocus` on an element of the content does the same without a ref.' } } },
+  render: (args) => <InitialFocusDemo {...args} />
 }
 
 export const WithoutMotion: Story = {

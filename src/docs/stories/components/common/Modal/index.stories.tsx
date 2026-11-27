@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button, Modal } from 'enchase'
+import { useRef, useState } from 'react'
+import { Button, Input, Modal } from 'enchase'
 import { containerArgType } from '@docs/shared/argTypes.ts'
 import { clauses } from './defaultData.ts'
 
@@ -66,6 +66,7 @@ const meta = {
     showCloseButton: { description: 'Shows the close button in the header.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
     closeOnOverlayClick: { description: 'Closes when the backdrop is clicked.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
     closeOnEsc: { description: 'Closes with Esc. With stacked modals, only the top one closes.', control: 'boolean', table: { defaultValue: { summary: 'true' } } },
+    initialFocus: { description: 'Ref of the element that takes the focus when it opens, inside the panel. Without it, the focus goes to the first element marked with the data-autofocus attribute, or else to the first control that Tab reaches (the close button, when there is one). A ref that is not inside the panel is ignored.', control: false },
     className: { description: 'Class of the panel. It wins over the library class without !important.', control: false },
     style: { description: 'Style of the panel, merged with the library style (yours wins).', control: false },
     container: containerArgType,
@@ -106,6 +107,26 @@ export const LongContent: Story = {
       </ol>
     </ModalDemo>
   )
+}
+
+const InitialFocusDemo = (args: ComponentProps<typeof Modal>) => {
+  const [open, setOpen] = useState(false)
+  const name = useRef<HTMLInputElement>(null)
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open with the focus on the field</Button>
+      <Modal {...args} open={open} onClose={() => setOpen(false)} initialFocus={name} footer={<Button>Save</Button>}>
+        <Input ref={name} label="Name" fullWidth />
+      </Modal>
+    </>
+  )
+}
+
+export const InitialFocus: Story = {
+  args: { title: 'Rename the project' },
+  parameters: { controls: { disable: true }, docs: { description: { story: 'The dialog opens with the focus on the field, not on the close button: `initialFocus` takes the ref of the element. The attribute `data-autofocus` on an element of the content does the same without a ref.' } } },
+  render: (args) => <InitialFocusDemo {...args} />
 }
 
 export const WithoutMotion: Story = {

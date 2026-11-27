@@ -65,6 +65,7 @@ const meta = {
       options: ['primary', 'secondary', 'outline', 'ghost', 'danger'],
       table: { defaultValue: { summary: 'primary' } }
     },
+    initialFocus: { description: 'Ref of the element that takes the focus when it opens, inside the panel. Without it, the focus starts on the cancel button, the safe choice of a confirmation.', control: false },
     container: containerArgType,
     animation: {
       description: 'false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale, as in the Modal.',

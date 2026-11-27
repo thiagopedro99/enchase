@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { describe, expect, it } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 
+import { Drawer } from '@components/common/Drawer/index.tsx'
 import { Popover } from '@components/common/Popover/index.tsx'
 import { Modal } from '@components/common/Modal/index.tsx'
 import { renderInBrowser } from '../support/harness.tsx'
@@ -104,6 +105,44 @@ describe('the Tab trap of a dialog in a real browser', () => {
     expect(seen).toContain('editable')
     expect(seen).toContain('summary')
   })
+})
+
+const WithInitialFocus = ({ kind, marked = false }: { kind: 'modal' | 'drawer'; marked?: boolean }) => {
+  const [open, setOpen] = useState(false)
+  const second = useRef<HTMLInputElement>(null)
+  const Dialog = kind === 'modal' ? Modal : Drawer
+
+  return (
+    <>
+      <button data-testid="trigger" onClick={() => setOpen(true)}>
+        Abrir
+      </button>
+      <Dialog open={open} onClose={() => setOpen(false)} title="Título" initialFocus={marked ? undefined : second} animation={false}>
+        <input data-testid="first" aria-label="Primeiro" />
+        <input ref={second} data-testid="second" aria-label="Segundo" data-autofocus={marked ? '' : undefined} />
+        <button data-testid="last">Salvar</button>
+      </Dialog>
+    </>
+  )
+}
+
+describe('the initial focus of a dialog in a real browser', () => {
+  for (const kind of ['modal', 'drawer'] as const) {
+    for (const marked of [false, true]) {
+      it(`opens the ${kind} on the element ${marked ? 'marked with data-autofocus' : 'of initialFocus'}, keeps the Tab order from there and gives the focus back`, async () => {
+        renderInBrowser(<WithInitialFocus kind={kind} marked={marked} />)
+
+        await userEvent.click(page.getByTestId('trigger'))
+        await expect.element(page.getByRole('dialog')).toBeVisible()
+
+        expect(where()).toBe('second')
+        expect(await walk(2)).toEqual(['second', 'last', `${kind}-close`])
+
+        await userEvent.keyboard('{Escape}')
+        await expect.element(page.getByTestId('trigger')).toHaveFocus()
+      })
+    }
+  }
 })
 
 describe('the Popover focus helpers in a real browser', () => {

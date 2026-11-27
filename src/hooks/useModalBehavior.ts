@@ -10,11 +10,12 @@ type ModalBehaviorOptions = {
   rootRef: RefObject<HTMLElement | null>
   dialogRef: RefObject<HTMLElement | null>
   onEscape?: (() => void) | undefined
+  initialFocus?: RefObject<HTMLElement | null> | undefined
 }
 
-export const useModalBehavior = ({ rootRef, dialogRef, onEscape }: ModalBehaviorOptions) => {
+export const useModalBehavior = ({ rootRef, dialogRef, onEscape, initialFocus }: ModalBehaviorOptions) => {
   useInertSiblings(rootRef)
-  useFocusTrap(dialogRef, true)
+  useFocusTrap(dialogRef, true, initialFocus)
   useScrollLock()
 
   useEffect(() => {

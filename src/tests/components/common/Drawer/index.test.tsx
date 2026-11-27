@@ -6,7 +6,7 @@ import { renderWithProviders } from '@tests/renderWithProviders.tsx'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
 import { axe } from '@tests/axe.ts'
-import { createRef, useState } from 'react'
+import { createRef, useRef, useState } from 'react'
 
 import { Drawer } from '@components/common/Drawer/index.tsx'
 import { useOverlayStack } from '@hooks/useOverlayStack.ts'
@@ -620,5 +620,41 @@ describe('Drawer ref', () => {
     await user.keyboard('{Escape}')
 
     await waitFor(() => expect(ref.current).toBeNull())
+  })
+})
+
+describe('Drawer initial focus', () => {
+  const Filters = ({ withRef, marked = false }: { withRef: boolean; marked?: boolean }) => {
+    const name = useRef<HTMLInputElement>(null)
+
+    return (
+      <Drawer open onClose={vi.fn()} title="Filters" initialFocus={withRef ? name : undefined} footer={<button data-autofocus={marked ? '' : undefined}>Apply</button>}>
+        <input ref={name} aria-label="Name" />
+      </Drawer>
+    )
+  }
+
+  it('focuses the element of initialFocus when the drawer opens', () => {
+    renderWithProviders(<Filters withRef />, { locale: ptBR })
+
+    expect(screen.getByLabelText('Name')).toHaveFocus()
+  })
+
+  it('prefers initialFocus to an element marked with data-autofocus', () => {
+    renderWithProviders(<Filters withRef marked />, { locale: ptBR })
+
+    expect(screen.getByLabelText('Name')).toHaveFocus()
+  })
+
+  it('focuses the element marked with data-autofocus when there is no initialFocus', () => {
+    renderWithProviders(<Filters withRef={false} marked />, { locale: ptBR })
+
+    expect(screen.getByRole('button', { name: 'Apply' })).toHaveFocus()
+  })
+
+  it('keeps the first tabbable element without the prop and without the mark', () => {
+    renderWithProviders(<Filters withRef={false} />, { locale: ptBR })
+
+    expect(screen.getByRole('button', { name: 'Fechar modal' })).toHaveFocus()
   })
 })

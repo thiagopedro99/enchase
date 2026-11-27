@@ -6,12 +6,12 @@ import { mergeRefs } from '@utils/mergeRefs.ts'
 
 import type { DrawerLayerProps } from './types.ts'
 
-export const DrawerLayer = ({ open, state, panelRef, userRef, label, labelledBy, onClose, closeOnOverlayClick = true, closeOnEsc = true, root, overlay, panel, children }: DrawerLayerProps) => {
+export const DrawerLayer = ({ open, state, panelRef, userRef, label, labelledBy, onClose, closeOnOverlayClick = true, closeOnEsc = true, initialFocus, root, overlay, panel, children }: DrawerLayerProps) => {
   const rootRef = useRef<HTMLDivElement>(null)
   const isTop = useOverlayStack(open)
   const mergedPanelRef = useMemo(() => mergeRefs(panelRef, userRef), [panelRef, userRef])
 
-  useModalBehavior({ rootRef, dialogRef: panelRef, onEscape: closeOnEsc ? () => isTop() && onClose?.() : undefined })
+  useModalBehavior({ rootRef, dialogRef: panelRef, onEscape: closeOnEsc ? () => isTop() && onClose?.() : undefined, initialFocus })
 
   return (
     <div ref={rootRef} {...root}>

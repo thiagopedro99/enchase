@@ -1,7 +1,7 @@
 import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { ButtonVariant } from '../Button/types.ts'
 import type { MotionOverride } from '@motion/types.ts'
-import type { CSSProperties, ReactNode, Ref } from 'react'
+import type { CSSProperties, ReactNode, Ref, RefObject } from 'react'
 
 export type ModalSize = 'sm' | 'md' | 'lg' | 'xl' | 'full'
 
@@ -18,6 +18,7 @@ export interface ModalProps {
   showCloseButton?: boolean | undefined
   closeOnOverlayClick?: boolean | undefined
   closeOnEsc?: boolean | undefined
+  initialFocus?: RefObject<HTMLElement | null> | undefined
   size?: ModalSize | undefined
   container?: PortalContainer | undefined
   animation?: MotionOverride | undefined
@@ -38,6 +39,7 @@ export interface ConfirmModalProps {
   confirmText?: string | undefined
   cancelText?: string | undefined
   confirmVariant?: ButtonVariant | undefined
+  initialFocus?: RefObject<HTMLElement | null> | undefined
   ref?: Ref<HTMLDivElement> | undefined
   container?: PortalContainer | undefined
   animation?: MotionOverride | undefined

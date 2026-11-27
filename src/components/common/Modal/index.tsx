@@ -34,6 +34,7 @@ const ModalDialog = ({
   showCloseButton,
   closeOnOverlayClick,
   closeOnEsc,
+  initialFocus,
   size,
   className,
   style,
@@ -48,7 +49,7 @@ const ModalDialog = ({
   const { labels } = useUIConfig()
   const isTop = useOverlayStack(open)
 
-  useModalBehavior({ rootRef, dialogRef: panelRef, onEscape: closeOnEsc ? () => isTop() && onClose() : undefined })
+  useModalBehavior({ rootRef, dialogRef: panelRef, onEscape: closeOnEsc ? () => isTop() && onClose() : undefined, initialFocus })
 
   const panelProps = mergeProps(
     {
@@ -157,6 +158,7 @@ export const ConfirmModal = ({
   confirmText,
   cancelText,
   confirmVariant = 'primary',
+  initialFocus,
   container,
   animation,
   className,
@@ -176,6 +178,7 @@ export const ConfirmModal = ({
       onClose={onClose}
       title={title ?? labels.confirmAction}
       role="alertdialog"
+      initialFocus={initialFocus}
       container={container}
       animation={animation}
       className={className}
