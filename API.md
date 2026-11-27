@@ -941,7 +941,7 @@ A text tooltip for a trigger, opened by pointer and by focus. It gives the trigg
 | `closeDelay` | `number` | `120` | Milliseconds between leaving the trigger and hiding the tooltip. Moving the pointer onto the tooltip itself keeps it open. |
 | `className` | `string` | — | Class of the element that wraps the trigger (data-slot="tooltip-trigger"). |
 | `style` | `CSSProperties` | — | Style of the element that wraps the trigger. |
-| `bubbleClassName` | `string` | — | Class of the tooltip (data-slot="tooltip-bubble"). You can also style it by data-slot, data-position and data-state. |
+| `bubbleClassName` | `string` | — | Class of the tooltip (data-slot="tooltip-bubble"). You can also style it by data-slot, data-placement and data-state. |
 | `bubbleStyle` | `CSSProperties` | — | Style of the tooltip. |
 | `ref` | `Ref<HTMLSpanElement>` | — | Ref of the bubble (`<span data-slot="tooltip-bubble">`), the element that receives `bubbleClassName` and `bubbleStyle`. It is `null` while the tooltip is hidden, because the bubble is not in the page then. |
 
