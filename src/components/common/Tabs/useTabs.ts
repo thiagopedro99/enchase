@@ -6,7 +6,7 @@ import { composeProps } from '@utils/composeProps.ts'
 import { mergeRefs } from '@utils/mergeRefs.ts'
 
 import type { UseTabsOptions, UseTabsReturn } from './types.ts'
-import type { KeyboardEvent, Ref } from 'react'
+import type { KeyboardEvent, MouseEvent, Ref } from 'react'
 
 type Props = Record<string, unknown>
 
@@ -67,7 +67,10 @@ export const useTabs = ({ items, value, defaultValue, onValueChange, activation 
       'aria-controls': panelId(index),
       tabIndex: known && index === tabbableIndex ? 0 : -1,
       disabled: items[index]?.disabled,
-      onClick: () => setSelected(tabValue)
+      onClick: (event: MouseEvent<HTMLElement>) => {
+        setSelected(tabValue)
+        event.currentTarget.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
+      }
     }
 
     return {

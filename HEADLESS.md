@@ -76,7 +76,7 @@ The state that your CSS needs, such as `data-state="on"`, `data-open` or `data-d
 useTabs({ items, value?, defaultValue?, onValueChange?, activation? })
 ```
 
-`activation` is `'automatic'` (the default) or `'manual'`. The arrows and `Home` and `End` move the focus along the enabled tabs (the arrows wrap around and swap in right to left), and in automatic activation the focused tab is the selected one; in manual activation `Enter`, `Space` or a click selects. Only the selected tab (or the first enabled one) is in the tab order. It returns `selected`, `activeIndex`, `tabbableIndex`, `select(value)`, `getListProps`, `getTabProps(value)` and `getPanelProps(value)`. Put the list `aria-label` in the argument of `getListProps`.
+`activation` is `'automatic'` (the default) or `'manual'`. The arrows and `Home` and `End` move the focus along the enabled tabs (the arrows wrap around and swap in right to left), and in automatic activation the focused tab is the selected one; in manual activation `Enter`, `Space` or a click selects. Only the selected tab (or the first enabled one) is in the tab order, and `getListProps` gives the list `tabIndex: -1`, so a list that scrolls sideways is not a tab stop of its own in Firefox. A tab that is clicked, or reached by keyboard, is scrolled into view when the list does not show it whole. It returns `selected`, `activeIndex`, `tabbableIndex`, `select(value)`, `getListProps`, `getTabProps(value)` and `getPanelProps(value)`. Put the list `aria-label` in the argument of `getListProps`.
 
 ## usePagination
 

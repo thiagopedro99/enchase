@@ -408,3 +408,73 @@ describe('Tabs in forced colors', () => {
     expect(contrastRatio(indicator.borderBottomColor, canvas)).toBeGreaterThanOrEqual(3)
   })
 })
+
+describe('Tabs list that does not fit in a real browser', () => {
+  const list = () => part('tabs-list')
+
+  it('hides its scrollbar, so the list is as tall when the tabs overflow as when they fit, and stays out of the Tab order', () => {
+    const wide = renderInBrowser(
+      <div style={{ inlineSize: 2400 }}>
+        <Tabs ariaLabel="Abas" items={many} />
+      </div>
+    )
+    const fitting = list().getBoundingClientRect().height
+    const tabHeight = tab(0).getBoundingClientRect().height
+
+    expect(list().scrollWidth).toBeLessThanOrEqual(list().clientWidth)
+    wide.unmount()
+    renderInBrowser(
+      <div style={{ inlineSize: 320 }}>
+        <Tabs ariaLabel="Abas" items={many} />
+      </div>
+    )
+
+    expect(list().scrollWidth).toBeGreaterThan(list().clientWidth)
+    expect(getComputedStyle(list()).scrollbarWidth).toBe('none')
+    if (CSS.supports('selector(::-webkit-scrollbar)')) expect(getComputedStyle(list(), '::-webkit-scrollbar').display).toBe('none')
+    expect(list().getBoundingClientRect().height).toBe(fitting)
+    expect(list().offsetHeight).toBe(list().clientHeight)
+    expect(tab(0).getBoundingClientRect().height).toBe(tabHeight)
+    expect(list().getAttribute('tabindex')).toBe('-1')
+  })
+
+  it('reveals the whole tab that is cut at the edge when it is clicked, and shows the next one', async () => {
+    renderInBrowser(
+      <div style={{ inlineSize: 320 }}>
+        <Tabs ariaLabel="Abas" items={many} />
+      </div>
+    )
+    const box = () => list().getBoundingClientRect()
+    const cut = many.findIndex((_, index) => tab(index).getBoundingClientRect().left < box().right && tab(index).getBoundingClientRect().right > box().right + 1)
+
+    expect(cut).toBeGreaterThan(0)
+    expect(cut).toBeLessThan(many.length - 1)
+
+    await userEvent.click(tab(cut), { position: { x: 4, y: 8 } })
+
+    expect(tab(cut).getBoundingClientRect().right).toBeLessThanOrEqual(box().right - 8)
+    expect(tab(cut).getBoundingClientRect().left).toBeGreaterThanOrEqual(box().left)
+    expect(tab(cut + 1).getBoundingClientRect().left).toBeLessThan(box().right - 8)
+    expect(checkedTab()).toBe(many[cut].label)
+    expect(window.scrollX).toBe(0)
+    expect(window.scrollY).toBe(0)
+  })
+
+  it('reveals the tab that is cut at the start edge when it is clicked, in right-to-left text', async () => {
+    renderInBrowser(
+      <div dir="rtl" style={{ inlineSize: 320 }}>
+        <Tabs ariaLabel="Abas" items={many} />
+      </div>
+    )
+    const box = () => list().getBoundingClientRect()
+    const cut = many.findIndex((_, index) => tab(index).getBoundingClientRect().right > box().left && tab(index).getBoundingClientRect().left < box().left - 1)
+
+    expect(cut).toBeGreaterThan(0)
+
+    await userEvent.click(tab(cut), { position: { x: tab(cut).getBoundingClientRect().width - 4, y: 8 } })
+
+    expect(tab(cut).getBoundingClientRect().left).toBeGreaterThanOrEqual(box().left + 8)
+    expect(tab(cut + 1).getBoundingClientRect().right).toBeGreaterThan(box().left + 8)
+    expect(checkedTab()).toBe(many[cut].label)
+  })
+})

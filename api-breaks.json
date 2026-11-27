@@ -1,67 +1,10 @@
 {
-  "since": "0.27.0",
-  "breaks": [
-    {
-      "key": "removed enchase ModalProps.isOpen",
-      "note": "the Modal opens with open, as the Drawer, the Menu and the Popover do: rename isOpen to open"
-    },
-    {
-      "key": "added required enchase ModalProps.open",
-      "note": "the Modal opens with open, as the Drawer, the Menu and the Popover do: rename isOpen to open"
-    },
-    {
-      "key": "removed enchase ConfirmModalProps.isOpen",
-      "note": "the ConfirmModal opens with open, as the Modal does: rename isOpen to open"
-    },
-    {
-      "key": "added required enchase ConfirmModalProps.open",
-      "note": "the ConfirmModal opens with open, as the Modal does: rename isOpen to open"
-    },
-    {
-      "key": "removed enchase TooltipProps.position",
-      "note": "the side of the Tooltip is placement, as in the Menu and the Popover: rename position to placement. The values are the same"
-    },
-    {
-      "key": "removed enchase TooltipPosition",
-      "note": "the type of the placement of the Tooltip is TooltipPlacement; TooltipPosition is gone"
-    },
-    {
-      "key": "changed enchase TooltipPlacement",
-      "note": "TooltipPlacement is now the type of the placement prop, with start and end besides the four sides; the four sides alone are TooltipSide"
-    },
-    {
-      "key": "removed enchase MenuProps.label",
-      "note": "the accessible name of the Menu is ariaLabel, as in the Drawer, the Modal and the Tabs: rename label to ariaLabel. The label of each item stays"
-    },
-    {
-      "key": "added required enchase MenuProps.ariaLabel",
-      "note": "the accessible name of the Menu is ariaLabel, as in the Drawer, the Modal and the Tabs: rename label to ariaLabel. The label of each item stays"
-    },
-    {
-      "key": "removed enchase PopoverProps.label",
-      "note": "the accessible name of the Popover is ariaLabel: rename label to ariaLabel"
-    },
-    {
-      "key": "changed enchase/headless/segmented-control UseSegmentedControlReturn.getGroupProps",
-      "note": "getGroupProps of useSegmentedControl also returns tabIndex: -1, as getListProps of useTabs does: a group that scrolls is a tab stop of its own in Firefox. Nothing to change unless you read the exact return type; pass tabIndex to getGroupProps to override it"
-    }
-  ],
+  "since": "0.28.0",
+  "breaks": [],
   "behavior": [
     {
-      "key": "field-min-width",
-      "note": "the 200px minimum width of Input, Textarea, NumberInput, Select, Combobox and DatePicker (--enchase-input-min-width) no longer goes past the container: in a container narrower than the minimum the field shrinks with it, where it used to stick out. With room, a field measures what it did. The computed min-inline-size of the control is now min(<the hook>, 100%), and the root of each field has a ::before with no height that holds the minimum"
-    },
-    {
-      "key": "segmented-control-nowrap",
-      "note": "the SegmentedControl no longer breaks a label, and scrolls sideways when the options do not fit: it used to break the labels anywhere, also inside a word, and grow taller. With fullWidth, an option whose label does not fit in an equal share takes the width of its label, and the others share the rest. The root, which now scrolls, has tabindex=\"-1\" (and getGroupProps of useSegmentedControl returns tabIndex: -1), so it is not a tab stop of its own in Firefox"
-    },
-    {
-      "key": "tooltip-data-placement",
-      "note": "the bubble of the Tooltip says its side in data-placement, as the Popover does, and no longer in data-position: rename the attribute in a selector of yours that styles the bubble by its side"
-    },
-    {
-      "key": "board-move-menu",
-      "note": "in the experimental Board, the move-to menu names a column by its label, or by its title when the title is text, where it showed the whole title node; with sortable={false} it leaves out the column the card is in, and a card with nowhere to go has no menu button. The native drag of a link or an image inside a card is cancelled, so a click that shakes still reaches the link"
+      "key": "tabs-scrollbar-hidden",
+      "note": "the list of the Tabs hides its scrollbar when the tabs do not fit, as the SegmentedControl does: a classic scrollbar made the list 10px taller. A tab that is clicked comes whole into view, with room for the next one to show, as a tab reached by keyboard already did; useTabs does the same in the onClick of getTabProps"
     }
   ]
 }
