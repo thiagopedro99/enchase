@@ -218,7 +218,7 @@ describe('SegmentedControl layout in a real browser', () => {
     expect(style('segmented-control-item', 1).borderInlineStartWidth).toBe('1px')
     expect(style('segmented-control-item', 2).borderInlineStartWidth).toBe('1px')
     expect(parseFloat(style('segmented-control').borderTopLeftRadius)).toBeGreaterThan(8)
-    expect(style('segmented-control').overflow).toBe('hidden')
+    expect([style('segmented-control').overflowX, style('segmented-control').overflowY]).toEqual(['auto', 'hidden'])
   })
 
   it('fills the container with options of the same width when full width', () => {
@@ -233,7 +233,38 @@ describe('SegmentedControl layout in a real browser', () => {
     expect(Math.max(...widths) - Math.min(...widths)).toBeLessThanOrEqual(1)
   })
 
-  it('breaks long labels and stays inside a narrow container', () => {
+  const styleNames = ['Enchase', 'Material 2', 'Material 3', 'shadcn', 'Workbench'].map((label) => ({ value: label, label }))
+
+  const linesOf = (item: HTMLElement) => {
+    const range = document.createRange()
+
+    range.selectNodeContents(item)
+
+    return new Set([...range.getClientRects()].map((rect) => Math.round(rect.top))).size
+  }
+
+  for (const fullWidth of [false, true]) {
+    it(`never breaks a label and scrolls inside a narrow container${fullWidth ? ' when full width' : ''}`, () => {
+      renderInBrowser(
+        <div style={{ inlineSize: 280 }}>
+          <SegmentedControl ariaLabel="Estilo" items={styleNames} fullWidth={fullWidth} />
+        </div>
+      )
+      const group = part('segmented-control')
+      const container = group.parentElement as HTMLElement
+
+      expect(container.scrollWidth).toBeLessThanOrEqual(container.clientWidth)
+      expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(document.documentElement.clientWidth)
+      expect(group.getBoundingClientRect().width).toBeLessThanOrEqual(280)
+      expect(group.scrollWidth).toBeGreaterThan(group.clientWidth)
+      items().forEach((item) => {
+        expect(linesOf(item), item.textContent ?? '').toBe(1)
+        expect(item.scrollWidth, item.textContent ?? '').toBeLessThanOrEqual(item.clientWidth)
+      })
+    })
+  }
+
+  it('keeps one long word whole and scrolls to it', () => {
     const word = 'Benachrichtigungseinstellungsverwaltungsseite'
 
     renderInBrowser(
@@ -241,10 +272,51 @@ describe('SegmentedControl layout in a real browser', () => {
         <SegmentedControl ariaLabel="Visão" items={[{ value: 'a', label: word }, { value: 'b', label: word }]} />
       </div>
     )
-    const container = part('segmented-control').parentElement as HTMLElement
+    const group = part('segmented-control')
+    const container = group.parentElement as HTMLElement
 
     expect(container.scrollWidth).toBeLessThanOrEqual(container.clientWidth)
-    expect(part('segmented-control').getBoundingClientRect().width).toBeLessThanOrEqual(180)
+    expect(group.getBoundingClientRect().width).toBeLessThanOrEqual(180)
+    expect(linesOf(items()[0])).toBe(1)
+    expect(group.scrollWidth).toBeGreaterThan(group.clientWidth)
+  })
+
+  it('brings the option that takes the focus into view', async () => {
+    renderInBrowser(
+      <div style={{ inlineSize: 280 }}>
+        <SegmentedControl ariaLabel="Estilo" items={styleNames} defaultValue="Enchase" />
+      </div>
+    )
+    const group = part('segmented-control')
+    const inside = (item: HTMLElement) => item.getBoundingClientRect().left >= group.getBoundingClientRect().left - 1 && item.getBoundingClientRect().right <= group.getBoundingClientRect().right + 1
+
+    expect(inside(items()[4])).toBe(false)
+
+    await userEvent.keyboard('{Tab}{End}')
+
+    expect(items()[4]).toHaveFocus()
+    expect(inside(items()[4])).toBe(true)
+    expect(window.scrollX).toBe(0)
+
+    await userEvent.keyboard('{Home}')
+
+    expect(inside(items()[0])).toBe(true)
+  })
+
+  it('gives the options their own width when they do not fit in equal parts of a full width control', () => {
+    renderInBrowser(
+      <div style={{ inlineSize: 420 }}>
+        <SegmentedControl ariaLabel="Visão" items={[views[0], { value: 'long', label: 'Uma opção bem mais comprida' }, views[2]]} fullWidth />
+      </div>
+    )
+    const group = part('segmented-control')
+    const widths = items().map((item) => Math.round(item.getBoundingClientRect().width))
+
+    expect(Math.round(group.getBoundingClientRect().width)).toBe(420)
+    expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth)
+    expect(widths[1]).toBeGreaterThan(widths[0])
+    expect(Math.abs(widths[0] - widths[2])).toBeLessThanOrEqual(1)
+    expect(linesOf(items()[1])).toBe(1)
   })
 
   it('puts the icon and the word side by side with a gap', () => {

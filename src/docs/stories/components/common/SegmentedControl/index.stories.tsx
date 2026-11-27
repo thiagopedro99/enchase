@@ -181,6 +181,25 @@ export const FullWidth: Story = {
   parameters: { layout: 'padded' }
 }
 
+const styleNames = [
+  { value: 'enchase', label: 'Enchase' },
+  { value: 'material2', label: 'Material 2' },
+  { value: 'material3', label: 'Material 3' },
+  { value: 'shadcn', label: 'shadcn' },
+  { value: 'workbench', label: 'Workbench' }
+]
+
+export const NarrowContainer: Story = {
+  args: { items: styleNames, defaultValue: 'enchase', ariaLabel: 'Style' },
+  render: (args) => (
+    <div style={{ display: 'grid', gap: '1rem', inlineSize: '18rem', maxInlineSize: '100%' }}>
+      <SegmentedControl {...args} />
+      <SegmentedControl {...args} fullWidth ariaLabel="Style, full width" />
+    </div>
+  ),
+  parameters: { docs: { description: { story: 'In a container narrower than the options, a label never breaks inside a word and the control never grows past the container: it scrolls sideways. The keyboard brings the focused option into view.' } } }
+}
+
 export const Multiple: Story = {
   parameters: {
     controls: { disable: true },

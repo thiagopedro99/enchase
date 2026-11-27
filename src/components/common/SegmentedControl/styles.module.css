@@ -6,7 +6,10 @@
   min-inline-size: 0;
   max-inline-size: 100%;
   margin: 0;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
   padding: var(--enchase-segmented-control-padding, 0);
   border: var(--enchase-segmented-control-border-width, var(--enchase-border-width, 1px)) solid var(--enchase-segmented-control-border-color, var(--enchase-color-border-strong));
   background-color: var(--enchase-segmented-control-background, transparent);
@@ -30,8 +33,13 @@
   min-block-size: var(--enchase-control-height-lg, 3rem);
 }
 
+.group[data-full-width] {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(max-content, 1fr);
+}
+
 :where(.group[data-full-width]) {
-  display: flex;
   inline-size: 100%;
 }
 
@@ -39,6 +47,7 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  flex: none;
   justify-content: center;
   box-sizing: border-box;
   min-inline-size: 24px;
@@ -50,7 +59,7 @@
   font-weight: var(--enchase-segmented-control-item-font-weight, var(--enchase-font-weight-medium));
   line-height: var(--enchase-segmented-control-item-line-height, var(--enchase-line-height-tight, 1.2));
   text-align: center;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
   cursor: pointer;
   user-select: none;
   appearance: none;
@@ -68,10 +77,6 @@
 
 .item + .item {
   border-inline-start: var(--enchase-segmented-control-item-border-width, var(--enchase-border-width, 1px)) solid var(--enchase-segmented-control-item-border-color, var(--enchase-color-border-strong));
-}
-
-:where(.group[data-full-width] .item) {
-  flex: 1 1 0;
 }
 
 :where(.group[data-size='sm'] .item) {
@@ -92,6 +97,10 @@
   padding-block: var(--enchase-segmented-control-item-padding-block-lg, var(--enchase-space-xs));
   padding-inline: var(--enchase-segmented-control-item-padding-inline-lg, var(--enchase-space-lg));
   font-size: var(--enchase-segmented-control-item-font-size-lg, var(--enchase-font-size-base));
+}
+
+:where(.group[data-full-width] .item) {
+  inline-size: 100%;
 }
 
 .item:where([aria-checked='true'], [aria-pressed='true']) {
