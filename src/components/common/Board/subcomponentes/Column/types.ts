@@ -1,11 +1,12 @@
 import type { ReactNode } from 'react'
 import type { BoardColumnView, UseBoardResult } from '../../useBoard.ts'
-import type { BoardItem } from '../../types.ts'
+import type { BoardColumn, BoardItem } from '../../types.ts'
 
 export type ColumnProps<Item extends BoardItem> = {
   view: BoardColumnView<Item>
   renderCard: (item: Item) => ReactNode
   getItemLabel: (item: Item) => string
+  renderEmpty?: ((column: BoardColumn) => ReactNode) | undefined
   board: UseBoardResult<Item>
 }
 

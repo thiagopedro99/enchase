@@ -66,6 +66,9 @@ const browserOptions = (provider = playwright()) => ({
       await context.page.mouse.move(0, 0)
       await context.page.mouse.up()
     },
+    liftMouse: async (context: { page: Page }) => {
+      await context.page.mouse.up()
+    },
     moveMouse: async (context: { page: Page }, x: number, y: number, steps?: number) => {
       await context.page.mouse.move(x, y, { steps })
     },

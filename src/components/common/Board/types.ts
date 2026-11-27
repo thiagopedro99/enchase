@@ -5,6 +5,7 @@ export type BoardColumn = {
   id: string
   title: ReactNode
   label?: string | undefined
+  description?: ReactNode | undefined
 }
 
 export type BoardPosition = {
@@ -26,6 +27,7 @@ export interface BoardProps<Item extends BoardItem> {
   onMove: (move: BoardMove<Item>) => void
   renderCard: (item: Item) => ReactNode
   getItemLabel: (item: Item) => string
+  renderEmpty?: ((column: BoardColumn) => ReactNode) | undefined
   ariaLabel?: string | undefined
   ariaLabelledBy?: string | undefined
   sortable?: boolean | undefined

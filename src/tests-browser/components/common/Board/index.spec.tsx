@@ -7,7 +7,7 @@ import UIProvider from '@components/uiProvider/index.tsx'
 import { ptBR } from '@locales/ptBR.ts'
 import { renderInBrowser } from '../../../support/harness.tsx'
 import { part, parts } from '../../../support/hookProbes.ts'
-import { letGoOfTheMouse, moveMouse, parkMouse, pressMouse, releaseMouse } from '../../../support/pointer.ts'
+import { letGoOfTheMouse, liftMouse, moveMouse, parkMouse, pressMouse, releaseMouse } from '../../../support/pointer.ts'
 import { frames } from '../../../support/settle.ts'
 import { setForcedColors } from '../../../support/media.ts'
 import { unlessWebkit } from '../../../support/browserSkips.ts'
@@ -348,5 +348,93 @@ describe('Board in a real browser', () => {
     await frames(2)
 
     expect(document.documentElement.hasAttribute('data-enchase-board-dragging')).toBe(false)
+  })
+})
+
+describe('Board additions in a real browser', () => {
+  const pixel = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
+
+  it('keeps the click of a link when the pointer shakes on it, and never starts the native drag or a move', async () => {
+    const onClick = vi.fn((event: { preventDefault: () => void }) => event.preventDefault())
+    const onMove = vi.fn()
+    const drags: boolean[] = []
+    const record = (event: Event) => drags.push(event.defaultPrevented)
+
+    document.addEventListener('dragstart', record)
+    renderInBrowser(
+      <Board<Item>
+        columns={columns}
+        items={defaultItems}
+        onMove={onMove}
+        getItemLabel={(item) => item.title}
+        renderCard={(item) => (
+          <a href="/detalhe" data-testid={`link-${item.id}`} onClick={onClick} style={{ display: 'inline-block', padding: 8, whiteSpace: 'nowrap' }}>
+            <img alt="" src={pixel} width={24} height={24} /> {item.id}
+          </a>
+        )}
+      />
+    )
+    const link = page.getByTestId('link-1').element().getBoundingClientRect()
+
+    await pressMouse('[data-testid="link-1"]')
+    await moveMouse(link.left + link.width / 2 + 3, link.top + link.height / 2 + 2, 3)
+    await moveMouse(link.left + link.width / 2 + 9, link.top + link.height / 2 + 7, 4)
+    await moveMouse(link.left + link.width / 2 + 2, link.top + link.height / 2 + 1, 4)
+    await liftMouse()
+    await frames(2)
+    document.removeEventListener('dragstart', record)
+
+    expect(drags.every(Boolean)).toBe(true)
+    expect(onClick).toHaveBeenCalledTimes(1)
+    expect(onMove).not.toHaveBeenCalled()
+    expect(document.querySelector('[data-slot="board-drag-copy"]')).toBeNull()
+  })
+
+  it('draws the description under the title, inside the column, and wraps a long one', () => {
+    renderInBrowser(
+      <div style={{ inlineSize: 540 }}>
+        <Board<Item>
+          columns={[
+            { id: 'todo', title: 'A fazer', description: 'Sugestões que ainda ninguém pegou para fazer, da mais votada para a menos votada' },
+            { id: 'doing', title: 'Em andamento' }
+          ]}
+          items={defaultItems}
+          onMove={vi.fn()}
+          getItemLabel={(item) => item.title}
+          renderCard={(item) => <p>{item.title}</p>}
+        />
+      </div>
+    )
+    const column = part('board-column').getBoundingClientRect()
+    const title = part('board-column-title').getBoundingClientRect()
+    const description = part('board-column-description').getBoundingClientRect()
+    const list = part('board-column-list').getBoundingClientRect()
+
+    expect(description.top).toBeGreaterThanOrEqual(title.bottom)
+    expect(description.bottom).toBeLessThanOrEqual(list.top)
+    expect(description.left).toBeGreaterThanOrEqual(column.left)
+    expect(description.right).toBeLessThanOrEqual(column.right)
+    expect(description.height).toBeGreaterThan(parseFloat(getComputedStyle(part('board-column-description')).fontSize) * 2)
+    expect(Math.round(description.left + parseFloat(getComputedStyle(part('board-column-description')).paddingLeft))).toBe(Math.round(title.left))
+  })
+
+  it('shows a custom empty content inside the dashed box of the empty column', () => {
+    renderInBrowser(
+      <Board<Item>
+        columns={columns}
+        items={defaultItems}
+        onMove={vi.fn()}
+        getItemLabel={(item) => item.title}
+        renderCard={(item) => <p>{item.title}</p>}
+        renderEmpty={(column) => <button type="button">Sugerir em {String(column.title)}</button>}
+      />
+    )
+    const empty = part('board-empty')
+    const button = page.getByRole('button', { name: 'Sugerir em Concluído' }).element().getBoundingClientRect()
+    const box = empty.getBoundingClientRect()
+
+    expect(getComputedStyle(empty).borderTopStyle).toBe('dashed')
+    expect(button.left).toBeGreaterThanOrEqual(box.left)
+    expect(button.right).toBeLessThanOrEqual(box.right)
   })
 })

@@ -1,12 +1,14 @@
 import { commands } from 'vitest/browser'
 
-type PointerCommands = { pressMouse: (selector: string) => Promise<void>; releaseMouse: () => Promise<void>; parkMouse: () => Promise<void>; moveMouse: (x: number, y: number, steps?: number) => Promise<void> }
+type PointerCommands = { pressMouse: (selector: string) => Promise<void>; releaseMouse: () => Promise<void>; liftMouse: () => Promise<void>; parkMouse: () => Promise<void>; moveMouse: (x: number, y: number, steps?: number) => Promise<void> }
 
 const pointer = commands as unknown as PointerCommands
 
 export const pressMouse = (selector: string) => pointer.pressMouse(selector)
 
 export const releaseMouse = () => pointer.releaseMouse()
+
+export const liftMouse = () => pointer.liftMouse()
 
 export const parkMouse = () => pointer.parkMouse()
 

@@ -4,7 +4,7 @@ import { useUIConfig } from '@hooks/useUIConfig.ts'
 import { boardLabelsFor } from './locales.ts'
 import { defaultReadOnly, defaultSortable, dragThreshold, edgeScrollZone, edgeScrollSpeed } from './defaultData.ts'
 
-import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent, ReactNode, RefCallback } from 'react'
+import type { DragEvent, KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent, PointerEvent as ReactPointerEvent, ReactNode, RefCallback } from 'react'
 import type { BoardLabels } from './locales.ts'
 import type { BoardColumn, BoardItem, BoardMoveState, BoardPosition, BoardProps } from './types.ts'
 
@@ -42,7 +42,7 @@ export type BoardColumnView<Item> = {
 }
 
 export type BoardMenuEntry =
-  | { kind: 'column'; id: string; title: ReactNode; current: boolean; onSelect: () => void }
+  | { kind: 'column'; id: string; label: ReactNode; current: boolean; onSelect: () => void }
   | { kind: 'separator'; id: string }
   | { kind: 'move'; id: string; label: string; disabled: boolean; onSelect: () => void }
 
@@ -549,6 +549,7 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
       if (target.closest('button, a, input, select, textarea, [contenteditable], [role="button"]')) return
       beginDrag(itemId, event)
     },
+    onDragStart: (event: DragEvent<HTMLLIElement>) => event.preventDefault(),
     onClickCapture: (event: ReactMouseEvent<HTMLLIElement>) => {
       if (suppressClickRef.current !== itemId) return
       suppressClickRef.current = null
@@ -581,13 +582,15 @@ export const useBoard = <Item extends BoardItem>({ columns, items, onMove, getIt
     const position = positionById.get(itemId)
     if (!position) return []
 
-    const entries: BoardMenuEntry[] = columns.map((column) => ({
-      kind: 'column' as const,
-      id: column.id,
-      title: column.title,
-      current: column.id === position.columnId,
-      onSelect: () => moveViaMenu(itemId, column.id)
-    }))
+    const entries: BoardMenuEntry[] = columns
+      .filter((column) => sortable || column.id !== position.columnId)
+      .map((column) => ({
+        kind: 'column' as const,
+        id: column.id,
+        label: labelForColumn(columns, column.id) || column.title,
+        current: column.id === position.columnId,
+        onSelect: () => moveViaMenu(itemId, column.id)
+      }))
 
     if (sortable) {
       const list = itemsByColumn.get(position.columnId) ?? []

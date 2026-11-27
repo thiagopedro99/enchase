@@ -7,7 +7,7 @@ import styles from './styles.module.css'
 
 import type { BoardItem, BoardProps } from './types.ts'
 
-export const Board = <Item extends BoardItem>({ columns, items, onMove, renderCard, getItemLabel, ariaLabel, ariaLabelledBy, sortable, readOnly, labels: labelOverrides, className, style, ref }: BoardProps<Item>) => {
+export const Board = <Item extends BoardItem>({ columns, items, onMove, renderCard, getItemLabel, renderEmpty, ariaLabel, ariaLabelledBy, sortable, readOnly, labels: labelOverrides, className, style, ref }: BoardProps<Item>) => {
   const board = useBoard({ columns, items, onMove, getItemLabel, sortable, readOnly, labels: labelOverrides })
 
   const root = mergeProps(
@@ -31,7 +31,7 @@ export const Board = <Item extends BoardItem>({ columns, items, onMove, renderCa
 
       <div ref={board.trackRef} {...slot('board', 'track')} className={styles.track}>
         {board.columns.map((view) => (
-          <Column key={view.column.id} view={view} renderCard={renderCard} getItemLabel={getItemLabel} board={board} />
+          <Column key={view.column.id} view={view} renderCard={renderCard} getItemLabel={getItemLabel} renderEmpty={renderEmpty} board={board} />
         ))}
       </div>
 

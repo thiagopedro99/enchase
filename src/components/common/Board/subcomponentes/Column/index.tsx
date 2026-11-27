@@ -22,7 +22,7 @@ const BoardCard = <Item extends BoardItem>({ item, dimmed, picked, renderCard, g
     : board.getMenuItems(item.id).map((entry) => {
         if (entry.kind === 'separator') return { id: entry.id, separator: true }
         if (entry.kind === 'move') return { id: entry.id, label: entry.label, disabled: entry.disabled, onSelect: entry.onSelect }
-        return { id: entry.id, label: entry.title, disabled: entry.current, icon: entry.current ? <CheckIcon size={16} /> : undefined, onSelect: entry.onSelect }
+        return { id: entry.id, label: entry.label, disabled: entry.current, icon: entry.current ? <CheckIcon size={16} /> : undefined, onSelect: entry.onSelect }
       })
 
   return (
@@ -37,7 +37,7 @@ const BoardCard = <Item extends BoardItem>({ item, dimmed, picked, renderCard, g
         {renderCard(item)}
       </div>
 
-      {!readOnly && (
+      {menuEntries.length > 0 && (
         <span {...slot('board', 'menu-button')} className={styles.menuButton}>
           <Menu items={menuEntries} ariaLabel={labels.boardMoveCardTo(label)}>
             <Button variant="ghost" size="sm" iconOnly aria-label={labels.boardMoveCardTo(label)} {...board.getMenuButtonProps(item.id)}>
@@ -50,14 +50,16 @@ const BoardCard = <Item extends BoardItem>({ item, dimmed, picked, renderCard, g
   )
 }
 
-export const Column = <Item extends BoardItem>({ view, renderCard, getItemLabel, board }: ColumnProps<Item>) => {
+export const Column = <Item extends BoardItem>({ view, renderCard, getItemLabel, renderEmpty, board }: ColumnProps<Item>) => {
   const labels = board.labels
   const titleId = useId()
+  const descriptionId = useId()
+  const description = view.column.description
   const empty = view.cards.length === 0
   const readOnly = board.readOnly
 
   return (
-    <div {...slot('board', 'column')} className={styles.column} role="region" aria-labelledby={titleId} data-target={view.isDropTarget ? '' : undefined}>
+    <div {...slot('board', 'column')} className={styles.column} role="region" aria-labelledby={titleId} aria-describedby={description ? descriptionId : undefined} data-target={view.isDropTarget ? '' : undefined}>
       <div {...slot('board', 'column-header')} className={styles.header}>
         <div id={titleId} {...slot('board', 'column-title')} className={styles.title}>
           {view.column.title}
@@ -67,6 +69,12 @@ export const Column = <Item extends BoardItem>({ view, renderCard, getItemLabel,
         </span>
         <VisuallyHidden>{labels.boardCardCount(view.cards.length)}</VisuallyHidden>
       </div>
+
+      {description && (
+        <div id={descriptionId} {...slot('board', 'column-description')} className={styles.description}>
+          {description}
+        </div>
+      )}
 
       <ul ref={board.getColumnListRef(view.column.id)} {...slot('board', 'column-list')} className={styles.list}>
         {view.cards.map((card, index) => (
@@ -78,12 +86,17 @@ export const Column = <Item extends BoardItem>({ view, renderCard, getItemLabel,
         {view.linePosition === view.cards.length && <li aria-hidden="true" {...slot('board', 'line')} className={styles.line} />}
       </ul>
 
-      {empty && (
+      {empty && !renderEmpty && (
         <p {...slot('board', 'empty')} className={styles.empty}>
           {readOnly ? labels.boardEmptyColumnReadOnly : labels.boardEmptyColumn}
         </p>
       )}
 
+      {empty && renderEmpty && (
+        <div {...slot('board', 'empty')} className={styles.empty}>
+          {renderEmpty(view.column)}
+        </div>
+      )}
     </div>
   )
 }

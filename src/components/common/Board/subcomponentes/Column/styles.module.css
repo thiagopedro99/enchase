@@ -57,6 +57,14 @@
   color: var(--enchase-board-column-title-color, var(--enchase-color-text-primary));
 }
 
+:where(.description) {
+  margin: 0;
+  padding-inline: var(--enchase-board-column-header-padding-inline, var(--enchase-space-xs));
+  overflow-wrap: anywhere;
+  font-size: var(--enchase-board-column-description-font-size, var(--enchase-font-size-xs));
+  color: var(--enchase-board-column-description-color, var(--enchase-color-text-secondary));
+}
+
 :where(.count) {
   flex-shrink: 0;
   display: inline-flex;

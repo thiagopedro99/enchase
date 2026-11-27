@@ -409,3 +409,148 @@ describe('Board', () => {
     expect(onClose).not.toHaveBeenCalled()
   })
 })
+
+describe('Board column description and menu labels', () => {
+  const described: BoardColumn[] = [
+    { id: 'todo', title: 'A fazer', description: 'Ainda sem dono' },
+    { id: 'doing', title: <strong>Em andamento</strong>, label: 'Em andamento', description: <em>Com alguém trabalhando</em> },
+    { id: 'done', title: <span>Concluído</span> }
+  ]
+
+  it('draws the description under the title and describes the column with it', () => {
+    renderWithProviders(<TestBoard boardColumns={described} />)
+    const column = screen.getByRole('region', { name: 'Em andamento' })
+    const description = column.querySelector('[data-slot="board-column-description"]') as HTMLElement
+
+    expect(description).toHaveTextContent('Com alguém trabalhando')
+    expect(column).toHaveAttribute('aria-describedby', description.id)
+    expect(column.querySelector('[data-slot="board-column-header"]')?.nextElementSibling).toBe(description)
+    expect(column.querySelector('[data-slot="board-column-title"]')).not.toHaveTextContent('Com alguém')
+  })
+
+  it('adds no description part and no aria-describedby to a column without one', () => {
+    renderWithProviders(<TestBoard />)
+    const column = screen.getByRole('region', { name: 'A fazer' })
+
+    expect(column.querySelector('[data-slot="board-column-description"]')).toBeNull()
+    expect(column).not.toHaveAttribute('aria-describedby')
+  })
+
+  it('names the columns of the menu by their label, or by a text title, and never by the description', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<TestBoard boardColumns={described} />)
+
+    await user.click(menuButton('Revisar PR'))
+    const items = screen.getAllByRole('menuitem').map((item) => item.textContent)
+
+    expect(items.slice(0, 3)).toEqual(['A fazer', 'Em andamento', 'Concluído'])
+    expect(screen.getByRole('menu')).not.toHaveTextContent('Ainda sem dono')
+    expect(screen.getByRole('menu')).not.toHaveTextContent('Com alguém trabalhando')
+    expect(screen.getByRole('menuitem', { name: 'Em andamento' }).querySelector('strong')).toBeNull()
+  })
+})
+
+describe('Board menu without sorting', () => {
+  it('does not list the column the card is in', async () => {
+    const user = userEvent.setup()
+    const onMove = vi.fn()
+    renderWithProviders(<TestBoard sortable={false} onMove={onMove} />)
+
+    await user.click(menuButton('Revisar PR'))
+
+    expect(screen.getAllByRole('menuitem').map((item) => item.textContent)).toEqual(['Em andamento', 'Concluído'])
+
+    await user.click(screen.getByRole('menuitem', { name: 'Concluído' }))
+
+    expect(onMove).toHaveBeenCalledTimes(1)
+    expect(onMove.mock.calls[0][0].to).toEqual({ columnId: 'done', index: 0 })
+  })
+
+  it('still lists the current column, checked and disabled, when the cards can be sorted', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<TestBoard />)
+
+    await user.click(menuButton('Revisar PR'))
+
+    expect(screen.getByRole('menuitem', { name: 'A fazer' })).toHaveAttribute('aria-disabled', 'true')
+  })
+
+  it('has no menu button when there is nowhere to move to', () => {
+    renderWithProviders(<TestBoard sortable={false} boardColumns={[columns[0]]} items={[defaultItems[0]]} />)
+
+    expect(screen.queryByRole('button', { name: 'Mover Revisar PR para' })).not.toBeInTheDocument()
+    expect(document.querySelector('[data-slot="board-menu-button"]')).toBeNull()
+  })
+})
+
+describe('Board native drag', () => {
+  it('cancels the native drag of a link or an image inside a card, and leaves the click alone', async () => {
+    const user = userEvent.setup()
+    const onClick = vi.fn((event: { preventDefault: () => void }) => event.preventDefault())
+    renderWithProviders(
+      <Board<Item>
+        columns={columns}
+        items={defaultItems}
+        onMove={vi.fn()}
+        getItemLabel={(item) => item.title}
+        renderCard={(item) => (
+          <a href="/detalhe" onClick={onClick}>
+            <img alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" />
+            {item.title}
+          </a>
+        )}
+      />
+    )
+    const link = screen.getByRole('link', { name: 'Revisar PR' })
+
+    for (const target of [link, link.querySelector('img') as HTMLElement]) {
+      const drag = new Event('dragstart', { bubbles: true, cancelable: true })
+
+      target.dispatchEvent(drag)
+
+      expect(drag.defaultPrevented).toBe(true)
+    }
+
+    await user.click(link)
+
+    expect(onClick).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('Board empty column content', () => {
+  it('keeps the default text without renderEmpty', () => {
+    renderWithProviders(<TestBoard />)
+    const empty = screen.getByRole('region', { name: 'Concluído' }).querySelector('[data-slot="board-empty"]') as HTMLElement
+
+    expect(empty.tagName).toBe('P')
+    expect(empty.textContent).not.toBe('')
+  })
+
+  it('renders what renderEmpty returns for the column, in place of the default text', () => {
+    const renderEmpty = vi.fn((column: BoardColumn) => <button type="button">Sugerir em {column.label ?? String(column.title)}</button>)
+    renderWithProviders(<Board<Item> columns={columns} items={defaultItems} onMove={vi.fn()} getItemLabel={(item) => item.title} renderCard={(item) => <p>{item.title}</p>} renderEmpty={renderEmpty} />)
+    const region = screen.getByRole('region', { name: 'Concluído' })
+    const empty = region.querySelector('[data-slot="board-empty"]') as HTMLElement
+
+    expect(empty.tagName).toBe('DIV')
+    expect(within(empty).getByRole('button', { name: 'Sugerir em Concluído' })).toBeInTheDocument()
+    expect(renderEmpty).toHaveBeenCalledTimes(1)
+    expect(renderEmpty).toHaveBeenCalledWith(columns[2])
+    expect(screen.getByRole('region', { name: 'A fazer' }).querySelector('[data-slot="board-empty"]')).toBeNull()
+  })
+
+  it('has no axe violations with descriptions and a custom empty content', async () => {
+    const { container } = renderWithProviders(
+      <Board<Item>
+        columns={[{ id: 'todo', title: 'A fazer', description: 'Ainda sem dono' }, { id: 'done', title: 'Concluído', description: 'Entregue' }]}
+        items={defaultItems.slice(0, 1)}
+        onMove={vi.fn()}
+        getItemLabel={(item) => item.title}
+        renderCard={(item) => <p>{item.title}</p>}
+        renderEmpty={() => <button type="button">Sugerir</button>}
+      />
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})
