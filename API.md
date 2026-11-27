@@ -1154,7 +1154,7 @@ Returns:
 | --- | --- |
 | `selected` | `string[]` |
 | `choose` | `(value: string) => void` |
-| `getGroupProps` | `<User extends object = object>(props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { role: 'group' \| 'radiogroup'; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void; } & User` |
+| `getGroupProps` | `<User extends object = object>(props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { role: 'group' \| 'radiogroup'; tabIndex: -1; onKeyDown: (event: KeyboardEvent<HTMLElement>) => void; } & User` |
 | `getItemProps` | `<User extends object = object>(value: string, props?: (User & HTMLAttributes<HTMLElement>) \| undefined) => { ref: RefCallback<HTMLButtonElement>; type: 'button'; role: 'radio' \| undefined; 'aria-checked': boolean \| undefined; 'aria-pressed': boolean \| undefined; tabIndex: 0 \| -1 \| undefined; disabled: boolean; onClick: (event: MouseEvent<HTMLButtonElement, MouseEvent>) => void; } & Omit<User, 'ref'>` |
 
 ### useSlider

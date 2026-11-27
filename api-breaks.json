@@ -49,7 +49,7 @@
     },
     {
       "key": "segmented-control-nowrap",
-      "note": "the SegmentedControl no longer breaks a label, and scrolls sideways when the options do not fit: it used to break the labels anywhere, also inside a word, and grow taller. With fullWidth, an option whose label does not fit in an equal share takes the width of its label, and the others share the rest"
+      "note": "the SegmentedControl no longer breaks a label, and scrolls sideways when the options do not fit: it used to break the labels anywhere, also inside a word, and grow taller. With fullWidth, an option whose label does not fit in an equal share takes the width of its label, and the others share the rest. The root, which now scrolls, has tabindex=\"-1\" (and getGroupProps of useSegmentedControl returns tabIndex: -1), so it is not a tab stop of its own in Firefox"
     },
     {
       "key": "tooltip-data-placement",

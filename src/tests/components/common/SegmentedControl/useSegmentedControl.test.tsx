@@ -287,3 +287,21 @@ describe('useSegmentedControl', () => {
     expect(await axe(many.container)).toHaveNoViolations()
   })
 })
+
+describe('useSegmentedControl group out of the Tab order', () => {
+  it('gives the group tabIndex -1 in both modes, and lets the caller change it', () => {
+    const single = render(<Shell items={items} />)
+
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('tabindex', '-1')
+    single.unmount()
+
+    const several = render(<Shell items={items} multiple />)
+
+    expect(screen.getByRole('group')).toHaveAttribute('tabindex', '-1')
+    several.unmount()
+
+    render(<Shell items={items} groupProps={{ tabIndex: 0 }} />)
+
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('tabindex', '0')
+  })
+})

@@ -526,3 +526,50 @@ describe('SegmentedControl with a visible label', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('SegmentedControl root out of the Tab order', () => {
+  it('takes the scrolling root out of the Tab order, so Tab enters on the checked option and leaves after it', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(
+      <>
+        <SegmentedControl ariaLabel="View" items={views} defaultValue="board" />
+        <button>After</button>
+      </>
+    )
+
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('tabindex', '-1')
+
+    await user.tab()
+    expect(screen.getByRole('radio', { name: 'Board' })).toHaveFocus()
+
+    await user.tab()
+    expect(screen.getByRole('button', { name: 'After' })).toHaveFocus()
+
+    await user.tab({ shift: true })
+    expect(screen.getByRole('radio', { name: 'Board' })).toHaveFocus()
+  })
+
+  it('does the same for the group of toggle buttons, where Tab stops on every button and never on the group', async () => {
+    const user = userEvent.setup()
+    renderWithProviders(<SegmentedControl multiple ariaLabel="Days" items={views} />)
+    const group = screen.getByRole('group', { name: 'Days' })
+
+    expect(group).toHaveAttribute('tabindex', '-1')
+
+    for (const name of ['List', 'Board', 'Calendar']) {
+      await user.tab()
+      expect(screen.getByRole('button', { name })).toHaveFocus()
+    }
+  })
+
+  it('has no axe violations with the root out of the Tab order, in both modes', async () => {
+    const { container } = renderWithProviders(
+      <>
+        <SegmentedControl ariaLabel="View" items={views} defaultValue="list" />
+        <SegmentedControl multiple ariaLabel="Days" items={views} />
+      </>
+    )
+
+    expect(await axe(container)).toHaveNoViolations()
+  })
+})

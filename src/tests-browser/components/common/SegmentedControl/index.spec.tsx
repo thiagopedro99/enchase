@@ -318,7 +318,7 @@ describe('SegmentedControl layout in a real browser', () => {
 
     expect(group.scrollWidth).toBeGreaterThan(group.clientWidth)
     expect(getComputedStyle(group).scrollbarWidth).toBe('none')
-    expect(getComputedStyle(group, '::-webkit-scrollbar').display).toBe('none')
+    if (CSS.supports('selector(::-webkit-scrollbar)')) expect(getComputedStyle(group, '::-webkit-scrollbar').display).toBe('none')
     expect(items().map((item) => item.getBoundingClientRect().height)).toEqual(fitting)
     expect(group.getBoundingClientRect().height).toBe(groupHeight)
     expect(group.offsetHeight - group.clientHeight).toBe(parseFloat(getComputedStyle(group).borderTopWidth) + parseFloat(getComputedStyle(group).borderBottomWidth))

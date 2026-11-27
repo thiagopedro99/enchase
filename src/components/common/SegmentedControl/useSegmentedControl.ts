@@ -58,7 +58,7 @@ export const useSegmentedControl = ({ items, multiple = false, value, defaultVal
   }
 
   const getGroupProps: UseSegmentedControlReturn['getGroupProps'] = (props) => {
-    const own: ReturnType<UseSegmentedControlReturn['getGroupProps']> = { role: multiple ? 'group' : 'radiogroup', onKeyDown: handleKeyDown }
+    const own: ReturnType<UseSegmentedControlReturn['getGroupProps']> = { role: multiple ? 'group' : 'radiogroup', tabIndex: -1, onKeyDown: handleKeyDown }
 
     return composeProps(own, props)
   }
