@@ -184,6 +184,7 @@ A group of checkboxes to choose any number of options that fit on the screen at 
 | `value` | `string[]` | — | Values of the checked options when the group is controlled. It also requires onValueChange. To control it with none checked, pass an empty array. See the Controlled story. |
 | `defaultValue` | `string[]` | — | Values of the options checked at the start, for use without external control. See the WithDefaultValue story. |
 | `onValueChange` | `(value: string[]) => void` | — | Called with the values of all the checked options, in the order of the options, each time the user checks or unchecks one. A disabled option that is checked stays in the list. |
+| `required` | `boolean` | — | Requires at least one checked option when the form is submitted: while none is checked, every checkbox is required (the native attribute, which screen readers announce), and once one is checked none of them is. |
 | `error` | `string` | — | Error message. Marks every checkbox as invalid (aria-invalid), paints the title and the unchecked boxes red and is announced as an alert. It replaces the helperText. See the Validated story. |
 | `helperText` | `string` | — | Helper text under the group. It is tied to the group by aria-describedby and disappears when there is an error. |
 | `orientation` | `'vertical' \| 'horizontal'` | `'vertical'` | Direction of the list: vertical stacks the options and horizontal puts them side by side, wrapping to a new line when there is not enough room. |
@@ -255,7 +256,7 @@ A ready-made confirmation modal: an alertdialog with the question and the cancel
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `isOpen` | `boolean` | *required* | Opens and closes the confirmation. Like the Modal, it is always controlled: you keep the state and change it in onClose. |
+| `open` | `boolean` | *required* | Opens and closes the confirmation. Like the Modal, it is always controlled: you keep the state and change it in onClose. |
 | `onClose` | `() => void` | *required* | Called on cancel, when closed by Esc, the close button or the backdrop, and right after onConfirm. |
 | `onConfirm` | `() => void` | *required* | Called when the confirm button is clicked. The modal calls onClose right after, so there is no need to close it here. |
 | `title` | `string` | — | Title of the confirmation. Without it, it uses the labels.confirmAction text of the UIProvider. |
@@ -263,6 +264,7 @@ A ready-made confirmation modal: an alertdialog with the question and the cancel
 | `confirmText` | `string` | — | Text of the confirm button. Without it, it uses labels.confirm from the UIProvider. |
 | `cancelText` | `string` | — | Text of the cancel button, which receives the initial focus. Without it, it uses labels.cancel from the UIProvider. |
 | `confirmVariant` | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger' \| 'dashed' \| 'link'` | `'primary'` | Style of the confirm button, the same as in the Button. |
+| `initialFocus` | `RefObject<HTMLElement \| null>` | — | Ref of the element that takes the focus when it opens, inside the panel. Without it, the focus starts on the cancel button, the safe choice of a confirmation. |
 | `ref` | `Ref<HTMLDivElement>` | — | Ref of the panel of the dialog (`data-slot="modal-panel"`), the element that receives `className` and `style`. It is `null` while the dialog is closed, because the panel is not in the page then. |
 | `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
 | `animation` | `MotionOverride` | — | false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale, as in the Modal. |
@@ -346,6 +348,7 @@ A panel that slides in from the edge of the page, rendered in a portal like the 
 | `showCloseButton` | `boolean` | `true` | Shows the close button in the header. |
 | `closeOnOverlayClick` | `boolean` | `true` | Closes when the overlay is clicked. |
 | `closeOnEsc` | `boolean` | `true` | Closes with Esc. With stacked overlays, only the top one closes. |
+| `initialFocus` | `RefObject<HTMLElement \| null>` | — | Ref of the element that takes the focus when it opens, inside the panel. Without it, the focus goes to the first element marked with the data-autofocus attribute, or else to the first control that Tab reaches (the close button, when there is one). A ref that is not inside the panel is ignored. |
 | `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
 | `animation` | `MotionOverride` | — | false turns off the motion; { tuning: { duration } } changes how long the slide takes. The panel always travels at least its own width. |
 | `className` | `string` | — | Class of the panel. It wins over the library class without !important. |
@@ -537,7 +540,7 @@ A button that opens a list of actions. It is a `Popover` with `role="menu"`: the
 | --- | --- | --- | --- |
 | `children` | `ReactNode` | *required* | The element that opens the menu, normally a button. It receives aria-haspopup, aria-expanded and aria-controls, and the arrow keys: ArrowDown opens the menu on the first item and ArrowUp on the last. |
 | `items` | `MenuEntry[]` | *required* | The entries of the menu, in order. An item is { id, label, textValue?, icon?, disabled?, onSelect? } and a separator is { id, separator: true }. The label is any node; give textValue when it is not a string, so that typing letters can find the item. A disabled item is announced as unavailable, is skipped by the arrow keys and by typing, and does nothing when it is clicked. |
-| `label` | `string` | *required* | Accessible name of the menu (aria-label of the list). It is not shown: name what the actions are about. |
+| `ariaLabel` | `string` | *required* | Accessible name of the menu (aria-label of the list). It is not shown: name what the actions are about. |
 | `open` | `boolean` | — | Opens and closes the menu, when you control it. Use it together with onOpenChange. |
 | `defaultOpen` | `boolean` | `false` | Whether the menu starts open, when you do not control it. An open menu does not take the focus until the user interacts. |
 | `onOpenChange` | `(open: boolean) => void` | — | Called with the new state whenever the menu opens or closes: click, keyboard, Esc, a click outside or a chosen item. |
@@ -553,11 +556,11 @@ A button that opens a list of actions. It is a `Popover` with `role="menu"`: the
 
 ### Modal
 
-A modal dialog rendered in a portal: the focus stays trapped in the panel, the page behind it is inert, and Esc or a click on the backdrop closes it. It enters and exits with animation. It is always controlled by `isOpen` and `onClose`. When the content is taller than the panel, the body scrolls and becomes a focusable region named by the title (or by `ariaLabel`), so a keyboard user can scroll it.
+A modal dialog rendered in a portal: the focus stays trapped in the panel, the page behind it is inert, and Esc or a click on the backdrop closes it. It enters and exits with animation. It is always controlled by `open` and `onClose`. When the content is taller than the panel, the body scrolls and becomes a focusable region named by the title (or by `ariaLabel`), so a keyboard user can scroll it.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `isOpen` | `boolean` | *required* | Opens and closes the modal. It is always controlled: you keep the state and change it in onClose. It renders in a portal on the body, only after mounting, and stays mounted until the exit animation ends. |
+| `open` | `boolean` | *required* | Opens and closes the modal. It is always controlled: you keep the state and change it in onClose. It renders in a portal on the body, only after mounting, and stays mounted until the exit animation ends. |
 | `onClose` | `() => void` | *required* | Called when the user asks to close: close button, click on the backdrop or Esc, depending on showCloseButton, closeOnOverlayClick and closeOnEsc. The modal does not close itself. |
 | `title` | `string` | — | Title of the dialog (h2), which gives the accessible name. Without it, use ariaLabel. |
 | `ariaLabel` | `string` | — | Accessible name of the dialog when there is no title. |
@@ -567,6 +570,7 @@ A modal dialog rendered in a portal: the focus stays trapped in the panel, the p
 | `showCloseButton` | `boolean` | `true` | Shows the close button in the header. |
 | `closeOnOverlayClick` | `boolean` | `true` | Closes when the backdrop is clicked. |
 | `closeOnEsc` | `boolean` | `true` | Closes with Esc. With stacked modals, only the top one closes. |
+| `initialFocus` | `RefObject<HTMLElement \| null>` | — | Ref of the element that takes the focus when it opens, inside the panel. Without it, the focus goes to the first element marked with the data-autofocus attribute, or else to the first control that Tab reaches (the close button, when there is one). A ref that is not inside the panel is ignored. |
 | `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'` | Maximum width of the panel. |
 | `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
 | `animation` | `MotionOverride` | — | false turns off the motion; { recipe, tuning } adjusts the duration, the distance and the scale. |
@@ -651,7 +655,7 @@ A floating panel attached to a trigger. Its position adjusts itself near the edg
 | `offset` | `number` | `8` | Distance in px between the trigger and the popover. |
 | `padding` | `number` | `8` | Margin in px to the edge of the window. |
 | `role` | `'dialog' \| 'listbox' \| 'tree' \| 'grid' \| 'menu'` | `'dialog'` | Role of the content, which also becomes aria-haspopup on the trigger. The default is dialog. With menu, Tab closes the popup and moves the focus on, but the arrow-key navigation and the items are yours: use Menu for the whole pattern. |
-| `label` | `string` | — | Accessible name of the content (aria-label). |
+| `ariaLabel` | `string` | — | Accessible name of the content (aria-label). |
 | `arrow` | `boolean` | `false` | Shows an arrow that points to the trigger. When the box has a border (--enchase-popover-content-border-width), the arrow carries the border on its two outer sides. |
 | `closeOnEsc` | `boolean` | `true` | Esc closes only the top layer and returns the focus to the trigger. |
 | `closeOnOutsideClick` | `boolean` | `true` | A click outside closes the popover without taking the focus away from where the click landed. |
@@ -928,7 +932,7 @@ A text tooltip for a trigger, opened by pointer and by focus. It gives the trigg
 | --- | --- | --- | --- |
 | `text` | `string` | *required* | Text of the tooltip. With describe on, it also becomes the accessible description of the trigger. |
 | `children` | `ReactNode` | *required* | The trigger. It sits inside a div (data-slot="tooltip-trigger") and, with describe on, receives aria-describedby. |
-| `position` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Side of the trigger where the tooltip appears. start and end follow the direction of the UIProvider (left and right in ltr, the reverse in rtl). Near the edge of the screen the tooltip flips to the other side and shifts to fit. |
+| `placement` | `'start' \| 'end' \| 'top' \| 'right' \| 'bottom' \| 'left'` | `'top'` | Side of the trigger where the tooltip appears. start and end follow the direction of the UIProvider (left and right in ltr, the reverse in rtl). Near the edge of the screen the tooltip flips to the other side and shifts to fit. |
 | `describe` | `boolean` | `true` | Turns on the accessible description of the trigger. Turn it off when the trigger already has the same text as its name, like an icon-only button. |
 | `arrow` | `boolean` | `false` | Draws a pointer on the edge of the tooltip that faces the trigger, in the color of the tooltip, pointing at the middle of the trigger. Near the edge of the screen, where the tooltip moves along the trigger, the pointer slides to keep pointing at it. `--enchase-tooltip-arrow-size` sets its size. |
 | `container` | `HTMLElement \| (() => HTMLElement \| null) \| null` | — | Element that the overlay renders in, or a function that returns it. The function runs after the overlay mounts, never on the server and never during a render, so it can look up an element rendered by the same tree, and it runs again when the prop changes. Without it, or when it is null, the overlay renders in the `body`. Use it to keep the overlay inside an element with its own theme: it inherits the CSS variables of that element, which an overlay in the `body` does not. An ancestor of the container with `transform`, `filter` or `contain` becomes the containing block of the fixed positioning and moves the overlay, and one that creates a stacking context (`z-index`, `opacity`, `isolation`) confines the `z-index` of the overlay to it. |
@@ -1998,7 +2002,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-input-field-color-placeholder` | `var(--enchase-color-text-placeholder)` | `color` (also in Combobox, DatePicker, NumberInput, Textarea) |
 | `--enchase-input-field-radius` | `0.625rem` (`--enchase-radius-control`) | `border-radius`, `border-start-start-radius`, `border-start-end-radius` |
 | `--enchase-input-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
-| `--enchase-input-gap` | `0.25rem` (`--enchase-space-xs`) | `gap`, `column-gap` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-gap` | `0.25rem` (`--enchase-space-xs`) | `gap`, `margin-block-end`, `column-gap` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-height` | `3.5rem` | `min-block-size`, `block-size`, `inset-block-start`, `transform` (also in Combobox, ComboboxToggle, DatePicker, NumberInput, Select) |
 | `--enchase-input-helper-color` | `var(--enchase-color-text-secondary)` | `color` (also in Checkbox, Combobox, DatePicker, NumberInput, Select, Switch, Textarea) |
 | `--enchase-input-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
@@ -2014,7 +2018,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-input-label-font-weight-stacked` | `500` (`--enchase-font-weight-medium`) | `font-weight` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-label-line-height-stacked` | `1.4` (`--enchase-line-height-snug`) | `line-height` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-label-width` | `7.5rem` | `grid-template-columns` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
-| `--enchase-input-min-width` | `200px` | `min-inline-size` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
+| `--enchase-input-min-width` | `200px` | `inline-size`, `min-inline-size` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-opacity-disabled` | `1` | `opacity` (also in Combobox, ComboboxToggle, DatePicker, DatePickerToggle, NumberInput, Select, Textarea) |
 | `--enchase-input-outline-border-color` | `var(--enchase-color-border-strong)` | `border` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
 | `--enchase-input-outline-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-container, 0.12) * 100%), transparent)` | `border-color` (also in Combobox, DatePicker, NumberInput, Select, Textarea) |
