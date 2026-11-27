@@ -26,7 +26,7 @@ The real-browser suite runs on the latest Chromium, Firefox and WebKit of Playwr
 
 ## What is not tested
 
-- **The speech of screen readers.** Nothing was tested with NVDA, JAWS or VoiceOver: the roles, the names and the states are tested, and what a screen reader says about them is not. Testing them is one of the criteria for 1.0, which asks for two combinations: NVDA with Firefox on Windows, and VoiceOver with Safari on macOS, run by hand over the whole script. JAWS and VoiceOver on iOS wait for 1.1. The script of the test and an empty table for the results are in the section "Screen reader tests, not run yet", below.
+- **The speech of screen readers.** Nothing was tested with NVDA, JAWS or VoiceOver: the roles, the names and the states are tested, and what a screen reader says about them is not. The project does not run these tests, and no version promises them, 1.0 included. A script for whoever wants to run them is in the section "A script for screen reader tests", below, and what you hear is welcome as an issue.
 - **Safari and iOS themselves.** WebKit on Linux stands in for them, and a manual review in real Safari is still needed. Edge is not tested apart from Chromium.
 - **Windows high contrast (`forced-colors`).** A few rules exist, for the navbar, the segmented control and the textarea, and the mode is not tested in a real browser.
 - **Zoom and reflow.** The layout is tested at the widths of the breakpoints, and not at 400% of zoom.
@@ -34,11 +34,9 @@ The real-browser suite runs on the latest Chromium, Firefox and WebKit of Playwr
 - **The contrast of a custom theme written in `hsl()`, `oklch()` or `oklab()`.** Those formats are not measured, and the warning says how many pairs went unchecked.
 - **Manual audits and tests with people.**
 
-## Screen reader tests, not run yet
+## A script for screen reader tests
 
-Nothing in this section has been run. It is the script and the table for the test that the criterion for 1.0 asks for, and the README keeps saying that nothing was tested until the table has results.
-
-The criterion for 1.0 asks for two combinations, run by hand over the 23 lines of the script: NVDA with Firefox on Windows, and VoiceOver with Safari on macOS. The table gets the version of the reader, of the browser and of the system. JAWS and VoiceOver on iOS wait for 1.1: their columns stay in the table, empty and marked as not run, and the README keeps saying that they were not tested.
+The project has not run this script and does not plan to. It is here for whoever wants to test a component with a screen reader and report what was said, and it is not a criterion for any version. The README keeps saying that nothing was tested.
 
 ### How
 
@@ -51,7 +49,7 @@ Open each story in the [Storybook](https://enchase.othiagosilva.com.br/docs/) (`
 | VoiceOver | macOS, with Safari |
 | VoiceOver | iOS, with Safari |
 
-For each line of the script, do the step with the keyboard (on iOS, with the swipe and double tap gestures) and write down what was said about the name, the role, the state, the position in a set when there is one, and the change that the step causes. What the column "Listen for" lists is what the markup says, which the jsdom tests and axe already check: the test is about what each reader does with it. Write the version of the reader and of the browser once, at the top of its column. In a cell, `ok` means that what was said covers the column "Listen for", `differs` is followed by the words that were said, and `not announced` means that nothing was. Each `differs` and `not announced` is an issue of its own, with the component, the reader, its version and what was said, and it stays in this file until it is fixed or documented.
+For each line of the script, do the step with the keyboard (on iOS, with the swipe and double tap gestures) and listen to what is said about the name, the role, the state, the position in a set when there is one, and the change that the step causes. What the column "Listen for" lists is what the markup says, which the jsdom tests and axe already check: the test is about what each reader does with it. What differs, or is not announced, is an issue of its own, with the component, the reader and its version, the browser, the system and the words that were said.
 
 ### The script
 
@@ -81,35 +79,6 @@ For each line of the script, do the step with the keyboard (on iOS, with the swi
 | Input and Textarea | `components-input--with-error`, `components-textarea--with-error` | Tab in and type. | The label; the helper text as the description; the field as invalid; the error announced. |
 | Progress and Loading | `components-progress--with-value`, `components-loading--playground` | Reach them with the reading cursor. | The progress bar with its value; the loading status announced. |
 
-### The results
-
-| Component | NVDA | JAWS | VoiceOver macOS | VoiceOver iOS |
-| --- | --- | --- | --- | --- |
-| Version and browser | | not run, waits for 1.1 | | not run, waits for 1.1 |
-| Tabs | | | | |
-| Accordion | | | | |
-| SegmentedControl | | | | |
-| RadioGroup | | | | |
-| Checkbox and CheckboxGroup | | | | |
-| Switch | | | | |
-| Slider | | | | |
-| NumberInput | | | | |
-| Select | | | | |
-| Combobox | | | | |
-| DatePicker | | | | |
-| Menu | | | | |
-| Popover | | | | |
-| Modal and ConfirmModal | | | | |
-| Drawer | | | | |
-| Tooltip | | | | |
-| Pagination | | | | |
-| Breadcrumbs | | | | |
-| Navbar | | | | |
-| Table | | | | |
-| Alert and Toast | | | | |
-| Input and Textarea | | | | |
-| Progress and Loading | | | | |
-
 ## Reporting a problem
 
-Open an [issue](https://github.com/thiagopedro99/enchase/issues) with the component, the browser, the assistive technology and what you expected. A fix is a patch of the latest minor version, listed under Fixes in the release notes. The notes of every release also say, in a bullet that starts with "Screen readers:", whether the speech of what is new was heard, and today it never was.
+Open an [issue](https://github.com/thiagopedro99/enchase/issues) with the component, the browser, the assistive technology and what you expected. A fix is a patch of the latest minor version, listed under Fixes in the release notes.
