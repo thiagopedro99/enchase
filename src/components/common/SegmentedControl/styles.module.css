@@ -20,7 +20,7 @@
 }
 
 :where(.group) {
-  scroll-padding-inline: var(--enchase-segmented-control-scroll-padding, var(--enchase-space-xl));
+  scroll-padding-inline: var(--enchase-space-xl);
   border-radius: var(--enchase-segmented-control-radius, var(--enchase-radius-button));
 }
 
