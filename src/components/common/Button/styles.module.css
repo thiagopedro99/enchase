@@ -272,14 +272,19 @@
   cursor: progress;
 }
 
-.button[data-loading]:not(:disabled)::after {
-  opacity: 0;
-}
-
 @media (hover: hover) and (pointer: fine) {
+  .button[data-loading]:hover:not(:disabled)::after {
+    opacity: 0;
+  }
+
   .button[data-loading][data-motion]:hover:not(:disabled) {
     transform: none;
   }
+}
+
+.button[data-loading]:focus-visible:not(:disabled)::after,
+.button[data-loading]:active:not(:disabled)::after {
+  opacity: 0;
 }
 
 .button[data-loading][data-motion]:active:not(:disabled) {
