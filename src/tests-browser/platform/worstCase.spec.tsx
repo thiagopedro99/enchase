@@ -329,7 +329,7 @@ describe.each(widths)('worst case data at %ipx', (width) => {
   it('keeps a long tooltip bubble inside the viewport', async () => {
     await setup(
       <div style={{ padding: 40 }}>
-        <Tooltip text={`${worstCase.longTitle} ${worstCase.longEmail} ${worstCase.longUrl}`} position="bottom">
+        <Tooltip text={`${worstCase.longTitle} ${worstCase.longEmail} ${worstCase.longUrl}`} placement="bottom">
           <button>Alvo</button>
         </Tooltip>
       </div>

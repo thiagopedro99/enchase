@@ -36,7 +36,7 @@ describe('Tooltip layer in a real browser', () => {
   it('stays above the trigger and clear of it', async () => {
     renderInBrowser(
       <div style={{ margin: '200px auto', width: 100 }}>
-        <Tooltip text="Dica" position="top">
+        <Tooltip text="Dica" placement="top">
           <button>Alvo</button>
         </Tooltip>
       </div>
@@ -56,7 +56,7 @@ describe('Tooltip flipping and shifting in a real browser', () => {
   it('flips below the trigger when there is no room above', async () => {
     renderInBrowser(
       <div style={{ position: 'absolute', top: 0, left: 300 }}>
-        <Tooltip text="Dica" position="top">
+        <Tooltip text="Dica" placement="top">
           <button>Alvo</button>
         </Tooltip>
       </div>
@@ -75,7 +75,7 @@ describe('Tooltip flipping and shifting in a real browser', () => {
     await page.viewport(1280, 400)
     renderInBrowser(
       <div style={{ position: 'absolute', bottom: 0, left: 300 }}>
-        <Tooltip text="Dica" position="bottom">
+        <Tooltip text="Dica" placement="bottom">
           <button>Alvo</button>
         </Tooltip>
       </div>
@@ -90,7 +90,7 @@ describe('Tooltip flipping and shifting in a real browser', () => {
   it('keeps a bubble wider than its distance to the edge inside the viewport', async () => {
     renderInBrowser(
       <div style={{ position: 'absolute', top: 200, left: 0 }}>
-        <Tooltip text="Uma dica bem longa para esta borda" position="top">
+        <Tooltip text="Uma dica bem longa para esta borda" placement="top">
           <button>A</button>
         </Tooltip>
       </div>
@@ -109,7 +109,7 @@ describe('Tooltip at the right edge in a real browser', () => {
   it('keeps a long bubble inside the viewport when the trigger touches the right edge', async () => {
     renderInBrowser(
       <div style={{ position: 'absolute', top: 10, right: 0 }}>
-        <Tooltip text="Mudar para tema escuro" position="bottom">
+        <Tooltip text="Mudar para tema escuro" placement="bottom">
           <button>T</button>
         </Tooltip>
       </div>
@@ -124,7 +124,7 @@ describe('Tooltip at the right edge in a real browser', () => {
     renderInBrowser(
       <div style={{ height: 3000 }}>
         <div style={{ position: 'absolute', top: 10, right: 0 }}>
-          <Tooltip text="Mudar para tema escuro" position="top">
+          <Tooltip text="Mudar para tema escuro" placement="top">
             <button>T</button>
           </Tooltip>
         </div>
@@ -142,7 +142,7 @@ describe('Tooltip at the right edge in a real browser', () => {
 
       return (
         <div style={{ position: 'absolute', top: 10, right: 0 }}>
-          <Tooltip text={dark ? 'Mudar para tema claro muito longo' : 'Tema'} position="bottom">
+          <Tooltip text={dark ? 'Mudar para tema claro muito longo' : 'Tema'} placement="bottom">
             <button onClick={() => setDark(true)}>T</button>
           </Tooltip>
         </div>
@@ -160,7 +160,7 @@ describe('Tooltip at the right edge in a real browser', () => {
   it('measures the final bubble, not the one that is still scaling in', async () => {
     renderInBrowser(
       <div style={{ position: 'absolute', top: 10, right: 0 }}>
-        <Tooltip text="Mudar para tema escuro" position="bottom" animation={{ recipe: 'pop' }}>
+        <Tooltip text="Mudar para tema escuro" placement="bottom" animation={{ recipe: 'pop' }}>
           <button>T</button>
         </Tooltip>
       </div>
@@ -181,7 +181,7 @@ describe('Tooltip following its trigger in a real browser', () => {
     renderInBrowser(
       <div data-testid="box" style={{ overflow: 'auto', height: 200, width: 400, margin: '100px auto' }}>
         <div style={{ height: 1000, paddingTop: 80 }}>
-          <Tooltip text="Dica" position="bottom">
+          <Tooltip text="Dica" placement="bottom">
             <button>Alvo</button>
           </Tooltip>
         </div>
@@ -201,7 +201,7 @@ describe('Tooltip following its trigger in a real browser', () => {
     renderInBrowser(
       <div data-testid="frame" style={{ position: 'absolute', top: 150, left: 0, width: 800 }}>
         <div style={{ marginLeft: '60%', width: 'fit-content' }}>
-          <Tooltip text="Dica" position="top">
+          <Tooltip text="Dica" placement="top">
             <button>Alvo</button>
           </Tooltip>
         </div>
@@ -221,7 +221,7 @@ describe('Tooltip following its trigger in a real browser', () => {
     renderInBrowser(
       <div data-testid="box" style={{ overflow: 'auto', height: 120, width: 300, margin: '100px auto' }}>
         <div style={{ height: 1000, paddingTop: 20 }}>
-          <Tooltip text="Dica" position="bottom">
+          <Tooltip text="Dica" placement="bottom">
             <button>Alvo</button>
           </Tooltip>
         </div>
@@ -240,7 +240,7 @@ describe('Tooltip in right-to-left in a real browser', () => {
   const rtl = (position: 'start' | 'end') => (
     <div dir="rtl" style={{ margin: '200px auto', width: 100 }}>
       <UIProvider locale={{ ...ptBR, dir: 'rtl' }}>
-        <Tooltip text="Dica" position={position}>
+        <Tooltip text="Dica" placement={position}>
           <button>Alvo</button>
         </Tooltip>
       </UIProvider>

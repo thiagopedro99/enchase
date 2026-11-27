@@ -2,14 +2,14 @@ import type { CSSProperties, ReactNode, Ref } from 'react'
 import type { PortalContainer } from '@utils/portalContainer.ts'
 import type { MotionOverride } from '@motion/types.ts'
 
-export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right'
+export type TooltipSide = 'top' | 'bottom' | 'left' | 'right'
 
-export type TooltipPosition = TooltipPlacement | 'start' | 'end'
+export type TooltipPlacement = TooltipSide | 'start' | 'end'
 
 export interface TooltipProps {
   text: string
   children: ReactNode
-  position?: TooltipPosition | undefined
+  placement?: TooltipPlacement | undefined
   describe?: boolean | undefined
   arrow?: boolean | undefined
   container?: PortalContainer | undefined

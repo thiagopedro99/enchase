@@ -13,7 +13,7 @@ describe('the ref of the Tooltip in a real browser', () => {
     const target = createRef<HTMLSpanElement>()
     renderInBrowser(
       <div style={{ margin: '200px auto', width: 100 }}>
-        <Tooltip ref={target} text="Dica" position="top" openDelay={0}>
+        <Tooltip ref={target} text="Dica" placement="top" openDelay={0}>
           <button>Alvo</button>
         </Tooltip>
       </div>,

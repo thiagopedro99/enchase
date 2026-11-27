@@ -247,7 +247,7 @@ describe('Tooltip placement', () => {
     withViewport()
     vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(rect)
     renderWithProviders(
-      <Tooltip text="Save changes" position={position}>
+      <Tooltip text="Save changes" placement={position}>
         <button>Save</button>
       </Tooltip>
     )
@@ -262,7 +262,7 @@ describe('Tooltip placement', () => {
     withViewport()
     const spy = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue(rect)
     renderWithProviders(
-      <Tooltip text="Save changes" position="bottom">
+      <Tooltip text="Save changes" placement="bottom">
         <button>Save</button>
       </Tooltip>
     )
@@ -304,7 +304,7 @@ describe('Tooltip contract', () => {
   it('marks the trigger and the bubble with data-slot and the bubble with position and state', async () => {
     const user = userEvent.setup()
     const { container } = renderWithProviders(
-      <Tooltip text="Save changes" position="bottom">
+      <Tooltip text="Save changes" placement="bottom">
         <button>Save</button>
       </Tooltip>
     )
@@ -345,7 +345,7 @@ describe('Tooltip contract', () => {
   ] as const)('maps %s %s to the %s side', async (dir, position, placement) => {
     const user = userEvent.setup()
     renderWithProviders(
-      <Tooltip text="Save changes" position={position}>
+      <Tooltip text="Save changes" placement={position}>
         <button>Save</button>
       </Tooltip>,
       { locale: { locale: 'x', dir, messages: ptBR.messages } }

@@ -8,7 +8,7 @@ const meta = {
   component: Tooltip,
   args: {
     text: 'Save changes',
-    position: 'top',
+    placement: 'top',
     describe: true,
     arrow: false,
     openDelay: 0,
@@ -27,7 +27,7 @@ const meta = {
       description: 'Text of the tooltip. With describe on, it also becomes the accessible description of the trigger.',
       control: 'text'
     },
-    position: {
+    placement: {
       description: 'Side of the trigger where the tooltip appears. start and end follow the direction of the UIProvider (left and right in ltr, the reverse in rtl). Near the edge of the screen the tooltip flips to the other side and shifts to fit.',
       control: 'select',
       options: ['top', 'bottom', 'left', 'right', 'start', 'end'],
@@ -87,7 +87,7 @@ export const Positions: Story = {
   render: (args) => (
     <div style={{ display: 'flex', gap: '1.5rem', padding: '3rem 4rem', flexWrap: 'wrap' }}>
       {(['top', 'bottom', 'left', 'right'] as const).map((position) => (
-        <Tooltip key={position} {...args} position={position} text={`Side: ${position}`}>
+        <Tooltip key={position} {...args} placement={position} text={`Side: ${position}`}>
           <Button variant="outline">{position}</Button>
         </Tooltip>
       ))}

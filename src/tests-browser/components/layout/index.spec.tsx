@@ -123,7 +123,7 @@ describe('Tooltip in a real browser', () => {
     renderInBrowser(
       <div data-testid="scroller" style={{ height: 60, width: 200, overflow: 'auto', margin: '200px auto', border: '1px solid' }}>
         <div style={{ height: 300 }}>
-          <Tooltip text="Dica longa" position="top">
+          <Tooltip text="Dica longa" placement="top">
             <button>Alvo</button>
           </Tooltip>
         </div>

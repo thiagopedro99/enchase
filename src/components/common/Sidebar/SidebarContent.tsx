@@ -56,7 +56,7 @@ const SidebarItemView = ({ item, current, collapsed, index, onSelect }: SidebarI
   return (
     <li {...slot('sidebar', 'item')} className={styles.listItem} style={{ '--enchase-sidebar-index': index } as CSSProperties}>
       {collapsed ? (
-        <Tooltip text={item.label} position="end" describe={false}>
+        <Tooltip text={item.label} placement="end" describe={false}>
           {element}
         </Tooltip>
       ) : (

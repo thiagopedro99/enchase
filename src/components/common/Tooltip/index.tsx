@@ -1,7 +1,7 @@
 import { cloneElement, isValidElement, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
-import { arrowPadding, bubbleOffset, closeDelay as defaultCloseDelay, defaultArrow, defaultPosition, joinsGroup, openDelay as defaultOpenDelay, resolveAnimation, tooltipGroup, viewportPadding } from './defaultData.ts'
+import { arrowPadding, bubbleOffset, closeDelay as defaultCloseDelay, defaultArrow, defaultPlacement, joinsGroup, openDelay as defaultOpenDelay, resolveAnimation, tooltipGroup, viewportPadding } from './defaultData.ts'
 import { autoUpdate, computePosition, resolvePlacement } from '../../../positioning/index.ts'
 import { mergeProps, slot } from '@utils/mergeProps.ts'
 import { mergeRefs } from '@utils/mergeRefs.ts'
@@ -17,7 +17,7 @@ import type { TooltipProps } from './types.ts'
 export const Tooltip = ({
   text,
   children,
-  position = defaultPosition,
+  placement = defaultPlacement,
   describe = true,
   arrow = defaultArrow,
   container,
@@ -101,7 +101,7 @@ export const Tooltip = ({
     const update = () => {
       const pointer = arrowRef.current
       const result = computePosition(reference, bubble, {
-        placement: resolvePlacement(position, dir === 'rtl'),
+        placement: resolvePlacement(placement, dir === 'rtl'),
         offset: bubbleOffset,
         padding: viewportPadding,
         arrow: pointer ? { element: pointer, padding: arrowPadding } : undefined
@@ -121,7 +121,7 @@ export const Tooltip = ({
     }
 
     return autoUpdate(reference, bubble, update)
-  }, [presence.mounted, presence.ref, position, dir, target, arrow])
+  }, [presence.mounted, presence.ref, placement, dir, target, arrow])
 
   const trigger = describe && isValidElement(children) ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string | undefined }>, { 'aria-describedby': id }) : children
 

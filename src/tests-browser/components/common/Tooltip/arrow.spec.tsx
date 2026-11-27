@@ -52,7 +52,7 @@ describe('the arrow of the Tooltip in a real browser', () => {
   it.each(['top', 'bottom', 'left', 'right'] as const)('sits on the edge of the bubble that faces the trigger, pointing at the middle of it, when the bubble is at the %s', async (position) => {
     renderInBrowser(
       centered(
-        <Tooltip text="Uma dica um pouco maior" position={position} arrow openDelay={0}>
+        <Tooltip text="Uma dica um pouco maior" placement={position} arrow openDelay={0}>
           <button>Alvo</button>
         </Tooltip>
       )
@@ -70,7 +70,7 @@ describe('the arrow of the Tooltip in a real browser', () => {
   it('points out of the bubble by about the half of its diagonal, and stays clear of the trigger', async () => {
     renderInBrowser(
       centered(
-        <Tooltip text="Dica" position="top" arrow openDelay={0}>
+        <Tooltip text="Dica" placement="top" arrow openDelay={0}>
           <button>Alvo</button>
         </Tooltip>
       )
@@ -86,7 +86,7 @@ describe('the arrow of the Tooltip in a real browser', () => {
   it('keeps pointing at the middle of a trigger of a fixed size, inside the bubble, when the bubble moves along the trigger near the edge of the screen', async () => {
     renderInBrowser(
       <div style={{ position: 'absolute', top: 300, left: 2 }}>
-        <Tooltip text="A dica longa o bastante para empurrar a bolha" position="top" arrow openDelay={0}>
+        <Tooltip text="A dica longa o bastante para empurrar a bolha" placement="top" arrow openDelay={0}>
           <button style={{ inlineSize: 80, blockSize: 32, padding: 0 }}>Alvo</button>
         </Tooltip>
       </div>
@@ -103,7 +103,7 @@ describe('the arrow of the Tooltip in a real browser', () => {
   it('moves to the other edge when the bubble flips under the trigger for lack of room', async () => {
     renderInBrowser(
       <div style={{ position: 'absolute', top: 2, left: 560 }}>
-        <Tooltip text="Dica" position="top" arrow openDelay={0}>
+        <Tooltip text="Dica" placement="top" arrow openDelay={0}>
           <button>Alvo</button>
         </Tooltip>
       </div>
@@ -122,7 +122,7 @@ describe('the arrow of the Tooltip in a real browser', () => {
     renderInBrowser(
       <div dir="rtl" style={{ position: 'absolute', top: 300, left: 560 }}>
         <UIProvider locale={{ ...ptBR, dir: 'rtl' }}>
-          <Tooltip text="Dica" position={position} arrow openDelay={0}>
+          <Tooltip text="Dica" placement={position} arrow openDelay={0}>
             <button>Alvo</button>
           </Tooltip>
         </UIProvider>

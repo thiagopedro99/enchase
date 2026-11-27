@@ -1,9 +1,9 @@
 import { baseTuning, presetScale } from '@motion/defaultData.ts'
 
 import type { MotionOverride, MotionSettings } from '@motion/types.ts'
-import type { TooltipAnimation, TooltipPosition } from './types.ts'
+import type { TooltipAnimation, TooltipPlacement } from './types.ts'
 
-export const defaultPosition: TooltipPosition = 'top'
+export const defaultPlacement: TooltipPlacement = 'top'
 
 export const defaultArrow = false
 

@@ -26,7 +26,7 @@ const ThemeToggle = ({ animation, ...props }: ThemeToggleProps) => {
   }
 
   return (
-    <Tooltip text={label} position="bottom" describe={false}>
+    <Tooltip text={label} placement="bottom" describe={false}>
       <button {...mergeProps(own, props)}>
         <IconSwap className={styles.icon} data-slot="theme-toggle-icon" first={<MoonIcon size={20} />} second={<SunIcon size={20} />} showSecond={resolvedMode === 'dark'} />
       </button>

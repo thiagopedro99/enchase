@@ -19,10 +19,10 @@ export const ModalDemo = () => {
 
 export const TooltipDemo = () => (
   <Demo title="Tooltip" hint="Move the mouse from one button to the other: the second one opens without animating.">
-    <Tooltip text="Save changes" position="top">
+    <Tooltip text="Save changes" placement="top">
       <Button variant="outline">Save</Button>
     </Tooltip>
-    <Tooltip text="Discard changes" position="top">
+    <Tooltip text="Discard changes" placement="top">
       <Button variant="outline">Discard</Button>
     </Tooltip>
   </Demo>

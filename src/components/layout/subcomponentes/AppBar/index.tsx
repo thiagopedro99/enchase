@@ -12,7 +12,7 @@ export const AppBar = ({ items, menuLabel, menuExpanded, menuControls, menuHasPo
 
   return (
     <header {...mergeProps(own, props)}>
-      <Tooltip text={menuLabel} position="bottom" describe={false}>
+      <Tooltip text={menuLabel} placement="bottom" describe={false}>
         <button
           type="button"
           className={styles.menuButton}
