@@ -446,7 +446,7 @@ describe('the field of the Combobox in a real browser', () => {
       </div>
     )
 
-    expect([style('combobox-control').minWidth, style('combobox-control').paddingLeft, style('combobox-input').fontSize]).toEqual(['120px', '12px', '14px'])
+    expect([style('combobox-control').minWidth, style('combobox-control').paddingLeft, style('combobox-input').fontSize]).toEqual(['min(120px, 100%)', '12px', '14px'])
   })
 
   it('starts at the 200px, 0.75rem padding and 0.875rem text of the other fields and as tall as them', () => {
@@ -457,7 +457,7 @@ describe('the field of the Combobox in a real browser', () => {
       </>
     )
 
-    expect([style('combobox-control').minWidth, style('combobox-control').paddingLeft, style('combobox-input').fontSize]).toEqual(['200px', '12px', '14px'])
+    expect([style('combobox-control').minWidth, style('combobox-control').paddingLeft, style('combobox-input').fontSize]).toEqual(['min(200px, 100%)', '12px', '14px'])
     expect(control().getBoundingClientRect().height).toBe(part('input-control').getBoundingClientRect().height)
   })
 

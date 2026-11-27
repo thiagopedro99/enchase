@@ -17,6 +17,17 @@
   inline-size: 100%;
 }
 
+:where(.wrapper)::before {
+  content: '';
+  flex: none;
+  box-sizing: border-box;
+  inline-size: var(--enchase-input-min-width, 200px);
+  max-inline-size: 100%;
+  block-size: 0;
+  margin-block-end: calc(var(--enchase-input-gap, var(--enchase-space-xs)) * -1);
+  pointer-events: none;
+}
+
 .field {
   position: relative;
   display: flex;
@@ -29,7 +40,7 @@
 
 :where(.field) {
   inline-size: 100%;
-  min-inline-size: var(--enchase-input-min-width, 200px);
+  min-inline-size: min(var(--enchase-input-min-width, 200px), 100%);
   min-block-size: var(--enchase-input-height, 3.5rem);
   padding-block: 0;
   padding-inline-start: var(--enchase-input-padding-inline, var(--enchase-space-md));
@@ -297,6 +308,11 @@
   grid-template-columns: var(--enchase-input-label-width, 7.5rem) minmax(0, 1fr);
   column-gap: calc(var(--enchase-input-gap, var(--enchase-space-xs)) * 2);
   align-items: start;
+}
+
+.wrapper[data-label-placement='start']::before {
+  grid-area: 1 / 2;
+  margin-block-end: 0;
 }
 
 .wrapper[data-label-placement='start'] > .label {

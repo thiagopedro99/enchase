@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
+import { Combobox } from '@components/common/Combobox/index.tsx'
+import { DatePicker } from '@components/common/DatePicker/index.tsx'
 import { Input } from '@components/common/Input/index.tsx'
 import { NumberInput } from '@components/common/NumberInput/index.tsx'
 import { Select } from '@components/common/Select/index.tsx'
@@ -48,10 +50,10 @@ describe('the text box of the fields from the hooks', () => {
         return [style.minWidth, style.paddingLeft, style.fontSize]
       })
     ).toEqual([
-      ['200px', '12px', '14px'],
-      ['200px', '12px', '14px'],
-      ['200px', '12px', '14px'],
-      ['200px', '12px', '14px']
+      ['min(200px, 100%)', '12px', '14px'],
+      ['min(200px, 100%)', '12px', '14px'],
+      ['min(200px, 100%)', '12px', '14px'],
+      ['min(200px, 100%)', '12px', '14px']
     ])
   })
 
@@ -65,10 +67,10 @@ describe('the text box of the fields from the hooks', () => {
         return [style.minWidth, style.paddingLeft, style.fontSize]
       })
     ).toEqual([
-      ['120px', '12px', '14px'],
-      ['120px', '12px', '14px'],
-      ['120px', '12px', '14px'],
-      ['120px', '12px', '14px']
+      ['min(120px, 100%)', '12px', '14px'],
+      ['min(120px, 100%)', '12px', '14px'],
+      ['min(120px, 100%)', '12px', '14px'],
+      ['min(120px, 100%)', '12px', '14px']
     ])
   })
 
@@ -218,5 +220,74 @@ describe('the room of the buttons inside a field from the target size', () => {
     document.body.innerHTML = ''
     renderInBrowser(narrow({ '--enchase-input-padding-inline': '8px' }))
     expect(labelOf('number-input').offsetWidth).toBe(220)
+  })
+})
+
+describe('the minimum width of the fields against the width of their container', () => {
+  const roots = ['input', 'number-input', 'select', 'textarea', 'combobox', 'date-picker']
+
+  const six = (placement: 'floating' | 'stacked' | 'start') => (
+    <>
+      <Input label="Name" labelPlacement={placement} />
+      <NumberInput label="Amount" defaultValue={1} labelPlacement={placement} />
+      <Select label="Plan" options={options} labelPlacement={placement} />
+      <Textarea label="Notes" labelPlacement={placement} />
+      <Combobox label="Fruit" options={options} labelPlacement={placement} />
+      <DatePicker label="Day" labelPlacement={placement} />
+    </>
+  )
+
+  const widths = () => roots.map((name) => Math.round(part(name).getBoundingClientRect().width))
+
+  const overflowing = (container: HTMLElement) => [...container.querySelectorAll<HTMLElement>('[data-slot]')].filter((element) => element.getBoundingClientRect().right > container.getBoundingClientRect().right + 0.5).map((element) => element.dataset.slot)
+
+  it('keeps 200px for a field that shrinks to its content', () => {
+    renderInBrowser(<div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', gap: 8, inlineSize: 1200 }}>{six('floating')}</div>)
+
+    widths().forEach((width, index) => expect(width, roots[index]).toBeGreaterThanOrEqual(200))
+  })
+
+  it('keeps the same block size as a field with no minimum to hold', () => {
+    const view = renderInBrowser(<div style={{ inlineSize: 600 }}>{six('stacked')}</div>)
+    const heights = roots.map((name) => part(name).getBoundingClientRect().height)
+
+    view.unmount()
+    renderInBrowser(scoped({ inlineSize: '600px', '--enchase-input-min-width': '0px' }, six('stacked')))
+
+    expect(roots.map((name) => part(name).getBoundingClientRect().height)).toEqual(heights)
+  })
+
+  for (const [placement, column] of [
+    ['floating', 140],
+    ['stacked', 140],
+    ['start', 240]
+  ] as const) {
+    it(`fits two columns of ${column}px with the ${placement} label, with no field past its column`, () => {
+      const view = renderInBrowser(<div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, inlineSize: column * 2 + 8, '--enchase-input-label-width': '3rem' } as CSSProperties}>{six(placement)}</div>)
+      const grid = view.container.firstElementChild as HTMLElement
+
+      expect(grid.scrollWidth).toBeLessThanOrEqual(grid.clientWidth)
+      roots.forEach((name) => {
+        const root = part(name)
+
+        expect(Math.round(root.getBoundingClientRect().width), name).toBe(column)
+        expect(part(`${name}-control`).getBoundingClientRect().width, name).toBeLessThan(200)
+        expect(overflowing(root), name).toEqual([])
+      })
+    })
+  }
+
+  it('follows the hook when the container is wide and the container when it is narrow', () => {
+    renderInBrowser(scoped({ '--enchase-input-min-width': '320px', display: 'flex', flexWrap: 'wrap', alignItems: 'flex-start', inlineSize: '1200px' }, <Input label="Name" />))
+
+    expect(Math.round(part('input').getBoundingClientRect().width)).toBe(320)
+  })
+
+  it('does not widen a narrow block container', () => {
+    const view = renderInBrowser(<div style={{ inlineSize: 120, overflow: 'auto' }}>{six('floating')}</div>)
+    const box = view.container.firstElementChild as HTMLElement
+
+    expect(box.scrollWidth).toBe(box.clientWidth)
+    expect(widths()).toEqual([120, 120, 120, 120, 120, 120])
   })
 })
