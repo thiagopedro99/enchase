@@ -12,7 +12,7 @@ const SitePage = ({ title, actions, children }: SitePageProps) => {
   }, [title])
 
   return (
-    <Layout className={styles.page} navigation="navbar" translucent maxWidth="full" padding={false} brand={brand} navigationSections={siteNavigation} footerProps={footerProps} {...(actions ? { actions } : {})}>
+    <Layout className={styles.page} navigation="navbar" translucent maxWidth="full" padding={false} brand={brand} navigationSections={siteNavigation} footerProps={footerProps} {...(actions ? { persistentActions: actions } : {})}>
       {children}
     </Layout>
   )

@@ -10,8 +10,6 @@
 }
 
 .avatar {
-  --enchase-avatar-size-sm: 1.75rem;
-
   flex: none;
 }
 
@@ -23,4 +21,10 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--enchase-color-text-primary);
+}
+
+@media (max-width: 767.98px) {
+  .name {
+    display: none;
+  }
 }

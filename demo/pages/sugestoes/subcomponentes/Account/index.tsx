@@ -20,7 +20,7 @@ const Account = ({ account, onLeave }: AccountProps) => {
 
   return (
     <div className={styles.account}>
-      <Avatar size="sm" name={account.user.login} className={styles.avatar} {...(account.user.avatarUrl ? { src: account.user.avatarUrl } : {})} />
+      <Avatar size="xs" name={account.user.login} className={styles.avatar} {...(account.user.avatarUrl ? { src: account.user.avatarUrl } : {})} />
       <span className={styles.name}>@{account.user.login}</span>
       <Button variant="ghost" size="sm" onClick={onLeave}>
         Sair
