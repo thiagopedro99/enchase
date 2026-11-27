@@ -1,6 +1,6 @@
 import type { HTMLAttributes, ReactNode, Ref } from 'react'
 
-export type AvatarSize = 'sm' | 'md' | 'lg'
+export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg'
 
 export interface AvatarProps extends HTMLAttributes<HTMLSpanElement> {
   name?: string | undefined

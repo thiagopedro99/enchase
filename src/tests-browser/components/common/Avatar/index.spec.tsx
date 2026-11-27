@@ -24,17 +24,19 @@ afterEach(() => {
 const stateOf = (index = 0) => () => part('avatar', index)?.getAttribute('data-state')
 
 describe('Avatar in a real browser', () => {
-  it('is a circle of 32, 40 or 56 pixels by size', () => {
+  it('is a circle of 24, 32, 40 or 56 pixels by size', () => {
     renderInBrowser(
       <>
+        <Avatar name="Ana Souza" size="xs" />
         <Avatar name="Ana Souza" size="sm" />
         <Avatar name="Ana Souza" />
         <Avatar name="Ana Souza" size="lg" />
       </>
     )
 
-    expect([0, 1, 2].map((index) => part('avatar', index).getBoundingClientRect().width)).toEqual([32, 40, 56])
-    expect([0, 1, 2].map((index) => part('avatar', index).getBoundingClientRect().height)).toEqual([32, 40, 56])
+    expect([0, 1, 2, 3].map((index) => part('avatar', index).getBoundingClientRect().width)).toEqual([24, 32, 40, 56])
+    expect([0, 1, 2, 3].map((index) => part('avatar', index).getBoundingClientRect().height)).toEqual([24, 32, 40, 56])
+    expect(part('avatar', 0).scrollWidth).toBeLessThanOrEqual(part('avatar', 0).clientWidth)
     expect(parseFloat(style('avatar').borderTopLeftRadius)).toBeGreaterThan(100)
   })
 

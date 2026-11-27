@@ -6,7 +6,7 @@ import { createRef } from 'react'
 
 import { Avatar } from '@components/common/Avatar/index.tsx'
 
-const sizes = ['sm', 'md', 'lg'] as const
+const sizes = ['xs', 'sm', 'md', 'lg'] as const
 
 const image = () => document.querySelector('img') as HTMLImageElement
 

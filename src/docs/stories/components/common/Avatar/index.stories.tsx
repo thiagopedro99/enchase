@@ -27,7 +27,7 @@ const meta = {
       control: 'text'
     },
     size: {
-      description: 'Size of the avatar: sm is 2 rem, md is 2.5 rem and lg is 3.5 rem.',
+      description: 'Size of the avatar: xs is 1.5 rem (24 px, for a dense row or next to a line of text), sm is 2 rem, md is 2.5 rem and lg is 3.5 rem.',
       control: 'inline-radio',
       options: sizes,
       table: { defaultValue: { summary: `'${defaultSize}'` } }

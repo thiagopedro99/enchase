@@ -225,6 +225,7 @@ const feedback: HookValues = {
   '--enchase-progress-ring-value-font-size-sm': '0.9375rem',
   '--enchase-progress-ring-value-font-size-md': '1.5rem',
   '--enchase-progress-ring-value-font-size-lg': '1.725rem',
+  '--enchase-avatar-size-xs': '1.25rem',
   '--enchase-avatar-size-sm': '1.5rem',
   '--enchase-avatar-size-md': '2rem',
   '--enchase-avatar-size-lg': '2.5rem',

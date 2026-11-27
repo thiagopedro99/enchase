@@ -19,6 +19,12 @@
   line-height: var(--enchase-avatar-line-height, var(--enchase-line-height-none, 1));
 }
 
+:where(.avatar[data-size='xs']) {
+  inline-size: var(--enchase-avatar-size-xs, 1.5rem);
+  block-size: var(--enchase-avatar-size-xs, 1.5rem);
+  font-size: var(--enchase-avatar-font-size-xs, var(--enchase-font-size-xs));
+}
+
 :where(.avatar[data-size='sm']) {
   inline-size: var(--enchase-avatar-size-sm, 2rem);
   block-size: var(--enchase-avatar-size-sm, 2rem);
