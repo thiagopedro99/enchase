@@ -202,7 +202,7 @@ export const Refs = () => {
       <Drawer ref={drawer} open={false} onClose={() => undefined}>Body</Drawer>
       <Sidebar ref={sidebar} sections={sections} />
       <Popover ref={popover} content="More"><Button>Open</Button></Popover>
-      <Menu ref={menu} label="Actions" items={[{ id: 'edit', label: 'Edit' }]}><Button>Open</Button></Menu>
+      <Menu ref={menu} ariaLabel="Actions" items={[{ id: 'edit', label: 'Edit' }]}><Button>Open</Button></Menu>
       <Tooltip ref={tooltip} text="Hint"><Button>Hover</Button></Tooltip>
       <Button ref={(node: HTMLButtonElement | null) => void node}>Callback</Button>
       <Card ref={undefined}>Without</Card>

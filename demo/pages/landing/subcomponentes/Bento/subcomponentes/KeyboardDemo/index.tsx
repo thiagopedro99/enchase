@@ -13,7 +13,7 @@ const KeyboardDemo = () => {
       <div className={styles.fields}>
         <Combobox label="Framework" options={frameworks} defaultValue={defaultFramework} fullWidth />
         <DatePicker label="Entrega" defaultValue={defaultDate} fullWidth />
-        <Menu label="Ações do projeto" items={items}>
+        <Menu ariaLabel="Ações do projeto" items={items}>
           <Button variant="outline">
             Ações
             <ChevronDownIcon size={16} />

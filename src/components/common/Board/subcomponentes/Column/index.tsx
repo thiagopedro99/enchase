@@ -39,7 +39,7 @@ const BoardCard = <Item extends BoardItem>({ item, dimmed, picked, renderCard, g
 
       {!readOnly && (
         <span {...slot('board', 'menu-button')} className={styles.menuButton}>
-          <Menu items={menuEntries} label={labels.boardMoveCardTo(label)}>
+          <Menu items={menuEntries} ariaLabel={labels.boardMoveCardTo(label)}>
             <Button variant="ghost" size="sm" iconOnly aria-label={labels.boardMoveCardTo(label)} {...board.getMenuButtonProps(item.id)}>
               <BoardMenuIcon size={16} />
             </Button>

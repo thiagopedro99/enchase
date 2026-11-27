@@ -23,7 +23,7 @@ const openOnShortScreen = async (key: '{Enter}' | '{ArrowDown}' | '{ArrowUp}' = 
   await page.viewport(1280, 300)
   renderInBrowser(
     <div style={{ padding: 16 }}>
-      <Menu label="Actions" items={entries}>
+      <Menu ariaLabel="Actions" items={entries}>
         <Button>Open</Button>
       </Menu>
     </div>

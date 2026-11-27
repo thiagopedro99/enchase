@@ -89,7 +89,7 @@ const sidebarLink = (index: number) => () => part('sidebar-nav').querySelectorAl
 const navbarLink = (index: number) => () => part('navbar-menu').querySelectorAll('a')[index]
 
 const dropdown = (
-  <Menu label="Actions" items={entries} defaultOpen>
+  <Menu ariaLabel="Actions" items={entries} defaultOpen>
     <button type="button">Open</button>
   </Menu>
 )

@@ -87,7 +87,7 @@ export const gallery = (
       <ButtonLink href="/docs">Docs</ButtonLink>
       <Link href="/api">Api</Link>
       <ThemeToggle />
-      <Menu label="Actions" items={menuEntries}>
+      <Menu ariaLabel="Actions" items={menuEntries}>
         <Button variant="ghost">Menu</Button>
       </Menu>
       <Popover content={<p>Details</p>}>

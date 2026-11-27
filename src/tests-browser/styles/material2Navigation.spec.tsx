@@ -96,7 +96,7 @@ describe('the pagination of the material2 style', () => {
 describe('the menu of the material2 style', () => {
   const opened = async () => {
     show(
-      <Menu label="Actions" items={[{ id: 'a', label: 'Action A' }, { id: 'b', label: 'Action B' }]} defaultOpen>
+      <Menu ariaLabel="Actions" items={[{ id: 'a', label: 'Action A' }, { id: 'b', label: 'Action B' }]} defaultOpen>
         <button type="button">Open</button>
       </Menu>
     )

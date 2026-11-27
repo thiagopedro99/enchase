@@ -153,8 +153,8 @@ Cada componente tem uma story no [Storybook publicado](https://enchase.othiagosi
 | `ConfirmModal` | `<ConfirmModal open={open} onClose={close} onConfirm={apagar} message="Apagar item?" />` |
 | `Drawer` | `<Drawer open={open} onClose={close} title="Filtros" side="end">...</Drawer>`: painel que desliza de uma borda da página, com portal, `container`, foco preso e a página inerte, como o `Modal`; `side` (`start` ou `end`) acompanha a direção da página |
 | `Tooltip` | `<Tooltip text="Ajuda"><button>?</button></Tooltip>` |
-| `Popover` | `<Popover label="Detalhes" content={<p>Conteúdo</p>}><button>Abrir</button></Popover>` |
-| `Menu` | `<Menu label="Ações" items={[{ id: 'editar', label: 'Editar', onSelect: editar }, { id: 'sep', separator: true }, { id: 'apagar', label: 'Apagar', onSelect: apagar }]}><button>Ações</button></Menu>`: lista de ações aberta por um botão (`role="menu"`, sobre o `Popover`), com setas, Home, End e digitação para ir a um item; escolher um item chama o `onSelect` dele, fecha o menu e devolve o foco ao botão, e Esc e Tab também fecham |
+| `Popover` | `<Popover ariaLabel="Detalhes" content={<p>Conteúdo</p>}><button>Abrir</button></Popover>` |
+| `Menu` | `<Menu ariaLabel="Ações" items={[{ id: 'editar', label: 'Editar', onSelect: editar }, { id: 'sep', separator: true }, { id: 'apagar', label: 'Apagar', onSelect: apagar }]}><button>Ações</button></Menu>`: lista de ações aberta por um botão (`role="menu"`, sobre o `Popover`), com setas, Home, End e digitação para ir a um item; escolher um item chama o `onSelect` dele, fecha o menu e devolve o foco ao botão, e Esc e Tab também fecham |
 | `Loading`, `InlineLoading` | `<Loading overlay text="Carregando" />` |
 | `Progress` | `<Progress value={40} aria-label="Enviando fotos" />`; sem `value` é indeterminado, e `variant="circular"` desenha um anel |
 | `Skeleton` | `<Skeleton variant="text" width="12rem" />` |

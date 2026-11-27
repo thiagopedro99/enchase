@@ -48,7 +48,7 @@ const popover = (
 
 const menu = (
   <Menu
-    label="Actions"
+    ariaLabel="Actions"
     items={[
       { id: 'first', label: 'First' },
       { id: 'last', label: 'Last' }

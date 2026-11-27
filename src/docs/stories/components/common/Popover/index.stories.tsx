@@ -26,7 +26,7 @@ const meta = {
     arrow: defaultArrow,
     closeOnEsc: defaultCloseOnEsc,
     closeOnOutsideClick: defaultCloseOnOutsideClick,
-    label: 'Order details',
+    ariaLabel: 'Order details',
     content: panel,
     children: <Button>Open details</Button>
   },
@@ -60,7 +60,7 @@ const meta = {
       options: ['dialog', 'listbox', 'tree', 'grid', 'menu'],
       table: { defaultValue: { summary: defaultRole } }
     },
-    label: {
+    ariaLabel: {
       description: 'Accessible name of the content (aria-label).',
       control: 'text'
     },

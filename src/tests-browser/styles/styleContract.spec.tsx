@@ -208,7 +208,7 @@ describe.each(builtInStyleEntries)('the contract of the %s style in a real brows
     show(
       <Menu
         defaultOpen
-        label="Actions"
+        ariaLabel="Actions"
         items={[
           { id: 'edit', label: 'Edit', icon: <svg /> },
           { id: 'split', separator: true },

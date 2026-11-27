@@ -146,7 +146,7 @@ describe('the compact density of the workbench style, in the lists', () => {
 
   it('pads the item of the menu by 4px above and below and 12px at the sides, as the original does, which makes it 30px high where the original is 28px because the style keeps the type', async () => {
     show(
-      <Menu label="Actions" items={entries} defaultOpen>
+      <Menu ariaLabel="Actions" items={entries} defaultOpen>
         <button type="button">Open</button>
       </Menu>,
       'compact'

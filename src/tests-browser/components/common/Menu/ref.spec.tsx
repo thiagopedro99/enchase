@@ -18,7 +18,7 @@ describe('the ref of the Menu in a real browser', () => {
     const target = createRef<HTMLDivElement>()
     renderInBrowser(
       <div style={{ margin: '120px auto', width: 120 }}>
-        <Menu ref={target} label="Actions" items={entries}>
+        <Menu ref={target} ariaLabel="Actions" items={entries}>
           <button>Open</button>
         </Menu>
       </div>,

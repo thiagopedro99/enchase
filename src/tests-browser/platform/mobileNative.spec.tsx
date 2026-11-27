@@ -153,7 +153,7 @@ describe('touch handling on the interactive controls', () => {
 
   it('applies the same handling to the items of the menu', async () => {
     renderInBrowser(
-      <Menu defaultOpen label="Ações" items={[{ id: 'edit', label: 'Editar' }]}>
+      <Menu defaultOpen ariaLabel="Ações" items={[{ id: 'edit', label: 'Editar' }]}>
         <button>Abrir</button>
       </Menu>
     )

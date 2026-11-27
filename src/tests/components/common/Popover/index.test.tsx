@@ -41,7 +41,7 @@ describe('Popover', () => {
   it('keeps the content out of the page until it opens and links it to the trigger', async () => {
     const user = userEvent.setup()
     renderWithProviders(
-      <Popover content={content} label="Detalhes">
+      <Popover content={content} ariaLabel="Detalhes">
         <button>Abrir</button>
       </Popover>
     )
@@ -200,9 +200,9 @@ describe('Popover', () => {
     renderWithProviders(
       <Popover
         defaultOpen
-        label="Pai"
+        ariaLabel="Pai"
         content={
-          <Popover defaultOpen label="Filho" content={<button>Neto</button>}>
+          <Popover defaultOpen ariaLabel="Filho" content={<button>Neto</button>}>
             <button>Abrir filho</button>
           </Popover>
         }
@@ -221,7 +221,7 @@ describe('Popover', () => {
     const onClose = vi.fn()
     renderWithProviders(
       <Modal open onClose={onClose} title="Modal">
-        <Popover label="Pop" content={<button>Dentro</button>}>
+        <Popover ariaLabel="Pop" content={<button>Dentro</button>}>
           <button>Abrir</button>
         </Popover>
       </Modal>
@@ -243,7 +243,7 @@ describe('Popover', () => {
     const onClose = vi.fn()
     renderWithProviders(
       <Modal open onClose={onClose} title="Modal">
-        <Popover label="Pop" content={<button>Dentro</button>}>
+        <Popover ariaLabel="Pop" content={<button>Dentro</button>}>
           <button>Abrir</button>
         </Popover>
       </Modal>
@@ -268,7 +268,7 @@ describe('Popover', () => {
 
       return (
         <>
-          <Popover defaultOpen label="Pop" content={<button onClick={() => setModal(true)}>Abrir modal</button>}>
+          <Popover defaultOpen ariaLabel="Pop" content={<button onClick={() => setModal(true)}>Abrir modal</button>}>
             <button>Abrir</button>
           </Popover>
           <Modal open={modal} onClose={() => setModal(false)} title="Aberto">
@@ -363,7 +363,7 @@ describe('Popover', () => {
 
   it('has no axe violations open', async () => {
     const { container } = renderWithProviders(
-      <Popover defaultOpen label="Detalhes" content={content}>
+      <Popover defaultOpen ariaLabel="Detalhes" content={content}>
         <button>Abrir</button>
       </Popover>
     )
@@ -375,7 +375,7 @@ describe('Popover', () => {
 
   it('renders only the trigger on the server, even when open by default', () => {
     const html = renderToString(
-      <Popover defaultOpen label="Detalhes" content={<p>Conteúdo do popover</p>}>
+      <Popover defaultOpen ariaLabel="Detalhes" content={<p>Conteúdo do popover</p>}>
         <button>Abrir</button>
       </Popover>
     )
@@ -576,7 +576,7 @@ describe('Popover with the menu role', () => {
   const withNeighbours = (
     <div>
       <button>Antes</button>
-      <Popover role="menu" label="Ações" content={items}>
+      <Popover role="menu" ariaLabel="Ações" content={items}>
         <button>Abrir</button>
       </Popover>
       <button>Depois</button>
@@ -666,7 +666,7 @@ describe('Popover with the menu role', () => {
   it('keeps a dialog popover open when Shift+Tab leaves its first element, as before', async () => {
     const user = userEvent.setup()
     renderWithProviders(
-      <Popover label="Painel" content={<button>Primeiro</button>}>
+      <Popover ariaLabel="Painel" content={<button>Primeiro</button>}>
         <button>Abrir</button>
       </Popover>
     )
@@ -692,7 +692,7 @@ describe('the control of a popover for its content', () => {
   it('closes the popover from inside and gives the focus back to the trigger', async () => {
     const user = userEvent.setup()
     renderWithProviders(
-      <Popover label="Painel" content={<Closer />}>
+      <Popover ariaLabel="Painel" content={<Closer />}>
         <button>Abrir</button>
       </Popover>
     )
@@ -709,7 +709,7 @@ describe('the control of a popover for its content', () => {
     const scrollIntoView = stubScrollIntoView()
     const user = userEvent.setup()
     renderWithProviders(
-      <Popover label="Painel" content={<Closer />}>
+      <Popover ariaLabel="Painel" content={<Closer />}>
         <button>Abrir</button>
       </Popover>
     )
@@ -739,7 +739,7 @@ describe('the control of a popover for its content', () => {
     }
 
     renderWithProviders(
-      <Popover label="Painel" content={<Spy />}>
+      <Popover ariaLabel="Painel" content={<Spy />}>
         <button>Abrir</button>
       </Popover>
     )
@@ -761,7 +761,7 @@ describe('Popover ref', () => {
     const user = userEvent.setup()
     const ref = createRef<HTMLDivElement>()
     renderWithProviders(
-      <Popover content={content} label="Detalhes" ref={ref}>
+      <Popover content={content} ariaLabel="Detalhes" ref={ref}>
         <button>Abrir</button>
       </Popover>
     )
@@ -785,7 +785,7 @@ describe('Popover ref', () => {
     renderWithProviders(
       <Popover
         content={content}
-        label="Detalhes"
+        ariaLabel="Detalhes"
         ref={(node) => {
           calls.push(node)
         }}

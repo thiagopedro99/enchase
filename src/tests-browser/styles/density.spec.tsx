@@ -191,8 +191,8 @@ const parts: Part[] = [
 ]
 
 const overlays: Part[] = [
-  { name: 'the item of the menu', ui: <Menu defaultOpen label="Actions" items={menuEntries}><Button>Open</Button></Menu>, target: '[data-slot=menu-item]', enchase: '33 > 33', shadcn: '33 > 33', workbench: '32 > 30' },
-  { name: 'the popup of the menu', ui: <Menu defaultOpen label="Actions" items={menuEntries}><Button>Open</Button></Menu>, target: '[data-slot=popover-content]', enchase: '118 > 118', shadcn: '118 > 118', workbench: '113 > 107' },
+  { name: 'the item of the menu', ui: <Menu defaultOpen ariaLabel="Actions" items={menuEntries}><Button>Open</Button></Menu>, target: '[data-slot=menu-item]', enchase: '33 > 33', shadcn: '33 > 33', workbench: '32 > 30' },
+  { name: 'the popup of the menu', ui: <Menu defaultOpen ariaLabel="Actions" items={menuEntries}><Button>Open</Button></Menu>, target: '[data-slot=popover-content]', enchase: '118 > 118', shadcn: '118 > 118', workbench: '113 > 107' },
   { name: 'the list of the combobox', ui: <Combobox defaultOpen label="Fruit" options={fruits} />, target: '[data-slot=combobox-listbox]', enchase: '109 > 109', shadcn: '109 > 109', workbench: '104 > 98' },
   { name: 'the option of the combobox', ui: <Combobox defaultOpen label="Fruit" options={fruits} />, target: '[data-slot=combobox-option]', enchase: '33 > 33', shadcn: '33 > 33', workbench: '32 > 30' },
   { name: 'the popup of the date picker', ui: <DatePicker defaultOpen label="Date" />, target: '[data-slot=popover-content]', enchase: '266x306 > 258x296', shadcn: '266x306 > 258x296', workbench: '284x329 > 284x312' },

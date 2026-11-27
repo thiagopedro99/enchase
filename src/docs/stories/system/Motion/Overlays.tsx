@@ -45,7 +45,7 @@ export const ToastDemo = () => {
 
 export const PopoverDemo = () => (
   <Demo title="Popover" hint="Grows from the trigger with the snappy spring.">
-    <Popover label="Details" content={<div style={{ padding: '0.25rem 0.5rem' }}>Three items, delivery on Friday.</div>}>
+    <Popover ariaLabel="Details" content={<div style={{ padding: '0.25rem 0.5rem' }}>Three items, delivery on Friday.</div>}>
       <Button variant="outline">Open popover</Button>
     </Popover>
   </Demo>

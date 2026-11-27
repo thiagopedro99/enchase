@@ -10,7 +10,7 @@ describe('the ref of the Popover in a real browser', () => {
     const target = createRef<HTMLDivElement>()
     renderInBrowser(
       <div style={{ margin: '200px auto', width: 120 }}>
-        <Popover ref={target} label="Detalhes" content={<button>Dentro</button>}>
+        <Popover ref={target} ariaLabel="Detalhes" content={<button>Dentro</button>}>
           <button>Abrir</button>
         </Popover>
       </div>,

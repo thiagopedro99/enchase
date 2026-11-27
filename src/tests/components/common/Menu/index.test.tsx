@@ -21,7 +21,7 @@ const entries = (onSelect: (id: string) => void = () => undefined): MenuEntry[] 
 const page = (items: MenuEntry[] = entries()) => (
   <div>
     <button>Before</button>
-    <Menu label="Actions" items={items}>
+    <Menu ariaLabel="Actions" items={items}>
       <button>Open</button>
     </Menu>
     <button>After</button>
@@ -51,7 +51,7 @@ describePortalContainerContract({
   name: 'Menu',
   slot: 'popover-content',
   render: (container) => (
-    <Menu open label="Actions" items={entries()} container={container} onOpenChange={vi.fn()}>
+    <Menu open ariaLabel="Actions" items={entries()} container={container} onOpenChange={vi.fn()}>
       <button>Open</button>
     </Menu>
   )
@@ -347,7 +347,7 @@ describe('Menu', () => {
     const onClick = vi.fn()
 
     renderWithProviders(
-      <Menu label="Actions" items={entries()}>
+      <Menu ariaLabel="Actions" items={entries()}>
         <button onKeyDown={onKeyDown} onClick={onClick}>
           Open
         </button>
@@ -374,7 +374,7 @@ describe('Menu', () => {
 
       return (
         <Menu
-          label="Actions"
+          ariaLabel="Actions"
           items={entries()}
           open={open}
           onOpenChange={(next) => {
@@ -398,7 +398,7 @@ describe('Menu', () => {
     unmount()
 
     renderWithProviders(
-      <Menu defaultOpen label="Actions" items={entries()}>
+      <Menu defaultOpen ariaLabel="Actions" items={entries()}>
         <button>Open</button>
       </Menu>
     )
@@ -416,7 +416,7 @@ describe('Menu', () => {
       return (
         <>
           <button onClick={() => setOpen(true)}>Open from outside</button>
-          <Menu label="Actions" items={entries()} open={open} onOpenChange={setOpen}>
+          <Menu ariaLabel="Actions" items={entries()} open={open} onOpenChange={setOpen}>
             <button>Open</button>
           </Menu>
         </>
@@ -449,7 +449,7 @@ describe('Menu', () => {
   it('marks the parts with slots and lets the user class and style win', async () => {
     const user = userEvent.setup()
     renderWithProviders(
-      <Menu label="Actions" items={entries()} className="mine" style={{ color: 'rgb(1, 2, 3)' }} contentClassName="panel" contentStyle={{ color: 'rgb(4, 5, 6)' }}>
+      <Menu ariaLabel="Actions" items={entries()} className="mine" style={{ color: 'rgb(1, 2, 3)' }} contentClassName="panel" contentStyle={{ color: 'rgb(4, 5, 6)' }}>
         <button>Open</button>
       </Menu>
     )
@@ -470,7 +470,7 @@ describe('Menu', () => {
   it('turns the motion variables to zero when the animation is off', async () => {
     const user = userEvent.setup()
     renderWithProviders(
-      <Menu label="Actions" items={entries()} animation={false}>
+      <Menu ariaLabel="Actions" items={entries()} animation={false}>
         <button>Open</button>
       </Menu>
     )
@@ -492,7 +492,7 @@ describe('Menu', () => {
   })
 
   it('renders an optional prop that is passed as undefined exactly as if it was omitted', async () => {
-    const required = { open: true, label: 'Actions', items: entries(), children: <button>Open</button> }
+    const required = { open: true, ariaLabel: 'Actions', items: entries(), children: <button>Open</button> }
 
     const explicit = {
       defaultOpen: undefined,
@@ -530,7 +530,7 @@ describe('Menu ref', () => {
     const user = userEvent.setup()
     const ref = createRef<HTMLDivElement>()
     renderWithProviders(
-      <Menu label="Actions" items={entries()} ref={ref}>
+      <Menu ariaLabel="Actions" items={entries()} ref={ref}>
         <button>Open</button>
       </Menu>
     )

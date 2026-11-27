@@ -48,7 +48,7 @@ const within = (item: Element, container: Element) => {
 const neighbours = (log?: string[], items: MenuEntry[] = entries(log)): ReactElement => (
   <div>
     <button>Before</button>
-    <Menu label="Actions" items={items}>
+    <Menu ariaLabel="Actions" items={items}>
       <button>Open</button>
     </Menu>
     <button>After</button>
@@ -277,7 +277,7 @@ describe('Menu inside a modal', () => {
 
     return (
       <Modal open={open} onClose={() => setOpen(false)} title="Settings">
-        <Menu label="Actions" items={entries()}>
+        <Menu ariaLabel="Actions" items={entries()}>
           <button>Open</button>
         </Menu>
       </Modal>
@@ -324,7 +324,7 @@ describe('Menu with a list taller than the window', () => {
   const tall = (
     <div style={{ minHeight: 3000 }}>
       <div style={{ position: 'absolute', top: 16, left: 16 }}>
-        <Menu label="Language" items={languages}>
+        <Menu ariaLabel="Language" items={languages}>
           <button>Open</button>
         </Menu>
       </div>
@@ -381,7 +381,7 @@ describe('Menu with a list taller than the window', () => {
 describe('Menu from its hooks', () => {
   const open = async (items: MenuEntry[]) => {
     renderInBrowser(
-      <Menu defaultOpen label="Actions" items={items}>
+      <Menu defaultOpen ariaLabel="Actions" items={items}>
         <button>Open</button>
       </Menu>
     )
@@ -445,7 +445,7 @@ describe('Menu from its hooks', () => {
 
   it('eases the color of the items for as long as the animation says', async () => {
     renderInBrowser(
-      <Menu defaultOpen label="Actions" items={entries()} animation={{ tuning: { duration: 0.4 } }}>
+      <Menu defaultOpen ariaLabel="Actions" items={entries()} animation={{ tuning: { duration: 0.4 } }}>
         <button>Open</button>
       </Menu>,
       'auto'
@@ -457,7 +457,7 @@ describe('Menu from its hooks', () => {
 
   it('does not ease anything when the animation is off', async () => {
     renderInBrowser(
-      <Menu defaultOpen label="Actions" items={entries()} animation={false}>
+      <Menu defaultOpen ariaLabel="Actions" items={entries()} animation={false}>
         <button>Open</button>
       </Menu>,
       'auto'

@@ -188,7 +188,7 @@ describe('the menu on a touch device in a real browser', () => {
 
       renderInBrowser(
         <Menu
-          label="Ações"
+          ariaLabel="Ações"
           items={[
             { id: 'edit', label: 'Editar', onSelect: () => log.push('edit') },
             { id: 'duplicate', label: 'Duplicar', onSelect: () => log.push('duplicate') }

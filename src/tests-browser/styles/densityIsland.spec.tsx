@@ -51,7 +51,7 @@ const Notifier = () => {
 }
 
 const overlays: Overlay[] = [
-  { name: 'the menu', ui: <Menu defaultOpen label="Actions" items={entries}><Button>Open</Button></Menu>, target: '[data-slot=menu-item]' },
+  { name: 'the menu', ui: <Menu defaultOpen ariaLabel="Actions" items={entries}><Button>Open</Button></Menu>, target: '[data-slot=menu-item]' },
   { name: 'the popover', ui: <Popover defaultOpen content={<p>Hello there</p>}><Button>Open</Button></Popover>, target: '[data-slot=popover-content]' },
   { name: 'the list of the combobox', ui: <Combobox defaultOpen label="Fruit" options={fruits} />, target: '[data-slot=combobox-option]' },
   { name: 'the calendar of the date picker', ui: <DatePicker defaultOpen label="Date" />, target: '[data-slot=date-picker-calendar-day]' },

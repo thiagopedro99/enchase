@@ -18,7 +18,7 @@ const SelectionDemo = () => {
 
   return (
     <Flex align="center" gap="1rem" wrap>
-      <Menu label="Actions" items={items}>
+      <Menu ariaLabel="Actions" items={items}>
         <Button variant="outline">Actions</Button>
       </Menu>
       <span aria-live="polite">Last action: {last}</span>
@@ -31,7 +31,7 @@ const ControlledDemo = () => {
 
   return (
     <Flex align="center" gap="1rem" wrap>
-      <Menu label="Actions" items={actions} open={open} onOpenChange={setOpen}>
+      <Menu ariaLabel="Actions" items={actions} open={open} onOpenChange={setOpen}>
         <Button variant="outline">Actions</Button>
       </Menu>
       <Button variant="ghost" onClick={() => setOpen((current) => !current)}>
@@ -45,7 +45,7 @@ const meta = {
   title: 'Components/Menu',
   component: Menu,
   args: {
-    label: 'Actions',
+    ariaLabel: 'Actions',
     items: actions,
     placement: defaultPlacement,
     offset: defaultOffset,
@@ -65,7 +65,7 @@ const meta = {
       description: 'The entries of the menu, in order. An item is { id, label, textValue?, icon?, disabled?, onSelect? } and a separator is { id, separator: true }. The label is any node; give textValue when it is not a string, so that typing letters can find the item. A disabled item is announced as unavailable, is skipped by the arrow keys and by typing, and does nothing when it is clicked.',
       control: false
     },
-    label: { description: 'Accessible name of the menu (aria-label of the list). It is not shown: name what the actions are about.', control: 'text' },
+    ariaLabel: { description: 'Accessible name of the menu (aria-label of the list). It is not shown: name what the actions are about.', control: 'text' },
     open: { description: 'Opens and closes the menu, when you control it. Use it together with onOpenChange.', control: false },
     defaultOpen: { description: 'Whether the menu starts open, when you do not control it. An open menu does not take the focus until the user interacts.', control: 'boolean', table: { defaultValue: { summary: String(defaultOpen) } } },
     onOpenChange: { description: 'Called with the new state whenever the menu opens or closes: click, keyboard, Esc, a click outside or a chosen item.', control: false },
@@ -98,7 +98,7 @@ export const Playground: Story = {}
 
 export const WithIcons: Story = {
   args: {
-    label: 'Page',
+    ariaLabel: 'Page',
     items: [
       { id: 'new', label: 'New page', icon: <PlusIcon /> },
       { id: 'preview', label: 'Preview', icon: <EyeIcon /> },
@@ -131,7 +131,7 @@ export const Controlled: Story = {
 
 export const LongList: Story = {
   args: {
-    label: 'Language',
+    ariaLabel: 'Language',
     items: languages.map((name) => ({ id: name.toLowerCase(), label: name })),
     children: <Button variant="outline">Language</Button>
   },

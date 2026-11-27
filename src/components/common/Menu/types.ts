@@ -24,7 +24,7 @@ export type MenuEntryPoint = 'first' | 'last'
 export interface MenuProps {
   children: ReactNode
   items: MenuEntry[]
-  label: string
+  ariaLabel: string
   open?: boolean | undefined
   defaultOpen?: boolean | undefined
   onOpenChange?: ((open: boolean) => void) | undefined

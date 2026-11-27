@@ -508,7 +508,7 @@ describe('the containers of the shadcn style', () => {
     show(
       <Menu
         defaultOpen
-        label="Actions"
+        ariaLabel="Actions"
         items={[
           { id: 'edit', label: 'Edit', icon: <svg /> },
           { id: 'split', separator: true },

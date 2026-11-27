@@ -15,7 +15,7 @@ export interface PopoverProps {
   offset?: number | undefined
   padding?: number | undefined
   role?: PopoverRole | undefined
-  label?: string | undefined
+  ariaLabel?: string | undefined
   arrow?: boolean | undefined
   closeOnEsc?: boolean | undefined
   closeOnOutsideClick?: boolean | undefined

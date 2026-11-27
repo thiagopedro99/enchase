@@ -61,7 +61,7 @@ export const render = () =>
     <UIProvider labels={{ previousPage: 'Voltar' }}>
       <Button>Save</Button>
       <Tabs ariaLabel="Sections" items={[{ value: 'a', label: 'One', content: 'First' }, { value: 'b', label: 'Two', content: 'Second' }]} />
-      <Menu label="Actions" items={[{ id: 'a', label: 'One' }]}>
+      <Menu ariaLabel="Actions" items={[{ id: 'a', label: 'One' }]}>
         <Button>Open</Button>
       </Menu>
       <Pagination pageCount={3} />
