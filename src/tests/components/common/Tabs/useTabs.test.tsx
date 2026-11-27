@@ -270,3 +270,29 @@ describe('useTabs', () => {
     expect(await axe(container)).toHaveNoViolations()
   })
 })
+
+describe('useTabs bringing a tab into view', () => {
+  it('scrolls the clicked tab into view, to the nearest edge, and still calls the onClick of the caller', async () => {
+    const user = userEvent.setup()
+    const scrolled: [string | null, unknown][] = []
+    const onClick = vi.fn()
+
+    Element.prototype.scrollIntoView = function (this: Element, options?: boolean | ScrollIntoViewOptions) {
+      scrolled.push([this.textContent, options])
+    }
+    render(<Shell items={items} tabProps={() => ({ onClick })} />)
+
+    await user.click(screen.getAllByRole('tab')[1])
+
+    expect(scrolled).toEqual([[screen.getAllByRole('tab')[1].textContent, { block: 'nearest', inline: 'nearest' }]])
+    expect(screen.getAllByRole('tab')[1]).toHaveAttribute('aria-selected', 'true')
+    expect(onClick).toHaveBeenCalledTimes(1)
+    Reflect.deleteProperty(Element.prototype, 'scrollIntoView')
+  })
+
+  it('keeps the list out of the Tab order', () => {
+    render(<Shell items={items} />)
+
+    expect(screen.getByRole('tablist')).toHaveAttribute('tabindex', '-1')
+  })
+})
