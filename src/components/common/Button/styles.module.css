@@ -343,3 +343,11 @@
     animation: pulse 1.6s var(--enchase-button-spinner-ease, var(--enchase-motion-ease-in-out)) infinite;
   }
 }
+
+@media (forced-colors: active) {
+  .spinner {
+    forced-color-adjust: none;
+    border-color: ButtonText;
+    border-inline-end-color: transparent;
+  }
+}

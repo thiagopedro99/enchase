@@ -4,7 +4,9 @@ import { page } from 'vitest/browser'
 
 import { Button } from '@components/common/Button/index.tsx'
 import { ButtonLink } from '@components/common/ButtonLink/index.tsx'
+import { unlessWebkit } from '../../../support/browserSkips.ts'
 import { renderInBrowser } from '../../../support/harness.tsx'
+import { setForcedColors } from '../../../support/media.ts'
 
 const addStyle = (css: string, where: 'start' | 'end') => {
   const style = document.createElement('style')
@@ -203,5 +205,38 @@ describe('Button loading in a real browser', () => {
     expect(button.textContent).toBe('Salvando')
     expect(spinner.left).toBeGreaterThan(box.left)
     expect(spinner.right).toBeLessThan(box.left + box.width / 2)
+  })
+})
+
+describe('Button loading in forced colors', () => {
+  const forcedColors = unlessWebkit('forcedColors') ? it : it.skip
+
+  afterEach(async () => {
+    await setForcedColors('none')
+  })
+
+  forcedColors('keeps the hidden content hidden and the spinner visible', async () => {
+    await setForcedColors('active')
+    const view = renderInBrowser(
+      <>
+        <Button loading>Salvar</Button>
+        <Button loading variant="outline">
+          Salvar
+        </Button>
+      </>
+    )
+
+    for (const button of view.container.querySelectorAll<HTMLElement>('button')) {
+      const content = button.querySelector('[data-slot="button-content"]') as HTMLElement
+      const spinner = button.querySelector('[data-slot="button-spinner"]') as HTMLElement
+      const ring = getComputedStyle(spinner)
+
+      expect(getComputedStyle(content).color).toBe('rgba(0, 0, 0, 0)')
+      expect(ring.borderTopColor).not.toBe('rgba(0, 0, 0, 0)')
+      expect(ring.borderTopColor).not.toBe(getComputedStyle(button).backgroundColor)
+      expect(ring.borderRightColor).toBe('rgba(0, 0, 0, 0)')
+      expect(parseFloat(ring.borderTopWidth)).toBeGreaterThanOrEqual(2)
+      expect(spinner.getBoundingClientRect().width).toBeGreaterThanOrEqual(12)
+    }
   })
 })
