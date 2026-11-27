@@ -54,6 +54,10 @@
     {
       "key": "tooltip-data-placement",
       "note": "the bubble of the Tooltip says its side in data-placement, as the Popover does, and no longer in data-position: rename the attribute in a selector of yours that styles the bubble by its side"
+    },
+    {
+      "key": "board-move-menu",
+      "note": "in the experimental Board, the move-to menu names a column by its label, or by its title when the title is text, where it showed the whole title node; with sortable={false} it leaves out the column the card is in, and a card with nowhere to go has no menu button. The native drag of a link or an image inside a card is cancelled, so a click that shakes still reaches the link"
     }
   ]
 }

@@ -48,7 +48,7 @@ A round picture for a person or an entity. It shows the image when there is one 
 | --- | --- | --- | --- |
 | `name` | `string` | — | Name of the person or the entity. It gives the initials of the fallback (the first letter of the first and of the last word) and the accessible name of the avatar. Without it the avatar shows a question mark that assistive technology skips. |
 | `src` | `string` | — | Address of the image. While it loads, and if it fails, the avatar shows the initials. Change it and the avatar waits for the new image. |
-| `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the avatar: sm is 2 rem, md is 2.5 rem and lg is 3.5 rem. |
+| `size` | `'xs' \| 'sm' \| 'md' \| 'lg'` | `'md'` | Size of the avatar: xs is 1.5 rem (24 px, for a dense row or next to a line of text), sm is 2 rem, md is 2.5 rem and lg is 3.5 rem. |
 | `children` | `ReactNode` | — | Content shown instead of the initials when there is no image, for example an icon. It does not change the accessible name. |
 | `ref` | `Ref<HTMLSpanElement>` | — | Ref of the root `<span>` (`data-slot="avatar"`). |
 
@@ -89,6 +89,8 @@ A button with seven variants and three sizes, and press feedback made with CSS o
 | `size` | `'sm' \| 'md' \| 'lg'` | `'md'` | Size of the button. |
 | `fullWidth` | `boolean` | `false` | Takes up the full available width. |
 | `iconOnly` | `boolean` | `false` | Makes the button a square for a single icon: as wide as it is tall in every size, with the same padding on the four sides and the icon in the middle. There is no text to name it, so pass `aria-label`; without it a screen reader announces an empty button. |
+| `loading` | `boolean` | `false` | Shows that the action is running: a spinner takes the place of the content, which keeps its room, so the button does not change size. The button is aria-busy and aria-disabled, keeps the focus and its name, and ignores the click and the submit of its form until it stops loading. |
+| `loadingText` | `ReactNode` | — | Text shown next to the spinner while loading, in place of the content. With it, the button takes the size of this text. |
 | `animation` | `false \| { recipe, from, tuning }` | `press` | Motion recipe of the button, made with CSS only. Use false to turn the animation off, or { recipe, tuning } with press (scales on press) or lift (rises on hover); other recipes are ignored. The duration, the scale and the distance become the variables --enchase-button-duration, --enchase-button-scale and --enchase-button-distance. Use the controls of the Motion group to experiment. The root element accepts className and style, and exposes data-slot="button". |
 | `ref` | `Ref<HTMLButtonElement>` | — | Ref of the `<button>`. |
 
@@ -491,6 +493,7 @@ A page shell: a top bar with the breadcrumb trail and the side menu (permanent o
 | `footerProps` | `FooterProps` | — | companyName, notice, year and links of the footer. |
 | `sidebarFooter` | `SidebarSlot` | — | Fixed content in the footer of the sidebar, above the collapse button. It can be a function that receives { collapsed }. |
 | `actions` | `ReactNode` | — | Extra content for the top bar, such as a sign-in button or the user avatar. With navigation="sidebar" it sits in the `AppBar`, before the theme toggle, on every screen width. With navigation="navbar" it is passed to the `actions` of the `Navbar`: on a wide screen it sits in the bar, before the theme toggle, and on a narrow screen it moves to the bottom of the mobile menu. |
+| `persistentActions` | `ReactNode` | — | Extra content for the top bar that stays in it on every screen width. With navigation="navbar" it is passed to the `persistentActions` of the `Navbar`, which keeps it in the bar on a narrow screen, where `actions` goes into the mobile menu. With navigation="sidebar" it sits in the `AppBar` after `actions`, which also stays in the bar. |
 | `navigationSections` | `SidebarSection[]` | `[]` | Sections of the main menu, as in Sidebar: [{ id, title?, items: [{ id, label, href?, native?, icon?, badge?, onClick? }] }]. |
 | `pageSections` | `SidebarSection[]` | `[]` | Anchor sections added to the menu. |
 | `activePageSectionId` | `string` | — | Id of the anchor item that is on screen (use useScrollSpy): it is marked in the menu (aria-current="location") and becomes the last item of the breadcrumb trail. |
@@ -590,6 +593,7 @@ A navigation bar at the top, with the brand, the links, actions and the theme bu
 | `sections` | `SidebarSection[]` | — | Items of the menu, in the same format as the Sidebar: [{ id, items: [{ id, label, href }] }]. Only the items with href appear, and the titles of the sections are not shown. |
 | `activeSectionId` | `string` | — | Id of the anchor item (href #id, or /page#id on the current page) marked as the current location (aria-current="location"). Use useScrollSpy to get it. |
 | `actions` | `ReactNode` | — | Actions next to the menu, such as a call-to-action button. On wide screens they stay in the bar, between the menu and the theme button (data-slot="navbar-cta"). On narrow screens they go into the drawer, below the links (data-slot="navbar-drawer-cta"), and a click on a link inside them closes the drawer. The node is rendered in one place at a time. |
+| `persistentActions` | `ReactNode` | — | Actions that stay in the bar on every screen width, such as the sign-in button or the avatar of the user: after the actions and before the theme button (data-slot="navbar-persistent"). They never go into the drawer, so keep them small: on a narrow screen they share the line with the logo, the theme button and the menu button. |
 | `translucent` | `boolean` | `false` | Makes the background of the bar semitransparent, blurring what passes behind it. The background comes from `--enchase-navbar-background` (default: the color `--enchase-navbar-background-solid`, which is the `surfaceContainer` of the theme, at `--enchase-navbar-background-alpha`, 0.8) and the blur from `--enchase-navbar-blur` (default `12px`), which you change in the `style` or in the CSS. With `prefers-reduced-transparency: reduce`, `prefers-contrast: more`, forced colors or without `backdrop-filter`, the background is opaque. With the default theme, the text of the brand and of the menu keeps 4.5:1 even over pure black or white (3:1 on the accent color of the brand on hover); check the contrast if you change the color or the theme. |
 | `className` | `string` | — | Class of the header (`data-slot="navbar"`). The parts follow `data-slot="navbar-*"`; the mobile drawer is `navbar-drawer`, with `data-state`. |
 | `style` | `CSSProperties` | — | Style of the header. |
@@ -976,7 +980,7 @@ Also accepts the other attributes of `<span>`, passed on to the element.
 ### useBreakpoint
 
 ```ts
-useBreakpoint(server?: BreakpointKey): { current: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xs'; up: (name: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xs') => boolean; down: (name: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xs') => boolean; }
+useBreakpoint(server?: BreakpointKey): { current: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl'; up: (name: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl') => boolean; down: (name: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl') => boolean; }
 ```
 
 Current screen range, from `xs` to `xxl`, according to the breakpoints of the `UIProvider`. `up(name)` holds when the screen is at least `name` wide and `down(name)` when it is narrower than `name`. On the server and during hydration the `server` argument applies (default `xs`); after mounting, the real width applies.
@@ -985,9 +989,9 @@ Returns:
 
 | Member | Type |
 | --- | --- |
-| `current` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| 'xs'` |
-| `up` | `(name: 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| 'xs') => boolean` |
-| `down` | `(name: 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl' \| 'xs') => boolean` |
+| `current` | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl'` |
+| `up` | `(name: 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl') => boolean` |
+| `down` | `(name: 'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl' \| 'xxl') => boolean` |
 
 ### useColorMode
 
@@ -1434,12 +1438,14 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-avatar-font-size-lg` | `1.375rem` (`--enchase-font-size-xl`) | `font-size` |
 | `--enchase-avatar-font-size-md` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-avatar-font-size-sm` | `0.875rem` (`--enchase-font-size-sm`) | `font-size` |
+| `--enchase-avatar-font-size-xs` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-avatar-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-avatar-line-height` | `1` (`--enchase-line-height-none`) | `line-height` |
 | `--enchase-avatar-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-avatar-size-lg` | `3.5rem` | `inline-size`, `block-size` |
 | `--enchase-avatar-size-md` | `2.5rem` | `inline-size`, `block-size` |
 | `--enchase-avatar-size-sm` | `2rem` | `inline-size`, `block-size` |
+| `--enchase-avatar-size-xs` | `1.5rem` | `inline-size`, `block-size` |
 
 ### Badge
 
@@ -1623,6 +1629,10 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-button-shadow-primary-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
 | `--enchase-button-shadow-secondary` | `none` | `box-shadow` |
 | `--enchase-button-shadow-secondary-hover` | `var(--enchase-shadow-sm)` | `box-shadow` |
+| `--enchase-button-spinner-border-width` | `2px` | `border-width` |
+| `--enchase-button-spinner-duration` | `0.8s` | `animation` |
+| `--enchase-button-spinner-ease` | `cubic-bezier(0.4, 0, 0.2, 1)` (`--enchase-motion-ease-in-out`) | `animation` |
+| `--enchase-button-spinner-size` | `1em` | `inline-size`, `block-size` |
 | `--enchase-button-text-decoration-link-hover` | `underline` | `text-decoration` |
 | `--enchase-button-text-transform` | `none` | `text-transform` |
 
@@ -1777,6 +1787,8 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-board-column-count-min-width` | `1.5rem` | `min-inline-size` |
 | `--enchase-board-column-count-padding-inline` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
 | `--enchase-board-column-count-radius` | `0.625rem` (`--enchase-radius-button`) | `border-radius` |
+| `--enchase-board-column-description-color` | `var(--enchase-color-text-secondary)` | `color` |
+| `--enchase-board-column-description-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-board-column-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-board-column-header-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-board-column-header-padding-inline` | `0.25rem` (`--enchase-space-xs`) | `padding-inline` |
