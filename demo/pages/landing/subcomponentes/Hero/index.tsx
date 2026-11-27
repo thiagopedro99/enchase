@@ -43,7 +43,7 @@ const Hero = ({ look, onLookChange }: HeroProps) => {
             <Badge variant="primary" size="sm">
               Novo na {version}
             </Badge>
-            <span>Ações na barra do topo do Layout</span>
+            <span>Nomes de props alinhados e Button com loading</span>
             <ChevronRightIcon size={16} />
           </Link>
 

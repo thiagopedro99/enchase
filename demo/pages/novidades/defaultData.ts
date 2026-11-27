@@ -10,6 +10,53 @@ export const anchorOf = (version: string) => `v-${version.replace(/\./g, '-')}`
 
 export const releases: ReleaseNote[] = [
   {
+    version: '0.28.0',
+    previous: '0.27.0',
+    date: '27 de novembro de 2026',
+    shortDate: '27 nov',
+    title: 'Nomes de props alinhados e Button com loading',
+    summary: 'Uma arrumação antes da 1.0: quatro props mudam de nome para a biblioteca usar um nome só para cada coisa, os campos e o `SegmentedControl` passam a caber em espaço estreito, e chegam o `loading` do `Button`, o foco inicial dos diálogos e as ações fixas da barra. Esta versão quebra: é preciso trocar os nomes.',
+    behavior: true,
+    groups: [
+      {
+        kind: 'mudou',
+        items: [
+          '`Modal` e `ConfirmModal`: `isOpen` agora é `open`, como no `Drawer`, no `Menu` e no `Popover`.',
+          '`Tooltip`: `position` agora é `placement`, como no `Menu` e no `Popover`. Na bolha, o atributo `data-position` virou `data-placement`.',
+          '`Menu` e `Popover`: `label` agora é `ariaLabel`, como no `Drawer`, no `Modal` e nas `Tabs`. O `label` de cada item do `Menu` continua.',
+          'Campos (`Input`, `Textarea`, `NumberInput`, `Select`, `Combobox` e `DatePicker`): a largura mínima de 200 px não passa mais da largura do contêiner. Com espaço, o campo mede o mesmo de antes.',
+          '`SegmentedControl`: não quebra mais um rótulo no meio da palavra. Quando as opções não cabem, ele rola de lado, sem barra à mostra, e a opção escolhida vem inteira para a vista.',
+          '`Board` (experimental): com `sortable={false}`, o menu "Mover para" não lista mais a coluna em que o cartão já está, e os nomes do menu vêm do `label` da coluna.'
+        ]
+      },
+      {
+        kind: 'novo',
+        items: [
+          '`loading` e `loadingText` no `Button`: mostra um spinner, bloqueia o clique e o envio do formulário, e mantém a largura do botão.',
+          '`initialFocus` em `Modal`, `ConfirmModal` e `Drawer`: escolhe o elemento que recebe o foco ao abrir. O atributo `data-autofocus` continua valendo.',
+          '`persistentActions` em `Navbar` e `Layout`: ações que ficam na barra em qualquer largura de tela.',
+          '`required` no `CheckboxGroup` (ao menos uma opção marcada) e o tamanho `xs` no `Avatar`.',
+          '`Board` (experimental): `description` em cada coluna e `renderEmpty` para o conteúdo da coluna vazia. Links e imagens dentro do cartão não iniciam mais o arrasto do navegador.'
+        ]
+      }
+    ],
+    migration: {
+      text: 'Troque os quatro nomes; os valores e o comportamento das props são os mesmos. O TypeScript aponta o `open` do `Modal` e do `ConfirmModal` e o `ariaLabel` do `Menu`, que são obrigatórios; o `position` do `Tooltip` e o `label` do `Popover` são opcionais, então procure por eles. Se você seleciona a bolha do `Tooltip` por `data-position` em CSS ou em teste, troque por `data-placement`.',
+      blocks: [
+        {
+          label: 'Antes',
+          language: 'tsx',
+          code: '<Modal isOpen={aberto} onClose={fechar} title="Editar" />\n<Tooltip text="Ajuda" position="bottom">...</Tooltip>\n<Menu label="Ações" items={itens}>...</Menu>\n<Popover label="Detalhes" content={conteudo}>...</Popover>'
+        },
+        {
+          label: 'Depois',
+          language: 'tsx',
+          code: '<Modal open={aberto} onClose={fechar} title="Editar" />\n<Tooltip text="Ajuda" placement="bottom">...</Tooltip>\n<Menu ariaLabel="Ações" items={itens}>...</Menu>\n<Popover ariaLabel="Detalhes" content={conteudo}>...</Popover>'
+        }
+      ]
+    }
+  },
+  {
     version: '0.27.0',
     previous: '0.26.0',
     date: '26 de novembro de 2026',

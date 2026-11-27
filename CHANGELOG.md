@@ -1,5 +1,57 @@
 # Changelog
 
+## v0.28.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.27.0...v0.28.0)
+
+### Enhancements
+
+- ⚠️  Rename the position of the Tooltip to placement ([c85abf1](https://github.com/thiagopedro99/enchase/commit/c85abf1))
+- ⚠️  Rename isOpen to open on Modal and ConfirmModal ([3b670b8](https://github.com/thiagopedro99/enchase/commit/3b670b8))
+- ⚠️  Rename the label of Menu and Popover to ariaLabel ([0d292ac](https://github.com/thiagopedro99/enchase/commit/0d292ac))
+- Let the CheckboxGroup require at least one option ([70d340b](https://github.com/thiagopedro99/enchase/commit/70d340b))
+- Let Modal, ConfirmModal and Drawer choose the element that takes the focus ([70dbe22](https://github.com/thiagopedro99/enchase/commit/70dbe22))
+- ⚠️  Rename the data-position of the Tooltip bubble to data-placement ([8ffb946](https://github.com/thiagopedro99/enchase/commit/8ffb946))
+- Add a loading state to the Button ([2706bdb](https://github.com/thiagopedro99/enchase/commit/2706bdb))
+- Add the xs size to the Avatar ([8318d3c](https://github.com/thiagopedro99/enchase/commit/8318d3c))
+- Add actions that stay in the bar to Navbar and Layout ([655ab4d](https://github.com/thiagopedro99/enchase/commit/655ab4d))
+- Give the Board column descriptions, a custom empty column and a cleaner move menu ([17ae3dd](https://github.com/thiagopedro99/enchase/commit/17ae3dd))
+
+### Fixes
+
+- Keep the minimum width of the fields inside a narrower container ([fb77148](https://github.com/thiagopedro99/enchase/commit/fb77148))
+- Scroll the SegmentedControl instead of breaking its labels inside a word ([eca3a04](https://github.com/thiagopedro99/enchase/commit/eca3a04))
+- Hide the scrollbar of the SegmentedControl and bring a clicked option into view ([49cc494](https://github.com/thiagopedro99/enchase/commit/49cc494))
+- Take the scroll padding of the SegmentedControl from the space token ([e26ce15](https://github.com/thiagopedro99/enchase/commit/e26ce15))
+- Keep the focus trap and the reset listener steady across renders ([1e90f5e](https://github.com/thiagopedro99/enchase/commit/1e90f5e))
+- Say the state in the loading rules of the Button ([1878e46](https://github.com/thiagopedro99/enchase/commit/1878e46))
+- Keep the gap of the Button spinner in forced colors ([09bfa42](https://github.com/thiagopedro99/enchase/commit/09bfa42))
+- Take the scrolling root of the SegmentedControl out of the Tab order ([d667092](https://github.com/thiagopedro99/enchase/commit/d667092))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Rename the position of the Tooltip to placement ([c85abf1](https://github.com/thiagopedro99/enchase/commit/c85abf1))
+- ⚠️  Rename isOpen to open on Modal and ConfirmModal ([3b670b8](https://github.com/thiagopedro99/enchase/commit/3b670b8))
+- ⚠️  Rename the label of Menu and Popover to ariaLabel ([0d292ac](https://github.com/thiagopedro99/enchase/commit/0d292ac))
+- ⚠️  Rename the data-position of the Tooltip bubble to data-placement ([8ffb946](https://github.com/thiagopedro99/enchase/commit/8ffb946))
+
+### Notes
+
+- Breaking: four props change their name, with no alias for the old one, and four behaviors change. `ModalProps` and `ConfirmModalProps`: `isOpen` is now `open`. `TooltipProps`: `position` is now `placement`; the type `TooltipPosition` is gone, `TooltipPlacement` is now the type of the prop, and the four physical sides alone are `TooltipSide`. `MenuProps` and `PopoverProps`: `label` is now `ariaLabel`. `UseSegmentedControlReturn`: `getGroupProps` also returns `tabIndex: -1`. The behaviors are `field-min-width`, `segmented-control-nowrap`, `tooltip-data-placement` and `board-move-menu`, each in a bullet below. `npm run check:api` against 0.27.0 reports 11 declarations removed or changed, all of them declared in `api-breaks.json`, and one type widened, `AvatarSize`; the same 25 keys of `exports` and none removed, the same 14 stable entries with 1,134 lines of declarations (8 more), 1,294 `--enchase-*` names (8 more) and 298 `data-slot` names (4 more) with none removed, and 991 hooks in the 5 styles (one more).
+- The renames are of the name only: the values and what each prop does are the same. Replace `isOpen` with `open` on every `Modal` and `ConfirmModal`, `position` with `placement` on every `Tooltip`, and `label` with `ariaLabel` on every `Menu` and `Popover`. The `label` of each item of a `Menu` stays, and so does the `position` of the `ToastProvider`, which is a corner of the screen. They bring the library to one name for each thing: `open` as in the `Drawer`, the `Menu` and the `Popover`, `placement` as in the `Menu` and the `Popover`, and `ariaLabel` as in the `Drawer`, the `Modal` and the `Tabs`. TypeScript points at every place: `open` on the `Modal` and on the `ConfirmModal` and `ariaLabel` on the `Menu` are required.
+- `tooltip-data-placement`: the bubble of the `Tooltip` carries the side where it landed in `data-placement`, as the content of the `Popover` does. It was `data-position`. Only a stylesheet or a test of yours that selects the bubble by that attribute has to change.
+- `field-min-width`: the 200px minimum width of `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox` and `DatePicker` (`--enchase-input-min-width`) no longer goes past the container. In a container narrower than the minimum the field shrinks with it, where it used to stick out: two `Select` side by side in a row of 300px measure 146px each, in a flex row and in a grid of two equal columns. With room, a field measures what it did. The computed `min-inline-size` of the control is now `min(<the hook>, 100%)`, and the root of each field has a `::before` with no height that holds the minimum as its intrinsic width.
+- `segmented-control-nowrap`: the `SegmentedControl` no longer breaks a label, and scrolls sideways when the options do not fit. It used to break the labels anywhere, also inside a word, and grow taller. The scrollbar is hidden, so the options keep their height where the scrollbars take room, and an option that the arrows reach or that a click chooses comes whole into view, with the next one showing. With `fullWidth`, an option whose label does not fit in an equal share takes the width of its label, and the others share the rest. The root, which now scrolls, has `tabindex="-1"`, so that Firefox does not make it a tab stop of its own, and `getGroupProps` of `useSegmentedControl` returns the same `tabIndex`; pass `tabIndex` to `getGroupProps` to override it.
+- New in the `Button`, `loading` and `loadingText`. While `loading` is on, the button has `aria-busy` and `aria-disabled`, keeps the focus and its accessible name, and neither calls `onClick` nor submits its form. Without `loadingText` the content stays in place, invisible, under a spinner, so the button keeps its width and its height; with `loadingText` the spinner and that text take the place of the content. The spinner is css of the `Button` itself, in `currentColor`, with the hooks `--enchase-button-spinner-size`, `--enchase-button-spinner-border-width`, `--enchase-button-spinner-duration` and `--enchase-button-spinner-ease`. Without the prop the markup is the one of 0.27.0.
+- New in `Modal`, `ConfirmModal` and `Drawer`, `initialFocus`: a ref to the element that takes the focus when the dialog opens, which has to be inside the panel. Without it the focus goes, as before, to the first element with the attribute `data-autofocus`, then to the first control that Tab reaches, then to the panel. `data-autofocus` was already read and is now documented.
+- New in `Navbar` and `Layout`, `persistentActions`: content that stays in the bar on every screen width, after `actions` and before the theme toggle. `actions` is as before: in the bar on a wide screen and at the end of the mobile menu on a narrow one. Keep it small: at 360px the logo, a small button, the theme toggle and the menu button fit in one line.
+- New in the `CheckboxGroup`, `required`, which means at least one option: while no box is checked every box carries the native `required`, so the browser stops the form and a screen reader announces it, and once one is checked none carries it. New in the `Avatar`, `size="xs"`: 24px, or 20px in the `workbench` style, whose `sm` is already 24px. Hooks `--enchase-avatar-size-xs` and `--enchase-avatar-font-size-xs`.
+- `enchase/experimental/board` changed, as an experimental entry may. `BoardColumn` takes a `description`, drawn under the header of the column and tied to it with `aria-describedby`, and the `Board` takes `renderEmpty`, the content of a column with no card. The menu that moves a card names each column by its `label`, or by its `title` when that is text, and no longer by the node of the title. `board-move-menu`: with `sortable={false}` that menu no longer lists the column where the card already is, and a card with nowhere to go has no menu button. A link or an image inside a card no longer starts the drag of the browser, so a click with a small movement reaches the link.
+- The kit of `enchase eject` changes in 41 files, of 19 components and of the hooks `useFocusTrap` and `useModalBehavior`. An ejected component that you leave as it is keeps working with its old prop names; copy it again to get the new ones.
+- Weight: the package goes from 1,081 to 1,082 files and from 514.6 kB packed (514,566 bytes) to 521.9 kB (521,855 bytes). The new file is `docs/migration/0.28.md`. In `dist-lib`, 76 files differ from 0.27.0: 33 of JavaScript, 28 declarations, 14 stylesheets and the map `css/index.json`. `styles.css` goes from 309,914 to 315,389 bytes, and `theme.css` stays at 45,296. In `test:size`, minified, the `Button` goes from 8,337 to 8,975 bytes (budget 12,288), the `SegmentedControl` from 14,063 to 14,187 (budget 14,336), the `CheckboxGroup` from 13,205 to 13,565 (budget 14,336), the `Drawer` from 20,885 to 21,059 (budget 22,528) and the `Board` from 57,145 to 58,322 (budget 59,392).
+- Checked: lint, `docs:api:check`, the build, the 6,099 jsdom tests, `build:lib`, `check:api` against 0.27.0, `pack:check` (publint and attw, with the 25 keys of `exports`) and `test:size` pass here on the release commit. On the commit before it, CI passed the package workflow, with `test:consumer`, `test:next` and `test:eject`, the whole browser suites in real Chromium, Firefox and WebKit, and the accessibility audit of the stories in the five styles and the two color modes. The first run of the Firefox suite failed: the root of the `SegmentedControl`, which now scrolls, was a tab stop of its own there. The `tabindex="-1"` of the root is the fix, and the suite passed with it.
+- Screen readers: the new states were tested with axe and in the three engines, and not with NVDA, JAWS or VoiceOver, as the README says of the whole library.
+
 ## v0.27.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.26.0...v0.27.0)
