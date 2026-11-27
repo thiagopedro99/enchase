@@ -40,6 +40,10 @@
     {
       "key": "removed enchase PopoverProps.label",
       "note": "the accessible name of the Popover is ariaLabel: rename label to ariaLabel"
+    },
+    {
+      "key": "changed enchase/headless/segmented-control UseSegmentedControlReturn.getGroupProps",
+      "note": "getGroupProps of useSegmentedControl also returns tabIndex: -1, as getListProps of useTabs does: a group that scrolls is a tab stop of its own in Firefox. Nothing to change unless you read the exact return type; pass tabIndex to getGroupProps to override it"
     }
   ],
   "behavior": [
