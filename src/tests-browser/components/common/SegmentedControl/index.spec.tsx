@@ -303,6 +303,51 @@ describe('SegmentedControl layout in a real browser', () => {
     expect(inside(items()[0])).toBe(true)
   })
 
+  it('hides its scrollbar, so the options are as tall when they overflow as when they fit', () => {
+    const wide = renderInBrowser(<SegmentedControl ariaLabel="Estilo" items={styleNames} />)
+    const fitting = items().map((item) => item.getBoundingClientRect().height)
+    const groupHeight = part('segmented-control').getBoundingClientRect().height
+
+    wide.unmount()
+    renderInBrowser(
+      <div style={{ inlineSize: 280 }}>
+        <SegmentedControl ariaLabel="Estilo" items={styleNames} />
+      </div>
+    )
+    const group = part('segmented-control')
+
+    expect(group.scrollWidth).toBeGreaterThan(group.clientWidth)
+    expect(getComputedStyle(group).scrollbarWidth).toBe('none')
+    expect(getComputedStyle(group, '::-webkit-scrollbar').display).toBe('none')
+    expect(items().map((item) => item.getBoundingClientRect().height)).toEqual(fitting)
+    expect(group.getBoundingClientRect().height).toBe(groupHeight)
+    expect(group.offsetHeight - group.clientHeight).toBe(parseFloat(getComputedStyle(group).borderTopWidth) + parseFloat(getComputedStyle(group).borderBottomWidth))
+  })
+
+  for (const multiple of [false, true]) {
+    it(`reveals the whole option that is cut at the edge when it is clicked, and shows the next one${multiple ? ', with multiple' : ''}`, async () => {
+      renderInBrowser(
+        <div style={{ inlineSize: 280 }}>
+          {multiple ? <SegmentedControl ariaLabel="Estilo" items={styleNames} multiple /> : <SegmentedControl ariaLabel="Estilo" items={styleNames} defaultValue="Enchase" />}
+        </div>
+      )
+      const group = part('segmented-control')
+      const box = () => group.getBoundingClientRect()
+      const cut = items().findIndex((item) => item.getBoundingClientRect().left < box().right && item.getBoundingClientRect().right > box().right + 1)
+
+      expect(cut).toBeGreaterThan(0)
+      expect(cut).toBeLessThan(items().length - 1)
+
+      await userEvent.click(items()[cut], { position: { x: 4, y: 8 } })
+
+      expect(items()[cut].getBoundingClientRect().right).toBeLessThanOrEqual(box().right - 8)
+      expect(items()[cut].getBoundingClientRect().left).toBeGreaterThanOrEqual(box().left)
+      expect(items()[cut + 1].getBoundingClientRect().left).toBeLessThan(box().right - 8)
+      expect(items()[cut].getAttribute(multiple ? 'aria-pressed' : 'aria-checked')).toBe('true')
+      expect(window.scrollX).toBe(0)
+    })
+  }
+
   it('gives the options their own width when they do not fit in equal parts of a full width control', () => {
     renderInBrowser(
       <div style={{ inlineSize: 420 }}>

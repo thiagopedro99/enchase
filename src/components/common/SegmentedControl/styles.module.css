@@ -9,13 +9,18 @@
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
-  scrollbar-width: thin;
+  scrollbar-width: none;
   padding: var(--enchase-segmented-control-padding, 0);
   border: var(--enchase-segmented-control-border-width, var(--enchase-border-width, 1px)) solid var(--enchase-segmented-control-border-color, var(--enchase-color-border-strong));
   background-color: var(--enchase-segmented-control-background, transparent);
 }
 
+.group::-webkit-scrollbar {
+  display: none;
+}
+
 :where(.group) {
+  scroll-padding-inline: var(--enchase-segmented-control-scroll-padding, var(--enchase-space-xl));
   border-radius: var(--enchase-segmented-control-radius, var(--enchase-radius-button));
 }
 

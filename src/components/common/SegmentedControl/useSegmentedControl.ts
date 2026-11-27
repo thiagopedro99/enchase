@@ -6,7 +6,7 @@ import { composeProps } from '@utils/composeProps.ts'
 import { mergeRefs } from '@utils/mergeRefs.ts'
 
 import type { UseSegmentedControlOptions, UseSegmentedControlReturn } from './types.ts'
-import type { KeyboardEvent, Ref } from 'react'
+import type { KeyboardEvent, MouseEvent, Ref } from 'react'
 
 type Props = Record<string, unknown>
 
@@ -76,7 +76,10 @@ export const useSegmentedControl = ({ items, multiple = false, value, defaultVal
       'aria-pressed': multiple ? isSelected : undefined,
       tabIndex: multiple ? undefined : known && index === tabbable ? 0 : -1,
       disabled: !enabled[index],
-      onClick: () => choose(itemValue)
+      onClick: (event: MouseEvent<HTMLElement>) => {
+        choose(itemValue)
+        event.currentTarget.scrollIntoView?.({ block: 'nearest', inline: 'nearest' })
+      }
     }
 
     return {
