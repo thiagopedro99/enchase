@@ -189,16 +189,17 @@ describe('Suggestions moves', () => {
     expect(within(column(/Em análise/)).getByRole('link', { name: 'Code block' })).toBeInTheDocument()
   })
 
-  it('does nothing when the card is sent to the column where it already is', async () => {
+  it('does not offer the column where the card already is', async () => {
     const user = userEvent.setup()
     const fetcher = serve()
 
     vi.stubGlobal('fetch', fetcher)
     renderPage()
-    await moveTo(user, /Em análise/)
+    await user.click(await screen.findByRole('button', { name: 'Mover Code block para' }))
+    await screen.findAllByRole('menuitem')
 
+    expect(screen.queryByRole('menuitem', { name: /Em análise/ })).not.toBeInTheDocument()
     expect(within(column(/Em análise/)).getByRole('link', { name: 'Code block' })).toBeInTheDocument()
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(sent(fetcher)).toEqual([])
   })
 })
