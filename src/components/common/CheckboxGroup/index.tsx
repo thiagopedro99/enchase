@@ -19,7 +19,8 @@ export const CheckboxGroup = forwardRef<HTMLFieldSetElement, CheckboxGroupProps>
     const controlled = value !== undefined
     const groupRef = useRef<HTMLFieldSetElement>(null)
     const mergedRef = useMemo(() => mergeRefs(groupRef, ref), [ref])
-    const [chosen, setChosen] = useState(defaultValue?.length ?? 0)
+    const initial = defaultValue?.length ?? 0
+    const [chosen, setChosen] = useState(initial)
     const missing = Boolean(required) && (controlled ? value.length : chosen) === 0
     const describedBy = [props['aria-describedby'], error ? errorId : helperText ? helperId : undefined].filter(Boolean).join(' ') || undefined
     const root = mergeProps(
@@ -44,12 +45,12 @@ export const CheckboxGroup = forwardRef<HTMLFieldSetElement, CheckboxGroupProps>
 
     useEffect(() => {
       const form = required ? groupRef.current?.form : null
-      const restore = () => setChosen(defaultValue?.length ?? 0)
+      const restore = () => setChosen(initial)
 
       form?.addEventListener('reset', restore)
 
       return () => form?.removeEventListener('reset', restore)
-    }, [required, defaultValue])
+    }, [required, initial])
 
     return (
       <fieldset {...root} ref={mergedRef} id={groupId} aria-describedby={describedBy}>

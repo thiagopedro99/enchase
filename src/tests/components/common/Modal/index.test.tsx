@@ -639,6 +639,70 @@ describe('Modal initial focus', () => {
   })
 })
 
+describe('Modal initial focus while it is open', () => {
+  it('keeps the focus where it is when the ref of initialFocus changes, and does not send it back to the trigger', async () => {
+    const user = userEvent.setup()
+    const Swapping = () => {
+      const [open, setOpen] = useState(false)
+      const [second, setSecond] = useState(false)
+      const name = useRef<HTMLInputElement>(null)
+      const email = useRef<HTMLInputElement>(null)
+
+      return (
+        <>
+          <button onClick={() => setOpen(true)}>Open</button>
+          <Modal open={open} onClose={() => setOpen(false)} title="Sign in" initialFocus={second ? email : name} animation={false} footer={<button onClick={() => setSecond(true)}>Swap</button>}>
+            <input ref={name} aria-label="Name" />
+            <input ref={email} aria-label="Email" />
+          </Modal>
+        </>
+      )
+    }
+
+    renderWithProviders(<Swapping />)
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+    expect(screen.getByLabelText('Name')).toHaveFocus()
+
+    await user.click(screen.getByRole('button', { name: 'Swap' }))
+
+    expect(screen.getByRole('button', { name: 'Swap' })).toHaveFocus()
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+
+    await user.tab()
+    await user.tab()
+    expect(screen.getByLabelText('Name')).toHaveFocus()
+  })
+
+  it('uses the latest ref the next time the dialog opens', async () => {
+    const user = userEvent.setup()
+    const Reopening = () => {
+      const [open, setOpen] = useState(false)
+      const [second, setSecond] = useState(false)
+      const name = useRef<HTMLInputElement>(null)
+      const email = useRef<HTMLInputElement>(null)
+
+      return (
+        <>
+          <button onClick={() => setOpen(true)}>Open</button>
+          <Modal open={open} onClose={() => setOpen(false)} title="Sign in" initialFocus={second ? email : name} animation={false} footer={<button onClick={() => setSecond(true)}>Swap</button>}>
+            <input ref={name} aria-label="Name" />
+            <input ref={email} aria-label="Email" />
+          </Modal>
+        </>
+      )
+    }
+
+    renderWithProviders(<Reopening />)
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+    await user.click(screen.getByRole('button', { name: 'Swap' }))
+    await user.keyboard('{Escape}')
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument())
+    await user.click(screen.getByRole('button', { name: 'Open' }))
+
+    expect(screen.getByLabelText('Email')).toHaveFocus()
+  })
+})
+
 describe('ConfirmModal initial focus', () => {
   it('starts on the cancel button, and on the element of initialFocus when one is given', () => {
     const first = renderWithProviders(<ConfirmModal open onClose={vi.fn()} onConfirm={vi.fn()} message="Delete it?" />)

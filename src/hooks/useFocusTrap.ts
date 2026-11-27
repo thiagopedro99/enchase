@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { focusInOrder, tabbablesIn } from '@utils/tabbable.ts'
 import { lastInteractionTarget } from './interactionTarget.ts'
@@ -14,13 +14,17 @@ const triggerToRestore = () => {
 }
 
 export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, active: boolean, initialFocus?: RefObject<HTMLElement | null>) => {
+  const latest = useRef(initialFocus)
+
+  latest.current = initialFocus
+
   useEffect(() => {
     const container = containerRef.current
     if (!active || !container) return
 
     const trigger = triggerToRestore()
 
-    const chosen = initialFocus?.current
+    const chosen = latest.current?.current
     const initialTarget = chosen && container.contains(chosen) ? chosen : container.querySelector<HTMLElement>('[data-autofocus]')
 
     if (initialTarget) initialTarget.focus({ preventScroll: true })
@@ -54,5 +58,5 @@ export const useFocusTrap = (containerRef: RefObject<HTMLElement | null>, active
 
       trigger.focus({ preventScroll: true })
     }
-  }, [active, containerRef, initialFocus])
+  }, [active, containerRef])
 }

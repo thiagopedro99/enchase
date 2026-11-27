@@ -444,6 +444,25 @@ describe('CheckboxGroup required', () => {
     expect(requiredBoxes()).toHaveLength(3)
   })
 
+  it('does not listen to the reset of the form again on every render with a new defaultValue array of the same size', () => {
+    const add = vi.spyOn(HTMLFormElement.prototype, 'addEventListener')
+    const form = (label: string) => (
+      <form>
+        <CheckboxGroup label={label} options={topics} defaultValue={['news']} required />
+      </form>
+    )
+    const { rerender } = renderWithProviders(form('Assuntos'))
+    const resets = () => add.mock.calls.filter(([type]) => type === 'reset').length
+    const before = resets()
+
+    rerender(form('Temas'))
+    rerender(form('Tópicos'))
+
+    expect(before).toBeGreaterThan(0)
+    expect(resets()).toBe(before)
+    add.mockRestore()
+  })
+
   it('follows the value when it is controlled', () => {
     const { rerender } = renderWithProviders(<CheckboxGroup label="Assuntos" options={topics} value={[]} required />)
 
