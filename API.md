@@ -1731,7 +1731,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-checkbox-box-border-color-checked-disabled` | `transparent` | `border-color` |
 | `--enchase-checkbox-box-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
 | `--enchase-checkbox-box-border-color-hover` | `var(--enchase-checkbox-box-border-color, var(--enchase-color-border-strong))` | `border-color` |
-| `--enchase-checkbox-box-border-color-invalid` | `var(--enchase-color-error)` | `border-color` |
+| `--enchase-checkbox-box-border-color-error` | `var(--enchase-color-error)` | `border-color` |
 | `--enchase-checkbox-box-check-width` | `2px` | `border-width` |
 | `--enchase-checkbox-box-radius` | `2px` | `border-radius` |
 | `--enchase-checkbox-box-size` | `18px` | `inline-size`, `block-size`, `margin-block-start`, `margin-inline-start` |
@@ -1761,7 +1761,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-checkbox-group-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-checkbox-group-helper-margin-block-start` | `0.25rem` (`--enchase-space-xs`) | `margin-block-start` |
 | `--enchase-checkbox-group-legend-color` | `var(--enchase-color-text-secondary)` | `color` |
-| `--enchase-checkbox-group-legend-color-invalid` | `var(--enchase-color-error)` | `color` |
+| `--enchase-checkbox-group-legend-color-error` | `var(--enchase-color-error)` | `color` |
 | `--enchase-checkbox-group-legend-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-checkbox-group-legend-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-checkbox-group-legend-margin-block-end` | `0.5rem` (`--enchase-space-sm`) | `margin-block-end` |
@@ -2350,7 +2350,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-radio-group-control-border-color-checked` | `var(--enchase-color-primary)` | `border-color` |
 | `--enchase-radio-group-control-border-color-disabled` | `color-mix(in srgb, var(--enchase-color-text-primary) calc(var(--enchase-state-disabled-content, 0.38) * 100%), transparent)` | `border-color` |
 | `--enchase-radio-group-control-border-color-hover` | `var(--enchase-radio-group-control-border-color, var(--enchase-color-border-strong))` | `border-color` |
-| `--enchase-radio-group-control-border-color-invalid` | `var(--enchase-color-error)` | `border-color` |
+| `--enchase-radio-group-control-border-color-error` | `var(--enchase-color-error)` | `border-color` |
 | `--enchase-radio-group-control-dot-size` | `calc(var(--enchase-radio-group-control-size, 1.25rem) / 2)` | `--radio-dot-size` |
 | `--enchase-radio-group-control-radius` | `9999px` (`--enchase-radius-full`) | `border-radius` |
 | `--enchase-radio-group-control-size` | `1.25rem` | `--radio-dot-size`, `inline-size`, `block-size` |
@@ -2370,7 +2370,7 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-radio-group-label-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
 | `--enchase-radio-group-label-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-radio-group-legend-color` | `var(--enchase-color-text-secondary)` | `color` |
-| `--enchase-radio-group-legend-color-invalid` | `var(--enchase-color-error)` | `color` |
+| `--enchase-radio-group-legend-color-error` | `var(--enchase-color-error)` | `color` |
 | `--enchase-radio-group-legend-font-size` | `1rem` (`--enchase-font-size-base`) | `font-size` |
 | `--enchase-radio-group-legend-font-weight` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-radio-group-legend-margin-block-end` | `0.5rem` (`--enchase-space-sm`) | `margin-block-end` |
@@ -2433,11 +2433,11 @@ Optional CSS variables that each component reads to change a measure, a font, a 
 | `--enchase-select-helper-font-size` | `0.75rem` (`--enchase-font-size-xs`) | `font-size` |
 | `--enchase-select-icon-color` | `var(--enchase-color-text-secondary)` | `color` |
 | `--enchase-select-option-background` | `var(--enchase-color-surface-container-high)` | `background-color` |
-| `--enchase-select-option-background-checked` | `var(--enchase-color-secondary-container)` | `background-color` |
+| `--enchase-select-option-background-selected` | `var(--enchase-color-secondary-container)` | `background-color` |
 | `--enchase-select-option-color` | `var(--enchase-color-text-primary)` | `color` |
-| `--enchase-select-option-color-checked` | `var(--enchase-color-on-secondary-container)` | `color` |
+| `--enchase-select-option-color-selected` | `var(--enchase-color-on-secondary-container)` | `color` |
 | `--enchase-select-option-color-disabled` | `var(--enchase-color-text-disabled)` | `color` |
-| `--enchase-select-option-font-weight-checked` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
+| `--enchase-select-option-font-weight-selected` | `500` (`--enchase-font-weight-medium`) | `font-weight` |
 | `--enchase-select-option-gap` | `0.5rem` (`--enchase-space-sm`) | `gap` |
 | `--enchase-select-option-padding-block` | `0.75rem` | `padding-block` |
 | `--enchase-select-option-padding-inline` | `1rem` (`--enchase-space-md`) | `padding-inline` |

@@ -25,7 +25,7 @@
 }
 
 .group[data-invalid] .legend {
-  color: var(--enchase-checkbox-group-legend-color-invalid, var(--enchase-color-error));
+  color: var(--enchase-checkbox-group-legend-color-error, var(--enchase-color-error));
 }
 
 .options {

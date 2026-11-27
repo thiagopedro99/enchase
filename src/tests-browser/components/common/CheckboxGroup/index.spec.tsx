@@ -238,7 +238,7 @@ describe('CheckboxGroup from the hooks', () => {
   })
 
   it('takes the color of the legend of an invalid group from its hook', () => {
-    onRoot({ '--enchase-checkbox-group-legend-color-invalid': 'rgb(4, 5, 6)' })
+    onRoot({ '--enchase-checkbox-group-legend-color-error': 'rgb(4, 5, 6)' })
     renderInBrowser(<CheckboxGroup label="Assuntos" options={topics} error="Escolha um" />)
 
     expect(style('checkbox-group-legend').color).toBe('rgb(4, 5, 6)')
@@ -281,7 +281,7 @@ describe('CheckboxGroup from the hooks', () => {
   })
 
   it('takes the border of an unchecked invalid box from its hook', () => {
-    onRoot({ '--enchase-checkbox-box-border-color-invalid': 'rgb(13, 14, 15)' })
+    onRoot({ '--enchase-checkbox-box-border-color-error': 'rgb(13, 14, 15)' })
     renderInBrowser(<CheckboxGroup label="Assuntos" options={topics} error="Escolha um" defaultValue={['news']} />)
 
     expect(style('checkbox-box', 1).borderTopColor).toBe('rgb(13, 14, 15)')

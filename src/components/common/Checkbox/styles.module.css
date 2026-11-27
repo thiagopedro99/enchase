@@ -88,7 +88,7 @@
 }
 
 .hidden[aria-invalid='true']:not(:checked, :indeterminate, :disabled) + .box {
-  border-color: var(--enchase-checkbox-box-border-color-invalid, var(--enchase-color-error));
+  border-color: var(--enchase-checkbox-box-border-color-error, var(--enchase-color-error));
 }
 
 .hidden:disabled + .box {

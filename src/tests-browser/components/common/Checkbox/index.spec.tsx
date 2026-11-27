@@ -80,7 +80,7 @@ describe('Checkbox in a real browser', () => {
   })
 
   it('takes the border of an unchecked invalid box from its hook', () => {
-    onRoot({ '--enchase-checkbox-box-border-color-invalid': 'rgb(1, 2, 3)' })
+    onRoot({ '--enchase-checkbox-box-border-color-error': 'rgb(1, 2, 3)' })
     renderInBrowser(<Checkbox label="Invalid" aria-invalid="true" />)
 
     expect(style('checkbox-box').borderTopColor).toBe('rgb(1, 2, 3)')

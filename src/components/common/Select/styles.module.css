@@ -158,9 +158,9 @@
   }
 
   .select option:checked {
-    background-color: var(--enchase-select-option-background-checked, var(--enchase-color-secondary-container));
-    color: var(--enchase-select-option-color-checked, var(--enchase-color-on-secondary-container));
-    font-weight: var(--enchase-select-option-font-weight-checked, var(--enchase-font-weight-medium));
+    background-color: var(--enchase-select-option-background-selected, var(--enchase-color-secondary-container));
+    color: var(--enchase-select-option-color-selected, var(--enchase-color-on-secondary-container));
+    font-weight: var(--enchase-select-option-font-weight-selected, var(--enchase-font-weight-medium));
   }
 
   .select option:disabled {

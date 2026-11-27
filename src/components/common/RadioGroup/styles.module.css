@@ -25,7 +25,7 @@
 }
 
 .group[data-invalid] .legend {
-  color: var(--enchase-radio-group-legend-color-invalid, var(--enchase-color-error));
+  color: var(--enchase-radio-group-legend-color-error, var(--enchase-color-error));
 }
 
 .options {
@@ -119,7 +119,7 @@
 }
 
 .group[data-invalid] .hidden:not(:checked, :disabled) + .control {
-  border-color: var(--enchase-radio-group-control-border-color-invalid, var(--enchase-color-error));
+  border-color: var(--enchase-radio-group-control-border-color-error, var(--enchase-color-error));
 }
 
 .hidden:disabled + .control {

@@ -124,7 +124,7 @@ const colorHooks: HookValues = {
   '--enchase-segmented-control-item-color-selected': 'var(--enchase-color-text-primary)',
   '--enchase-pagination-control-background-current': selectedLayer,
   '--enchase-pagination-control-color-current': 'var(--enchase-color-primary-hover)',
-  '--enchase-select-option-background-checked': primaryLayer,
+  '--enchase-select-option-background-selected': primaryLayer,
   '--enchase-combobox-option-background-selected': primaryLayer,
   '--enchase-sidebar-item-control-background-current': primaryLayer,
   '--enchase-table-row-background-selected': primaryLayer,
