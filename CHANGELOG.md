@@ -1,5 +1,34 @@
 # Changelog
 
+## v0.29.0
+
+[compare changes](https://github.com/thiagopedro99/enchase/compare/v0.28.0...v0.29.0)
+
+### Enhancements
+
+- ⚠️  Name the error and the selected state the same way in every hook ([6927a0d](https://github.com/thiagopedro99/enchase/commit/6927a0d))
+- ⚠️  Drop the 2xl synonym of the Container max width ([ceb8d6c](https://github.com/thiagopedro99/enchase/commit/ceb8d6c))
+
+### Fixes
+
+- Hide the scrollbar of the Tabs list and bring a clicked tab into view ([1fb8d9f](https://github.com/thiagopedro99/enchase/commit/1fb8d9f))
+
+#### ⚠️ Breaking Changes
+
+- ⚠️  Name the error and the selected state the same way in every hook ([6927a0d](https://github.com/thiagopedro99/enchase/commit/6927a0d))
+- ⚠️  Drop the 2xl synonym of the Container max width ([ceb8d6c](https://github.com/thiagopedro99/enchase/commit/ceb8d6c))
+
+### Notes
+
+- Breaking, in seven css hooks and in one value of a prop, with no alias for the old names, and one behavior changes. The error state is `-error` in every hook: `--enchase-checkbox-box-border-color-invalid`, `--enchase-checkbox-group-legend-color-invalid`, `--enchase-radio-group-control-border-color-invalid` and `--enchase-radio-group-legend-color-invalid` now end in `-error`. The chosen option of a list is `-selected` in every hook: `--enchase-select-option-background-checked`, `--enchase-select-option-color-checked` and `--enchase-select-option-font-weight-checked` now end in `-selected`. `ContainerMaxWidth` no longer has `'2xl'`: write `maxWidth="xxl"`, which is the same width. The behavior is `tabs-scrollbar-hidden`, in a bullet below. `npm run check:api` against 0.28.0 reports 7 `--enchase-*` names removed, 10 hooks removed from the styles, which are the three of the `Select` in the styles that declare them, and one declaration changed, all of them declared in `api-breaks.json`; the same 25 keys of `exports`, the same 14 stable entries with 1,134 lines of declarations, the same 1,294 `--enchase-*` names (7 leave and 7 enter) and 298 `data-slot` names, and the same 991 hooks in the 5 styles.
+- Who has to change something: an app that sets one of the seven hooks in its own css, and an app that writes `maxWidth="2xl"` on a `Container`. Rename the hook, or the value, and nothing else: the defaults are the same, and the computed style of every story of `Checkbox`, `CheckboxGroup`, `RadioGroup` and `Select`, with the list of the `Select` open, is the one of 0.28.0 in the five styles and the two color modes. An app that sets none of them changes nothing. A hook with the old name is ignored without an error, so search your css for `-invalid` and for `select-option` and `-checked`.
+- They bring the hooks to one word for each state: `-error` was already the word of `Input`, `Textarea`, `NumberInput`, `Select`, `Combobox` and `DatePicker`, and `-selected` the word of the options of the `Combobox`. The `-checked` hooks of `Checkbox`, `RadioGroup` and `Switch` stay: there it is the checked state itself.
+- One spelling for each scale: a breakpoint is `xxl` (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`), and a step of a size scale is `2xl` or `3xl` (font sizes, spacing and radius). The `maxWidth` of the `Container` follows the breakpoints and took both spellings; now it takes `xxl` only. The tokens and the breakpoints did not change.
+- `tabs-scrollbar-hidden`: the list of the `Tabs` hides its scrollbar when the tabs do not fit, as the `SegmentedControl` does since 0.28.0. Where the scrollbars take room, as on Windows with a mouse, a list that scrolled was 10px taller than its tabs, with the bar showing under them; now it is as tall as they are. A tab that is clicked comes whole into view, with room for the next one to show, as a tab reached by the keyboard already did, and `useTabs` does the same in the `onClick` of `getTabProps`. The list keeps its `tabindex="-1"`.
+- The kit of `enchase eject` changes in 8 files of 6 components: the stylesheets of `Checkbox`, `CheckboxGroup`, `RadioGroup`, `Select` and `Tabs`, `useTabs.ts`, and the two files of the `Container`. An ejected component that you leave as it is keeps reading the old names of its hooks.
+- Weight: the package goes from 1,082 to 1,083 files and from 521.9 kB packed (521,855 bytes) to 522.3 kB (522,340 bytes). The new file is `docs/migration/0.29.md`. In `dist-lib`, 21 files differ from 0.28.0: 11 of JavaScript, 8 stylesheets, the map `css/index.json` and the declaration of the `Container`. `styles.css` goes from 315,389 to 315,501 bytes and `theme.css` from 45,296 to 45,303. In `test:size`, minified, `useTabs` goes from 2,877 to 2,982 bytes (budget 3,584).
+- Checked: lint, `docs:api:check`, the build, the 6,102 jsdom tests, `build:lib`, `check:api` against 0.28.0, `pack:check` (publint and attw, with the 25 keys of `exports`) and `test:size` pass here on the release commit. On the commit before it, CI passed the package workflow, with `test:consumer`, `test:next` and `test:eject`, the whole browser suites in real Chromium, Firefox and WebKit, and the accessibility audit of the stories in the five styles and the two color modes. With the scrollbars showing, in real Chromium, the list of the `Tabs` that scrolls measures what its tabs do in three styles (36, 44 and 46px), and a click on the tab cut at the edge scrolls the list and not the page.
+
 ## v0.28.0
 
 [compare changes](https://github.com/thiagopedro99/enchase/compare/v0.27.0...v0.28.0)

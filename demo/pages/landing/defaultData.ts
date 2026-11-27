@@ -9,7 +9,7 @@ import type { ThemeInput, ThemeStyle } from 'enchase/theme'
 import type { Look, LookStyle } from './types.ts'
 import type { SidebarSection } from 'enchase'
 
-export const version = '0.28'
+export const version = '0.29'
 
 export const installCommand = 'npm install enchase'
 

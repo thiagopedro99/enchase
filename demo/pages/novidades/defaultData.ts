@@ -10,6 +10,47 @@ export const anchorOf = (version: string) => `v-${version.replace(/\./g, '-')}`
 
 export const releases: ReleaseNote[] = [
   {
+    version: '0.29.0',
+    previous: '0.28.0',
+    date: '27 de novembro de 2026',
+    shortDate: '27 nov',
+    title: 'Um nome só para cada estado',
+    summary: 'O fim da arrumação antes da 1.0: sete ganchos de CSS mudam de nome para o estado de erro e a opção escolhida terem uma palavra só, o `Container` deixa de aceitar `2xl` como sinônimo de `xxl`, e a lista das `Tabs` esconde a barra de rolagem. Só muda algo para quem usa esses ganchos ou esse valor.',
+    behavior: true,
+    groups: [
+      {
+        kind: 'mudou',
+        items: [
+          'Estado de erro: os ganchos de `Checkbox`, `CheckboxGroup` e `RadioGroup` que terminavam em `-invalid` agora terminam em `-error`, como os dos campos.',
+          'Opção escolhida: os três ganchos de `--enchase-select-option-*` que terminavam em `-checked` agora terminam em `-selected`, como os do `Combobox`.',
+          '`Container`: `maxWidth` não aceita mais `2xl`. Use `xxl`, que dá a mesma largura. A regra é uma só: breakpoint se escreve `xxl`, e tamanho de escala (fonte, espaço, raio) se escreve `2xl`.'
+        ]
+      },
+      {
+        kind: 'corrigido',
+        items: [
+          '`Tabs`: quando as abas não cabem, a lista rola sem barra à mostra. No Windows com mouse a barra deixava a lista 10 px mais alta que as abas.',
+          '`Tabs`: a aba clicada vem inteira para a vista, com espaço para a próxima aparecer, como já acontecia pelo teclado.'
+        ]
+      }
+    ],
+    migration: {
+      text: 'Só muda quem define um dos sete ganchos no próprio CSS ou escreve `maxWidth="2xl"`. Um gancho com o nome antigo é ignorado sem erro, então procure por `-invalid` e por `select-option` com `-checked` no seu CSS. Os valores padrão são os mesmos.',
+      blocks: [
+        {
+          label: 'Antes',
+          language: 'css',
+          code: ':root {\n  --enchase-checkbox-box-border-color-invalid: crimson;\n  --enchase-checkbox-group-legend-color-invalid: crimson;\n  --enchase-radio-group-control-border-color-invalid: crimson;\n  --enchase-radio-group-legend-color-invalid: crimson;\n  --enchase-select-option-background-checked: lavender;\n  --enchase-select-option-color-checked: indigo;\n  --enchase-select-option-font-weight-checked: 600;\n}'
+        },
+        {
+          label: 'Depois',
+          language: 'css',
+          code: ':root {\n  --enchase-checkbox-box-border-color-error: crimson;\n  --enchase-checkbox-group-legend-color-error: crimson;\n  --enchase-radio-group-control-border-color-error: crimson;\n  --enchase-radio-group-legend-color-error: crimson;\n  --enchase-select-option-background-selected: lavender;\n  --enchase-select-option-color-selected: indigo;\n  --enchase-select-option-font-weight-selected: 600;\n}'
+        }
+      ]
+    }
+  },
+  {
     version: '0.28.0',
     previous: '0.27.0',
     date: '27 de novembro de 2026',
